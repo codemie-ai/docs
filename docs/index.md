@@ -26,18 +26,33 @@ Comprehensive guide for developers and users working with AI/Run CodeMie:
 
 ### 🚀 Deployment Guide
 
-Technical documentation for platform administrators and DevOps teams:
+Technical documentation for platform administrators and DevOps teams. Choose your cloud provider:
+
+#### AWS Deployment
 
 - **[Overview](./deployment-guide/aws/overview)** - AWS deployment overview and planning
-- **[Architecture](./deployment-guide/aws/architecture)** - Understand the platform architecture
-- **[Prerequisites](./deployment-guide/aws/prerequisites)** - System requirements and preparation
-- **[Infrastructure Deployment](./deployment-guide/aws/infrastructure-deployment/)** - Set up the infrastructure
-- **[Components Deployment](./deployment-guide/aws/components-deployment/)** - Deploy platform components
+- **[Architecture](./deployment-guide/aws/architecture)** - AWS platform architecture
+- **[Prerequisites](./deployment-guide/aws/prerequisites)** - AWS system requirements and preparation
+- **[Infrastructure Deployment](./deployment-guide/aws/infrastructure-deployment/)** - Set up AWS infrastructure
+- **[Components Deployment](./deployment-guide/aws/components-deployment/)** - Deploy platform components on AWS
 - **[Post-Installation](./deployment-guide/aws/post-installation)** - Configuration and verification
 - **[AI Models Integration](./deployment-guide/aws/ai-models-integration)** - Connect AI models and providers
 - **[Updates](./deployment-guide/aws/update)** - Update and maintenance procedures
 - **[Extensions](./deployment-guide/aws/extensions)** - Platform extensions and customizations
-- **[FAQ](./deployment-guide/aws/faq)** - Deployment troubleshooting and common questions
+- **[FAQ](./deployment-guide/aws/faq)** - AWS deployment troubleshooting and common questions
+
+#### GCP Deployment
+
+- **[Overview](./deployment-guide/gcp/overview)** - GCP deployment overview and planning
+- **[Architecture](./deployment-guide/gcp/architecture)** - GCP platform architecture
+- **[Prerequisites](./deployment-guide/gcp/prerequisites)** - GCP system requirements and preparation
+- **[Infrastructure Deployment](./deployment-guide/gcp/infrastructure-deployment)** - Set up GCP infrastructure with Terraform
+- **[Components Overview](./deployment-guide/gcp/components-overview)** - Application stack and components
+- **[Scripted Installation](./deployment-guide/gcp/scripted-installation)** - Automated deployment using Helm charts
+- **[Manual Installation](./deployment-guide/gcp/manual-installation)** - Step-by-step manual deployment
+- **[Post-Installation](./deployment-guide/gcp/post-installation)** - User configuration and authorization
+- **[AI Models Integration](./deployment-guide/gcp/ai-models)** - Configure AI models (Vertex AI, Bedrock, Azure OpenAI)
+- **[Maintenance](./deployment-guide/gcp/maintenance)** - Updates, extensions, and troubleshooting
 
 ## What is AI/Run CodeMie?
 
@@ -55,7 +70,9 @@ AI/Run CodeMie is an innovative LLM-powered platform that goes beyond standard A
 New to AI/Run CodeMie? Start here:
 
 1. **Users**: Begin with the [Getting Started](user-guide/getting-started/) guide to learn the platform basics
-2. **Administrators**: Check the [AWS Deployment Overview](./deployment-guide/aws/overview) to plan your deployment
+2. **Administrators**: Check the deployment overview for your cloud provider:
+   - [AWS Deployment Overview](./deployment-guide/aws/overview)
+   - [GCP Deployment Overview](./deployment-guide/gcp/overview)
 
 ## Getting Help
 
