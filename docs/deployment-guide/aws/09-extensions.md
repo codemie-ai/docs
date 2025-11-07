@@ -163,5 +163,5 @@ For detailed documentation on specific extensions:
 
 ## Next Steps
 
-- [FAQ](./10-faq.md) - Frequently asked questions
+- [FAQ](../faq.md) - Frequently asked questions
 - Review individual extension documentation for detailed setup guides

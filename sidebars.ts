@@ -102,10 +102,56 @@ const sidebars: SidebarsConfig = {
               id: 'deployment-guide/aws/extensions',
               label: 'Extensions',
             },
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Azure',
+          link: {
+            type: 'doc',
+            id: 'deployment-guide/azure/overview',
+          },
+          collapsed: true,
+          items: [
             {
               type: 'doc',
-              id: 'deployment-guide/aws/faq',
-              label: 'FAQ',
+              id: 'deployment-guide/azure/prerequisites',
+              label: 'Prerequisites',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/architecture',
+              label: 'Architecture',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/infrastructure-deployment',
+              label: 'Infrastructure Deployment',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/components-deployment',
+              label: 'Components Deployment',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/post-installation',
+              label: 'Post-Installation',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/ai-models-integration',
+              label: 'AI Models Integration',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/update-version',
+              label: 'Update Version',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/azure/extensions',
+              label: 'Extensions',
             },
           ],
         },
@@ -325,7 +371,22 @@ const sidebars: SidebarsConfig = {
             'deployment-guide/aws/ai-models-integration',
             'deployment-guide/aws/update',
             'deployment-guide/aws/extensions',
-            'deployment-guide/aws/faq',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Azure',
+          collapsed: true,
+          items: [
+            'deployment-guide/azure/overview',
+            'deployment-guide/azure/prerequisites',
+            'deployment-guide/azure/architecture',
+            'deployment-guide/azure/infrastructure-deployment',
+            'deployment-guide/azure/components-deployment',
+            'deployment-guide/azure/post-installation',
+            'deployment-guide/azure/ai-models-integration',
+            'deployment-guide/azure/update-version',
+            'deployment-guide/azure/extensions',
           ],
         },
         {

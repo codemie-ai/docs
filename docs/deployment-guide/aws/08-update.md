@@ -168,4 +168,4 @@ After update:
 ## Next Steps
 
 - [Extensions](./09-extensions.md) - Explore optional extensions
-- [FAQ](./10-faq.md) - Common questions and troubleshooting
+- [FAQ](../faq.md) - Common questions and troubleshooting

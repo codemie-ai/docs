@@ -39,7 +39,6 @@ Technical documentation for platform administrators and DevOps teams. Choose you
 - **[AI Models Integration](./deployment-guide/aws/ai-models-integration)** - Connect AI models and providers
 - **[Updates](./deployment-guide/aws/update)** - Update and maintenance procedures
 - **[Extensions](./deployment-guide/aws/extensions)** - Platform extensions and customizations
-- **[FAQ](./deployment-guide/aws/faq)** - AWS deployment troubleshooting and common questions
 
 #### GCP Deployment
 
