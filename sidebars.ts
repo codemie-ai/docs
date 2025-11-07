@@ -14,7 +14,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/index',
       },
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           type: 'doc',
@@ -51,56 +51,119 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Deployment Guide',
-      link: {
-        type: 'doc',
-        id: 'deployment-guide/aws/overview',
-      },
-      collapsed: false,
+      collapsed: true,
       items: [
         {
-          type: 'doc',
-          id: 'deployment-guide/aws/prerequisites',
-          label: 'Prerequisites',
+          type: 'category',
+          label: 'AWS',
+          link: {
+            type: 'doc',
+            id: 'deployment-guide/aws/overview',
+          },
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/prerequisites',
+              label: 'Prerequisites',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/architecture',
+              label: 'Architecture',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/infrastructure-deployment/index',
+              label: 'Infrastructure Deployment',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/components-deployment/index',
+              label: 'Components Deployment',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/post-installation',
+              label: 'Post-Installation',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/ai-models-integration',
+              label: 'AI Models Integration',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/update',
+              label: 'Updates',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/extensions',
+              label: 'Extensions',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/aws/faq',
+              label: 'FAQ',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'deployment-guide/aws/architecture',
-          label: 'Architecture',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/infrastructure-deployment/index',
-          label: 'Infrastructure Deployment',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/components-deployment/index',
-          label: 'Components Deployment',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/post-installation',
-          label: 'Post-Installation',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/ai-models-integration',
-          label: 'AI Models Integration',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/update',
-          label: 'Updates',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/extensions',
-          label: 'Extensions',
-        },
-        {
-          type: 'doc',
-          id: 'deployment-guide/aws/faq',
-          label: 'FAQ',
+          type: 'category',
+          label: 'GCP',
+          link: {
+            type: 'doc',
+            id: 'deployment-guide/gcp/overview',
+          },
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/prerequisites',
+              label: 'Prerequisites',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/architecture',
+              label: 'Architecture',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/infrastructure-deployment',
+              label: 'Infrastructure Deployment',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/components-overview',
+              label: 'Components Overview',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/scripted-installation',
+              label: 'Scripted Installation',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/manual-installation',
+              label: 'Manual Installation',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/post-installation',
+              label: 'Post-Installation',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/ai-models',
+              label: 'AI Models Integration',
+            },
+            {
+              type: 'doc',
+              id: 'deployment-guide/gcp/maintenance',
+              label: 'Maintenance',
+            },
+          ],
         },
       ],
     },
@@ -118,6 +181,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/getting-started/index',
       },
+      collapsed: true,
       items: [
         'user-guide/getting-started/what-is-airuncodemie',
         'user-guide/getting-started/what-are-airuncodemie-capabilities',
@@ -132,6 +196,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/concepts/index',
       },
+      collapsed: true,
       items: [
         'user-guide/concepts/projects-overview',
         'user-guide/concepts/data-source-overview',
@@ -151,6 +216,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/assistants/index',
       },
+      collapsed: true,
       items: [
         'user-guide/assistants/assistant-templates',
         'user-guide/assistants/create-assistant-from-a-template',
@@ -178,6 +244,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/workflows/index',
       },
+      collapsed: true,
       items: [
         'user-guide/workflows/workflows-overview',
         'user-guide/workflows/create-workflow',
@@ -195,6 +262,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/conversational-advice/index',
       },
+      collapsed: true,
       items: [
         'user-guide/conversational-advice/conversational-support',
         'user-guide/conversational-advice/indexing-duration',
@@ -209,6 +277,7 @@ const sidebars: SidebarsConfig = {
         type: 'doc',
         id: 'user-guide/ai-documentation/index',
       },
+      collapsed: true,
       items: [],
     },
   ],
@@ -216,10 +285,12 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Deployment Guide',
+      collapsed: true,
       items: [
         {
           type: 'category',
           label: 'AWS',
+          collapsed: true,
           items: [
             'deployment-guide/aws/overview',
             'deployment-guide/aws/prerequisites',
@@ -231,6 +302,7 @@ const sidebars: SidebarsConfig = {
                 type: 'doc',
                 id: 'deployment-guide/aws/infrastructure-deployment/index',
               },
+              collapsed: true,
               items: [
                 'deployment-guide/aws/infrastructure-deployment/scripted-deployment',
                 'deployment-guide/aws/infrastructure-deployment/manual-deployment',
@@ -243,6 +315,7 @@ const sidebars: SidebarsConfig = {
                 type: 'doc',
                 id: 'deployment-guide/aws/components-deployment/index',
               },
+              collapsed: true,
               items: [
                 'deployment-guide/aws/components-deployment/scripted-deployment',
                 'deployment-guide/aws/components-deployment/manual-deployment',
@@ -253,6 +326,23 @@ const sidebars: SidebarsConfig = {
             'deployment-guide/aws/update',
             'deployment-guide/aws/extensions',
             'deployment-guide/aws/faq',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'GCP',
+          collapsed: true,
+          items: [
+            'deployment-guide/gcp/overview',
+            'deployment-guide/gcp/prerequisites',
+            'deployment-guide/gcp/architecture',
+            'deployment-guide/gcp/infrastructure-deployment',
+            'deployment-guide/gcp/components-overview',
+            'deployment-guide/gcp/scripted-installation',
+            'deployment-guide/gcp/manual-installation',
+            'deployment-guide/gcp/post-installation',
+            'deployment-guide/gcp/ai-models',
+            'deployment-guide/gcp/maintenance',
           ],
         },
         'deployment-guide/faq',
