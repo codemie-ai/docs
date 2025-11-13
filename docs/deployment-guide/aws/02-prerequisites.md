@@ -12,12 +12,12 @@ Before installing AI/Run CodeMie, carefully review the prerequisites and require
 
 ### AWS Account Access Requirements
 
-- ✓ Active AWS Account with preferable region for deployment
-- ✓ User credentials with programmatic access to AWS account with permissions to create and manage IAM Roles and Policy Documents
+- Active AWS Account with preferable region for deployment
+- User credentials with programmatic access to AWS account with permissions to create and manage IAM Roles and Policy Documents
 
 ### Domain Name
 
-- ✓ Available wildcard DNS hosted zone in Route53
+- Available wildcard DNS hosted zone in Route53
 
 :::info
 AI/Run CodeMie terraform modules will automatically create:
@@ -28,12 +28,12 @@ AI/Run CodeMie terraform modules will automatically create:
 
 ### External Connections
 
-- ✓ Firewall or SG and NACLs of EKS cluster allow outbound access to:
+- Firewall or SG and NACLs of EKS cluster allow outbound access to:
   - AI/Run CodeMie container registry – `europe-west3-docker.pkg.dev`
   - 3rd party container registries – `quay.io`, `docker.io`, `registry.developers.crunchydata.com`
   - Any service you're planning to use with AI/Run CodeMie (for example, GitLab instance)
 
-- ✓ Firewall on your integration service allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
+- Firewall on your integration service allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
 
 :::info
 NAT Gateway public IP address will be known after EKS installation
@@ -41,8 +41,8 @@ NAT Gateway public IP address will be known after EKS installation
 
 ### LLM Models
 
-- ✓ Activated region in AWS where [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html) are available
-- ✓ Activated desired LLMs and embeddings models in AWS account (for example, Sonnet 3.5v3/3.7, AWS Titan 2.0)
+- Activated region in AWS where [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html) are available
+- Activated desired LLMs and embeddings models in AWS account (for example, Sonnet 3.5v3/3.7, AWS Titan 2.0)
 
 :::info
 AI/Run CodeMie can be deployed with mock LLM configurations initially. Real configurations can be provided later if client-side approvals require additional time.
@@ -50,8 +50,8 @@ AI/Run CodeMie can be deployed with mock LLM configurations initially. Real conf
 
 ### User Permissions and Admission Control Requirements for EKS
 
-- ✓ Admin EKS permissions with rights to create `namespaces`
-- ✓ Admission webhook allows creation of Kubernetes resources listed below (applicable when deploying onto an existing EKS cluster with enforced policies):
+- Admin EKS permissions with rights to create `namespaces`
+- Admission webhook allows creation of Kubernetes resources listed below (applicable when deploying onto an existing EKS cluster with enforced policies):
 
 | AI/Run CodeMie Component | Kubernetes APIs                                                           | Description                                                                                                                                                                                                                                                                                                                                              |
 | ------------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
