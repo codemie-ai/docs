@@ -139,10 +139,18 @@ After execution, the script will:
 The script creates a `deployment_outputs.env` file with essential infrastructure details:
 
 ```bash
+# Platform Outputs
 AWS_DEFAULT_REGION=eu-west-2
 EKS_AWS_ROLE_ARN=arn:aws:iam::123456789012:role/...
 AWS_KMS_KEY_ID=12345678-90ab-cdef-1234-567890abcdef
 AWS_S3_BUCKET_NAME=codemie-platform-bucket
+
+# RDS Database Outputs
+CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.eu-west-2.rds.amazonaws.com
+CODEMIE_POSTGRES_DATABASE_PORT=5432
+CODEMIE_POSTGRES_DATABASE_NAME=codemie
+CODEMIE_POSTGRES_DATABASE_USER=dbadmin
+CODEMIE_POSTGRES_DATABASE_PASSWORD="password"
 ```
 
 ### 4. Complete Deployment
