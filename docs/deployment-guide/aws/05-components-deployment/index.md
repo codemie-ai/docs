@@ -32,7 +32,7 @@ If your EKS cluster does not have these components, the detailed instructions ar
 
 3. Clone the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
 
-4. Set up pull secrets for container registry access (see detailed instructions in manual deployment section)
+4. Set up pull secrets for container registry access. For detailed instructions, see [Container Registry Access](./manual-deployment#container-registry-access).
 
 ## Application Stack Overview
 
