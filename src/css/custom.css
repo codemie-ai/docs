@@ -24,3 +24,13 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* Fix for docusaurus-plugin-image-zoom z-index issue */
+/* Ensure the zoom overlay and image appear above the navbar */
+.medium-zoom-overlay {
+  z-index: 300;
+}
+
+.medium-zoom-image--opened {
+  z-index: 301;
+}
