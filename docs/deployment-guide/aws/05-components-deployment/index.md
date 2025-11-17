@@ -36,7 +36,7 @@ If your EKS cluster does not have these components, the detailed instructions ar
 
 ## Application Stack Overview
 
-![AI/Run CodeMie Application Stack](../images/application-stack-diagram.svg)
+![AI/Run CodeMie Application Stack](../images/application-stack-diagram.drawio.png)
 
 The AI/Run CodeMie deployment includes:
 
