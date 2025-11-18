@@ -52,7 +52,6 @@ terraform plan
 terraform apply
 ```
 
-
 ## Step 2: Terraform Backend Resources Deployment
 
 This step creates:
@@ -141,7 +140,6 @@ Ensure that you allowed incoming traffic to the Security Group attached to LoadB
 - Your VPN or from networks you're planning to work with AI/Run CodeMie
 - EKS Cluster NAT Gateway EIP (not required if `enable_private_connections` variable is set to `true`)
   :::
-
 
 ## Next Steps
 

@@ -32,7 +32,6 @@ The deployment provisions all required AWS infrastructure components described i
 | 1   | IAM deployer role  | [codemie-terraform-aws-iam](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam)           |
 | 2   | Main AWS resources | [codemie-terraform-aws-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform) |
 
-
 ## Next Steps
 
 Choose your deployment method:

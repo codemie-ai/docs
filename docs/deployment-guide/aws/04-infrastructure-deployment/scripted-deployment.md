@@ -57,7 +57,6 @@ terraform plan
 terraform apply
 ```
 
-
 ## Step 2: Run Installation Script
 
 1. Clone the platform repository:
