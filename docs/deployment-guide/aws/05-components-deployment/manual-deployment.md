@@ -522,17 +522,27 @@ If you don't have your own logging system:
 
 ### Kibana Dashboards
 
-Install custom dashboards for metrics and monitoring:
+Install custom dashboards for metrics and monitoring.
+
+**With manual authentication:**
 
 ```bash
-bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.url"
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.<your-domain>"
 ```
 
-Use `--force` to recreate existing resources.
+**With Kubernetes secret authentication (recommended):**
 
-:::warning
-Kibana URL must NOT include trailing slash to avoid 404 errors.
-:::
+```bash
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.<your-domain>" --k8s-auth --non-interactive
+```
+
+This uses the `elasticsearch-master-credentials` secret from the `elastic` namespace by default.
+
+For more information and additional options, use:
+
+```bash
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --help
+```
 
 ## Next Steps
 
