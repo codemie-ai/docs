@@ -17,6 +17,16 @@ This guide describes the process of updating AI/Run CodeMie components to newer 
 - Helm 3.16.0+ installed
 - Backup of critical data (recommended)
 
+:::info GCR Login Required
+Before updating AI/Run CodeMie components, login to AI/Run CodeMie GCR:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+```
+
+:::
+
 ## Update Methods
 
 ### Scripted Update
