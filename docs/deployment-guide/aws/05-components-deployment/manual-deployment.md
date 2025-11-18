@@ -270,7 +270,7 @@ Access Keycloak at: `https://keycloak.<your-domain>/auth/admin`
    kubectl get secret keycloak-admin -n security -o yaml | sed '/namespace:/d' | kubectl apply -n oauth2-proxy -f -
    ```
 
-4. Configure domain in `oauth2-proxy/values-aws.yaml`
+4. Configure domain in `oauth2-proxy/values-aws.yaml` (replace %%DOMAIN%%)
 
 5. Install OAuth2 Proxy:
    ```bash
