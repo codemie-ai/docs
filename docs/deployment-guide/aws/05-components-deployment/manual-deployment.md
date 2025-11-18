@@ -232,7 +232,7 @@ kubectl create secret generic codemie-postgresql \
 
 ### Keycloak
 
-1. Configure domain in `keycloak-helm/values-aws.yaml`
+1. Configure domain in `keycloak-helm/values-aws.yaml` (replace %%DOMAIN%%)
 
 2. Install Keycloak:
    ```bash
@@ -450,7 +450,7 @@ helm upgrade --install mermaid-server \
 
 ### CodeMie UI
 
-1. Configure domain in `codemie-ui/values-aws.yaml`
+1. Configure domain in `codemie-ui/values-aws.yaml` (replace %%DOMAIN%%)
 
 2. Install:
    ```bash
