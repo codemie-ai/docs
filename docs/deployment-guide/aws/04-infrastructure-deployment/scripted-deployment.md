@@ -57,9 +57,6 @@ terraform plan
 terraform apply
 ```
 
-:::warning EPAM Accounts Only
-After role creation it's necessary to enable IRSA (IAM Roles for Service Accounts) in EKS. Follow [these instructions](https://kb.epam.com/display/EPMCDME/Enabling+IRSA+%28IAM+Roles+for+Service+Accounts%29+in+EKS) to create a support request.
-:::
 
 ## Step 2: Run Installation Script
 
