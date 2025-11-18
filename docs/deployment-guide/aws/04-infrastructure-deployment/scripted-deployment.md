@@ -57,10 +57,6 @@ terraform plan
 terraform apply
 ```
 
-:::warning EPAM Accounts Only
-After role creation it's necessary to enable IRSA (IAM Roles for Service Accounts) in EKS. Follow [these instructions](https://kb.epam.com/display/EPMCDME/Enabling+IRSA+%28IAM+Roles+for+Service+Accounts%29+in+EKS) to create a support request.
-:::
-
 ## Step 2: Run Installation Script
 
 1. Clone the platform repository:
@@ -75,11 +71,22 @@ cd codemie-terraform-aws-platform
 ```bash
 # AI/Run CodeMie deployment variables configuration
 AWS_PROFILE="My_Profile"
+
+# AWS region where the platform will be deployed
 TF_VAR_region="eu-west-2"
+
+# AWS IAM Role ARN for the deployment you created on a previous step
 TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"
+
+# The domain name for the platform
 TF_VAR_platform_domain_name="codemie.example.com"
+
+# The name of the AWS IAM Role to be used to access the EKS cluster
 TF_VAR_eks_admin_role_arn=""
+
+# The name of the policy that defines the permissions boundary
 TF_VAR_role_permissions_boundary_arn=""
+
 TF_VAR_cluster_version="1.33"
 TF_VAR_demand_instance_types='[{ instance_type = "r5.xlarge" }]'
 TF_VAR_demand_max_nodes_count=2
@@ -90,8 +97,14 @@ TF_VAR_subnet_azs='["eu-west-2a", "eu-west-2b", "eu-west-2c"]'
 TF_VAR_s3_states_bucket_name="codemie-terraform-states"
 TF_VAR_table_name="codemie_terraform_locks"
 TF_VAR_enable_private_connections=true
+
+# List of optional prefix lists IDs for ALB and NLB to create security group from
 TF_VAR_lb_prefix_list_ids='[]'
+
+# List of optional specific IP addresses/CIDR blocks to allow access from to ALB and NLB
 TF_VAR_lb_specific_ips='[]'
+
+# Additional optional security group IDs to attach to ALB and NLB
 TF_VAR_security_group_ids='[]'
 ```
 
@@ -122,10 +135,18 @@ After execution, the script will:
 The script creates a `deployment_outputs.env` file with essential infrastructure details:
 
 ```bash
+# Platform Outputs
 AWS_DEFAULT_REGION=eu-west-2
 EKS_AWS_ROLE_ARN=arn:aws:iam::123456789012:role/...
 AWS_KMS_KEY_ID=12345678-90ab-cdef-1234-567890abcdef
 AWS_S3_BUCKET_NAME=codemie-platform-bucket
+
+# RDS Database Outputs
+CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.eu-west-2.rds.amazonaws.com
+CODEMIE_POSTGRES_DATABASE_PORT=5432
+CODEMIE_POSTGRES_DATABASE_NAME=codemie
+CODEMIE_POSTGRES_DATABASE_USER=dbadmin
+CODEMIE_POSTGRES_DATABASE_PASSWORD="password"
 ```
 
 ### 4. Complete Deployment

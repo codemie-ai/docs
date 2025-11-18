@@ -8,7 +8,7 @@ description: Configure LLM and embedding models
 
 ## Managing LLM and Embedding Models
 
-AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration files can be found in the container at path: `config/llms`.
+AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration files can be found in the container at path: [`config/llms`](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/llms).
 
 The `MODELS_ENV` environment variable specifies the environment for the models. For example, `MODELS_ENV=dial` will use models from the `config/llms/llm-dial-config.yaml` file.
 

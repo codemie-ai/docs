@@ -25,25 +25,12 @@ There are two deployment options available:
 
 ## Deployment Resources
 
-The deployment process creates the following resources in order:
+The deployment provisions all required AWS infrastructure components described in the [Architecture](../03-architecture.md#infrastructure-components) section using the following Terraform modules:
 
 | #   | Resource name      | Source                                                                                            |
 | --- | ------------------ | ------------------------------------------------------------------------------------------------- |
 | 1   | IAM deployer role  | [codemie-terraform-aws-iam](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam)           |
 | 2   | Main AWS resources | [codemie-terraform-aws-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform) |
-
-### Main AWS Resources
-
-The deployment creates:
-
-- **EKS Cluster** - Managed Kubernetes environment
-- **AWS ASGs** - Auto Scaling Groups for the EKS Cluster
-- **AWS ALB & AWS NLB** - Load balancers for HTTP/HTTPS and TCP traffic
-- **AWS KMS key** - For encrypting and decrypting sensitive data
-- **AWS IAM Roles** - Access to AWS KMS and Bedrock services
-- **AWS IAM role ExternalSecretOperator** - For use with AWS Systems Manager
-- **AWS RDS Postgres** - Managed PostgreSQL database
-- **Internal AWS ALB** (Optional) - Private DNS hosted zone for private network connections
 
 ## Next Steps
 

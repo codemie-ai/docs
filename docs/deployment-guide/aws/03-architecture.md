@@ -8,7 +8,7 @@ description: AI/Run CodeMie deployment architecture on AWS
 
 The diagram below depicts the AI/Run CodeMie infrastructure deployment in one region (AZ) of the AWS public cloud environment.
 
-![AI/Run CodeMie Architecture on AWS](./images/architecture-diagram.png)
+![AI/Run CodeMie Architecture on AWS](./images/architecture-diagram.drawio.png)
 
 ## Container Resources Requirements
 
