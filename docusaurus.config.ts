@@ -57,7 +57,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/logo.svg',
+    image: 'img/codemie-social-card.jpg',
     navbar: {
       title: 'AI/Run CodeMie',
       logo: {
