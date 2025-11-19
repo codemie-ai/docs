@@ -43,6 +43,7 @@ npm run lint:markdown  # Markdown linting
 ## CI/CD Pipeline
 
 Pull requests are automatically validated:
+
 - Commit/PR pattern: `EPMCDME-XXXX: Description` (required)
 - Code quality: TypeScript, ESLint, Prettier, Markdown
 - Build verification
