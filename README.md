@@ -2,7 +2,7 @@
 
 Official documentation for AI/Run CodeMie - an AI-powered development platform.
 
-**Live Site**: [Documentation](#) • **Issues**: [GitHub Issues](https://github.com/codemie-ai/docs/issues)
+**Live Site**: [Documentation](https://codemie-ai.github.io/docs) • **Issues**: [GitHub Issues](https://github.com/codemie-ai/docs/issues)
 
 ## Quick Start for Contributors
 
