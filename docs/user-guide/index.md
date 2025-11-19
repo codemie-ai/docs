@@ -44,14 +44,15 @@ Master the use of AI assistants:
 - Sub-assistants and orchestrators
 - Research tools
 
-### [4. Working With Workflows](./workflows/index.md)
+### [4. Workflows](./workflows/index.md)
 
-Learn to create and manage workflows:
+Design and execute complex multi-assistant workflows:
 
-- Workflows overview
-- Creating workflows from scratch and templates
-- Sharing and exporting workflow executions
-- LLM model configuration
+- Workflows Overview
+- Working with Workflow
+- Advanced Topics
+- Best Practices & Troubleshooting
+- Key Concepts
 
 ### [5. Conversational Advice](./conversational-advice/index.md)
 

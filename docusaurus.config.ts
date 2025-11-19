@@ -31,6 +31,7 @@ const config: Config = {
           editUrl: 'https://github.com/codemie-ai/docs/tree/main/',
           sidebarCollapsible: true,
           sidebarCollapsed: false,
+          numberPrefixParser: false,
         },
         blog: false,
         theme: {
@@ -68,9 +69,15 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
+          sidebarId: 'conceptsSidebar',
+          position: 'left',
+          label: 'Concepts',
+        },
+        {
+          type: 'docSidebar',
           sidebarId: 'userGuideSidebar',
           position: 'left',
-          label: 'User Guide',
+          label: 'Guides',
         },
         {
           type: 'docSidebar',
@@ -92,7 +99,11 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
-              label: 'User Guide',
+              label: 'Concepts',
+              to: 'concepts/',
+            },
+            {
+              label: 'Guides',
               to: 'user-guide/',
             },
             {

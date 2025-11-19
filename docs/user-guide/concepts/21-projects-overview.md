@@ -1,4 +1,11 @@
-# 2.1 Projects Overview
+---
+id: projects-overview
+title: Projects Overview
+sidebar_label: Projects Overview
+sidebar_position: 1
+---
+
+# Projects Overview
 
 The first thing that users must create when onboarding on AI/RunTM CodeMie is "Project". In AI/RunTM CodeMie, the concept of "Project" is introduced to delineate and isolate working environments, ensuring that users' activities do not interfere with one another.
 

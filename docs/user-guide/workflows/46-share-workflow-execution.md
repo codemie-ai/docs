@@ -1,4 +1,11 @@
-# 4.6 Share Workflow Execution
+---
+id: 46-share-workflow-execution
+title: Share Workflow Execution
+sidebar_label: Advanced Features
+sidebar_position: 1
+---
+
+# Share Workflow Execution
 
 To share the Workflow Execution, you have two options:
 

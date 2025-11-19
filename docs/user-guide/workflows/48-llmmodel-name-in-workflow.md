@@ -1,4 +1,11 @@
-# 4.8 LLM Model Name in Workflow
+---
+id: 48-llmmodel-name-in-workflow
+title: LLM Model Name in Workflow
+sidebar_label: Best Practices
+sidebar_position: 1
+---
+
+# LLM Model Name in Workflow
 
 To find the LLM model name used in a workflow:
 

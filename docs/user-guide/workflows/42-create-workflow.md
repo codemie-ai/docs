@@ -1,4 +1,11 @@
-# 4.2 Create Workflow
+---
+id: 42-create-workflow
+title: Create Workflow
+sidebar_label: Configuration Reference
+sidebar_position: 2
+---
+
+# Create Workflow
 
 Before creating a workflow, ensure that you have a clear vision of its purpose. Additionally, you should set up and configure the assistants that will be involved. Once these prerequisites are met, follow these steps:
 

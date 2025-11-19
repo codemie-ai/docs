@@ -1,4 +1,11 @@
-# 2.3 Project Visibility Management
+---
+id: project-visibility-management
+title: Project Visibility Management
+sidebar_label: Project Visibility Management
+sidebar_position: 2
+---
+
+# Project Visibility Management
 
 Indexed repositories within the project space are visible to all members of the assigned project but not to the users assigned to other projects. This option determines whether this index will be available to all project participants or will be private – visible only to the user who created it.
 
