@@ -5,8 +5,6 @@ interface FeatureGridProps {
   children: React.ReactNode;
 }
 
-export default function FeatureGrid({
-  children,
-}: FeatureGridProps): React.JSX.Element {
+export default function FeatureGrid({ children }: FeatureGridProps): React.JSX.Element {
   return <div className={styles.featureGrid}>{children}</div>;
 }

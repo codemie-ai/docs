@@ -19,7 +19,9 @@ export default function FeatureCard({
 }: FeatureCardProps): React.JSX.Element {
   const renderIcon = () => {
     if (iconType === 'image') {
-      return <img src={icon} alt={`${title} logo`} className={`${styles.featureCardImage} no-zoom`} />;
+      return (
+        <img src={icon} alt={`${title} logo`} className={`${styles.featureCardImage} no-zoom`} />
+      );
     }
     return <div className={styles.featureCardIcon}>{icon}</div>;
   };
