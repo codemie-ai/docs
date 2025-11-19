@@ -16,7 +16,7 @@ export default function FeatureCard({
   link,
   icon = '📘',
   iconType = 'emoji',
-}: FeatureCardProps): JSX.Element {
+}: FeatureCardProps): React.JSX.Element {
   const renderIcon = () => {
     if (iconType === 'image') {
       return <img src={icon} alt={`${title} logo`} className={`${styles.featureCardImage} no-zoom`} />;
