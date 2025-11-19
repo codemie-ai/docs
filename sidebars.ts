@@ -50,7 +50,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Deployment Guide',
+      label: 'Deployment Guides',
+      link: {
+        type: 'doc',
+        id: 'deployment-guide/index',
+      },
       collapsed: true,
       items: [
         {
@@ -211,7 +215,12 @@ const sidebars: SidebarsConfig = {
             },
           ],
         },
-        'deployment-guide/api-configuration',
+        {
+          type: 'category',
+          label: 'Additional Resources',
+          collapsed: true,
+          items: ['deployment-guide/api-configuration'],
+        },
       ],
     },
   ],
@@ -330,9 +339,14 @@ const sidebars: SidebarsConfig = {
   ],
   deploymentGuideSidebar: [
     {
+      type: 'doc',
+      id: 'deployment-guide/index',
+      label: 'Deployment Guides',
+    },
+    {
       type: 'category',
-      label: 'Deployment Guide',
-      collapsed: true,
+      label: 'Cloud Platforms',
+      collapsed: false,
       items: [
         {
           type: 'category',
@@ -407,9 +421,13 @@ const sidebars: SidebarsConfig = {
             'deployment-guide/gcp/maintenance',
           ],
         },
-        'deployment-guide/api-configuration',
-        'deployment-guide/faq',
       ],
+    },
+    {
+      type: 'category',
+      label: 'Additional Resources',
+      collapsed: true,
+      items: ['deployment-guide/api-configuration', 'deployment-guide/faq'],
     },
   ],
 };

@@ -75,7 +75,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'deploymentGuideSidebar',
           position: 'left',
-          label: 'Deployment Guide',
+          label: 'Deployment Guides',
         },
         {
           href: 'https://github.com/codemie-ai/docs',
@@ -95,8 +95,8 @@ const config: Config = {
               to: 'user-guide/',
             },
             {
-              label: 'Deployment Guide',
-              to: 'deployment-guide/aws/overview',
+              label: 'Deployment Guides',
+              to: 'deployment-guide/',
             },
           ],
         },
