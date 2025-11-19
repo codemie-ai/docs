@@ -400,14 +400,50 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'category',
-              label: 'Post-Installation Configuration',
+              label: 'Post-Installation',
               link: {
                 type: 'doc',
                 id: 'deployment-guide/aws/post-installation/post-installation-overview',
               },
               collapsed: true,
               items: [
-                'deployment-guide/aws/post-installation/user-configuration',
+                {
+                  type: 'category',
+                  label: 'User Configuration',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/aws/post-installation/user-configuration/user-configuration-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/aws/post-installation/user-configuration/initial-realm-setup',
+                    {
+                      type: 'category',
+                      label: 'User Provisioning',
+                      collapsed: true,
+                      items: [
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/manual-creation',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-assistant',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/entra-id-only',
+                      ],
+                    },
+                    {
+                      type: 'category',
+                      label: 'User Authorization',
+                      link: {
+                        type: 'doc',
+                        id: 'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-roles',
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-attributes',
+                      ],
+                    },
+                    'deployment-guide/aws/post-installation/user-configuration/platform-administration',
+                  ],
+                },
                 'deployment-guide/aws/post-installation/ui-customization',
               ],
             },
