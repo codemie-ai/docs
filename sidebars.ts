@@ -379,7 +379,23 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: [
                 'deployment-guide/aws/components-deployment/scripted-deployment',
-                'deployment-guide/aws/components-deployment/manual-deployment',
+                {
+                  type: 'category',
+                  label: 'Manual Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/aws/components-deployment/manual-deployment/manual-deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/aws/components-deployment/manual-deployment/storage-and-ingress',
+                    'deployment-guide/aws/components-deployment/manual-deployment/data-layer',
+                    'deployment-guide/aws/components-deployment/manual-deployment/security-and-identity',
+                    'deployment-guide/aws/components-deployment/manual-deployment/messaging',
+                    'deployment-guide/aws/components-deployment/manual-deployment/core-components',
+                    'deployment-guide/aws/components-deployment/manual-deployment/observability',
+                  ],
+                },
               ],
             },
             'deployment-guide/aws/post-installation',
