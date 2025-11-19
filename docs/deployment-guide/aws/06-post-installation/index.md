@@ -30,25 +30,6 @@ After successfully deploying all AI/Run CodeMie components, you need to complete
 - Custom logos and colors
 - Platform-specific configurations
 
-## Prerequisites
-
-Before you begin, ensure you have:
-
-- A successful deployment of all AI/Run CodeMie components
-- Access to your Kubernetes cluster via `kubectl`
-
-### Retrieve Keycloak Admin Credentials
-
-For options involving Keycloak, retrieve admin credentials:
-
-```bash
-# Get Keycloak Admin Username
-kubectl get secret keycloak-admin -n security -o jsonpath='{.data.username}' | base64 -d; echo
-
-# Get Keycloak Admin Password
-kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | base64 -d; echo
-```
-
 ## Next Steps
 
 Start with [User Configuration](./user-configuration) to set up your first users and enable platform access.
