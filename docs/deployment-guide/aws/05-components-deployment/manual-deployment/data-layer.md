@@ -72,26 +72,11 @@ helm upgrade --install postgres-operator postgres-operator-helm/. \
 
 ## PostgreSQL
 
-:::warning Cloud-managed PostgreSQL Recommended
-In-cluster PostgreSQL installation is deprecated. Using cloud-managed PostgreSQL (AWS RDS) is now required for new deployments.
-:::
-
-1. Create PostgreSQL secret:
-
-For cloud-managed Postgres:
+Create PostgreSQL secret for cloud-managed database (AWS RDS):
 
 ```bash
 kubectl create secret generic codemie-postgresql \
   --from-literal=password=%%YOUR_PASSWORD%% \
-  --namespace codemie
-```
-
-For in-cluster Postgres (deprecated):
-
-```bash
-kubectl create secret generic codemie-postgresql \
-  --from-literal=password=$(openssl rand -base64 12) \
-  --from-literal=postgres-password=$(openssl rand -base64 12) \
   --namespace codemie
 ```
 
