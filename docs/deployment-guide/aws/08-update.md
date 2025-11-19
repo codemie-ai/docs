@@ -177,5 +177,5 @@ After update:
 
 ## Next Steps
 
-- [Extensions](./09-extensions.md) - Explore optional extensions
+- [Extensions](./extensions/) - Explore optional extensions
 - [FAQ](../faq.md) - Common questions and troubleshooting

@@ -104,4 +104,4 @@ Some components may be missing depending on your setup configuration or use `htt
 
 ## Next Steps
 
-After successful components deployment, proceed to [Post-Installation Configuration](../06-post-installation.md) to complete required setup steps.
+After successful components deployment, proceed to [Post-Installation Configuration](../post-installation/) to complete required setup steps.

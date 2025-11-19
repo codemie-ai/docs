@@ -1,10 +1,25 @@
 ---
-sidebar_position: 7
+id: ai-models-overview
+sidebar_position: 1
 title: AI Models Integration
 description: Configure LLM and embedding models
 ---
 
 # AI Models Integration and Configuration
+
+## Overview
+
+AI/Run CodeMie supports LLM and embedding models from various cloud providers. This section guides you through configuring models for your deployment.
+
+## Model Providers
+
+### [AWS Bedrock Models](./aws-bedrock) (Optional)
+
+Configure Amazon Bedrock LLMs and embedding models for AWS-native integration.
+
+### [Azure OpenAI Models](./azure-openai) (Optional)
+
+Configure Azure OpenAI Service for LLM and embedding models.
 
 ## Managing LLM and Embedding Models
 
@@ -35,60 +50,6 @@ extraObjects:
 ```
 
 3. Update the deployment to set `MODELS_ENV=custom`
-
-## AWS Bedrock Models
-
-### Prerequisites
-
-- Activated region in AWS where [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html) are available
-- Activated desired LLMs and embedding models in your AWS account
-- IAM role with Bedrock access configured (created during infrastructure deployment)
-
-### Configuration Example
-
-```yaml
-models:
-  bedrock:
-    provider: aws_bedrock
-    region: us-east-1
-    models:
-      - model_id: anthropic.claude-3-5-sonnet-20241022-v2:0
-        name: 'Claude 3.5 Sonnet'
-        type: chat
-        max_tokens: 200000
-      - model_id: amazon.titan-embed-text-v2:0
-        name: 'Titan Embeddings G1 - Text'
-        type: embedding
-```
-
-:::info
-AI/Run CodeMie uses IRSA (IAM Roles for Service Accounts) for secure access to Bedrock services without managing API keys.
-:::
-
-## Azure OpenAI Models (Optional)
-
-### Prerequisites
-
-- Azure OpenAI service deployed
-- API endpoint and credentials
-- Model deployments created
-
-### Configuration Example
-
-```yaml
-models:
-  azure_openai:
-    provider: azure_openai
-    api_base: https://your-resource.openai.azure.com
-    api_version: '2024-02-01'
-    models:
-      - deployment_name: gpt-4
-        model_name: 'GPT-4'
-        type: chat
-      - deployment_name: text-embedding-ada-002
-        model_name: 'Ada Embeddings'
-        type: embedding
-```
 
 ## Model Configuration Parameters
 
@@ -161,5 +122,6 @@ After configuration:
 
 ## Next Steps
 
-- [Update AI/Run CodeMie](./08-update.md) - Learn about update procedures
-- [Extensions](./09-extensions.md) - Explore optional extensions
+- Configure [AWS Bedrock Models](./aws-bedrock) for AWS integration
+- Configure [Azure OpenAI Models](./azure-openai) for Azure integration
+- Or proceed to [Updates](../update) to learn about update procedures

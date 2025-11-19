@@ -88,12 +88,12 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'deployment-guide/aws/post-installation',
+              id: 'deployment-guide/aws/post-installation/post-installation-overview',
               label: 'Post-Installation',
             },
             {
               type: 'doc',
-              id: 'deployment-guide/aws/ai-models-integration',
+              id: 'deployment-guide/aws/ai-models-integration/ai-models-overview',
               label: 'AI Models Integration',
             },
             {
@@ -103,7 +103,7 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'deployment-guide/aws/extensions',
+              id: 'deployment-guide/aws/extensions/extensions-overview',
               label: 'Extensions',
             },
           ],
@@ -398,10 +398,49 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
-            'deployment-guide/aws/post-installation',
-            'deployment-guide/aws/ai-models-integration',
+            {
+              type: 'category',
+              label: 'Post-Installation Configuration',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/post-installation/post-installation-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/post-installation/user-configuration',
+                'deployment-guide/aws/post-installation/ui-customization',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'AI Models Integration',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/ai-models-integration/ai-models-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/ai-models-integration/aws-bedrock',
+                'deployment-guide/aws/ai-models-integration/azure-openai',
+              ],
+            },
             'deployment-guide/aws/update',
-            'deployment-guide/aws/extensions',
+            {
+              type: 'category',
+              label: 'Extensions (Optional)',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/extensions/extensions-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/extensions/litellm-proxy',
+                'deployment-guide/aws/extensions/assistants-evaluation',
+                'deployment-guide/aws/extensions/ai-code-explorer',
+                'deployment-guide/aws/extensions/angular-upgrade-assistant',
+                'deployment-guide/aws/extensions/salesforce-devforce-ai',
+              ],
+            },
           ],
         },
         {

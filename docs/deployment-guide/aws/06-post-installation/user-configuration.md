@@ -1,29 +1,11 @@
 ---
-sidebar_position: 6
-title: Post-Installation Configuration
-description: Required and optional configuration steps after deployment
+id: user-configuration
+sidebar_position: 2
+title: User Configuration
+description: Configure users, roles, and permissions
 ---
 
-# AI/Run CodeMie Post-Installation Configuration
-
-## Prerequisites
-
-Before you begin, ensure you have:
-
-- A successful deployment of all AI/Run CodeMie components
-- Access to your Kubernetes cluster via `kubectl`
-
-### Retrieve Keycloak Admin Credentials
-
-For options involving Keycloak, retrieve admin credentials:
-
-```bash
-# Get Keycloak Admin Username
-kubectl get secret keycloak-admin -n security -o jsonpath='{.data.username}' | base64 -d; echo
-
-# Get Keycloak Admin Password
-kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | base64 -d; echo
-```
+# User Configuration
 
 ## User Configuration Workflow
 
@@ -132,4 +114,5 @@ After completing configuration:
 
 ## Next Steps
 
-Proceed to [AI Models Integration](./07-ai-models-integration.md) to configure LLM and embedding models.
+- (Optional) Configure [UI Customization](./ui-customization)
+- Or proceed to [AI Models Integration](../ai-models-integration/) to configure LLM and embedding models

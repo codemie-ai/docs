@@ -1,0 +1,54 @@
+---
+id: post-installation-overview
+sidebar_position: 1
+title: Post-Installation Configuration
+description: Required and optional configuration steps after deployment
+---
+
+# AI/Run CodeMie Post-Installation Configuration
+
+## Overview
+
+After successfully deploying all AI/Run CodeMie components, you need to complete the post-installation configuration to make the system operational.
+
+## Configuration Sections
+
+### [User Configuration](./user-configuration)
+
+**Required** - Configure users, roles, and permissions to enable access to the platform:
+
+- Initial realm setup in Keycloak
+- User provisioning methods
+- Role assignment
+- User attributes configuration
+
+### [UI Customization](./ui-customization) (Optional)
+
+**Optional** - Customize the AI/Run CodeMie user interface:
+
+- Branding and theming
+- Custom logos and colors
+- Platform-specific configurations
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- A successful deployment of all AI/Run CodeMie components
+- Access to your Kubernetes cluster via `kubectl`
+
+### Retrieve Keycloak Admin Credentials
+
+For options involving Keycloak, retrieve admin credentials:
+
+```bash
+# Get Keycloak Admin Username
+kubectl get secret keycloak-admin -n security -o jsonpath='{.data.username}' | base64 -d; echo
+
+# Get Keycloak Admin Password
+kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | base64 -d; echo
+```
+
+## Next Steps
+
+Start with [User Configuration](./user-configuration) to set up your first users and enable platform access.

@@ -73,4 +73,4 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode all
 
 ## Next Steps
 
-After successful deployment, proceed to [Post-Installation Configuration](../06-post-installation.md) to complete required setup steps.
+After successful deployment, proceed to [Post-Installation Configuration](../post-installation/) to complete required setup steps.
