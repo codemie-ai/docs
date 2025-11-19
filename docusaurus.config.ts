@@ -122,7 +122,7 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     zoom: {
-      selector: '.markdown :not(em) > img',
+      selector: '.markdown :not(em) > img:not(.no-zoom)',
       background: {
         light: 'rgb(255, 255, 255)',
         dark: 'rgb(50, 50, 50)',
