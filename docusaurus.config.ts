@@ -57,13 +57,12 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/logo.svg',
     navbar: {
       title: 'AI/Run CodeMie',
       logo: {
         alt: 'AI/Run CodeMie Logo',
-        src: 'img/logo-light.svg',
-        srcDark: 'img/logo.svg',
+        src: 'img/logo.svg',
       },
       items: [
         {

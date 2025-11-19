@@ -3,26 +3,53 @@
  */
 
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #672d92;
+  --ifm-color-primary-dark: #5c2883;
+  --ifm-color-primary-darker: #53257a;
+  --ifm-color-primary-darkest: #461e66;
+  --ifm-color-primary-light: #7539a3;
+  --ifm-color-primary-lighter: #8346ac;
+  --ifm-color-primary-lightest: #9b64bb;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #8f5bb8;
+  --ifm-color-primary-dark: #8346ac;
+  --ifm-color-primary-darker: #7a3fa6;
+  --ifm-color-primary-darkest: #672d92;
+  --ifm-color-primary-light: #9b6fc4;
+  --ifm-color-primary-lighter: #a782cd;
+  --ifm-color-primary-lightest: #bea0db;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar styling with brand colors */
+.navbar {
+  background-color: #672d92 !important;
+  box-shadow: 0 2px 8px rgba(103, 45, 146, 0.2);
+}
+
+.navbar__title,
+.navbar__link,
+.navbar__brand {
+  color: #ffffff !important;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: #ffffff !important;
+  opacity: 0.8;
+}
+
+.navbar__toggle {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .navbar {
+  background-color: #5c2883 !important;
+  box-shadow: 0 2px 8px rgba(92, 40, 131, 0.3);
 }
 
 /* Fix for docusaurus-plugin-image-zoom z-index issue */
