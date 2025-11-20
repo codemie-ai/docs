@@ -462,6 +462,7 @@ const sidebars: SidebarsConfig = {
               ],
             },
             'deployment-guide/aws/update',
+            'deployment-guide/aws/elasticsearch-kibana-upgrade',
             {
               type: 'category',
               label: 'Extensions (Optional)',

@@ -1,4 +1,5 @@
 ---
+id: update
 sidebar_position: 8
 title: Update AI/Run CodeMie
 description: Update procedures for AI/Run CodeMie components
@@ -104,5 +105,6 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
 
 ## Next Steps
 
+- [Elasticsearch and Kibana Upgrade](./elasticsearch-kibana-upgrade) - Upgrade Elasticsearch and Kibana
 - [Extensions](./extensions/) - Explore optional extensions
 - [FAQ](../faq.md) - Common questions and troubleshooting
