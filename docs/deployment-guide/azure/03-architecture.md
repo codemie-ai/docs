@@ -9,7 +9,7 @@ sidebar_position: 3
 
 The diagram below depicts the AI/Run CodeMie infrastructure deployment in the Azure public cloud environment.
 
-![Azure Architecture Diagram](./images/2474244469.png)
+![Azure Architecture Diagram](./images/architecture-diagram.drawio.png)
 
 ## EntraID Integration Options
 
