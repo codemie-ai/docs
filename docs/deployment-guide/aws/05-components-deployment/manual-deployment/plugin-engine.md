@@ -7,6 +7,15 @@ description: Install NATS and NATS Auth Callout
 
 # Plugin Engine Installation
 
+Plugins in the CodeMie context enable remote and distributed invocation of Agent tooling. They also facilitate the decoupling of the CodeMie backend codebase, simplifying the development of user functionality. Running tooling remotely is important and enables several use cases:
+
+- Running on a user workstation for development and research tasks
+- Running in secure perimeters close to integrated applications
+- Scaling tools for performance gains
+- Enabling least privilege access
+
+NATS based architecture enables seamless Assistant integration with tooling in any perimeter/appliance.
+
 ## NATS
 
 To deploy NATS, follow the steps below:
