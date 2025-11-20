@@ -445,6 +445,7 @@ const sidebars: SidebarsConfig = {
                   ],
                 },
                 'deployment-guide/aws/post-installation/ui-customization',
+                'deployment-guide/aws/post-installation/datasources-configuration',
               ],
             },
             {
