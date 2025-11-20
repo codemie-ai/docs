@@ -12,7 +12,7 @@ const config: Config = {
 
   organizationName: 'codemie-ai',
   projectName: 'docs',
-
+  trailingSlash: true,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
