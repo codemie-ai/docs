@@ -118,4 +118,4 @@ kubectl create secret generic salesforce-credentials \
 ## Next Steps
 
 - Return to [Extensions Overview](./)
-- Review [FAQ](/deployment-guide/faq) for common questions
+- Review [FAQ](../../faq) for common questions

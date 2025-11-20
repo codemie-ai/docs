@@ -12,7 +12,7 @@ description: Deploy AI/Run CodeMie components on EKS
 This section describes the process of deploying the main AI/Run CodeMie components to the AWS EKS cluster.
 
 :::info
-For infrastructure deployment details, refer to the Infrastructure Deployment section.
+For infrastructure deployment details, refer to the [Infrastructure Deployment](../infrastructure-deployment/) section.
 :::
 
 ## Prerequisites
@@ -33,7 +33,7 @@ If your EKS cluster does not have these components, the detailed instructions ar
 
 3. Clone the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
 
-4. Set up pull secrets for container registry access. For detailed instructions, see [Container Registry Access](./components-deployment/manual-deployment#container-registry-access).
+4. Set up pull secrets for container registry access. For detailed instructions, see [Container Registry Access](./manual-deployment#container-registry-access).
 
 ## Application Stack Overview
 
@@ -85,8 +85,8 @@ Versions for Docker containers and Helm releases are matching
 
 Choose your preferred deployment method:
 
-- **[Scripted Deployment](./components-deployment/components-scripted-deployment)** - Automated deployment using helm-charts.sh script
-- **[Manual Deployment](./components-deployment/manual-deployment)** - Step-by-step manual component installation
+- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
+- **[Manual Deployment](./manual-deployment/)** - Step-by-step manual component installation
 
 ## Finalizing Installation
 
@@ -105,4 +105,4 @@ Some components may be missing depending on your setup configuration or use `htt
 
 ## Next Steps
 
-After successful components deployment, proceed to Post-Installation Configuration to complete required setup steps.
+After successful components deployment, proceed to [Post-Installation Configuration](../post-installation/) to complete required setup steps.

@@ -36,7 +36,7 @@ kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | b
 
 The user configuration process consists of three main parts:
 
-### 1. [Initial Realm Setup](./user-configuration/initial-realm-setup) (One-time)
+### 1. [Initial Realm Setup](./initial-realm-setup) (One-time)
 
 A one-time prerequisite to enable custom attributes in Keycloak.
 
@@ -44,10 +44,10 @@ A one-time prerequisite to enable custom attributes in Keycloak.
 
 The first step where you choose a method to create user entities in the system. Available options:
 
-- **[Option A: Create Users Manually](./user-configuration/user-provisioning/manual-creation)** - Ideal for initial setup, creating your first administrator, or managing a small number of users
-- **[Option B: Create Users with Keycloak Assistant](./user-configuration/user-provisioning/keycloak-assistant)** - Powerful method for bulk user creation (requires pre-existing admin account)
-- **[Option C: Keycloak + Entra ID](./user-configuration/user-provisioning/keycloak-entra-id)** (Recommended) - Integrate Keycloak with Microsoft Entra ID for seamless single sign-on
-- **[Option D: Entra ID Only](./user-configuration/user-provisioning/entra-id-only)** - Use Microsoft Entra ID directly without Keycloak
+- **[Option A: Create Users Manually](./user-provisioning/manual-creation)** - Ideal for initial setup, creating your first administrator, or managing a small number of users
+- **[Option B: Create Users with Keycloak Assistant](./user-provisioning/keycloak-assistant)** - Powerful method for bulk user creation (requires pre-existing admin account)
+- **[Option C: Keycloak + Entra ID](./user-provisioning/keycloak-entra-id)** (Recommended) - Integrate Keycloak with Microsoft Entra ID for seamless single sign-on
+- **[Option D: Entra ID Only](./user-provisioning/entra-id-only)** - Use Microsoft Entra ID directly without Keycloak
 
 :::warning Critical Prerequisite
 After a user is created via any method from Part 1, they **cannot sign in** until you complete at least **Step 2.1: Assign a Role**.
@@ -57,16 +57,16 @@ After a user is created via any method from Part 1, they **cannot sign in** unti
 
 Assigning permissions to users. The configuration path depends on the role:
 
-- **[Step 2.1: Assign a Role](./user-configuration/user-authorization/assign-roles)** - Grants platform-level capabilities and enables sign-in
-- **[Step 2.2: Assign Attributes](./user-configuration/user-authorization/assign-attributes)** - Required for `developer` users to access projects and create assistants
+- **[Step 2.1: Assign a Role](./user-authorization/assign-roles)** - Grants platform-level capabilities and enables sign-in
+- **[Step 2.2: Assign Attributes](./user-authorization/assign-attributes)** - Required for `developer` users to access projects and create assistants
 
 Additionally, this section includes:
 
-- **[Platform Administration Guide](./user-configuration/platform-administration)** - Explains how users with the `admin` role can create and manage projects
+- **[Platform Administration Guide](./platform-administration)** - Explains how users with the `admin` role can create and manage projects
 
 ## Next Steps
 
 After completing user configuration:
 
-- (Optional) Configure [UI Customization](../post-installation/ui-customization)
-- Proceed to AI Models Integration to configure LLM and embedding models
+- (Optional) Configure [UI Customization](../ui-customization)
+- Proceed to [AI Models Integration](../../ai-models-integration/) to configure LLM and embedding models

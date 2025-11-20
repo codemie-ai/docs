@@ -17,32 +17,32 @@ Manual steps are not mandatory if you chose the automated `helm-charts.sh` scrip
 
 This guide covers installation of the following components in order:
 
-1. **[Storage and Ingress](./manual-deployment/storage-and-ingress)** (if needed)
+1. **[Storage and Ingress](./storage-and-ingress)** (if needed)
    - AWS gp3 Storage Class
    - Nginx Ingress Controller
 
-2. **[Data Layer](./manual-deployment/data-layer)**
+2. **[Data Layer](./data-layer)**
    - Elasticsearch
    - Kibana
    - Postgres-operator
    - PostgreSQL
 
-3. **[Security and Identity](./manual-deployment/security-and-identity)**
+3. **[Security and Identity](./security-and-identity)**
    - Keycloak-operator
    - Keycloak
    - OAuth2 Proxy
 
-4. **[Plugin Engine](./manual-deployment/plugin-engine)**
+4. **[Plugin Engine](./plugin-engine)**
    - NATS
    - NATS Auth Callout
 
-5. **[AI/Run CodeMie Core](./manual-deployment/core-components)**
+5. **[AI/Run CodeMie Core](./core-components)**
    - CodeMie API
    - CodeMie UI
    - MCP Connect
    - Mermaid Server
 
-6. **[Observability](./manual-deployment/observability)** (optional)
+6. **[Observability](./observability)** (optional)
    - Fluentbit
    - Kibana Dashboards
 
@@ -88,4 +88,4 @@ gcloud auth application-default print-access-token | helm registry login -u oaut
 
 ## Next Steps
 
-Follow the installation guide in the order listed above, starting with [Storage and Ingress](./manual-deployment/storage-and-ingress).
+Follow the installation guide in the order listed above, starting with [Storage and Ingress](./storage-and-ingress).
