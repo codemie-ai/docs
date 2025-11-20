@@ -137,7 +137,34 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'deployment-guide/aws/post-installation/user-configuration/initial-realm-setup',
-                    'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
+                    {
+                      type: 'category',
+                      label: 'User Provisioning',
+                      link: {
+                        type: 'doc',
+                        id: 'deployment-guide/aws/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/manual-creation',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-assistant',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/entra-id-only',
+                      ],
+                    },
+                    {
+                      type: 'category',
+                      label: 'User Authorization',
+                      link: {
+                        type: 'doc',
+                        id: 'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-roles',
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-attributes',
+                      ],
+                    },
                     'deployment-guide/aws/post-installation/user-configuration/platform-administration',
                   ],
                 },
