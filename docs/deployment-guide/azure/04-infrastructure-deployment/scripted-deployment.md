@@ -223,10 +223,26 @@ TF_VAR_cognitive_regions='{
         "version": "2024-11-20",
         "capacity": 200,
         "type": "GlobalStandard"
+      },
+      {
+        "format": "OpenAI",
+        "name": "gpt-4.1-2025-04-14",
+        "model_name": "gpt-4.1",
+        "version": "2025-04-14",
+        "capacity": 200,
+        "type": "GlobalStandard"
+      },
+      {
+        "format": "OpenAI",
+        "name": "text-embedding-ada-002",
+        "model_name": "text-embedding-ada-002",
+        "version": "2",
+        "capacity": 200,
+        "type": "GlobalStandard"
       }
     ]
   },
-  "eastus2": {
+   "eastus2": {
     "count": 2,
     "custom_domain_name": true,
     "available_models": [
@@ -235,6 +251,22 @@ TF_VAR_cognitive_regions='{
         "name": "gpt-4o-2024-11-20",
         "model_name": "gpt-4o",
         "version": "2024-11-20",
+        "capacity": 200,
+        "type": "GlobalStandard"
+      },
+      {
+        "format": "OpenAI",
+        "name": "gpt-4.1-2025-04-14",
+        "model_name": "gpt-4.1",
+        "version": "2025-04-14",
+        "capacity": 200,
+        "type": "GlobalStandard"
+      },
+      {
+        "format": "OpenAI",
+        "name": "text-embedding-ada-002",
+        "model_name": "text-embedding-ada-002",
+        "version": "2",
         "capacity": 200,
         "type": "GlobalStandard"
       }
