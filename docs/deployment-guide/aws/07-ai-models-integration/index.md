@@ -7,121 +7,63 @@ description: Configure LLM and embedding models
 
 # AI Models Integration and Configuration
 
-## Overview
+## Managing LLM and embedding models
 
-AI/Run CodeMie supports LLM and embedding models from various cloud providers. This section guides you through configuring models for your deployment.
+AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration file can be found by path in container: [config/llms](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/llms?ref_type=heads).
 
-## Model Providers
+The `MODELS_ENV` is used to specify the environment for the models. For example, `MODELS_ENV=dial` will use the models from the `config/llms/llm-dial-config.yaml` file (Pattern: `llm-<MODELS_ENV>-config.yaml`).
 
-### [AWS Bedrock Models](./aws-bedrock) (Optional)
+Example of providing LLM and embedding models for the custom environment:
 
-Configure Amazon Bedrock LLMs and embedding models for AWS-native integration.
-
-### [Azure OpenAI Models](./azure-openai) (Optional)
-
-Configure Azure OpenAI Service for LLM and embedding models.
-
-## Managing LLM and Embedding Models
-
-AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration files can be found in the container at path: [`config/llms`](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/llms).
-
-The `MODELS_ENV` environment variable specifies the environment for the models. For example, `MODELS_ENV=dial` will use models from the `config/llms/llm-dial-config.yaml` file.
-
-**Pattern:** `llm-<MODELS_ENV>-config.yaml`
-
-## Custom LLM Configuration
-
-To provide LLM and embedding models for a custom environment:
-
-1. Navigate to `codemie-helm-charts/codemie-api/values.yaml`
-
-2. Configure custom ConfigMap to mount to AI/Run pod:
+1. Go to the `codemie-helm-charts/codemie-api/values.yaml` file
+2. Fill the following values to create and mount custom configmap to AI/Run pod:
 
 ```yaml
+extraEnv:
+  - name: MODELS_ENV
+    value: <project-name>
+
+extraVolumeMounts: |
+  ...
+  - name: codemie-llm-customer-config
+    mountPath: /app/config/llms/llm-<project-name>-config.yaml
+    subPath: llm-<project-name>-config.yaml
+  ...
+
+extraVolumes: |
+  ...
+  - name: codemie-llm-customer-config
+    configMap:
+      name: codemie-llm-customer-config
+  ...
+
 extraObjects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: codemie-llm-config
+      name: codemie-llm-customer-config
     data:
-      llm-custom-config.yaml: |
-        ---
-        # Your LLM configuration here
+      llm-<project-name>-config.yaml: |
+        llm_models:
+          - base_name: "gpt-4o-2024-08-06"
+            deployment_name: "gpt-4o-2024-08-06"
+            label: "GPT-4o 2024-08-06"
+            multimodal: true
+            enabled: true
+            default: true
+            provider: "azure_openai"
+            cost:
+              input: 0.0000025
+              output: 0.000011
+
+        embeddings_models:
+          - base_name: "ada-002"
+            deployment_name: "text-embedding-ada-002"
+            label: "Text Embedding Ada"
+            enabled: true
+            default: true
+            provider: "azure_openai"
+            cost:
+              input: 0.0000001
+              output: 0
 ```
-
-3. Update the deployment to set `MODELS_ENV=custom`
-
-## Model Configuration Parameters
-
-### Chat Models
-
-| Parameter                      | Description                  | Required |
-| ------------------------------ | ---------------------------- | -------- |
-| `model_id` / `deployment_name` | Model identifier             | Yes      |
-| `name`                         | Display name                 | Yes      |
-| `type`                         | Model type (chat, embedding) | Yes      |
-| `max_tokens`                   | Maximum context window       | No       |
-| `temperature`                  | Default temperature          | No       |
-| `top_p`                        | Default top_p value          | No       |
-
-### Embedding Models
-
-| Parameter                      | Description         | Required |
-| ------------------------------ | ------------------- | -------- |
-| `model_id` / `deployment_name` | Model identifier    | Yes      |
-| `name`                         | Display name        | Yes      |
-| `type`                         | Must be "embedding" | Yes      |
-| `dimensions`                   | Vector dimensions   | No       |
-
-## Applying Configuration
-
-After modifying the LLM configuration:
-
-1. Update the Helm release:
-
-   ```bash
-   helm upgrade codemie-api \
-     oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
-     --version x.y.z \
-     --namespace codemie \
-     -f ./codemie-api/values-aws.yaml
-   ```
-
-2. Restart the deployment:
-
-   ```bash
-   kubectl rollout restart deployment/codemie -n codemie
-   ```
-
-3. Verify models are available in the AI/Run CodeMie UI
-
-## Testing Models
-
-After configuration:
-
-1. Log in to AI/Run CodeMie UI
-2. Create or open a project
-3. Create a new assistant
-4. Verify configured models appear in the model selection dropdown
-5. Test model functionality with sample prompts
-
-## Troubleshooting
-
-### Models Not Appearing
-
-- Verify ConfigMap is properly mounted
-- Check `MODELS_ENV` environment variable
-- Review pod logs for configuration errors
-- Ensure API credentials are valid
-
-### Authentication Errors
-
-- For AWS Bedrock: Verify IRSA role permissions
-- For Azure OpenAI: Check API key validity and endpoint accessibility
-- Review network connectivity to model providers
-
-## Next Steps
-
-- Configure [AWS Bedrock Models](./aws-bedrock) for AWS integration
-- Configure [Azure OpenAI Models](./azure-openai) for Azure integration
-- Or proceed to [Updates](../update) to learn about update procedures
