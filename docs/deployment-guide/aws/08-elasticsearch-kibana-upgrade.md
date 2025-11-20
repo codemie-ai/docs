@@ -1,6 +1,6 @@
 ---
 id: elasticsearch-kibana-upgrade
-sidebar_position: 8.5
+sidebar_position: 8
 title: Elasticsearch and Kibana Upgrade
 description: Upgrade Elasticsearch and Kibana from 8.14.2 to 8.18.4
 ---
@@ -102,7 +102,3 @@ If you encounter issues during the upgrade:
 2. Verify resource availability (CPU, memory, storage)
 3. Ensure network connectivity between components
 4. Consult the official Elasticsearch/Kibana upgrade documentation
-
-## Next Steps
-
-- [Extensions](./extensions/) - Explore optional extensions
