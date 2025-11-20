@@ -1,7 +1,7 @@
 ---
 id: assign-attributes
 sidebar_position: 3
-title: "Step 2.2: Assign Attributes"
+title: 'Step 2.2: Assign Attributes'
 sidebar_label: Assign Attributes
 description: Configure project access for users with developer role
 ---
@@ -12,10 +12,10 @@ Attributes define which projects a user with the `developer` role can access and
 
 ## Understanding Attributes
 
-| Attribute (Key) | Grants Role | Permissions Within Assigned Projects | Value Configuration |
-|-----------------|-------------|-------------------------------------|---------------------|
-| `applications` | **Standard User** | Allows the user to create, edit, delete, share, and publish **their own** assistants. | Enter a comma-separated list of project names where the user has standard access (e.g., `my_awesome_project`, `example_project`). |
-| `applications_admin` | **Project Administrator** | Allows the user to manage **all assistants in the project** and **project-specific integrations**. | Enter a comma-separated list of project names where the user has admin rights. |
+| Attribute (Key)      | Grants Role               | Permissions Within Assigned Projects                                                               | Value Configuration                                                                                                               |
+| -------------------- | ------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `applications`       | **Standard User**         | Allows the user to create, edit, delete, share, and publish **their own** assistants.              | Enter a comma-separated list of project names where the user has standard access (e.g., `my_awesome_project`, `example_project`). |
+| `applications_admin` | **Project Administrator** | Allows the user to manage **all assistants in the project** and **project-specific integrations**. | Enter a comma-separated list of project names where the user has admin rights.                                                    |
 
 :::info Automatic Project Creation
 The system is designed to streamline project setup. When you assign the `applications` attribute to a user, any project listed in the **Value** that does not already exist will be **created automatically** on the platform.
@@ -25,7 +25,7 @@ This behavior applies to both personal and shared projects:
 - **Personal Project Example:** If you assign the value `john_doe` to a user with the username `john_doe`, a personal project named `john_doe` is created for them.
 - **Shared Project Example:** If you assign the value `team-alpha` to one or more users, a shared project named `team-alpha` will be automatically created the first time it is assigned.
 
-***Note for Administrators:** Manual project creation (as described in the [Platform Administration Guide](../platform-administration)) is now only necessary if a project needs to be set up for administrative purposes before any users are assigned to it.*
+_**Note for Administrators:** Manual project creation (as described in the [Platform Administration Guide](../platform-administration)) is now only necessary if a project needs to be set up for administrative purposes before any users are assigned to it._
 :::
 
 :::note How to Configure a Project Administrator

@@ -18,7 +18,6 @@ This section describes the process of enabling Azure AI models in Azure account.
 ## Steps to Enable Azure AI Models
 
 1. Create Cognitive Account Resource
-
    - Navigate to [Azure Portal](https://portal.azure.com)
    - Search for "Azure OpenAI" and click "Create"
    - Fill in the required details:
@@ -31,7 +30,6 @@ This section describes the process of enabling Azure AI models in Azure account.
    - Click "Review + create" and then "Create"
 
 2. Configure API Access
-
    - Once deployment is complete, go to the resource
    - Navigate to "Keys and Endpoint" section
    - Note down:

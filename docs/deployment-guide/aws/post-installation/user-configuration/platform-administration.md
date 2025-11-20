@@ -48,7 +48,7 @@ After creating the project, you can now assign it to users by following the inst
 :::note How Project Access Works for Admins
 The project dropdown menu will initially appear empty for users with the `admin` role. To find and access any project, the administrator must start typing its name in the search bar (at least **three characters** are required).
 
-*Example: The project dropdown is initially empty, but projects appear after typing "sam".*
+_Example: The project dropdown is initially empty, but projects appear after typing "sam"._
 :::
 
 ![Empty Dropdown](../../images/user-configuration/image-2025-9-17_9-8-51.png)

@@ -60,7 +60,7 @@ Configure connection to Salesforce org:
 ```yaml
 salesforce:
   instance_url: https://your-instance.salesforce.com
-  api_version: "59.0"
+  api_version: '59.0'
   auth:
     method: oauth
 ```

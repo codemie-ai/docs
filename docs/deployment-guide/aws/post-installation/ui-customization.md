@@ -11,11 +11,11 @@ To meet customer requirements, some of the UI elements on the AI/Run CodeMie can
 
 ```yaml
 components:
-  - id: "componentId"
+  - id: 'componentId'
     settings:
-      name: "Component Display Name"
+      name: 'Component Display Name'
       enabled: true|false
-      url: "https://example.com/resource"
+      url: 'https://example.com/resource'
 ```
 
 Below are the standard components that can be configured or hidden/enabled in AI/Run CodeMie:
@@ -25,82 +25,82 @@ Below are the standard components that can be configured or hidden/enabled in AI
 Provides links to tutorial videos for users.
 
 ```yaml
-- id: "videoPortal"
+- id: 'videoPortal'
   settings:
-    name: "Video Portal"
+    name: 'Video Portal'
     enabled: true
-    url: "https://example-video-portal.com"
+    url: 'https://example-video-portal.com'
 ```
 
-| Setting | Type | Required | Description |
-| ------- | ---- | -------- | ----------- |
-| name | string | Yes | Display name for the video portal link |
-| enabled | boolean | Yes | Set to `true` to show the video portal link, `false` to hide it |
-| url | string | Yes | URL to your video tutorial content |
+| Setting | Type    | Required | Description                                                     |
+| ------- | ------- | -------- | --------------------------------------------------------------- |
+| name    | string  | Yes      | Display name for the video portal link                          |
+| enabled | boolean | Yes      | Set to `true` to show the video portal link, `false` to hide it |
+| url     | string  | Yes      | URL to your video tutorial content                              |
 
 ## User Guide
 
 Provides a link to user documentation.
 
 ```yaml
-- id: "userGuide"
+- id: 'userGuide'
   settings:
-    name: "User Guide"
+    name: 'User Guide'
     enabled: true
-    url: "https://example-tutorial-portal.com"
+    url: 'https://example-tutorial-portal.com'
 ```
 
-| Setting | Type | Required | Description |
-| ------- | ---- | -------- | ----------- |
-| name | string | Yes | Display name for the user guide link |
-| enabled | boolean | Yes | Set to `true` to show the user guide link, `false` to hide it |
-| url | string | Yes | URL to your user documentation |
+| Setting | Type    | Required | Description                                                   |
+| ------- | ------- | -------- | ------------------------------------------------------------- |
+| name    | string  | Yes      | Display name for the user guide link                          |
+| enabled | boolean | Yes      | Set to `true` to show the user guide link, `false` to hide it |
+| url     | string  | Yes      | URL to your user documentation                                |
 
 ## Admin Actions
 
 Controls whether administrative actions are available.
 
 ```yaml
-- id: "adminActions"
+- id: 'adminActions'
   settings:
     enabled: true
 ```
 
-| Setting | Type | Required | Description |
-| ------- | ---- | -------- | ----------- |
-| enabled | boolean | Yes | Set to `true` to enable admin actions, `false` to disable them |
+| Setting | Type    | Required | Description                                                    |
+| ------- | ------- | -------- | -------------------------------------------------------------- |
+| enabled | boolean | Yes      | Set to `true` to enable admin actions, `false` to disable them |
 
 ## Feedback Assistant
 
 Controls whether the feedback feature is available.
 
 ```yaml
-- id: "feedbackAssistant"
+- id: 'feedbackAssistant'
   settings:
     enabled: true
 ```
 
-| Setting | Type | Required | Description |
-| ------- | ---- | -------- | ----------- |
-| enabled | boolean | Yes | Set to `true` to enable the feedback assistant, `false` to disable it |
+| Setting | Type    | Required | Description                                                           |
+| ------- | ------- | -------- | --------------------------------------------------------------------- |
+| enabled | boolean | Yes      | Set to `true` to enable the feedback assistant, `false` to disable it |
 
 ## Workflow Documentation
 
 Provides a link to workflow-specific documentation.
 
 ```yaml
-- id: "workflowDocumentation"
+- id: 'workflowDocumentation'
   settings:
-    name: "Workflow Documentation"
+    name: 'Workflow Documentation'
     enabled: true
-    url: "https://example-documentation.com"
+    url: 'https://example-documentation.com'
 ```
 
-| Setting | Type | Required | Description |
-| ------- | ---- | -------- | ----------- |
-| name | string | Yes | Display name for the workflow documentation link |
-| enabled | boolean | Yes | Set to `true` to show the workflow documentation link, `false` to hide it |
-| url | string | Yes | URL to your workflow documentation |
+| Setting | Type    | Required | Description                                                               |
+| ------- | ------- | -------- | ------------------------------------------------------------------------- |
+| name    | string  | Yes      | Display name for the workflow documentation link                          |
+| enabled | boolean | Yes      | Set to `true` to show the workflow documentation link, `false` to hide it |
+| url     | string  | Yes      | URL to your workflow documentation                                        |
 
 ## Configuration
 

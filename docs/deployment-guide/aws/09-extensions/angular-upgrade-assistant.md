@@ -61,8 +61,8 @@ Specify target Angular version:
 
 ```yaml
 angular_upgrade:
-  target_version: "17.0.0"
-  current_version: "14.2.0"
+  target_version: '17.0.0'
+  current_version: '14.2.0'
 ```
 
 ### Migration Options

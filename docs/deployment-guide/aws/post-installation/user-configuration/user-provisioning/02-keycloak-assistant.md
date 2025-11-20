@@ -1,7 +1,7 @@
 ---
 id: keycloak-assistant
 sidebar_position: 3
-title: "Option B: Keycloak Assistant"
+title: 'Option B: Keycloak Assistant'
 sidebar_label: Keycloak Assistant
 description: Bulk user creation using the AI/Run CodeMie Keycloak Manager assistant
 ---
@@ -79,7 +79,7 @@ extraObjects:
     metadata:
       name: keycloak-assistant
       annotations:
-        edp.epam.com/preserve-resources-on-deletion: "true"
+        edp.epam.com/preserve-resources-on-deletion: 'true'
     spec:
       advancedProtocolMappers: true
       clientAuthenticatorType: client-secret

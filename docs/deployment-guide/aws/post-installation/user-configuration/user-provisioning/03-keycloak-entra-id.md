@@ -1,7 +1,7 @@
 ---
 id: keycloak-entra-id
 sidebar_position: 4
-title: "Option C: Keycloak + Entra ID (Recommended)"
+title: 'Option C: Keycloak + Entra ID (Recommended)'
 sidebar_label: Keycloak + Entra ID
 description: Integrate Keycloak with Microsoft Entra ID for enterprise SSO
 ---
@@ -58,7 +58,7 @@ Navigate to the `API permissions` tab. Ensure that the `User.Read` permission fo
 
 ![Permissions List](../../../images/user-configuration/image-2025-9-19_3-36-44.png)
 
-*Keep the Azure portal tab open, as you will need to return to it.*
+_Keep the Azure portal tab open, as you will need to return to it._
 
 ## Stage 2: Keycloak Configuration
 
@@ -82,7 +82,7 @@ In the Azure portal, navigate to your app registration:
 1. The **Application (client) ID** is available on the main **Overview** page.
 2. Click on **Endpoints** to find the **OpenID Connect metadata document** URL.
 3. The **Client Secret Value** is the one you copied and saved in Stage 1.
-:::
+   :::
 
 ![Application ID](../../../images/user-configuration/image-2025-9-19_3-53-20.png)
 

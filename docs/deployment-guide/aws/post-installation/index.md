@@ -29,6 +29,7 @@ Complete user setup including authentication and authorization:
 #### [UI Customization](./ui-customization)
 
 Customize the AI/Run CodeMie user interface:
+
 - Configure UI components visibility
 - Custom links and documentation
 - Admin actions and feedback settings
@@ -36,6 +37,7 @@ Customize the AI/Run CodeMie user interface:
 #### [Data Sources Configuration](./datasources-configuration)
 
 Configure data sources and loaders:
+
 - Code loader settings for multiple programming languages
 - Integration with Jira, Confluence, and JSON sources
 - Storage and indexing configuration

@@ -1,7 +1,7 @@
 ---
 id: assign-roles
 sidebar_position: 2
-title: "Step 2.1: Assign Roles"
+title: 'Step 2.1: Assign Roles'
 sidebar_label: Assign Roles
 description: Grant platform-level roles to users
 ---
@@ -12,10 +12,10 @@ Assigning a role is the first mandatory step in user authorization. A role defin
 
 ## Available Roles
 
-| Role | Permissions & Configuration |
-|------|---------------------------|
-| `admin` | **Global Platform Administrator.**<br/><br/>This role grants the highest level of access and **does not require any additional attributes.**<br/><br/>Permissions include:<br/>• Managing **all** assistants on the platform<br/>• Creating projects<br/>• Creating global integrations |
-| `developer` | **Base role for project-level access.**<br/><br/>This role **does nothing on its own**. It **always requires** at least one attribute (`applications` or `applications_admin`) to grant the user access to specific projects. |
+| Role        | Permissions & Configuration                                                                                                                                                                                                                                                             |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `admin`     | **Global Platform Administrator.**<br/><br/>This role grants the highest level of access and **does not require any additional attributes.**<br/><br/>Permissions include:<br/>• Managing **all** assistants on the platform<br/>• Creating projects<br/>• Creating global integrations |
+| `developer` | **Base role for project-level access.**<br/><br/>This role **does nothing on its own**. It **always requires** at least one attribute (`applications` or `applications_admin`) to grant the user access to specific projects.                                                           |
 
 ## How to Assign a Role
 

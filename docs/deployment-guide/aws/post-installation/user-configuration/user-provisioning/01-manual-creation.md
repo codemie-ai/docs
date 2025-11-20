@@ -1,7 +1,7 @@
 ---
 id: manual-creation
 sidebar_position: 2
-title: "Option A: Manual User Creation"
+title: 'Option A: Manual User Creation'
 sidebar_label: Manual Creation
 description: Create users manually through the Keycloak admin interface
 ---
