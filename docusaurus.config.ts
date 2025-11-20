@@ -31,6 +31,13 @@ const config: Config = {
           editUrl: 'https://github.com/codemie-ai/docs/tree/main/',
           sidebarCollapsible: true,
           sidebarCollapsed: false,
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: 'Latest',
+              path: '/',
+            },
+          },
         },
         blog: false,
         theme: {
@@ -74,6 +81,10 @@ const config: Config = {
           to: 'deployment-guide/',
           position: 'left',
           label: 'Deployment Guides',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
         },
         {
           href: 'https://github.com/codemie-ai/docs',

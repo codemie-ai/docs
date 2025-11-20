@@ -320,6 +320,206 @@ items: [
 ]
 ```
 
+### Managing Nested Navigation and Dropdowns
+
+**CRITICAL**: When documentation has nested subdirectories with multiple related pages, the sidebar MUST reflect this nested structure using categories with proper dropdowns. Failure to do so results in missing navigation and inaccessible pages.
+
+#### Problem: Flat Structure with Nested Content
+
+❌ **Incorrect** - Flat sidebar with nested file structure:
+
+```typescript
+// File structure:
+// docs/deployment-guide/aws/
+//   ├── infrastructure-deployment/
+//   │   ├── index.md (id: infrastructure-deployment-overview)
+//   │   ├── scripted-deployment.md (id: infrastructure-scripted-deployment)
+//   │   └── manual-deployment.md (id: infrastructure-manual-deployment)
+
+// Sidebar (WRONG):
+items: [
+  {
+    type: 'doc',
+    id: 'deployment-guide/aws/infrastructure-deployment/infrastructure-deployment-overview',
+    label: 'Infrastructure Deployment',
+  },
+  // ❌ Sub-pages missing - no way to navigate to them!
+];
+```
+
+**Result**: Pages like `manual-deployment.md` and `scripted-deployment.md` are orphaned with no navigation bar.
+
+#### Solution: Nested Categories with Dropdowns
+
+✅ **Correct** - Nested sidebar structure:
+
+```typescript
+items: [
+  {
+    type: 'category',
+    label: 'Infrastructure Deployment',
+    link: {
+      type: 'doc',
+      id: 'deployment-guide/aws/infrastructure-deployment/infrastructure-deployment-overview',
+    },
+    collapsed: true, // Creates dropdown
+    items: [
+      'deployment-guide/aws/infrastructure-deployment/infrastructure-scripted-deployment',
+      'deployment-guide/aws/infrastructure-deployment/infrastructure-manual-deployment',
+    ],
+  },
+];
+```
+
+**Result**: Parent page is clickable, dropdown arrow shows sub-pages, full navigation available.
+
+#### When to Use Categories with Dropdowns
+
+Use nested categories when:
+
+1. **Directory has multiple files** - More than just an `index.md`
+2. **Logical grouping exists** - Files are related sub-topics
+3. **User needs navigation** - Users must access all pages from sidebar
+
+#### Real-World Example: Multi-Level Nesting
+
+```typescript
+{
+  type: 'category',
+  label: 'Components Deployment',
+  link: {
+    type: 'doc',
+    id: 'deployment-guide/aws/components-deployment/components-deployment-overview',
+  },
+  collapsed: true,
+  items: [
+    'deployment-guide/aws/components-deployment/components-scripted-deployment',
+    {
+      type: 'category',
+      label: 'Manual Deployment',
+      link: {
+        type: 'doc',
+        id: 'deployment-guide/aws/components-deployment/manual-deployment/manual-deployment-overview',
+      },
+      collapsed: true,
+      items: [
+        'deployment-guide/aws/components-deployment/manual-deployment/storage-and-ingress',
+        'deployment-guide/aws/components-deployment/manual-deployment/security-and-identity',
+        'deployment-guide/aws/components-deployment/manual-deployment/data-layer',
+        'deployment-guide/aws/components-deployment/manual-deployment/core-components',
+        'deployment-guide/aws/components-deployment/manual-deployment/plugin-engine',
+        'deployment-guide/aws/components-deployment/manual-deployment/observability',
+      ],
+    },
+  ],
+}
+```
+
+#### Step-by-Step: Converting Flat to Nested Navigation
+
+**Scenario**: You discover that `http://localhost:3000/docs/section/subsection/page` has no sidebar navigation.
+
+1. **Audit File Structure**
+
+```bash
+find docs/section -type f -name "*.md" | sort
+```
+
+Check if there are multiple files in the subdirectory.
+
+2. **Check Front Matter IDs**
+
+```bash
+grep "^id:" docs/section/subsection/*.md
+```
+
+Collect all document IDs from front matter. Add missing `id` fields if necessary.
+
+3. **Update Sidebar Configuration**
+
+Replace flat reference:
+
+```typescript
+// Before (WRONG)
+{
+  type: 'doc',
+  id: 'section/subsection/index',
+  label: 'Subsection',
+}
+```
+
+With nested category:
+
+```typescript
+// After (CORRECT)
+{
+  type: 'category',
+  label: 'Subsection',
+  link: {
+    type: 'doc',
+    id: 'section/subsection/overview-page-id', // Index page ID
+  },
+  collapsed: true,
+  items: [
+    'section/subsection/page1-id',
+    'section/subsection/page2-id',
+    'section/subsection/page3-id',
+  ],
+}
+```
+
+4. **Verify All IDs Exist**
+
+Ensure every ID in `items` array matches an `id` field in front matter. Use document IDs, not filenames.
+
+5. **Test Navigation**
+
+```bash
+npm start
+```
+
+- Navigate to parent page - should be clickable
+- Check dropdown arrow appears
+- Verify all sub-pages accessible
+- Confirm no console errors
+
+#### Checklist: Adding New Section with Sub-Pages
+
+- [ ] Create directory with descriptive name
+- [ ] Add `index.md` with proper front matter including `id` field
+- [ ] Create sub-page files with front matter including `id` fields
+- [ ] Update `sidebars.ts` with nested category structure
+- [ ] Use `type: 'category'` with `link` pointing to index page
+- [ ] Add all sub-page IDs to `items` array
+- [ ] Set `collapsed: true` for dropdown behavior
+- [ ] Test all pages are accessible via navigation
+- [ ] Verify dropdown arrows appear where expected
+
+#### Common Mistake: Missing Index Page ID
+
+❌ **Wrong**:
+
+```yaml
+# docs/section/index.md
+---
+sidebar_position: 4
+title: Section Title
+---
+```
+
+✅ **Correct**:
+
+```yaml
+# docs/section/index.md
+---
+id: section-overview # ← Must have ID for sidebar reference!
+sidebar_position: 4
+title: Section Title
+---
+```
+
+Without the `id` field, you cannot reference the page as a category link in the sidebar.
+
 ---
 
 ## Common Markdown Conventions

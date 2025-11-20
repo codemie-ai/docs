@@ -1,4 +1,5 @@
 ---
+id: components-deployment-overview
 sidebar_position: 5
 title: Components Deployment
 description: Deploy AI/Run CodeMie components on EKS
@@ -84,7 +85,7 @@ Versions for Docker containers and Helm releases are matching
 
 Choose your preferred deployment method:
 
-- **[Scripted Deployment](./scripted-deployment)** - Automated deployment using helm-charts.sh script
+- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
 - **[Manual Deployment](./manual-deployment/)** - Step-by-step manual component installation
 
 ## Finalizing Installation

@@ -1,3 +1,12 @@
+---
+id: index
+title: User Guide
+sidebar_label: User Guide
+sidebar_position: 1
+image: /img/codemie-social-card.jpg
+description: Welcome to the AI/Run CodeMie User Guide. This comprehensive documentation will help you understand and effectively use all features of AI/Run CodeMie.
+---
+
 # User Guide
 
 Welcome to the AI/Run CodeMie User Guide. This comprehensive documentation will help you understand and effectively use all features of AI/Run CodeMie.
@@ -25,7 +34,7 @@ Understand the fundamental concepts and components:
 - Data Source types (Git, Confluence, Jira, Files, Google, AWS)
 - Indexing and integrations
 - Assistant Tools
-- Tool integrations (Keycloak, SonarQube, SQL, Cloud platforms, etc.)
+- Tool integrations (Keycloak, SonarQube, SQL, Cloud providers, etc.)
 - MCP (Model Context Protocol) overview
 - Administrative tools
 - Image processing

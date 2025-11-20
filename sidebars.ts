@@ -77,24 +77,86 @@ const sidebars: SidebarsConfig = {
               label: 'Architecture',
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/aws/infrastructure-deployment/index',
+              type: 'category',
               label: 'Infrastructure Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/infrastructure-deployment/infrastructure-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/infrastructure-deployment/infrastructure-scripted-deployment',
+                'deployment-guide/aws/infrastructure-deployment/infrastructure-manual-deployment',
+              ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/aws/components-deployment/index',
+              type: 'category',
               label: 'Components Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/components-deployment/components-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/components-deployment/components-scripted-deployment',
+                {
+                  type: 'category',
+                  label: 'Manual Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/aws/components-deployment/manual-deployment/manual-deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/aws/components-deployment/manual-deployment/storage-and-ingress',
+                    'deployment-guide/aws/components-deployment/manual-deployment/security-and-identity',
+                    'deployment-guide/aws/components-deployment/manual-deployment/data-layer',
+                    'deployment-guide/aws/components-deployment/manual-deployment/core-components',
+                    'deployment-guide/aws/components-deployment/manual-deployment/plugin-engine',
+                    'deployment-guide/aws/components-deployment/manual-deployment/observability',
+                  ],
+                },
+              ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/aws/post-installation/post-installation-overview',
+              type: 'category',
               label: 'Post-Installation',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/post-installation/post-installation-overview',
+              },
+              collapsed: true,
+              items: [
+                {
+                  type: 'category',
+                  label: 'User Configuration',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/aws/post-installation/user-configuration/user-configuration-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/aws/post-installation/user-configuration/initial-realm-setup',
+                    'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
+                    'deployment-guide/aws/post-installation/user-configuration/platform-administration',
+                  ],
+                },
+                'deployment-guide/aws/post-installation/datasources-configuration',
+                'deployment-guide/aws/post-installation/ui-customization',
+              ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/aws/ai-models-integration/ai-models-overview',
+              type: 'category',
               label: 'AI Models Integration',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/ai-models-integration/ai-models-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/ai-models-integration/aws-bedrock',
+                'deployment-guide/aws/ai-models-integration/azure-openai',
+              ],
             },
             {
               type: 'doc',
@@ -102,9 +164,20 @@ const sidebars: SidebarsConfig = {
               label: 'Updates',
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/aws/extensions/extensions-overview',
+              type: 'category',
               label: 'Extensions',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/aws/extensions/extensions-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/aws/extensions/litellm-proxy',
+                'deployment-guide/aws/extensions/assistants-evaluation',
+                'deployment-guide/aws/extensions/ai-code-explorer',
+                'deployment-guide/aws/extensions/angular-upgrade-assistant',
+                'deployment-guide/aws/extensions/salesforce-devforce-ai',
+              ],
             },
           ],
         },

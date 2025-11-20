@@ -1,4 +1,5 @@
 ---
+id: infrastructure-manual-deployment
 sidebar_position: 2
 title: Manual Deployment
 description: Manual AWS infrastructure deployment with Terraform

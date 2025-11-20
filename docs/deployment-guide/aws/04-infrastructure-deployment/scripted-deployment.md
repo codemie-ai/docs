@@ -1,4 +1,5 @@
 ---
+id: infrastructure-scripted-deployment
 sidebar_position: 1
 title: Scripted Deployment
 description: Automated AWS infrastructure deployment using scripts

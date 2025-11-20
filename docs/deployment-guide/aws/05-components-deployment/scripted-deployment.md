@@ -1,4 +1,5 @@
 ---
+id: components-scripted-deployment
 sidebar_position: 1
 title: Scripted Deployment
 description: Automated components deployment using Helm charts
