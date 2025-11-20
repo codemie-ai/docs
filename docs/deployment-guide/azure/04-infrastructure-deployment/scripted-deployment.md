@@ -1,51 +1,22 @@
 ---
-id: infrastructure-deployment
-title: Azure Infrastructure Deployment
-sidebar_label: Infrastructure Deployment
-sidebar_position: 4
+id: infrastructure-scripted-deployment
+title: Scripted Deployment
+sidebar_label: Scripted Deployment
+sidebar_position: 1
 ---
 
-# Azure Infrastructure Deployment
-
-## Overview
-
-:::info
-Skip if you have ready AKS cluster with all required services (see [AI/Run CodeMie deployment architecture](./architecture)).
-:::
-
-This section describes the process of deploying the AI/Run CodeMie infrastructure within an Azure environment and will cover the following topics:
-
-- Create Azure storage account and container to store terraform states
-- Create the AKS Cluster
-- Create the Virtual Networks (vNet)
-  - HubVNet
-  - AksVNet
-- Create the Azure NAT Gateway
-- Create the Node Pool
-- Create the Storage Accounts
-  - VM Storage Account
-  - AI/Run Storage Account
-- Create the Bastion Host
-- Create the Virtual Machine
-- Create PostgreSQL Flexible server and database
-- Create the Azure Key Vault key to encrypt and decrypt sensitive data in the AI/Run application
-- Create the Entra ID Applications
-  - to access the Azure Key Vault key from the AI/Run CodeMie application backend
-  - to access the Azure AI services from AI/Run CodeMie application backend
-- Create the Azure AI models
-
-## Scripted Deployment
+# Scripted Deployment
 
 The `azure-terraform.sh` script automates the deployment of infrastructure.
 
-### Deployment Order
+## Deployment Order
 
 | #   | Resource name                                                            | Source                                                                              |
 | --- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
 | 1   | Terraform Backend                                                        | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
-| 2   | Main Azure resources (see [AI/Run CodeMie Architecture](./architecture)) | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
+| 2   | Main Azure resources (see [AI/Run CodeMie Architecture](../architecture)) | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
 
-### Core Infrastructure Configuration
+## Core Infrastructure Configuration
 
 1. Clone git repo with project [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure):
 
@@ -74,7 +45,7 @@ TF_VAR_admin_group_object_ids='["3a459347-0000-1111-2222-e73413cfa80a"]' # A lis
 Full list of available variables can be found in the `variables.tf` file for appropriate module. For example, for [platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure/-/blob/main/platform/variables.tf) module.
 :::
 
-### AI Models Configuration
+## AI Models Configuration
 
 The AI models deployment can be controlled by the `DEPLOY_AI_MODELS` parameter:
 
@@ -88,7 +59,7 @@ This is useful when:
 - You want to deploy AI models separately at a later time
 - You are using AI models from other providers (such as Anthropic, Vertex, or AWS Bedrock models) and need to integrate them with your infrastructure without deploying Azure AI resources
 
-#### AI Models Networking Configuration
+### AI Models Networking Configuration
 
 **Choosing the Right Network Configuration**
 
@@ -135,7 +106,7 @@ TF_VAR_ai_endpoint_subnet_name="CustomSubnetName"
 
 Private Links will be deployed in this network/subnet configuration regardless of your public access settings, ensuring your AI models are always accessible from your Azure infrastructure.
 
-#### Cognitive Regions Configuration Guide
+### Cognitive Regions Configuration Guide
 
 When `DEPLOY_AI_MODELS="true"`, you can configure the AI models and regions using the `TF_VAR_cognitive_regions` parameter in your `deployment.conf` file.
 
@@ -274,7 +245,7 @@ TF_VAR_cognitive_regions='{
 
 </details>
 
-### Usage
+## Usage
 
 Run installation script:
 
@@ -293,7 +264,7 @@ After execution, the script will:
    2. Deploy core AI/Run CodeMie Platform infrastructure
    3. Set up AI Models (if selected)
 
-### Connect to Bastion VM
+## Connect to Bastion VM
 
 1. Go to `CodeMieRG` resource group on Azure portal
 2. Choose Connect via Bastion option for `CodeMieVM` virtual machine
@@ -313,7 +284,7 @@ sudo passwd azadmin
 Use `ctrl+shift+c` and `ctrl+shift+v` to copy/insert values into browser window
 :::
 
-### Prepare Bastion VM
+## Prepare Bastion VM
 
 1. Connect to the jumpbox VM via RDP with username: `azadmin` and with the password set on previous step.
 2. Open terminal and login to Azure:

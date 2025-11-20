@@ -228,9 +228,16 @@ const sidebars: SidebarsConfig = {
               label: 'Architecture',
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/azure/infrastructure-deployment',
+              type: 'category',
               label: 'Infrastructure Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/azure/infrastructure-deployment/infrastructure-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/azure/infrastructure-deployment/infrastructure-scripted-deployment',
+              ],
             },
             {
               type: 'doc',
