@@ -215,7 +215,7 @@ Next, use a clear, structured prompt to create users in bulk. You can specify th
 After the assistant confirms the users have been created, you must manually set their initial passwords in Keycloak.
 
 1. Verify that the new users appear in the Keycloak UI under the **Users** section.
-2. For each new user, follow the instructions in the [Assign Credentials](#assign-credentials) section (under Option A) to set their temporary password.
+2. For each new user, follow the instructions in the [Set User Credentials](./manual-creation#4-set-user-credentials) section (under Option A) to set their temporary password.
 3. Securely share the login information and temporary passwords with the new users.
 
 :::note Next Step:
