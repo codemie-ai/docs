@@ -13,16 +13,20 @@ The diagram below depicts the AI/Run CodeMie infrastructure deployment in the Az
 
 ## EntraID Integration Options
 
-<details>
-<summary>Click to expand EntraID integration diagrams...</summary>
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-![EntraID Integration Option 1](./images/2446599913.png)
-
-![EntraID Integration Option 2](./images/2446599932.png)
-
-![EntraID Integration Option 3](./images/2446599960.png)
-
-</details>
+<Tabs>
+  <TabItem value="option1" label="Option 1" default>
+    ![EntraID Integration Option 1](./images/azure-client-tenant.drawio.png)
+  </TabItem>
+  <TabItem value="option2" label="Option 2">
+    ![EntraID Integration Option 2](./images/azure-cross-tenants.drawio.png)
+  </TabItem>
+  <TabItem value="option3" label="Option 3">
+    ![EntraID Integration Option 3](./images/azure-epam-tenant.drawio.png)
+  </TabItem>
+</Tabs>
 
 ## Container Resources Requirements
 
