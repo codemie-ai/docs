@@ -8,11 +8,10 @@ const config: Config = {
   favicon: 'img/favicon.svg',
 
   url: 'https://codemie-ai.github.io',
-  baseUrl: '/docs/',
-
+  baseUrl: '/',
+  trailingSlash: false,
   organizationName: 'codemie-ai',
   projectName: 'docs',
-  trailingSlash: true,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -28,7 +27,11 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/codemie-ai/docs/tree/main/',
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
+          editUrl: ({ docPath }) => {
+            return 'https://github.com/codemie-ai/docs/edit/main/docs/${docPath}';
+          },
           sidebarCollapsible: true,
           sidebarCollapsed: false,
           lastVersion: 'current',
