@@ -345,3 +345,7 @@ kubelogin convert-kubeconfig -l azurecli
 ```bash
 az configure --defaults group=<resource-group-name> # From TF_VAR_resource_group_name or if not specified – CodeMieRG
 ```
+
+## Next Steps
+
+After successful deployment, proceed to [Components Deployment](../components-deployment/) to install AI/Run CodeMie application components.
