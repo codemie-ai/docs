@@ -32,7 +32,7 @@ This guide covers installation of the following components in order:
    - Keycloak
    - OAuth2 Proxy
 
-4. **[Messaging](./messaging)**
+4. **[Plugin Engine](./plugin-engine)**
    - NATS
    - NATS Auth Callout
 

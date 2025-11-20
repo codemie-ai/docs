@@ -391,7 +391,7 @@ const sidebars: SidebarsConfig = {
                     'deployment-guide/aws/components-deployment/manual-deployment/storage-and-ingress',
                     'deployment-guide/aws/components-deployment/manual-deployment/data-layer',
                     'deployment-guide/aws/components-deployment/manual-deployment/security-and-identity',
-                    'deployment-guide/aws/components-deployment/manual-deployment/messaging',
+                    'deployment-guide/aws/components-deployment/manual-deployment/plugin-engine',
                     'deployment-guide/aws/components-deployment/manual-deployment/core-components',
                     'deployment-guide/aws/components-deployment/manual-deployment/observability',
                   ],

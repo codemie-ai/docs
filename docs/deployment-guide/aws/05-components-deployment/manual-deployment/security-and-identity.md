@@ -84,4 +84,4 @@ Access Keycloak at: `https://keycloak.<your-domain>/auth/admin`
 
 ## Next Steps
 
-Proceed to [Messaging](./messaging) installation.
+Proceed to [Plugin Engine](./plugin-engine) installation.

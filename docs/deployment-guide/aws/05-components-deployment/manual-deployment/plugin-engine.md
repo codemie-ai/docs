@@ -1,11 +1,11 @@
 ---
-id: messaging
+id: plugin-engine
 sidebar_position: 5
-title: Messaging
+title: Plugin Engine
 description: Install NATS and NATS Auth Callout
 ---
 
-# Messaging Installation
+# Plugin Engine Installation
 
 ## NATS
 
