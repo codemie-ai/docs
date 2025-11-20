@@ -35,6 +35,32 @@ If you don't have your own logging system:
 
 4. Configure `codemie_infra_logs*` index in Kibana
 
+## Kibana
+
+1. Configure domain in `kibana/values-aws.yaml` (replace `%%DOMAIN%%`)
+
+2. Create encryption keys secret:
+
+   ```bash
+   kubectl create secret generic "kibana-encryption-keys" \
+     --namespace="elastic" \
+     --from-literal=encryptedSavedObjects.encryptionKey="$(openssl rand -hex 16)" \
+     --from-literal=reporting.encryptionKey="$(openssl rand -hex 16)" \
+     --from-literal=security.encryptionKey="$(openssl rand -hex 16)" \
+     --type=Opaque
+   ```
+
+3. Install Kibana:
+   ```bash
+   helm upgrade --install kibana kibana/. \
+     -n elastic \
+     --values kibana/values-aws.yaml \
+     --wait --timeout 900s \
+     --dependency-update
+   ```
+
+Access Kibana at: `https://kibana.<your-domain>`
+
 ## Kibana Dashboards
 
 Install custom dashboards for metrics and monitoring.
