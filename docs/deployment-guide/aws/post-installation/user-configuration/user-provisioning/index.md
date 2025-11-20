@@ -8,7 +8,7 @@ description: Choose a method to create user entities in the system
 
 # User Provisioning
 
-This section covers the first step of user configuration where you choose a method to create user entities in the system. After creating users through any of these methods, you must proceed to [User Authorization](../user-authorization/assign-roles) to grant them the necessary permissions.
+This section covers the first step of user configuration where you choose a method to create user entities in the system. After creating users through any of these methods, you must proceed to [User Authorization](../user-configuration/user-authorization/assign-roles) to grant them the necessary permissions.
 
 ## Available Options
 
@@ -18,7 +18,7 @@ This section covers the first step of user configuration where you choose a meth
 
 Create users manually through the Keycloak admin interface. This is the simplest method and requires no additional setup.
 
-[Learn more →](./manual-creation)
+[Learn more →](./user-provisioning/manual-creation)
 
 ---
 
@@ -30,7 +30,7 @@ Use the AI/Run CodeMie Keycloak Manager assistant to create users in bulk with a
 
 **Prerequisites:** Requires a pre-existing admin account.
 
-[Learn more →](./keycloak-assistant)
+[Learn more →](./user-provisioning/keycloak-assistant)
 
 ---
 
@@ -40,7 +40,7 @@ Use the AI/Run CodeMie Keycloak Manager assistant to create users in bulk with a
 
 Integrate Keycloak with Microsoft Entra ID to enable single sign-on with corporate credentials. This method automates permission assignment for new users.
 
-[Learn more →](./keycloak-entra-id)
+[Learn more →](./user-provisioning/keycloak-entra-id)
 
 ---
 
@@ -50,10 +50,10 @@ Integrate Keycloak with Microsoft Entra ID to enable single sign-on with corpora
 
 Use Microsoft Entra ID directly for authentication and user management.
 
-[Learn more →](./entra-id-only)
+[Learn more →](./user-provisioning/entra-id-only)
 
 ---
 
 :::warning Critical Next Step
-After creating a user via any method above, they **cannot sign in** until you complete at least **[Step 2.1: Assign a Role](../user-authorization/assign-roles)** in the User Authorization section.
+After creating a user via any method above, they **cannot sign in** until you complete at least **[Step 2.1: Assign a Role](../user-configuration/user-authorization/assign-roles)** in the User Authorization section.
 :::

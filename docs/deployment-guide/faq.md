@@ -1,4 +1,5 @@
 ---
+id: faq
 sidebar_position: 10
 title: FAQ
 description: Frequently asked questions about AI/Run CodeMie deployment
