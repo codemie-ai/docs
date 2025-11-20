@@ -66,14 +66,12 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'userGuideSidebar',
+          to: 'user-guide/',
           position: 'left',
           label: 'User Guide',
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'deploymentGuideSidebar',
+          to: 'deployment-guide/',
           position: 'left',
           label: 'Deployment Guides',
         },

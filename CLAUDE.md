@@ -617,6 +617,11 @@ Before committing documentation changes:
 - [ ] Check for MDX compilation warnings
 - [ ] Verify code blocks have syntax highlighting
 - [ ] Test on both light and dark themes (if applicable)
+- [ ] Stop server after testing
+- [ ] Run `npm run typecheck` for TypeScript validation
+- [ ] Run `npm run lint:eslint` for ESLint checks
+- [ ] Run `npm run lint:prettier` for format validation
+- [ ] Run `npm run lint:markdown` for Markdown linting
 
 ---
 
