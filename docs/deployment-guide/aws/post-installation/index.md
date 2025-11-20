@@ -56,6 +56,6 @@ For a minimal setup:
 
 After completing post-installation configuration:
 
-- Configure [AI Models Integration](../ai-models-integration/ai-models-overview) for LLM and embedding models
-- Review [Extensions](../extensions/extensions-overview) for additional capabilities
+- Configure [AI Models Integration](../ai-models-integration/) for LLM and embedding models
+- Review [Extensions](../extensions/) for additional capabilities
 - Set up monitoring and backups as described in [Platform Administration](./user-configuration/platform-administration)

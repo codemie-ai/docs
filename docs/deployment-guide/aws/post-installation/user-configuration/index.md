@@ -69,4 +69,4 @@ Additionally, this section includes:
 After completing user configuration:
 
 - (Optional) Configure [UI Customization](../ui-customization)
-- Proceed to [AI Models Integration](../../ai-models-integration/ai-models-overview) to configure LLM and embedding models
+- Proceed to [AI Models Integration](../../ai-models-integration/) to configure LLM and embedding models
