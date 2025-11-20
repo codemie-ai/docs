@@ -13,23 +13,23 @@ This section covers optional extensions that can be installed to enhance AI/Run 
 
 ## Available Extensions
 
-### [LiteLLM Proxy](./litellm-proxy)
+### [LiteLLM Proxy](./extensions/litellm-proxy)
 
 Load balancing and high availability for LLM requests.
 
-### [Assistants Evaluation](./assistants-evaluation)
+### [Assistants Evaluation](./extensions/assistants-evaluation)
 
 Tool for evaluating and benchmarking AI assistant performance.
 
-### [AI Code Explorer (AICE)](./ai-code-explorer)
+### [AI Code Explorer (AICE)](./extensions/ai-code-explorer)
 
 Advanced code analysis and exploration tool.
 
-### [Angular Upgrade Assistant](./angular-upgrade-assistant)
+### [Angular Upgrade Assistant](./extensions/angular-upgrade-assistant)
 
 Specialized assistant for Angular application upgrades.
 
-### [Salesforce DevForce AI](./salesforce-devforce-ai)
+### [Salesforce DevForce AI](./extensions/salesforce-devforce-ai)
 
 AI-powered development assistant for Salesforce.
 
@@ -85,4 +85,4 @@ For detailed documentation on specific extensions:
 ## Next Steps
 
 - Explore individual extension pages for detailed setup guides
-- [FAQ](../../faq) - Frequently asked questions
+- [FAQ](/deployment-guide/faq) - Frequently asked questions

@@ -15,7 +15,7 @@ After successfully deploying all AI/Run CodeMie components, you need to complete
 
 ### Required Configuration
 
-#### [User Configuration](./user-configuration/)
+#### [User Configuration](./post-installation/user-configuration)
 
 Complete user setup including authentication and authorization:
 
@@ -26,7 +26,7 @@ Complete user setup including authentication and authorization:
 
 ### Optional Configuration
 
-#### [UI Customization](./ui-customization)
+#### [UI Customization](./post-installation/ui-customization)
 
 Customize the AI/Run CodeMie user interface:
 
@@ -34,7 +34,7 @@ Customize the AI/Run CodeMie user interface:
 - Custom links and documentation
 - Admin actions and feedback settings
 
-#### [Data Sources Configuration](./datasources-configuration)
+#### [Data Sources Configuration](./post-installation/datasources-configuration)
 
 Configure data sources and loaders:
 
@@ -47,15 +47,15 @@ Configure data sources and loaders:
 
 For a minimal setup:
 
-1. Complete [Initial Realm Setup](./user-configuration/initial-realm-setup)
-2. Create your first admin user via [Manual Creation](./user-configuration/user-provisioning/manual-creation)
-3. [Assign admin role](./user-configuration/user-authorization/assign-roles) to the user
+1. Complete [Initial Realm Setup](./post-installation/user-configuration/initial-realm-setup)
+2. Create your first admin user via [Manual Creation](./post-installation/user-configuration/user-provisioning/manual-creation)
+3. [Assign admin role](./post-installation/user-configuration/user-authorization/assign-roles) to the user
 4. Test login at `https://codemie.<your-domain>`
 
 ## Next Steps
 
 After completing post-installation configuration:
 
-- Configure [AI Models Integration](../ai-models-integration/) for LLM and embedding models
-- Review [Extensions](../extensions/) for additional capabilities
-- Set up monitoring and backups as described in [Platform Administration](./user-configuration/platform-administration)
+- Configure AI Models Integration for LLM and embedding models
+- Review Extensions for additional capabilities
+- Set up monitoring and backups as described in [Platform Administration](./post-installation/user-configuration/platform-administration)
