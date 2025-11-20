@@ -47,133 +47,60 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
 
 ### Manual Component Update
 
-To update individual components manually:
+1. Make sure your `codemie-helm-charts` repo is up to date and with values you used during initial deployment.
 
-```bash
-helm upgrade codemie-api \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
-  --version x.y.z \
-  --namespace codemie \
-  -f ./codemie-api/values-aws.yaml
-```
-
-Repeat for other components as needed.
-
-## Update Order
-
-Follow this order when updating components:
-
-1. **Third-party components** (if needed)
-   - Elasticsearch
-   - Kibana
-   - Postgres-operator
-   - Keycloak-operator
-
-2. **AI/Run CodeMie core components**
-   - CodeMie API
-   - CodeMie UI
-   - NATS Auth Callout
-   - MCP Connect
-   - Mermaid Server
-
-## Elasticsearch and Kibana Update
-
-:::warning Important Update Order
-Always upgrade Elasticsearch before Kibana to maintain compatibility.
-:::
-
-### Recommended Upgrade Order
-
-1. **Elasticsearch First**
+2. Update `codemie-nats-auth-callout` first. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
-   helm upgrade elastic elasticsearch/. \
-     -n elastic \
-     --values elasticsearch/values-aws.yaml
+   helm upgrade --install codemie-nats-auth-callout \
+   "oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-nats-auth-callout" \
+   --version "x.y.z" \
+   --namespace "codemie" \
+   -f "./codemie-nats-auth-callout/values-aws.yaml" \
+   --wait --timeout 600s
    ```
 
-2. **Kibana Second**
-   ```bash
-   helm upgrade kibana kibana/. \
-     -n elastic \
-     --values kibana/values-aws.yaml
-   ```
-
-### Post-Upgrade Verification
-
-After completing upgrades:
-
-- Verify Elasticsearch cluster health
-- Check Kibana accessibility and functionality
-- Validate data integrity
-- Test critical dashboards and searches
-
-## Rollback Procedure
-
-If issues occur during update:
-
-```bash
-# List release history
-helm history codemie-api -n codemie
-
-# Rollback to previous version
-helm rollback codemie-api [REVISION] -n codemie
-```
-
-## Troubleshooting Updates
-
-### Issue: Pod fails to start after update
-
-**Solutions:**
-
-- Check pod logs: `kubectl logs <pod-name> -n codemie`
-- Verify resource availability
-- Ensure ConfigMaps and Secrets are up to date
-- Review breaking changes in release notes
-
-### Issue: Database migration fails
-
-**Solutions:**
-
-- Check CodeMie API logs for migration errors
-- Verify database connectivity
-- Ensure database user has required permissions
-- Restore from backup if needed
-
-### Issue: Incompatible component versions
-
-**Solutions:**
-
-- Review compatibility matrix in release notes
-- Update dependent components first
-- Use scripted update to ensure version compatibility
-
-## Verification Steps
-
-After update:
-
-1. Check all pods are running:
+3. Update `codemie-mcp-connect-service` helm chart with the command. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
-   kubectl get pods -n codemie
+   helm upgrade --install codemie-mcp-connect-service oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-mcp-connect-service \
+   --version x.y.z \
+   --namespace "codemie" \
+   -f "./codemie-mcp-connect-service/values.yaml" \
+   --wait --timeout 600s
    ```
 
-2. Verify services are accessible:
-   - AI/Run CodeMie UI
-   - AI/Run CodeMie API
-   - Keycloak
-   - Kibana
+4. Update `codemie-ui` then. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
-3. Test core functionality:
-   - User authentication
-   - Project access
-   - Assistant creation
-   - Model interaction
-
-4. Review logs for errors:
    ```bash
-   kubectl logs -f deployment/codemie -n codemie
+   helm upgrade --install codemie-ui oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-ui \
+   --version x.y.z \
+   --namespace "codemie" \
+   -f "./codemie-ui/values-aws.yaml" \
+   --wait --timeout 180s
    ```
+
+5. Update `codemie-api` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+
+   ```bash
+   helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
+   --version x.y.z \
+   --namespace "codemie" \
+   -f "./codemie-api/values-aws.yaml" \
+   --wait --timeout 600s
+   ```
+
+6. Lastly update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+
+   ```bash
+   helm upgrade --install mermaid-server oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/mermaid-server \
+   --version x.y.z \
+   --namespace "codemie" \
+   -f "./mermaid-server/values.yaml" \
+   --wait --timeout 600s
+   ```
+
+7. Verify all pods are up and running.
 
 ## Next Steps
 
