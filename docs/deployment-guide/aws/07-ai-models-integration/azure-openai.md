@@ -7,127 +7,53 @@ description: Configure Azure OpenAI Service models
 
 # Azure OpenAI Models (Optional)
 
-## Prerequisites
+:::note
+**Required in case of using Azure OpenAI models such as GPT-4o, etc.**
+:::
 
-- Azure OpenAI service deployed
-- API endpoint and credentials
-- Model deployments created
+## Overview
 
-## Configuration Example
+This section describes the process of enabling Azure AI models in Azure account.
 
-```yaml
-models:
-  azure_openai:
-    provider: azure_openai
-    api_base: https://your-resource.openai.azure.com
-    api_version: '2024-02-01'
-    models:
-      - deployment_name: gpt-4
-        model_name: 'GPT-4'
-        type: chat
-      - deployment_name: text-embedding-ada-002
-        model_name: 'Ada Embeddings'
-        type: embedding
-```
+## Steps to Enable Azure AI Models
 
-## Available Models
+1. Create Cognitive Account Resource
 
-### Chat Models
+   - Navigate to [Azure Portal](https://portal.azure.com)
+   - Search for "Azure OpenAI" and click "Create"
+   - Fill in the required details:
+     - Subscription
+     - Resource group
+     - Region
+     - Name
+     - Pricing tier (typically S0)
+     - Network: "All networks" type
+   - Click "Review + create" and then "Create"
 
-- **GPT-4** - Latest GPT-4 model
-- **GPT-4 Turbo** - Optimized GPT-4 variant
-- **GPT-3.5 Turbo** - Fast and efficient model
+2. Configure API Access
 
-### Embedding Models
+   - Once deployment is complete, go to the resource
+   - Navigate to "Keys and Endpoint" section
+   - Note down:
+     - Key 1 or Key 2
+     - Endpoint URL
+     - Resource location
 
-- **text-embedding-ada-002** - Standard embedding model
-- **text-embedding-3-small** - Compact embedding model
-- **text-embedding-3-large** - High-dimensional embedding model
-
-## Configuration Steps
-
-1. Create Azure OpenAI resource in Azure Portal
-
-2. Deploy desired models in your Azure OpenAI resource
-
-3. Obtain API endpoint and key
-
-4. Navigate to `codemie-helm-charts/codemie-api/values-aws.yaml`
-
-5. Add Azure OpenAI configuration:
-
-```yaml
-extraObjects:
-  - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: codemie-llm-config
-    data:
-      llm-azure-config.yaml: |
-        models:
-          azure_openai:
-            provider: azure_openai
-            api_base: https://your-resource.openai.azure.com
-            api_version: '2024-02-01'
-            models:
-              - deployment_name: gpt-4
-                model_name: 'GPT-4'
-                type: chat
-
-  - apiVersion: v1
-    kind: Secret
-    metadata:
-      name: azure-openai-credentials
-    type: Opaque
-    stringData:
-      api-key: your-api-key-here
-```
-
-6. Set `MODELS_ENV=azure` in the deployment
-
-7. Apply the configuration following the steps in [AI Models Integration](./#applying-configuration)
-
-## Authentication Options
-
-### Option 1: API Key (Simple)
-
-Store API key in Kubernetes secret:
-
-```bash
-kubectl create secret generic azure-openai-credentials \
-  --from-literal=api-key=your-api-key-here \
-  --namespace codemie
-```
-
-### Option 2: Managed Identity (Recommended)
-
-Use Azure AD Managed Identity for enhanced security:
-
-1. Enable system-assigned managed identity for AKS
-2. Grant identity access to Azure OpenAI resource
-3. Configure pod identity in deployment
-
-## Troubleshooting
-
-### Authentication Errors
-
-- Verify API key is correct and not expired
-- Check API endpoint URL format
-- Ensure managed identity has proper role assignments
-
-### Rate Limiting
-
-- Review Azure OpenAI quota limits
-- Consider implementing request throttling
-- Use multiple deployment instances for load balancing
-
-### Models Not Available
-
-- Confirm model deployments exist in Azure OpenAI resource
-- Verify deployment names match configuration
-- Check API version compatibility
-
-## Next Steps
-
-- Return to [AI Models Integration](./) for additional configuration options
-- Proceed to [Updates](../update) to learn about update procedures
+3. Deploy AI Model
+   - Go to Cognitive Account
+   - In "Overview" tab, click "Go to Azure AI Foundry portal"
+   - In the left menu, navigate to "shared resources" -> "Deployments"
+   - Click "Deploy model" -> "Deploy base model"
+   - Search and select desired model
+   - Click "Confirm"
+   - Configure deployment settings:
+     - Deployment name: [your-deployment-name]
+     - Deployment type:
+       - Standard
+       - Global Standard
+     - Model version: Select appropriate version
+     - Tokens per Minute Rate Limit:
+       - Set to maximum value if deploying single instance in region
+       - Adjust based on quota requirements for multiple deployments
+       - Reference "Quota" menu in left navigation for detailed limits
+     - Review settings and click "Deploy"
