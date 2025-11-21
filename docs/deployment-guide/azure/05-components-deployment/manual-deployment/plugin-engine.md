@@ -7,6 +7,15 @@ sidebar_label: Plugin Engine
 
 # Plugin Engine Installation
 
+Plugins in the CodeMie context enable remote and distributed invocation of Agent tooling. They also facilitate the decoupling of the CodeMie backend codebase, simplifying the development of user functionality. Running tooling remotely is important and enables several use cases:
+
+- Running on a user workstation for development and research tasks
+- Running in secure perimeters close to integrated applications
+- Scaling tools for performance gains
+- Enabling least privilege access
+
+NATS based architecture enables seamless Assistant integration with tooling in any perimeter/appliance.
+
 ## Install AI/Run CodeMie NATS Component
 
 To deploy a NATS, follow the steps below:
