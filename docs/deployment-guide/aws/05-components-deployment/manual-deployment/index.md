@@ -25,7 +25,7 @@ This guide covers installation of the following components in order:
    - Elasticsearch
    - Kibana
    - Postgres-operator
-   - PostgreSQL
+   - PostgreSQL secret for RDS 
 
 3. **[Security and Identity](./security-and-identity)**
    - Keycloak-operator

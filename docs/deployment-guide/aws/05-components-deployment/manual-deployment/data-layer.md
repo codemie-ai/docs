@@ -44,9 +44,7 @@ helm upgrade --install postgres-operator postgres-operator-helm/. \
   --dependency-update
 ```
 
-## PostgreSQL
-
-Create PostgreSQL secret for cloud-managed database (AWS RDS):
+## PostgreSQL secret for RDS
 
 ```bash
 kubectl create secret generic codemie-postgresql \
