@@ -108,6 +108,7 @@ Versions for Docker containers and Helm releases are matching
 Choose your preferred deployment method:
 
 - **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
+- **[Manual Deployment](./manual-deployment/)** - Step-by-step manual installation of each component
 
 ## Finalizing Installation and Accessing Applications
 
