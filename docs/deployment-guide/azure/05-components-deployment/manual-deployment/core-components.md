@@ -73,4 +73,4 @@ helm upgrade --install mermaid-server oci://europe-west3-docker.pkg.dev/or2-msq-
 
 ## Next Steps
 
-Optionally proceed to [Observability](./observability) installation, or complete the deployment by going to [Post-Installation Configuration](../../post-installation).
+Proceed to [Observability](./observability) installation.
