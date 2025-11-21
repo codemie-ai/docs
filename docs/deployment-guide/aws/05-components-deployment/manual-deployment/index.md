@@ -23,7 +23,6 @@ This guide covers installation of the following components in order:
 
 2. **[Data Layer](./data-layer)**
    - Elasticsearch
-   - Kibana
    - Postgres-operator
    - PostgreSQL secret for RDS 
 
@@ -44,6 +43,7 @@ This guide covers installation of the following components in order:
 
 6. **[Observability](./observability)**
    - Fluentbit
+   - Kibana
    - Kibana Dashboards
 
 ## Prerequisites Setup
