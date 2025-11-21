@@ -11,9 +11,9 @@ The `azure-terraform.sh` script automates the deployment of infrastructure.
 
 ## Deployment Order
 
-| #   | Resource name                                                            | Source                                                                              |
-| --- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| 1   | Terraform Backend                                                        | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
+| #   | Resource name                                                             | Source                                                                              |
+| --- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 1   | Terraform Backend                                                         | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
 | 2   | Main Azure resources (see [AI/Run CodeMie Architecture](../architecture)) | [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure) |
 
 ## Core Infrastructure Configuration

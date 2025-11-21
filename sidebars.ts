@@ -240,9 +240,16 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/azure/components-deployment',
+              type: 'category',
               label: 'Components Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/azure/components-deployment/components-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/azure/components-deployment/components-scripted-deployment',
+              ],
             },
             {
               type: 'doc',

@@ -1,8 +1,8 @@
 ---
-id: components-deployment
+id: components-deployment-overview
+sidebar_position: 5
 title: AI/Run CodeMie Components Deployment
 sidebar_label: Components Deployment
-sidebar_position: 5
 ---
 
 # AI/Run CodeMie Components Deployment
@@ -12,7 +12,7 @@ sidebar_position: 5
 This section describes the process of the main AI/Run CodeMie components deployment to the AKS cluster.
 
 :::info
-For infrastructure deployment details, refer to the [Infrastructure Deployment](./infrastructure-deployment) section
+For infrastructure deployment details, refer to the [Infrastructure Deployment](../infrastructure-deployment/) section
 :::
 
 ## Prerequisites
@@ -61,7 +61,7 @@ imagePullSecrets:
 
 ## AI/Run CodeMie Application Stack Overview
 
-![Application Stack](../common/images/application-stack-diagram.drawio.png)
+![Application Stack](../../common/images/application-stack-diagram.drawio.png)
 
 ### Core AI/Run CodeMie Components
 
@@ -103,69 +103,11 @@ Versions for Docker containers and Helm releases are matching
 | LLM Proxy or EPAM DIAL Proxy | `docker.io/epam/ai-dial-core:x.y.z`, `docker.io/epam/ai-dial-adapter-openai:x.y.z`, `docker.io/bitnami/redis-cluster:x.y.z`            | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
 | Fluentbit                    | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluentbit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                              |
 
-## Scripted AI/Run CodeMie Components Installation
+## Deployment Methods
 
-The `helm-charts.sh` script (codemie-helm-charts repository) automates the deployment of components using Helm charts. It follows the steps described in the official documentation for deploying with Helm.
+Choose your preferred deployment method:
 
-### Prerequisites
-
-- Make sure AKS cluster has installed:
-  - Nginx Ingress Controller
-  - AKS Storage Class
-
-:::info
-Step-by-step installation examples are available in the "Nginx Ingress Controller" and "AKS Storage Class" subsections under the "Manual AI/Run CodeMie Components Installation" section.
-:::
-
-- Ensure you have [Helm](https://helm.sh/docs/intro/install/) installed and configured.
-- Ensure that the required cloud provider CLI tools and credentials are set up (e.g., Azure CLI, Google Cloud SDK).
-- The script assumes that you are familiar with basic Helm chart deployment and the underlying cloud environment.
-
-### Script Parameters
-
-The script requires exactly three input parameters to control its behavior:
-
-1. **Cloud Provider**
-   The target cloud provider where the deployment should be executed.
-   **Allowed Values:**
-   - `aws`
-   - `azure`
-   - `gcp`
-
-2. **AI/Run Version**
-   The version of the AI/Run components to deploy. Format should follow semantic versioning, for example:
-   - `x.y.z`
-
-3. **Mode Name**
-   Specifies which components are to be installed.
-   **Allowed Values:**
-   - `all` - Installs both AI/Run components and the third-party components.
-   - `recommended` - Installs both AI/Run components and the third-party components except of Nginx Ingress Controller
-   - `minimal` - Installs only the AI/Run components.
-
-### Component-specific placeholders
-
-| Component    | Placeholder               | Description                | Example               | File to edit                                          |
-| ------------ | ------------------------- | -------------------------- | --------------------- | ----------------------------------------------------- |
-| Kibana       | `codemie.private.lab.com` | Your public/private host   | `codemie.example.com` | `codemie-helm-charts/kibana/values-azure.yaml`        |
-| Keycloak     | `codemie.private.lab.com` | Your public/private host   | `codemie.example.com` | `codemie-helm-charts/keycloak-helm/values-azure.yaml` |
-| OAuth2 Proxy | `codemie.private.lab.com` | Your public/private host   | `codemie.example.com` | `codemie-helm-charts/oauth2-proxy/values-azure.yaml`  |
-| CodeMie UI   | `codemie.private.lab.com` | Your public/private host   | `codemie.example.com` | `codemie-helm-charts/codemie-ui/values-azure.yaml`    |
-| CodeMie API  | `codemie.private.lab.com` | Your public/private host   | `codemie.example.com` | `codemie-helm-charts/codemie-api/values-azure.yaml`   |
-| CodeMie API  | `%%DOMAIN%%`              | Your public/private domain | `example.com`         | `codemie-helm-charts/codemie-api/values-azure.yaml`   |
-
-### Usage
-
-Below is example demonstrating how to run the script:
-
-**Example: Deploy AI/Run CodeMie + Third-Party Components**
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
-
-bash helm-charts.sh --cloud azure --version x.y.z --mode all
-```
+- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
 
 ## Finalizing Installation and Accessing Applications
 
@@ -183,3 +125,7 @@ Some components maybe missing due to your setup configuration or use `http` prot
 :::
 
 For detailed manual installation steps for each component, please refer to the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository documentation.
+
+## Next Steps
+
+After successful components deployment, proceed to [Post-Installation Configuration](../post-installation) to complete required setup steps.
