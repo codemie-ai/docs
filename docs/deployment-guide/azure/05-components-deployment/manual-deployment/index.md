@@ -42,7 +42,7 @@ This guide covers installation of the following components in order:
    - MCP Connect
    - Mermaid Server
 
-6. **[Observability](./observability)** (optional)
+6. **[Observability](./observability)**
    - Fluentbit
    - Kibana Dashboards
 
