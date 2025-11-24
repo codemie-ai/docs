@@ -134,16 +134,6 @@ In AWS, if TLS termination for Plugin Engine load balancer is handled by NLB (TL
 
 ## NATS Auth Callout
 
-:::info Registry Login Required
-Before applying `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server` helm-charts, it's necessary to login into AI/Run CodeMie GCR:
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
-```
-
-:::
-
 To deploy the NATS Auth Callout service, follow the steps below:
 
 Install `codemie-nats-auth-callout` helm chart, applying custom values file with the command:

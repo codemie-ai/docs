@@ -100,15 +100,6 @@ To deploy a NATS, follow the steps below:
 
 ## Install AI/Run CodeMie NATS Auth Callout Component
 
-:::info
-Before applying `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service` and `mermaid-server` helm-charts, it's necessary to login into AI/Run CodeMie GCR:
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
-```
-:::
-
 To deploy a NATS Auth Callout service, follow the steps below:
 
 1. Install `codemie-nats-auth-callout` helm chart, applying custom values file with the command:
