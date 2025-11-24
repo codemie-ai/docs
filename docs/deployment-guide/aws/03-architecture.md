@@ -10,7 +10,7 @@ The diagram below depicts the AI/Run CodeMie infrastructure deployment in one re
 
 ![AI/Run CodeMie Architecture on AWS](./images/architecture-diagram.drawio.png)
 
-import ContainerResources from '../common/docs/\_container-resources.mdx';
+import ContainerResources from '../common/03-architecture/_container-resources.mdx';
 
 <ContainerResources />
 
