@@ -50,12 +50,16 @@ Create `codemie-postgresql` secret:
 
 ```bash
 kubectl create secret generic codemie-postgresql \
-        --from-literal=PG_PASS=`<CODEMIE_POSTGRES_DATABASE_PASSWORD>` \
-        --from-literal=PG_USER=`<CODEMIE_POSTGRES_DATABASE_USER>` \
-        --from-literal=PG_HOST=`<CODEMIE_POSTGRES_DATABASE_HOST>` \
-        --from-literal=PG_NAME=`<CODEMIE_POSTGRES_DATABASE_NAME>` \
+        --from-literal=PG_PASS=<CODEMIE_POSTGRES_DATABASE_PASSWORD> \
+        --from-literal=PG_USER=<CODEMIE_POSTGRES_DATABASE_USER> \
+        --from-literal=PG_HOST=<CODEMIE_POSTGRES_DATABASE_HOST> \
+        --from-literal=PG_NAME=<CODEMIE_POSTGRES_DATABASE_NAME> \
         --namespace codemie
 ```
+
+:::note
+Replace `<CODEMIE_POSTGRES_DATABASE_*>` placeholders with actual values from your `deployment_outputs.env` file (see [Infrastructure Deployment](../../infrastructure-deployment/infrastructure-scripted-deployment#3-generate-outputs)).
+:::
 
 Secret example:
 
@@ -72,10 +76,6 @@ data:
   PG_USER: <base64-encoded-user>
 type: Opaque
 ```
-
-:::note
-The values for `CODEMIE_POSTGRES_DATABASE_*` environment variables can be taken from `deployment_outputs.env` file (see [Infrastructure Deployment](../../infrastructure-deployment/infrastructure-scripted-deployment#3-generate-outputs)).
-:::
 
 ## Next Steps
 
