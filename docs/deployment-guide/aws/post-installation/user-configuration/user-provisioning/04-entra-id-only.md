@@ -4,6 +4,7 @@ sidebar_position: 5
 title: 'Option D: Entra ID Only'
 sidebar_label: Entra ID Only
 description: Use Microsoft Entra ID directly without Keycloak
+draft: true
 ---
 
 # Option D: Entra ID Only

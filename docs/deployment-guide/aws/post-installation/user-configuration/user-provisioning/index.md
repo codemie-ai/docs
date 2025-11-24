@@ -44,16 +44,6 @@ Integrate Keycloak with Microsoft Entra ID to enable single sign-on with corpora
 
 ---
 
-### Option D: Entra ID Only
-
-**Ideal for:** Direct Entra ID integration without Keycloak.
-
-Use Microsoft Entra ID directly for authentication and user management.
-
-[Learn more →](./entra-id-only)
-
----
-
 :::warning Critical Next Step
 After creating a user via any method above, they **cannot sign in** until you complete at least **[Step 2.1: Assign a Role](../user-authorization/assign-roles)** in the User Authorization section.
 :::

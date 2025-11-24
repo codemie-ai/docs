@@ -30,7 +30,7 @@ kubectl get secret keycloak-admin -n security -o jsonpath='{.data.username}' | b
 kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | base64 -d; echo
 ```
 
-- **For options involving Entra ID (C and D):** You will need administrative access to your organization's Microsoft Azure portal.
+- **For option involving Entra ID (C):** You will need administrative access to your organization's Microsoft Azure portal.
 
 ## User Configuration Workflow
 
@@ -47,7 +47,6 @@ The first step where you choose a method to create user entities in the system. 
 - **[Option A: Create Users Manually](./user-provisioning/manual-creation)** - Ideal for initial setup, creating your first administrator, or managing a small number of users
 - **[Option B: Create Users with Keycloak Assistant](./user-provisioning/keycloak-assistant)** - Powerful method for bulk user creation (requires pre-existing admin account)
 - **[Option C: Keycloak + Entra ID](./user-provisioning/keycloak-entra-id)** (Recommended) - Integrate Keycloak with Microsoft Entra ID for seamless single sign-on
-- **[Option D: Entra ID Only](./user-provisioning/entra-id-only)** - Use Microsoft Entra ID directly without Keycloak
 
 :::warning Critical Prerequisite
 After a user is created via any method from Part 1, they **cannot sign in** until you complete at least **Step 2.1: Assign a Role**.
