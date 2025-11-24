@@ -50,8 +50,8 @@ extraObjects:
             label: "GPT-4o 2024-08-06"
             multimodal: true
             enabled: true
-            default: true
             provider: "azure_openai"
+            default_for_categories: [global]
             cost:
               input: 0.0000025
               output: 0.000011
@@ -61,8 +61,8 @@ extraObjects:
             deployment_name: "text-embedding-ada-002"
             label: "Text Embedding Ada"
             enabled: true
-            default: true
             provider: "azure_openai"
+            default_for_categories: [global]
             cost:
               input: 0.0000001
               output: 0
