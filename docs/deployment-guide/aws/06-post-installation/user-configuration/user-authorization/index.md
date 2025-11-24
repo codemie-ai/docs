@@ -5,6 +5,6 @@ title: User Authorization Overview
 description: Assign roles and attributes to users
 ---
 
-import UserAuthorizationOverview from '../../../common/06-post-installation/user-configuration/user-authorization/\_index.md';
+import UserAuthorizationOverview from '../../../../common/06-post-installation/user-configuration/user-authorization/\_index.md';
 
 <UserAuthorizationOverview />

@@ -15,7 +15,7 @@ After successfully deploying all AI/Run CodeMie components, you need to complete
 
 ### Required Configuration
 
-#### [User Configuration](../user-configuration/)
+#### [User Configuration](./user-configuration/)
 
 Complete user setup including authentication and authorization:
 
@@ -47,9 +47,9 @@ Configure data sources and loaders:
 
 For a minimal setup:
 
-1. Complete [Initial Realm Setup](../user-configuration/initial-realm-setup)
-2. Create your first admin user via [Manual Creation](../user-configuration/user-provisioning/manual-creation)
-3. [Assign admin role](../user-configuration/user-authorization/assign-roles) to the user
+1. Complete [Initial Realm Setup](./user-configuration/initial-realm-setup)
+2. Create your first admin user via [Manual Creation](./user-configuration/user-provisioning/manual-creation)
+3. [Assign admin role](./user-configuration/user-authorization/assign-roles) to the user
 4. Test login at `https://codemie.<your-domain>`
 
 ## Next Steps

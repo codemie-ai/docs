@@ -132,24 +132,24 @@ const sidebars: SidebarsConfig = {
                   label: 'User Configuration',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/aws/user-configuration/user-configuration-overview',
+                    id: 'deployment-guide/aws/post-installation/user-configuration/user-configuration-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/aws/user-configuration/initial-realm-setup',
+                    'deployment-guide/aws/post-installation/user-configuration/initial-realm-setup',
                     {
                       type: 'category',
                       label: 'User Provisioning',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/aws/user-configuration/user-provisioning/user-provisioning-overview',
+                        id: 'deployment-guide/aws/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/aws/user-configuration/user-provisioning/manual-creation',
-                        'deployment-guide/aws/user-configuration/user-provisioning/keycloak-assistant',
-                        'deployment-guide/aws/user-configuration/user-provisioning/keycloak-entra-id',
-                        'deployment-guide/aws/user-configuration/user-provisioning/entra-id-only',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/manual-creation',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-assistant',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
+                        'deployment-guide/aws/post-installation/user-configuration/user-provisioning/entra-id-only',
                       ],
                     },
                     {
@@ -157,15 +157,15 @@ const sidebars: SidebarsConfig = {
                       label: 'User Authorization',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/aws/user-configuration/user-authorization/user-authorization-overview',
+                        id: 'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/aws/user-configuration/user-authorization/assign-roles',
-                        'deployment-guide/aws/user-configuration/user-authorization/assign-attributes',
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-roles',
+                        'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-attributes',
                       ],
                     },
-                    'deployment-guide/aws/user-configuration/platform-administration',
+                    'deployment-guide/aws/post-installation/user-configuration/platform-administration',
                   ],
                 },
                 'deployment-guide/aws/post-installation/datasources-configuration',
@@ -282,24 +282,24 @@ const sidebars: SidebarsConfig = {
                   label: 'User Configuration',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/azure/user-configuration/user-configuration-overview',
+                    id: 'deployment-guide/azure/post-installation/user-configuration/user-configuration-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/azure/user-configuration/initial-realm-setup',
+                    'deployment-guide/azure/post-installation/user-configuration/initial-realm-setup',
                     {
                       type: 'category',
                       label: 'User Provisioning',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/azure/user-configuration/user-provisioning/user-provisioning-overview',
+                        id: 'deployment-guide/azure/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/azure/user-configuration/user-provisioning/manual-creation',
-                        'deployment-guide/azure/user-configuration/user-provisioning/keycloak-assistant',
-                        'deployment-guide/azure/user-configuration/user-provisioning/keycloak-entra-id',
-                        'deployment-guide/azure/user-configuration/user-provisioning/entra-id-only',
+                        'deployment-guide/azure/post-installation/user-configuration/user-provisioning/manual-creation',
+                        'deployment-guide/azure/post-installation/user-configuration/user-provisioning/keycloak-assistant',
+                        'deployment-guide/azure/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
+                        'deployment-guide/azure/post-installation/user-configuration/user-provisioning/entra-id-only',
                       ],
                     },
                     {
@@ -307,15 +307,15 @@ const sidebars: SidebarsConfig = {
                       label: 'User Authorization',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/azure/user-configuration/user-authorization/user-authorization-overview',
+                        id: 'deployment-guide/azure/post-installation/user-configuration/user-authorization/user-authorization-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/azure/user-configuration/user-authorization/assign-roles',
-                        'deployment-guide/azure/user-configuration/user-authorization/assign-attributes',
+                        'deployment-guide/azure/post-installation/user-configuration/user-authorization/assign-roles',
+                        'deployment-guide/azure/post-installation/user-configuration/user-authorization/assign-attributes',
                       ],
                     },
-                    'deployment-guide/azure/user-configuration/platform-administration',
+                    'deployment-guide/azure/post-installation/user-configuration/platform-administration',
                   ],
                 },
                 'deployment-guide/azure/post-installation/datasources-configuration',
