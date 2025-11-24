@@ -177,12 +177,12 @@ const sidebars: SidebarsConfig = {
               label: 'AI Models Integration',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/aws/ai-models-integration/ai-models-overview',
+                id: 'deployment-guide/common/ai-models-integration/ai-models-overview',
               },
               collapsed: true,
               items: [
-                'deployment-guide/aws/ai-models-integration/aws-bedrock',
-                'deployment-guide/aws/ai-models-integration/azure-openai',
+                'deployment-guide/common/ai-models-integration/aws-bedrock',
+                'deployment-guide/common/ai-models-integration/azure-openai',
               ],
             },
             {
@@ -323,9 +323,17 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/azure/ai-models-integration',
+              type: 'category',
               label: 'AI Models Integration',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/common/ai-models-integration/ai-models-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/common/ai-models-integration/aws-bedrock',
+                'deployment-guide/common/ai-models-integration/azure-openai',
+              ],
             },
             {
               type: 'doc',

@@ -834,4 +834,4 @@ Control granular access to CodeMie resources:
 - [AWS Deployment Guide](./aws/overview) - Complete AWS deployment walkthrough
 - [Azure Deployment Guide](./azure/overview) - Azure-specific setup instructions
 - [GCP Deployment Guide](./gcp/overview) - Google Cloud deployment steps
-- [AI Models Integration](./aws/ai-models-integration) - Configuring AI providers in detail
+- [AI Models Integration](./common/ai-models-integration/) - Configuring AI providers in detail
