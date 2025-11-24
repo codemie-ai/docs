@@ -42,7 +42,7 @@ Specifies which components to install.
 
 - `all` - installs both AI/Run CodeMie and 3rd-party components (for fresh installation)
 - `recommended` - installs both AI/Run and 3rd-party components except Nginx Ingress Controller
-- `update` - updates only AI/Run CodeMie core components
+- `update` - updates only AI/Run CodeMie core components (see [Update AI/Run CodeMie](../update) for more details)
 
 ## Component Configuration
 
