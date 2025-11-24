@@ -27,37 +27,7 @@ If your AKS cluster does not already have an Nginx Ingress Controller and a Stor
 :::
 
 3. Clone [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
-4. For your convenience you can open repository in pre-installed VSCode:
-
-```bash
-cd codemie-helm-charts && code .
-```
-
-5. Before deploying AI/Run CodeMie components, you need to properly set up pull secret:
-
-Ask AI/Run CodeMie team to provide `key.json` file and email of a service account to pull images from our container registry. Create `codemie` namespace:
-
-```bash
-kubectl create namespace codemie
-```
-
-Configure the secret in your cluster. Replace `%%PROJECT_NAME%%` with your project name:
-
-```bash
-kubectl create secret docker-registry gcp-artifact-registry \
-  --docker-server=https://europe-west3-docker.pkg.dev \
-  --docker-email=gsa-%%PROJECT_NAME%%-to-gcr@or2-msq-epmd-edp-anthos-t1iylu.iam.gserviceaccount.com \
-  --docker-username=_json_key \
-  --docker-password="$(cat key.json)" \
-  -n codemie
-```
-
-Reference the secret in `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service` and `mermaid-server` deployments:
-
-```yaml
-imagePullSecrets:
-  - name: gcp-artifact-registry
-```
+4. Set up pull secrets for container registry access. For detailed instructions, see [Container Registry Access](./manual-deployment#container-registry-access).
 
 ## AI/Run CodeMie Application Stack Overview
 
