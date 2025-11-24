@@ -296,6 +296,7 @@ After execution, the script will:
    2. Deploy core AI/Run CodeMie Platform infrastructure
    3. Set up AI Models (if selected)
 3. Generate `deployment_outputs.env` file with essential infrastructure details:
+
 ```bash
 # Platform Outputs
 AZURE_CLIENT_ID="a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d"

@@ -24,7 +24,7 @@ This guide covers installation of the following components in order:
 2. **[Data Layer](./data-layer)**
    - Elasticsearch
    - Postgres-operator
-   - PostgreSQL secret for RDS 
+   - PostgreSQL secret for RDS
 
 3. **[Security and Identity](./security-and-identity)**
    - Keycloak-operator

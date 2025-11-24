@@ -21,7 +21,6 @@ NATS based architecture enables seamless Assistant integration with tooling in a
 To deploy a NATS, follow the steps below:
 
 1. Create `codemie-nats-secrets` Kubernetes secret. To set up it, follow these steps to generate and encode the necessary values:
-
    1. **NATS_URL**
       - Since NATS is deployed in the same namespace as the AI/Run CodeMie and NATS Callout services, use the internal URL `nats://codemie-nats:443`
       - Base64 encode this URL before using it in the secret.
