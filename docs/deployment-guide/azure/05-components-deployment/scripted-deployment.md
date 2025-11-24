@@ -43,7 +43,7 @@ The script requires exactly three input parameters to control its behavior:
    **Allowed Values:**
    - `all` - Installs both AI/Run components and the third-party components.
    - `recommended` - Installs both AI/Run components and the third-party components except of Nginx Ingress Controller
-   - `minimal` - Installs only the AI/Run components.
+   - `update` - updates only AI/Run CodeMie core components
 
 ## Component-specific placeholders
 
