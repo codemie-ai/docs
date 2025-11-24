@@ -295,6 +295,28 @@ After execution, the script will:
    1. Create Terraform backend storage (Azure Storage Account)
    2. Deploy core AI/Run CodeMie Platform infrastructure
    3. Set up AI Models (if selected)
+3. Generate `deployment_outputs.env` file with essential infrastructure details:
+```bash
+# Platform Outputs
+AZURE_CLIENT_ID="a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d"
+AZURE_KEY_VAULT_URL="https://codemie-kv-abc123.vault.azure.net"
+AZURE_KEY_NAME="codemie-key"
+AZURE_STORAGE_ACCOUNT_NAME="codemiestorabc123"
+AZURE_RESOURCE_GROUP="airun-codemie"
+BASTION_ADMIN_USERNAME="azadmin"
+CODEMIE_DOMAIN_NAME="private.lab.com"
+
+# AI Model Outputs
+AZURE_AI_TENANT_ID=1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+AZURE_AI_CLIENT_ID=6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a
+AZURE_AI_CLIENT_SECRET=AbC~8Q.dEfGhIjKlMnOpQrStUvWxYz1234567890
+# CodeMie PostgreSQL
+CODEMIE_POSTGRES_DATABASE_HOST="codemie-psql-abc123.postgres.database.azure.com"
+CODEMIE_POSTGRES_DATABASE_PORT=5432
+CODEMIE_POSTGRES_DATABASE_NAME="codemie"
+CODEMIE_POSTGRES_DATABASE_USER="pgadmin"
+CODEMIE_POSTGRES_DATABASE_PASSWORD='password'
+```
 
 ## Connect to Bastion VM
 

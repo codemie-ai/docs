@@ -60,9 +60,11 @@ Create `codemie-postgresql` secret:
 
 ```bash
 kubectl create secret generic codemie-postgresql \
---from-literal=password=$(CODEMIE_POSTGRES_DATABASE_PASSWORD) \
---from-literal=PG_URL="postgresql://${CODEMIE_POSTGRES_DATABASE_USER}:${CODEMIE_POSTGRES_DATABASE_PASSWORD}@${CODEMIE_POSTGRES_DATABASE_HOST}/${CODEMIE_POSTGRES_DATABASE_NAME}" \
---namespace codemie
+        --from-literal=PG_PASS=`<CODEMIE_POSTGRES_DATABASE_PASSWORD>` \
+        --from-literal=PG_USER=`<CODEMIE_POSTGRES_DATABASE_USER>` \
+        --from-literal=PG_HOST=`<CODEMIE_POSTGRES_DATABASE_HOST>` \
+        --from-literal=PG_NAME=`<CODEMIE_POSTGRES_DATABASE_NAME>` \
+        --namespace codemie
 ```
 
 Secret example:
@@ -74,13 +76,15 @@ metadata:
   name: codemie-postgresql
   namespace: codemie
 data:
-  password: <base64-encoded-password>
-  PG_URL: <base64-encoded-connection-string>
+  PG_HOST: <base64-encoded-host>
+  PG_NAME: <base64-encoded-db-name>
+  PG_PASS: <base64-encoded-password>
+  PG_USER: <base64-encoded-user>
 type: Opaque
 ```
 
 :::note
-The values for `CODEMIE_POSTGRES_DATABASE_*` environment variables must be taken either from `deployment_outputs.env` file or obtained from the Azure cloud portal.
+The values for `CODEMIE_POSTGRES_DATABASE_*` environment variables can be taken from `deployment_outputs.env` file (see [Infrastructure Deployment](../../infrastructure-deployment/infrastructure-scripted-deployment#usage)) or obtained from the Azure cloud portal.
 :::
 
 ## Next Steps
