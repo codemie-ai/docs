@@ -5,6 +5,6 @@ title: AI Models Integration
 description: Configure LLM and embedding models
 ---
 
-import AIModelsIntegration from '../../common/07-ai-models-integration/_index.md';
+import AIModelsIntegration from '../../common/07-ai-models-integration/\_index.md';
 
 <AIModelsIntegration />

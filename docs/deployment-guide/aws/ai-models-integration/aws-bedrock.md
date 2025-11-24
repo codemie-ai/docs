@@ -5,6 +5,6 @@ title: AWS Bedrock
 description: Configure AWS Bedrock models
 ---
 
-import AWSBedrock from '../../common/07-ai-models-integration/_aws-bedrock.md';
+import AWSBedrock from '../../common/07-ai-models-integration/\_aws-bedrock.md';
 
 <AWSBedrock />
