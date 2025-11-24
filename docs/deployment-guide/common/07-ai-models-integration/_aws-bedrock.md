@@ -1,10 +1,3 @@
----
-id: aws-bedrock
-sidebar_position: 2
-title: AWS Bedrock Models (Optional)
-description: Configure AWS Bedrock LLMs and embedding models
----
-
 # AWS Bedrock Models (Optional)
 
 :::note

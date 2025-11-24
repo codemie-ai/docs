@@ -1,11 +1,3 @@
----
-id: user-provisioning-overview
-sidebar_position: 2
-title: User Provisioning
-sidebar_label: User Provisioning
-description: Choose a method to create user entities in the system
----
-
 # User Provisioning
 
 This section covers the first step of user configuration where you choose a method to create user entities in the system. After creating users through any of these methods, you must proceed to [User Authorization](../user-authorization/assign-roles) to grant them the necessary permissions.

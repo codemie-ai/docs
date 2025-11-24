@@ -1,11 +1,3 @@
----
-id: keycloak-entra-id
-sidebar_position: 4
-title: 'Option C: Keycloak + Entra ID (Recommended)'
-sidebar_label: Keycloak + Entra ID
-description: Integrate Keycloak with Microsoft Entra ID for enterprise SSO
----
-
 # Option C: Keycloak + Entra ID Integration (Recommended)
 
 If your organization uses Microsoft Entra ID, you can configure it as an Identity Provider in Keycloak. This will allow users to sign in to AI/Run CodeMie with their corporate credentials.
@@ -18,33 +10,33 @@ The process is divided into two main stages: configuring the application in Azur
 
 Log in to the Azure portal, go to `Microsoft Entra ID`, and select `App registrations` from the `Manage` side menu.
 
-![Microsoft Entra ID](../../images/user-configuration/image-2025-9-19_3-13-10.png)
+![Microsoft Entra ID](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-13-10.png)
 
-![App Registrations](../../images/user-configuration/image-2025-9-19_3-13-54.png)
+![App Registrations](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-13-54.png)
 
 ### 2. Create New Registration
 
 Click `New registration`. Provide a descriptive **Name** (e.g., `AI/Run CodeMie Keycloak Integration`), and click `Register`. You can leave the "Redirect URI" blank for now.
 
-![New Registration](../../images/user-configuration/image-2025-9-19_3-24-34.png)
+![New Registration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-24-34.png)
 
-![Registration Form](../../images/user-configuration/image-2025-9-19_3-15-57.png)
+![Registration Form](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-15-57.png)
 
 ### 3. Create Client Secret
 
 From the app's side menu, navigate to `Certificates & secrets` and click `New client secret`.
 
-![Certificates & Secrets](../../images/user-configuration/image-2025-9-19_3-27-16.png)
+![Certificates & Secrets](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-27-16.png)
 
-![New Client Secret](../../images/user-configuration/image-2025-9-19_3-29-40.png)
+![New Client Secret](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-29-40.png)
 
 ### 4. Save the Client Secret Value
 
 Give the secret a **Description** (e.g., `Keycloak Secret`) and click `Add`.
 
-![Secret Description](../../images/user-configuration/image-2025-9-19_3-33-15.png)
+![Secret Description](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-33-15.png)
 
-![Copy Secret](../../images/user-configuration/image-2025-9-19_3-34-3.png)
+![Copy Secret](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-34-3.png)
 
 :::warning Important: Copy the Secret Value Immediately
 The client secret `Value` is only visible once, immediately after creation. Copy it and save it in a secure location; you will need it for the Keycloak configuration.
@@ -54,9 +46,9 @@ The client secret `Value` is only visible once, immediately after creation. Copy
 
 Navigate to the `API permissions` tab. Ensure that the `User.Read` permission for `Microsoft Graph` (Type: `Delegated`) is present. This is usually added by default.
 
-![API Permissions](../../images/user-configuration/image-2025-9-19_3-35-52.png)
+![API Permissions](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-35-52.png)
 
-![Permissions List](../../images/user-configuration/image-2025-9-19_3-36-44.png)
+![Permissions List](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-36-44.png)
 
 _Keep the Azure portal tab open, as you will need to return to it._
 
@@ -68,9 +60,9 @@ This stage involves connecting your Entra ID application to Keycloak and automat
 
 First, in your `codemie-prod` realm, navigate to `Identity Providers` and select **OpenID Connect v1.0**.
 
-![Identity Providers](../../images/user-configuration/image-2025-9-19_3-40-46.png)
+![Identity Providers](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-40-46.png)
 
-![OpenID Connect](../../images/user-configuration/image-2025-9-19_3-41-19.png)
+![OpenID Connect](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-41-19.png)
 
 ### 2. Configure the Provider Details
 
@@ -84,11 +76,11 @@ In the Azure portal, navigate to your app registration:
 3. The **Client Secret Value** is the one you copied and saved in Stage 1.
    :::
 
-![Application ID](../../images/user-configuration/image-2025-9-19_3-53-20.png)
+![Application ID](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-53-20.png)
 
-![Endpoints](../../images/user-configuration/image-2025-9-19_3-59-40.png)
+![Endpoints](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-59-40.png)
 
-![Metadata URL](../../images/user-configuration/image-2025-9-19_3-53-47.png)
+![Metadata URL](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_3-53-47.png)
 
 Now, fill in the following fields on the Keycloak page and click `Add`:
 
@@ -97,7 +89,7 @@ Now, fill in the following fields on the Keycloak page and click `Add`:
 - **Client ID:** Paste the `Application (client) ID` from Azure.
 - **Client Secret:** Paste the client secret `Value` you saved in Stage 1.
 
-![Provider Configuration](../../images/user-configuration/image-2025-9-19_4-13-10.png)
+![Provider Configuration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-13-10.png)
 
 ### 3. Configure the Redirect URI
 
@@ -105,19 +97,19 @@ This step creates the secure link between Keycloak and your Azure app.
 
 **Copy the Redirect URI from Keycloak:** After adding the provider, Keycloak will display a **Redirect URI** at the top of its configuration page. Copy this value.
 
-![Copy Redirect URI](../../images/user-configuration/image-2025-9-19_4-19-2.png)
+![Copy Redirect URI](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-19-2.png)
 
 **Add a Web Platform in Azure:** Go back to your Azure app registration, select the **Authentication** tab, click **Add a platform**, and then select **Web**.
 
-![Authentication Tab](../../images/user-configuration/image-2025-9-19_4-20-13.png)
+![Authentication Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-20-13.png)
 
-![Add Platform](../../images/user-configuration/image-2025-9-19_4-21-19.png)
+![Add Platform](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-21-19.png)
 
-![Select Web](../../images/user-configuration/image-2025-9-19_4-21-40.png)
+![Select Web](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-21-40.png)
 
 **Paste the URI and Save:** In the "Redirect URIs" field, paste the URI you copied from Keycloak and click **Configure**.
 
-![Configure Redirect URI](../../images/user-configuration/image-2025-9-19_4-24-53.png)
+![Configure Redirect URI](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-24-53.png)
 
 ### 4. Automate Permissions with Mappers
 
@@ -135,11 +127,11 @@ This mapper automatically assigns the `developer` role to all new SSO users. For
 
 Navigate to the **Mappers** tab from your Identity Provider's configuration page.
 
-![Mappers Tab](../../images/user-configuration/image-2025-9-19_5-35-59.png)
+![Mappers Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_5-35-59.png)
 
 Click **Add mapper** to open the configuration form.
 
-![Add Mapper](../../images/user-configuration/image-2025-9-19_5-36-28.png)
+![Add Mapper](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_5-36-28.png)
 
 Configure and save the mapper: Fill in the fields with the following values and then click **Save**:
 
@@ -148,7 +140,7 @@ Configure and save the mapper: Fill in the fields with the following values and 
 - **Mapper Type:** `Hardcoded Role`
 - **Role:** Select the `developer` role from the list.
 
-![Role Mapper Configuration](../../images/user-configuration/image-2025-9-19_4-34-2.png)
+![Role Mapper Configuration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-34-2.png)
 
 ---
 
@@ -166,7 +158,7 @@ Configure and save the mapper: Fill in the fields with the following values and 
 - **Claim:** `email`
 - **User Attribute Name:** `applications`
 
-![Attribute Mapper Configuration](../../images/user-configuration/image-2025-9-19_4-43-39.png)
+![Attribute Mapper Configuration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-43-39.png)
 
 ---
 
@@ -176,13 +168,13 @@ This final step confirms that everything is working correctly. To complete it, y
 
 **Initiate the First Sign-In:** Navigate to the AI/Run CodeMie login page and click the button to sign in with your Entra ID provider.
 
-![SSO Login](../../images/user-configuration/image-2025-9-19_4-58-57.png)
+![SSO Login](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_4-58-57.png)
 
 **Authenticate with Microsoft:** Sign in using your Azure Administrator credentials.
 
 **Provide Admin Consent for the Organization:** Microsoft will display a "Permissions requested" dialog. You **must** check the box labeled **"Consent on behalf of your organization"** before clicking **Accept**.
 
-![Admin Consent](../../images/user-configuration/image-2025-9-19_5-0-18.png)
+![Admin Consent](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-19_5-0-18.png)
 
 **Confirm Successful Login:** After accepting, you should be successfully logged in, confirming that the SSO integration and mappers are working correctly.
 

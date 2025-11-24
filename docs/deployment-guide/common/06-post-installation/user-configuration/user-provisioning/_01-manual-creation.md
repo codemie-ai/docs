@@ -1,11 +1,3 @@
----
-id: manual-creation
-sidebar_position: 2
-title: 'Option A: Manual User Creation'
-sidebar_label: Manual Creation
-description: Create users manually through the Keycloak admin interface
----
-
 # Option A: Manual User Creation
 
 Manual user creation is the simplest method to add users to AI/Run CodeMie. This approach is ideal for initial setup, creating your first administrator, or managing a small number of users.
@@ -14,15 +6,15 @@ Manual user creation is the simplest method to add users to AI/Run CodeMie. This
 
 While in the `codemie-prod` realm, click on **Users** in the left sidebar menu.
 
-![Users Menu](../../images/user-configuration/image-2025-9-17_14-55-2.png)
+![Users Menu](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_14-55-2.png)
 
 ### 2. Create New User
 
 Click **Create new user** (or **Add user** if users already exist).
 
-![Create New User](../../images/user-configuration/image-2025-9-17_14-55-25.png)
+![Create New User](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_14-55-25.png)
 
-![Add User Form](../../images/user-configuration/image-2025-9-17_14-56-1.png)
+![Add User Form](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_14-56-1.png)
 
 ### 3. Fill in User Details
 
@@ -35,7 +27,7 @@ Enter the required information:
 
 Click **Create** to save the user.
 
-![User Details Form](../../images/user-configuration/image-2025-9-15_0-43-4.png)
+![User Details Form](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_0-43-4.png)
 
 ### 4. Set User Credentials
 
@@ -45,13 +37,13 @@ After creating the user, you must set their initial password.
 
 Click on the **Credentials** tab in the user details page.
 
-![Credentials Tab](../../images/user-configuration/image-2025-9-15_0-45-4.png)
+![Credentials Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_0-45-4.png)
 
 #### Set Password
 
 1. Click the **Set password** button
 
-![Set Password Button](../../images/user-configuration/image-2025-9-15_0-46-20.png)
+![Set Password Button](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_0-46-20.png)
 
 2. Enter the password in both fields:
    - **Password:** Enter the initial password
@@ -61,7 +53,7 @@ Click on the **Credentials** tab in the user details page.
    - **Temporary:** Keep this **enabled** (recommended) to force the user to change their password on first login
    - If disabled, the password will be permanent until the user changes it
 
-![Password Form](../../images/user-configuration/image-2025-9-15_0-49-56.png)
+![Password Form](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_0-49-56.png)
 
 4. Click **Save** to confirm the password
 

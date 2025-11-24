@@ -1,10 +1,3 @@
----
-id: azure-openai
-sidebar_position: 3
-title: Azure OpenAI Models (Optional)
-description: Configure Azure OpenAI Service models
----
-
 # Azure OpenAI Models (Optional)
 
 :::note

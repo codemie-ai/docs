@@ -1,10 +1,3 @@
----
-id: ai-models-overview
-sidebar_position: 1
-title: AI Models Integration
-description: Configure LLM and embedding models
----
-
 # AI Models Integration and Configuration
 
 ## Managing LLM and embedding models

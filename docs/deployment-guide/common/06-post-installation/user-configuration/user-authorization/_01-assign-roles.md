@@ -1,11 +1,3 @@
----
-id: assign-roles
-sidebar_position: 2
-title: 'Step 2.1: Assign Roles'
-sidebar_label: Assign Roles
-description: Grant platform-level roles to users
----
-
 # Step 2.1: Assign Roles
 
 Assigning a role is the first mandatory step in user authorization. A role defines the user's fundamental capabilities within the AI/Run CodeMie platform.
@@ -25,26 +17,26 @@ Follow these steps to assign a role to a user in Keycloak:
 
 From the `User list` in the `codemie-prod` realm, click on the username of the user you want to configure.
 
-![User List](../../images/user-configuration/image-2025-9-15_1-6-49.png)
+![User List](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-6-49.png)
 
 ### 2. Open Role Mappings
 
 In the `User details` page, navigate to the `Role mappings` tab.
 
-![Role Mappings Tab](../../images/user-configuration/image-2025-9-15_1-7-38.png)
+![Role Mappings Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-7-38.png)
 
 ### 3. Assign Role
 
 Click the `Assign role` button to open the role selection dialog.
 
-![Assign Role Button](../../images/user-configuration/image-2025-9-15_1-7-52.png)
+![Assign Role Button](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-7-52.png)
 
 ### 4. Select and Confirm
 
 1. Select the appropriate role (`admin` or `developer`)
 2. Click the **Assign** button to confirm
 
-![Select Role](../../images/user-configuration/image-2025-9-15_1-8-8.png)
+![Select Role](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-8-8.png)
 
 ### 5. Verify Assignment
 

@@ -1,10 +1,3 @@
----
-id: initial-realm-setup
-sidebar_position: 2
-title: Initial Realm Setup
-description: One-time configuration to enable custom attributes in Keycloak
----
-
 # Initial Realm Setup
 
 This is a one-time configuration step that must be completed before creating any users. It enables Keycloak to store custom attributes required for AI/Run CodeMie's project access control system.
@@ -21,15 +14,15 @@ Navigate to your Keycloak admin console URL (typically `https://keycloak.<your-d
 
 Choose the `codemie-prod` realm from the dropdown at the top left corner of the interface.
 
-![Select Realm](../images/user-configuration/image-2025-9-16_16-20-31.png)
+![Select Realm](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-20-31.png)
 
-![Realm Selected](../images/user-configuration/image-2025-9-16_16-23-9.png)
+![Realm Selected](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-23-9.png)
 
 ### 3. Navigate to Realm Settings
 
 Click on **Realm Settings** in the left sidebar menu.
 
-![Realm Settings](../images/user-configuration/image-2025-9-16_16-23-49.png)
+![Realm Settings](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-23-49.png)
 
 ### 4. Enable Unmanaged Attributes
 
@@ -37,11 +30,11 @@ Click on **Realm Settings** in the left sidebar menu.
 2. Select **Enabled** from the dropdown
 3. Click **Save** to apply the changes
 
-![Enable Unmanaged Attributes](../images/user-configuration/image-2025-9-16_16-34-28.png)
+![Enable Unmanaged Attributes](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-34-28.png)
 
-![Select Enabled](../images/user-configuration/image-2025-9-16_16-34-52.png)
+![Select Enabled](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-34-52.png)
 
-![Save Changes](../images/user-configuration/image-2025-9-16_16-36-10.png)
+![Save Changes](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-16_16-36-10.png)
 
 ## Next Steps
 

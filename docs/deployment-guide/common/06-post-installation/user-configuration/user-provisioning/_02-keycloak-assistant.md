@@ -1,11 +1,3 @@
----
-id: keycloak-assistant
-sidebar_position: 3
-title: 'Option B: Keycloak Assistant'
-sidebar_label: Keycloak Assistant
-description: Bulk user creation using the AI/Run CodeMie Keycloak Manager assistant
----
-
 # Option B: Create Users with the Keycloak Assistant
 
 For creating users or managing them programmatically, you can use the AI/Run CodeMie `Keycloak Manager`. This is a powerful system agent that interacts directly with your Keycloak instance.
@@ -147,11 +139,11 @@ kubectl rollout restart deployment/oauth2-proxy -n oauth2-proxy
 
 #### 10. As a platform admin, open the AI/Run CodeMie UI and navigate to the `Integrations` tab.
 
-![Integrations Tab](../../images/user-configuration/image-2025-9-17_10-15-44.png)
+![Integrations Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_10-15-44.png)
 
 #### 11. Click the `Create` button in the top right corner and select `Create Project Integration`.
 
-![Create Integration](../../images/user-configuration/image-2025-9-17_10-16-37.png)
+![Create Integration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_10-16-37.png)
 
 #### 12. Fill in the required fields:
 
@@ -182,7 +174,7 @@ Pay attention that newer Keycloak versions might not include the `/auth` path in
 `kubectl get secret keycloak-assistant -n oauth2-proxy -o jsonpath="{.data.client-secret}" | base64 --decode`
 :::
 
-![Integration Configuration](../../images/user-configuration/image-2025-9-17_10-18-27.png)
+![Integration Configuration](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_10-18-27.png)
 
 #### 13. Click the `Create` button to save the integration.
 
@@ -194,21 +186,21 @@ The process of using the assistant involves three main stages: initiating the ch
 
 Navigate to the **Assistants** tab and click the **Start chat** button for the `Keycloak Manager`.
 
-![Start Chat](../../images/user-configuration/image-2025-9-17_10-44-43.png)
+![Start Chat](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_10-44-43.png)
 
 #### 2. Create Users with a Prompt
 
 First, verify the connection with a simple prompt like `Show number of users in the realm`.
 
-![Verify Connection](../../images/user-configuration/image-2025-9-17_13-58-17.png)
+![Verify Connection](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_13-58-17.png)
 
 Next, use a clear, structured prompt to create users in bulk. You can specify the project, user emails, and roles all in one command. The assistant will create the users but will **not** set their passwords.
 
 > `Create and add the following people to the "project_name" project – first_lastname1@example.com, first_lastname2@example.com. Assign to each of them the developer role. Output the results in a table format.`
 
-![User Creation Process](../../images/user-configuration/image-2025-9-17_13-49-58.png)
-![Creation in Progress](../../images/user-configuration/image-2025-9-17_13-50-15.png)
-![Creation Complete](../../images/user-configuration/image-2025-9-17_13-50-28.png)
+![User Creation Process](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_13-49-58.png)
+![Creation in Progress](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_13-50-15.png)
+![Creation Complete](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-17_13-50-28.png)
 
 #### 3. Set Passwords and Finalize
 

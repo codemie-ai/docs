@@ -1,10 +1,3 @@
----
-id: user-authorization-overview
-sidebar_position: 1
-title: User Authorization
-description: Grant users permissions to access the platform and projects
----
-
 # User Authorization
 
 This section is a **mandatory** follow-up step for any user created in Part 1. Here, you will grant users permissions to access the platform and its projects.

@@ -1,11 +1,3 @@
----
-id: assign-attributes
-sidebar_position: 3
-title: 'Step 2.2: Assign Attributes'
-sidebar_label: Assign Attributes
-description: Configure project access for users with developer role
----
-
 # Step 2.2: Assign Attributes to Developer Users
 
 Attributes define which projects a user with the `developer` role can access and what permissions they have within those projects. This step is **required** for all users with the `developer` role.
@@ -44,13 +36,13 @@ The `applications` attribute defines the base list of accessible projects, and `
 
 In the user details page, click on the **Attributes** tab.
 
-![Attributes Tab](../../images/user-configuration/image-2025-9-15_1-38-42.png)
+![Attributes Tab](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-38-42.png)
 
 ### 2. Add Attributes
 
 Click the **Add attributes** button to create a new attribute.
 
-![Add Attributes Button](../../images/user-configuration/image-2025-9-15_1-38-51.png)
+![Add Attributes Button](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-38-51.png)
 
 ### 3. Configure Standard Access
 
@@ -59,7 +51,7 @@ For standard user access to projects:
 - **Key:** `applications`
 - **Value:** Comma-separated list of project names (e.g., `my_project,team_project`)
 
-![Standard User Attribute](../../images/user-configuration/image-2025-9-15_1-38-56.png)
+![Standard User Attribute](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-38-56.png)
 
 ### 4. Configure Admin Access (Optional)
 
@@ -70,7 +62,7 @@ For project administrator access:
    - **Key:** `applications_admin`
    - **Value:** Comma-separated list of projects to admin (must be subset of `applications`)
 
-![Project Admin Attributes](../../images/user-configuration/image-2025-9-15_1-42-30.png)
+![Project Admin Attributes](@site/docs/deployment-guide/common/images/user-configuration/image-2025-9-15_1-42-30.png)
 
 ### 5. Save Changes
 

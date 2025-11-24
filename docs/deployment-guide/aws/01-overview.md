@@ -45,7 +45,7 @@ Install and configure all AI/Run CodeMie application components on your EKS clus
 
 Complete required and optional configuration steps after deployment.
 
-### [AI Models Integration](../common/ai-models-integration/)
+### [AI Models Integration](./ai-models-integration/)
 
 Configure LLM and embedding models from various providers.
 
