@@ -92,7 +92,7 @@ The created S3 bucket will be used for all subsequent infrastructure deployments
 
 ## Step 3: Main AWS Resources Deployment
 
-This step creates the following resources (see [Architecture](../03-architecture.md)):
+This step creates the following resources (see [Architecture](../architecture)):
 
 - EKS Cluster
 - AWS ASGs for the EKS Cluster

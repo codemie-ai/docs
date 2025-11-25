@@ -10,7 +10,7 @@ description: Deploy AWS infrastructure for AI/Run CodeMie
 ## Overview
 
 :::info
-Skip if you have ready EKS cluster with all required services (see [AI/Run CodeMie Architecture](../03-architecture.md)).
+Skip if you have ready EKS cluster with all required services (see [AI/Run CodeMie Architecture](../architecture)).
 :::
 
 This section describes the process of deploying the AI/Run CodeMie infrastructure within an AWS environment. Terraform is used to manage resources and configure services.
@@ -21,12 +21,12 @@ A crucial step involves using a registered domain name added to AWS Route 53, wh
 
 There are two deployment options available:
 
-- **[Scripted Deployment](./scripted-deployment.md)** - Use the script if you want an easier deployment flow
-- **[Manual Deployment](./manual-deployment.md)** - Use the manual option if you want to control Terraform resources and provide customization
+- **[Scripted Deployment](./infrastructure-scripted-deployment)** - Use the script if you want an easier deployment flow
+- **[Manual Deployment](./infrastructure-manual-deployment)** - Use the manual option if you want to control Terraform resources and provide customization
 
 ## Deployment Resources
 
-The deployment provisions all required AWS infrastructure components described in the [Architecture](../03-architecture.md#infrastructure-components) section using the following Terraform modules:
+The deployment provisions all required AWS infrastructure components described in the [Architecture](../architecture#infrastructure-components) section using the following Terraform modules:
 
 | #   | Resource name      | Source                                                                                            |
 | --- | ------------------ | ------------------------------------------------------------------------------------------------- |
@@ -37,5 +37,5 @@ The deployment provisions all required AWS infrastructure components described i
 
 Choose your deployment method:
 
-- [Scripted Deployment →](./scripted-deployment.md)
-- [Manual Deployment →](./manual-deployment.md)
+- [Scripted Deployment →](./infrastructure-scripted-deployment)
+- [Manual Deployment →](./infrastructure-manual-deployment)

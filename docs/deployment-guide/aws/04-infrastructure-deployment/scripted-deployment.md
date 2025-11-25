@@ -11,7 +11,7 @@ The `aws-terraform.sh` script automates the deployment of infrastructure for AI/
 
 ## Prerequisites
 
-Ensure you have completed all items in the [Prerequisites](../02-prerequisites.md) checklist.
+Ensure you have completed all items in the [Prerequisites](../prerequisites) checklist.
 
 ## Deployment Order
 

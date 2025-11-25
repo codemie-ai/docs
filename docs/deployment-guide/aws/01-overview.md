@@ -25,27 +25,27 @@ Each section contains detailed instructions to ensure a smooth deployment proces
 
 ## Deployment Guide Structure
 
-### [Prerequisites](./02-prerequisites.md)
+### [Prerequisites](./prerequisites)
 
 Review all requirements before starting the deployment, including AWS account access, domain configuration, and required tools.
 
-### [Architecture](./03-architecture.md)
+### [Architecture](./architecture)
 
 Understand the AI/Run CodeMie deployment architecture and resource requirements.
 
-### [Infrastructure Deployment](./infrastructure-deployment/)
+### [Infrastructure Deployment](./infrastructure-deployment)
 
 Deploy AWS infrastructure using Terraform, including EKS cluster, networking, and supporting services.
 
-### [Components Deployment](./components-deployment/)
+### [Components Deployment](./components-deployment)
 
 Install and configure all AI/Run CodeMie application components on your EKS cluster.
 
-### [Post-Installation Configuration](./post-installation/)
+### [Post-Installation Configuration](./post-installation)
 
 Complete required and optional configuration steps after deployment.
 
-### [AI Models Integration](./ai-models-integration/)
+### [AI Models Integration](./ai-models-integration)
 
 Configure LLM and embedding models from various providers.
 
@@ -53,10 +53,10 @@ Configure LLM and embedding models from various providers.
 
 Learn how to update your AI/Run CodeMie installation.
 
-### [Extensions](../extensions/)
+### [Extensions](../extensions)
 
 Optional extensions and additional features you can enable.
 
-### [FAQ](../faq.md)
+### [FAQ](../faq)
 
 Frequently asked questions about deployment and configuration.
