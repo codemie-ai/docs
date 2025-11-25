@@ -17,6 +17,7 @@ This guide describes the process of updating AI/Run CodeMie components to newer 
 - `kubectl` access to your EKS cluster
 - Helm 3.16.0+ installed
 - Backup of critical data (recommended)
+- `codemie-helm-charts` repo is up to date with values used during initial deployment
 
 :::info GCR Login Required
 Before updating AI/Run CodeMie components, login to AI/Run CodeMie GCR:
@@ -48,9 +49,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
 
 ### Manual Component Update
 
-1. Make sure your `codemie-helm-charts` repo is up to date and with values you used during initial deployment.
-
-2. Update `codemie-nats-auth-callout` first. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+1. Update `codemie-nats-auth-callout` first. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
    helm upgrade --install codemie-nats-auth-callout \
@@ -61,7 +60,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
    --wait --timeout 600s
    ```
 
-3. Update `codemie-mcp-connect-service` helm chart with the command. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+2. Update `codemie-mcp-connect-service` helm chart with the command. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
    helm upgrade --install codemie-mcp-connect-service oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-mcp-connect-service \
@@ -71,7 +70,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
    --wait --timeout 600s
    ```
 
-4. Update `codemie-ui` then. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+3. Update `codemie-ui` then. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
    helm upgrade --install codemie-ui oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-ui \
@@ -81,7 +80,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
    --wait --timeout 180s
    ```
 
-5. Update `codemie-api` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+4. Update `codemie-api` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
    helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
@@ -91,7 +90,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
    --wait --timeout 600s
    ```
 
-6. Lastly update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+5. Lastly update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
 
    ```bash
    helm upgrade --install mermaid-server oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/mermaid-server \
@@ -101,7 +100,7 @@ The `--mode update` flag will update only AI/Run CodeMie core components:
    --wait --timeout 600s
    ```
 
-7. Verify all pods are up and running.
+6. Verify all pods are up and running.
 
 ## Next Steps
 
