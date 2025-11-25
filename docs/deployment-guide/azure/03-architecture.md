@@ -28,6 +28,6 @@ import TabItem from '@theme/TabItem';
   </TabItem>
 </Tabs>
 
-import ContainerResources from '../common/03-architecture/_container-resources.mdx';
+import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
 
 <ContainerResources />
