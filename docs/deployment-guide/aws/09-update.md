@@ -1,5 +1,5 @@
 ---
-id: update
+id: update-version
 sidebar_position: 9
 title: Update AI/Run CodeMie
 description: Update procedures for AI/Run CodeMie components

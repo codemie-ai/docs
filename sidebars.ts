@@ -187,8 +187,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'deployment-guide/aws/update',
-              label: 'Updates',
+              id: 'deployment-guide/aws/update-version',
+              label: 'Update Version',
             },
             {
               type: 'category',
