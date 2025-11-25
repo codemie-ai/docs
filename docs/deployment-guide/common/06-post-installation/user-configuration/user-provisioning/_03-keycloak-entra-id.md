@@ -1,5 +1,3 @@
-# Option C: Keycloak + Entra ID Integration (Recommended)
-
 If your organization uses Microsoft Entra ID, you can configure it as an Identity Provider in Keycloak. This will allow users to sign in to AI/Run CodeMie with their corporate credentials.
 
 The process is divided into two main stages: configuring the application in Azure, and then connecting it to Keycloak.

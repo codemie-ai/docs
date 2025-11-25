@@ -1,5 +1,3 @@
-# Option A: Manual User Creation
-
 Manual user creation is the simplest method to add users to AI/Run CodeMie. This approach is ideal for initial setup, creating your first administrator, or managing a small number of users.
 
 ### 1. Navigate to Users Section

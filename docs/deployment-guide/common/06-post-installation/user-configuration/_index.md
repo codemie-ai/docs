@@ -1,5 +1,3 @@
-# User Configuration Overview
-
 This guide provides a complete workflow for configuring user authentication and authorization for the AI/Run CodeMie platform. The process is divided into three main parts that must be completed in sequence.
 
 ## Prerequisites

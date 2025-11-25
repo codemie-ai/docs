@@ -1,5 +1,3 @@
-# AWS Bedrock Models (Optional)
-
 :::note
 **Required in case of using Anthropic Claude models**
 :::

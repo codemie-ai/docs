@@ -1,5 +1,3 @@
-# Option D: Entra ID Only
-
 This option allows you to use Microsoft Entra ID directly, without Keycloak, for authentication and user management.
 
 :::info Content Coming Soon

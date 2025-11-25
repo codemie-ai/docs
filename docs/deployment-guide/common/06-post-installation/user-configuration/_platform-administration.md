@@ -1,5 +1,3 @@
-# Platform Administration Guide
-
 This guide is for users who have been assigned the global `admin` role. It explains how to create new projects and access existing ones within the AI/Run CodeMie platform.
 
 ## Creating a New Project

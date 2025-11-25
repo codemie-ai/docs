@@ -1,5 +1,3 @@
-# Azure OpenAI Models (Optional)
-
 :::note
 **Required in case of using Azure OpenAI models such as GPT-4o, etc.**
 :::

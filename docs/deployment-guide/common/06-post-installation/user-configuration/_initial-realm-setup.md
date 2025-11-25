@@ -1,5 +1,3 @@
-# Initial Realm Setup
-
 This is a one-time configuration step that must be completed before creating any users. It enables Keycloak to store custom attributes required for AI/Run CodeMie's project access control system.
 
 ## Configuration Steps

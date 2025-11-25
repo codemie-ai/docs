@@ -1,5 +1,3 @@
-# Option B: Create Users with the Keycloak Assistant
-
 For creating users or managing them programmatically, you can use the AI/Run CodeMie `Keycloak Manager`. This is a powerful system agent that interacts directly with your Keycloak instance.
 
 The process involves a one-time setup to create a secure connection, followed by instructions on how to use the assistant.

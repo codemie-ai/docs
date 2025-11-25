@@ -1,5 +1,3 @@
-# Step 2.2: Assign Attributes to Developer Users
-
 Attributes define which projects a user with the `developer` role can access and what permissions they have within those projects. This step is **required** for all users with the `developer` role.
 
 ## Understanding Attributes

@@ -1,5 +1,3 @@
-# AI Models Integration and Configuration
-
 ## Managing LLM and embedding models
 
 AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration file can be found by path in container: [config/llms](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/llms?ref_type=heads).

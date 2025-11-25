@@ -1,5 +1,3 @@
-# Step 2.1: Assign Roles
-
 Assigning a role is the first mandatory step in user authorization. A role defines the user's fundamental capabilities within the AI/Run CodeMie platform.
 
 ## Available Roles

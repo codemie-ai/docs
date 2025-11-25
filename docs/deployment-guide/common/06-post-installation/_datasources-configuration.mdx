@@ -162,7 +162,7 @@ extraVolumeMounts: |
 And apply helm chart with the command:
 
 <CodeBlock language="bash">
-{`helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
+  {`helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
 --version x.y.z \\
 --namespace "codemie" \\
 -f "./codemie-api/values-${props.cloud_name}.yaml" \\
