@@ -49,7 +49,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
 
 ### Manual Component Update
 
-1. Update `codemie-nats-auth-callout` first. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+1. Update `codemie-nats-auth-callout` first. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash
    helm upgrade --install codemie-nats-auth-callout \
@@ -60,7 +60,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
    --wait --timeout 600s
    ```
 
-2. Update `codemie-mcp-connect-service` helm chart with the command. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+2. Update `codemie-mcp-connect-service` helm chart with the command. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash
    helm upgrade --install codemie-mcp-connect-service oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-mcp-connect-service \
@@ -70,7 +70,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
    --wait --timeout 600s
    ```
 
-3. Update `codemie-ui` then. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+3. Update `codemie-ui` then. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash
    helm upgrade --install codemie-ui oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-ui \
@@ -80,7 +80,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
    --wait --timeout 180s
    ```
 
-4. Update `codemie-api` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+4. Update `codemie-api` component. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash
    helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
@@ -90,7 +90,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
    --wait --timeout 600s
    ```
 
-5. Lastly update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "1.3.0"`:
+5. Lastly update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash
    helm upgrade --install mermaid-server oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/mermaid-server \
