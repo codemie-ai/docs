@@ -39,13 +39,13 @@ Use the automated script for updates:
 bash helm-charts.sh --cloud aws --version x.y.z --mode update
 ```
 
-  The `--mode update` flag updates AI/Run CodeMie core components in the following order:
+The `--mode update` flag updates AI/Run CodeMie core components in the following order:
 
-  1. CodeMie MCP Connect
-  2. Mermaid Server
-  3. CodeMie NATS Auth Callout
-  4. CodeMie UI
-  5. CodeMie API
+1. CodeMie MCP Connect
+2. Mermaid Server
+3. CodeMie NATS Auth Callout
+4. CodeMie UI
+5. CodeMie API
 
 ### Manual Component Update
 
@@ -58,6 +58,7 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode update
    -f "./codemie-mcp-connect-service/values.yaml" \
    --wait --timeout 600s
    ```
+
 2. Update `mermaid-server` component. Replace `--version "x.y.z"` with your target version, for example `--version "2.2.5"`:
 
    ```bash

@@ -831,6 +831,6 @@ Control granular access to CodeMie resources:
 
 ## See Also
 
-- [AWS Deployment Guide](./aws/overview) - Complete AWS deployment walkthrough
-- [Azure Deployment Guide](./azure/overview) - Azure-specific setup instructions
-- [GCP Deployment Guide](./gcp/overview) - Google Cloud deployment steps
+- [AWS Deployment Guide](../aws/overview) - Complete AWS deployment walkthrough
+- [Azure Deployment Guide](../azure/overview) - Azure-specific setup instructions
+- [GCP Deployment Guide](../gcp/overview) - Google Cloud deployment steps
