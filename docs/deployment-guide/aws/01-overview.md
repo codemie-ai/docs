@@ -53,10 +53,6 @@ Configure LLM and embedding models from various providers.
 
 Learn how to update your AI/Run CodeMie installation.
 
-### [Elasticsearch and Kibana Upgrade](./08-elasticsearch-kibana-upgrade.md)
-
-Upgrade guide for Elasticsearch and Kibana components (8.14.2 → 8.18.4).
-
 ### [Extensions](./extensions/)
 
 Optional extensions and additional features you can enable.

@@ -1,7 +1,7 @@
 ---
 id: elasticsearch-kibana-upgrade
 sidebar_position: 8
-title: Elasticsearch and Kibana Upgrade
+title: Elasticsearch and Kibana Upgrade (8.14.2 → 8.18.4)
 description: Upgrade Elasticsearch and Kibana from 8.14.2 to 8.18.4
 ---
 
@@ -17,9 +17,9 @@ This page will guide your journey from 8.14.2 Elasticsearch/Kibana to 8.18.4
 
 **Before proceeding with any upgrade, ensure you have:**
 
-- ✅ Created a complete backup of your Elasticsearch data
-- ✅ Planned for potential downtime
-- ✅ Tested the upgrade process in a non-production environment
+- Created a complete backup of your Elasticsearch data
+- Planned for potential downtime
+- Tested the upgrade process in a non-production environment
 
 ## Elasticsearch Upgrade (8.14.2 → 8.18.4)
 

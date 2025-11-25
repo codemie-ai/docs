@@ -402,7 +402,10 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Additional Resources',
           collapsed: true,
-          items: ['deployment-guide/additional-resources/api-configuration'],
+          items: [
+            'deployment-guide/additional-resources/api-configuration',
+            'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
+          ],
         },
       ],
     },
