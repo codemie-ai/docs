@@ -59,7 +59,7 @@ Configure marketplace integration for sharing and discovering assistants.
 | Parameter                              | Type    | Default                    | Description                                        |
 | -------------------------------------- | ------- | -------------------------- | -------------------------------------------------- |
 | `PLATFORM_MARKETPLACE_DATASOURCE_NAME` | string  | `"marketplace_assistants"` | Datasource name for marketplace assistant catalog  |
-| `PLATFORM_DATASOURCES_SYNC_ENABLED`    | boolean | `true`                     | Automatically sync platform datasources on startup |
+| `PLATFORM_DATASOURCES_SYNC_ENABLED`    | boolean | `false`                    | Automatically sync platform datasources on startup |
 
 ### State Management & Import/Export
 
@@ -604,7 +604,7 @@ Automatically select relevant tools based on user queries to improve response qu
 
 | Parameter                  | Type    | Default | Description                                                    |
 | -------------------------- | ------- | ------- | -------------------------------------------------------------- |
-| `TOOL_SELECTION_ENABLED`   | boolean | `true`  | Enable AI-powered tool selection from available toolkits       |
+| `TOOL_SELECTION_ENABLED`   | boolean | `false` | Enable AI-powered tool selection from available toolkits       |
 | `TOOL_SELECTION_THRESHOLD` | integer | `3`     | Min tools before triggering smart selection (use all if below) |
 | `TOOL_SELECTION_LIMIT`     | integer | `3`     | Max tools to select per query to optimize token usage          |
 
