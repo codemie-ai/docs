@@ -85,4 +85,4 @@ For detailed documentation on specific extensions:
 ## Next Steps
 
 - Explore individual extension pages for detailed setup guides
-- [FAQ](../../faq) - Frequently asked questions
+- [FAQ](../faq) - Frequently asked questions

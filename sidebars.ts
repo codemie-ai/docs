@@ -190,22 +190,6 @@ const sidebars: SidebarsConfig = {
               id: 'deployment-guide/aws/update-version',
               label: 'Update Version',
             },
-            {
-              type: 'category',
-              label: 'Extensions',
-              link: {
-                type: 'doc',
-                id: 'deployment-guide/aws/extensions/extensions-overview',
-              },
-              collapsed: true,
-              items: [
-                'deployment-guide/aws/extensions/litellm-proxy',
-                'deployment-guide/aws/extensions/assistants-evaluation',
-                'deployment-guide/aws/extensions/ai-code-explorer',
-                'deployment-guide/aws/extensions/angular-upgrade-assistant',
-                'deployment-guide/aws/extensions/salesforce-devforce-ai',
-              ],
-            },
           ],
         },
         {
@@ -396,6 +380,22 @@ const sidebars: SidebarsConfig = {
               id: 'deployment-guide/gcp/maintenance',
               label: 'Maintenance',
             },
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Extensions',
+          link: {
+            type: 'doc',
+            id: 'deployment-guide/extensions/extensions-overview',
+          },
+          collapsed: true,
+          items: [
+            'deployment-guide/extensions/litellm-proxy',
+            'deployment-guide/extensions/assistants-evaluation',
+            'deployment-guide/extensions/ai-code-explorer',
+            'deployment-guide/extensions/angular-upgrade-assistant',
+            'deployment-guide/extensions/salesforce-devforce-ai',
           ],
         },
         {

@@ -53,7 +53,7 @@ Configure LLM and embedding models from various providers.
 
 Learn how to update your AI/Run CodeMie installation.
 
-### [Extensions](./extensions/)
+### [Extensions](../extensions/)
 
 Optional extensions and additional features you can enable.
 
