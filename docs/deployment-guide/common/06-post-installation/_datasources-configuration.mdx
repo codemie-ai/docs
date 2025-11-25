@@ -1,4 +1,4 @@
-# Data Sources Configuration (Optional)
+import CodeBlock from '@theme/CodeBlock';
 
 ## Configuration
 
@@ -161,10 +161,10 @@ extraVolumeMounts: |
 
 And apply helm chart with the command:
 
-```bash
-helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
---version x.y.z \
---namespace "codemie" \
--f "./codemie-api/values-{props.cloud_name}.yaml" \
---wait --timeout 600s
-```
+<CodeBlock language="bash">
+{`helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
+--version x.y.z \\
+--namespace "codemie" \\
+-f "./codemie-api/values-${props.cloud_name}.yaml" \\
+--wait --timeout 600s`}
+</CodeBlock>
