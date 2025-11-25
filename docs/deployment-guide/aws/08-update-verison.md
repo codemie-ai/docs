@@ -104,5 +104,4 @@ The `--mode update` flag updates AI/Run CodeMie core components in the following
 
 ## Next Steps
 
-- [Extensions](./extensions/) - Explore optional extensions
-- [FAQ](../faq.md) - Common questions and troubleshooting
+- [Extensions](../extensions/) - Explore optional extensions
