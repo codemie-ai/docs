@@ -340,11 +340,6 @@ const sidebars: SidebarsConfig = {
               id: 'deployment-guide/azure/update-version',
               label: 'Update Version',
             },
-            {
-              type: 'doc',
-              id: 'deployment-guide/azure/extensions',
-              label: 'Extensions',
-            },
           ],
         },
         {

@@ -57,4 +57,3 @@ For a minimal setup:
 After completing post-installation configuration:
 
 - Configure [AI Models Integration](../ai-models-integration/) for LLM and embedding models
-- Review [Extensions](../extensions/) for additional capabilities
