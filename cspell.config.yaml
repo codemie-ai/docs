@@ -109,6 +109,7 @@ words:
   - natscli
   - StorageClass
   - millicores
+  - fluentbit
   # Data
   - PostgreSQL
   - Postgres
@@ -202,6 +203,7 @@ words:
   - keepalive
   - AITOOLS
   - hotfixes
+  - llms
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors
