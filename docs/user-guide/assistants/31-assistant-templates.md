@@ -34,9 +34,9 @@ Supports users in the release process, generates release notes, closes necessary
 
 ---
 
-#### Junior Python Langchain Developer
+#### Junior Python LangChain Developer
 
-Contributes to the development of applications and tools within the Langchain framework for creating efficient, reliable language chain applications, incorporating frameworks such as Langchain, Pydantic, and Tiktoken.
+Contributes to the development of applications and tools within the LangChain framework for creating efficient, reliable language chain applications, incorporating frameworks such as LangChain, Pydantic, and Tiktoken.
 
 **Tools:**
 
@@ -56,9 +56,9 @@ Develops high-quality, dynamic, and responsive web applications using Vue.js.
 
 ---
 
-#### Junior Python Langchain Developer with Local File System
+#### Junior Python LangChain Developer with Local File System
 
-Contributes to the development of applications and tools within the Langchain framework.
+Contributes to the development of applications and tools within the LangChain framework.
 
 :::note
 Designed solely for local usage.

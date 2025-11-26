@@ -41,7 +41,7 @@ Converts Mermaid diagram syntax to images for documentation and visualizations.
 | ------------------------- | ------- | ------------------------- | -------------------------------------------------------------------------------------------------- |
 | `MERMAID_SERVER_URL`      | string  | `"http://localhost:8082"` | Local Mermaid rendering service URL for diagram generation                                         |
 | `MERMAID_SERVER_TIMEOUT`  | integer | `50`                      | Max seconds to wait for diagram rendering before timeout                                           |
-| `MERMAID_USE_MERMAID_INC` | boolean | `false`                   | Use public Mermaid Inc. service (requires outboud internet connection) or locally installed server |
+| `MERMAID_USE_MERMAID_INC` | boolean | `false`                   | Use public Mermaid Inc. service (requires outbound internet connection) or locally installed server |
 
 ### Agent-to-Agent (A2A) Communication
 
@@ -94,7 +94,7 @@ These parameters define paths to configuration files and directories. Typically 
 | Parameter                         | Type | Default                          | Description                                              |
 | --------------------------------- | ---- | -------------------------------- | -------------------------------------------------------- |
 | `PROJECT_ROOT`                    | Path | Auto-detected                    | Project root directory (auto-detected from installation) |
-| `LLM_TEMPLATES_ROOT`              | Path | `config/llms`                    | Directory containing LLM model configuration YAML files  |
+| `LLM_TEMPLATES_ROOT`              | Path | `config/LLMs`                    | Directory containing LLM model configuration YAML files  |
 | `DATASOURCES_CONFIG_DIR`          | Path | `config/datasources`             | Datasource connector definitions and schemas             |
 | `ASSISTANT_TEMPLATES_DIR`         | Path | `config/templates/assistant`     | Pre-built assistant templates for quick setup            |
 | `WORKFLOW_TEMPLATES_DIR`          | Path | `config/templates/workflow`      | Workflow templates for common automation patterns        |
@@ -521,13 +521,13 @@ Connect to external LiteLLM proxy for advanced features like load balancing and 
 
 | Parameter             | Type   | Default | Description                                            |
 | --------------------- | ------ | ------- | ------------------------------------------------------ |
-| `LITE_LLM_URL`        | string | `""`    | LiteLLM proxy server URL (e.g., `http://litellm:4000`) |
+| `LITE_LLM_URL`        | string | `""`    | LiteLLM proxy server URL (e.g., `http://LiteLLM:4000`) |
 | `LITE_LLM_APP_KEY`    | string | `""`    | Application-specific key for LiteLLM authentication    |
 | `LITE_LLM_MASTER_KEY` | string | `""`    | Master key for LiteLLM administrative operations       |
 
 ### LiteLLM Model Tagging
 
-Tag LLM requests for cost tracking, usage analytics, and chargeback allocation.
+Tag LLM requests for cost tracking and usage analytics.
 
 | Parameter                        | Type   | Default     | Description                                                  |
 | -------------------------------- | ------ | ----------- | ------------------------------------------------------------ |
@@ -551,10 +551,10 @@ Reduce latency and API costs by caching metadata and responses.
 
 | Parameter                    | Type    | Default | Description                                                 |
 | ---------------------------- | ------- | ------- | ----------------------------------------------------------- |
-| `LITELLM_CUSTOMER_CACHE_TTL` | integer | `300`   | Customer info cache duration in seconds (5 minutes)         |
-| `LITELLM_MODELS_CACHE_TTL`   | integer | `1800`  | Available models list cache duration (30 minutes)           |
-| `LITELLM_REQUEST_TIMEOUT`    | float   | `5.0`   | Timeout for metadata requests to LiteLLM proxy              |
-| `LITELLM_FAIL_OPEN_ON_503`   | boolean | `true`  | Allow requests when LiteLLM proxy unavailable (bypass mode) |
+| `LiteLLM_CUSTOMER_CACHE_TTL` | integer | `300`   | Customer info cache duration in seconds (5 minutes)         |
+| `LiteLLM_MODELS_CACHE_TTL`   | integer | `1800`  | Available models list cache duration (30 minutes)           |
+| `LiteLLM_REQUEST_TIMEOUT`    | float   | `5.0`   | Timeout for metadata requests to LiteLLM proxy              |
+| `LiteLLM_FAIL_OPEN_ON_503`   | boolean | `true`  | Allow requests when LiteLLM proxy unavailable (bypass mode) |
 
 ---
 

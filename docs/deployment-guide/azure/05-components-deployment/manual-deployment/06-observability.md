@@ -7,26 +7,26 @@ sidebar_label: Observability
 
 # Observability Installation
 
-## Install Fluentbit Component
+## Install Fluent Bit Component
 
-If you do not have your own logging system then consider installing Fluentbit component to store historical log data.
+If you do not have your own logging system then consider installing Fluent Bit component to store historical log data.
 
-1. Create `fluentbit` namespace:
+1. Create `Fluent Bit` namespace:
 
    ```bash
-   kubectl create ns fluentbit
+   kubectl create ns Fluent Bit
    ```
 
-2. Copy Elasticsearch credentials to the `fluentbit` namespace with the command:
+2. Copy Elasticsearch credentials to the `Fluent Bit` namespace with the command:
 
    ```bash
-   kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | sed '/namespace:/d' | kubectl apply -n fluentbit -f -
+   kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | sed '/namespace:/d' | kubectl apply -n Fluent Bit -f -
    ```
 
-3. Install `fluentbit` with the command:
+3. Install `Fluent Bit` with the command:
 
    ```bash
-   helm upgrade --install fluent-bit fluent-bit/. -n fluentbit --values fluent-bit/values.yaml --wait --timeout 900s --dependency-update
+   helm upgrade --install fluent-bit fluent-bit/. -n Fluent Bit --values fluent-bit/values.yaml --wait --timeout 900s --dependency-update
    ```
 
 4. Go to Kibana and setup `codemie_infra_logs*` index to view historical logs.

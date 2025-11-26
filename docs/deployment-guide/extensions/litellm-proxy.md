@@ -1,5 +1,5 @@
 ---
-id: litellm-proxy
+id: LiteLLM-proxy
 sidebar_position: 2
 title: LiteLLM Proxy
 description: Load balancing and high availability for LLM requests
@@ -49,7 +49,7 @@ For detailed installation instructions, refer to the LiteLLM Proxy documentation
 ### Basic Configuration
 
 ```yaml
-litellm:
+LiteLLM:
   enabled: true
   replicas: 2
   resources:
@@ -66,7 +66,7 @@ litellm:
 Configure multiple LLM providers for load balancing:
 
 ```yaml
-litellm:
+LiteLLM:
   providers:
     - name: bedrock
       region: us-east-1

@@ -2,32 +2,32 @@
 id: observability
 sidebar_position: 7
 title: Observability
-description: Install Fluentbit and Kibana Dashboards for logging and monitoring
+description: Install Fluent Bit and Kibana Dashboards for logging and monitoring
 ---
 
 # Observability
 
-## Fluentbit
+## Fluent Bit
 
 If you don't have your own logging system:
 
 1. Create namespace:
 
    ```bash
-   kubectl create ns fluentbit
+   kubectl create ns Fluent Bit
    ```
 
 2. Copy Elasticsearch credentials:
 
    ```bash
-   kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | sed '/namespace:/d' | kubectl apply -n fluentbit -f -
+   kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | sed '/namespace:/d' | kubectl apply -n Fluent Bit -f -
    ```
 
-3. Install Fluentbit:
+3. Install Fluent Bit:
 
    ```bash
    helm upgrade --install fluent-bit fluent-bit/. \
-     -n fluentbit \
+     -n Fluent Bit \
      --values fluent-bit/values.yaml \
      --wait --timeout 900s \
      --dependency-update

@@ -97,6 +97,9 @@ jobs:
       - name: Run Markdown linter
         run: npm run lint:markdown
 
+      - name: Run spell check
+        run: npm run lint:spelling
+
       - name: Linting summary
         if: success()
         run: |
@@ -105,6 +108,7 @@ jobs:
           echo "- ESLint: PASSED"
           echo "- Prettier: PASSED"
           echo "- Markdown linting: PASSED"
+          echo "- Spell checking: PASSED"
 
   build:
     name: Build Documentation

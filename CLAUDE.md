@@ -822,6 +822,7 @@ Before committing documentation changes:
 - [ ] Run `npm run lint:eslint` for ESLint checks
 - [ ] Run `npm run lint:prettier` for format validation
 - [ ] Run `npm run lint:markdown` for Markdown linting
+- [ ] Run `npm run lint:spelling` for spell checking
 
 ---
 

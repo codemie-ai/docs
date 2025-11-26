@@ -35,9 +35,11 @@ npm run build
 npm start                # Dev server with hot reload
 npm run build            # Production build
 npm run typecheck        # TypeScript validation
+npm run lint             # Run all linters (ESLint, Prettier, Markdown, Spelling)
 npm run lint:eslint      # ESLint checks
 npm run lint:prettier    # Format validation
 npm run lint:markdown    # Markdown linting
+npm run lint:spelling    # Spell checking
 npm run secrets:check    # Scan for secrets (current files only)
 npm run secrets:check-git # Scan for secrets (includes Git history)
 ```
@@ -48,7 +50,7 @@ Pull requests are automatically validated:
 
 - Commit/PR pattern: `EPMCDME-XXXX: Description` (required)
 - Secrets detection: Gitleaks scan for exposed credentials
-- Code quality: TypeScript, ESLint, Prettier, Markdown
+- Code quality: TypeScript, ESLint, Prettier, Markdown, Spell checking
 - Build verification
 
 Merges to `main` auto-deploy to GitHub Pages.

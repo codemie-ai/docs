@@ -1,0 +1,229 @@
+version: "0.2"
+language: "en"
+useGitignore: true
+
+ignorePaths:
+  - node_modules
+  - build
+  - .docusaurus
+  - .git
+  - package-lock.json
+  - "*.lock"
+  - .github
+  - .idea
+  - .log
+  - .png
+  - "*.svg"
+  - .vscode
+# Custom dictionary - project-specific words that are correct
+words:
+  # Project/Brand names
+  - codemie
+  - AI/Run
+  - airun
+  - docusaurus
+  - easyops
+  - AICE
+  - EPAM
+  - epmd
+  - cdme
+  - EPMDEDP
+  - Tavily
+  - SonarQube
+  - DevForce
+  - EPMCDME
+  - crunchydata
+  - DALL-E
+  - DALLE
+  - AMNA
+  - AIRN
+  - VERTEXAI
+  - LangFuse
+  - LangGraph
+  - bitnami
+  # Cloud/Infrastructure
+  - kubernetes
+  - kubectl
+  - kubeconfig
+  - autoscaler
+  - Karpenter
+  - IAM
+  - RBAC
+  - IRSA
+  # AWS
+  - EKS
+  - S3
+  - RDS
+  - ECR
+  - VPC
+  - subnets
+  - subnet
+  - NAT
+  - ELB
+  - ALB
+  - CloudWatch
+  - CloudFormation
+  - eksctl
+  - awscli
+  - NACLs
+  - xlarge
+  - AWSIRSA
+  # GCP
+  - GCP
+  - GKE
+  - gcloud
+  - gsutil
+  - anthos
+  - t1iylu
+  - aiplatform
+  - cloudkms
+  # Azure
+  - AKS
+  - Azure
+  - azurecli
+  - japaneast
+  - eastus
+  - westeurope
+  # DevOps/Tools
+  - Helm
+  - Terraform
+  - Ansible
+  - GitOps
+  - ArgoCD
+  - Argo
+  - Prometheus
+  - Grafana
+  - Loki
+  - Jaeger
+  - OpenTelemetry
+  - OTEL
+  - Keycloak
+  - OIDC
+  - OAuth
+  - DaemonSet
+  - ConfigMap
+  - tfvars
+  - kubelogin
+  - htpasswd
+  - tfenv
+  - natscli
+  - StorageClass
+  - millicores
+  # Data
+  - PostgreSQL
+  - Postgres
+  - MongoDB
+  - Redis
+  - MinIO
+  - Elasticsearch
+  - Opensearch
+  - psql
+  - pgadmin
+  # Technical terms
+  - backend
+  - frontend
+  - microservices
+  - namespace
+  - namespaces
+  - autoscaling
+  - localhost
+  - hostname
+  - subdomain
+  - subdomains
+  - endpoint
+  - endpoints
+  - webhook
+  - webhooks
+  - repo
+  - repos
+  - codebase
+  - yaml
+  - YAML
+  - JSON
+  - SDLC
+  - env
+  - envs
+  - config
+  - configs
+  - CLI
+  - API
+  - APIs
+  - SDK
+  - URL
+  - URLs
+  - TLS
+  - SSL
+  - HTTPS
+  - HTTP
+  - DNS
+  - IP
+  - CIDR
+  - SOQL
+  - jumpbox
+  - dbadmin
+  # File types
+  - tsx
+  - jsx
+  - mdx
+  - phpt
+  - rhtml
+  # Shell commands, utilities and variables
+  - pwgen
+  - bcrypt
+  - urandom
+  - ingressip
+  - codemiestorage
+  # Python libraries
+  - tiktoken
+  - Uvicorn
+  - Pydantic
+  # Variable names (common patterns)
+  - BCRYPTED
+  - NSEED
+  - XSEED
+  - nseed
+  - xseed
+  # Other
+  - readonly
+  - stateful
+  - stateless
+  - multimodal
+  - uncontradictory
+  - reindexing
+  - preconfigured
+  - Toolkits
+  - autotest
+  - azadmin
+  - oauth2accesstoken
+  - multivalued
+  - userinfo
+  - usermodel
+  - PRECREATE
+  - keepalive
+  - AITOOLS
+  - hotfixes
+# Ignore RegExp patterns (for things like URLs, version numbers, etc.)
+ignoreRegExpList:
+  # Ignore hex colors
+  - "/#[0-9a-fA-F]{3,8}/g"
+  # Ignore version numbers
+  - "/v?\\d+\\.\\d+(\\.\\d+)?(-[a-zA-Z0-9.]+)?/g"
+  # Ignore base64-like strings
+  - "/[A-Za-z0-9+/]{20,}={0,2}/g"
+  # Ignore AWS ARNs
+  - "/arn:aws:[a-z0-9-]+:[a-z0-9-]*:\\d{12}:[a-zA-Z0-9-_/]+/g"
+  # Ignore email addresses
+  - "/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g"
+  # Ignore URLs
+  - "/https?:\\/\\/[^\\s]+/g"
+  # Ignore Docker image names
+  - "/[a-z0-9-]+\\/[a-z0-9-]+:[a-z0-9.-]+/gi"
+
+# Disable checking of some patterns
+patterns:
+  # Ignore code blocks in markdown
+  - name: markdown-code
+    pattern: "/```[\\s\\S]*?```/g"
+  # Ignore inline code
+  - name: inline-code
+    pattern: "/`[^`]+`/g"

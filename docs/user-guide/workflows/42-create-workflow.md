@@ -83,7 +83,7 @@ states:
   - id: lister # Unique identifier for the state in this configuration
     assistant_id: lister
     task: |
-      Of all the tickets provided, list me those that are assigned to Oleksandr Stepanov
+      Of all the tickets provided, list me those that are assigned to <Name> <Surname>
     output_schema: |
       {
         "success": "If you receive a list of tickets, return count, otherwise return false",

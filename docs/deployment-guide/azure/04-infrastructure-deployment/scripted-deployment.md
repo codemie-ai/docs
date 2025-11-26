@@ -302,7 +302,7 @@ After execution, the script will:
 AZURE_CLIENT_ID="00000000-0000-0000-0000-000000000000"
 AZURE_KEY_VAULT_URL="https://codemie-kv-abc123.vault.azure.net"
 AZURE_KEY_NAME="codemie-key"
-AZURE_STORAGE_ACCOUNT_NAME="codemiestorabc123"
+AZURE_STORAGE_ACCOUNT_NAME="codemiestorage123"
 AZURE_RESOURCE_GROUP="airun-codemie"
 BASTION_ADMIN_USERNAME="azadmin"
 CODEMIE_DOMAIN_NAME="private.lab.com"

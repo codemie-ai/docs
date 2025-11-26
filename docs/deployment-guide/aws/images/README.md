@@ -6,7 +6,7 @@ This directory contains all images and diagrams used in the AWS deployment guide
 
 - **architecture-diagram.drawio.png** - Main AWS infrastructure architecture diagram showing EKS, VPC, ALB/NLB, RDS, S3, etc.
 - **application-stack-diagram.drawio.png** - Complete application stack showing all AI/Run CodeMie components and their relationships
-- **litellm-architecture.png** - LiteLLM Proxy architecture diagram (if available)
+- **LiteLLM-architecture.png** - LiteLLM Proxy architecture diagram (if available)
 
 ## Usage
 

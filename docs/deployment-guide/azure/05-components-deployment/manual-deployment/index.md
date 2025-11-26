@@ -42,7 +42,7 @@ This guide covers installation of the following components in order:
    - Mermaid Server
 
 6. **[Observability](./observability)**
-   - Fluentbit
+   - Fluent Bit
    - Kibana
    - Kibana Dashboards
 
