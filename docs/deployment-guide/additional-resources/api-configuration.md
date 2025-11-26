@@ -551,10 +551,10 @@ Reduce latency and API costs by caching metadata and responses.
 
 | Parameter                    | Type    | Default | Description                                                 |
 | ---------------------------- | ------- | ------- | ----------------------------------------------------------- |
-| `LiteLLM_CUSTOMER_CACHE_TTL` | integer | `300`   | Customer info cache duration in seconds (5 minutes)         |
-| `LiteLLM_MODELS_CACHE_TTL`   | integer | `1800`  | Available models list cache duration (30 minutes)           |
-| `LiteLLM_REQUEST_TIMEOUT`    | float   | `5.0`   | Timeout for metadata requests to LiteLLM proxy              |
-| `LiteLLM_FAIL_OPEN_ON_503`   | boolean | `true`  | Allow requests when LiteLLM proxy unavailable (bypass mode) |
+| `LITELLM_CUSTOMER_CACHE_TTL` | integer | `300`   | Customer info cache duration in seconds (5 minutes)         |
+| `LITELLM_MODELS_CACHE_TTL`   | integer | `1800`  | Available models list cache duration (30 minutes)           |
+| `LITELLM_REQUEST_TIMEOUT`    | float   | `5.0`   | Timeout for metadata requests to LiteLLM proxy              |
+| `LITELLM_FAIL_OPEN_ON_503`   | boolean | `true`  | Allow requests when LiteLLM proxy unavailable (bypass mode) |
 
 ---
 
