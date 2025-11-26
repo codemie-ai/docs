@@ -13,7 +13,7 @@ This section covers optional extensions that can be installed to enhance AI/Run 
 
 ## Available Extensions
 
-### [LiteLLM Proxy](./LiteLLM-proxy)
+### [LiteLLM Proxy](./litellm-proxy)
 
 Load balancing and high availability for LLM requests.
 
