@@ -1,0 +1,20 @@
+# License
+
+## Ownership
+
+All right, title and interest, including but not limited to all existing or future copyrights, trademarks,
+service marks, trade secrets, patents, patent applications, know how, moral rights, contract rights,
+and proprietary rights, and all registrations, applications, renewals, extensions,
+and combinations of the foregoing ("Intellectual Property Rights"),
+in and to the following are the exclusive property of EPAM (or, as the case may be, its licensors and suppliers):
+
+1. The SaaS Services, Software, Firmware, Documentation and all proprietary technology used by EPAM to perform its obligations under this Agreement.
+2. All software, tools, routines, programs, designs, technology, ideas, know-how, processes, techniques and inventions that EPAM makes,
+develops, conceives or reduces to practice, whether alone or jointly with others, in the course of performing the Professional Services.
+3. The fully compiled version of any of the foregoing software programs that can be executed by a computer and used without further compilation (the "Executable Code").
+4. The human readable version of any of the foregoing software programs that can be compiled into Executable Code (the "Source Code").
+5. All enhancements, modifications, improvements and derivative works of each and any of the foregoing (the "EPAM Property").
+
+If any derivative work is created by Customer from the Products or Services, EPAM shall own all right,
+title and interest in and to such derivative work. Any rights not expressly granted
+to Customer hereunder are reserved by EPAM (or its licensors and suppliers, as the case may be).
