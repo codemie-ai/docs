@@ -346,9 +346,16 @@ const sidebars: SidebarsConfig = {
               label: 'Architecture',
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/gcp/infrastructure-deployment',
+              type: 'category',
               label: 'Infrastructure Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/gcp/infrastructure-deployment/infrastructure-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/gcp/infrastructure-deployment/infrastructure-manual-deployment',
+              ],
             },
             {
               type: 'doc',

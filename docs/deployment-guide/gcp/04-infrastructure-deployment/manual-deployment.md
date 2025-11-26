@@ -1,30 +1,20 @@
 ---
-id: infrastructure-deployment
-title: GCP Infrastructure Deployment
-sidebar_label: Infrastructure Deployment
-sidebar_position: 4
+id: infrastructure-manual-deployment
+title: Manual Infrastructure Deployment
+sidebar_label: Manual Deployment
+sidebar_position: 1
 ---
 
-# GCP Infrastructure Deployment
+# Manual Infrastructure Deployment
 
-## Overview
-
-:::tip
-Skip this section if you have a ready GKE cluster with all required services.
-:::
-
-This section describes the process of deploying the AI/Run CodeMie infrastructure and application components within a GCP environment. The deployment uses Terraform to manage resources and configure services.
-
-## Manual Deployment
-
-### Deployment Order
+## Deployment Order
 
 | #   | Resource name                                                                                      | Source                                                                                                        | Modules used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 1   | Terraform Backend                                                                                  | [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend) | –                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2   | VPC<br/>NAT<br/>BastionHost<br/>GKE cluster<br/>Google Service Accounts<br/>KMS key<br/>Postgresql | [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)             | • [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)<br/>• [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)<br/>• [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)<br/>• [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)<br/>• [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)<br/>• [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)<br/>• [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)<br/>• [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)<br/>• [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql) |
 
-### Terraform Backend Resources Deployment
+## Terraform Backend Resources Deployment
 
 This step covers the creation of Google Storage Bucket to store Terraform states.
 
@@ -49,7 +39,7 @@ terraform apply
 
 The created bucket will be used for all subsequent infrastructure deployments.
 
-### Main GCP Resources Deployment
+## Main GCP Resources Deployment
 
 This step will cover the following topics:
 
@@ -126,7 +116,7 @@ terraform apply
 
 This concludes GCP infrastructure deployment.
 
-### Bastion Host Connection and Setup Guide (Optional)
+## Bastion Host Connection and Setup Guide (Optional)
 
 :::warning
 Required only if you are deploying a completely private cluster with a private DNS domain. Otherwise, you can access GKE API and CodeMie application without bastion.
@@ -139,7 +129,7 @@ You can connect in two ways:
 - **SSH Connection**: For deploying and managing workloads in Kubernetes with command-line tools
 - **RDP Connection**: For interacting with application UIs that are only accessible within the VPC using private DNS
 
-#### SSH Connection
+### SSH Connection
 
 Use SSH to deploy and manage cluster resources.
 
@@ -180,7 +170,7 @@ Fetch GKE credentials using the Terraform output (get_credentials_command):
 # Parameter: get_kubectl_credentials_for_private_cluster
 ```
 
-#### RDP Connection: Access Private Application UIs
+### RDP Connection: Access Private Application UIs
 
 Some applications are exposed internally via private DNS and are not accessible from outside the VPC. Use RDP through the Bastion Host to access these UIs.
 
