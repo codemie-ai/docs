@@ -49,7 +49,7 @@ For detailed installation instructions, refer to the LiteLLM Proxy documentation
 ### Basic Configuration
 
 ```yaml
-LiteLLM:
+litellm:
   enabled: true
   replicas: 2
   resources:
@@ -66,7 +66,7 @@ LiteLLM:
 Configure multiple LLM providers for load balancing:
 
 ```yaml
-LiteLLM:
+litellm:
   providers:
     - name: bedrock
       region: us-east-1
