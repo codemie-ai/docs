@@ -1,8 +1,8 @@
 ## Managing LLM and embedding models
 
-AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration file can be found by path in container: [config/LLMs](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/LLMs?ref_type=heads).
+AI/Run CodeMie provides a way to configure LLM and embedding models from different cloud providers. Configuration file can be found by path in container: [config/llms](https://gitbud.epam.com/epm-cdme/codemie/-/tree/main/config/llms?ref_type=heads).
 
-The `MODELS_ENV` is used to specify the environment for the models. For example, `MODELS_ENV=dial` will use the models from the `config/LLMs/llm-dial-config.yaml` file (Pattern: `llm-<MODELS_ENV>-config.yaml`).
+The `MODELS_ENV` is used to specify the environment for the models. For example, `MODELS_ENV=dial` will use the models from the `config/llms/llm-dial-config.yaml` file (Pattern: `llm-<MODELS_ENV>-config.yaml`).
 
 Example of providing LLM and embedding models for the custom environment:
 
@@ -17,7 +17,7 @@ extraEnv:
 extraVolumeMounts: |
   ...
   - name: codemie-llm-customer-config
-    mountPath: /app/config/LLMs/llm-<project-name>-config.yaml
+    mountPath: /app/config/llms/llm-<project-name>-config.yaml
     subPath: llm-<project-name>-config.yaml
   ...
 
