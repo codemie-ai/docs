@@ -41,6 +41,7 @@ words:
   - LangFuse
   - LangGraph
   - bitnami
+  - litellm
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
