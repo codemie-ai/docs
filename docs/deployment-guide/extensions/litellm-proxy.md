@@ -1,5 +1,5 @@
 ---
-id: LiteLLM-proxy
+id: litellm-proxy
 sidebar_position: 2
 title: LiteLLM Proxy
 description: Load balancing and high availability for LLM requests
