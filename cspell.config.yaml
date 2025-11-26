@@ -1,5 +1,5 @@
-version: "0.2"
-language: "en"
+version: '0.2'
+language: 'en'
 useGitignore: true
 
 ignorePaths:
@@ -8,12 +8,12 @@ ignorePaths:
   - .docusaurus
   - .git
   - package-lock.json
-  - "*.lock"
+  - '*.lock'
   - .github
   - .idea
   - .log
   - .png
-  - "*.svg"
+  - '*.svg'
   - .vscode
 # Custom dictionary - project-specific words that are correct
 words:
@@ -205,11 +205,11 @@ words:
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors
-  - "/#[0-9a-fA-F]{3,8}/g"
+  - '/#[0-9a-fA-F]{3,8}/g'
   # Ignore version numbers
   - "/v?\\d+\\.\\d+(\\.\\d+)?(-[a-zA-Z0-9.]+)?/g"
   # Ignore base64-like strings
-  - "/[A-Za-z0-9+/]{20,}={0,2}/g"
+  - '/[A-Za-z0-9+/]{20,}={0,2}/g'
   # Ignore AWS ARNs
   - "/arn:aws:[a-z0-9-]+:[a-z0-9-]*:\\d{12}:[a-zA-Z0-9-_/]+/g"
   # Ignore email addresses
@@ -226,4 +226,4 @@ patterns:
     pattern: "/```[\\s\\S]*?```/g"
   # Ignore inline code
   - name: inline-code
-    pattern: "/`[^`]+`/g"
+    pattern: '/`[^`]+`/g'

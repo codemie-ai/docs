@@ -28,7 +28,7 @@ The diagrams below depict the AI/Run CodeMie infrastructure deployment in one re
 | Oauth2-proxy        | 1                        | 128Mi | 0.1  | –                  |
 | NATS + Auth Callout | 1 + 1                    | 512Mi | 1.0  | –                  |
 | MCP Connect         | 1                        | 1Gi   | 0.5  | –                  |
-| Fluent Bit           | daemonset                | 128Mi | 0.1  | –                  |
+| Fluent Bit          | daemonset                | 128Mi | 0.1  | –                  |
 | LLM Proxy\*         | 1                        | 1Gi   | 1.0  | –                  |
 
 \* Depends on the exact LLM proxy type
