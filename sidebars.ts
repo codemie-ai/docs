@@ -366,8 +366,8 @@ const sidebars: SidebarsConfig = {
               },
               collapsed: true,
               items: [
-                'deployment-guide/gcp/components-deployment/components-scripted-installation',
-                'deployment-guide/gcp/components-deployment/components-manual-installation',
+                'deployment-guide/gcp/components-deployment/components-scripted-deployment',
+                'deployment-guide/gcp/components-deployment/components-manual-deployment',
               ],
             },
             {

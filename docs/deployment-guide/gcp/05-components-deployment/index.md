@@ -17,7 +17,7 @@ This section describes the process of the main AI/Run CodeMie components deploym
 ```
 
 :::info
-For infrastructure deployment details, refer to the [Infrastructure Deployment](./infrastructure-deployment) section.
+For infrastructure deployment details, refer to the [Infrastructure Deployment](../infrastructure-deployment) section.
 :::
 
 ## Prerequisites
@@ -103,6 +103,13 @@ Versions for Docker containers and Helm releases are matching.
 | NATS                     | `nats:x.y.z`, `natsio/nats-server-config-reloader:x.y.z`                                                                               | Message broker that serves as a crucial component of the AI/Run CodeMie Plugin Engine, facilitating communication between services                                                                               |
 | LLM Proxy                | –                                                                                                                                      | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
 | Fluentbit                | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluentbit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                              |
+
+## Deployment Methods
+
+Choose your preferred deployment method:
+
+- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
+- **[Manual Deployment](./components-manual-deployment)** - Step-by-step manual installation of each component
 
 ## Finalizing Installation
 

@@ -1,11 +1,11 @@
 ---
-id: components-scripted-installation
-title: Scripted Components Installation
-sidebar_label: Scripted Installation
+id: components-scripted-deployment
+title: Scripted Components Deployment
+sidebar_label: Scripted Deployment
 sidebar_position: 1
 ---
 
-# Scripted AI/Run CodeMie Components Installation
+# Scripted Components Deployment
 
 The `helm-charts.sh` script ([codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository) automates the deployment of components using Helm charts.
 

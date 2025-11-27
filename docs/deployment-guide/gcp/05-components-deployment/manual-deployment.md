@@ -1,11 +1,11 @@
 ---
-id: components-manual-installation
-title: Manual Components Installation
-sidebar_label: Manual Installation
+id: components-manual-deployment
+title: Manual Components Deployment
+sidebar_label: Manual Deployment
 sidebar_position: 2
 ---
 
-# Manual AI/Run CodeMie Components Installation
+# Manual Components Deployment
 
 Use this instruction to manually install AI/Run CodeMie by each component.
 
