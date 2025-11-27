@@ -453,7 +453,23 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'deployment-guide/extensions/litellm-proxy',
+            {
+              type: 'category',
+              label: 'LiteLLM Proxy',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/extensions/litellm-proxy/litellm-proxy-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/extensions/litellm-proxy/postgres-setup',
+                'deployment-guide/extensions/litellm-proxy/configure-values',
+                'deployment-guide/extensions/litellm-proxy/auth-secrets',
+                'deployment-guide/extensions/litellm-proxy/model-config',
+                'deployment-guide/extensions/litellm-proxy/deployment',
+                'deployment-guide/extensions/litellm-proxy/migration-guide',
+              ],
+            },
             'deployment-guide/extensions/assistants-evaluation',
             'deployment-guide/extensions/ai-code-explorer',
             'deployment-guide/extensions/angular-upgrade-assistant',
