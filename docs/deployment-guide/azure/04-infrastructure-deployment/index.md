@@ -33,3 +33,9 @@ This section describes the process of deploying the AI/Run CodeMie infrastructur
   - to access the Azure Key Vault key from the AI/Run CodeMie application backend
   - to access the Azure AI services from AI/Run CodeMie application backend
 - Create the Azure AI models
+
+## Next Steps
+
+Choose your deployment method:
+
+- [Scripted Deployment →](./infrastructure-scripted-deployment)
