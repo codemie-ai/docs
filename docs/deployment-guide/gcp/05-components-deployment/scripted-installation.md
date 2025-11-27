@@ -1,8 +1,8 @@
 ---
-id: scripted-installation
-title: Scripted AI/Run CodeMie Installation
+id: components-scripted-installation
+title: Scripted Components Installation
 sidebar_label: Scripted Installation
-sidebar_position: 6
+sidebar_position: 1
 ---
 
 # Scripted AI/Run CodeMie Components Installation

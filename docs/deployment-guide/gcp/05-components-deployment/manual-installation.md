@@ -1,8 +1,8 @@
 ---
-id: manual-installation
-title: Manual AI/Run CodeMie Installation
+id: components-manual-installation
+title: Manual Components Installation
 sidebar_label: Manual Installation
-sidebar_position: 7
+sidebar_position: 2
 ---
 
 # Manual AI/Run CodeMie Components Installation
