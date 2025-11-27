@@ -45,6 +45,10 @@
   object-fit: contain;
 }
 
+[data-theme='dark'] .invertInDarkTheme {
+  filter: brightness(0) invert(1);
+}
+
 .featureCardTitle {
   font-size: 1.25rem;
   font-weight: 600;
