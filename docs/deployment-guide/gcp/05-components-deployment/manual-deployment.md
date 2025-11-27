@@ -446,16 +446,26 @@ helm upgrade --install fluent-bit fluent-bit/. -n fluentbit --values fluent-bit/
 
 AI/Run CodeMie supports custom metrics about Assistants usage, including token consumption, costs, and engagement patterns. To view these metrics and gain valuable insights into your AI assistant interactions, the Kibana dashboard installation is required.
 
-1. Run the script with the next arguments:
+**With manual authentication:**
 
 ```bash
-bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.url"
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.<your-domain>"
 ```
 
-Use `--force` to recreate existing resources in Kibana.
+**With Kubernetes secret authentication (recommended):**
 
-Refer to this guide for an extensive explanation of script usage: [How to Import and Export Kibana Dashboards](https://kb.epam.com/display/EPMCDME/How+to+Import+and+Export+Kibana+Dashboards)
+```bash
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --url "https://kibana.<your-domain>" --k8s-auth --non-interactive
+```
 
-:::warning
-Kibana URL must NOT include trailing slash. Otherwise, 404 error happens.
-:::
+This uses the `elasticsearch-master-credentials` secret from the `elastic` namespace by default.
+
+For more information and additional options, use:
+
+```bash
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --help
+```
+
+## Next Steps
+
+Complete the deployment by going to [Post-Installation Configuration](../post-installation).
