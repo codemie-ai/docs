@@ -358,19 +358,17 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'doc',
-              id: 'deployment-guide/gcp/components-overview',
-              label: 'Components Overview',
-            },
-            {
-              type: 'doc',
-              id: 'deployment-guide/gcp/scripted-installation',
-              label: 'Scripted Installation',
-            },
-            {
-              type: 'doc',
-              id: 'deployment-guide/gcp/manual-installation',
-              label: 'Manual Installation',
+              type: 'category',
+              label: 'Components Deployment',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/gcp/components-deployment/components-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/gcp/scripted-installation',
+                'deployment-guide/gcp/manual-installation',
+              ],
             },
             {
               type: 'doc',

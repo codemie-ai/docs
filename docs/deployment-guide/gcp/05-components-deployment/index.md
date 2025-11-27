@@ -1,7 +1,7 @@
 ---
-id: components-overview
-title: AI/Run CodeMie Components Overview
-sidebar_label: Components Overview
+id: components-deployment-overview
+title: AI/Run CodeMie Components Deployment Overview
+sidebar_label: Components Deployment
 sidebar_position: 5
 ---
 
@@ -61,7 +61,7 @@ imagePullSecrets:
 
 ## AI/Run CodeMie Application Stack Overview
 
-![Application Stack](../common/images/application-stack-diagram.drawio.png)
+![Application Stack](../../common/images/application-stack-diagram.drawio.png)
 
 ### Core AI/Run CodeMie Components
 
