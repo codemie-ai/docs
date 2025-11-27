@@ -12,33 +12,52 @@ This guide provides instructions for installing and configuring the LiteLLM Prox
 
 ## Prerequisites
 
-:::info Prerequisites
+### General Requirements
 
-Before you begin, please ensure you have the following:
+Before you begin, ensure you have:
 
-- **Access to your Kubernetes cluster via `kubectl`.**
-- **Access to the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository.**
+- **Kubernetes Cluster Access**: `kubectl` configured to access your target cluster
+- **Helm Charts Repository**: Clone access to [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+- **CodeMie Version**: AI/Run CodeMie v2.0.0 or higher
 
-**Conditional Prerequisites:**
+:::warning Version Requirement
 
-- **If you are using AWS Bedrock LLM models:**
-  - Option 1 (Recommended for EKS): IAM Role with access to Bedrock services for use with IRSA (IAM Roles for Service Accounts)
-  - Option 2: AWS User with access to Bedrock services
-
-- **If you are using Azure OpenAI LLM models:**
-  - Option 1 (Recommended): Azure Entra ID Application with access to Azure OpenAI services
-  - Option 2: Direct API key authentication
-
-- **If you are using GCP Vertex AI LLM models:**
-  - GCP Service Account with access to Vertex AI
+LiteLLM Proxy requires AI/Run CodeMie version 2.0.0 or higher. Ensure your CodeMie installation is updated before proceeding.
 
 :::
 
-:::warning
+### Cloud Provider Prerequisites
 
-Minimal supported version of AI/Run CodeMie for use with LiteLLM Proxy is 2.0.0. Make sure you've updated your CodeMie installation before proceeding.
+Depending on which LLM providers you plan to use, prepare the appropriate credentials:
 
-:::
+<details>
+<summary><strong>AWS Bedrock</strong></summary>
+
+Choose one of the following authentication methods:
+
+- **Option 1 (Recommended for EKS): IAM Role with access to Bedrock services for use with IRSA (IAM Roles for Service Accounts)**
+
+- **Option 2: AWS User with access to Bedrock services**
+
+</details>
+
+<details>
+<summary><strong>Azure OpenAI</strong></summary>
+
+Choose one of the following authentication methods:
+
+- **Option 1 (Recommended): Azure Entra ID Application with access to Azure OpenAI services**
+
+- **Option 2: Direct API key authentication**
+
+</details>
+
+<details>
+<summary><strong>Google Vertex AI</strong></summary>
+
+- **GCP Service Account with access to Vertex AI**
+
+</details>
 
 ## LiteLLM Proxy System Requirements
 
