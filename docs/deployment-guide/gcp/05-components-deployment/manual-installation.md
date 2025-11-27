@@ -466,18 +466,3 @@ Refer to this guide for an extensive explanation of script usage: [How to Import
 :::warning
 Kibana URL must NOT include trailing slash. Otherwise, 404 error happens.
 :::
-
-## Finalizing Installation and Accessing Applications
-
-Regardless of your installation method, eventually you should have the following application stack available:
-
-| Component          | URL                                                   |
-| ------------------ | ----------------------------------------------------- |
-| AI/Run CodeMie UI  | `https://codemie.<your-domain>`                       |
-| AI/Run CodeMie API | `https://codemie.<your-domain>/code-assistant-api/v1` |
-| Keycloak UI        | `https://keycloak.<your-domain>/auth/admin`           |
-| Kibana             | `https://kibana.<your-domain>`                        |
-
-:::info
-Some components may be missing due to your setup configuration or use `http` protocol in private cluster.
-:::

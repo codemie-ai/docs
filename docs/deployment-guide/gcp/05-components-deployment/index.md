@@ -103,3 +103,22 @@ Versions for Docker containers and Helm releases are matching.
 | NATS                     | `nats:x.y.z`, `natsio/nats-server-config-reloader:x.y.z`                                                                               | Message broker that serves as a crucial component of the AI/Run CodeMie Plugin Engine, facilitating communication between services                                                                               |
 | LLM Proxy                | –                                                                                                                                      | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
 | Fluentbit                | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluentbit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                              |
+
+## Finalizing Installation
+
+Regardless of your installation method, eventually you should have the following application stack available:
+
+| Component          | URL                                                   |
+| ------------------ | ----------------------------------------------------- |
+| AI/Run CodeMie UI  | `https://codemie.<your-domain>`                       |
+| AI/Run CodeMie API | `https://codemie.<your-domain>/code-assistant-api/v1` |
+| Keycloak UI        | `https://keycloak.<your-domain>/auth/admin`           |
+| Kibana             | `https://kibana.<your-domain>`                        |
+
+:::info
+Some components may be missing due to your setup configuration or use `http` protocol in private cluster.
+:::
+
+## Next Steps
+
+After successful components deployment, proceed to [Post-Installation Configuration](../post-installation) to complete required setup steps.

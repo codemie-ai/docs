@@ -59,18 +59,17 @@ Specifies which components are to be installed.
 Fill these values before running installation script.
 :::
 
-| Component    | Placeholder / Env variable  | Description                                                                                                                                                                       | Example           | File to edit                                        |
-| ------------ | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | --------------------------------------------------- |
-| Kibana       | `%%DOMAIN%%`                | Your public domain                                                                                                                                                                | `example.com`     | `codemie-helm-charts/kibana/values-gcp.yaml`        |
-| Keycloak     | `%%DOMAIN%%`                | Your public domain                                                                                                                                                                | `example.com`     | `codemie-helm-charts/keycloak-helm/values-gcp.yaml` |
-| OAuth2 Proxy | `%%DOMAIN%%`                | Your public domain                                                                                                                                                                | `example.com`     | `codemie-helm-charts/oauth2-proxy/values-gcp.yaml`  |
-| CodeMie UI   | `%%DOMAIN%%`                | Your public domain                                                                                                                                                                | `example.com`     | `codemie-helm-charts/codemie-ui/values-gcp.yaml`    |
-| CodeMie API  | `%%DOMAIN%%`                | Your public domain                                                                                                                                                                | `example.com`     | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_PROJECT_ID%%`     | GCP project ID                                                                                                                                                                    | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_REGION%%`         | GCP region                                                                                                                                                                        | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID of KMS Key                                                                                                                                                         | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_KMS_REGION%%`     | GCP region of KMS Key                                                                                                                                                             | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `PG_URL`                    | Leave as is if planning to use in-cluster postgres. Change to `postgresql://admin:$(POSTGRES_PASSWORD)@%%DB_HOST%%:5432/codemie` in case of using cloud managed Postgres instance |                   |                                                     |
+| Component    | Placeholder / Env variable  | Description               | Example           | File to edit                                        |
+| ------------ | --------------------------- | ------------------------- | ----------------- | --------------------------------------------------- |
+| Kibana       | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/kibana/values-gcp.yaml`        |
+| Keycloak     | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/keycloak-helm/values-gcp.yaml` |
+| OAuth2 Proxy | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/oauth2-proxy/values-gcp.yaml`  |
+| CodeMie UI   | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/codemie-ui/values-gcp.yaml`    |
+| CodeMie API  | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
+| CodeMie API  | `%%GOOGLE_PROJECT_ID%%`     | GCP project ID            | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
+| CodeMie API  | `%%GOOGLE_REGION%%`         | GCP region                | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
+| CodeMie API  | `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID of KMS Key | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
+| CodeMie API  | `%%GOOGLE_KMS_REGION%%`     | GCP region of KMS Key     | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
 
 ## Create Service Account Key for Kubernetes
 
