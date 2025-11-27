@@ -197,3 +197,7 @@ Open your preferred RDP client and connect to `localhost:3389`.
    ```
 
    - Paste commands into terminal: Use `Shift-Ctrl-V`
+
+## Next Steps
+
+After successful deployment, proceed to [Components Deployment](../components-deployment/) to install AI/Run CodeMie application components.
