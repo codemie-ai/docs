@@ -439,8 +439,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'deployment-guide/gcp/maintenance',
-              label: 'Maintenance',
+              id: 'deployment-guide/gcp/update-version',
+              label: 'Update Version',
             },
           ],
         },
