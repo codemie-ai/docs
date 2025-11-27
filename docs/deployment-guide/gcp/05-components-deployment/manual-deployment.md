@@ -275,44 +275,37 @@ helm upgrade --install codemie-mcp-connect-service oci://europe-west3-docker.pkg
 --wait --timeout 600s
 ```
 
-## Install PostgreSQL Component
+## Install PostgreSQL secret
 
-:::warning
-Required starting from AI/Run CodeMie 1.0.0 version.
-:::
-
-1. Create `codemie-postgresql` with postgresql passwords:
+Create `codemie-postgresql` secret:
 
 ```bash
 kubectl create secret generic codemie-postgresql \
---from-literal=password=$(openssl rand -base64 12) \
---from-literal=postgres-password=$(openssl rand -base64 12) \
---namespace codemie
+        --from-literal=PG_PASS=<CODEMIE_POSTGRES_DATABASE_PASSWORD> \
+        --from-literal=PG_USER=<CODEMIE_POSTGRES_DATABASE_USER> \
+        --from-literal=PG_HOST=<CODEMIE_POSTGRES_DATABASE_HOST> \
+        --from-literal=PG_NAME=<CODEMIE_POSTGRES_DATABASE_NAME> \
+        --namespace codemie
 ```
+
+:::note
+Replace `<CODEMIE_POSTGRES_DATABASE_*>` placeholders with actual values.
+:::
 
 Secret example:
 
-```yaml
+```bash
 apiVersion: v1
 kind: Secret
 metadata:
   name: codemie-postgresql
   namespace: codemie
 data:
-  password: <base64-encoded-password> # main password for user that is used to access codemie database
-  postgres-password: <base64-encoded-postgres-password> # postgres admin user password
+  PG_HOST: <base64-encoded-host>
+  PG_NAME: <base64-encoded-db-name>
+  PG_PASS: <base64-encoded-password>
+  PG_USER: <base64-encoded-user>
 type: Opaque
-```
-
-2. Install `PostgreSQL` helm chart with the command:
-
-```bash
-helm upgrade --install codemie-postgresql bitnami/postgresql \
---version 16.7.21 \
---values ./codemie-postgresql/values-gcp.yaml \
---namespace codemie \
---wait --timeout 600s \
---dependency-update
 ```
 
 ## Install OAuth2 Proxy Component
