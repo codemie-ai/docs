@@ -469,12 +469,16 @@ const sidebars: SidebarsConfig = {
             'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
           ],
         },
+        {
+          type: 'doc',
+          id: 'deployment-guide/faq',
+          label: 'FAQ',
+        },
       ],
     },
   ],
 };
 
-// Use the same sidebar for all sections
 sidebars.userGuideSidebar = sidebars.mainSidebar;
 sidebars.deploymentGuideSidebar = sidebars.mainSidebar;
 
