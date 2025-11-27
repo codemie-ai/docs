@@ -61,7 +61,7 @@ imagePullSecrets:
 
 ## AI/Run CodeMie Application Stack Overview
 
-![Application Stack](./images/2586695666.png)
+![Application Stack](../common/images/application-stack-diagram.drawio.png)
 
 ### Core AI/Run CodeMie Components
 
