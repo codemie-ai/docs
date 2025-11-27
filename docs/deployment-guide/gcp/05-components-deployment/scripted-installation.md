@@ -245,3 +245,7 @@ Get the NATS service IP:
 ```bash
 kubectl get service codemie-nats -n codemie -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
+
+## Next Steps
+
+After successful deployment, proceed to [Post-Installation Configuration](../post-installation) to complete required setup steps.
