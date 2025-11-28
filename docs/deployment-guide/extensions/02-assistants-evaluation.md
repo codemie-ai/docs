@@ -47,18 +47,19 @@ The diagram below depicts the Langfuse LLM Observability Platform deployed on Ku
 
 ### Components and Requirements
 
-| Component | CPU (Limits/Requests) | Memory (Limits/Requests) | Storage |
-|-----------|----------------------|--------------------------|---------|
-| Langfuse Web | 2 / 1 | 4Gi / 2Gi | — |
-| Langfuse Worker | 2 / 1 | 4Gi / 2Gi | — |
-| PostgreSQL[^1] | — | — | — |
-| ClickHouse x 3 Replicas | 2 / 0.3 | 8Gi / 8Gi | 100Gi PVC |
-| Zookeeper x 3 Replicas | 2 / 0.1 | 4Gi / 4Gi | 1Gi |
-| Redis | 1 / 0.1 | 1.5Gi / 512Mi | 2Gi |
-| S3 (Minio)[^2] | 2 / 0.1 | 4Gi / 512Mi | 100Gi PVC |
-| **Total** | **~11 / ~2.6 vCPU** | **~49.5 / ~33 GiB RAM** | **~400 Gi PVC** |
+| Component               | CPU (Limits/Requests) | Memory (Limits/Requests) | Storage         |
+| ----------------------- | --------------------- | ------------------------ | --------------- |
+| Langfuse Web            | 2 / 1                 | 4Gi / 2Gi                | —               |
+| Langfuse Worker         | 2 / 1                 | 4Gi / 2Gi                | —               |
+| PostgreSQL[^1]          | —                     | —                        | —               |
+| ClickHouse x 3 Replicas | 2 / 0.3               | 8Gi / 8Gi                | 100Gi PVC       |
+| Zookeeper x 3 Replicas  | 2 / 0.1               | 4Gi / 4Gi                | 1Gi             |
+| Redis                   | 1 / 0.1               | 1.5Gi / 512Mi            | 2Gi             |
+| S3 (Minio)[^2]          | 2 / 0.1               | 4Gi / 512Mi              | 100Gi PVC       |
+| **Total**               | **~11 / ~2.6 vCPU**   | **~49.5 / ~33 GiB RAM**  | **~400 Gi PVC** |
 
 [^1]: Reusing main AI/Run CodeMie PostgreSQL instance
+
 [^2]: Can use S3 instead of MinIO
 
 ## Prerequisites for Deployment
@@ -125,7 +126,6 @@ s3:
 3. **Configure PostgreSQL running in managed cloud**
 
    a. Connect to PostgreSQL database `codemie` depending on your cloud provider. Choose one of the following options:
-
    - Some cloud providers have built-in query tools
    - Deploy pgadmin inside the cluster to access your private Postgres instance:
 
@@ -239,15 +239,15 @@ PostgreSQL password:
 
 #### Script Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `-h, --help` | Show help message | - |
-| `-n, --namespace` | Kubernetes namespace | `langfuse` |
-| `-v, --version` | Langfuse Helm chart version | `1.5.3` |
-| `-d, --dry-run` | Perform dry run without changes | `false` |
-| `--skip-secrets` | Skip secret creation | `false` |
-| `--skip-deploy` | Skip Helm deployment | `false` |
-| `--values-file` | Path to values.yaml file | `values.yaml` |
+| Option            | Description                     | Default       |
+| ----------------- | ------------------------------- | ------------- |
+| `-h, --help`      | Show help message               | -             |
+| `-n, --namespace` | Kubernetes namespace            | `langfuse`    |
+| `-v, --version`   | Langfuse Helm chart version     | `1.5.3`       |
+| `-d, --dry-run`   | Perform dry run without changes | `false`       |
+| `--skip-secrets`  | Skip secret creation            | `false`       |
+| `--skip-deploy`   | Skip Helm deployment            | `false`       |
+| `--values-file`   | Path to values.yaml file        | `values.yaml` |
 
 ### What the Script Does
 
@@ -377,15 +377,15 @@ Add the following environment variables to your CodeMie API `values.yaml`:
 ```yaml
 extraEnv:
   - name: LANGFUSE_TRACES
-    value: "true"
+    value: 'true'
   - name: LANGFUSE_HOST
     value: https://langfuse.%DOMAIN%
   - name: LANGFUSE_SAMPLE_RATE
-    value: "1.0"
+    value: '1.0'
   - name: LANGFUSE_TRACING_ENVIRONMENT
     value: <your_environment_name>
   - name: LANGFUSE_RELEASE
-    value: "1.4.0" # AI/Run CodeMie current version
+    value: '1.4.0' # AI/Run CodeMie current version
   - name: LANGFUSE_PUBLIC_KEY
     valueFrom:
       secretKeyRef:
