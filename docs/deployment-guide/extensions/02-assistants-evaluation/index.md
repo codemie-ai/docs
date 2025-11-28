@@ -26,6 +26,7 @@ This guide provides two deployment methods:
 ### Automated Deployment (Recommended)
 
 Uses the `deploy-langfuse.sh` script to automatically handle:
+
 - Kubernetes secret creation
 - Helm repository configuration
 - Langfuse deployment
