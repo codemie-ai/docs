@@ -31,20 +31,20 @@ The diagram below depicts the AICE Platform deployed on Kubernetes infrastructur
 
 ### Core AICE Components Overview
 
-| Component name              | Images                                 | Description                                                                                                                                                                                                                                          |
-| --------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| code-exploration-ui         | `aice/code-exploration-ui:latest`      | Frontend UI application for code exploration, built with React and served via Nginx. Provides the web interface for users to interact with the AICE system.                                                                                         |
-| code-analysis-datasource    | `aice/code-analysis-datasource:latest` | Service responsible for parsing and analyzing source code. Exposes APIs for code analysis and provides data to the main API service. Uses LSP implementations and ANTLR for code parsing and semantic analysis.                                     |
+| Component name              | Images                                 | Description                                                                                                                                                                                                                                                           |
+| --------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| code-exploration-ui         | `aice/code-exploration-ui:latest`      | Frontend UI application for code exploration, built with React and served via Nginx. Provides the web interface for users to interact with the AICE system.                                                                                                           |
+| code-analysis-datasource    | `aice/code-analysis-datasource:latest` | Service responsible for parsing and analyzing source code. Exposes APIs for code analysis and provides data to the main API service. Uses LSP implementations and ANTLR for code parsing and semantic analysis.                                                       |
 | code-exploration-api        | `aice/code-exploration-api:latest`     | Main backend API service that handles requests from the UI. Manages the code knowledge graph, interacts with Neo4j, Elasticsearch, and LLM providers to deliver code exploration capabilities. Implements hexagonal architecture for maintainability and scalability. |
-| code-exploration-api-worker | `aice/code-exploration-api:latest`     | Background worker process for the API service that handles asynchronous tasks such as LLM processing. Uses the same image as the API service but runs with a different command.                                                                     |
+| code-exploration-api-worker | `aice/code-exploration-api:latest`     | Background worker process for the API service that handles asynchronous tasks such as LLM processing. Uses the same image as the API service but runs with a different command.                                                                                       |
 
 ### Third-Party AICE Components
 
-| Component name | Images                                                    | Description                                                                                                                                                                   |
-| -------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| neo4j          | `neo4j:5.26.3`                                            | Graph database used to store and query the code knowledge graph. Configured with APOC and Graph Data Science plugins for advanced graph operations.                          |
-| elasticsearch  | `docker.elastic.co/elasticsearch/elasticsearch:8.16.1`    | Search engine used for full-text searching of code and related metadata. Provides powerful search capabilities across the codebase.                                          |
-| redis          | `redis:8.2.2`                                             | In-memory data store used for caching, session management, and as a message broker for the task queue system. Facilitates communication between API and worker processes.    |
+| Component name | Images                                                 | Description                                                                                                                                                               |
+| -------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| neo4j          | `neo4j:5.26.3`                                         | Graph database used to store and query the code knowledge graph. Configured with APOC and Graph Data Science plugins for advanced graph operations.                       |
+| elasticsearch  | `docker.elastic.co/elasticsearch/elasticsearch:8.16.1` | Search engine used for full-text searching of code and related metadata. Provides powerful search capabilities across the codebase.                                       |
+| redis          | `redis:8.2.2`                                          | In-memory data store used for caching, session management, and as a message broker for the task queue system. Facilitates communication between API and worker processes. |
 
 ## PostgreSQL Configuration
 
@@ -126,11 +126,11 @@ Add the following environment variables to your CodeMie API `values.yaml`:
 ```yaml
 extraEnv:
   - name: LLM_PROXY_MODE
-    value: "lite_llm"
+    value: 'lite_llm'
   - name: LLM_PROXY_ENABLED
-    value: "true"
+    value: 'true'
   - name: LITE_LLM_URL
-    value: "http://litellm.litellm:4000"
+    value: 'http://litellm.litellm:4000'
   - name: LITE_LLM_APP_KEY
     valueFrom:
       secretKeyRef:

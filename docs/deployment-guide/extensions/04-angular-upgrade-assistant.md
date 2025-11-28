@@ -1,106 +1,69 @@
 ---
 id: angular-upgrade-assistant
-sidebar_position: 5
 title: Angular Upgrade Assistant
-description: Specialized assistant for Angular application upgrades
+sidebar_label: Angular Upgrade Assistant
+sidebar_position: 4
+description: AI-powered assistant for upgrading Angular projects to newer versions
 ---
 
 # Angular Upgrade Assistant
 
-Specialized assistant for Angular application upgrades.
+Angular Upgrade Assistant is an AI-enabled solution designed to streamline and simplify the process of upgrading Angular projects to newer Angular versions. Built with Vue.js and Vite, it provides an intuitive UI for managing dependency upgrades and fixing build errors.
 
-## Features
+## Use Case
 
-- Version compatibility analysis
-- Migration path planning
-- Code transformation suggestions
-- Dependency updates
-- Breaking change identification
+When you need to upgrade an Angular project to a newer Angular version, this application provides a UI for the AI-enabled upgrade assistant, which speeds up and simplifies the process of upgrading project dependencies and fixing build errors.
 
-## Use Cases
+## Angular Upgrade Assistant Requirements
 
-### Angular version upgrades
+The diagram below depicts the Angular Upgrade Assistant deployed on Kubernetes infrastructure within a cloud environment.
 
-Upgrade Angular applications to newer versions:
+:::info Architecture
 
-- Analyze current version
-- Plan migration path
-- Identify breaking changes
-- Generate migration scripts
+Angular Upgrade Assistant is a lightweight frontend application that works together with the Angular Upgrade AI Assistant server (a separate Python application).
 
-### Migration to modern Angular features
+:::
 
-- Convert to standalone components
-- Adopt signals and modern APIs
-- Update routing patterns
-- Modernize dependency injection
+### Container Resource Requirements
 
-### Breaking change identification
+| Component Name            | Replicas | Memory | CPU (cores) |
+| ------------------------- | -------- | ------ | ----------- |
+| angular-upgrade-assistant | 1        | 128Mi  | 0.1         |
 
-- Detect deprecated APIs
-- Find incompatible patterns
-- Suggest alternatives
+### Component Overview
 
-### Best practices application
+| Component name            | Images                                                                                      | Description                                                                                                                                                                                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| angular-upgrade-assistant | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/angular-upgrade-assistant` | Frontend UI application, part of Angular Upgrade AI Assistant solution to upgrade Angular projects to newer Angular versions. Built with Vue.js and Vite and based on CodeMie UI. Works together with Angular Upgrade AI Assistant server, which is a separate Python application. |
 
-- Recommend Angular best practices
-- Improve code structure
-- Optimize performance
+## Install Angular Upgrade Assistant Extension Component
 
-## Prerequisites
+Follow these steps to install the Angular Upgrade Assistant:
 
-- Angular application source code
-- Git repository access
-- Understanding of target Angular version
+### Step 1: Configure Values File
 
-## Configuration
+Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/angular-upgrade-assistant` by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`.
 
-### Target Version
+### Step 2: Install Helm Chart
 
-Specify target Angular version:
+Install the `angular-upgrade-assistant` Helm chart in the created namespace, applying the custom values file with the following command:
 
-```yaml
-angular_upgrade:
-  target_version: '17.0.0'
-  current_version: '14.2.0'
+```bash
+helm upgrade --install angular-upgrade-assistant oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/angular-upgrade-assistant \
+--version x.y.z \
+--namespace "codemie" \
+-f "./codemie-extensions/angular-upgrade-assistant/values-<cloud_name>.yaml" \
+--wait --timeout 180s
 ```
 
-### Migration Options
+### Step 3: Access the Application
 
-Configure migration preferences:
+AI/Run CodeMie UI can be accessed by the following URL:
 
-```yaml
-angular_upgrade:
-  options:
-    standalone_components: true
-    signals: true
-    strict_mode: true
-```
-
-## Using the Assistant
-
-### Analysis Phase
-
-1. Connect Angular project
-2. Run compatibility analysis
-3. Review breaking changes
-4. Generate migration plan
-
-### Migration Phase
-
-1. Follow suggested migration steps
-2. Apply code transformations
-3. Update dependencies
-4. Test changes
-
-### Validation Phase
-
-1. Run tests
-2. Verify functionality
-3. Review performance
-4. Document changes
+- URL Pattern: `https://codemie.%%DOMAIN%%/apps/angular-upgrade-assistant/`
+- Example: `https://codemie.example.com/apps/angular-upgrade-assistant/`
 
 ## Next Steps
 
-- Return to [Extensions Overview](./)
+- Return to [Extensions Overview](../)
 - Configure other extensions
