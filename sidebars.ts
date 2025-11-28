@@ -453,11 +453,67 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'deployment-guide/extensions/litellm-proxy',
-            'deployment-guide/extensions/assistants-evaluation',
-            'deployment-guide/extensions/ai-code-explorer',
-            'deployment-guide/extensions/angular-upgrade-assistant',
-            'deployment-guide/extensions/salesforce-devforce-ai',
+            {
+              type: 'category',
+              label: 'LiteLLM Proxy',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/extensions/litellm-proxy/litellm-proxy-overview',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/extensions/litellm-proxy/postgres-setup',
+                'deployment-guide/extensions/litellm-proxy/configure-values',
+                'deployment-guide/extensions/litellm-proxy/auth-secrets',
+                'deployment-guide/extensions/litellm-proxy/model-config',
+                {
+                  type: 'category',
+                  label: 'Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/extensions/litellm-proxy/deployment/deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/extensions/litellm-proxy/deployment/automated-deployment',
+                    'deployment-guide/extensions/litellm-proxy/deployment/manual-deployment',
+                  ],
+                },
+                'deployment-guide/extensions/litellm-proxy/migration-guide',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Assistants Evaluation',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/extensions/assistants-evaluation/assistants-evaluation',
+              },
+              collapsed: true,
+              items: [
+                'deployment-guide/extensions/assistants-evaluation/prerequisites',
+                'deployment-guide/extensions/assistants-evaluation/system-requirements',
+                'deployment-guide/extensions/assistants-evaluation/deployment-prerequisites',
+                {
+                  type: 'category',
+                  label: 'Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/extensions/assistants-evaluation/deployment/deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/extensions/assistants-evaluation/deployment/automated-deployment',
+                    'deployment-guide/extensions/assistants-evaluation/deployment/manual-deployment',
+                  ],
+                },
+                'deployment-guide/extensions/assistants-evaluation/post-deployment',
+                'deployment-guide/extensions/assistants-evaluation/troubleshooting',
+              ],
+            },
+            'deployment-guide/extensions/ai-code-explorer/ai-code-explorer',
+            'deployment-guide/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
+            'deployment-guide/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
           ],
         },
         {

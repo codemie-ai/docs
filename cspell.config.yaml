@@ -121,6 +121,10 @@ words:
   - Opensearch
   - psql
   - pgadmin
+  - clickhouse
+  - Neo4j
+  - elasticvue
+  - valkey
   # Technical terms
   - backend
   - frontend
@@ -163,6 +167,11 @@ words:
   - SOQL
   - jumpbox
   - dbadmin
+  - masterkey
+  - nextauth
+  - statefulset
+  - ANTLR
+  - dozerdb
   # File types
   - tsx
   - jsx
