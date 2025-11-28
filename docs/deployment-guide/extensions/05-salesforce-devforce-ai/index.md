@@ -14,7 +14,7 @@ Salesforce DevForce AI is an AI-powered development accelerator designed to stre
 
 The diagram below depicts the Salesforce DevForce AI deployed on Kubernetes infrastructure within a cloud environment.
 
-![Salesforce Devforce AI Architecture](./05-salesforce-devforce-ai/images/salesforce-devforce-ai-architecture.drawio.png)
+![Salesforce Devforce AI Architecture](./images/salesforce-devforce-ai-architecture.drawio.png)
 
 ### Container Resource Requirements
 

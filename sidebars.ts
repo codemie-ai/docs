@@ -513,7 +513,7 @@ const sidebars: SidebarsConfig = {
             },
             'deployment-guide/extensions/ai-code-explorer/ai-code-explorer',
             'deployment-guide/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
-            'deployment-guide/extensions/salesforce-devforce-ai',
+            'deployment-guide/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
           ],
         },
         {
