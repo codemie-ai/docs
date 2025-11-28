@@ -482,7 +482,7 @@ const sidebars: SidebarsConfig = {
                 'deployment-guide/extensions/litellm-proxy/migration-guide',
               ],
             },
-            'deployment-guide/extensions/assistants-evaluation',
+            'deployment-guide/extensions/assistants-evaluation/assistants-evaluation',
             'deployment-guide/extensions/ai-code-explorer',
             'deployment-guide/extensions/angular-upgrade-assistant',
             'deployment-guide/extensions/salesforce-devforce-ai',

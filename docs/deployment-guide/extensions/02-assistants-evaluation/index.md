@@ -43,7 +43,7 @@ Review Langfuse system requirements before proceeding.
 
 The diagram below depicts the Langfuse LLM Observability Platform deployed on Kubernetes infrastructure within a cloud environment.
 
-![LiteLLM Architecture](./02-assistants-evaluation/images/langfuse-architecture.drawio.png)
+![Langfuse Architecture](./images/langfuse-architecture.drawio.png)
 
 ### Components and Requirements
 
