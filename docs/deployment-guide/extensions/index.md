@@ -1,15 +1,11 @@
 ---
 id: extensions-overview
 sidebar_position: 1
-title: Extensions (Optional)
+title: Extensions
 description: Optional extensions and additional features for AI/Run CodeMie
 ---
 
-# AI/Run CodeMie Extensions (Optional)
-
-## Overview
-
-This section covers optional extensions that can be installed to enhance AI/Run CodeMie functionality.
+# AI/Run CodeMie Extensions
 
 ## Available Extensions
 
