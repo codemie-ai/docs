@@ -18,11 +18,7 @@ When you need to upgrade an Angular project to a newer Angular version, this app
 
 The diagram below depicts the Angular Upgrade Assistant deployed on Kubernetes infrastructure within a cloud environment.
 
-:::info Architecture
-
-Angular Upgrade Assistant is a lightweight frontend application that works together with the Angular Upgrade AI Assistant server (a separate Python application).
-
-:::
+![Angular Upgrade Assistant Architecture](./04-angular-upgrade-assistant/image/angular-upgrade-assistant-architecture.drawio.png)
 
 ### Container Resource Requirements
 
