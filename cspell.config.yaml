@@ -122,10 +122,8 @@ words:
   - psql
   - pgadmin
   - clickhouse
-  - ClickHouse
   - Neo4j
   - elasticvue
-  - Valkey
   - valkey
   # Technical terms
   - backend
@@ -172,7 +170,6 @@ words:
   - masterkey
   - nextauth
   - statefulset
-  - StatefulSet
   - ANTLR
   - dozerdb
   # File types
