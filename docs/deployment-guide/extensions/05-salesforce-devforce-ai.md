@@ -1,121 +1,55 @@
 ---
 id: salesforce-devforce-ai
-sidebar_position: 6
 title: Salesforce DevForce AI
-description: AI-powered development assistant for Salesforce
+sidebar_label: Salesforce DevForce AI
+sidebar_position: 5
+description: AI-powered development accelerator for Salesforce projects
 ---
 
 # Salesforce DevForce AI
 
-AI-powered development assistant for Salesforce.
+Salesforce DevForce AI is an AI-powered development accelerator designed to streamline and enhance Salesforce development workflows. This extension provides intelligent assistance for Salesforce-related development tasks.
 
-## Features
+## Salesforce DevForce AI Requirements
 
-- Apex code generation
-- SOQL query assistance
-- Metadata analysis
-- Best practices guidance
-- Testing support
+The diagram below depicts the Salesforce DevForce AI deployed on Kubernetes infrastructure within a cloud environment.
 
-## Prerequisites
+![Salesforce Devforce AI Architecture](./05-salesforce-devforce-ai/images/salesforce-devforce-ai-architecture.drawio.png)
 
-- Salesforce org access
-- API credentials configured
-- Salesforce metadata accessible
-- Appropriate Salesforce licenses
+### Container Resource Requirements
 
-## Use Cases
+| Component Name         | Replicas | Memory | CPU (cores) |
+| ---------------------- | -------- | ------ | ----------- |
+| salesforce-accelerator | 1        | 256Mi  | 0.1         |
 
-### Apex Development
+## Install Salesforce AI Extension Component
 
-- Generate Apex classes and triggers
-- Write test classes
-- Optimize SOQL queries
-- Implement design patterns
+Follow these steps to install the Salesforce DevForce AI extension:
 
-### Metadata Analysis
+### Step 1: Configure Values File
 
-- Analyze org structure
-- Identify unused components
-- Find dependencies
-- Plan deployments
+Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/salesforce-accelerator` by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`.
 
-### Best Practices
+### Step 2: Install Helm Chart
 
-- Apply Salesforce best practices
-- Improve code quality
-- Optimize performance
-- Ensure security
-
-## Installation
-
-Refer to the Salesforce DevForce AI documentation for detailed setup instructions.
-
-## Configuration
-
-### Salesforce Connection
-
-Configure connection to Salesforce org:
-
-```yaml
-salesforce:
-  instance_url: https://your-instance.salesforce.com
-  api_version: '59.0'
-  auth:
-    method: oauth
-```
-
-### Credentials
-
-Store credentials securely:
+Install the `salesforce-accelerator` Helm chart in the created namespace, applying the custom values file with the following command:
 
 ```bash
-kubectl create secret generic salesforce-credentials \
-  --from-literal=client-id=your-client-id \
-  --from-literal=client-secret=your-client-secret \
-  --namespace codemie
+helm upgrade --install salesforce-accelerator oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/salesforce-accelerator \
+--version x.y.z \
+--namespace "codemie" \
+-f "./codemie-extensions/salesforce-accelerator/values-<cloud_name>.yaml" \
+--wait --timeout 180s
 ```
 
-## Using DevForce AI
+### Step 3: Access the Application
 
-### Code Generation
+AI/Run CodeMie UI can be accessed by the following URL:
 
-1. Describe requirements
-2. Specify object relationships
-3. Generate Apex code
-4. Review and customize
-
-### Query Assistance
-
-1. Describe data needs
-2. Get SOQL query suggestions
-3. Optimize query performance
-4. Test queries
-
-### Metadata Analysis
-
-1. Connect to Salesforce org
-2. Run metadata scan
-3. Review analysis results
-4. Get recommendations
-
-## Troubleshooting
-
-### Connection Issues
-
-- Verify API credentials
-- Check network connectivity
-- Ensure proper permissions
-- Review API limits
-
-### Code Generation Issues
-
-- Provide detailed requirements
-- Specify object schema
-- Review generated code
-- Adjust prompts as needed
+- URL Pattern: `https://codemie.%%DOMAIN%%/salesforce-accelerator-api/`
+- Example: `https://codemie.example.com/salesforce-accelerator-api/`
 
 ## Next Steps
 
-- Return to [Extensions Overview](./)
-- Review [FAQ](../faq) for common questions
+- Return to [Extensions Overview](../)
+- Configure other extensions
