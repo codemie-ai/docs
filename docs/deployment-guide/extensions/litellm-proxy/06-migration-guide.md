@@ -26,13 +26,13 @@ Follow the instructions in [PostgreSQL Database Setup](./postgres-setup).
 
 Follow the first three parts of the manual deployment guide to install LiteLLM without connecting it to the CodeMie API yet:
 
-- [Step 5.1: Create Namespace](./deployment#step-51-create-namespace)
-- [Step 5.2: Create Secrets and ConfigMaps](./deployment#step-52-create-secrets-and-configmaps)
-- [Step 5.3: Deploy the LiteLLM Helm Chart](./deployment#step-53-deploy-the-litellm-helm-chart)
+- [Step 5.1: Create Namespace](./deployment/manual-deployment#step-51-create-namespace)
+- [Step 5.2: Create Secrets and ConfigMaps](./deployment/manual-deployment#step-52-create-secrets-and-configmaps)
+- [Step 5.3: Deploy the LiteLLM Helm Chart](./deployment/manual-deployment#step-53-deploy-the-litellm-helm-chart)
 
 ### 3. Verify the Standalone LiteLLM Instance
 
-Before proceeding, use the verification commands from [Step 5.5](./deployment#step-55-verify-deployment-and-access-ui) to ensure LiteLLM is running correctly and you can access its UI. The dashboard will show no traffic, which is expected.
+Before proceeding, use the verification commands from [Step 5.5](./deployment/manual-deployment#step-55-verify-deployment-and-access-ui) to ensure LiteLLM is running correctly and you can access its UI. The dashboard will show no traffic, which is expected.
 
 ### 4. Reconfigure and Redeploy the CodeMie API
 
@@ -40,7 +40,7 @@ Now, switch the CodeMie API from DIAL to LiteLLM.
 
 #### 4.1. Create the Integration Secret
 
-Create the integration secret by following the instructions in [Step 5.4.1: Create the Integration Secret](./deployment#541-create-the-integration-secret).
+Create the integration secret by following the instructions in [Step 5.4.1: Create the Integration Secret](./deployment/manual-deployment#541-create-the-integration-secret).
 
 #### 4.2. Update CodeMie API Configuration
 
@@ -80,7 +80,7 @@ extraEnv:
 
 #### 4.3. Redeploy the CodeMie API
 
-Redeploy the CodeMie API to apply the changes by following the instructions in [Step 5.4.2: Redeploy the CodeMie API](./deployment#542-redeploy-the-codemie-api).
+Redeploy the CodeMie API to apply the changes by following the instructions in [Step 5.4.2: Redeploy the CodeMie API](./deployment/manual-deployment#542-redeploy-the-codemie-api).
 
 ### 5. Verify the Full Integration
 

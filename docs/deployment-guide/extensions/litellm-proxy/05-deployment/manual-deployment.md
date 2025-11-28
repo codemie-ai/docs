@@ -1,67 +1,26 @@
 ---
-id: deployment
-sidebar_label: Deployment
-sidebar_position: 6
-title: Step 5 - Deployment
-description: Deploy LiteLLM Proxy using automated or manual methods
+id: manual-deployment
+sidebar_label: Manual Deployment
+sidebar_position: 2
+title: Manual Deployment
+description: Deploy LiteLLM Proxy manually with granular control
 ---
 
-# Step 5: Deployment
-
-Choose one of the following methods to deploy the LiteLLM Proxy. **Option A** is recommended for most users as it automates secret creation, Helm deployment, and integration configuration.
-
-## Option A: Automated Deployment (Recommended)
-
-The deployment script automates:
-
-- Kubernetes secret creation
-- Helm repository configuration
-- LiteLLM Proxy deployment
-- Integration secret creation for CodeMie
-
-### Pre-Deployment Checklist
-
-Before running the script, ensure you have completed the following configuration steps:
-
-1. **Clone the Repository:** Clone the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository and navigate to its root directory.
-
-2. **Configure API and Proxy Values:** Update both the `codemie-api/values-<cloud>.yaml` and `litellm/values-<cloud_name>.yaml` files with your environment-specific settings as described in [Configure Values](./configure-values).
-
-3. **Configure LLM Models:** Review and customize your desired models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](./model-config).
-
-:::warning
-
-Completing all configuration steps mentioned in the checklist is **mandatory** for a successful installation.
-
-:::
-
-### Run the Deployment Script
-
-Once all configurations are in place, execute the following command from the root of the repository. Replace `<cloud_name>` with your target cloud (`aws`, `azure`, or `gcp`) and specify the desired version.
-
-```bash
-bash helm-charts.sh --cloud <cloud_name> --version=x.y.z --mode all --optional litellm
-```
-
-During execution, the script may prompt you to enter authentication details if you are deploying for Azure or GCP.
-
----
-
-## Option B: Manual Deployment
+# Manual Deployment
 
 This method is recommended if you need granular control over the deployment process or need to integrate it into custom automation pipelines. It involves manually creating all resources and configuring the integration.
 
-### Pre-Deployment Checklist
+## Pre-Deployment Checklist
 
 Before you begin the deployment, ensure you have completed the following configuration steps:
 
 1. **Clone the Repository:** Clone the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository and navigate to its root directory.
 
-2. **Configure API and Proxy Values:** Update both the `codemie-api/values-<cloud>.yaml` and `litellm/values-<cloud_name>.yaml` files as described in [Configure Values](./configure-values).
+2. **Configure API and Proxy Values:** Update both the `codemie-api/values-<cloud>.yaml` and `litellm/values-<cloud_name>.yaml` files as described in [Configure Values](../configure-values).
 
-3. **Configure LLM Models:** Customize your models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](./model-config).
+3. **Configure LLM Models:** Customize your models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](../model-config).
 
-### Step 5.1: Create Namespace
+## Step 5.1: Create Namespace
 
 Create a dedicated namespace for all LiteLLM Proxy resources.
 
@@ -69,11 +28,11 @@ Create a dedicated namespace for all LiteLLM Proxy resources.
 kubectl create namespace litellm
 ```
 
-### Step 5.2: Create Secrets and ConfigMaps
+## Step 5.2: Create Secrets and ConfigMaps
 
 Create the following secrets in the `litellm` namespace. Some are universal, while others are specific to the cloud provider you are using.
 
-#### Universal Secrets (Required for all deployments)
+### Universal Secrets (Required for all deployments)
 
 **1. LiteLLM Proxy Master Key Secret**
 
@@ -97,7 +56,7 @@ kubectl create secret generic litellm-redis \
 
 **3. PostgreSQL Secret**
 
-Replace `your_database_host_here` and `your_strong_password_here` with the values from your PostgreSQL setup in [PostgreSQL Setup](./postgres-setup).
+Replace `your_database_host_here` and `your_strong_password_here` with the values from your PostgreSQL setup in [PostgreSQL Setup](../postgres-setup).
 
 ```bash
 kubectl create secret generic litellm-postgresql \
@@ -108,11 +67,11 @@ kubectl create secret generic litellm-postgresql \
 --type=Opaque
 ```
 
-#### Cloud-Specific Secrets (Create only what you need)
+### Cloud-Specific Secrets (Create only what you need)
 
-Refer to [Cloud Provider Authentication](./auth-secrets) for details on obtaining these credentials.
+Refer to [Cloud Provider Authentication](../auth-secrets) for details on obtaining these credentials.
 
-### Step 5.3: Deploy the LiteLLM Helm Chart
+## Step 5.3: Deploy the LiteLLM Helm Chart
 
 Deploy the LiteLLM Proxy using your customized values file.
 
@@ -123,11 +82,11 @@ helm upgrade --install litellm ./litellm \
 --values ./litellm/values-<cloud_name>.yaml
 ```
 
-### Step 5.4: Configure CodeMie Integration
+## Step 5.4: Configure CodeMie Integration
 
 After the LiteLLM Proxy is running, you must configure the CodeMie API to communicate with it. This involves creating an integration secret and redeploying the CodeMie API.
 
-#### 5.4.1. Create the Integration Secret
+### 5.4.1. Create the Integration Secret
 
 The following command retrieves the LiteLLM domain and master key, creates a dedicated team and service account key for CodeMie, and then creates a Kubernetes secret named `litellm-integration` in the `codemie` namespace.
 
@@ -160,7 +119,7 @@ kubectl create secret generic litellm-integration \
 --type=Opaque
 ```
 
-#### 5.4.2. Redeploy the CodeMie API
+### 5.4.2. Redeploy the CodeMie API
 
 Now that the `litellm-integration` secret is created, you must redeploy the CodeMie API to apply the configuration changes. The required environment variables should already be present in your `codemie-api/values-<cloud>.yaml` file, as specified in the pre-deployment checklist.
 
@@ -175,9 +134,9 @@ helm upgrade --install codemie-api oci://<your-registry>/codemie \
 --wait --timeout 600s
 ```
 
-### Step 5.5: Verify Deployment and Access UI
+## Step 5.5: Verify Deployment and Access UI
 
-#### Verification Commands
+### Verification Commands
 
 Use the following commands to check the status of your LiteLLM Proxy deployment:
 
@@ -192,7 +151,7 @@ kubectl get svc -n litellm
 kubectl get ingress -n litellm
 ```
 
-#### Accessing the LiteLLM UI
+### Accessing the LiteLLM UI
 
 You can access the administrative UI using the domain configured in your ingress. The username is `admin`, and the password is the master key you created.
 
@@ -208,6 +167,6 @@ echo "Use 'admin' as the username and the following key as the password: $LITELL
 
 ## Next Steps
 
-- For migration from DIAL Proxy, see [Migration Guide](./migration-guide)
-- Return to [Extensions Overview](../)
+- For migration from DIAL Proxy, see [Migration Guide](../migration-guide)
+- Return to [Extensions Overview](../../)
 - Configure other extensions

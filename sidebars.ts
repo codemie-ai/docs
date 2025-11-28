@@ -466,7 +466,19 @@ const sidebars: SidebarsConfig = {
                 'deployment-guide/extensions/litellm-proxy/configure-values',
                 'deployment-guide/extensions/litellm-proxy/auth-secrets',
                 'deployment-guide/extensions/litellm-proxy/model-config',
-                'deployment-guide/extensions/litellm-proxy/deployment',
+                {
+                  type: 'category',
+                  label: 'Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/extensions/litellm-proxy/deployment/deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/extensions/litellm-proxy/deployment/automated-deployment',
+                    'deployment-guide/extensions/litellm-proxy/deployment/manual-deployment',
+                  ],
+                },
                 'deployment-guide/extensions/litellm-proxy/migration-guide',
               ],
             },
