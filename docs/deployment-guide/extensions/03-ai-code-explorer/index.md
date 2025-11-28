@@ -14,7 +14,7 @@ AI Code Explorer (AICE) is an intelligent code analysis and exploration platform
 
 The diagram below depicts the AICE Platform deployed on Kubernetes infrastructure within a cloud environment.
 
-![AICE Architecture](./03-ai-code-explorer/images/aice-architecture.drawio.drawio.png)
+![AICE Architecture](./images/aice-architecture.drawio.drawio.png)
 
 ### AICE Container Resource Requirements
 
