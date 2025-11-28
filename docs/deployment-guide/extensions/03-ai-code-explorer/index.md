@@ -115,44 +115,6 @@ kubectl cp dozerdb-plugin-5.26.3.0.jar aice-neo4j-0:/plugins/dozerdb-plugin-5.26
 kubectl rollout restart statefulset aice-neo4j -n aice
 ```
 
-## Post-Deployment Configuration
-
-After successful deployment, you need to configure CodeMie API integration.
-
-### Update CodeMie API Configuration
-
-Add the following environment variables to your CodeMie API `values.yaml`:
-
-```yaml
-extraEnv:
-  - name: LLM_PROXY_MODE
-    value: 'lite_llm'
-  - name: LLM_PROXY_ENABLED
-    value: 'true'
-  - name: LITE_LLM_URL
-    value: 'http://litellm.litellm:4000'
-  - name: LITE_LLM_APP_KEY
-    valueFrom:
-      secretKeyRef:
-        name: litellm-integration
-        key: litellm-app-key
-  - name: LITE_LLM_MASTER_KEY
-    valueFrom:
-      secretKeyRef:
-        name: litellm-integration
-        key: litellm-master-key
-```
-
-### Redeploy CodeMie API
-
-```bash
-helm upgrade --install codemie-api oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
---version x.y.z \
---namespace "codemie" \
--f "./codemie-api/values-<cloud_name>.yaml" \
---wait --timeout 600s
-```
-
 ## Next Steps
 
 - Return to [Extensions Overview](../)
