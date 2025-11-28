@@ -494,8 +494,19 @@ const sidebars: SidebarsConfig = {
                 'deployment-guide/extensions/assistants-evaluation/prerequisites',
                 'deployment-guide/extensions/assistants-evaluation/system-requirements',
                 'deployment-guide/extensions/assistants-evaluation/deployment-prerequisites',
-                'deployment-guide/extensions/assistants-evaluation/automated-deployment',
-                'deployment-guide/extensions/assistants-evaluation/manual-deployment',
+                {
+                  type: 'category',
+                  label: 'Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'deployment-guide/extensions/assistants-evaluation/deployment/deployment-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'deployment-guide/extensions/assistants-evaluation/deployment/automated-deployment',
+                    'deployment-guide/extensions/assistants-evaluation/deployment/manual-deployment',
+                  ],
+                },
                 'deployment-guide/extensions/assistants-evaluation/post-deployment',
                 'deployment-guide/extensions/assistants-evaluation/troubleshooting',
               ],

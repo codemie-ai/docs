@@ -31,16 +31,7 @@ Uses the `deploy-langfuse.sh` script to automatically handle:
 - Langfuse deployment
 - Integration secret creation for CodeMie
 
-See [Automated Deployment](./automated-deployment) for details.
-
-### Manual Deployment
-
-Provides granular control over each deployment step. Recommended for:
-- Custom automation pipelines
-- Environments requiring manual verification
-- Advanced configuration scenarios
-
-See [Manual Deployment](./manual-deployment) for step-by-step instructions.
+See [Deployment](./deployment) for both automated and manual deployment options.
 
 ## Documentation Structure
 
@@ -49,10 +40,9 @@ Follow these sections in order for a successful deployment:
 1. [Prerequisites](./prerequisites) - Required tools and infrastructure
 2. [System Requirements](./system-requirements) - Resource specifications and architecture
 3. [Deployment Prerequisites](./deployment-prerequisites) - Configuration steps before deployment
-4. [Automated Deployment](./automated-deployment) - Quick deployment using script
-5. [Manual Deployment](./manual-deployment) - Manual step-by-step deployment
-6. [Post-Deployment Configuration](./post-deployment) - Configure CodeMie integration
-7. [Troubleshooting](./troubleshooting) - Common issues and solutions
+4. [Deployment](./deployment) - Automated or manual deployment options
+5. [Post-Deployment Configuration](./post-deployment) - Configure CodeMie integration
+6. [Troubleshooting](./troubleshooting) - Common issues and solutions
 
 ## Next Steps
 
