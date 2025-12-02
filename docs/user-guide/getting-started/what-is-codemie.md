@@ -1,4 +1,11 @@
-# 1.1 What is AI/Run CodeMie?
+---
+id: what-is-codemie
+title: What is AI/Run CodeMie?
+sidebar_label: What is AI/Run CodeMie?
+sidebar_position: 1
+---
+
+# What is AI/Run CodeMie?
 
 AI/Run CodeMie is a sophisticated AI assistant tool tailored specifically for developers. AI/Run CodeMie is an innovative LLM-powered platform designed to help users address specific challenges and find solutions for their needs.
 

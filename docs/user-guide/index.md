@@ -17,7 +17,7 @@ Welcome to the AI/Run CodeMie User Guide. This comprehensive documentation will 
 
 This guide is organized into the following chapters:
 
-### [1. Getting Started](./getting-started/index.md)
+### [1. Getting Started](./getting-started/index.mdx)
 
 Learn the basics of AI/Run CodeMie, including:
 
@@ -25,6 +25,7 @@ Learn the basics of AI/Run CodeMie, including:
 - Core capabilities and features
 - FAQ Assistant
 - Help center
+- Glossary
 
 ### [2. Concepts](./concepts/index.md)
 
@@ -95,7 +96,8 @@ If you need assistance:
 
 ## Quick Links
 
-- [What is AI/Run CodeMie?](./getting-started/11-what-is-airuncodemie.md)
+- [What is AI/Run CodeMie?](./getting-started/what-is-codemie.md)
 - [Creating Your First Assistant](./assistants/32-create-assistant-from-a-template.md)
 - [Data Sources Overview](./concepts/22-data-source-overview.md)
 - [Workflows Overview](./workflows/41-workflows-overview.md)
+- [Glossary](./getting-started/glossary.md) - Complete terminology reference

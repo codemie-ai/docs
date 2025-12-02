@@ -1,6 +1,13 @@
-# 1.4 Help Center
+---
+id: help-center
+title: Help Center
+sidebar_label: Help Center
+sidebar_position: 4
+---
 
-![Help Center](../images/image165.png)
+# Help Center
+
+![Help Center](./images/image165.png)
 
 The Help Center page serves as a central hub for getting help, learning, and updates on the CodeMie platform. It provides users with access to various support resources and learning materials.
 
@@ -28,7 +35,7 @@ Section for learning the platform and getting the most out of it:
 
 Short tutorials, step-by-step instructions, and product tips: [Video Portal](https://videoportal.epam.com/channel/z1Je1k9Jv5/videos)
 
-![Video Portal](../images/image81.png)
+![Video Portal](./images/image81.png)
 
 ### User Guide
 
@@ -38,7 +45,7 @@ Step-by-step documentation for all key features.
 
 Section for tracking new features and improvements:
 
-![Product Updates](../images/image90.png)
+![Product Updates](./images/image90.png)
 
 ### Release Notes
 

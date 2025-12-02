@@ -1,4 +1,11 @@
-# 1.2 What Are AI/Run CodeMie Capabilities?
+---
+id: codemie-capabilities
+title: CodeMie's capabilities
+sidebar_label: Capabilities
+sidebar_position: 2
+---
+
+# CodeMie's capabilities
 
 AI/Run CodeMie efficiently addresses numerous tasks across varying difficulty levels. Below is an overview of AI/Run CodeMie's key capabilities:
 

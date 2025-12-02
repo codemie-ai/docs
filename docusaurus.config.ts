@@ -73,9 +73,14 @@ const config: Config = {
       },
       items: [
         {
+          to: 'user-guide/getting-started/',
+          position: 'left',
+          label: 'Getting Started',
+        },
+        {
           to: 'user-guide/',
           position: 'left',
-          label: 'User Guide',
+          label: 'User Guides',
         },
         {
           to: 'deployment-guide/',
@@ -102,6 +107,10 @@ const config: Config = {
             {
               label: 'User Guide',
               to: 'user-guide/',
+            },
+            {
+              label: 'Administrator Guides',
+              to: 'admin-guide/',
             },
             {
               label: 'Deployment Guides',
