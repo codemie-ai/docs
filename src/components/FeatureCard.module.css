@@ -49,6 +49,10 @@
   filter: brightness(0) invert(1);
 }
 
+[data-theme='light'] .invertInLightTheme {
+  filter: brightness(0) saturate(100%) opacity(0.8);
+}
+
 .featureCardTitle {
   font-size: 1.25rem;
   font-weight: 600;

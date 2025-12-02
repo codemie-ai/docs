@@ -9,6 +9,7 @@ interface FeatureCardProps {
   icon?: string;
   iconType?: 'emoji' | 'image';
   invertInDarkTheme?: boolean;
+  invertInLightTheme?: boolean;
 }
 
 export default function FeatureCard({
@@ -18,10 +19,11 @@ export default function FeatureCard({
   icon = '📘',
   iconType = 'emoji',
   invertInDarkTheme = true,
+  invertInLightTheme = false,
 }: FeatureCardProps): React.JSX.Element {
   const renderIcon = () => {
     if (iconType === 'image') {
-      const imageClasses = `${styles.featureCardImage} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} no-zoom`;
+      const imageClasses = `${styles.featureCardImage} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''} no-zoom`;
       return <img src={icon} alt={`${title} logo`} className={imageClasses} />;
     }
     return <div className={styles.featureCardIcon}>{icon}</div>;
