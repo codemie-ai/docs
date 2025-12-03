@@ -57,7 +57,6 @@ The next software must be pre-installed and configured on the deployer laptop or
 - [nsc](https://github.com/nats-io/nsc)
 - [azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 - [azure kubelogin](https://azure.github.io/kubelogin/install.html)
-- [jq](https://jqlang.org/)
 - htpasswd
 
 ### Required Repository Access
