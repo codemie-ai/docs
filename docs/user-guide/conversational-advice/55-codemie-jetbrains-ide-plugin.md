@@ -1,3 +1,10 @@
+---
+id: jetbrains-plugin
+title: 5.5 CodeMie JetBrains IDE Plugin
+sidebar_label: JetBrains Plugin
+sidebar_position: 5
+---
+
 # 5.5 CodeMie JetBrains IDE Plugin
 
 The CodeMie JetBrains IDE plugin brings native CodeMie integration directly into your JetBrains development environment, including IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs. This plugin provides seamless access to CodeMie assistants, project selection, and development tools without leaving your IDE.

@@ -1,3 +1,10 @@
+---
+id: indexing-duration
+title: 5.2 Indexing Duration
+sidebar_label: Indexing Duration
+sidebar_position: 2
+---
+
 # 5.2 Indexing Duration
 
 When indexing the data sources, keep in mind the following:

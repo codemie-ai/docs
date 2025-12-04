@@ -1,3 +1,10 @@
+---
+id: sharing-assistants
+title: 3.8 Sharing Assistants
+sidebar_label: Sharing Assistants
+sidebar_position: 8
+---
+
 # 3.8 Sharing Assistants
 
 Finely tuned assistants are a valuable resource in AI/Run CodeMie. They can be useful not just for a single person but for many people. Sharing assistants' system instructions is a clumsy and inconvenient way. AI/Run CodeMie provides a couple of options for sharing assistants: within the project and beyond projects.

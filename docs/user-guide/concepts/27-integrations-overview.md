@@ -1,3 +1,10 @@
+---
+id: integrations-overview
+title: 2.7 Integrations Overview
+sidebar_label: Integrations
+sidebar_position: 7
+---
+
 # 2.7 Integrations Overview
 
 The Integrations menu allows users to integrate various tools for further usage when working with assistants. These tools will expand assistants' capabilities, allowing them not only to answer questions but also perform complex tasks, be it creating pull requests for a Git repository, updating Jira issues, collecting the fresh news from the news sites, etc.

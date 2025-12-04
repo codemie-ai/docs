@@ -1,3 +1,10 @@
+---
+id: share-assistant-chat
+title: 3.13 Share Assistant Chat with Other Users
+sidebar_label: Share Assistant Chat
+sidebar_position: 13
+---
+
 # 3.13 Share Assistant Chat with Other Users
 
 You can easily share your assistant chat conversations with team members or colleagues by following these steps:

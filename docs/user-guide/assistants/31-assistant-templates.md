@@ -1,3 +1,10 @@
+---
+id: assistant-templates
+title: 3.1 Assistant Templates
+sidebar_label: Assistant Templates
+sidebar_position: 1
+---
+
 # 3.1 Assistant Templates
 
 AI/Run CodeMie offers a predefined set of assistants tailored to specific roles. It is highly recommended to use these templates for creating relevant prompts, as they will improve the quality of responses and increase the probability of achieving satisfactory results. Additionally, these templates help users familiarize themselves with assistant functionality.

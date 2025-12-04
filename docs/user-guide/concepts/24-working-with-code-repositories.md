@@ -1,3 +1,10 @@
+---
+id: working-with-code-repositories
+title: 2.4 Working With Code Repositories
+sidebar_label: Code Repositories
+sidebar_position: 4
+---
+
 # 2.4 Working With Code Repositories
 
 AI/RunTM CodeMie assistants can work with Git repositories. Apart from integrating the Git tool for such purposes, assistants must also know what repository to deal with. To connect assistant with the repository, it is required to provide the repository link or upload the codebase and specify the target branch to work with.

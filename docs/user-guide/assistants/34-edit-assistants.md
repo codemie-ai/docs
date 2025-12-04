@@ -1,3 +1,10 @@
+---
+id: edit-assistants
+title: 3.4 Edit Assistants
+sidebar_label: Edit Assistants
+sidebar_position: 4
+---
+
 # 3.4 Edit Assistants
 
 Sometimes, assistants need improvements or changes to process prompts more efficiently. To address this issue, assistants support editing on the fly, with no need to create another assistant or chat.

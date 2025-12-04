@@ -1,3 +1,10 @@
+---
+id: group-chats
+title: 3.10 Group Chats
+sidebar_label: Group Chats
+sidebar_position: 10
+---
+
 # 3.10 Group Chats
 
 Sometimes it might be annoying to scroll and search the exact chat with the exact assistant to ask a single question. Alternatively, spawning new chats will lead to an excessive number of tiny chats that are basically not so important to store so you will need to manually delete them from time to time. To address these problems, group chats were created.

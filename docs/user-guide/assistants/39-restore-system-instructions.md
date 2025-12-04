@@ -1,3 +1,10 @@
+---
+id: restore-system-instructions
+title: 3.9 Restore System Instructions
+sidebar_label: Restore System Instructions
+sidebar_position: 9
+---
+
 # 3.9 Restore System Instructions
 
 When experimenting with assistants, you may encounter different outcomes with various system instructions. The most recent instructions don't always yield the best results, so you may want to revert to earlier ones. The challenge lies in recalling those more effective instructions. This is where the "system instructions history" becomes useful. It allows you to store all the instructions you've set for the assistant, enabling you to select and re-use them later if needed.

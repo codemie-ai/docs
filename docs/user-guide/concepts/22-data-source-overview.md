@@ -1,3 +1,10 @@
+---
+id: data-source-overview
+title: 2.2 Data Source Overview
+sidebar_label: Data Source Overview
+sidebar_position: 2
+---
+
 # 2.2 Data Source Overview
 
 The Data Source functionality in AI/Run CodeMie platform serves to incorporate various types of data into the platform, expanding the range of tasks the assistant can help with and enhancing its ability to provide relevant and accurate answers.

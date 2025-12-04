@@ -1,3 +1,10 @@
+---
+id: workflow-templates
+title: 4.5 Workflow Templates
+sidebar_label: Workflow Templates
+sidebar_position: 5
+---
+
 # 4.5 Workflow Templates
 
 AI/Run CodeMie offers a bunch of predefined workflow templates out of the box. These templates serve not only as examples for creating your own workflow but also for solving various tasks, such as Jira ticket management, comparing Git branches, Python unit test generation, etc.

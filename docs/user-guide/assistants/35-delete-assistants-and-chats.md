@@ -1,3 +1,10 @@
+---
+id: delete-assistants-and-chats
+title: 3.5 Delete Assistants and Chats
+sidebar_label: Delete Assistants and Chats
+sidebar_position: 5
+---
+
 # 3.5 Delete Assistants and Chats
 
 An excessive amount of redundant assistants affects navigation. The same case is related to chats. In this case, cleanup might be the way to go. In this section, we will learn how to delete both assistants and chats.

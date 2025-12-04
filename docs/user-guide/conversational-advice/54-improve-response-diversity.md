@@ -1,3 +1,10 @@
+---
+id: improve-response-diversity
+title: 5.4 Improve Response Diversity
+sidebar_label: Response Diversity
+sidebar_position: 4
+---
+
 # 5.4 Improve Response Diversity
 
 There are cases when you ask assistants to generate a response to answer a question. But the answer turns out to be not so informative. You ask the assistant to regenerate a response but each time it sends a similar response with rephrased text. As a result, an assistant seems incapable of resolving the issue.

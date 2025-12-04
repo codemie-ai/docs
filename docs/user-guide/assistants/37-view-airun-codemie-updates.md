@@ -1,3 +1,10 @@
+---
+id: view-updates
+title: 3.7 View AI/Run CodeMie Updates
+sidebar_label: View Updates
+sidebar_position: 7
+---
+
 # 3.7 View AI/Run CodeMie Updates
 
 Our team is continuously working on refining AI/Run CodeMie. Based on your feedback, we release new updates to deliver the best experience for you.

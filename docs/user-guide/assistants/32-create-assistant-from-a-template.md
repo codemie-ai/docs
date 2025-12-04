@@ -1,3 +1,10 @@
+---
+id: create-assistant-from-template
+title: 3.2 Create Assistant From a Template
+sidebar_label: Create From Template
+sidebar_position: 2
+---
+
 # 3.2 Create Assistant From a Template
 
 To create an assistant from a template, follow the steps below:

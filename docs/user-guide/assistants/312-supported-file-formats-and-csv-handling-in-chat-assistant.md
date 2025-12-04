@@ -1,3 +1,10 @@
+---
+id: supported-file-formats-csv
+title: 3.12 Supported File Formats and CSV Handling in Chat Assistant
+sidebar_label: File Formats & CSV Handling
+sidebar_position: 12
+---
+
 # 3.12 Supported File Formats and CSV Handling in Chat Assistant
 
 CodeMie chat assistant supports the following file formats:
