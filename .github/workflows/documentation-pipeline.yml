@@ -13,34 +13,35 @@ jobs:
     name: Commit & PR Validation
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    env:
-      VALIDATION_PATTERN: '^((EPMCDME)-\d+:\s[A-Z][a-z]*.*|Revert "(EPMCDME)-\d+:\s[A-Z][a-z]*.*)$'
-      MAX_LENGTH: '300'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
 
-      - name: Validate commit message
-        run: |
-          python3 .github/scripts/validate_commit.py \
-            --pattern "$VALIDATION_PATTERN" \
-            --max-length $MAX_LENGTH \
-            --verbose
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate commit messages
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
       - name: Validate PR title
-        env:
-          GH_TOKEN: ${{ github.token }}
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --verbose
+
+      - name: Validation summary
+        if: success()
         run: |
-          python3 .github/scripts/validate_pr_title.py \
-            --pattern "$VALIDATION_PATTERN" \
-            --max-length $MAX_LENGTH \
-            --pr-number ${{ github.event.pull_request.number }} \
-            --repo ${{ github.repository }} \
-            --verbose
+          echo "Conventional commits validation passed!"
+          echo "- Commit messages: PASSED"
+          echo "- PR title: PASSED"
 
   secrets-detection:
     name: Secrets Detection

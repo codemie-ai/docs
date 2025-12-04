@@ -818,11 +818,8 @@ Before committing documentation changes:
 - [ ] Verify code blocks have syntax highlighting
 - [ ] Test on both light and dark themes (if applicable)
 - [ ] Stop server after testing
-- [ ] Run `npm run typecheck` for TypeScript validation
-- [ ] Run `npm run lint:eslint` for ESLint checks
-- [ ] Run `npm run lint:prettier` for format validation
-- [ ] Run `npm run lint:markdown` for Markdown linting
-- [ ] Run `npm run lint:spelling` for spell checking
+- [ ] Run `npm run check` to validate all quality checks (typecheck, linting, commit message)
+- [ ] Use `npm run format` to auto-fix formatting issues if needed
 
 ---
 
