@@ -1,3 +1,10 @@
+---
+id: subassistants-orchestrator
+title: 3.19 Subassistants / Multiassistant Orchestrator
+sidebar_label: Subassistants / Orchestrator
+sidebar_position: 19
+---
+
 # 3.19 Sub-assistants, Multi-assistant (Orchestrator)
 
 ## Overview

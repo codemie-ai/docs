@@ -1,3 +1,10 @@
+---
+id: workflows-overview
+title: 4.1 Workflows Overview
+sidebar_label: Workflows Overview
+sidebar_position: 1
+---
+
 # 4.1 Workflows Overview
 
 AI/Run CodeMie allows you to design complex logic for interactions between assistants, enabling the creation of fully functional workflows. By executing a series of actions, users can create their own low-code pipelines to handle a wide variety of tasks. Workflows can be found under the **Workflows** tab at the left of the screen:

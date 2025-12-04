@@ -1,3 +1,10 @@
+---
+id: research-tools
+title: 3.20 Research Tools
+sidebar_label: Research Tools
+sidebar_position: 20
+---
+
 # 3.20 Research Tools
 
 The Research toolkit enables your CodeMie assistants to access real-time information from the internet and perform location-based searches. This comprehensive toolkit includes **six powerful tools** designed to gather fresh, accurate data and location information for your AI assistant.

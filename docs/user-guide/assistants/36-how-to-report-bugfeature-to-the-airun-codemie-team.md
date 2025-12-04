@@ -1,3 +1,10 @@
+---
+id: report-bug-feature
+title: 3.6 How to Report Bug/Feature to the AI/Run CodeMie Team
+sidebar_label: Report Bug/Feature
+sidebar_position: 6
+---
+
 # 3.6 How to Report Bug/Feature to the AI/Run CodeMie Team
 
 We value your support and look forward to receiving feedback from you about any issues or enhancements. To contact our team, the "AI/Run Feedback" assistant was created. Use of this assistant requires Jira tool integration.

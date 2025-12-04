@@ -1,3 +1,10 @@
+---
+id: datasource-vs-tool
+title: 2.12 What is the difference between a Data Source and an Assistant Tool in CodeMie?
+sidebar_label: DataSource vs Tool
+sidebar_position: 12
+---
+
 # 2.12 What is the difference between a Data Source and an Assistant Tool in CodeMie?
 
 ## Data Sources

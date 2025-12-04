@@ -1,3 +1,10 @@
+---
+id: share-workflow-execution
+title: 4.6 Share Workflow Execution
+sidebar_label: Share Execution
+sidebar_position: 6
+---
+
 # 4.6 Share Workflow Execution
 
 To share the Workflow Execution, you have two options:

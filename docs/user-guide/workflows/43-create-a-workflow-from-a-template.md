@@ -1,3 +1,10 @@
+---
+id: create-workflow-from-template
+title: 4.3 Create a Workflow from a Template
+sidebar_label: Create from Template
+sidebar_position: 3
+---
+
 # 4.3 Create a Workflow from a Template
 
 Creating an assistant from scratch might be too difficult, especially for the first time. To address this issue, the AI/Run CodeMie team has created a bunch of predefined templates that can perform various tasks. To create such an assistant, follow the steps below:

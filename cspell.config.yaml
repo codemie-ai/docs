@@ -229,6 +229,8 @@ words:
   - finalizer
   - qubit
   - chatbots
+  - subassistants
+  - Multiassistant
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors

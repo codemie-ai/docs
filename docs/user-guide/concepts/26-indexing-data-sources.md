@@ -1,3 +1,10 @@
+---
+id: indexing-data-sources
+title: 2.6 Indexing Data Sources
+sidebar_label: Indexing Data Sources
+sidebar_position: 6
+---
+
 # 2.6 Indexing Data Sources
 
 Once a data source is added to the AI/RunTM CodeMie platform, you can proceed with indexing it. Indexing enables assistants and workflows to interact with the data within the data source. Assistants can only access data that has been indexed, so you need to re-index the data source each time it is updated. Otherwise, AI/RunTM CodeMie will not recognize the new data. By default, AI/RunTM CodeMie automatically indexes new data sources as soon as they are added to the platform:

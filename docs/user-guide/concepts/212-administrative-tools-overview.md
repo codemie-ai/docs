@@ -1,3 +1,10 @@
+---
+id: administrative-tools
+title: 2.12 Administrative Tools Overview
+sidebar_label: Administrative Tools
+sidebar_position: 13
+---
+
 # 2.12 Administrative Tools Overview
 
 In AI/Run CodeMie, admins have extended functionality that allows for regulating management issues. At the time being, Admin users can do the following things:

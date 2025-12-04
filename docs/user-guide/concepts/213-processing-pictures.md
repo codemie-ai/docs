@@ -1,3 +1,10 @@
+---
+id: processing-pictures
+title: 2.13 Processing Pictures
+sidebar_label: Processing Pictures
+sidebar_position: 14
+---
+
 # 2.13 Processing Pictures
 
 AI/Run CodeMie assistants can handle various image formats such as .jpg, .png, and .svg. They can analyze the contents, offer suggestions or improvements, and recognize images, among other capabilities.

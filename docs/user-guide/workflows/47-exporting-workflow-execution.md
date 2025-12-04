@@ -1,3 +1,10 @@
+---
+id: exporting-workflow-execution
+title: 4.7 Exporting Workflow Execution
+sidebar_label: Export Execution
+sidebar_position: 7
+---
+
 # 4.7 Exporting Workflow Execution
 
 This functionality allows you to export information about the execution steps of a workflow as a zip archive containing Markdown or HTML files. Each file includes details about a specific step and its status.

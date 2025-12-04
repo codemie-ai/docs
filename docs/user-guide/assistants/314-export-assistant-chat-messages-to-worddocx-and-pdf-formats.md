@@ -1,3 +1,10 @@
+---
+id: export-chat-messages
+title: 3.14 Export Assistant Chat Messages to Word(.docx) and PDF Formats
+sidebar_label: Export Chat Messages
+sidebar_position: 14
+---
+
 # 3.14 Export Assistant Chat Messages to Word(docx) and PDF Formats
 
 CodeMie allows you to export individual Assistant chat messages to PPTX, Word (DOCX) and PDF formats, preserving the visual rendering of markdown content including tables, code blocks, lists, and images.

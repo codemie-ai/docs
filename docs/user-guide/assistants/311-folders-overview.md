@@ -1,3 +1,10 @@
+---
+id: folders-overview
+title: 3.11 Folders Overview
+sidebar_label: Folders Overview
+sidebar_position: 11
+---
+
 # 3.11 Folders Overview
 
 By default, chat history is sorted by activity order. That is, the most recent chats will be placed at the top of the list. CodeMie also offers the **Group Chats by "Folders"** feature. With this feature, the chat history will be split by folders. Each folder represents a CodeMie assistant that is used in the chat.

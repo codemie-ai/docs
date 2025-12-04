@@ -1,3 +1,10 @@
+---
+id: clone-assistant-from-marketplace
+title: 3.18 Clone Assistant from Marketplace
+sidebar_label: Clone from Marketplace
+sidebar_position: 18
+---
+
 # 3.18 Clone Assistant from Marketplace
 
 All users can clone assistants from the Marketplace to their personal workspace, enabling them to customize and build upon existing community-contributed assistants.

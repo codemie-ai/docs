@@ -1,3 +1,10 @@
+---
+id: marketplace-overview
+title: 3.16 Marketplace Overview
+sidebar_label: Marketplace Overview
+sidebar_position: 16
+---
+
 # 3.16 Marketplace Overview
 
 The Marketplace is a centralized hub within the Assistants section where you can discover, explore, and deploy ready-to-use assistants created by the community. It provides streamlined access to all global assistants in one convenient location.
