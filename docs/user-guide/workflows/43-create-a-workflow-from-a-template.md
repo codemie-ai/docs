@@ -1,42 +1,57 @@
 ---
 id: create-workflow-from-template
-title: 4.3 Create a Workflow from a Template
+title: Create a Workflow from a Template
 sidebar_label: Create from Template
 sidebar_position: 3
+description: Quick-start guide to creating workflows from pre-built templates
 ---
 
-# 4.3 Create a Workflow from a Template
+# Create a Workflow from a Template
 
-Creating an assistant from scratch might be too difficult, especially for the first time. To address this issue, the AI/Run CodeMie team has created a bunch of predefined templates that can perform various tasks. To create such an assistant, follow the steps below:
+Creating a workflow from scratch can be complex, especially for first-time users. AI/Run CodeMie provides predefined templates that can perform various tasks out of the box, making it easy to get started quickly.
 
-1. In the AI/Run CodeMie main page, select the **Workflows** tab.
+## Steps to Create from Template
 
-2. In the Workflows page, select the **Templates** tab:
+1. Navigate to the **Workflows** section in the main navigation.
+
+2. Select the **Templates** tab:
 
    ![Templates tab in Workflows page](../images/image108.png)
 
-3. To view the assistant and its settings, click on the tab with its name. Select the appropriate assistant from the assistant's list and click on the **+** button. Once the assistant is selected, a Create Workflow from Template menu will appear:
+3. Browse available templates and click on a template card to view its details and configuration.
+
+4. Click the **+** button to create a workflow from the selected template:
 
    ![Create Workflow from Template menu](../images/image204.png)
 
-4. Fill in the workflow details and click **Create**:
-   - **Project**: Specify your AI/Run CodeMie project. Should be pre-populated by default.
+5. Configure the workflow settings:
 
-   - **Shared with Project Team**: Choose whether you want your teammates to see and use the workflow or not.
+### Workflow Configuration
 
-   - **Name**: Enter the Workflow name.
+| Field                      | Description                                                                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| **Project**                | Your AI/Run CodeMie project (pre-populated by default)                                       |
+| **Shared with Project Team** | Enable to allow teammates to view and use the workflow                                     |
+| **Name**                   | Unique name for the workflow                                                                 |
+| **Description**            | Brief description of the workflow's features and purpose                                     |
+| **Icon URL**               | URL to an icon image for the workflow avatar                                                 |
+| **Workflow Mode**          | Sequential or Autonomous mode                                                                |
+| **Supervisor Prompt**      | Global context shared across all assistants; can include variables like date, time, etc.    |
 
-   - **Description**: Enter a brief description that describes Workflow's features and purpose.
+### Workflow Modes
 
-   - **Icon URL**: The icon you specified in this field will be put in the Workflow avatar.
+**Sequential Mode**
+- Full control over workflow execution
+- Define each step with specific assistants
+- Best for tasks requiring precise ordering
 
-   - **Workflow Mode**: Choose one of two workflow modes:
-     - **Sequential Mode**: Offers full control. You define the workflow, choosing assistants and setting each step. It's perfect for tasks needing specific, orderly execution. Opt for this when detail and sequence matter.
+**Autonomous Mode**
+- AI automatically manages assistants and states
+- Seamless experience with minimal setup
+- Ideal for quick deployment
 
-     - **Autonomous Mode**: Simplifies your workflow. No need to choose assistants or set states; our AI handles it, adapting to your needs for a seamless experience. Ideal for when you want efficiency without the setup.
+6. Click **Create** to save your workflow.
 
-   - **Supervisor prompt**: Use this field to specify the context that is general for all the assistants in the workflow. Besides, this field also serves as a place to set variables for assistants, such as date, time, etc.
-
-:::note
-Ensure the assistants are set properly. For instance, the workflow above requires your "scraper" assistant to have permissions to access your Jira instance.
+:::warning Assistant Configuration
+Ensure that assistants have the necessary permissions for their tasks. For example, if a workflow includes a Jira integration, the scraper assistant must have access permissions to your Jira instance.
 :::

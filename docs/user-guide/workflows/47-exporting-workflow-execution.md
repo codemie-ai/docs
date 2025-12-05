@@ -1,75 +1,91 @@
 ---
 id: exporting-workflow-execution
-title: 4.7 Exporting Workflow Execution
+title: Exporting Workflow Execution
 sidebar_label: Export Execution
 sidebar_position: 7
 ---
 
-# 4.7 Exporting Workflow Execution
+# Exporting Workflow Execution
 
 This functionality allows you to export information about the execution steps of a workflow as a zip archive containing Markdown or HTML files. Each file includes details about a specific step and its status.
 
-## Steps for Exporting Data
+## Export Current Execution
 
-1. **Run the Workflow**: Ensure that the workflow has been executed. Once the process is complete, you can proceed to the next step.
+After a workflow has finished running:
 
-2. **Export Execution Button**: After the workflow execution has finished, locate and click the **Export as** button on the execution page. The button will be available once the workflow execution is complete.
+1. Locate and click the **Export as** button on the execution page.
 
    ![Export as button location](../images/image123.png)
 
-   ![Export options dialog](../images/image42.png)
+2. Choose your preferred export format (Markdown or HTML).
 
-:::note
-You can combine all results into a single file, and when you unzip it, you will get a single file instead of a folder with multiple files. To do this, you need to check the **Combine results into a single file** checkbox.
+3. Optionally, check **Combine results into a single file** to merge all steps into one file instead of separate files.
+
+:::tip
+When you combine results into a single file, the zip archive will contain one consolidated file instead of a folder with multiple files.
 :::
 
-## Exporting Previous Executions
+## Export Previous Executions
 
-You can export previous executions by following these steps:
+To export a previous workflow execution:
 
-1. Click on the plate of your necessary workflow.
+1. Navigate to your workflow and click on its card.
 
-2. Find the desired execution and click the **Download** button.
+2. Find the execution you want to export in the execution history.
 
-3. Select format and click **Export** button
+3. Click the **Download** button for that execution.
+
+4. Select your preferred format and click **Export**.
 
    ![Export format selection](../images/image149.png)
 
-## Archive Generation
+## Archive Structure
 
-Upon clicking the export button, the system will automatically generate a zip archive containing Markdown files for each execution step.
+The system automatically generates a zip archive containing the exported data. Once generated, the archive will be available for download immediately.
 
-## Expected Archive Structure
+### Archive Naming
 
-Inside the zip archive, you will find the following files:
+The archive follows this naming pattern:
 
-1. Each execution step will be represented by a separate Markdown file, named according to the pattern: `step_name_status.md`, where:
-   - `step_name` is the name of the step
-   - `status` is the execution status (e.g., "success" or "failed")
+```
+workflow_name_execution_datetime_execution_id.zip
+```
 
-2. If a step repeats, the file name will include the iteration number: `step_name_iteration_number_status.md`, e.g., `ProcessData_1_success.md` or `ProcessData_2_failed.md`.
+Where:
+- `workflow_name` - The name of the workflow
+- `execution_datetime` - The date and time of execution
+- `execution_id` - The unique identifier for the execution
 
-## Archive Naming Convention
+### File Structure
 
-The zip archive will be named according to the pattern:
-`workflow_name_execution_datetime_execution_id.zip`, where:
+Inside the archive, each execution step is represented by a separate file:
 
-1. `workflow_name` is the name of the workflow
+**Standard file naming:**
+```
+step_name_status.md
+```
 
-2. `execution_datetime` is the date and time of execution
+Where:
+- `step_name` - The name of the step
+- `status` - The execution status (e.g., "success" or "failed")
 
-3. `execution_id` is the unique identifier for the execution
+**Repeated steps naming:**
 
-Download the Archive: Once the archive is generated, you can download it to your computer for further use or analysis.
+If a step runs multiple times, the file includes an iteration number:
+```
+step_name_iteration_number_status.md
+```
 
-### Example:
+Examples: `ProcessData_1_success.md`, `ProcessData_2_failed.md`
+
+### Example
 
 ![Example of exported archive](../images/image82.png)
 
-## Important Notes:
-
+:::note
 - Ensure that the workflow execution has been completed before exporting.
 
 - The archive will be available for download immediately after it is generated.
 
 - File and archive names strictly follow the defined naming conventions to simplify analysis and archiving.
+:::

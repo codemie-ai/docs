@@ -1,93 +1,119 @@
 ---
 id: create-workflow
-title: 4.2 Create Workflow
+title: Create Workflow
 sidebar_label: Create Workflow
 sidebar_position: 2
+description: Step-by-step guide to creating custom workflows in AI/Run CodeMie
 ---
 
-# 4.2 Create Workflow
+# Create Workflow
 
-Before creating a workflow, ensure that you have a clear vision of its purpose. Additionally, you should set up and configure the assistants that will be involved. Once these prerequisites are met, follow these steps:
+Before creating a workflow, ensure you have:
 
-1. Navigate to Workflows and click the **+ Create Workflow** button:
+- A clear vision of the workflow's purpose
+- Set up and configured the assistants that will be involved
 
-   ![Create Workflow button](../images/image49.png)
+## Creating a New Workflow
 
-2. In the Create Workflow page, specify all the fields, including YAML configuration, and click **Update**:
+1. Navigate to the **Workflows** section and click **+ Create Workflow**:
 
-   ![Create Workflow page](../images/image197.png)
-   - **Project**: Specify your AI/Run CodeMie project. Should be pre-populated by default.
+   ![Create Workflow button](../images/image48.png)
 
-   - **Shared with Project Team**: Choose whether you want your teammates to see and use the workflow or not.
+2. Configure the workflow settings:
 
-   - **Name**: Enter the Workflow name.
+   ![Create Workflow page](../images/image196.png)
 
-   - **Description**: Enter a brief description that describes Workflow's features and purpose.
+### Workflow Configuration Fields
 
-   - **Icon URL**: The icon you specified in this field will be put in the Workflow avatar.
+| Field                      | Description                                                                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| **Project**                | Your AI/Run CodeMie project (pre-populated by default)                                       |
+| **Shared with Project Team** | Enable to allow teammates to view and use the workflow                                     |
+| **Name**                   | Unique name for the workflow                                                                 |
+| **Description**            | Brief description of the workflow's features and purpose                                     |
+| **Icon URL**               | URL to an icon image for the workflow avatar                                                 |
+| **Workflow Mode**          | Sequential or Autonomous mode (see below)                                                    |
+| **Supervisor Prompt**      | Global context shared across all assistants; can include variables like date, time, etc.    |
 
-   - **Workflow Mode**: Choose one of two workflow modes:
-     - **Sequential Mode**: Offers full control. You define the workflow, choosing assistants and setting each step. It's perfect for tasks needing specific, orderly execution. Opt for this when detail and sequence matter.
-     - **Autonomous Mode**: Simplifies your workflow. No need to choose assistants or set states; our AI handles it, adapting to your needs for a seamless experience. Ideal for when you want efficiency without the setup.
+### Workflow Modes
 
-   - **Supervisor prompt**: Use this field to specify the context that is general for all the assistants in the workflow. Besides, this field also serves as a place to set variables for assistants, such as date, time, etc.
+Choose between two execution modes:
+
+**Sequential Mode**
+- Offers full control over workflow execution
+- You define each step, selecting assistants and setting the order
+- Best for tasks requiring specific, orderly execution
+- Recommended when detail and sequence are critical
+
+**Autonomous Mode**
+- Simplified workflow creation
+- AI automatically selects assistants and manages states
+- Adapts to your needs for a seamless experience
+- Ideal for efficiency without manual setup
 
 ## YAML Configuration Structure
 
-YAML configuration structure breakdown is the following:
+For Sequential Mode workflows, configure the workflow behavior using YAML.
 
-1. **Assistants Section**:
-   - `assistants`: This is a list of assistant configurations.
-   - `id`: A unique identifier for the assistant within this configuration.
-   - `assistant_id`: The unique identifier provided by AI/Run CodeMie for the assistant.
-   - `model` (optional): The model to be used by the assistant. If not specified, a default model will be used.
+### Assistants Section
 
-2. **States Section**:
-   - `states`: This is a list of state configurations.
-   - `id`: A unique identifier for the state within this configuration.
-   - `assistant_id`: The identifier of the assistant (from the assistants section) that will handle this state.
-   - `task`: A multi-line string specifying the task that the assistant needs to perform.
-   - `output_schema` (optional): JSON schema defining the expected output of the task.
-   - `next`: Defines what the next state will be.
-     - `state_id`: The identifier of the next state. If a condition is used, this field is not required.
-     - `iter_key` (optional): Key from `output_schema` for iterating over items.
-     - `condition`: Conditional logic to determine the next state.
-       - `expression`: The condition to evaluate. Uses the output of the current state.
-       - `then`: The next state if the condition is true.
-       - `otherwise`: The next state if the condition is false.
+Define the assistants that will participate in the workflow:
 
-To create a workflow configuration with two assistants and two states, copy and paste the YAML example below into your configuration file. Customize the `id`, `assistant_id`, `task`, and other fields according to your requirements.
+| Field          | Required | Description                                                    |
+| -------------- | -------- | -------------------------------------------------------------- |
+| `id`           | Yes      | Unique identifier for the assistant in this configuration      |
+| `assistant_id` | Yes      | AI/Run CodeMie assistant ID                                    |
+| `model`        | No       | Override the default model for this assistant                  |
 
-## Additional Information
+### States Section
 
-- The `output_schema` should be a valid JSON schema that describes the structure of the output.
-- Make sure that all `id` fields are unique within their respective sections.
-- Use the `condition` in the `next` field to handle branching logic based on the output of the current state.
-- Make sure that `iter_key` is the same as in `output_schema` to correctly iterate over results with assistant.
+Define the workflow states and their execution logic:
 
-By following these guidelines, you can effectively create and manage workflow configurations using YAML.
+| Field           | Required | Description                                                  |
+| --------------- | -------- | ------------------------------------------------------------ |
+| `id`            | Yes      | Unique identifier for the state                              |
+| `assistant_id`  | Yes      | ID of the assistant handling this state                      |
+| `task`          | Yes      | Multi-line string describing the task to perform             |
+| `output_schema` | No       | JSON schema defining expected output structure               |
+| `next`          | Yes      | Configuration for state transition                           |
 
-### YAML Configuration Example:
+#### Next State Configuration
+
+| Field       | Required | Description                                                     |
+| ----------- | -------- | --------------------------------------------------------------- |
+| `state_id`  | No*      | ID of the next state (*not required if using condition)        |
+| `iter_key`  | No       | Key from output_schema for iteration                           |
+| `condition` | No       | Conditional logic with `expression`, `then`, and `otherwise`   |
+
+:::info Configuration Guidelines
+- All `id` fields must be unique within their respective sections
+- `output_schema` must be valid JSON schema
+- When using `iter_key`, ensure it matches a key in `output_schema`
+- Use `condition` in the `next` field for branching logic based on state output
+:::
+
+### Configuration Example
 
 ```yaml
 assistants:
-  - id: lister # Unique identifier for the assistant in this configuration
-    assistant_id: 18125c76-a67d-4fd9-b849-5c44277e302c # AI/Run CodeMie assistant ID
-    model: 'gpt-4o' # Optional model override
+  - id: lister
+    assistant_id: 18125c76-a67d-4fd9-b849-5c44277e302c
+    model: 'gpt-4o'
 
   - id: scraper
     assistant_id: d61a51e5-b8e5-4ce8-977d-c1364fcd5b1a
-    model: 'gpt-4o' # Optional model override
+    model: 'gpt-4o'
 
 states:
-  - id: scraper # Unique identifier for the state in this configuration
+  - id: scraper
     assistant_id: scraper
     task: |
-      Show me all the tickets for the current sprint in the EPMDEDP project. Must be at least 20 items large.
+      Show me all the tickets for the current sprint in the EPMDEDP project.
+      Must be at least 20 items large.
     next:
-      state_id: lister # Unique identifier for the next state
+      state_id: lister
 
-  - id: lister # Unique identifier for the state in this configuration
+  - id: lister
     assistant_id: lister
     task: |
       Of all the tickets provided, list me those that are assigned to <Name> <Surname>
@@ -100,6 +126,10 @@ states:
       state_id: end
 ```
 
-3. You can also see the workflow visualization view by clicking the **Visualize** button:
+## Workflow Visualization
 
-   ![Workflow visualization view](../images/image203.png)
+After configuring your workflow, click the **Visualize** button to see a graphical representation of the workflow states and transitions:
+
+![Workflow visualization view](../images/image202.png)
+
+3. Click **Update** to save your workflow configuration.

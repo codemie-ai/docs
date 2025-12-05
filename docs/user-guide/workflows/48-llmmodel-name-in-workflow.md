@@ -1,26 +1,53 @@
 ---
 id: llm-model-name-in-workflow
-title: 4.8 LLM Model Name in Workflow
+title: LLM Model Name in Workflow
 sidebar_label: LLM Model Name
 sidebar_position: 8
+description: How to identify which LLM model is being used in a workflow
 ---
 
-# 4.8 LLM Model Name in Workflow
+# LLM Model Name in Workflow
 
-To find the LLM model name used in a workflow:
+Use browser Developer Tools to identify the LLM model being used in your workflow execution.
 
-1. Open the Codemie web page: Go to https://epa.ms/codemie
+## Steps to Find Model Name
 
-2. Open DevTools (Developer Tools): Press the **F12** key or right-click on the page and select **Inspect**.
+1. **Open AI/Run CodeMie** in your browser.
 
-3. Go to the **Network** tab: This tab shows all network requests made by the page.
+2. **Open Developer Tools**:
+   - Press **F12**, or
+   - Right-click on the page and select **Inspect**
 
-4. Refresh the page (**F5**): This will load all the network activity, including the LLM request.
+3. **Navigate to Network Tab**:
 
-5. Find the request named **llm_models**: In the "Name" column filter or search for llm_models. Double-click on the request or select it.
+   The Network tab displays all HTTP requests made by the application.
+
+4. **Refresh the Page**:
+
+   Press **F5** to capture network activity, including LLM model requests.
+
+5. **Locate the LLM Models Request**:
+
+   Search or filter for `llm_models` in the Name column:
 
    ![Network tab showing llm_models request](../images/image110.png)
 
-6. Click on the **Response** tab: You will see a JSON response from the server.
+6. **View Response Data**:
 
-7. Locate the **base_name** field: Inside the JSON object, you'll find model information. The base_name field indicates the model name used in the workflow.
+   Click on the request, then select the **Response** tab to see the JSON response.
+
+7. **Find the Model Name**:
+
+   Locate the `base_name` field in the JSON response - this indicates the LLM model name used in the workflow.
+
+## Example Response Structure
+
+```json
+{
+  "model_id": "...",
+  "base_name": "gpt-4o",
+  "provider": "..."
+}
+```
+
+The `base_name` field contains the model identifier (e.g., `gpt-4o`, `claude-3-sonnet`, etc.).

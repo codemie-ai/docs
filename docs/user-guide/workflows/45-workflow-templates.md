@@ -1,15 +1,22 @@
 ---
 id: workflow-templates
-title: 4.5 Workflow Templates
+title: Workflow Templates
 sidebar_label: Workflow Templates
 sidebar_position: 5
+description: Comprehensive list of pre-built workflow templates available in AI/Run CodeMie
 ---
 
-# 4.5 Workflow Templates
+# Workflow Templates
 
-AI/Run CodeMie offers a bunch of predefined workflow templates out of the box. These templates serve not only as examples for creating your own workflow but also for solving various tasks, such as Jira ticket management, comparing Git branches, Python unit test generation, etc.
+AI/Run CodeMie provides predefined workflow templates that serve as both examples and ready-to-use solutions for common tasks including:
 
-The table below lists all the available templates with their description and tools:
+- Jira ticket management
+- Git branch comparison
+- Python unit test generation
+- Code coverage analysis
+- Sonar issue remediation
+
+## Available Templates
 
 | Name                                                   | Description/Integrated tools                                                                                                                                                                                                                                                                                                                     | Required Assistants' tools                                                                                                                                                                                                    |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -606,15 +606,14 @@ states:
     # If both iterations set "result" key, only the last value is retained
 ```
 
-**Important Context Merging Notes:**
-
+:::info Context Merging
 - Iterations are isolated during execution but merged after completion
 - Context keys set by multiple iterations will have only one final value (last wins)
 - To preserve all iteration results, use unique keys (e.g., `result_1`, `result_2`) or aggregate into lists
 - Message histories are fully preserved from all iterations
+:::
 
-#### Important Notes:
-
+:::note Important Notes
 - **Multi-stage iteration requirement**: The same `iter_key` must be present in every state within the iteration chain except the last one in the chain
 - The state result is automatically parsed as JSON if possible
 - If `iter_key` evaluates to a non-list value, it's wrapped as a single-item list
@@ -624,5 +623,6 @@ states:
 - Cannot combine `iter_key` with `state_ids` (parallel transitions) or `condition`/`switch`
 - Each iteration branch has isolated context and message history during execution
 - After all iterations complete, contexts and message histories are merged using LangGraph reducers
+:::
 
 ---

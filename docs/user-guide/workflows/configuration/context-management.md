@@ -677,8 +677,7 @@ task: |
   Theme: {{user.preferences.theme}}
 ```
 
-**Important Notes:**
-
+:::note Important Notes
 - **Root-level keys only**: Only top-level keys from JSON output become context store keys
 - **Nested structures preserved**: The values can be complex nested objects/arrays
 - **Jinja2 resolution**: Template rendering uses Jinja2, which supports dot notation for nested access
@@ -688,6 +687,7 @@ task: |
   Output: { 'user_name': 'Alice', 'user_email': 'alice@example.com', 'user_theme': 'dark' }
   # Direct access: {{user_name}}, {{user_email}}, {{user_theme}}
   ```
+:::
 
 **Working with Arrays:**
 
