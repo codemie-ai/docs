@@ -694,7 +694,7 @@ Track memory usage and identify memory leaks during application runtime using Py
 
 | Parameter                           | Type    | Default              | Description                                                                       |
 | ----------------------------------- | ------- | -------------------- | --------------------------------------------------------------------------------- |
-| `MEMORY_PROFILING_ENABLED`          | boolean | `false `             | Enable tracemalloc-based memory profiling                                         |
+| `MEMORY_PROFILING_ENABLED`          | boolean | `false `             | Enable tracemalloc and psutil based memory profiling                                         |
 | `MEMORY_PROFILING_INTERVAL_MINUTES` | integer | `10`                 | Interval between automatic snapshots (in minutes)                                 |
 | `MEMORY_PROFILING_DETAIL_LEVEL`     | string  | `"file"`             | Detail level: "file" (fast, groups by file) or "line" (slower, shows exact lines) |
 | `MEMORY_PROFILING_SNAPSHOT_PREFIX`  | string  | `"memory_snapshots"` | Prefix path for snapshot storage location                                         |
