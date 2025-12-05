@@ -40,6 +40,7 @@ words:
   - VERTEXAI
   - LangFuse
   - LangGraph
+  - Langchain
   - bitnami
   - litellm
   # Cloud/Infrastructure
@@ -233,6 +234,9 @@ words:
   - chatbots
   - subassistants
   - Multiassistant
+  - roadmaps
+  - wireframing
+  - Presales
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors
