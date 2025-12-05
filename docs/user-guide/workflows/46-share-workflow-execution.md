@@ -1,20 +1,35 @@
 ---
 id: share-workflow-execution
-title: 4.6 Share Workflow Execution
+title: Share Workflow Execution
 sidebar_label: Share Execution
 sidebar_position: 6
+description: How to share workflow execution results with team members
 ---
 
-# 4.6 Share Workflow Execution
+# Share Workflow Execution
 
-To share the Workflow Execution, you have two options:
+Share workflow execution results with authorized users to collaborate on analysis and review.
 
-1. Copy the browser URL and send it to an authorized user.
+## Sharing Methods
 
-2. Navigate to the **Workflows** tab:
-   - Select the specific workflow
-   - Click on the three dots menu next to the chosen workflow
-   - Select the **View Details** option from the menu
-   - Click on the copy button at the end of "Link to workflow details"
+### Option 1: Direct URL Sharing
 
-Users who open the link will be able to view the Workflow Execution details.
+Copy the browser URL from the workflow execution page and send it to an authorized user.
+
+### Option 2: Workflow Details Link
+
+1. Navigate to the **Workflows** section.
+
+2. Locate and select your workflow.
+
+3. Click the three dots menu (**⋮**) next to the workflow.
+
+4. Select **View Details** from the menu.
+
+5. Click the copy button next to "Link to workflow details".
+
+6. Share the copied link with authorized users.
+
+:::info Access Requirements
+Users must be authorized in AI/Run CodeMie to view shared workflow execution details. The link will only work for users with proper access permissions.
+:::
