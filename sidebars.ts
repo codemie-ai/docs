@@ -104,6 +104,48 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
+            {
+              type: 'doc',
+              id: 'user-guide/integrations/integrations',
+              label: 'Integrations',
+            },
+            {
+              type: 'category',
+              label: 'Data Sources',
+              link: {
+                type: 'doc',
+                id: 'user-guide/data-source/data-source',
+              },
+              collapsed: true,
+              items: [
+                {
+                  type: 'category',
+                  label: 'Data Source Overview',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/data-source/data-source-overview/data-source-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'user-guide/data-source/data-source-overview/indexing-data-sources',
+                    'user-guide/data-source/data-source-overview/indexing-duration',
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: 'DataSources Types',
+                  collapsed: true,
+                  items: [
+                    'user-guide/data-source/datasources-types/add-git-data-sources',
+                    'user-guide/data-source/datasources-types/add-confluence-pages',
+                    'user-guide/data-source/datasources-types/add-jira-data-source',
+                    'user-guide/data-source/datasources-types/add-file-datasource',
+                    'user-guide/data-source/datasources-types/add-google-data-source',
+                    'user-guide/data-source/datasources-types/add-aws-knowledge-bases',
+                  ],
+                },
+              ],
+            },
           ],
         },
       ],
