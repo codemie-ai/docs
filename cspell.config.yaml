@@ -83,6 +83,7 @@ words:
   - AKS
   - Azure
   - azurecli
+  - azuredevops
   - japaneast
   - eastus
   - westeurope
@@ -141,6 +142,10 @@ words:
   - endpoints
   - webhook
   - webhooks
+  - ITSM
+  - CMDB
+  - cloudapp
+  - newbot
   - repo
   - repos
   - codebase
@@ -237,6 +242,8 @@ words:
   - roadmaps
   - wireframing
   - Presales
+  - testmate
+  - agentic
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors

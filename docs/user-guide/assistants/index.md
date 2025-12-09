@@ -32,6 +32,7 @@ Manage conversations and organize your workspace:
 - [Share Assistants](./sharing-assistants) - Share assistants with team members
 - [Restore System Instructions](./restore-system-instructions) - Revert to previous instruction versions
 - [Supported File Formats](./supported-file-formats-and-csv-handling-in-chat-assistant) - Upload and analyze files in chats
+- [HTML Preview](./html-preview) - Preview and interact with HTML content in chat
 
 ## Sharing and Export
 

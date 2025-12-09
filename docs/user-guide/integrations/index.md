@@ -66,3 +66,12 @@ For Datasource you can create user integration from data source page:
    ![Integration selection interface](./images/datasource-integration-modal.png)
 
 4. After saving, the new integration appears in the existing list without requiring a page reload or navigation away.
+
+## Filter Integrations
+
+As you work with AI/Run CodeMie, the number of integrations will increase. To simplify navigation between integrations, use the filters. You can filter integrations by:
+
+- **NAME**
+- **PROJECT**
+- **TYPE**
+- **GLOBAL**
