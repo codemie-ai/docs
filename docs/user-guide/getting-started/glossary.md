@@ -146,7 +146,7 @@ A workspace within the CodeMie platform that delineates and isolates working env
 
 ### Project Admin
 
-A user with administrative privileges within the CodeMie platform. Project Admins have extended functionality including the ability to create new projects, configure Project Integrations (available to all team members), view all project assistants, and manage project-level settings. Only Admin or applications_admin roles have access to these administrative functions.
+A user with administrative privileges within the CodeMie platform. Project Admins have extended functionality including the ability configure Project Integrations (available to all team members), view all project assistants and workflows and manage project-level settings. Only Admin roles or user with attribute applications_admin have access to these administrative functions.
 
 ### Providers
 
