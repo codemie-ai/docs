@@ -19,7 +19,7 @@ To initiate your first conversation, click on the FAQ button:
 Content of help might be changed for different projects.
 :::
 
-## Example Usage
+## Example of Usage
 
 1. Try to ask something related to AI/Run CodeMie:
 
