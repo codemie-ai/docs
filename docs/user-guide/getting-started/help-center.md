@@ -7,9 +7,9 @@ sidebar_position: 4
 
 # Help Center
 
-![Help Center](./images/image165.png)
-
 The Help Center page serves as a central hub for getting help, learning, and updates on the CodeMie platform. It provides users with access to various support resources and learning materials.
+
+![Help Center](./images/image165.png)
 
 ## AI Assistants
 
@@ -31,13 +31,13 @@ The perfect solution for real-time interaction and instant support. Designed to 
 
 Section for learning the platform and getting the most out of it:
 
-### Video Portal
+### Youtube channel
 
-Short tutorials, step-by-step instructions, and product tips: [Video Portal](https://videoportal.epam.com/channel/z1Je1k9Jv5/videos)
+Watch tutorials and product guides on our YouTube channel.: [Youtube channel](https://www.youtube.com/@EPAMAIRunCodeMie)
 
-![Video Portal](./images/image81.png)
+![Youtube channel](./images/image81.png)
 
-### User Guide
+### User Guides
 
 Step-by-step documentation for all key features.
 
@@ -45,8 +45,8 @@ Step-by-step documentation for all key features.
 
 Section for tracking new features and improvements:
 
-![Product Updates](./images/image90.png)
-
 ### Release Notes
 
 View the latest changes, fixes, and improvements.
+
+![Product Updates](./images/image90.png)

@@ -86,14 +86,17 @@ Integration with external services and systems that extend assistant capabilitie
 
 ## I
 
-### IDE Plugin
+### IDE
 
-Native IDE extensions that bring CodeMie capabilities directly into your development environment, allowing access to assistants, tools, and project resources without leaving your IDE.
+Native IDE extensions and plugins that bring CodeMie capabilities directly into your development environment, allowing access to assistants, tools, and project resources without leaving your IDE.
 
 **Supported IDEs:**
 
-- **Visual Studio Code (VSCode)**
-- **JetBrains IDEs** - IntelliJ IDEA, WebStorm, PyCharm, and others
+- **Visual Studio Code (VSCode)** extensions:
+  - [GH Copilot Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.codemie)
+  - [Native VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.ai-run-codemie)
+
+- **JetBrains** plugin: [IntelliJ IDEA, WebStorm, PyCharm, and others](https://plugins.jetbrains.com/plugin/27730-ai-run-codemie)
 
 ### Integration
 
@@ -154,7 +157,7 @@ Third-party provider configurations that enable integration of external data sou
 
 ### Plugin
 
-An extensible component that adds functionality to the CodeMie platform. Plugins can provide additional tools, integrations, or capabilities for assistants to use.
+An extensible component that adds functionality to the CodeMie platform. Plugins can provide additional tools, integrations, or capabilities for assistants to use. Available at [codemie-plugins](https://pypi.org/project/codemie-plugins/).
 
 ---
 
