@@ -69,7 +69,20 @@ redis:
 s3:
   persistence:
     size: "100Gi"         # Adjust as needed
+
+# Configure data retention policies (optional):
+retention:
+  ttl:
+    enabled: true              # Enable automatic data cleanup
+    observationsDays: 60       # Retain observations for 60 days
+    tracesDays: 60            # Retain traces for 60 days
+    blobstoragefilelogDays: 60 # Retain blob storage logs for 60 days
+    systemLogsDays: 30        # Retain ClickHouse system logs for 30 days
 ```
+
+:::tip Data Retention
+The retention configuration automatically applies TTL (Time-To-Live) policies to ClickHouse tables. This helps manage storage costs by automatically removing old data. Adjust the retention periods based on your compliance and storage requirements.
+:::
 
 ## Step 3: Configure PostgreSQL
 

@@ -36,12 +36,13 @@ The script is designed to be idempotent. Follow the next steps to install.
 # Deploy to a custom namespace
 ./langfuse/deploy-langfuse.sh -n my-langfuse-namespace
 
-# Deploy with a specific Langfuse chart version
-./langfuse/deploy-langfuse.sh -v 1.5.3
-
 # Use a custom values file
 ./langfuse/deploy-langfuse.sh --values-file custom-values.yaml
 ```
+
+:::info Version Management
+The Langfuse chart version is now managed in `langfuse/Chart.yaml` (dependency version), not via command-line option.
+::::
 
 ### Advanced Usage
 
@@ -56,7 +57,7 @@ The script is designed to be idempotent. Follow the next steps to install.
 ./langfuse/deploy-langfuse.sh --skip-deploy
 
 # Combined options
-./langfuse/deploy-langfuse.sh -n production -v 1.5.3 --values-file prod-values.yaml
+./langfuse/deploy-langfuse.sh -n production --values-file prod-values.yaml
 ```
 
 ### Provide PostgreSQL Password when Asked
@@ -82,11 +83,14 @@ PostgreSQL password:
 | ----------------- | ------------------------------- | ------------- |
 | `-h, --help`      | Show help message               | -             |
 | `-n, --namespace` | Kubernetes namespace            | `langfuse`    |
-| `-v, --version`   | Langfuse Helm chart version     | `1.5.3`       |
 | `-d, --dry-run`   | Perform dry run without changes | `false`       |
 | `--skip-secrets`  | Skip secret creation            | `false`       |
 | `--skip-deploy`   | Skip Helm deployment            | `false`       |
 | `--values-file`   | Path to values.yaml file        | `values.yaml` |
+
+:::note Chart Version
+The Langfuse Helm chart version is managed in `langfuse/Chart.yaml` under the `dependencies` section.
+:::
 
 ## What the Script Does
 
@@ -95,5 +99,7 @@ PostgreSQL password:
 3. **Helm Repository**: Adds and updates Langfuse Helm repository
 4. **PostgreSQL Password creation**: Asks for the database password
 5. **Secret Creation**: Creates all required Kubernetes secrets
-6. **Langfuse Deployment**: Deploys Langfuse using Helm
-7. **Integration Setup**: Creates integration secret for CodeMie
+6. **Helm Dependencies**: Updates Helm chart dependencies from Chart.yaml
+7. **Langfuse Deployment**: Deploys Langfuse using local Helm chart with custom templates (including retention TTL job)
+8. **Integration Setup**: Creates integration secret for CodeMie
+9. **Pod Restart**: Restarts Langfuse web and worker pods
