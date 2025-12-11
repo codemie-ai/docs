@@ -18,6 +18,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'user-guide/getting-started/what-is-codemie',
         'user-guide/getting-started/codemie-capabilities',
+        'user-guide/getting-started/use-cases',
         'user-guide/getting-started/meet-faq-assistant',
         'user-guide/getting-started/help-center',
         'user-guide/getting-started/glossary',
