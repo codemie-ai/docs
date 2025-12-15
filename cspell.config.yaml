@@ -244,6 +244,9 @@ words:
   - Presales
   - testmate
   - agentic
+  - keycloakx
+  - backchannel
+  - xforwarded
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors
