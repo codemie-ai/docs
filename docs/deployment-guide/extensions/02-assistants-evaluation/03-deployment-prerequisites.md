@@ -70,13 +70,13 @@ s3:
   persistence:
     size: "100Gi"         # Adjust as needed
 
-# Configure data retention policies (optional):
+# Configure data retention policies for langfuse (optional):
 retention:
   langfuse:
-    enabled: false              # Enable automatic data cleanup
-    observationsDays: 60       # Retain observations for 60 days
-    tracesDays: 60            # Retain traces for 60 days
-    blobstoragefilelogDays: 60 # Retain blob storage logs for 60 days
+    enabled: false              # Set to 'true' to automatically purge historical data
+    observationsDays: 90        # Retain observations for 90 days
+    tracesDays: 90              # Retain traces for 90 days
+    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days
 ```
 
 :::tip Data Retention
