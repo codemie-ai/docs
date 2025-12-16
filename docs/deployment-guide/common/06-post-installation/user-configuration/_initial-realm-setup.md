@@ -6,7 +6,7 @@ Follow these steps to enable unmanaged attributes in the Keycloak realm:
 
 ### 1. Open the Keycloak Console
 
-Navigate to your Keycloak admin console URL (typically `https://keycloak.<your-domain>`).
+Navigate to your Keycloak admin console URL (typically `https://keycloak.<your-domain>/auth/admin/`).
 
 ### 2. Select the Correct Realm
 
