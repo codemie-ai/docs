@@ -73,7 +73,7 @@ s3:
 # Configure data retention policies (optional):
 retention:
   langfuse:
-    enabled: true              # Enable automatic data cleanup
+    enabled: false              # Enable automatic data cleanup
     observationsDays: 60       # Retain observations for 60 days
     tracesDays: 60            # Retain traces for 60 days
     blobstoragefilelogDays: 60 # Retain blob storage logs for 60 days
