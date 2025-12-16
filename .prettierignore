@@ -2,3 +2,7 @@ node_modules
 build
 .docusaurus
 package-lock.json
+*.png
+*.jpg
+*.jpeg
+*.svg

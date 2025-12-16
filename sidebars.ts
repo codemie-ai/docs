@@ -675,6 +675,16 @@ const sidebars: SidebarsConfig = {
           items: [
             'deployment-guide/additional-resources/api-configuration',
             'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
+            {
+              type: 'category',
+              label: 'Keycloak Upgrade',
+              link: {
+                type: 'doc',
+                id: 'deployment-guide/additional-resources/keycloak-upgrade/keycloak-upgrade',
+              },
+              collapsed: true,
+              items: ['deployment-guide/additional-resources/keycloak-upgrade/keycloak-24-to-26'],
+            },
           ],
         },
         {
