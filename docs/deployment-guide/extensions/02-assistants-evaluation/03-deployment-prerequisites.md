@@ -72,7 +72,7 @@ s3:
 
 # Configure data retention policies (optional):
 retention:
-  ttl:
+  langfuse:
     enabled: true              # Enable automatic data cleanup
     observationsDays: 60       # Retain observations for 60 days
     tracesDays: 60            # Retain traces for 60 days
@@ -83,9 +83,26 @@ retention:
 The retention configuration automatically applies [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to Langfuse tables in ClickHouse. This helps manage storage costs by automatically removing old data. Adjust the retention periods based on your compliance and storage requirements.
 :::
 
+:::info ClickHouse System Tables Retention
+The `clickhouse.extraOverrides` section in `values.yaml` contains optional configuration for ClickHouse system tables TTL. By default, it's commented out to avoid modifying ClickHouse's internal logging behavior.
+
+**When to enable:**
+
+- You need to manage storage used by ClickHouse system logs (query_log, trace_log, metric_log, etc.)
+- You want to limit retention of internal ClickHouse operational logs
+
+**How to enable:**
+
+1. Uncomment the `extraOverrides` section in `langfuse/values.yaml`
+2. Adjust the TTL intervals as needed (default is 90 days)
+3. Redeploy Langfuse with `helm upgrade`
+
+This configuration is separate from Langfuse data retention and only affects ClickHouse's internal system tables.
+:::
+
 ## Step 2.1: Managing ClickHouse Data Retention
 
-When you enable `retention.ttl.enabled: true` in the configuration above, a Kubernetes Job automatically applies TTL (Time-To-Live) policies to Langfuse tables in ClickHouse. The TTL policies automatically delete data older than the specified retention period.
+When you enable `retention.langfuse.enabled: true` in the configuration above, a Kubernetes Job automatically applies TTL (Time-To-Live) policies to Langfuse tables in ClickHouse. The TTL policies automatically delete data older than the specified retention period.
 
 ### Scenario A: New Langfuse Installation
 
