@@ -685,6 +685,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'deployment-guide/extensions/assistants-evaluation/post-deployment',
                 'deployment-guide/extensions/assistants-evaluation/troubleshooting',
+                'deployment-guide/extensions/assistants-evaluation/operational-queries',
               ],
             },
             'deployment-guide/extensions/ai-code-explorer/ai-code-explorer',

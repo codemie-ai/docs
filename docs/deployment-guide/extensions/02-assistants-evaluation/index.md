@@ -44,6 +44,7 @@ Follow these sections in order for a successful deployment:
 4. [Deployment](./deployment) - Automated or manual deployment options
 5. [Post-Deployment Configuration](./post-deployment) - Configure CodeMie integration
 6. [Troubleshooting](./troubleshooting) - Common issues and solutions
+7. [Operational Queries](./operational-queries) - ClickHouse monitoring and analysis queries
 
 ## Next Steps
 

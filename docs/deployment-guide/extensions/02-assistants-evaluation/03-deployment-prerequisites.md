@@ -177,6 +177,10 @@ These DELETE operations are irreversible. Make sure you have backups if needed a
 After deleting old data manually, you can enable or update the retention configuration in `values.yaml` and redeploy Langfuse. The TTL policies will then automatically manage future data cleanup.
 :::
 
+:::tip Monitoring Queries
+For useful SQL queries to monitor disk usage, verify retention policies, and analyze data patterns, see [Operational Queries](./operational-queries).
+:::
+
 ## Step 3: Configure PostgreSQL
 
 Configure PostgreSQL running in managed cloud.
