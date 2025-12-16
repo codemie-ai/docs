@@ -196,6 +196,30 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: ['user-guide/applications/ai-testmate'],
             },
+            {
+              type: 'category',
+              label: 'IDE Extensions',
+              link: {
+                type: 'doc',
+                id: 'user-guide/ide/index',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/ide/jetbrains-plugin',
+                'user-guide/ide/vscode-copilot-extension',
+                'user-guide/ide/vscode-native-extension',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'API',
+              link: {
+                type: 'doc',
+                id: 'user-guide/api/index',
+              },
+              collapsed: true,
+              items: ['user-guide/api/client-secret-access', 'user-guide/api/user-password-access'],
+            },
           ],
         },
       ],

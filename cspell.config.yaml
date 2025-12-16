@@ -249,6 +249,8 @@ words:
   - keycloakx
   - backchannel
   - xforwarded
+  - CIBA
+  - urlencode
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors
