@@ -19,7 +19,7 @@ extraEnv:
   - name: LANGFUSE_TRACES
     value: 'true'
   - name: LANGFUSE_HOST
-    value: https://langfuse.%DOMAIN%
+    value: http://langfuse-web.langfuse:3000
   - name: LANGFUSE_SAMPLE_RATE
     value: '1.0'
   - name: LANGFUSE_TRACING_ENVIRONMENT
