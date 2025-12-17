@@ -25,7 +25,7 @@ Share your custom assistants with the AI/Run CodeMie community by publishing the
 
 Before publishing, the system checks for sensitive credentials:
 
-![Credential warning modal](../images/image12.png)
+![Credential warning modal](../images/marketplace-publish-prompt-variables-warning.png)
 
 - If your assistant uses personal or project-specific credentials, a warning modal will appear
 - The modal guides you through the process and prevents accidental credential exposure
@@ -35,11 +35,37 @@ Before publishing, the system checks for sensitive credentials:
 Always review credential warnings carefully. Publishing assistants with personal credentials may expose sensitive information to other users.
 :::
 
+### Prompt Variables Review
+
+When publishing an assistant with prompt variables, the system displays a **Prompt Variables Review** section showing how variables will be handled:
+
+**Variable Display:**
+
+- **All Variables**: Lists all prompt variables used in the assistant's system instructions
+- **Sensitive Variables**: Displays sensitive variables separately with count (e.g., "Sensitive Variables (3):")
+  - Sensitive variables are marked with orange tags
+  - These variables are displayed as button-style tags with capitalized names
+
+**Security Notice:**
+
+The system displays an important warning:
+
+:::info
+Sensitive prompt variables will not be visible to other users, but will be injected into the system prompt when the assistant is invoked.
+:::
+
+This ensures that:
+
+- Users who clone your assistant from the marketplace will see placeholders for sensitive variables
+- Sensitive variable values remain encrypted and hidden
+- Users will need to provide their own values for sensitive variables when using the assistant
+- The assistant functionality is preserved while protecting confidential information
+
 ## Select Categories
 
 Choose up to **3 relevant categories** to help users discover your assistant:
 
-![Category selection](../images/image126.png)
+![Category selection](../images/image12.png)
 
 | Category                      | Description                                                                       |
 | ----------------------------- | --------------------------------------------------------------------------------- |
