@@ -41,8 +41,8 @@ The script is designed to be idempotent. Follow the next steps to install.
 ```
 
 :::info Version Management
-The Langfuse chart version is now managed in `langfuse/Chart.yaml` (dependency version), not via command-line option.
-::::
+The Langfuse application version is configured in `langfuse/values.yaml` using `langfuse.langfuse.image.tag`. The Helm chart version is managed in `langfuse/Chart.yaml` (dependency version).
+:::
 
 ### Advanced Usage
 
@@ -88,9 +88,11 @@ PostgreSQL password:
 | `--skip-deploy`   | Skip Helm deployment            | `false`       |
 | `--values-file`   | Path to values.yaml file        | `values.yaml` |
 
-:::note Chart Version
-The Langfuse Helm chart version is managed in `langfuse/Chart.yaml` under the `dependencies` section.
-:::
+:::note Version Management
+
+- **Langfuse Application**: Set version in `langfuse/values.yaml` → `langfuse.langfuse.image.tag: "3.129.0"`
+- **Helm Chart**: Managed in `langfuse/Chart.yaml` under the `dependencies` section
+  :::
 
 ## What the Script Does
 

@@ -117,8 +117,10 @@ helm upgrade --install langfuse ./langfuse \
 ```
 
 :::note Version Management
-The Langfuse chart version is managed in `langfuse/Chart.yaml` under the `dependencies` section, not via `--version` flag.
-:::
+
+- **Langfuse Application**: Set version in `langfuse/values.yaml` → `langfuse.langfuse.image.tag: "3.129.0"`
+- **Helm Chart**: Managed in `langfuse/Chart.yaml` under the `dependencies` section, not via `--version` flag
+  :::
 
 ## Step 6: Configure Integration
 
