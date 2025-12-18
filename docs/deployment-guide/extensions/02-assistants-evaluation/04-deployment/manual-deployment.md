@@ -90,18 +90,37 @@ kubectl create secret generic langfuse-postgresql \
 --type=Opaque
 ```
 
-## Step 4: Deploy Langfuse
+## Step 4: Update Helm Dependencies
 
-Install or upgrade Langfuse using Helm:
+Update the local chart dependencies:
 
 ```bash
-helm upgrade --install langfuse langfuse/langfuse \
---namespace langfuse \
---version 1.5.3 \
---values ./langfuse/values.yaml
+cd langfuse
+helm dependency update
+cd ..
 ```
 
-## Step 5: Configure Integration
+:::info Local Chart
+Langfuse deployment now uses a local Helm chart that wraps the official chart. This allows for custom templates (like the retention TTL job) while still using the official upstream chart.
+:::
+
+## Step 5: Deploy Langfuse
+
+Install or upgrade Langfuse using the local Helm chart:
+
+```bash
+helm upgrade --install langfuse ./langfuse \
+--namespace langfuse \
+--values ./langfuse/values.yaml \
+--wait \
+--timeout 10m
+```
+
+:::note Version Management
+The Langfuse chart version is managed in `langfuse/Chart.yaml` under the `dependencies` section, not via `--version` flag.
+:::
+
+## Step 6: Configure Integration
 
 Create the Langfuse integration secret in the `codemie` namespace:
 

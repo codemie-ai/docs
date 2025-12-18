@@ -69,7 +69,117 @@ redis:
 s3:
   persistence:
     size: "100Gi"         # Adjust as needed
+
+# Configure data retention policies for langfuse (optional):
+retention:
+  langfuse:
+    enabled: false              # Set to 'true' to automatically purge historical data
+    observationsDays: 90        # Retain observations for 90 days
+    tracesDays: 90              # Retain traces for 90 days
+    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days
 ```
+
+:::tip Data Retention
+The retention configuration automatically applies [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to Langfuse tables in ClickHouse. This helps manage storage costs by automatically removing old data. Adjust the retention periods based on your compliance and storage requirements.
+:::
+
+:::info ClickHouse System Tables Retention
+The `clickhouse.extraOverrides` section in `values.yaml` contains optional configuration for ClickHouse system tables TTL. By default, it's commented out to avoid modifying ClickHouse's internal logging behavior.
+
+**When to enable:**
+
+- You need to manage storage used by ClickHouse system logs (query_log, trace_log, metric_log, etc.)
+- You want to limit retention of internal ClickHouse operational logs
+
+**How to enable:**
+
+1. Uncomment the `extraOverrides` section in `langfuse/values.yaml`
+2. Adjust the TTL intervals as needed (default is 90 days)
+3. Redeploy Langfuse with `helm upgrade`
+
+This configuration is separate from Langfuse data retention and only affects ClickHouse's internal system tables.
+:::
+
+## Step 2.1: Managing ClickHouse Data Retention
+
+When you enable `retention.langfuse.enabled: true` in the configuration above, a Kubernetes Job automatically applies TTL (Time-To-Live) policies to Langfuse tables in ClickHouse. The TTL policies automatically delete data older than the specified retention period.
+
+### Scenario A: New Langfuse Installation
+
+If you're deploying Langfuse for the first time:
+
+1. Simply enable retention in `values.yaml` (as shown above)
+2. Deploy Langfuse following the deployment instructions
+3. TTL policies will be applied automatically during deployment
+4. No manual data cleanup is needed
+
+### Scenario B: Existing Installation or Changing TTL Settings
+
+If you have an existing Langfuse installation with data and want to:
+
+- Enable retention for the first time, OR
+- Reduce the retention period (e.g., from 90 days to 30 days)
+
+You **must manually delete old data** before enabling or updating retention settings.
+
+#### Step 1: Connect to ClickHouse
+
+Find the ClickHouse pod name:
+
+```bash
+kubectl get pods -n langfuse | grep clickhouse
+```
+
+Connect to the ClickHouse pod (replace `X` with your shard number):
+
+```bash
+kubectl exec -it langfuse-clickhouse-shard0-X -n langfuse -- /bin/bash
+```
+
+#### Step 2: Get ClickHouse Password
+
+Retrieve the admin password from the Kubernetes secret:
+
+```bash
+kubectl get secret langfuse-clickhouse -n langfuse -o jsonpath='{.data.admin-password}' | base64 --decode; echo
+```
+
+#### Step 3: Connect to ClickHouse Client
+
+Inside the pod, connect to ClickHouse using the password from Step 2:
+
+```bash
+clickhouse-client --password <password_from_step_2>
+```
+
+#### Step 4: Delete Old Data
+
+Execute the following SQL commands to delete data older than your desired retention date.
+
+**Example:** Delete data older than July 13, 2025:
+
+```sql
+-- Delete old observations
+ALTER TABLE default.observations DELETE WHERE toDate(start_time) < toDate('2025-07-13');
+
+-- Delete old traces
+ALTER TABLE default.traces DELETE WHERE toDate(timestamp) < toDate('2025-07-13');
+
+-- Delete old blob storage logs
+ALTER TABLE default.blob_storage_file_log DELETE WHERE toDate(created_at) < toDate('2025-07-13');
+```
+
+:::warning
+These DELETE operations are irreversible. Make sure you have backups if needed and verify the date before executing.
+:::
+
+:::info
+After deleting old data manually, you can enable or update the retention configuration in `values.yaml` and redeploy Langfuse. The TTL policies will then automatically manage future data cleanup.
+:::
+
+:::tip Monitoring Queries
+For useful SQL queries to monitor disk usage, verify retention policies, and analyze data patterns, see [Operational Queries](./operational-queries).
+:::
 
 ## Step 3: Configure PostgreSQL
 
