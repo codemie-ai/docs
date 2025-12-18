@@ -65,7 +65,28 @@ litellm-helm:
     global:
       # Storage Class Configuration
       defaultStorageClass: 'your-storage-class' # e.g., "gp3", "standard", etc.
+    enabled: false # Redis is disabled by default
 ```
+
+### Redis Configuration
+
+By default, Redis deployment is **disabled** (`enabled: false`). Redis is an optional component that enhances LiteLLM proxy capabilities for specific use cases.
+
+#### When to Enable Redis
+
+Set `enabled: true` if you need any of the following features:
+
+**1. Response Caching**
+
+Cache LLM API responses to reduce costs and latency. Redis stores responses for identical queries, enabling faster response times and lower API costs.
+
+Learn more: [LiteLLM Caching Documentation](https://litellm.vercel.app/docs/proxy/caching)
+
+**2. Distributed Rate Limiting and Load Balancing**
+
+When running multiple LiteLLM proxy instances (e.g., multiple Kubernetes pods), Redis synchronizes rate limits and load balancing state across all instances. This ensures consistent TPM/RPM enforcement and proper request distribution.
+
+Learn more: [LiteLLM Load Balancing Documentation](https://docs.litellm.ai/docs/proxy/load_balancing)
 
 ## Next Steps
 
