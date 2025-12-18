@@ -5,29 +5,33 @@ sidebar_label: Architecture
 sidebar_position: 3
 ---
 
+import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
+
 # AI/Run CodeMie Deployment Architecture
 
-The diagram below depicts the AI/Run CodeMie infrastructure deployment in the Azure public cloud environment.
+This page provides an overview of the AI/Run CodeMie deployment architecture on Microsoft Azure, including infrastructure components, network design, and resource requirements.
+
+## Architecture Overview
+
+AI/Run CodeMie is deployed on Azure Kubernetes Service (AKS) with supporting Azure services for networking, storage, and identity management.
+
+### High-Level Architecture Diagram
+
+The diagram below illustrates the complete AI/Run CodeMie infrastructure deployment on Azure:
 
 ![Azure Architecture Diagram](./images/architecture-diagram.drawio.png)
 
-## EntraID Integration Options
+:::tip Architecture Customization
+The architecture can be customized based on your organization's security policies, compliance requirements, and operational preferences. Consult with your deployment team to discuss specific requirements.
+:::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-  <TabItem value="option1" label="Option 1" default>
-    ![EntraID Integration Option 1](./images/azure-client-tenant.drawio.png)
-  </TabItem>
-  <TabItem value="option2" label="Option 2">
-    ![EntraID Integration Option 2](./images/azure-cross-tenants.drawio.png)
-  </TabItem>
-  <TabItem value="option3" label="Option 3">
-    ![EntraID Integration Option 3](./images/azure-epam-tenant.drawio.png)
-  </TabItem>
-</Tabs>
-
-import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
+## Resource Requirements
 
 <ContainerResources />
+
+## Next Steps
+
+After understanding the architecture, proceed to:
+
+- [Infrastructure Deployment](./infrastructure-deployment) - Deploy the Azure infrastructure using Terraform
+- [Components Deployment](./components-deployment) - Deploy AI/Run CodeMie application components using Helm

@@ -89,6 +89,7 @@ words:
   - japaneast
   - eastus
   - westeurope
+  - privatelink
   # DevOps/Tools
   - Helm
   - Terraform
@@ -115,6 +116,7 @@ words:
   - StorageClass
   - millicores
   - fluentbit
+  - tfstate
   # Data
   - PostgreSQL
   - Postgres

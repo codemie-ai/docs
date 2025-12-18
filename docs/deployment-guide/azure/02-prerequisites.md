@@ -5,69 +5,177 @@ sidebar_label: Prerequisites
 sidebar_position: 2
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Prerequisites
 
-Before installing AI/Run CodeMie, carefully review the prerequisites and requirements.
+This page outlines the requirements and prerequisites necessary for deploying AI/Run CodeMie on Microsoft Azure. Please ensure all requirements are met before proceeding with the installation.
 
-## Prerequisites Checklist
+## Azure Account Requirements
 
-### Azure Account Requirements
+### Required Access and Permissions
 
-- Active Azure subscription
-- Deployer user has built-in `contributor` role in Azure with permissions to access Entra ID App Registration (to obtain App ID and Secret for AI/Run CodeMie usage)
-- Access to Entra ID on the Azure portal to get application details (Tenant, etc.)
-- DNS Zone delegated to Azure and TLS certificate is available (only if public access to CodeMie is required, otherwise private DNS zone will be created by AI/Run CodeMie terraform modules)
+To deploy AI/Run CodeMie on Azure, you need:
 
-### External Connections
+- **Active Azure Subscription** with sufficient quota for the required resources
+- **Contributor Role** for the deployment user with the following permissions:
+  - Access to **Entra ID App Registration** to obtain Application ID and Secret
+  - Ability to create and manage Azure resources (AKS, networking, storage, etc.)
+    :::info Complete Resource List
+    For a detailed list of all Azure resources that will be provisioned, refer to the [Infrastructure Deployment](./infrastructure-deployment) section or review the Terraform modules in the deployment repository.
+    :::
+- **Entra ID Access** on the Azure portal to retrieve application details such as Tenant ID
 
-- Firewall or NSG of AKS cluster allow outbound access to:
-  - AI/Run CodeMie container registry – `europe-west3-docker.pkg.dev`
-  - 3rd party container registries – `quay.io`, `docker.io`, `registry.developers.crunchydata.com`
-  - Any service you're planning to use with AI/Run CodeMie (for example, GitLab instance)
-- Firewall on your integration service allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
+### DNS and Certificate Requirements
 
-:::info
-AKS cluster public IP address will be known after installation
+DNS and TLS certificate requirements depend on your access model:
+
+<Tabs>
+  <TabItem value="public" label="Public Access" default>
+    If you require **public internet access** to AI/Run CodeMie:
+
+    - Azure DNS Zone must be created and domain delegated there
+    - Valid wildcard TLS certificate must be available for HTTPS connections
+
+  </TabItem>
+  <TabItem value="private" label="Private Access">
+    If you only require **internal access** within your organization:
+
+    - AI/Run CodeMie Terraform modules will automatically create a private DNS zone
+    - No external DNS delegation or public certificates are required
+
+  </TabItem>
+</Tabs>
+
+## Network Requirements
+
+### Outbound Connectivity
+
+Your AKS cluster's Network Security Group (NSG) or firewall must allow **outbound access** to the following endpoints:
+
+| Destination                           | Purpose                                                        |
+| ------------------------------------- | -------------------------------------------------------------- |
+| `europe-west3-docker.pkg.dev`         | AI/Run CodeMie container registry (Google Container Registry)  |
+| `quay.io`                             | Third-party container images                                   |
+| `docker.io`                           | Docker Hub container images                                    |
+| `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
+| Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
+
+:::note Container Registry Access
+AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull images from GCR.
 :::
 
-### User Permissions and Admission Control Requirements for AKS
+### Inbound Connectivity on Corporate Services
 
-- Admin AKS permissions with rights to create `namespaces`
-- Admission webhook allows creation of Kubernetes resources listed below (applicable when deploying onto an existing AKS cluster):
+If you plan to integrate AI/Run CodeMie with external corporate services (e.g., GitLab, GitHub, internal APIs):
 
-| AI/Run CodeMie Component | Kubernetes APIs                                                           | Description                                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| NATS                     | `Service`                                                                 | NATS messaging system requires a LoadBalancer service type for client-server communication. When running `codemie-plugins`:<br/>– within the same virtual network as the AKS cluster – Internal LoadBalancer configured for secure, private network communication<br/>– outside the AKS cluster's virtual network – Public LoadBalancer required for cross-network communication |
-| keycloak-operator        | `ClusterRole`, `ClusterRoleBinding`, `Role`, `RoleBinding`, `CRDs`, `CRs` | Cluster-wide permissions required for managing Keycloak configuration, including realms, clients, and user federation settings                                                                                                                                                                                                                                                   |
-| Postgres-operator        | `ClusterRole`, `ClusterRoleBinding`, `CRDs`, `CRs`                        | Cluster-wide permissions required for managing PostgreSQL instances and their lifecycle                                                                                                                                                                                                                                                                                          |
-| All components           | `Pod(securityContext)`                                                    | All components require SecurityContext with `readOnlyRootFilesystem: false` for proper operation                                                                                                                                                                                                                                                                                 |
+- Configure the **firewall on your external service** to allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
+- This allows AI/Run CodeMie to make outbound API calls to your external services (e.g., GitLab API, GitHub API, internal services)
 
-## Deployer Instance Requirements
+:::warning
+The AI/Run CodeMie NAT Gateway public IP address will only be available **after infrastructure deployment**. You will need to configure external service firewalls after the installation is complete.
+:::
 
-### Required Software
+### Access Control Network List
 
-The next software must be pre-installed and configured on the deployer laptop or VDI instance before beginning the deployment process:
+To restrict access to AI/Run CodeMie and prevent unauthorized access from the public internet, prepare a list of allowed networks:
 
-- [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) `1.5.7`
-- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-- [helm](https://helm.sh/docs/intro/install/) `3.16.0+`
-- [gcloud CLI](https://cloud.google.com/sdk/docs/install)
-- [docker](https://docs.docker.com/get-started/get-docker/)
-- [natscli](https://github.com/nats-io/natscli?tab=readme-ov-file#installation)
-- [nsc](https://github.com/nats-io/nsc)
-- [azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-- [azure kubelogin](https://azure.github.io/kubelogin/install.html)
-- [jq](https://jqlang.org/download/)
-- [curl](https://github.com/curl/curl)
-- htpasswd
+- **Corporate network CIDR ranges** from which users will access AI/Run CodeMie
+- **VPN network ranges** if remote users connect via VPN
+- **Office locations** and their public IP addresses or CIDR blocks
+- **Any other trusted networks** that require access to the platform
+
+## AKS Cluster Requirements
+
+### Administrative Permissions
+
+The deployment user must have:
+
+- **AKS Admin permissions** with the ability to create and manage namespaces
+- Access to configure cluster-level resources (if deploying to an existing cluster)
+
+### Admission Control and Resource Requirements
+
+If deploying to an **existing AKS cluster**, ensure that admission webhooks allow the creation of the following Kubernetes resources:
+
+<Tabs>
+  <TabItem value="nats" label="NATS Messaging" default>
+    **Kubernetes API:** `Service` (LoadBalancer type)
+
+    **Purpose:** NATS is a core component of the CodeMie Plugin Engine, providing messaging infrastructure for communication between the [codemie-plugins](https://pypi.org/project/codemie-plugins/) CLI tool with MCP and the AI/Run CodeMie platform.
+
+    The LoadBalancer configuration depends on where the CLI tool will be executed:
+
+    | CLI Tool Execution Location | LoadBalancer Type | Description |
+    |----------------|------------------|-------------|
+    | Same virtual network as AKS | Internal LoadBalancer | Secure, private network communication within the VNet |
+    | External to AKS virtual network | Public LoadBalancer | Cross-network communication when CLI is run outside the VNet |
+
+  </TabItem>
+
+  <TabItem value="keycloak" label="Keycloak Operator">
+    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, `Role`, `RoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
+
+    **Purpose:** Manages Keycloak configuration including realms, clients, and user federation
+
+    :::note
+    Requires cluster-wide permissions for identity and access management operations.
+    :::
+
+  </TabItem>
+
+  <TabItem value="postgresql" label="PostgreSQL Operator">
+    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
+
+    **Purpose:** Manages PostgreSQL database instances and their lifecycle
+
+    :::note
+    Requires cluster-wide permissions for database provisioning and management.
+    :::
+
+  </TabItem>
+
+  <TabItem value="security" label="Security Context">
+    **Kubernetes API:** `Pod` with `securityContext`
+
+    **Requirement:** All AI/Run CodeMie components require `readOnlyRootFilesystem: false` in their security context for proper operation
+
+  </TabItem>
+</Tabs>
+
+## Deployment Machine Requirements
+
+### Required Software Tools
+
+The following tools must be pre-installed and properly configured on your deployment machine (laptop, workstation, or VDI instance):
+
+| Tool                                                                       | Version        | Purpose                                                   |
+| -------------------------------------------------------------------------- | -------------- | --------------------------------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install)             | `1.5.7`        | Infrastructure as Code provisioning                       |
+| [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)                 | Latest stable  | Kubernetes cluster management                             |
+| [Helm](https://helm.sh/docs/intro/install/)                                | `3.16.0+`      | Kubernetes package management                             |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | Latest         | Azure resource management                                 |
+| [kubelogin](https://azure.github.io/kubelogin/install.html)                | Latest         | AKS authentication plugin                                 |
+| [gcloud CLI](https://cloud.google.com/sdk/docs/install)                    | Latest         | Authentication to AI/Run CodeMie container registry (GCR) |
+| [Docker](https://docs.docker.com/get-started/get-docker/)                  | Latest stable  | Container operations                                      |
+| [natscli](https://github.com/nats-io/natscli#installation)                 | Latest         | NATS messaging CLI                                        |
+| [nsc](https://github.com/nats-io/nsc)                                      | Latest         | NATS security configuration                               |
+| [jq](https://jqlang.org/download/)                                         | Latest         | JSON processing and parsing                               |
+| [curl](https://curl.se/download.html)                                      | Latest         | HTTP requests and file transfers                          |
+| `htpasswd`                                                                 | System package | Password hash generation                                  |
 
 ### Required Repository Access
 
-Access to the following repositories is necessary for deployment:
+You will need access to the following repositories to complete the deployment:
 
-- [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure)
-- [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+- **Terraform Modules:** [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
 
-:::info
-Repositories can be extracted as archives and uploaded to a VDI if direct repository access is not available
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
 :::
+
+## Next Steps
+
+Once all prerequisites are met, proceed to the [Architecture Overview](./architecture) to understand the deployment architecture, or continue directly to [Infrastructure Deployment](./infrastructure-deployment) to begin the installation process.

@@ -401,7 +401,7 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'category',
-              label: 'Components Deployment',
+              label: 'CodeMie Components Deployment',
               link: {
                 type: 'doc',
                 id: 'deployment-guide/azure/components-deployment/components-deployment-overview',
@@ -411,7 +411,7 @@ const sidebars: SidebarsConfig = {
                 'deployment-guide/azure/components-deployment/components-scripted-deployment',
                 {
                   type: 'category',
-                  label: 'Manual Deployment',
+                  label: 'CodeMie Manual Deployment',
                   link: {
                     type: 'doc',
                     id: 'deployment-guide/azure/components-deployment/manual-deployment/manual-deployment-overview',
