@@ -21,6 +21,11 @@ Before deployment, you **MUST** update the `langfuse/values.yaml` file with your
 ```yaml
 # Update the domain in these sections:
 langfuse:
+  langfuse:
+    # Specify Langfuse version
+    image:
+      tag: "3.129.0"  # Pin to specific version for production stability
+
   nextauth:
     url: "https://langfuse.%%DOMAIN%%"  # Replace with your domain
   ingress:
