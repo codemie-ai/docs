@@ -45,7 +45,7 @@ The following components will be installed during this phase if not already pres
 If your cluster doesn't have these components, don't worry. The deployment scripts and manual guides include steps to install them automatically.
 :::
 
-### Repository and Access
+### Repository and Access {#repository-and-access}
 
 - **Helm Charts Repository**: Clone [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
 - **Container Registry Credentials**: Request `key.json` access credentials from the AI/Run CodeMie team for GCR authentication

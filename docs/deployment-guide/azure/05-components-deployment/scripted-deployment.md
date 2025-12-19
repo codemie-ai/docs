@@ -33,13 +33,13 @@ Before starting deployment, ensure you have completed all requirements:
 
 - [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
 - [ ] **Cluster Access**: Connected to Jumpbox VM and kubectl configured for AKS
-- [ ] **Container Registry**: Completed [Container Registry Access Setup](../index#container-registry-access) from overview page
+- [ ] **Container Registry**: Completed [Container Registry Access Setup](./#repository-and-access) from overview page
 - [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
 - [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
 - [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
 
 :::warning Container Registry Access Required
-You must complete the Container Registry Access setup from the [Components Deployment Overview](../index#container-registry-access) before proceeding. The script requires the `gcp-artifact-registry` pull secret to exist.
+You must complete the Container Registry Access setup from the [Components Deployment Overview](./#repository-and-access) before proceeding. The script requires the `gcp-artifact-registry` pull secret to exist.
 :::
 
 ### Required Tools

@@ -220,7 +220,7 @@ helm upgrade --install codemie-nats-auth-callout \
 - `-f ./codemie-nats-auth-callout/values-azure.yaml` - Uses Azure-specific configuration
 
 :::tip Version Number
-Use the same version number you retrieved in the [Getting Started](../manual-deployment-overview#step-4-get-latest-codemie-version) section.
+Use the same version number you retrieved in the [Getting Started](./#step-4-get-latest-codemie-version) section.
 :::
 
 ### Step 2: Verify NATS Auth Callout Deployment

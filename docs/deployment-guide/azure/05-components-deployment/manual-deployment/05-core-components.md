@@ -45,7 +45,7 @@ helm upgrade --install codemie-mcp-connect-service \
 - `-f ./codemie-mcp-connect-service/values.yaml` - Uses component configuration
 
 :::tip Version Number
-Use the same version number you retrieved in the [Getting Started](../manual-deployment-overview#step-4-get-latest-codemie-version) section.
+Use the same version number you retrieved in the [Getting Started](./#step-4-get-latest-codemie-version) section.
 :::
 
 ### Verify MCP Connect Deployment
@@ -121,7 +121,7 @@ CodeMie UI provides the web-based user interface for interacting with AI assista
 
 ### Step 1: Configure UI Values
 
-The domain configuration should already be set from the [Getting Started](../manual-deployment-overview#step-2-configure-domain-name) section. Verify the values in `codemie-ui/values-azure.yaml` are correct.
+The domain configuration should already be set from the [Getting Started](./#step-2-configure-domain-name) section. Verify the values in `codemie-ui/values-azure.yaml` are correct.
 
 ### Step 2: Install CodeMie UI Helm Chart
 
@@ -171,13 +171,13 @@ CodeMie API is the backend service that handles all business logic, AI orchestra
 
 ### Step 1: Configure API Values
 
-The domain configuration should already be set from the [Getting Started](../manual-deployment-overview#step-2-configure-domain-name) section. Verify the values in `codemie-api/values-azure.yaml` are correct:
+The domain configuration should already be set from the [Getting Started](./#step-2-configure-domain-name) section. Verify the values in `codemie-api/values-azure.yaml` are correct:
 
 - `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
 - `codemie.private.lab.com` should be replaced with your full hostname (e.g., `codemie.example.com`)
 
 :::tip Domain Configuration
-If you followed the [Getting Started](../manual-deployment-overview#step-2-configure-domain-name) steps, these replacements should already be done.
+If you followed the [Getting Started](./#step-2-configure-domain-name) steps, these replacements should already be done.
 :::
 
 ### Step 2: Copy Elasticsearch Credentials
