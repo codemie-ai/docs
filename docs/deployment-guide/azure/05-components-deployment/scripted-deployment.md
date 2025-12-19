@@ -152,14 +152,14 @@ The deployment script accepts three required parameters:
 
 The following files require domain name configuration (automated by Step 2 in Quick Start):
 
-| Component        | File                              | Placeholder               | Example Value                     |
-| ---------------- | --------------------------------- | ------------------------- | --------------------------------- |
-| **Kibana**       | `kibana/values-azure.yaml`        | `codemie.example.com`     | `codemie.example.com`             |
-| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `codemie.example.com`.    | `codemie.example.com`             |
-| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `codemie.example.com`     | `codemie.example.com`             |
-| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.example.com`     | `codemie.example.com`             |
-| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `codemie.example.com`     | `codemie.example.com`             |
-| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `%%DOMAIN%%`              | `example.com` (without subdomain) |
+| Component        | File                              | Placeholder            | Example Value                     |
+| ---------------- | --------------------------------- | ---------------------- | --------------------------------- |
+| **Kibana**       | `kibana/values-azure.yaml`        | `codemie.example.com`  | `codemie.example.com`             |
+| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `codemie.example.com`. | `codemie.example.com`             |
+| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `codemie.example.com`  | `codemie.example.com`             |
+| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.example.com`  | `codemie.example.com`             |
+| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `codemie.example.com`  | `codemie.example.com`             |
+| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `%%DOMAIN%%`           | `example.com` (without subdomain) |
 
 ## Next Steps
 
