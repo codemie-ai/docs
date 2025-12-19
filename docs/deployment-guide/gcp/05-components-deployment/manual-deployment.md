@@ -243,9 +243,18 @@ Use plugin engine NATS URL with `nats` protocol, for example: `nats://codemie-na
 :::info
 Before applying `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service` and `mermaid-server` helm-charts it's necessary to login into AI/Run CodeMie GCR:
 
+**For Helm 3.x:**
+
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
 gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+```
+
+**For Helm 4.x and higher:**
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 ```
 
 :::

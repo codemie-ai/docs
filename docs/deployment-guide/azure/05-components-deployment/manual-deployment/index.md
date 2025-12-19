@@ -172,6 +172,8 @@ Your domain name was configured during infrastructure deployment. Find it in `de
 
 Authenticate Helm to the Google Container Registry:
 
+**For Helm 3.x:**
+
 ```bash
 # Set credentials
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
@@ -179,6 +181,13 @@ export GOOGLE_APPLICATION_CREDENTIALS=key.json
 # Login to registry
 gcloud auth application-default print-access-token | \
   helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+```
+
+**For Helm 4.x and higher:**
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 ```
 
 ### Step 4: Get Latest CodeMie Version
@@ -276,7 +285,6 @@ kubectl describe pod -n codemie <pod-name>
 - Check node resources: `kubectl top nodes`
 - Review PVC status: `kubectl get pvc -n codemie`
 - Verify storage class exists: `kubectl get storageclass`
-
 ## Next Steps
 
 Begin the installation process by following the guides in order, starting with **[Storage and Ingress](./storage-and-ingress)**.

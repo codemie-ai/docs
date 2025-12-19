@@ -85,6 +85,8 @@ Your domain name was configured during infrastructure deployment. Find it in `de
 
 Authenticate Helm to the Google Container Registry:
 
+**For Helm 3.x:**
+
 ```bash
 # Set credentials
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
@@ -92,6 +94,13 @@ export GOOGLE_APPLICATION_CREDENTIALS=key.json
 # Login to registry
 gcloud auth application-default print-access-token | \
   helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+```
+
+**For Helm 4.x and higher:**
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 ```
 
 ### Step 4: Get Latest CodeMie Version
@@ -160,7 +169,6 @@ The following files require domain name configuration (automated by Step 2 in Qu
 | **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.example.com`  | `codemie.example.com`             |
 | **CodeMie API**  | `codemie-api/values-azure.yaml`   | `codemie.example.com`  | `codemie.example.com`             |
 | **CodeMie API**  | `codemie-api/values-azure.yaml`   | `%%DOMAIN%%`           | `example.com` (without subdomain) |
-
 ## Next Steps
 
 After successful deployment and validation, proceed to:

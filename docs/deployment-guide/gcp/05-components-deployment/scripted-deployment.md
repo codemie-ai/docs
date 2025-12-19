@@ -201,9 +201,20 @@ Below is an example demonstrating how to run the script:
 
 ### Example: Deploy AI/Run CodeMie + Third-Party Components
 
+**For Helm 3.x:**
+
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
 gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+
+bash helm-charts.sh --cloud gcp --version x.y.z --mode all
+```
+
+**For Helm 4.x and higher:**
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 
 bash helm-charts.sh --cloud gcp --version x.y.z --mode all
 ```
