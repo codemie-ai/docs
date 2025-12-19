@@ -72,6 +72,9 @@ AI/Run CodeMie can be deployed with mock LLM configurations initially. Real conf
   - [docker](https://docs.docker.com/get-started/get-docker/)
   - [natscli](https://github.com/nats-io/natscli?tab=readme-ov-file#installation)
   - [nsc](https://github.com/nats-io/nsc)
+  - [jq](https://jqlang.org/download/)
+  - [curl](https://github.com/curl/curl)
+  - htpasswd
 
 - Access to the following repositories is necessary for deployment:
   - [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)

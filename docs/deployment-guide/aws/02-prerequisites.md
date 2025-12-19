@@ -74,6 +74,9 @@ The following software must be pre-installed and configured on the deployer lapt
 - [docker](https://docs.docker.com/get-started/get-docker/)
 - [natscli](https://github.com/nats-io/natscli?tab=readme-ov-file#installation)
 - [nsc](https://github.com/nats-io/nsc)
+- [jq](https://jqlang.org/download/)
+- [curl](https://github.com/curl/curl)
+- htpasswd
 
 ### Required Repository Access
 
