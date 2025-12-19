@@ -178,7 +178,6 @@ https://<your-domain>/kibana
 
 **Example URLs**:
 
-- `https://codemie.private.lab.com/kibana` (default domain)
 - `https://codemie.example.com/kibana` (custom domain)
 
 **Login Credentials**:

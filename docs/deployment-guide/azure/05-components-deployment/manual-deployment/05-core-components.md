@@ -174,7 +174,6 @@ CodeMie API is the backend service that handles all business logic, AI orchestra
 The domain configuration should already be set from the [Getting Started](./#step-2-configure-domain-name) section. Verify the values in `codemie-api/values-azure.yaml` are correct:
 
 - `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
-- `codemie.private.lab.com` should be replaced with your full hostname (e.g., `codemie.example.com`)
 
 :::tip Domain Configuration
 If you followed the [Getting Started](./#step-2-configure-domain-name) steps, these replacements should already be done.
@@ -253,7 +252,6 @@ https://<your-domain>
 
 **Example URLs**:
 
-- `https://codemie.private.lab.com` (default domain)
 - `https://codemie.example.com` (custom domain)
 
 :::warning User Creation Required

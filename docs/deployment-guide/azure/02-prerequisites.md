@@ -63,7 +63,7 @@ Your AKS cluster's Network Security Group (NSG) or firewall must allow **outboun
 | Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
 
 :::note Container Registry Access
-AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull images from GCR.
+AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
 :::
 
 ### Inbound Connectivity on Corporate Services

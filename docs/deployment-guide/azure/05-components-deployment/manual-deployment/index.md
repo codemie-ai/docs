@@ -151,21 +151,21 @@ cd codemie-helm-charts
 
 ### Step 2: Configure Domain Name
 
-Update the domain name in values files. Replace `codemie.private.lab.com` with your actual domain, or leave it if using the default one:
+Update the domain name in values files. Replace `codemie.example.com` with your actual domain, or leave it if using the default one:
 
 ```bash
 # Use your domain from deployment_outputs.env
 YOUR_DOMAIN="codemie.example.com"
 
 # Update all values-azure.yaml files
-find . -name "values-azure.yaml" -exec sed -i "s/codemie.private.lab.com/$YOUR_DOMAIN/g" {} \;
+find . -name "values-azure.yaml" -exec sed -i "s/codemie.example.com/$YOUR_DOMAIN/g" {} \;
 
 # Update domain placeholder in CodeMie API values
 sed -i "s/%%DOMAIN%%/example.com/g" codemie-api/values-azure.yaml
 ```
 
 :::tip Domain Configuration
-Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`. If you're using the default domain `codemie.private.lab.com`, you can skip this step.
+Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
 :::
 
 ### Step 3: Authenticate to Container Registry

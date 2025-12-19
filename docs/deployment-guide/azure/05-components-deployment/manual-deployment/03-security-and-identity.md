@@ -145,8 +145,7 @@ https://<your-domain>/keycloak/admin
 
 **Example URLs**:
 
-- `https://codemie.private.lab.com/keycloak/admin` (default domain)
-- `https://codemie.example.com/keycloak/admin` (custom domain)
+- `https://codemie.example.com/keycloak/admin`
 
 **Login Credentials**:
 

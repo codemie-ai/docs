@@ -93,7 +93,7 @@ echo "Ingress IP: ${ingressip}"
 # Create A record (adjust parameters to match your environment)
 az network private-dns record-set a add-record \
   -g CodeMieRG \
-  -z private.lab.com \
+  -z example.com \
   -n codemie \
   -a ${ingressip}
 ```
@@ -101,7 +101,7 @@ az network private-dns record-set a add-record \
 **Parameters to Adjust**:
 
 - `-g CodeMieRG` - Replace with your resource group name
-- `-z private.lab.com` - Replace with your Private DNS zone name
+- `-z example.com` - Replace with your Private DNS zone name
 - `-n codemie` - Replace with your desired hostname (subdomain)
 
 :::tip DNS Configuration
@@ -116,11 +116,11 @@ Confirm the DNS record was created:
 # List DNS records
 az network private-dns record-set a list \
   -g CodeMieRG \
-  -z private.lab.com \
+  -z example.com \
   -o table
 
 # Test DNS resolution (from within VNet or via VPN)
-nslookup codemie.private.lab.com
+nslookup codemie.example.com
 ```
 
 ## Azure Storage Class Installation
@@ -175,7 +175,7 @@ kubectl get storageclass
 # DNS record exists
 az network private-dns record-set a show \
   -g CodeMieRG \
-  -z private.lab.com \
+  -z example.com \
   -n codemie
 ```
 
