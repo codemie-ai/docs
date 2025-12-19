@@ -25,7 +25,7 @@ This modular approach allows you to deploy only what you need and maintain clear
 
 ## Phase 1: Terraform State Backend
 
-The state backend is deployed first to provide secure, centralized storage for Terraform state files. This phase is **required** for all deployments.
+The state backend is deployed first to provide secure, centralized storage for Terraform state files.
 
 | Resource               | Purpose                                                                        |
 | ---------------------- | ------------------------------------------------------------------------------ |
