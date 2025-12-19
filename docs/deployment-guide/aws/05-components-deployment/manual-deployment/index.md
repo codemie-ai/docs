@@ -81,15 +81,6 @@ Before deploying AI/Run CodeMie components, set up pull secrets:
 
 Login to AI/Run CodeMie container registry:
 
-**For Helm 3.x:**
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
-```
-
-**For Helm 4.x and higher:**
-
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
 gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
