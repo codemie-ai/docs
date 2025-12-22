@@ -54,6 +54,7 @@ words:
   - IAM
   - RBAC
   - IRSA
+  - rollouts
   # AWS
   - EKS
   - S3
