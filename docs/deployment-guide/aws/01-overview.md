@@ -49,7 +49,7 @@ Complete required and optional configuration steps after deployment.
 
 Configure LLM and embedding models from various providers.
 
-### [Update AI/Run CodeMie](./update-version)
+### [Update AI/Run CodeMie](../update/codemie/update-version)
 
 Learn how to update your AI/Run CodeMie installation.
 

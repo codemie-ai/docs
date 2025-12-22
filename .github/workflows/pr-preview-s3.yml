@@ -1,0 +1,143 @@
+name: PR Preview on AWS S3
+
+on:
+  workflow_run:
+    workflows: ['Documentation Pipeline']
+    types: [completed]
+    branches:
+      - '**'
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+  actions: read
+
+jobs:
+  deploy-preview:
+    name: Deploy PR Preview
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+
+    steps:
+      - name: Get PR number from workflow run
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.workflow_run.pull_requests[0].number;
+            core.setOutput('number', prNumber);
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-build-pr-${{ steps.pr.outputs.number }}
+          path: build/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ steps.pr.outputs.number }}/ \
+            --delete \
+            --cache-control "public, max-age=3600" \
+            --content-type "text/html; charset=utf-8" \
+            --exclude "*" \
+            --include "*.html"
+
+          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ steps.pr.outputs.number }}/ \
+            --delete \
+            --cache-control "public, max-age=86400" \
+            --exclude "*.html"
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.pr.outputs.number }};
+            const previewUrl = `https://${{ secrets.AWS_S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com/pr-${prNumber}/index.html`;
+
+            // Check if comment already exists
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('PR Preview')
+            );
+
+            const commentBody = `## PR Preview Ready!
+
+            Your preview documentation is ready! Visit it here:
+
+            **Preview URL:** ${previewUrl}
+
+            ---
+
+            *This preview will be automatically updated when you push new commits to this PR.*
+            *Preview files will be deleted when the PR is closed or merged.*`;
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+            }
+
+  cleanup-preview:
+    name: Cleanup PR Preview
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Delete preview from S3
+        run: |
+          aws s3 rm s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }}/ --recursive
+
+      - name: Comment PR about cleanup
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: '## Preview Cleaned Up\n\nThe PR preview has been removed from S3.'
+            });
