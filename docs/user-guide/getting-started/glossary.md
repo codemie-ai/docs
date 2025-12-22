@@ -148,6 +148,13 @@ A workspace within the CodeMie platform that delineates and isolates working env
 
 A user with administrative privileges within the CodeMie platform. Project Admins have extended functionality including the ability configure Project Integrations (available to all team members), view all project assistants and workflows and manage project-level settings. Only Admin roles or user with attribute applications_admin have access to these administrative functions.
 
+### Prompt Variables
+
+Custom dynamic variables that can be defined and used within assistant system instructions. Prompt variables allow users to create reusable, parameterized instructions by inserting variables like `{{variable_name}}` into system prompts. Variables can be:
+
+- **Regular Variables**: Standard variables with visible values
+- **Sensitive Variables**: Encrypted variables marked with a shield icon for storing credentials, API keys, passwords, and other confidential information. Sensitive values are masked as `**********` in the UI and encrypted for security.
+
 ### Providers
 
 Third-party provider configurations that enable integration of external data sources and specialized tools into CodeMie. Providers allow users to index external data beyond standard types, access provider-specific tools for code analysis, and perform advanced code understanding tasks. Provider tools can work with data sources or independently, depending on the configuration.
