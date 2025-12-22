@@ -1,8 +1,15 @@
 name: PR Preview on AWS S3
 
 on:
+  # Run after Documentation Pipeline completes successfully
+  workflow_run:
+    workflows: ['Documentation Pipeline']
+    types: [completed]
+    branches:
+      - '**'
+  # Also trigger on PR close for cleanup
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [closed]
     branches:
       - main
 
@@ -10,31 +17,34 @@ permissions:
   contents: read
   pull-requests: write
   id-token: write
+  actions: read # Required to read workflow_run information
 
 jobs:
   deploy-preview:
     name: Deploy PR Preview
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
+    # Only run if triggered by workflow_run AND it was successful
+    if: |
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Get PR number from workflow run
+        id: pr
+        uses: actions/github-script@v7
         with:
-          node-version: '24'
-          cache: 'npm'
+          script: |
+            const prNumber = context.payload.workflow_run.pull_requests[0].number;
+            core.setOutput('number', prNumber);
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build documentation
-        run: npm run build
-        env:
-          DOCUSAURUS_URL: https://${{ secrets.AWS_S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com
-          DOCUSAURUS_BASE_URL: /pr-${{ github.event.pull_request.number }}/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-build-pr-${{ steps.pr.outputs.number }}
+          path: build/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -44,14 +54,14 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }}/ \
+          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ steps.pr.outputs.number }}/ \
             --delete \
             --cache-control "public, max-age=3600" \
             --content-type "text/html; charset=utf-8" \
             --exclude "*" \
             --include "*.html"
 
-          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ github.event.pull_request.number }}/ \
+          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}/pr-${{ steps.pr.outputs.number }}/ \
             --delete \
             --cache-control "public, max-age=86400" \
             --exclude "*.html"
@@ -61,7 +71,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = ${{ steps.pr.outputs.number }};
             const previewUrl = `https://${{ secrets.AWS_S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com/pr-${prNumber}/index.html`;
 
             // Check if comment already exists
@@ -78,13 +88,11 @@ jobs:
 
             const commentBody = `## 🚀 PR Preview Ready!
 
-            Your preview site is ready! Visit it here:
+            Your preview documentation is ready! Visit it here:
 
             **Preview URL:** ${previewUrl}
 
             ---
-
-            🔒 **Access Note:** This preview is IP-restricted. You must be connected to the office network or VPN to access it.
 
             *This preview will be automatically updated when you push new commits to this PR.*
             *Preview files will be deleted when the PR is closed or merged.*`;
