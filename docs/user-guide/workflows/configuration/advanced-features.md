@@ -893,7 +893,6 @@ states:
       store_in_context: false # Don't store individual results
       include_in_llm_history: false # Skip history
 
-
 # Performance characteristics:
 # - 1000 items processed in ~10 batches of 100
 # - Minimal token usage per item
@@ -970,7 +969,6 @@ states:
     next:
       state_id: end
       clear_prior_messages: true # Clean up aggressively
-
 
 # Use when:
 # - Limited compute resources
