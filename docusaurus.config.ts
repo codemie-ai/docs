@@ -7,8 +7,9 @@ const config: Config = {
   tagline: 'AI-powered development platform documentation',
   favicon: 'img/favicon.svg',
 
-  url: 'https://codemie-ai.github.io',
-  baseUrl: '/docs/',
+  // Use environment variables for PR previews, fallback to production values
+  url: process.env.DOCUSAURUS_URL || 'https://codemie-ai.github.io',
+  baseUrl: process.env.DOCUSAURUS_BASE_URL || '/docs/',
 
   organizationName: 'codemie-ai',
   projectName: 'docs',
