@@ -243,23 +243,34 @@ Check the physical parts to see exactly when ClickHouse schedules data deletion.
 SELECT
     partition,
     name AS part_name,
-    -- Earliest time a row in this part will be deleted
+    -- When the FIRST row in this part expires (Partial cleanup required)
     toDateTime(delete_ttl_info_min) AS min_ttl,
-    -- Latest time a row in this part will be deleted
+    -- When the LAST row in this part expires (Whole part deletion)
     toDateTime(delete_ttl_info_max) AS max_ttl
 FROM system.parts
 WHERE database = 'default' AND table = 'observations' AND active
 ORDER BY min_ttl;
 ```
 
-### How to Interpret
+### Column Meaning
 
-- **`1970-01-01`**: TTL not calculated yet. It will update after the next background merge.
-- **Past Date**: Data is expired. It is waiting for the background process to physically delete it.
-- **Future Date**: Data is active. It will be automatically deleted on this specific date.
+Since data is stored in files (parts) containing multiple rows:
 
-:::tip Force TTL Update
-If you see `1970-01-01` or expired dates and want to force an update/deletion immediately (e.g., for testing), run:
+- **`min_ttl`**: The expiration time of the **oldest** row in the file.
+- **`max_ttl`**: The expiration time of the **newest** row in the file.
+
+### How to Interpret Status
+
+Compare `min_ttl` with the **Current Time**:
+
+| Value            | Status             | Meaning                                                                                    |
+| :--------------- | :----------------- | :----------------------------------------------------------------------------------------- |
+| **`1970-01-01`** | **Not Calculated** | TTL rules applied but not processed yet. Wait for the next background merge.               |
+| **Past Date**    | **Expired**        | Retention period passed. Data physically exists but is queued for deletion (lazy cleanup). |
+| **Future Date**  | **Active**         | Data is safe. It is scheduled for deletion on this specific date.                          |
+
+:::tip Force Cleanup
+If you see expired dates but disk space is not freed yet, force a cleanup manually:
 
 ```sql
 OPTIMIZE TABLE default.observations FINAL;

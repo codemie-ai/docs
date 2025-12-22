@@ -130,11 +130,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
+      - name: Build project with PR preview configuration
         run: npm run build
+        env:
+          DOCUSAURUS_URL: https://codemie-docs-pr-previews.s3.eu-central-1.amazonaws.com
+          DOCUSAURUS_BASE_URL: /pr-${{ github.event.pull_request.number }}/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-build-pr-${{ github.event.pull_request.number }}
+          path: build/
+          retention-days: 1
 
       - name: Build summary
         if: success()
         run: |
           echo "Documentation build completed successfully!"
           echo "- Build: PASSED"
+          echo "- Artifacts uploaded for PR #${{ github.event.pull_request.number }}"
