@@ -770,6 +770,7 @@ tools:
   - name: custom_virus_scan # Custom plugin via NATS
   - name: slack_notify # Custom notification plugin
 
+
 # Workflow: Upload file → Scan for viruses → Notify team
 ```
 
