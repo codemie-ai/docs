@@ -83,7 +83,7 @@ jobs:
               comment.body.includes('PR Preview')
             );
 
-            const commentBody = `## 🚀 PR Preview Ready!
+            const commentBody = `## PR Preview Ready!
 
             Your preview documentation is ready! Visit it here:
 
@@ -139,5 +139,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: '## 🧹 Preview Cleaned Up\n\nThe PR preview has been removed from S3.'
+              body: '## Preview Cleaned Up\n\nThe PR preview has been removed from S3.'
             });
