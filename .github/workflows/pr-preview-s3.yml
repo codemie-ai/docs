@@ -1,13 +1,11 @@
 name: PR Preview on AWS S3
 
 on:
-  # Run after Documentation Pipeline completes successfully
   workflow_run:
     workflows: ['Documentation Pipeline']
     types: [completed]
     branches:
       - '**'
-  # Also trigger on PR close for cleanup
   pull_request:
     types: [closed]
     branches:
@@ -17,13 +15,12 @@ permissions:
   contents: read
   pull-requests: write
   id-token: write
-  actions: read # Required to read workflow_run information
+  actions: read
 
 jobs:
   deploy-preview:
     name: Deploy PR Preview
     runs-on: ubuntu-latest
-    # Only run if triggered by workflow_run AND it was successful
     if: |
       github.event_name == 'workflow_run' &&
       github.event.workflow_run.conclusion == 'success' &&

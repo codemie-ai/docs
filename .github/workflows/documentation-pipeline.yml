@@ -133,7 +133,6 @@ jobs:
       - name: Build project with PR preview configuration
         run: npm run build
         env:
-          # Build with PR-specific URLs for preview deployment
           DOCUSAURUS_URL: https://codemie-docs-pr-previews.s3.eu-central-1.amazonaws.com
           DOCUSAURUS_BASE_URL: /pr-${{ github.event.pull_request.number }}/
 

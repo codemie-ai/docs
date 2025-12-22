@@ -86,7 +86,7 @@ const config: Config = {
         {
           to: 'deployment-guide/',
           position: 'left',
-          label: 'Deployment Guides',
+          label: 'Administration',
         },
         {
           type: 'docsVersionDropdown',
@@ -110,11 +110,7 @@ const config: Config = {
               to: 'user-guide/',
             },
             {
-              label: 'Administrator Guides',
-              to: 'admin-guide/',
-            },
-            {
-              label: 'Deployment Guides',
+              label: 'Administration',
               to: 'deployment-guide/',
             },
           ],
