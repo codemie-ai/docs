@@ -9,99 +9,20 @@ sidebar_position: 2
 
 AI/Run CodeMie efficiently addresses numerous tasks across varying difficulty levels. Below is an overview of AI/Run CodeMie's key capabilities:
 
-## Core Features
+| Capability                                   | Description                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **AI-Powered SDLC Acceleration**             | CodeMie revolutionizes software development by offering intelligent assistance throughout the Software Development Life Cycle (SDLC). Intelligent assistance across all SDLC phases (BA, Dev, QA, PM) reduces process costs by 40-60%, automates routine work, and accelerates time-to-market through AI-driven automation and productivity gains.                                   |
+| **Universal Business Automation Platform**   | CodeMie extends far beyond software development—it's a cross-functional AI platform for any business domain. Marketplace agents support business operations, finance, HR, legal, marketing, sales, government, and operational workflows. Non-technical use cases include research & reporting, FAQ automation, document analysis, knowledge management, and web data summarization. |
+| **Agent Marketplace & Ecosystem**            | Centralized hub for discovering, sharing, and deploying ready-to-use AI assistants with community engagement metrics, adoption tracking, and clone-to-customize capabilities. Accelerates solution deployment by leveraging proven, reusable components.                                                                                                                             |
+| **Universal MCP Protocol Support**           | Industry-standard Model Context Protocol (MCP) integration enables connection to ANY external tool without custom development. Run community MCP servers (JetBrains, Claude, time APIs, databases) or build proprietary integrations. Kubernetes isolation with per-conversation containers ensures security.                                                                        |
+| **Smart Assistant Ecosystem**                | Pre-built, role-specific AI assistants and custom assistant constructor enable teams to deploy AI capabilities instantly or build tailored solutions matching unique workflows. Multi-agent orchestration coordinates specialized sub-assistants for complex tasks.                                                                                                                  |
+| **Intelligent Knowledge Management**         | Semantic search with vector embeddings across Git repositories, Jira, Confluence, PDFs, Google Docs, AWS Knowledge Bases, and custom data sources. Transforms unstructured project knowledge into actionable AI context—ensuring assistants understand YOUR codebase, YOUR documentation, YOUR business rules.                                                                       |
+| **Intelligent Codebase Co-Pilot**            | Beyond code completion: comprehensive Q&A on codebase, automatic code implementation with PR creation, unit test generation (TestMate), code analysis, vulnerability detection, and auto-documentation. Understands entire project context, coding styles, and dependencies.                                                                                                         |
+| **Python/NodeJS SDK & Programmatic Control** | Full platform control via Python and NodeJS SDK: create/manage assistants, execute workflows, synchronize with Git repositories, export/import project data programmatically. Structured outputs with Pydantic models enable type-safe integration into CI/CD pipelines.                                                                                                             |
+| **Multi-Agent Workflow Automation**          | YAML-configured workflows enable multiple AI agents to collaborate on complex end-to-end processes—from requirements analysis to code deployment. Conditional logic, human-in-the-loop controls, context store optimization, scheduled CRON execution.                                                                                                                               |
+| **Enterprise Integration & Extensibility**   | 50+ tools covering VCS (Git/GitHub/GitLab/AzureDevOps), Project Management (Jira/Confluence/AzureDevOps), Cloud (AWS/Azure/GCP/Kubernetes), Research (Google/Wikipedia), Data Management. Plugin SDK allows custom MCP server creation for proprietary systems.                                                                                                                      |
+| **Enterprise Governance & Collaboration**    | Multi-tenancy with project isolation, shareable conversations, versioned system instructions, comprehensive usage analytics for cost management. Admin MCP catalog management controls available integrations. Role-based access and credential security.                                                                                                                            |
+| **Pluggable Architecture**                   | Enables integration with any tool and workload with [codemie-plugins](https://pypi.org/project/codemie-plugins), regardless of programming language or runtime environment. Designed to be distributed, allowing plugins to run remotely on workstations, within secure perimeters, across cloud environments, or in CI/CD pipelines. 100% LangChain compatible.                     |
+| **IDE Plugins**                              | Native IDE integrations: JetBrains plugin, VS Code GH Copilot Extension, and VS Code Native plugin for seamless development experience.                                                                                                                                                                                                                                              |
 
-### Comprehensive SDLC Smart Assistance and Assistants Library
-
-AI/Run CodeMie offers robust smart assistance across all phases of the SDLC process by leveraging a variety of AI assistant roles, such as Business Analyst (BA), Developer, Quality Assurance (QA), Project Manager (PM), and more. These pre-built AI assistants enhance performance and productivity, and automate routine work, significantly reducing process costs and accelerating the software development cycle. The platform comes with a comprehensive library of pre-built AI assistants tailored to various roles within the SDLC to suit the diverse needs within a project.
-
-### Assistants Constructor
-
-Provides the flexibility to create personalized assistants equipped with specific tools and abilities tailored to your project's needs.
-
-### Indexing and Data Management
-
-AI/Run CodeMie provides options for data indexing, including the ability to:
-
-- Monitor the current progress and status of the indexing process
-- Perform incremental or full reindexing
-- Manage indexed data sources effectively
-
-Supported data sources include Jira, Confluence, various file formats (PDF, PPT, Excel, etc.), and Git.
-
-### Support for Multi-Agent Workflows
-
-AI/Run CodeMie supports multi-agent workflows, allowing multiple AI assistants to collaborate seamlessly on complex tasks and workflows. This capability covers use cases where different agents need to interact and share information to achieve a common goal, enhancing coordination and efficiency across various phases of the SDLC.
-
-### Ease of Use for Beginners
-
-Simple use cases for newcomers include:
-
-- Code review
-- Newcomer training
-- User story creation
-
-These require minimal setup, such as configuring your Git token for code-related tasks or your Jira token for project management tasks.
-
-## Extensive Library of Tools
-
-AI/Run CodeMie includes a wide array of tools to support various aspects of software development and project management:
-
-### Version Control Systems (VCS)
-
-Tools for managing and tracking changes in the codebase, such as Git.
-
-### Codebase Tools
-
-Tools for code review, static code analysis, and automated code formatting.
-
-### Research Tools
-
-Tools to assist in gathering and organizing research data and documentation.
-
-### Cloud Tools
-
-Integration with major cloud providers (AWS, GCP, Azure) for deployment, monitoring, and management of cloud resources.
-
-### Project Management Tools
-
-- **Jira**: For project management, task tracking, and issue tracking
-- **Confluence**: For documentation, knowledge sharing, and collaboration
-
-### Additional Tools
-
-- **Open API**: Integration with various open APIs to extend functionality and connect with other services
-- **Notification Tools**: Tools for sending notifications and alerts via email, chat, or other communication channels
-- **Data Management Tools**: Tools for querying Elasticsearch indexes
-- **Access Management**: Keycloak integration
-- **Plugin System**: Extensible plugin architecture
-- **File Management**: Tools for file operations
-- **Quality Assurance**: Testing and QA tools
-
-## Best Practices
-
-### Data Source Usage
-
-- There is no priority or sequential system in place. Everything depends on the given instructions
-- You can instruct the model to use a specific data source for a particular use case
-- Provide a description for the data source when it is created
-- Data source descriptions are provided to the model so it can understand better use cases for it
-
-### System Instructions
-
-- System Instructions (System prompt) extends based on data source description
-- If contradictions arise, the model will use its creative problem-solving abilities to address them
-- The data source does not have rules, only description
-
-### Context and Queries
-
-- The model has a context window, but it is irrelevant to data source size
-- The model answer will depend on query quality
-- With queries that are specific and on point, there are no problems even with thousands of data sources
-- If a poor query is provided (e.g., "tell me about something"), the answer would be vague
-
-### Instructions Guidelines
-
-- The smaller and clearer the instructions, the better
-- Instructions must be uncontradictory, as this will reduce the risk of confusing LLM
-- Other than the context window, there is no limit
+These capabilities ultimately enhance productivity and reduce costs. The development of such a powerful assistant necessitates extensive customization and fine-tuning. The following sections will delve into the intricate adjustments and configurations required to harness the full potential of AI/Run CodeMie.
