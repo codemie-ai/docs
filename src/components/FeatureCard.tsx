@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './FeatureCard.module.css';
 
 interface FeatureCardProps {
@@ -21,10 +22,12 @@ export default function FeatureCard({
   invertInDarkTheme = true,
   invertInLightTheme = false,
 }: FeatureCardProps): React.JSX.Element {
+  const iconUrl = useBaseUrl(icon);
+
   const renderIcon = () => {
     if (iconType === 'image') {
       const imageClasses = `${styles.featureCardImage} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''} no-zoom`;
-      return <img src={icon} alt={`${title} logo`} className={imageClasses} />;
+      return <img src={iconUrl} alt={`${title} logo`} className={imageClasses} />;
     }
     return <div className={styles.featureCardIcon}>{icon}</div>;
   };
