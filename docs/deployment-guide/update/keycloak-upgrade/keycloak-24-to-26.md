@@ -41,6 +41,7 @@ keycloakx.image.tag: '24.0.4'
 | ------------------------------- | :---------------: | :-----------------------: | ------------------------------------------------------------------- |
 | KC_HOSTNAME                     | keycloak.fqdn.com | https://keycloak.fqdn.com | Value can be domain name or URL                                     |
 | KC_HOSTNAME_ADMIN               |       UNSET       | https://keycloak.fqdn.com | New variable. The URL to access admin console                       |
+| KC_HTTP_ENABLED                 |       true        |           UNSET           | Managed by helm chart. `True` by default                            |
 | KC_HOSTNAME_STRICT_HTTPS        |       false       |           UNSET           | Not longer supported                                                |
 | KC_HOSTNAME_BACKCHANNEL_DYNAMIC |       UNSET       |           true            | New variable. Allows clients to access Keycloak by backchannel link |
 | HTTP_ADDRESS_FORWARDING         |       true        |           UNSET           | Not longer supported                                                |
@@ -54,3 +55,7 @@ No value changes required.
 | ----------------------- | --------------------------- |
 | KEYCLOAK_ADMIN          | KC_BOOTSTRAP_ADMIN_USERNAME |
 | KEYCLOAK_ADMIN_PASSWORD | KC_BOOTSTRAP_ADMIN_PASSWORD |
+
+:::warning IMPORTANT
+Ensure `keycloak-helm/Chart.lock` file and `keycloak-helm/charts/` directory do not exist before apply changes.
+:::
