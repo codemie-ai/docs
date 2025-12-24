@@ -255,7 +255,7 @@ https://<your-domain>
 - `https://codemie.example.com` (custom domain)
 
 :::warning User Creation Required
-You'll be redirected to Keycloak for authentication, but no users exist yet. You must complete the [Post-Installation Configuration](../../post-installation) guide to create users before you can log in to the application.
+You'll be redirected to Keycloak for authentication, but no users exist yet. You must complete the [Configuration](/docs/configuration-guide/) guide to create users before you can log in to the application.
 :::
 
 ## Post-Installation Validation

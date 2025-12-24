@@ -128,4 +128,4 @@ Some components may be missing due to your setup configuration or use `http` pro
 
 ## Next Steps
 
-After successful components deployment, proceed to [Post-Installation Configuration](../post-installation) to complete required setup steps.
+After successful components deployment, proceed to [Configuration](/docs/configuration-guide/) to complete required setup steps.

@@ -468,4 +468,4 @@ bash ./kibana-dashboards/manage-kibana-dashboards.sh --help
 
 ## Next Steps
 
-Complete the deployment by going to [Post-Installation Configuration](../post-installation).
+Complete the deployment by going to [Configuration](/docs/configuration-guide/).
