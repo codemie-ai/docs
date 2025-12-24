@@ -701,6 +701,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Configuration',
+          link: {
+            type: 'doc',
+            id: 'configuration-guide/index',
+          },
+          collapsed: true,
+          items: [],
+        },
+        {
+          type: 'category',
           label: 'Update',
           collapsed: true,
           items: [
