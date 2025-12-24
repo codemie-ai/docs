@@ -165,7 +165,7 @@ The following files require domain name configuration (automated by Step 2 in Qu
 
 After successful deployment and validation, proceed to:
 
-**[Configuration](/docs/configuration-guide/)** - Complete required setup including:
+**[Configuration](../../../configuration-guide/)** - Complete required setup including:
 
 - Initial user configuration in Keycloak
 - AI model integration setup

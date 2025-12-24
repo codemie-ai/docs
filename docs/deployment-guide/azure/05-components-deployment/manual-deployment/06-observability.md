@@ -281,7 +281,7 @@ All checks should return successful results.
 
 Congratulations! You have successfully completed the manual deployment of all AI/Run CodeMie components.
 
-Proceed to **[Configuration](/docs/configuration-guide/)** to:
+Proceed to **[Configuration](../../../../configuration-guide/)** to:
 
 - Create initial users and configure authentication
 - Set up AI model integrations

@@ -248,4 +248,4 @@ kubectl get service codemie-nats -n codemie -o jsonpath='{.status.loadBalancer.i
 
 ## Next Steps
 
-After successful deployment, proceed to [Configuration](/docs/configuration-guide/) to complete required setup steps.
+After successful deployment, proceed to [Configuration](../../../configuration-guide/) to complete required setup steps.
