@@ -522,14 +522,6 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'category',
-              label: 'Additional Resources',
-              collapsed: true,
-              items: [
-                'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
-              ],
-            },
-            {
               type: 'doc',
               id: 'deployment-guide/faq',
               label: 'FAQ',
@@ -594,19 +586,24 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Update',
+          link: {
+            type: 'doc',
+            id: 'update/update-overview',
+          },
           collapsed: true,
           items: [
-            'deployment-guide/update/codemie/update-version',
+            'update/codemie/update-version',
             {
               type: 'category',
               label: 'Keycloak Upgrade',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/update/keycloak-upgrade/keycloak-upgrade',
+                id: 'update/keycloak-upgrade/keycloak-upgrade',
               },
               collapsed: true,
-              items: ['deployment-guide/update/keycloak-upgrade/keycloak-24-to-26'],
+              items: ['update/keycloak-upgrade/keycloak-24-to-26'],
             },
+            'update/elasticsearch-kibana-upgrade',
           ],
         },
       ],

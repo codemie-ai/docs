@@ -315,5 +315,5 @@ If you need assistance with the update process:
 
 1. Review this documentation thoroughly
 2. Check the troubleshooting section for common issues
-3. Consult the [FAQ](../../faq) for known issues
+3. Consult the [FAQ](../../deployment-guide/faq) for known issues
 4. Contact your support team with detailed error messages and logs

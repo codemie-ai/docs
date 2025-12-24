@@ -44,7 +44,7 @@ Install and configure all AI/Run CodeMie application components on your EKS clus
 
 Configure LLM and embedding models from various providers.
 
-### [Update AI/Run CodeMie](../update/codemie/update-version)
+### [Update AI/Run CodeMie](../../update/codemie/update-version)
 
 Learn how to update your AI/Run CodeMie installation.
 
