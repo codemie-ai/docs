@@ -2,7 +2,7 @@
 id: api-configuration
 title: CodeMie API Configuration Reference
 sidebar_label: API Configuration
-sidebar_position: 100
+sidebar_position: 4
 ---
 
 # CodeMie API Configuration Reference
@@ -854,6 +854,6 @@ Control granular access to CodeMie resources:
 
 ## See Also
 
-- [AWS Deployment Guide](../aws/overview) - Complete AWS deployment walkthrough
-- [Azure Deployment Guide](../azure/overview) - Azure-specific setup instructions
-- [GCP Deployment Guide](../gcp/overview) - Google Cloud deployment steps
+- [AWS Deployment Guide](../deployment-guide/aws/overview) - Complete AWS deployment walkthrough
+- [Azure Deployment Guide](../deployment-guide/azure/overview) - Azure-specific setup instructions
+- [GCP Deployment Guide](../deployment-guide/gcp/overview) - Google Cloud deployment steps

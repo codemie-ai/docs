@@ -526,7 +526,6 @@ const sidebars: SidebarsConfig = {
               label: 'Additional Resources',
               collapsed: true,
               items: [
-                'deployment-guide/additional-resources/api-configuration',
                 'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
               ],
             },
@@ -589,6 +588,7 @@ const sidebars: SidebarsConfig = {
                 'configuration-guide/user-configuration/platform-administration',
               ],
             },
+            'configuration-guide/api-configuration',
           ],
         },
         {

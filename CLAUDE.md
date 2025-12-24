@@ -233,18 +233,18 @@ kubectl get pods
 
 ### Internal Links
 
-Use relative paths for internal documentation links:
+**CRITICAL**: Always use relative paths for internal documentation links. Absolute paths break in PR preview deployments to S3.
 
 ```markdown
-# ✅ Correct - Relative path
-
+# ✅ Correct - Relative paths (works in PR previews)
 See the [Prerequisites](./prerequisites) section.
-Refer to [Infrastructure Deployment](./infrastructure-deployment).
+See the [AWS Guide](../deployment-guide/aws/overview) from another section.
 
-# ❌ Incorrect - Absolute path
-
+# ❌ Incorrect - Absolute path (breaks PR previews)
 See the [Prerequisites](/docs/deployment-guide/gcp/prerequisites) section.
 ```
+
+**Exception**: FeatureCard components in `.mdx` files use Docusaurus paths like `/configuration-guide/page` which are automatically handled with the correct baseUrl.
 
 ---
 
