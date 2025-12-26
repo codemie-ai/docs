@@ -6,13 +6,23 @@ sidebar_label: CodeMie Platform
 description: Step-by-step guide for updating AI/Run CodeMie components across AWS, Azure, and GCP deployments
 ---
 
-# Update AI/Run CodeMie
+# Update AI/Run CodeMie Core Components
 
 This guide provides comprehensive instructions for updating your AI/Run CodeMie deployment to the latest version. The update process is streamlined and supports all major cloud providers.
 
 :::tip Best Practice
 Regular updates ensure optimal performance, security patches, and access to the latest features.
 :::
+
+## Components to Update
+
+This update process will upgrade the following AI/Run CodeMie components:
+
+- **CodeMie MCP Connect** - Model Context Protocol integration service
+- **Mermaid Server** - Diagram rendering service
+- **CodeMie NATS Auth Callout** - Message bus authentication service
+- **CodeMie UI** - Frontend application
+- **CodeMie API** - Backend services and APIs
 
 ## Prerequisites
 
