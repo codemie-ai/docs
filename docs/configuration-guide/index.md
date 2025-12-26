@@ -27,13 +27,13 @@ Control the visibility and configuration of UI components.
 
 Manage user access, roles, and identity integration.
 
-**[User Configuration](./user-configuration/user-configuration-overview)** - Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Microsoft Entra ID, Okta, etc.
+**[User Configuration](./user-configuration/)** - Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Microsoft Entra ID, Okta, etc.
 
 Key areas:
 
 - **[Initial Realm Setup](./user-configuration/initial-realm-setup)** - Configure Keycloak realm settings
-- **[User Provisioning](./user-configuration/user-provisioning/user-provisioning-overview)** - Add users manually or via identity provider integration
-- **[User Authorization](./user-configuration/user-authorization/user-authorization-overview)** - Assign roles and manage permissions
+- **[User Provisioning](./user-configuration/user-provisioning/)** - Add users manually or via identity provider integration
+- **[User Authorization](./user-configuration/user-authorization/)** - Assign roles and manage permissions
 - **[Platform Administration](./user-configuration/platform-administration)** - Administrative controls and settings
 
 ### API Configuration
