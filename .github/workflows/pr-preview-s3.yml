@@ -69,7 +69,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prNumber = ${{ steps.pr.outputs.number }};
-            const previewUrl = `https://${{ secrets.AWS_S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com/pr-${prNumber}/index.html`;
+            const previewUrl = `http://${{ secrets.AWS_S3_BUCKET_NAME }}.s3-website.${{ secrets.AWS_REGION }}.amazonaws.com/pr-${prNumber}/`;
 
             // Check if comment already exists
             const { data: comments } = await github.rest.issues.listComments({
