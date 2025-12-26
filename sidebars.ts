@@ -227,6 +227,10 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Administration',
+      link: {
+        type: 'doc',
+        id: 'admin/index',
+      },
       collapsed: true,
       items: [
         {
@@ -234,7 +238,7 @@ const sidebars: SidebarsConfig = {
           label: 'Deployment Guides',
           link: {
             type: 'doc',
-            id: 'deployment-guide/index',
+            id: 'admin/deployment/index',
           },
           collapsed: true,
           items: [
@@ -243,18 +247,18 @@ const sidebars: SidebarsConfig = {
               label: 'AWS',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/aws/overview',
+                id: 'admin/deployment/aws/overview',
               },
               collapsed: true,
               items: [
                 {
                   type: 'doc',
-                  id: 'deployment-guide/aws/prerequisites',
+                  id: 'admin/deployment/aws/prerequisites',
                   label: 'Prerequisites',
                 },
                 {
                   type: 'doc',
-                  id: 'deployment-guide/aws/architecture',
+                  id: 'admin/deployment/aws/architecture',
                   label: 'Architecture',
                 },
                 {
@@ -262,12 +266,12 @@ const sidebars: SidebarsConfig = {
                   label: 'Infrastructure Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/aws/infrastructure-deployment/infrastructure-deployment-overview',
+                    id: 'admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/aws/infrastructure-deployment/infrastructure-scripted-deployment',
-                    'deployment-guide/aws/infrastructure-deployment/infrastructure-manual-deployment',
+                    'admin/deployment/aws/infrastructure-deployment/infrastructure-scripted-deployment',
+                    'admin/deployment/aws/infrastructure-deployment/infrastructure-manual-deployment',
                   ],
                 },
                 {
@@ -275,26 +279,26 @@ const sidebars: SidebarsConfig = {
                   label: 'Components Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/aws/components-deployment/components-deployment-overview',
+                    id: 'admin/deployment/aws/components-deployment/components-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/aws/components-deployment/components-scripted-deployment',
+                    'admin/deployment/aws/components-deployment/components-scripted-deployment',
                     {
                       type: 'category',
                       label: 'Manual Deployment',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/aws/components-deployment/manual-deployment/manual-deployment-overview',
+                        id: 'admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/aws/components-deployment/manual-deployment/storage-and-ingress',
-                        'deployment-guide/aws/components-deployment/manual-deployment/data-layer',
-                        'deployment-guide/aws/components-deployment/manual-deployment/security-and-identity',
-                        'deployment-guide/aws/components-deployment/manual-deployment/plugin-engine',
-                        'deployment-guide/aws/components-deployment/manual-deployment/core-components',
-                        'deployment-guide/aws/components-deployment/manual-deployment/observability',
+                        'admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/aws/components-deployment/manual-deployment/data-layer',
+                        'admin/deployment/aws/components-deployment/manual-deployment/security-and-identity',
+                        'admin/deployment/aws/components-deployment/manual-deployment/plugin-engine',
+                        'admin/deployment/aws/components-deployment/manual-deployment/core-components',
+                        'admin/deployment/aws/components-deployment/manual-deployment/observability',
                       ],
                     },
                   ],
@@ -304,12 +308,12 @@ const sidebars: SidebarsConfig = {
                   label: 'AI Models Integration',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/aws/ai-models-integration/ai-models-integration-overview',
+                    id: 'admin/deployment/aws/ai-models-integration/ai-models-integration-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/aws/ai-models-integration/aws-bedrock',
-                    'deployment-guide/aws/ai-models-integration/azure-openai',
+                    'admin/deployment/aws/ai-models-integration/aws-bedrock',
+                    'admin/deployment/aws/ai-models-integration/azure-openai',
                   ],
                 },
               ],
@@ -319,18 +323,18 @@ const sidebars: SidebarsConfig = {
               label: 'Azure',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/azure/overview',
+                id: 'admin/deployment/azure/overview',
               },
               collapsed: true,
               items: [
                 {
                   type: 'doc',
-                  id: 'deployment-guide/azure/prerequisites',
+                  id: 'admin/deployment/azure/prerequisites',
                   label: 'Prerequisites',
                 },
                 {
                   type: 'doc',
-                  id: 'deployment-guide/azure/architecture',
+                  id: 'admin/deployment/azure/architecture',
                   label: 'Architecture',
                 },
                 {
@@ -338,11 +342,11 @@ const sidebars: SidebarsConfig = {
                   label: 'Infrastructure Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/azure/infrastructure-deployment/infrastructure-deployment-overview',
+                    id: 'admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/azure/infrastructure-deployment/infrastructure-scripted-deployment',
+                    'admin/deployment/azure/infrastructure-deployment/infrastructure-scripted-deployment',
                   ],
                 },
                 {
@@ -350,26 +354,26 @@ const sidebars: SidebarsConfig = {
                   label: 'CodeMie Components Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/azure/components-deployment/components-deployment-overview',
+                    id: 'admin/deployment/azure/components-deployment/components-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/azure/components-deployment/components-scripted-deployment',
+                    'admin/deployment/azure/components-deployment/components-scripted-deployment',
                     {
                       type: 'category',
                       label: 'CodeMie Manual Deployment',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/azure/components-deployment/manual-deployment/manual-deployment-overview',
+                        id: 'admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/azure/components-deployment/manual-deployment/storage-and-ingress',
-                        'deployment-guide/azure/components-deployment/manual-deployment/data-layer',
-                        'deployment-guide/azure/components-deployment/manual-deployment/security-and-identity',
-                        'deployment-guide/azure/components-deployment/manual-deployment/plugin-engine',
-                        'deployment-guide/azure/components-deployment/manual-deployment/core-components',
-                        'deployment-guide/azure/components-deployment/manual-deployment/observability',
+                        'admin/deployment/azure/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/azure/components-deployment/manual-deployment/data-layer',
+                        'admin/deployment/azure/components-deployment/manual-deployment/security-and-identity',
+                        'admin/deployment/azure/components-deployment/manual-deployment/plugin-engine',
+                        'admin/deployment/azure/components-deployment/manual-deployment/core-components',
+                        'admin/deployment/azure/components-deployment/manual-deployment/observability',
                       ],
                     },
                   ],
@@ -379,12 +383,12 @@ const sidebars: SidebarsConfig = {
                   label: 'AI Models Integration',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/azure/ai-models-integration/ai-models-integration-overview',
+                    id: 'admin/deployment/azure/ai-models-integration/ai-models-integration-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/azure/ai-models-integration/aws-bedrock',
-                    'deployment-guide/azure/ai-models-integration/azure-openai',
+                    'admin/deployment/azure/ai-models-integration/aws-bedrock',
+                    'admin/deployment/azure/ai-models-integration/azure-openai',
                   ],
                 },
               ],
@@ -394,18 +398,18 @@ const sidebars: SidebarsConfig = {
               label: 'GCP',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/gcp/overview',
+                id: 'admin/deployment/gcp/overview',
               },
               collapsed: true,
               items: [
                 {
                   type: 'doc',
-                  id: 'deployment-guide/gcp/prerequisites',
+                  id: 'admin/deployment/gcp/prerequisites',
                   label: 'Prerequisites',
                 },
                 {
                   type: 'doc',
-                  id: 'deployment-guide/gcp/architecture',
+                  id: 'admin/deployment/gcp/architecture',
                   label: 'Architecture',
                 },
                 {
@@ -413,11 +417,11 @@ const sidebars: SidebarsConfig = {
                   label: 'Infrastructure Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/gcp/infrastructure-deployment/infrastructure-deployment-overview',
+                    id: 'admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/gcp/infrastructure-deployment/infrastructure-manual-deployment',
+                    'admin/deployment/gcp/infrastructure-deployment/infrastructure-manual-deployment',
                   ],
                 },
                 {
@@ -425,12 +429,12 @@ const sidebars: SidebarsConfig = {
                   label: 'Components Deployment',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/gcp/components-deployment/components-deployment-overview',
+                    id: 'admin/deployment/gcp/components-deployment/components-deployment-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/gcp/components-deployment/components-scripted-deployment',
-                    'deployment-guide/gcp/components-deployment/components-manual-deployment',
+                    'admin/deployment/gcp/components-deployment/components-scripted-deployment',
+                    'admin/deployment/gcp/components-deployment/components-manual-deployment',
                   ],
                 },
                 {
@@ -438,12 +442,12 @@ const sidebars: SidebarsConfig = {
                   label: 'AI Models Integration',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/gcp/ai-models-integration/ai-models-integration-overview',
+                    id: 'admin/deployment/gcp/ai-models-integration/ai-models-integration-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/gcp/ai-models-integration/aws-bedrock',
-                    'deployment-guide/gcp/ai-models-integration/azure-openai',
+                    'admin/deployment/gcp/ai-models-integration/aws-bedrock',
+                    'admin/deployment/gcp/ai-models-integration/azure-openai',
                   ],
                 },
               ],
@@ -453,7 +457,7 @@ const sidebars: SidebarsConfig = {
               label: 'Extensions',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/extensions/extensions-overview',
+                id: 'admin/deployment/extensions/extensions-overview',
               },
               collapsed: true,
               items: [
@@ -462,28 +466,28 @@ const sidebars: SidebarsConfig = {
                   label: 'LiteLLM Proxy',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/extensions/litellm-proxy/litellm-proxy-overview',
+                    id: 'admin/deployment/extensions/litellm-proxy/litellm-proxy-overview',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/extensions/litellm-proxy/postgres-setup',
-                    'deployment-guide/extensions/litellm-proxy/configure-values',
-                    'deployment-guide/extensions/litellm-proxy/auth-secrets',
-                    'deployment-guide/extensions/litellm-proxy/model-config',
+                    'admin/deployment/extensions/litellm-proxy/postgres-setup',
+                    'admin/deployment/extensions/litellm-proxy/configure-values',
+                    'admin/deployment/extensions/litellm-proxy/auth-secrets',
+                    'admin/deployment/extensions/litellm-proxy/model-config',
                     {
                       type: 'category',
                       label: 'Deployment',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/extensions/litellm-proxy/deployment/deployment-overview',
+                        id: 'admin/deployment/extensions/litellm-proxy/deployment/deployment-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/extensions/litellm-proxy/deployment/automated-deployment',
-                        'deployment-guide/extensions/litellm-proxy/deployment/manual-deployment',
+                        'admin/deployment/extensions/litellm-proxy/deployment/automated-deployment',
+                        'admin/deployment/extensions/litellm-proxy/deployment/manual-deployment',
                       ],
                     },
-                    'deployment-guide/extensions/litellm-proxy/migration-guide',
+                    'admin/deployment/extensions/litellm-proxy/migration-guide',
                   ],
                 },
                 {
@@ -491,39 +495,39 @@ const sidebars: SidebarsConfig = {
                   label: 'Assistants Evaluation',
                   link: {
                     type: 'doc',
-                    id: 'deployment-guide/extensions/assistants-evaluation/assistants-evaluation',
+                    id: 'admin/deployment/extensions/assistants-evaluation/assistants-evaluation',
                   },
                   collapsed: true,
                   items: [
-                    'deployment-guide/extensions/assistants-evaluation/prerequisites',
-                    'deployment-guide/extensions/assistants-evaluation/system-requirements',
-                    'deployment-guide/extensions/assistants-evaluation/deployment-prerequisites',
+                    'admin/deployment/extensions/assistants-evaluation/prerequisites',
+                    'admin/deployment/extensions/assistants-evaluation/system-requirements',
+                    'admin/deployment/extensions/assistants-evaluation/deployment-prerequisites',
                     {
                       type: 'category',
                       label: 'Deployment',
                       link: {
                         type: 'doc',
-                        id: 'deployment-guide/extensions/assistants-evaluation/deployment/deployment-overview',
+                        id: 'admin/deployment/extensions/assistants-evaluation/deployment/deployment-overview',
                       },
                       collapsed: true,
                       items: [
-                        'deployment-guide/extensions/assistants-evaluation/deployment/automated-deployment',
-                        'deployment-guide/extensions/assistants-evaluation/deployment/manual-deployment',
+                        'admin/deployment/extensions/assistants-evaluation/deployment/automated-deployment',
+                        'admin/deployment/extensions/assistants-evaluation/deployment/manual-deployment',
                       ],
                     },
-                    'deployment-guide/extensions/assistants-evaluation/post-deployment',
-                    'deployment-guide/extensions/assistants-evaluation/troubleshooting',
-                    'deployment-guide/extensions/assistants-evaluation/operational-queries',
+                    'admin/deployment/extensions/assistants-evaluation/post-deployment',
+                    'admin/deployment/extensions/assistants-evaluation/troubleshooting',
+                    'admin/deployment/extensions/assistants-evaluation/operational-queries',
                   ],
                 },
-                'deployment-guide/extensions/ai-code-explorer/ai-code-explorer',
-                'deployment-guide/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
-                'deployment-guide/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
+                'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
+                'admin/deployment/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
+                'admin/deployment/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
               ],
             },
             {
               type: 'doc',
-              id: 'deployment-guide/faq',
+              id: 'admin/deployment/faq',
               label: 'FAQ',
             },
           ],
@@ -533,35 +537,35 @@ const sidebars: SidebarsConfig = {
           label: 'Configuration',
           link: {
             type: 'doc',
-            id: 'configuration-guide/index',
+            id: 'admin/configuration/index',
           },
           collapsed: true,
           items: [
-            'configuration-guide/datasources-configuration',
-            'configuration-guide/ui-customization',
+            'admin/configuration/datasources-configuration',
+            'admin/configuration/ui-customization',
             {
               type: 'category',
               label: 'User Configuration',
               link: {
                 type: 'doc',
-                id: 'configuration-guide/user-configuration/user-configuration-overview',
+                id: 'admin/configuration/user-configuration/user-configuration-overview',
               },
               collapsed: true,
               items: [
-                'configuration-guide/user-configuration/initial-realm-setup',
+                'admin/configuration/user-configuration/initial-realm-setup',
                 {
                   type: 'category',
                   label: 'User Provisioning',
                   link: {
                     type: 'doc',
-                    id: 'configuration-guide/user-configuration/user-provisioning/user-provisioning-overview',
+                    id: 'admin/configuration/user-configuration/user-provisioning/user-provisioning-overview',
                   },
                   collapsed: true,
                   items: [
-                    'configuration-guide/user-configuration/user-provisioning/manual-creation',
-                    'configuration-guide/user-configuration/user-provisioning/keycloak-assistant',
-                    'configuration-guide/user-configuration/user-provisioning/keycloak-entra-id',
-                    'configuration-guide/user-configuration/user-provisioning/entra-id-only',
+                    'admin/configuration/user-configuration/user-provisioning/manual-creation',
+                    'admin/configuration/user-configuration/user-provisioning/keycloak-assistant',
+                    'admin/configuration/user-configuration/user-provisioning/keycloak-entra-id',
+                    'admin/configuration/user-configuration/user-provisioning/entra-id-only',
                   ],
                 },
                 {
@@ -569,18 +573,18 @@ const sidebars: SidebarsConfig = {
                   label: 'User Authorization',
                   link: {
                     type: 'doc',
-                    id: 'configuration-guide/user-configuration/user-authorization/user-authorization-overview',
+                    id: 'admin/configuration/user-configuration/user-authorization/user-authorization-overview',
                   },
                   collapsed: true,
                   items: [
-                    'configuration-guide/user-configuration/user-authorization/assign-roles',
-                    'configuration-guide/user-configuration/user-authorization/assign-attributes',
+                    'admin/configuration/user-configuration/user-authorization/assign-roles',
+                    'admin/configuration/user-configuration/user-authorization/assign-attributes',
                   ],
                 },
-                'configuration-guide/user-configuration/platform-administration',
+                'admin/configuration/user-configuration/platform-administration',
               ],
             },
-            'configuration-guide/api-configuration',
+            'admin/configuration/api-configuration',
           ],
         },
         {
@@ -588,22 +592,22 @@ const sidebars: SidebarsConfig = {
           label: 'Update',
           link: {
             type: 'doc',
-            id: 'update/update-overview',
+            id: 'admin/update/update-overview',
           },
           collapsed: true,
           items: [
-            'update/codemie/update-version',
+            'admin/update/codemie/update-version',
             {
               type: 'category',
               label: 'Keycloak Upgrade',
               link: {
                 type: 'doc',
-                id: 'update/keycloak-upgrade/keycloak-upgrade',
+                id: 'admin/update/keycloak-upgrade/keycloak-upgrade',
               },
               collapsed: true,
-              items: ['update/keycloak-upgrade/keycloak-24-to-26'],
+              items: ['admin/update/keycloak-upgrade/keycloak-24-to-26'],
             },
-            'update/elasticsearch-kibana-upgrade',
+            'admin/update/elasticsearch-kibana-upgrade',
           ],
         },
       ],

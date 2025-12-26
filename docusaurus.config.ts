@@ -89,7 +89,7 @@ const config: Config = {
           label: 'User Guides',
         },
         {
-          to: 'deployment-guide/',
+          to: 'admin/',
           position: 'left',
           label: 'Administration',
         },
@@ -116,7 +116,7 @@ const config: Config = {
             },
             {
               label: 'Administration',
-              to: 'deployment-guide/',
+              to: 'admin/',
             },
           ],
         },

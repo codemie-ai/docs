@@ -1,0 +1,219 @@
+---
+id: index
+title: Administration Guide
+sidebar_label: Administration
+sidebar_position: 1
+pagination_next: null
+pagination_prev: null
+image: /img/codemie-social-card.jpg
+description: Comprehensive guide for administrators managing AI/Run CodeMie platform, including deployment, configuration, updates, and maintenance.
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Administration Guide
+
+Welcome to the AI/Run CodeMie Administration Guide. This section provides comprehensive documentation for system administrators responsible for deploying, configuring, maintaining, and securing the CodeMie platform.
+
+## Core Administration Areas
+
+### Deployment & Infrastructure
+
+Set up AI/Run CodeMie in your cloud environment with comprehensive deployment guides.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/cloud-providers/aws.svg"
+    iconType="image"
+    invertInDarkTheme={true}
+    title="AWS Deployment"
+    description="Deploy CodeMie on AWS with automated scripts or manual infrastructure setup using EKS, RDS, and other AWS services."
+    link="/admin/deployment/aws/overview"
+  />
+  <FeatureCard
+    icon="/img/cloud-providers/azure.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Azure Deployment"
+    description="Deploy CodeMie on Microsoft Azure with AKS, managed databases, and integrated Azure services."
+    link="/admin/deployment/azure/overview"
+  />
+  <FeatureCard
+    icon="/img/cloud-providers/gcp.svg"
+    iconType="image"
+    invertInDarkTheme={true}
+    title="GCP Deployment"
+    description="Deploy CodeMie on Google Cloud Platform using GKE and managed GCP services with Terraform automation."
+    link="/admin/deployment/gcp/overview"
+  />
+  <FeatureCard
+    icon="/img/cloud-providers/aws.svg"
+    iconType="image"
+    invertInDarkTheme={true}
+    title="AWS Marketplace"
+    description="Deploy AI/Run CodeMie directly from AWS Marketplace with one-click installation and managed services."
+    link="https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1"
+  />
+  <FeatureCard
+    icon="/img/icons/plugin.svg"
+    iconType="image"
+    title="Extensions"
+    description="Deploy optional extensions including LiteLLM Proxy, Assistant Evaluation, AI Code Explorer, and specialized development tools."
+    link="/admin/deployment/extensions/"
+  />
+</FeatureGrid>
+
+### Configuration & Customization
+
+Configure the platform to meet your organization's requirements and integrate with existing systems.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/configuration.svg"
+    iconType="image"
+    title="API Configuration"
+    description="Configure CodeMie API settings, AI provider integrations, database connections, security, storage, and observability parameters."
+    link="/admin/configuration/api-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Data Sources"
+    description="Configure data source loaders for code files, Confluence, Jira, and file uploads. Set chunking strategies and processing parameters."
+    link="/admin/configuration/datasources-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/fingerprint.svg"
+    iconType="image"
+    title="User Management"
+    description="Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Microsoft Entra ID."
+    link="/admin/configuration/user-configuration/"
+  />
+  <FeatureCard
+    icon="/img/icons/appearance.svg"
+    iconType="image"
+    title="UI Customization"
+    description="Control UI component visibility, configure help resources, and customize the user interface."
+    link="/admin/configuration/ui-customization"
+  />
+</FeatureGrid>
+
+### Updates & Maintenance
+
+Keep your CodeMie platform up-to-date with the latest features, security patches, and component upgrades.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/refresh.svg"
+    iconType="image"
+    title="Platform Updates"
+    description="Update AI/Run CodeMie to newer versions using automated scripts or manual procedures with detailed migration guidance."
+    link="/admin/update/codemie/update-version"
+  />
+  <FeatureCard
+    icon="/img/tools/keycloak.svg"
+    iconType="image"
+    title="Keycloak Upgrade"
+    description="Upgrade Keycloak identity and access management with version-specific migration guides and database updates."
+    link="/admin/update/keycloak-upgrade/"
+  />
+  <FeatureCard
+    icon="/img/tools/elasticsearch.svg"
+    iconType="image"
+    title="Observability Stack"
+    description="Upgrade Elasticsearch and Kibana components for logging, monitoring, and analytics capabilities."
+    link="/admin/update/elasticsearch-kibana-upgrade"
+  />
+  <FeatureCard
+    icon="/img/icons/protect.svg"
+    iconType="image"
+    title="Update Overview"
+    description="Review update best practices, pre-update checklists, and general guidance for maintaining platform components."
+    link="/admin/update/"
+  />
+</FeatureGrid>
+
+## Administrator Responsibilities
+
+As a CodeMie administrator, you are responsible for:
+
+### Platform Management
+
+- Deploying and maintaining infrastructure components
+- Configuring system settings and integrations
+- Managing platform updates and upgrades
+- Monitoring system health and performance
+
+### Security & Access Control
+
+- Configuring authentication and authorization
+- Managing user accounts and permissions
+- Implementing security policies and best practices
+- Integrating with enterprise identity providers
+
+### Data & Integration
+
+- Configuring data source connections
+- Setting up AI model providers (AWS Bedrock, Azure OpenAI, etc.)
+- Integrating with development tools (Git, Jira, Confluence)
+- Managing API access and credentials
+
+### Operations & Support
+
+- Troubleshooting platform issues
+- Maintaining system availability
+- Managing backups and disaster recovery
+- Providing user support and training
+
+## Getting Started
+
+If you're new to CodeMie administration:
+
+1. **Start with Deployment** - Choose your cloud provider and follow the deployment guide
+2. **Configure Core Settings** - Set up API configuration, user management, and data sources
+3. **Set Up Integrations** - Connect AI providers, identity systems, and development tools
+4. **Enable Extensions** - Deploy optional components based on your organization's needs
+5. **Establish Maintenance** - Create update schedules and monitoring procedures
+
+## Prerequisites
+
+Before administering CodeMie, ensure you have:
+
+- Administrative access to your cloud environment (AWS, Azure, or GCP)
+- Understanding of Kubernetes and container orchestration
+- Familiarity with identity management systems (Keycloak, Entra ID, Okta)
+- Knowledge of infrastructure as code (Terraform, Helm)
+- Access to required credentials and service accounts
+
+## Additional Resources
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/info.svg"
+    iconType="image"
+    title="Deployment FAQ"
+    description="Find answers to frequently asked questions about deploying and managing AI/Run CodeMie."
+    link="/admin/deployment/faq"
+  />
+  <FeatureCard
+    icon="/img/icons/chat.svg"
+    iconType="image"
+    title="User Guides"
+    description="Help your users get started with assistants, workflows, tools, and integrations."
+    link="/user-guide/"
+  />
+</FeatureGrid>
+
+## Getting Help
+
+For assistance with administration tasks:
+
+- Review component-specific troubleshooting sections
+- Consult the [FAQ](./deployment/faq) for common issues
+- Contact your support team with detailed environment information
+- Check component logs for error messages and diagnostics
+
+:::tip Best Practice
+Always test configuration changes and updates in a non-production environment before applying them to production systems.
+:::

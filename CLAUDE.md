@@ -238,7 +238,7 @@ kubectl get pods
 ```markdown
 # ✅ Correct - Relative paths (works in PR previews)
 See the [Prerequisites](./prerequisites) section.
-See the [AWS Guide](../deployment-guide/aws/overview) from another section.
+See the [AWS Guide](../deployment/aws/overview) from another section.
 
 # ❌ Incorrect - Absolute path (breaks PR previews)
 See the [Prerequisites](/docs/deployment-guide/gcp/prerequisites) section.
