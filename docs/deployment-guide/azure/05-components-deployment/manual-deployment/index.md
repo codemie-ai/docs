@@ -281,4 +281,4 @@ kubectl describe pod -n codemie <pod-name>
 
 Begin the installation process by following the guides in order, starting with **[Storage and Ingress](./storage-and-ingress)**.
 
-After completing all component installations, proceed to **[Post-Installation Configuration](../../post-installation)** to configure users, AI models, and data sources.
+After completing all component installations, proceed to **[Configuration](../../../../configuration-guide/)** to configure users, AI models, and data sources.

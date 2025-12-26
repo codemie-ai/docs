@@ -3,7 +3,7 @@ id: observability
 sidebar_position: 6
 title: Observability
 sidebar_label: Observability
-pagination_next: deployment-guide/azure/post-installation/post-installation-overview
+pagination_next: deployment-guide/azure/ai-models-integration/ai-models-integration-overview
 ---
 
 # Observability Installation
@@ -281,7 +281,7 @@ All checks should return successful results.
 
 Congratulations! You have successfully completed the manual deployment of all AI/Run CodeMie components.
 
-Proceed to **[Post-Installation Configuration](../../post-installation)** to:
+Proceed to **[Configuration](../../../../configuration-guide/)** to:
 
 - Create initial users and configure authentication
 - Set up AI model integrations

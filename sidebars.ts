@@ -301,60 +301,6 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Post-Installation',
-                  link: {
-                    type: 'doc',
-                    id: 'deployment-guide/aws/post-installation/post-installation-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    {
-                      type: 'category',
-                      label: 'User Configuration',
-                      link: {
-                        type: 'doc',
-                        id: 'deployment-guide/aws/post-installation/user-configuration/user-configuration-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'deployment-guide/aws/post-installation/user-configuration/initial-realm-setup',
-                        {
-                          type: 'category',
-                          label: 'User Provisioning',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/aws/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/aws/post-installation/user-configuration/user-provisioning/manual-creation',
-                            'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-assistant',
-                            'deployment-guide/aws/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
-                            'deployment-guide/aws/post-installation/user-configuration/user-provisioning/entra-id-only',
-                          ],
-                        },
-                        {
-                          type: 'category',
-                          label: 'User Authorization',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/aws/post-installation/user-configuration/user-authorization/user-authorization-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-roles',
-                            'deployment-guide/aws/post-installation/user-configuration/user-authorization/assign-attributes',
-                          ],
-                        },
-                        'deployment-guide/aws/post-installation/user-configuration/platform-administration',
-                      ],
-                    },
-                    'deployment-guide/aws/post-installation/datasources-configuration',
-                    'deployment-guide/aws/post-installation/ui-customization',
-                  ],
-                },
-                {
-                  type: 'category',
                   label: 'AI Models Integration',
                   link: {
                     type: 'doc',
@@ -430,60 +376,6 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Post-Installation',
-                  link: {
-                    type: 'doc',
-                    id: 'deployment-guide/azure/post-installation/post-installation-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    {
-                      type: 'category',
-                      label: 'User Configuration',
-                      link: {
-                        type: 'doc',
-                        id: 'deployment-guide/azure/post-installation/user-configuration/user-configuration-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'deployment-guide/azure/post-installation/user-configuration/initial-realm-setup',
-                        {
-                          type: 'category',
-                          label: 'User Provisioning',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/azure/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/azure/post-installation/user-configuration/user-provisioning/manual-creation',
-                            'deployment-guide/azure/post-installation/user-configuration/user-provisioning/keycloak-assistant',
-                            'deployment-guide/azure/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
-                            'deployment-guide/azure/post-installation/user-configuration/user-provisioning/entra-id-only',
-                          ],
-                        },
-                        {
-                          type: 'category',
-                          label: 'User Authorization',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/azure/post-installation/user-configuration/user-authorization/user-authorization-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/azure/post-installation/user-configuration/user-authorization/assign-roles',
-                            'deployment-guide/azure/post-installation/user-configuration/user-authorization/assign-attributes',
-                          ],
-                        },
-                        'deployment-guide/azure/post-installation/user-configuration/platform-administration',
-                      ],
-                    },
-                    'deployment-guide/azure/post-installation/datasources-configuration',
-                    'deployment-guide/azure/post-installation/ui-customization',
-                  ],
-                },
-                {
-                  type: 'category',
                   label: 'AI Models Integration',
                   link: {
                     type: 'doc',
@@ -539,60 +431,6 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'deployment-guide/gcp/components-deployment/components-scripted-deployment',
                     'deployment-guide/gcp/components-deployment/components-manual-deployment',
-                  ],
-                },
-                {
-                  type: 'category',
-                  label: 'Post-Installation',
-                  link: {
-                    type: 'doc',
-                    id: 'deployment-guide/gcp/post-installation/post-installation-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    {
-                      type: 'category',
-                      label: 'User Configuration',
-                      link: {
-                        type: 'doc',
-                        id: 'deployment-guide/gcp/post-installation/user-configuration/user-configuration-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'deployment-guide/gcp/post-installation/user-configuration/initial-realm-setup',
-                        {
-                          type: 'category',
-                          label: 'User Provisioning',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/gcp/post-installation/user-configuration/user-provisioning/user-provisioning-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/gcp/post-installation/user-configuration/user-provisioning/manual-creation',
-                            'deployment-guide/gcp/post-installation/user-configuration/user-provisioning/keycloak-assistant',
-                            'deployment-guide/gcp/post-installation/user-configuration/user-provisioning/keycloak-entra-id',
-                            'deployment-guide/gcp/post-installation/user-configuration/user-provisioning/entra-id-only',
-                          ],
-                        },
-                        {
-                          type: 'category',
-                          label: 'User Authorization',
-                          link: {
-                            type: 'doc',
-                            id: 'deployment-guide/gcp/post-installation/user-configuration/user-authorization/user-authorization-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'deployment-guide/gcp/post-installation/user-configuration/user-authorization/assign-roles',
-                            'deployment-guide/gcp/post-installation/user-configuration/user-authorization/assign-attributes',
-                          ],
-                        },
-                        'deployment-guide/gcp/post-installation/user-configuration/platform-administration',
-                      ],
-                    },
-                    'deployment-guide/gcp/post-installation/datasources-configuration',
-                    'deployment-guide/gcp/post-installation/ui-customization',
                   ],
                 },
                 {
@@ -684,15 +522,6 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'category',
-              label: 'Additional Resources',
-              collapsed: true,
-              items: [
-                'deployment-guide/additional-resources/api-configuration',
-                'deployment-guide/additional-resources/elasticsearch-kibana-upgrade',
-              ],
-            },
-            {
               type: 'doc',
               id: 'deployment-guide/faq',
               label: 'FAQ',
@@ -701,20 +530,80 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Update',
+          label: 'Configuration',
+          link: {
+            type: 'doc',
+            id: 'configuration-guide/index',
+          },
           collapsed: true,
           items: [
-            'deployment-guide/update/codemie/update-version',
+            'configuration-guide/datasources-configuration',
+            'configuration-guide/ui-customization',
+            {
+              type: 'category',
+              label: 'User Configuration',
+              link: {
+                type: 'doc',
+                id: 'configuration-guide/user-configuration/user-configuration-overview',
+              },
+              collapsed: true,
+              items: [
+                'configuration-guide/user-configuration/initial-realm-setup',
+                {
+                  type: 'category',
+                  label: 'User Provisioning',
+                  link: {
+                    type: 'doc',
+                    id: 'configuration-guide/user-configuration/user-provisioning/user-provisioning-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'configuration-guide/user-configuration/user-provisioning/manual-creation',
+                    'configuration-guide/user-configuration/user-provisioning/keycloak-assistant',
+                    'configuration-guide/user-configuration/user-provisioning/keycloak-entra-id',
+                    'configuration-guide/user-configuration/user-provisioning/entra-id-only',
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: 'User Authorization',
+                  link: {
+                    type: 'doc',
+                    id: 'configuration-guide/user-configuration/user-authorization/user-authorization-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'configuration-guide/user-configuration/user-authorization/assign-roles',
+                    'configuration-guide/user-configuration/user-authorization/assign-attributes',
+                  ],
+                },
+                'configuration-guide/user-configuration/platform-administration',
+              ],
+            },
+            'configuration-guide/api-configuration',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Update',
+          link: {
+            type: 'doc',
+            id: 'update/update-overview',
+          },
+          collapsed: true,
+          items: [
+            'update/codemie/update-version',
             {
               type: 'category',
               label: 'Keycloak Upgrade',
               link: {
                 type: 'doc',
-                id: 'deployment-guide/update/keycloak-upgrade/keycloak-upgrade',
+                id: 'update/keycloak-upgrade/keycloak-upgrade',
               },
               collapsed: true,
-              items: ['deployment-guide/update/keycloak-upgrade/keycloak-24-to-26'],
+              items: ['update/keycloak-upgrade/keycloak-24-to-26'],
             },
+            'update/elasticsearch-kibana-upgrade',
           ],
         },
       ],

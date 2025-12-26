@@ -42,7 +42,7 @@ Specifies which components to install.
 
 - `all` - installs both AI/Run CodeMie and 3rd-party components (for fresh installation)
 - `recommended` - installs both AI/Run and 3rd-party components except Nginx Ingress Controller
-- `update` - updates only AI/Run CodeMie core components (see [Update AI/Run CodeMie](../../update/codemie/update-version) for more details)
+- `update` - updates only AI/Run CodeMie core components (see [Update AI/Run CodeMie](../../../update/codemie/update-version) for more details)
 
 ## Component Configuration
 
@@ -74,4 +74,4 @@ bash helm-charts.sh --cloud aws --version x.y.z --mode all
 
 ## Next Steps
 
-After successful deployment, proceed to [Post-Installation Configuration](../post-installation/) to complete required setup steps.
+After successful deployment, proceed to [Configuration](../../../configuration-guide/) to complete required setup steps.

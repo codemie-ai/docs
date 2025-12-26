@@ -3,7 +3,7 @@ id: components-scripted-deployment
 sidebar_position: 1
 title: CodeMie Scripted Deployment
 sidebar_label: CodeMie Scripted Deployment
-pagination_next: deployment-guide/azure/post-installation/post-installation-overview
+pagination_next: deployment-guide/azure/ai-models-integration/ai-models-integration-overview
 ---
 
 # Scripted CodeMie Components Deployment
@@ -165,7 +165,7 @@ The following files require domain name configuration (automated by Step 2 in Qu
 
 After successful deployment and validation, proceed to:
 
-**[Post-Installation Configuration](../post-installation)** - Complete required setup including:
+**[Configuration](../../../configuration-guide/)** - Complete required setup including:
 
 - Initial user configuration in Keycloak
 - AI model integration setup

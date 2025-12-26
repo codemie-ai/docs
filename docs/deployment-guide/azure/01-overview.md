@@ -20,6 +20,6 @@ For successful deployment, please follow these steps in sequence:
 
 1. First, verify all prerequisites and set up your Azure environment accordingly. Next, deploy the required infrastructure using Terraform.
 2. Finally, deploy and configure the AI/Run CodeMie components on AKS cluster.
-3. Complete post-installation configuration.
+3. Complete platform configuration using the Configuration section.
 
 Each section contains detailed instructions to ensure a smooth deployment process. The guide is structured to walk you through from initial setup to a fully functional AI/Run CodeMie environment on Azure.

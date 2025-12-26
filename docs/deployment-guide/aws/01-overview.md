@@ -19,7 +19,6 @@ For successful deployment, please follow these steps in sequence:
 
 1. First, verify all prerequisites and set up your AWS environment accordingly. Next, deploy the required infrastructure using Terraform.
 2. Finally, deploy and configure the AI/Run CodeMie components on EKS cluster.
-3. Complete post-installation configuration
 
 Each section contains detailed instructions to ensure a smooth deployment process. The guide is structured to walk you through from initial setup to a fully functional AI/Run CodeMie environment on AWS.
 
@@ -41,15 +40,11 @@ Deploy AWS infrastructure using Terraform, including EKS cluster, networking, an
 
 Install and configure all AI/Run CodeMie application components on your EKS cluster.
 
-### [Post-Installation Configuration](./post-installation)
-
-Complete required and optional configuration steps after deployment.
-
 ### [AI Models Integration](./ai-models-integration)
 
 Configure LLM and embedding models from various providers.
 
-### [Update AI/Run CodeMie](../update/codemie/update-version)
+### [Update AI/Run CodeMie](../../update/codemie/update-version)
 
 Learn how to update your AI/Run CodeMie installation.
 

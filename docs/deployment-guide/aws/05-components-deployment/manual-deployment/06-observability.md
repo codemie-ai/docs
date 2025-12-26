@@ -87,4 +87,4 @@ bash ./kibana-dashboards/manage-kibana-dashboards.sh --help
 
 ## Next Steps
 
-After all components are installed, proceed to [Post-Installation Configuration](../../post-installation/) to complete required setup steps.
+After all components are installed, proceed to [Configuration](../../../../configuration-guide/) to complete required setup steps.
