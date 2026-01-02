@@ -7,46 +7,46 @@ sidebar_position: 4
 
 # Help Center
 
-The Help Center page serves as a central hub for getting help, learning, and updates on the CodeMie platform. It provides users with access to various support resources and learning materials.
+The Help Center page serves as a central hub for getting help, learning, and updates on the CodeMie platform. The page is organized into four main sections.
 
-![Help Center](./images/image165.png)
+![Help Center](./images/help-center-overview.png)
 
-## AI Assistants
-
-This section contains information about various AI assistants on the platform:
+## AI Help
 
 ### AI/Run FAQ
 
-Smart assistant that can help with onboarding processes. CodeMie can answer all your questions about capabilities, usage, and much more. To start chatting, simply click **Chat Now**.
-
-### AI/Run Feedback
-
-CodeMie assistant for reporting bugs and improvements in CodeMie Jira. The AI analyzes the bug report to create structured tickets containing summary, description of reproduction steps, actual and expected results.
+This is smart CodeMie assistant which can help you with onboarding process. CodeMie can answer to all you questions about capabilities, usage and so on. To start chatting, simply click **Chat Now**.
 
 ### AI/Run Chatbot
 
-The perfect solution for real-time interaction and instant support. Designed to enhance user efficiency, AI/Run Chatbot is the ideal alternative to ChatGPT.
+The ultimate solution for real-time interactions. Designed to handle general inquiries efficiently, AI/Run Chatbot is the perfect alternative to ChatGPT. To start chatting, simply click **Chat Now**.
 
 ## Learning Resources
 
-Section for learning the platform and getting the most out of it:
+### User Guide
 
-### Youtube channel
+Step-by-step documentation for all key features. Click **Open Guide** to access comprehensive documentation.
 
-Watch tutorials and product guides on our YouTube channel.: [Youtube channel](https://www.youtube.com/@EPAMAIRunCodeMie)
+### YouTube Channel
 
-![Youtube channel](./images/image81.png)
+Watch tutorials and product guides on our YouTube channel. Click **Explore** to visit: [YouTube channel](https://www.youtube.com/@EPAMAIRunCodeMie)
 
-### User Guides
-
-Step-by-step documentation for all key features.
+![Youtube channel](./images/youtube-channel.png)
 
 ## Product Updates
 
-Section for tracking new features and improvements:
-
 ### Release Notes
 
-View the latest changes, fixes, and improvements.
+View the latest changes, fixes, and enhancements. Click **See What's New** to view the latest updates.
 
-![Product Updates](./images/image90.png)
+![Release Notes](./images/release-notes.png)
+
+## Share Experience
+
+### AI/Run Feedback
+
+CodeMie assistant to report bugs and improvements into CodeMie Jira. It analyses your input to generate structured tickets containing a summary, description, steps to reproduce, actual and expected results. Click **Chat Now** to start reporting.
+
+### Survey
+
+Fill out a survey to share your experience using CodeMie: [Survey](https://forms.office.com/Pages/ResponsePage.aspx?id=0HIbtJ9OJkyKaflJ82fJHR4SMJgwvBNOsejqrpALtT5UQ0c3TTNGQTMyS00wSDQwWTBMNFdOMDBWWS4u)
