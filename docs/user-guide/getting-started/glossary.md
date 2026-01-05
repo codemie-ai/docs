@@ -112,12 +112,13 @@ A configured connection between the CodeMie platform and an external service or 
 
 ### JWT attributes
 
-Required Claim parameters in JWT tokens assigned in Keycloak to control project access and permissions. There are two main attribute types:
+Required Claim parameters in JWT tokens assigned in Keycloak to control project access and permissions. There are three main attribute types:
 
 - **applications**: Grants Standard User access to specified projects (comma-separated list of project names). Users can create, edit, delete, share, and publish their own assistants within these projects.
 - **applications_admin**: Grants Project Administrator privileges for specified projects (comma-separated list). Users can manage all assistants and project integrations within these projects.
+- **isAdmin**: Platform Administrator role (boolean value `true` or `false`). The highest privilege level in the platform that grants access to create projects, create katas, and manage all administrative features across the entire CodeMie platform. Users with this role have unrestricted access to all platform functionality.
 
-JWT attributes are only applicable to users with the `developer` role and determine which projects users can access and their permission level within those projects.
+JWT attributes are only applicable to users with the `developer` role and determine which projects users can access and their permission level within those projects. The `isAdmin` attribute provides platform-wide administrative access beyond project-specific permissions.
 
 ---
 
