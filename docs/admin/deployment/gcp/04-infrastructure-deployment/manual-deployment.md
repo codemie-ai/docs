@@ -154,82 +154,178 @@ gcloud storage buckets list | grep terraform
 The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform infrastructure.
 :::
 
-## Main GCP Resources Deployment
+## Phase 2: Deploy Platform Infrastructure
 
-This step will cover the following topics:
+This phase deploys all core GCP resources required to run AI/Run CodeMie. This includes the GKE cluster, networking components, databases, and security infrastructure.
 
-- Create the GKE Cluster
-- Create the Google Service Account to access the Vertex AI services
-- Create the NAT
-- Create the GCP KMS key to encrypt and decrypt sensitive data in the AI/Run application
-- Create the BastionHost to connect to private cluster
+:::tip What Gets Deployed
+This phase will create:
 
-To accomplish the tasks outlined above, follow these steps:
+- **GKE Cluster** - Kubernetes cluster for running AI/Run CodeMie
+- **VPC Network** - Private network with subnets and firewall rules
+- **Cloud NAT** - Outbound internet connectivity with static IP
+- **Cloud SQL** - PostgreSQL database for application data
+- **Service Accounts** - Identity for accessing Vertex AI and other GCP services
+- **Cloud KMS Key** - Encryption key for sensitive data
+- **Cloud DNS** - Name resolution for CodeMie components
+- **Bastion Host** - Management VM for private cluster access (optional)
+  :::
 
-1. Clone the git repository with the project [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform):
+### Step 1: Clone the Repository
+
+Clone the platform infrastructure Terraform repository:
 
 ```bash
 git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
 cd codemie-terraform-gcp-platform
 ```
 
-2. Set remote backend in `versions.tf`:
+### Step 2: Configure Remote State Backend
+
+Configure Terraform to use the GCS bucket created in Phase 1 for storing infrastructure state.
+
+Edit the `versions.tf` file and update the backend configuration:
 
 ```hcl
 backend "gcs" {
-    bucket = "bucket-name-you-created"
-    prefix = "prefix-for-state"
+    bucket = "your-bucket-name-from-phase1"  # Replace with actual bucket name
+    prefix = "terraform/platform/state"       # Path prefix for state files
 }
 ```
 
-3. Review the input variables for Terraform run in the `codemie-terraform-gcp-platform/variables.tf` file and create a `terraform.tfvars` in the repo to change default variable values in a key-value format. For example:
+:::warning State Backend Required
+You must configure the remote backend before running `terraform init`. Without this, Terraform will store state locally, preventing team collaboration and risking state loss.
+:::
 
-```hcl
-project_id = "gcp-project-id"
-platform_name = "codemie"
-bastion_members = ["group:email","user:another-email"]
-dns_name = "domain-com"
-dns_domain = "domain.com."
-extra_authorized_networks = [
-  {
-    cidr_block   = "x.x.x.x/x"
-    display_name = "GlobalProtectRegion1"
-  },
-  {
-    cidr_block   = "x.x.x.x/x"
-    display_name = "GlobalProtectRegion2"
-  }
-] # Add if you want to access GKE cluster from your workstation, otherwise GKE API will be accessible only from bastion VM
-private_cluster = false
-create_private_dns_zone = false
-...
+### Step 3: Review and Configure Variables
+
+The `variables.tf` file contains all configurable parameters for your infrastructure deployment. Review these variables and create a `terraform.tfvars` file to customize values for your environment.
+
+#### Create Configuration File
+
+Create a `terraform.tfvars` file in the repository root:
+
+```bash
+# Create and edit configuration file
+nano terraform.tfvars
 ```
 
-:::info
-Ensure you have carefully reviewed all variables and replaced mock values with yours. To see all possible values, please consult the file [terraform.tfvars.example](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/terraform.tfvars.example?ref_type=heads) or [variables.tf](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/variables.tf?ref_type=heads).
+#### Essential Variables
 
-Additional information about Terraform modules can be found in appropriate official documentation. For example:
+Configure these required variables in `terraform.tfvars`:
+
+```hcl
+# GCP Project Configuration
+project_id = "your-gcp-project-id"           # Your GCP project ID
+platform_name = "codemie"                     # Platform identifier
+
+# Network Access Control
+bastion_members = [
+  "group:devops@example.com",                 # Grant Bastion access to specific users/groups
+  "user:admin@example.com"
+]
+
+# DNS Configuration
+dns_name = "codemie-example-com"              # DNS zone name (hyphens, no dots)
+dns_domain = "codemie.example.com."           # Full domain with trailing dot
+
+# GKE API Access (optional)
+extra_authorized_networks = [
+  {
+    cidr_block   = "203.0.113.0/24"           # Your office/VPN CIDR
+    display_name = "Office Network"
+  },
+  {
+    cidr_block   = "198.51.100.0/24"          # Additional network if needed
+    display_name = "VPN Network"
+  }
+]
+
+# Cluster Configuration
+private_cluster = false                       # Set to true for completely private GKE cluster
+create_private_dns_zone = false               # Set to true if using private DNS
+```
+
+#### Variable Descriptions
+
+| Variable                    | Description                                                           | Required |
+| --------------------------- | --------------------------------------------------------------------- | -------- |
+| `project_id`                | GCP project ID where resources will be created                        | Yes      |
+| `platform_name`             | Identifier used in resource names (lowercase letters only)            | Yes      |
+| `bastion_members`           | IAM principals granted SSH access to Bastion Host                     | Yes      |
+| `dns_name`                  | DNS zone name (use hyphens instead of dots)                           | Yes      |
+| `dns_domain`                | Fully qualified domain name with trailing dot                         | Yes      |
+| `extra_authorized_networks` | CIDR blocks allowed to access GKE API (empty for Bastion-only access) | No       |
+| `private_cluster`           | Creates fully private GKE cluster (API not accessible from internet)  | No       |
+| `create_private_dns_zone`   | Creates private DNS zone instead of public (requires private cluster) | No       |
+
+:::info Configuration References
+For all available variables and their descriptions, see:
+
+- **Example configuration**: [terraform.tfvars.example](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/terraform.tfvars.example?ref_type=heads)
+- **Variable definitions**: [variables.tf](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/variables.tf?ref_type=heads)
+
+For Terraform module documentation, refer to:
 
 - [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)
-- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
+- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
 - [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)
 - [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)
-- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
+- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
 - [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
 - [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)
-- [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)
 - [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql)
   :::
 
-4. Initialize the backend and apply the changes:
+### Step 4: Deploy Platform Infrastructure
+
+Initialize Terraform and deploy the complete platform infrastructure:
 
 ```bash
+# Initialize Terraform and download providers/modules
 terraform init
+
+# Review the execution plan
 terraform plan
+
+# Deploy all infrastructure resources
 terraform apply
 ```
 
-This concludes GCP infrastructure deployment.
+When prompted, review the planned changes and type `yes` to confirm deployment.
+
+:::warning Deployment Duration
+Platform deployment takes approximately **25-35 minutes**. The GKE cluster and Cloud SQL database are the longest operations. Do not interrupt the process once started.
+:::
+
+### Step 5: Verify Deployment
+
+After successful deployment, verify all resources were created correctly:
+
+```bash
+# View Terraform outputs (includes important connection information)
+terraform output
+
+# Verify GKE cluster exists
+gcloud container clusters list --project=your-project-id
+
+# Check Cloud SQL instance
+gcloud sql instances list --project=your-project-id
+
+# List created VPC networks
+gcloud compute networks list --project=your-project-id
+```
+
+**Save the Terraform outputs** - they contain critical information needed for subsequent steps, including:
+
+- GKE cluster connection commands
+- Bastion Host SSH/RDP commands
+- Cloud SQL connection details
+- Service account information
+
+:::tip Infrastructure Ready
+The GCP infrastructure deployment is now complete. You can proceed to configure cluster access or continue with components deployment.
+:::
 
 ## Bastion Host Connection and Setup Guide (Optional)
 
