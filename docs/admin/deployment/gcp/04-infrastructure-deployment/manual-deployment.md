@@ -85,30 +85,74 @@ The manual deployment consists of two sequential phases. Each phase uses a dedic
 Bastion Host is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
 :::
 
-## Terraform Backend Resources Deployment
+## Phase 1: Deploy Terraform State Backend
 
-This step covers the creation of Google Storage Bucket to store Terraform states.
+The first step is to create a Google Cloud Storage bucket for storing Terraform state files. This bucket will be used by all subsequent infrastructure deployments to maintain state consistency and enable team collaboration.
 
-To create a bucket, follow the steps below:
+:::tip Why This Matters
+The state backend ensures that your infrastructure state is stored securely and can be shared across your team. Without this, Terraform state would only exist locally on your machine.
+:::
 
-1. Clone the git repository with the project [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend):
+### Step 1: Clone the Repository
+
+Clone the Terraform state backend repository to your local machine:
 
 ```bash
 git clone git@gitbud.epam.com:epm-cdme/codemie-terraform-gcp-remote-backend.git
 cd codemie-terraform-gcp-remote-backend
 ```
 
-2. Review and change, if needed, the input variables for Terraform run in the `codemie-terraform-gcp-remote-backend/variables.tf` file.
+### Step 2: Review Configuration Variables
 
-3. Initialize the backend and apply the changes:
+Open and review the `variables.tf` file to understand available configuration options:
 
 ```bash
+# View all available variables
+cat variables.tf
+```
+
+Key variables to consider:
+
+- **project_id**: Your GCP project ID
+- **storage_bucket_name**: Prefix for storage bucket name
+- **region**: GCP region for the bucket (e.g., `europe-west3`)
+
+If you need to customize any values, create a `terraform.tfvars` file with your overrides.
+
+### Step 3: Deploy the State Backend
+
+Initialize Terraform and deploy the storage bucket:
+
+```bash
+# Initialize Terraform providers
 terraform init
+
+# Preview the resources that will be created
 terraform plan
+
+# Create the GCS bucket
 terraform apply
 ```
 
-The created bucket will be used for all subsequent infrastructure deployments.
+When prompted, type `yes` to confirm the deployment.
+
+### Step 4: Verify Deployment
+
+After successful deployment, verify the bucket was created:
+
+```bash
+# Check Terraform outputs
+terraform output
+
+# Or verify via gcloud CLI
+gcloud storage buckets list | grep terraform
+```
+
+**Save the bucket name** - you'll need it for Phase 2 configuration.
+
+:::tip Next Phase
+The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform infrastructure.
+:::
 
 ## Main GCP Resources Deployment
 
