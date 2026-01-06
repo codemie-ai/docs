@@ -40,23 +40,50 @@ You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth 
 
 ## Deployment Phases
 
-The manual deployment consists of two sequential phases:
+The manual deployment consists of two sequential phases. Each phase uses a dedicated Terraform repository with specific GCP resources.
 
-| Phase                                | Description                                                      | Required | Estimated Duration |
-| ------------------------------------ | ---------------------------------------------------------------- | -------- | ------------------ |
-| **Phase 1: Terraform State Backend** | Creates Google Cloud Storage bucket for Terraform state files    | Yes      | ~2-3 min           |
-| **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components | Yes      | ~25-35 min         |
+### Phase 1: Terraform State Backend
+
+**Terraform Repository:** [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)
+
+**Resources Deployed:**
+
+- Google Cloud Storage bucket for Terraform state files
+
+**Estimated Duration:** ~2-3 minutes
+
+### Phase 2: Platform Infrastructure
+
+**Terraform Repository:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
+
+**Resources Deployed:**
+
+- VPC Network and Subnets
+- Cloud NAT and Cloud Router
+- GKE Cluster with Node Pools
+- Cloud SQL (PostgreSQL)
+- Google Service Accounts
+- Cloud KMS Key
+- Cloud DNS Zones
+- Bastion Host (optional, for private clusters)
+
+**Estimated Duration:** ~25-35 minutes
+
+**Terraform Modules Used:**
+
+- [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)
+- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
+- [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)
+- [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)
+- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
+- [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
+- [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)
+- [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)
+- [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql)
 
 :::info Bastion Host
-Bastion Host setup is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
+Bastion Host is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
 :::
-
-## Deployment Order
-
-| #   | Resource name                                                                                      | Source                                                                                                        | Modules used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | Terraform Backend                                                                                  | [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend) | –                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 2   | VPC<br/>NAT<br/>BastionHost<br/>GKE cluster<br/>Google Service Accounts<br/>KMS key<br/>Postgresql | [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)             | • [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)<br/>• [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)<br/>• [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)<br/>• [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)<br/>• [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)<br/>• [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)<br/>• [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)<br/>• [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)<br/>• [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql) |
 
 ## Terraform Backend Resources Deployment
 
