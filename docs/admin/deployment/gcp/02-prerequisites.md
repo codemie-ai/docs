@@ -128,25 +128,37 @@ If deploying to an **existing GKE cluster**, ensure that admission webhooks allo
   </TabItem>
 </Tabs>
 
-## Deployer Instance Requirements
+## Deployment Machine Requirements
 
-- The following software must be pre-installed and configured on the deployer laptop or VDI instance before beginning the deployment process:
-  - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) `1.5.7`
-  - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-  - [helm](https://helm.sh/docs/intro/install/) `3.16.0+`
-  - [gcloud CLI](https://cloud.google.com/sdk/gcloud)
-  - [docker](https://docs.docker.com/get-started/get-docker/)
-  - [natscli](https://github.com/nats-io/natscli?tab=readme-ov-file#installation)
-  - [nsc](https://github.com/nats-io/nsc)
-  - [jq](https://jqlang.org/download/)
-  - [curl](https://github.com/curl/curl)
-  - htpasswd
+### Required Software Tools
 
-- Access to the following repositories is necessary for deployment:
-  - [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)
-  - [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
-  - [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+The following tools must be pre-installed and properly configured on your deployment machine (laptop, workstation, or VDI instance):
 
-:::info
-Repositories can be extracted as archives and uploaded to a VDI if direct repository access is not available.
+| Tool                                                           | Version       | Purpose                                        |
+| -------------------------------------------------------------- | ------------- | ---------------------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install) | `1.5.7`       | Infrastructure as Code provisioning            |
+| [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)     | Latest stable | Kubernetes cluster management                  |
+| [Helm](https://helm.sh/docs/intro/install/)                    | `3.16.0+`     | Kubernetes package management                  |
+| [gcloud CLI](https://cloud.google.com/sdk/docs/install)        | Latest        | GCP resource management and GCR authentication |
+| [Docker](https://docs.docker.com/get-started/get-docker/)      | Latest stable | Container operations                           |
+| [natscli](https://github.com/nats-io/natscli#installation)     | Latest        | NATS messaging CLI                             |
+| [nsc](https://github.com/nats-io/nsc)                          | Latest        | NATS security configuration                    |
+| [jq](https://jqlang.org/download/)                             | Latest        | JSON processing and parsing                    |
+| [curl](https://curl.se/download.html)                          | Latest        | HTTP requests and file transfers               |
+| `htpasswd` (apache2-utils)                                     | Latest        | Password hash generation                       |
+
+### Required Repository Access
+
+You will need access to the following repositories to complete the deployment:
+
+- **Terraform Remote Backend:** [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)
+- **Terraform Platform Modules:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
 :::
+
+## Next Steps
+
+Once all prerequisites are met, proceed to the [Architecture Overview](./architecture) to understand the deployment architecture, or continue directly to [Infrastructure Deployment](./infrastructure-deployment) to begin the installation process.
