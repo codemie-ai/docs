@@ -11,15 +11,19 @@ pagination_next: admin/deployment/gcp/components-deployment/components-scripted-
 
 ## Overview
 
-This section describes the process of the main AI/Run CodeMie components deployment to the GCP GKE cluster. Before proceeding, make sure you obtained kubectl credentials using one of the following commands from terraform output depending on your cluster access type:
+This section guides you through deploying the AI/Run CodeMie application stack on your GKE cluster. After completing infrastructure deployment, this phase installs all necessary Kubernetes components including:
 
-```bash
-# Use the command from Terraform outputs
-# Parameters: "get_kubectl_credentials_for_public_cluster" or "get_kubectl_credentials_for_private_cluster"
-```
+- **Core AI/Run CodeMie services** (API, UI, MCP Connect, NATS Auth)
+- **Data layer** (Elasticsearch, PostgreSQL via operators)
+- **Security & Identity** (Keycloak, OAuth2 Proxy)
+- **Infrastructure services** (Ingress controller, storage)
+- **Observability** (Kibana, Fluent Bit)
+- **Optional LLM Proxy** (for load balancing AI model requests)
 
-:::info
-For infrastructure deployment details, refer to the [Infrastructure Deployment](../infrastructure-deployment) section.
+The deployment uses Helm charts to install and configure all components in the correct order, ensuring proper dependencies and integration.
+
+:::info Prerequisites
+This phase assumes you have completed [Infrastructure Deployment](../infrastructure-deployment/) and have a running GKE cluster with network, storage, and security configured.
 :::
 
 ## Prerequisites
