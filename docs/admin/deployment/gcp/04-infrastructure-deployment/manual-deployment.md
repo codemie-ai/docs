@@ -327,87 +327,191 @@ gcloud compute networks list --project=your-project-id
 The GCP infrastructure deployment is now complete. You can proceed to configure cluster access or continue with components deployment.
 :::
 
-## Bastion Host Connection and Setup Guide (Optional)
+## Bastion Host Access Configuration (Optional)
 
-:::warning
-Required only if you are deploying a completely private cluster with a private DNS domain. Otherwise, you can access GKE API and CodeMie application without bastion.
+:::warning Private Cluster Only
+This section is only required if you deployed a **completely private GKE cluster** with private DNS. For public clusters or clusters with authorized networks configured, you can access the GKE API and CodeMie application directly from your workstation.
 :::
 
-The Bastion Host enables secure access to your Kubernetes cluster inside a private network.
+The Bastion Host is a secure jump server that provides access to your private GKE cluster and applications running inside the VPC. This VM enables both command-line management (SSH) and browser-based access (RDP) to internal resources.
 
-You can connect in two ways:
+### Connection Methods Overview
 
-- **SSH Connection**: For deploying and managing workloads in Kubernetes with command-line tools
-- **RDP Connection**: For interacting with application UIs that are only accessible within the VPC using private DNS
+| Connection Type | Use Case                                                      | Access Method         |
+| --------------- | ------------------------------------------------------------- | --------------------- |
+| **SSH**         | Deploy and manage Kubernetes workloads using kubectl and Helm | Terminal/SSH client   |
+| **RDP**         | Access web UIs exposed via private DNS (Kibana, Keycloak)     | Remote Desktop client |
 
-### SSH Connection
+### Option 1: SSH Connection for Cluster Management
 
-Use SSH to deploy and manage cluster resources.
+Use SSH to connect to the Bastion Host for deploying and managing Kubernetes resources.
 
-**How to connect:**
+#### Step 1: Connect to Bastion Host
 
-1. **SSH into the Bastion Host**
-
-Use the SSH command provided as a Terraform output (bastion_ssh_command):
+Retrieve the SSH command from Terraform outputs and connect:
 
 ```bash
-# Use the command from Terraform outputs
-# Parameter: bastion_ssh_command
+# Get the SSH connection command
+terraform output bastion_ssh_command
+
+# Example output:
+# gcloud compute ssh bastion-vm --project=your-project --zone=europe-west3-a
+
+# Use this command to connect
+gcloud compute ssh bastion-vm --project=your-project --zone=europe-west3-a
 ```
 
-2. **Change the Root Password**
-
-:::info
-The "root" user and a new password will be used later to connect via RDP connection.
+:::tip IAM Permissions
+Ensure your user account is listed in `bastion_members` variable from Phase 2 configuration. Only authorized users can SSH into the Bastion Host.
 :::
 
+#### Step 2: Set Root Password (Required for RDP)
+
+After connecting via SSH, set a root password for later RDP access:
+
 ```bash
+# Switch to root user
 sudo -s
+
+# Set root password (you'll be prompted to enter it twice)
 passwd
 ```
 
-3. **Clone the Deployment Repository**
+:::info Save Your Password
+The root password you set here will be used to login via RDP. Make sure to remember it or store it securely.
+:::
+
+#### Step 3: Configure Kubectl Access
+
+Fetch GKE cluster credentials to enable kubectl commands:
 
 ```bash
+# Get the kubectl configuration command
+terraform output get_kubectl_credentials_for_private_cluster
+
+# Example output:
+# gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
+
+# Run the command to configure kubectl
+gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
+```
+
+Verify kubectl access:
+
+```bash
+# Test cluster connectivity
+kubectl get nodes
+
+# Check cluster information
+kubectl cluster-info
+```
+
+#### Step 4: Clone Deployment Repository
+
+Clone the Helm charts repository needed for component deployment:
+
+```bash
+# Clone the repository
 git clone https://gitbud.epam.com/epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
 ```
 
-4. **Get Kubernetes Credentials**
+You're now ready to proceed with [Components Deployment](../components-deployment).
 
-Fetch GKE credentials using the Terraform output (get_credentials_command):
+### Option 2: RDP Connection for Web UI Access
+
+Use RDP to access application web interfaces that are only available via private DNS (such as Kibana, Keycloak Admin Console).
+
+:::tip When to Use RDP
+RDP is useful when you need to access web-based administrative interfaces that aren't exposed publicly. For kubectl/Helm operations, SSH access is sufficient.
+:::
+
+#### Step 1: Set Up RDP Port Forwarding
+
+Retrieve the RDP forwarding command from Terraform outputs:
 
 ```bash
-# Use the command from Terraform outputs
-# Parameter: get_kubectl_credentials_for_private_cluster
+# Get the RDP forwarding command
+terraform output bastion_rdp_command
+
+# Example output:
+# gcloud compute start-iap-tunnel bastion-vm 3389 --local-host-port=localhost:3389 --zone=europe-west3-a --project=your-project
 ```
 
-### RDP Connection: Access Private Application UIs
-
-Some applications are exposed internally via private DNS and are not accessible from outside the VPC. Use RDP through the Bastion Host to access these UIs.
-
-**How to connect:**
-
-1. **Set Up RDP Port Forwarding**
-
-Use the command from Terraform output (bastion_rdp_command). This will forward port 3389 to your local machine:
+Run the command to create an IAP tunnel that forwards RDP traffic:
 
 ```bash
-# Use the command from Terraform outputs
-# Parameter: bastion_rdp_command
+# Start the IAP tunnel (keep this terminal open)
+gcloud compute start-iap-tunnel bastion-vm 3389 \
+  --local-host-port=localhost:3389 \
+  --zone=europe-west3-a \
+  --project=your-project
 ```
 
-2. **Connect via Remote Desktop Client**
+:::warning Keep Terminal Open
+The tunnel will remain active as long as this terminal session is running. Do not close it while using RDP.
+:::
 
-Open your preferred RDP client and connect to `localhost:3389`.
+#### Step 2: Connect with Remote Desktop Client
 
-3. **Useful Tips**
-   - Run Google Chrome as root:
+Open your Remote Desktop client and connect:
 
-   ```bash
-   /usr/bin/google-chrome --no-sandbox
-   ```
+| Setting      | Value                      |
+| ------------ | -------------------------- |
+| **Computer** | `localhost:3389`           |
+| **Username** | `root`                     |
+| **Password** | Password set in SSH Step 2 |
 
-   - Paste commands into terminal: Use `Shift-Ctrl-V`
+**Platform-specific clients:**
+
+- **Windows**: Remote Desktop Connection (built-in)
+- **macOS**: Microsoft Remote Desktop (from App Store)
+- **Linux**: Remmina, Vinagre, or xfreerdp
+
+#### Step 3: Access Web Applications
+
+Once connected via RDP, open a web browser on the Bastion Host to access internal services:
+
+**Common internal URLs:**
+
+- Kibana: `https://kibana.your-domain.com` (if using private DNS)
+- Keycloak Admin: `https://keycloak.your-domain.com/auth/admin`
+- AI/Run CodeMie: `https://codemie.your-domain.com`
+
+### Tips for Using the Bastion Host
+
+#### Running Chrome on Bastion
+
+The Bastion Host may require root privileges to run Chrome:
+
+```bash
+# Run Chrome without sandbox (required for root user)
+/usr/bin/google-chrome --no-sandbox
+```
+
+#### Pasting Commands into Terminal
+
+Use the correct keyboard shortcut for pasting in Linux terminal:
+
+```
+Shift + Ctrl + V
+```
+
+(Regular `Ctrl + V` won't work in most Linux terminal applications)
+
+#### File Transfer to/from Bastion
+
+Transfer files between your local machine and Bastion using `gcloud scp`:
+
+```bash
+# Upload file to Bastion
+gcloud compute scp local-file.txt bastion-vm:~/remote-file.txt \
+  --project=your-project --zone=europe-west3-a
+
+# Download file from Bastion
+gcloud compute scp bastion-vm:~/remote-file.txt ./local-file.txt \
+  --project=your-project --zone=europe-west3-a
+```
 
 ## Next Steps
 
