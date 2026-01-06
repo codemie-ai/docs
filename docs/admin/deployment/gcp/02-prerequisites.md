@@ -44,21 +44,27 @@ The following APIs must be enabled in your GCP project before deployment:
 Make sure you are familiar with Gemini models, their parameters, available regions, and other crucial details in the [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
 :::
 
-### Domain Name
+## Network Requirements
 
-- Registered domain name delegated to Cloud DNS with permissions to create records
+### Domain Name and DNS
 
-- Wildcard TLS certificate is available (https://kubernetes.github.io/ingress-nginx/user-guide/tls/)
+- Registered domain name delegated to Cloud DNS with permissions to create DNS records
+- Valid wildcard TLS certificate must be available for HTTPS connections (see [Ingress NGINX TLS guide](https://kubernetes.github.io/ingress-nginx/user-guide/tls/))
 
-### External Connections
+### Outbound Connectivity
 
-- Firewall or VPC firewall rules of GKE cluster allow outbound access to:
-  - AI/Run CodeMie container registry – europe-west3-docker.pkg.dev
-  - 3rd party container registries – quay.io, docker.io, registry.developers.crunchydata.com
-  - Any service you're planning to use with AI/Run CodeMie (for example, GitLab instance)
+Your GKE cluster's firewall or VPC firewall rules must allow **outbound access** to the following endpoints:
 
-:::info
-AI/Run CodeMie can be deployed with mock LLM configurations initially. Real configurations can be provided later if client-side approvals require additional time.
+| Destination                           | Purpose                                                        |
+| ------------------------------------- | -------------------------------------------------------------- |
+| `europe-west3-docker.pkg.dev`         | AI/Run CodeMie container registry (Google Container Registry)  |
+| `quay.io`                             | Third-party container images                                   |
+| `docker.io`                           | Docker Hub container images                                    |
+| `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
+| Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
+
+:::note Container Registry Access
+AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
 :::
 
 ### User Permissions and Admission Control Requirements for GKE
