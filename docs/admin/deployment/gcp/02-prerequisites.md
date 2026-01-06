@@ -9,30 +9,40 @@ pagination_next: admin/deployment/gcp/architecture
 
 # Prerequisites
 
-Before installing AI/Run CodeMie, review the prerequisites and requirements.
+This page outlines the requirements and prerequisites necessary for deploying AI/Run CodeMie on Google Cloud Platform (GCP). Please ensure all requirements are met before proceeding with the installation.
 
-## Prerequisites Checklist
+## GCP Account Requirements
 
-### GCP Account Access Requirements
+### Required Access and Permissions
 
-- Active GCP Account with administrative access
+To deploy AI/Run CodeMie on GCP, you need:
 
-- User credentials with role permissions to create and manage IAM Roles and Policy Documents
+- **Active GCP Project** with sufficient quota for the required resources
+- **Project Owner or Editor Role** for the deployment user with the following permissions:
+  - Ability to create and manage IAM Roles and Service Accounts
+  - Access to create and manage GCP resources (GKE, VPC, Cloud SQL, etc.)
+    :::info Complete Resource List
+    For a detailed list of all GCP resources that will be provisioned, refer to the [Infrastructure Deployment](./infrastructure-deployment) section or review the Terraform modules in the deployment repository.
+    :::
+  - Ability to bind the following IAM roles to service accounts:
+    - `roles/aiplatform.user` - For Vertex AI access
+    - `roles/storage.admin` - For Cloud Storage management
+    - `roles/cloudkms.cryptoKeyEncrypterDecrypter` - For encryption key operations
 
-- Enabled GCP APIs in your GCP project:
-  - [Cloud Identity-Aware Proxy API](https://console.cloud.google.com/marketplace/product/google/iap.googleapis.com)
-  - [Service Networking API](https://console.cloud.google.com/marketplace/product/google/servicenetworking.googleapis.com)
-  - [Secret Manager API](https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com)
-  - [Vertex AI API](https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com)
+### Required GCP APIs
 
-  :::info
-  Make sure you are familiar with Gemini models, their parameters, available regions and other crucial details in [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
-  :::
+The following APIs must be enabled in your GCP project before deployment:
 
-- User needs to be able to bind the following roles to service accounts:
-  - `roles/aiplatform.user`
-  - `roles/storage.admin`
-  - `roles/cloudkms.cryptoKeyEncrypterDecrypter`
+| API                                                                                                                    | Purpose                              |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| [Cloud Identity-Aware Proxy API](https://console.cloud.google.com/marketplace/product/google/iap.googleapis.com)       | Secure identity-based access control |
+| [Service Networking API](https://console.cloud.google.com/marketplace/product/google/servicenetworking.googleapis.com) | Private service connectivity         |
+| [Secret Manager API](https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com)         | Centralized secrets management       |
+| [Vertex AI API](https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com)                 | AI model integration and inference   |
+
+:::info Vertex AI Models
+Make sure you are familiar with Gemini models, their parameters, available regions, and other crucial details in the [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
+:::
 
 ### Domain Name
 
