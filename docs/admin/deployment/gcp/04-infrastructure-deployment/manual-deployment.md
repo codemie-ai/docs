@@ -9,6 +9,48 @@ pagination_next: admin/deployment/gcp/components-deployment/components-deploymen
 
 # Manual Infrastructure Deployment
 
+This guide walks you through deploying GCP infrastructure for AI/Run CodeMie using Terraform with manual step-by-step instructions. This approach provides full control over each deployment phase and allows for customization at every step.
+
+:::tip When to Use Manual Deployment
+Use manual deployment when you need:
+
+- Full control over each Terraform operation
+- Understanding of each infrastructure component
+- Custom configurations or modifications during deployment
+- Troubleshooting capabilities at each step
+  :::
+
+## Prerequisites
+
+Before starting the deployment, ensure you have completed all requirements from the [Prerequisites](../prerequisites) page:
+
+### Verification Checklist
+
+- [ ] **GCP Access**: Project Owner or Editor role with IAM permissions
+- [ ] **Required APIs Enabled**: Cloud IAP, Service Networking, Secret Manager, Vertex AI APIs
+- [ ] **Tools Installed**: Terraform 1.5.7, gcloud CLI, kubectl, Helm, Docker
+- [ ] **GCP Authentication**: Logged in via `gcloud auth login` and project set
+- [ ] **Repository Access**: Have access to `codemie-terraform-gcp-remote-backend` and `codemie-terraform-gcp-platform` repositories
+- [ ] **Network Planning**: Prepared list of authorized networks (if accessing GKE API from workstation)
+- [ ] **Domain & Certificate**: DNS zone and TLS certificate ready (for public access) or will use private DNS
+
+:::warning Authentication Required
+You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and verify with `gcloud config get-value project`.
+:::
+
+## Deployment Phases
+
+The manual deployment consists of two sequential phases:
+
+| Phase                                | Description                                                      | Required | Estimated Duration |
+| ------------------------------------ | ---------------------------------------------------------------- | -------- | ------------------ |
+| **Phase 1: Terraform State Backend** | Creates Google Cloud Storage bucket for Terraform state files    | Yes      | ~2-3 min           |
+| **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components | Yes      | ~25-35 min         |
+
+:::info Bastion Host
+Bastion Host setup is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
+:::
+
 ## Deployment Order
 
 | #   | Resource name                                                                                      | Source                                                                                                        | Modules used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
