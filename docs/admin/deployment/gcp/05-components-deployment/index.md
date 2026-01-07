@@ -253,7 +253,7 @@ Step-by-step manual installation of each component:
 - **Advantages**: Full control over each component, easier to debug issues
 - **Duration**: ~1-2 hours (depending on familiarity)
 
-[→ Manual Deployment Guide](./components-manual-deployment)
+[→ Manual Deployment Guide](./manual-deployment/)
 
 :::tip Recommendation
 Use **Scripted Deployment** for initial installations. Switch to manual deployment only if you need custom configurations or are troubleshooting specific issues.
