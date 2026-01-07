@@ -128,50 +128,95 @@ imagePullSecrets:
 
 :::
 
-## AI/Run CodeMie Application Stack Overview
+## Application Stack Components
+
+The AI/Run CodeMie application consists of multiple integrated components organized into functional categories. Understanding this architecture helps you plan the deployment sequence and troubleshoot issues effectively.
 
 ![Application Stack](../../common/images/application-stack-diagram.drawio.png)
 
-### Core AI/Run CodeMie Components
+### Component Categories
 
-:::info
-AI/Run CodeMie latest releases for core components versions can be found by executing the following script in the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository for each component.
+#### Core AI/Run CodeMie Services
+
+Proprietary services that provide the main AI/Run CodeMie functionality:
+
+| Component             | Container Image                                                     | Description                                                                           |
+| --------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **CodeMie API**       | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations          |
+| **CodeMie UI**        | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                                 |
+| **NATS Auth Callout** | `europe-west3-docker.pkg.dev/.../codemie-nats-auth-callout:x.y.z`   | Authentication and authorization service for NATS messaging (Plugin Engine component) |
+| **MCP Connect**       | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                               |
+| **Mermaid Server**    | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                                 |
+
+:::info Version Information
+To find the latest release versions for CodeMie components:
 
 ```bash
 bash get-codemie-latest-release-version.sh
-bash get-codemie-latest-release-version.sh -c ./path/to/key.json
+
+# Use the version detection script with GCP credentials
+bash get-codemie-latest-release-version.sh -c key.json
 ```
 
 Make sure you logged in with `key.json` shared with you.
 
-:::note
-Versions for Docker containers and Helm releases are matching.
-:::
+**Note**: Docker container versions match Helm chart release versions.
 :::
 
-| Component name                   | Images                                                                                              | Description                                                                                                                                                                                       |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI/Run CodeMie API               | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie:x.y.z`                     | The backend service of the AI/Run CodeMie application responsible for business logic, data processing, and API operations                                                                         |
-| AI/Run CodeMie UI                | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-ui:x.y.z`                  | The frontend service of the AI/Run CodeMie application that provides the user interface for interacting with the system                                                                           |
-| AI/Run CodeMie Nats Auth Callout | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-nats-auth-callout:x.y.z`   | Authorization component of AI/Run CodeMie Plugin Engine that handles authentication and authorization for the NATS messaging system                                                               |
-| AI/Run CodeMie MCP Connect       | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-mcp-connect-service:x.y.z` | A lightweight bridge tool that enables cloud-based AI services to communicate with local Model Context Protocol (MCP) servers via protocol translation while maintaining security and flexibility |
-| AI/Run Mermaid Server            | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/mermaid-server:x.y.z`              | Implementation of open-source service that generates image URLs for diagrams based on the provided Mermaid code for workflow visualization                                                        |
+#### Data Layer Components
 
-### Required Third-Party Components
+Database and storage services for application data:
 
-| Component name           | Images                                                                                                                                 | Description                                                                                                                                                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ingress Nginx Controller | `registry.k8s.io/ingress-nginx/controller:x.y.z`                                                                                       | Handles external traffic routing to services within the Kubernetes cluster. The AI/Run CodeMie application uses oauth2-proxy, which relies on the Ingress Nginx Controller for proper routing and access control |
-| Storage Class            | –                                                                                                                                      | Provides persistent storage capabilities                                                                                                                                                                         |
-| Elasticsearch            | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z`                                                                                  | Database component that stores all AI/Run CodeMie data, including datasources, projects, and other application information                                                                                       |
-| Kibana                   | `docker.elastic.co/kibana/kibana:x.y.z`                                                                                                | Web-based analytics and visualization platform that provides visualization of the data stored in Elasticsearch. Allows monitoring and analyzing AI/Run CodeMie data                                              |
-| Postgres-operator        | `registry.developers.crunchydata.com/crunchydata/postgres-operator:x.y.z`                                                              | Manages PostgreSQL database instances required by other components in the stack. Handles database lifecycle operations                                                                                           |
-| Keycloak-operator        | `epamedp/keycloak-operator:x.y.z`                                                                                                      | Manages Keycloak identity and access management instance and its configuration                                                                                                                                   |
-| Keycloak                 | `docker.io/busybox:x.y.z`, `quay.io/keycloak/keycloak:x.y.z`, `registry.developers.crunchydata.com/crunchydata/crunchy-postgres:x.y.z` | Identity and access management solution that provides authentication and authorization capabilities for integration with oauth2-proxy component                                                                  |
-| Oauth2-Proxy             | `quay.io/oauth2-proxy/oauth2-proxy:x.y.z`                                                                                              | Authentication middleware that provides secure authentication for the AI/Run CodeMie application by integrating with Keycloak or any other IdP                                                                   |
-| NATS                     | `nats:x.y.z`, `natsio/nats-server-config-reloader:x.y.z`                                                                               | Message broker that serves as a crucial component of the AI/Run CodeMie Plugin Engine, facilitating communication between services                                                                               |
-| LLM Proxy                | –                                                                                                                                      | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
-| Fluentbit                | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluentbit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                              |
+| Component               | Container Image                                                   | Description                                                                             |
+| ----------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Elasticsearch**       | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z`             | Document storage, full-text search engine, and analytics platform                       |
+| **Kibana**              | `docker.elastic.co/kibana/kibana:x.y.z`                           | Visualization and exploration tool for Elasticsearch data and logs                      |
+| **PostgreSQL Operator** | `registry.developers.crunchydata.com/.../postgres-operator:x.y.z` | Kubernetes operator for managing PostgreSQL database lifecycle                          |
+| **PostgreSQL**          | `registry.developers.crunchydata.com/.../crunchy-postgres:x.y.z`  | Relational database for structured application data (managed via operator or Cloud SQL) |
+
+#### Security & Identity Components
+
+Authentication, authorization, and access control services:
+
+| Component             | Container Image                           | Description                                                                   |
+| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------- |
+| **Keycloak Operator** | `epamedp/keycloak-operator:x.y.z`         | Kubernetes operator for managing Keycloak lifecycle and configuration         |
+| **Keycloak**          | `quay.io/keycloak/keycloak:x.y.z`         | Identity and access management (IAM) server for user authentication           |
+| **OAuth2 Proxy**      | `quay.io/oauth2-proxy/oauth2-proxy:x.y.z` | Reverse proxy providing authentication for web applications using OAuth2/OIDC |
+
+#### Infrastructure Components
+
+Foundational services for networking and storage:
+
+| Component                    | Container Image                                  | Description                                                            |
+| ---------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
+| **Nginx Ingress Controller** | `registry.k8s.io/ingress-nginx/controller:x.y.z` | HTTP/HTTPS load balancer and reverse proxy for cluster traffic routing |
+| **GCP Storage Class**        | –                                                | StorageClass for dynamic provisioning of GCP Persistent Disks          |
+
+#### Messaging Infrastructure (Plugin Engine)
+
+Message broker for inter-service communication and plugin system:
+
+| Component | Container Image | Description                                                                    |
+| --------- | --------------- | ------------------------------------------------------------------------------ |
+| **NATS**  | `nats:x.y.z`    | Lightweight, high-performance messaging system for microservices communication |
+
+#### Observability Components
+
+Logging, monitoring, and troubleshooting tools:
+
+| Component             | Container Image                           | Description                                                        |
+| --------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| **Fluent Bit**        | `cr.fluentbit.io/fluent/fluent-bit:x.y.z` | Lightweight log processor and forwarder for centralized logging    |
+| **Kibana Dashboards** | –                                         | Pre-configured dashboards for monitoring CodeMie metrics and usage |
+
+#### Optional Components
+
+Additional services for enhanced functionality:
+
+| Component     | Container Image | Description                                                                         |
+| ------------- | --------------- | ----------------------------------------------------------------------------------- |
+| **LLM Proxy** | –               | Load balancer and router for AI model requests (supports multiple providers/models) |
 
 ## Deployment Methods
 
