@@ -35,7 +35,7 @@ Execute multiple states in parallel (fan-out pattern).
 ```yaml
 next:
   condition:
-    expression: 'variable > 100'
+    expression: "variable > 100"
     then: state-if-true
     otherwise: state-if-false
 ```
@@ -154,11 +154,11 @@ next:
 next:
   switch:
     cases:
-      - condition: 'score >= 90'
+      - condition: "score >= 90"
         state_id: excellent-handler
-      - condition: 'score >= 70'
+      - condition: "score >= 70"
         state_id: good-handler
-      - condition: 'score >= 50'
+      - condition: "score >= 50"
         state_id: average-handler
     default: poor-handler
 ```
@@ -171,9 +171,9 @@ next:
     cases:
       - condition: "error_count == 0 and status == 'complete'"
         state_id: success-state
-      - condition: 'error_count > 0 and error_count < 5'
+      - condition: "error_count > 0 and error_count < 5"
         state_id: partial-success-state
-      - condition: 'error_count >= 5'
+      - condition: "error_count >= 5"
         state_id: failure-state
     default: unknown-state
 ```
@@ -230,12 +230,12 @@ Each item in the iteration becomes the **task input** for the iteration chain of
 ```yaml
 # State output with iter_key: chunks
 {
-  'chunks':
-    [
-      { 'data': 'chunk1', 'info': 'important info' },
-      { 'data': 'chunk2', 'info': 'very important info' },
-    ],
+  "chunks": [
+    {"data": "chunk1", "info": "important info"},
+    {"data": "chunk2", "info": "very important info"}
+  ]
 }
+
 # For iteration 1:
 # - Task input: {"data": "chunk1", "info": "important info"}
 # - Context variables: data=chunk1, info="important info"
@@ -306,8 +306,8 @@ The previous state can output various formats, and `iter_key` adapts accordingly
 {
   "data": {
     "users": [
-      { "id": 1, "name": "Alice" },
-      { "id": 2, "name": "Bob" }
+      {"id": 1, "name": "Alice"},
+      {"id": 2, "name": "Bob"}
     ]
   }
 }
@@ -342,9 +342,9 @@ The previous state can output various formats, and `iter_key` adapts accordingly
 
 ```json
 [
-  { "id": 1, "task": "Process A" },
-  { "id": 2, "task": "Process B" },
-  { "id": 3, "task": "Process C" }
+  {"id": 1, "task": "Process A"},
+  {"id": 2, "task": "Process B"},
+  {"id": 3, "task": "Process C"}
 ]
 ```
 
@@ -369,17 +369,17 @@ states:
   - id: state-1
     next:
       state_id: state-2
-      iter_key: items # First state starts iteration
+      iter_key: items      # First state starts iteration
 
   - id: state-2
     next:
       state_id: state-3
-      iter_key: items # Same iter_key continues iteration
+      iter_key: items      # Same iter_key continues iteration
 
   - id: state-3
     next:
       state_id: state-4
-      iter_key: items # Same iter_key throughout the chain
+      iter_key: items      # Same iter_key throughout the chain
 ```
 
 This ensures that the iteration context is maintained across all processing stages for each parallel item.
@@ -396,7 +396,7 @@ states:
     # Assistant outputs: ["file1.txt", "file2.txt", "file3.txt"]
     next:
       state_id: process-file
-      iter_key: . # Evaluates entire list
+      iter_key: .  # Evaluates entire list
 
   - id: process-file
     assistant_id: processor
@@ -416,7 +416,7 @@ states:
     # Assistant outputs: {"errors": ["err1", "err2"], "warnings": ["warn1"], "count": 3}
     next:
       state_id: fix-error
-      iter_key: errors # Extracts result['errors'] → ["err1", "err2"]
+      iter_key: errors  # Extracts result['errors'] → ["err1", "err2"]
 
   - id: fix-error
     assistant_id: fixer
@@ -437,7 +437,7 @@ states:
     # Tool outputs: {"status": "success", "data": {"users": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]}}
     next:
       state_id: process-user
-      iter_key: /data/users # JSON Pointer navigates to nested users array
+      iter_key: /data/users  # JSON Pointer navigates to nested users array
 
   - id: process-user
     assistant_id: user-processor
@@ -457,7 +457,7 @@ states:
     # Outputs: {"response": {"results": [{"env": "dev", "tests": ["test1", "test2"]}, {"env": "prod", "tests": ["test3"]}]}}
     next:
       state_id: process-environment
-      iter_key: /response/results # Extracts array of environment objects
+      iter_key: /response/results  # Extracts array of environment objects
 
   - id: process-environment
     assistant_id: env-processor
@@ -476,7 +476,7 @@ states:
     # Outputs: [{"id": 1, "title": "Task A", "priority": "high"}, {"id": 2, "title": "Task B", "priority": "low"}]
     next:
       state_id: execute-task
-      iter_key: . # Uses entire array (dot means use the list as-is)
+      iter_key: .  # Uses entire array (dot means use the list as-is)
 
   - id: execute-task
     assistant_id: executor
@@ -508,7 +508,7 @@ states:
     # Outputs: {"chunks": [{"data": "chunk1", "metadata": "info1"}, {"data": "chunk2", "metadata": "info2"}]}
     next:
       state_id: process-chunk
-      iter_key: chunks # Start iteration: splits into parallel executions
+      iter_key: chunks          # Start iteration: splits into parallel executions
 
   - id: process-chunk
     assistant_id: processor
@@ -519,7 +519,7 @@ states:
     # Iteration 2: data="chunk2", metadata="info2" in context
     next:
       state_id: validate-chunk
-      iter_key: chunks # Continue iteration: same iter_key required
+      iter_key: chunks          # Continue iteration: same iter_key required
 
   - id: validate-chunk
     assistant_id: validator
@@ -606,15 +606,14 @@ states:
     # If both iterations set "result" key, only the last value is retained
 ```
 
-:::info Context Merging
+**Important Context Merging Notes:**
 
 - Iterations are isolated during execution but merged after completion
 - Context keys set by multiple iterations will have only one final value (last wins)
 - To preserve all iteration results, use unique keys (e.g., `result_1`, `result_2`) or aggregate into lists
 - Message histories are fully preserved from all iterations
-  :::
 
-:::note Important Notes
+#### Important Notes:
 
 - **Multi-stage iteration requirement**: The same `iter_key` must be present in every state within the iteration chain except the last one in the chain
 - The state result is automatically parsed as JSON if possible
@@ -625,6 +624,5 @@ states:
 - Cannot combine `iter_key` with `state_ids` (parallel transitions) or `condition`/`switch`
 - Each iteration branch has isolated context and message history during execution
 - After all iterations complete, contexts and message histories are merged using LangGraph reducers
-  :::
 
 ---

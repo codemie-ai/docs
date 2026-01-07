@@ -153,7 +153,7 @@ Assistants are AI agents configured with specific capabilities, personalities, a
 ```yaml
 assistants:
   - id: code-analyzer
-    assistant_id: existing-assistant-123 # Reference existing assistant
+    assistant_id: existing-assistant-123  # Reference existing assistant
 ```
 
 **Defined Inline**
@@ -202,7 +202,7 @@ tools:
     tool: tool_method_name
     tool_args:
       param1: value1
-      param2: '{{dynamic_value}}'
+      param2: "{{dynamic_value}}"
     integration_alias: credentials-alias
     tool_result_json_pointer: /path/to/result
 ```
@@ -383,7 +383,7 @@ states:
       Focus on main ideas, key findings, and conclusions.
     next:
       state_id: format-summary
-      output_key: key_points # Store output as "key_points" variable
+      output_key: key_points  # Store output as "key_points" variable
       store_in_context: true
 
   - id: format-summary
@@ -436,7 +436,7 @@ assistants:
 states:
   - id: state-id
     assistant_id: assistant-id
-    task: 'Instructions'
+    task: "Instructions"
     next:
       state_id: next-state-id
 ```
@@ -471,7 +471,7 @@ custom_nodes:
     - id: my-assistant
       model: gpt-4.1
       temperature: 0.7
-      system_prompt: 'You are...'
+      system_prompt: "You are..."
       tools:
         - name: tool-name
   ```
@@ -491,7 +491,7 @@ custom_nodes:
   states:
     - id: state-1
       assistant_id: my-assistant
-      task: 'Task instructions'
+      task: "Task instructions"
       next:
         state_id: state-2
   ```
@@ -662,7 +662,7 @@ next:
   store_in_context: true
 
 # Access stored values in subsequent states
-task: 'Process {{previous_result}}'
+task: "Process {{previous_result}}"
 ```
 
 #### Common Patterns and Anti-Patterns
@@ -690,7 +690,7 @@ states:
 ```yaml
 next:
   condition:
-    expression: 'error_count == 0'
+    expression: "error_count == 0"
     then: continue-workflow
     otherwise: handle-errors
 ```
@@ -704,14 +704,14 @@ next:
 - id: state-1
   next: { state_id: state-2 }
 - id: state-2
-  next: { state_id: state-1 } # DON'T DO THIS
+  next: { state_id: state-1 }  # DON'T DO THIS
 ```
 
 **Overly Broad System Prompts**
 
 ```yaml
 # WRONG: Too generic
-system_prompt: 'You are a helpful AI assistant that can do anything.'
+system_prompt: "You are a helpful AI assistant that can do anything."
 ```
 
 **Not Clearing Context**
@@ -721,7 +721,7 @@ system_prompt: 'You are a helpful AI assistant that can do anything.'
 states:
   - id: process-1000-items
     next:
-      store_in_context: true # Will accumulate huge context
+      store_in_context: true  # Will accumulate huge context
 ```
 
 **Missing Error Paths**
@@ -799,7 +799,7 @@ state_ids: [state1, state2, state3]
 # Nested objects
 next:
   condition:
-    expression: 'count > 10'
+    expression: "count > 10"
     then: state-a
     otherwise: state-b
 ```
@@ -810,7 +810,7 @@ next:
 # This is a comment
 
 assistants:
-  - id: analyzer # Inline comment
+  - id: analyzer  # Inline comment
     model: gpt-4.1
 ```
 
@@ -845,13 +845,13 @@ custom_nodes:
 states:
   - id: state-1
     assistant_id: assistant-1
-    task: 'Task description'
+    task: "Task description"
     next:
       state_id: state-2
 
   - id: state-2
     assistant_id: assistant-1
-    task: 'Next task'
+    task: "Next task"
     next:
       state_id: end
 ```
@@ -878,7 +878,7 @@ states:
   # Step 1: Analyze the codebase structure
   - id: analyze-structure
     assistant_id: code-analyzer
-    task: 'Analyze code structure'
+    task: "Analyze code structure"
     next:
       state_id: generate-docs
       # Results stored in context for documentation phase
@@ -887,7 +887,7 @@ states:
   # Step 2: Generate documentation based on analysis
   - id: generate-docs
     assistant_id: summarizer
-    task: 'Generate docs from {{analysis_results}}'
+    task: "Generate docs from {{analysis_results}}"
     next:
       state_id: end
 ```

@@ -64,9 +64,9 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-filesystem'
-            - '/workspace'
+            - "-y"
+            - "@modelcontextprotocol/server-filesystem"
+            - "/workspace"
 
   - id: file-processor
     model: gpt-4.1
@@ -87,9 +87,9 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-filesystem'
-            - '/workspace'
+            - "-y"
+            - "@modelcontextprotocol/server-filesystem"
+            - "/workspace"
 
   - id: results-aggregator
     model: gpt-4.1-mini
@@ -184,9 +184,9 @@ When message count or token count exceeds configured limits, the workflow automa
 **Configuration** (from Section 3.2):
 
 ```yaml
-enable_summarization_node: true # Enable automatic summarization
-messages_limit_before_summarization: 25 # Trigger after 25 messages
-tokens_limit_before_summarization: 50000 # Or after 50K tokens (whichever comes first)
+enable_summarization_node: true  # Enable automatic summarization
+messages_limit_before_summarization: 25  # Trigger after 25 messages
+tokens_limit_before_summarization: 50000  # Or after 50K tokens (whichever comes first)
 ```
 
 #### Memory Management Examples
@@ -195,7 +195,7 @@ tokens_limit_before_summarization: 50000 # Or after 50K tokens (whichever comes 
 
 ```yaml
 enable_summarization_node: true
-messages_limit_before_summarization: 15 # Aggressive summarization
+messages_limit_before_summarization: 15  # Aggressive summarization
 tokens_limit_before_summarization: 25000
 recursion_limit: 100
 
@@ -208,21 +208,21 @@ assistants:
 states:
   - id: gather-sources
     assistant_id: researcher
-    task: 'Gather sources about {{topic}}'
+    task: "Gather sources about {{topic}}"
     # Messages: 1-2 (user input + response)
     next:
       state_id: analyze-source-1
 
   - id: analyze-source-1
     assistant_id: researcher
-    task: 'Analyze the first source in detail'
+    task: "Analyze the first source in detail"
     # Messages: 3-4
     next:
       state_id: analyze-source-2
 
   - id: analyze-source-2
     assistant_id: researcher
-    task: 'Analyze the second source'
+    task: "Analyze the second source"
     # Messages: 5-6
     next:
       state_id: analyze-source-3
@@ -231,7 +231,7 @@ states:
 
   - id: analyze-source-7
     assistant_id: researcher
-    task: 'Analyze the seventh source'
+    task: "Analyze the seventh source"
     # Messages: 15-16 → SUMMARIZATION TRIGGERED
     # Before this state executes:
     # 1. Workflow pauses
@@ -243,7 +243,7 @@ states:
 
   - id: synthesize-findings
     assistant_id: researcher
-    task: 'Synthesize all findings into a comprehensive report'
+    task: "Synthesize all findings into a comprehensive report"
     # Works with summarized history
     # Still has access to all important information
     # But with ~80% fewer tokens
@@ -274,7 +274,7 @@ After summarization (2-3 messages, ~4,000 tokens):
 **Example 2: Disabling Summarization for Short Workflows**
 
 ```yaml
-enable_summarization_node: false # Disable summarization
+enable_summarization_node: false  # Disable summarization
 recursion_limit: 20
 max_concurrency: 5
 
@@ -286,18 +286,19 @@ assistants:
 states:
   - id: step-1
     assistant_id: simple-processor
-    task: 'Task 1'
+    task: "Task 1"
     next:
       state_id: step-2
 
   - id: step-2
     assistant_id: simple-processor
-    task: 'Task 2'
+    task: "Task 2"
     next:
       state_id: step-3
 
   # Only 5-6 total messages, summarization not needed
   # Saves processing time and maintains full message history
+
 # Use when:
 # - Total workflow has < 10-15 messages
 # - Full conversation history is important
@@ -320,23 +321,23 @@ states:
   # Phase 1: Data Collection (messages 1-10)
   - id: collect-data-source-1
     assistant_id: processor
-    task: 'Collect data from source 1'
+    task: "Collect data from source 1"
     next:
       state_id: collect-data-source-2
 
   - id: collect-data-source-2
     assistant_id: processor
-    task: 'Collect data from source 2'
+    task: "Collect data from source 2"
     next:
       state_id: summarize-collection
       store_in_context: true
 
   - id: summarize-collection
     assistant_id: processor
-    task: 'Summarize all collected data into key metrics'
+    task: "Summarize all collected data into key metrics"
     next:
       state_id: start-analysis
-      clear_prior_messages: true # Manual cleanup: clear Phase 1 messages
+      clear_prior_messages: true  # Manual cleanup: clear Phase 1 messages
       # Phase 1 messages are removed from history
       # But summarize-collection output is in context store
       # Phase 2 starts fresh with only essential data
@@ -344,7 +345,7 @@ states:
   # Phase 2: Analysis (starts with clean slate)
   - id: start-analysis
     assistant_id: processor
-    task: 'Analyze the data summary: {{task}}'
+    task: "Analyze the data summary: {{task}}"
     # LLM sees:
     # - Only data summary (from context)
     # - No Phase 1 conversation history
@@ -369,7 +370,7 @@ states:
   # Phase 1: Data Gathering (heavy conversation)
   - id: gather-phase
     assistant_id: multi-phase-processor
-    task: 'Gather all required data'
+    task: "Gather all required data"
     next:
       state_id: process-phase
 
@@ -378,7 +379,7 @@ states:
   # Phase 2: Processing
   - id: process-phase
     assistant_id: multi-phase-processor
-    task: 'Process the gathered data'
+    task: "Process the gathered data"
     # Automatic summarization may have triggered during Phase 1
     # If messages > 20 or tokens > 40K
     next:
@@ -393,15 +394,15 @@ states:
   # Phase 3: Reporting (clean start)
   - id: transition-to-reporting
     assistant_id: multi-phase-processor
-    task: 'Prepare for reporting phase'
+    task: "Prepare for reporting phase"
     next:
       state_id: generate-report
-      clear_prior_messages: true # Manual cleanup
+      clear_prior_messages: true  # Manual cleanup
       # Fresh start for reporting with only essential context
 
   - id: generate-report
     assistant_id: multi-phase-processor
-    task: 'Generate final report using {{essential_data}}'
+    task: "Generate final report using {{essential_data}}"
     # Minimal context: only report-relevant data
     # Optimal token usage
     next:
@@ -548,7 +549,7 @@ states:
 
   - id: await-approval
     assistant_id: deployment-planner
-    interrupt_before: true # PAUSE HERE - await user approval
+    interrupt_before: true  # PAUSE HERE - await user approval
     task: |
       Execute the deployment plan.
 
@@ -577,7 +578,7 @@ states:
 
   - id: verify-deployment
     assistant_id: deployment-planner
-    task: 'Verify deployment health and report results'
+    task: "Verify deployment health and report results"
     next:
       state_id: end
 ```
@@ -593,35 +594,35 @@ assistants:
 states:
   - id: analyze-data
     assistant_id: data-processor
-    task: 'Analyze the data quality: {{data_source}}'
+    task: "Analyze the data quality: {{data_source}}"
     next:
       state_id: checkpoint-1
 
   - id: checkpoint-1
     assistant_id: data-processor
-    interrupt_before: true # First approval gate
-    task: 'Proceed with data transformation based on analysis?'
+    interrupt_before: true  # First approval gate
+    task: "Proceed with data transformation based on analysis?"
     # User reviews analysis results
     next:
       state_id: transform-data
 
   - id: transform-data
     assistant_id: data-processor
-    task: 'Transform the data according to requirements'
+    task: "Transform the data according to requirements"
     next:
       state_id: checkpoint-2
 
   - id: checkpoint-2
     assistant_id: data-processor
-    interrupt_before: true # Second approval gate
-    task: 'Apply transformed data to production database?'
+    interrupt_before: true  # Second approval gate
+    task: "Apply transformed data to production database?"
     # User reviews transformation results
     next:
       state_id: apply-to-production
 
   - id: apply-to-production
     assistant_id: data-processor
-    task: 'Apply data to production'
+    task: "Apply data to production"
     next:
       state_id: end
 ```
@@ -659,13 +660,13 @@ states:
       }
     next:
       condition:
-        expression: 'requires_approval == true'
+        expression: "requires_approval == true"
         then: manual-approval
         otherwise: auto-apply
 
   - id: manual-approval
     assistant_id: change-analyzer
-    interrupt_before: true # Only interrupts for high-risk changes
+    interrupt_before: true  # Only interrupts for high-risk changes
     task: |
       Apply high-risk changes:
       {{changes}}
@@ -677,13 +678,13 @@ states:
 
   - id: auto-apply
     assistant_id: change-analyzer
-    task: 'Automatically apply low-risk changes: {{changes}}'
+    task: "Automatically apply low-risk changes: {{changes}}"
     next:
       state_id: end
 
   - id: apply-changes
     assistant_id: change-analyzer
-    task: 'Apply approved high-risk changes'
+    task: "Apply approved high-risk changes"
     next:
       state_id: end
 ```
@@ -699,7 +700,7 @@ assistants:
 states:
   - id: gather-metrics
     assistant_id: report-generator
-    task: 'Gather all metrics for Q{{quarter}} report'
+    task: "Gather all metrics for Q{{quarter}} report"
     # Output: {"revenue": 1000000, "expenses": 750000, "profit": 250000}
     next:
       state_id: analyze-trends
@@ -743,7 +744,7 @@ states:
 
   - id: send-report
     assistant_id: report-generator
-    task: 'Send the approved report via email'
+    task: "Send the approved report via email"
     next:
       state_id: end
 ```
@@ -759,7 +760,7 @@ assistants:
 states:
   - id: create-initial-plan
     assistant_id: interactive-planner
-    task: 'Create an initial project plan for {{project_name}}'
+    task: "Create an initial project plan for {{project_name}}"
     next:
       state_id: review-plan
 
@@ -860,38 +861,38 @@ From Section 3.2, two main settings control performance:
 
 ```yaml
 # Optimized for maximum throughput
-enable_summarization_node: false # Skip summarization overhead
-recursion_limit: 500 # Allow deep iteration
-max_concurrency: 100 # Maximum parallelism
-messages_limit_before_summarization: 1000 # Not used
+enable_summarization_node: false  # Skip summarization overhead
+recursion_limit: 500              # Allow deep iteration
+max_concurrency: 100              # Maximum parallelism
+messages_limit_before_summarization: 1000  # Not used
 
 assistants:
   - id: fast-processor
-    model: gpt-4.1-mini # Fast, cheap model
-    temperature: 0.3 # Lower temp = faster inference
-    limit_tool_output_tokens: 3000 # Limit tool outputs
-    exclude_extra_context_tools: true # Reduce tool selection overhead
+    model: gpt-4.1-mini  # Fast, cheap model
+    temperature: 0.3      # Lower temp = faster inference
+    limit_tool_output_tokens: 3000  # Limit tool outputs
+    exclude_extra_context_tools: true  # Reduce tool selection overhead
     system_prompt: Process items quickly and concisely
 
 states:
   - id: generate-batch
     assistant_id: fast-processor
-    task: 'Return 1000 items to process'
+    task: "Return 1000 items to process"
     next:
       state_id: process-item
       iter_key: .
-      include_in_llm_history: false # Don't bloat history
+      include_in_llm_history: false  # Don't bloat history
 
   - id: process-item
     assistant_id: fast-processor
-    task: 'Process {{task}}'
+    task: "Process {{task}}"
     # 100 items execute concurrently
     # Each iteration uses minimal tokens
     # Fast turnaround
     next:
       state_id: end
-      store_in_context: false # Don't store individual results
-      include_in_llm_history: false # Skip history
+      store_in_context: false  # Don't store individual results
+      include_in_llm_history: false  # Skip history
 
 # Performance characteristics:
 # - 1000 items processed in ~10 batches of 100
@@ -920,14 +921,14 @@ assistants:
 states:
   - id: analyze-input
     assistant_id: balanced-processor
-    task: 'Analyze {{input}}'
+    task: "Analyze {{input}}"
     next:
       state_id: process-parallel
       iter_key: items
 
   - id: process-parallel
     assistant_id: balanced-processor
-    task: 'Process {{task}}'
+    task: "Process {{task}}"
     # Up to 15 items processed concurrently
     # Good balance of speed and resource usage
     next:
@@ -935,9 +936,10 @@ states:
 
   - id: aggregate
     assistant_id: balanced-processor
-    task: 'Aggregate all results'
+    task: "Aggregate all results"
     next:
       state_id: end
+
 # Performance characteristics:
 # - Moderate concurrency (15)
 # - Automatic summarization prevents context overflow
@@ -950,25 +952,25 @@ states:
 ```yaml
 # Optimized for minimal resource usage
 enable_summarization_node: true
-recursion_limit: 20 # Conservative limit
-max_concurrency: 3 # Low concurrency
-messages_limit_before_summarization: 15 # Aggressive summarization
+recursion_limit: 20              # Conservative limit
+max_concurrency: 3               # Low concurrency
+messages_limit_before_summarization: 15  # Aggressive summarization
 tokens_limit_before_summarization: 25000
 
 assistants:
   - id: conservative-processor
-    model: gpt-4.1-mini # Efficient model
+    model: gpt-4.1-mini  # Efficient model
     temperature: 0.5
-    limit_tool_output_tokens: 5000 # Strict limits
+    limit_tool_output_tokens: 5000  # Strict limits
     exclude_extra_context_tools: false
 
 states:
   - id: process-items
     assistant_id: conservative-processor
-    task: 'Process {{items}}'
+    task: "Process {{items}}"
     next:
       state_id: end
-      clear_prior_messages: true # Clean up aggressively
+      clear_prior_messages: true  # Clean up aggressively
 
 # Use when:
 # - Limited compute resources
@@ -982,8 +984,8 @@ states:
 ```yaml
 # Optimized for workflows with many sequential steps
 enable_summarization_node: true
-recursion_limit: 200 # High limit for deep chains
-max_concurrency: 5 # Lower concurrency
+recursion_limit: 200  # High limit for deep chains
+max_concurrency: 5    # Lower concurrency
 messages_limit_before_summarization: 30
 tokens_limit_before_summarization: 60000
 
@@ -995,7 +997,7 @@ assistants:
 states:
   - id: step-1
     assistant_id: chain-processor
-    task: 'Step 1'
+    task: "Step 1"
     next:
       state_id: step-2
 
@@ -1003,11 +1005,12 @@ states:
 
   - id: step-50
     assistant_id: chain-processor
-    task: 'Step 50'
+    task: "Step 50"
     # Automatic summarization keeps token count manageable
     # High recursion_limit allows completion
     next:
       state_id: end
+
 # Performance characteristics:
 # - Supports long sequential chains (up to 200 steps)
 # - Summarization prevents context overflow
@@ -1023,12 +1026,12 @@ states:
 # Use fast models for simple tasks
 assistants:
   - id: quick-classifier
-    model: gpt-4.1-mini # 5-10x faster than gpt-4.1
+    model: gpt-4.1-mini  # 5-10x faster than gpt-4.1
     temperature: 0.3
     # For: Classification, simple extraction, batch processing
 
   - id: complex-analyzer
-    model: gpt-4.1 # Use only when necessary
+    model: gpt-4.1  # Use only when necessary
     temperature: 0.7
     # For: Complex reasoning, detailed analysis, code generation
 ```
@@ -1041,12 +1044,12 @@ states:
     tool_id: database-query
     next:
       state_id: process-data
-      store_in_context: false # Don't store large data
-      include_in_llm_history: false # Don't send to LLM
+      store_in_context: false  # Don't store large data
+      include_in_llm_history: false  # Don't send to LLM
 
   - id: process-data
     assistant_id: processor
-    task: 'Process the data (available via tool)'
+    task: "Process the data (available via tool)"
     # LLM uses tools to access data, not from history
 ```
 
@@ -1064,7 +1067,7 @@ states:
 #   Total memory / Memory per task = 16
 # ) = 16
 
-max_concurrency: 16 # Optimal for this system
+max_concurrency: 16  # Optimal for this system
 ```
 
 **Strategy 4: Use Selective History**
@@ -1073,15 +1076,15 @@ max_concurrency: 16 # Optimal for this system
 states:
   - id: preprocessing
     assistant_id: processor
-    task: 'Preprocess data'
+    task: "Preprocess data"
     next:
       state_id: main-processing
-      clear_prior_messages: true # Remove preprocessing from history
+      clear_prior_messages: true  # Remove preprocessing from history
       # Main processing doesn't need preprocessing details
 
   - id: main-processing
     assistant_id: processor
-    task: 'Process using {{preprocessed_data}}'
+    task: "Process using {{preprocessed_data}}"
     # Faster: smaller context window
 ```
 

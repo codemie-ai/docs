@@ -47,8 +47,8 @@ assistants:
       Use the code repository datasource to find relevant code and documentation.
       Always reference specific files and line numbers.
     datasource_ids:
-      - main-codebase-repo # Git repository indexed as datasource
-      - api-documentation # API docs indexed separately
+      - main-codebase-repo  # Git repository indexed as datasource
+      - api-documentation   # API docs indexed separately
     # Automatic tools available:
     # - search_knowledge_base: Semantic search across code and docs
     # - get_document_by_id: Retrieve specific files
@@ -95,9 +95,9 @@ assistants:
       Always cite specific documentation pages when answering questions.
       If information is not in the docs, clearly state that.
     datasource_ids:
-      - product-documentation # User guides, API docs
-      - confluence-kb # Internal knowledge base
-      - faq-database # Frequently asked questions
+      - product-documentation  # User guides, API docs
+      - confluence-kb          # Internal knowledge base
+      - faq-database          # Frequently asked questions
     temperature: 0.5
 
 states:
@@ -129,11 +129,11 @@ assistants:
       You are a research analyst combining information from multiple sources.
       Synthesize information and identify patterns across different data sources.
     datasource_ids:
-      - jira-project-tickets # Project management data
+      - jira-project-tickets    # Project management data
       - confluence-requirements # Requirements documentation
-      - code-repository # Implementation code
-      - google-drive-specs # Technical specifications
-    limit_tool_output_tokens: 15000 # Large datasource results
+      - code-repository        # Implementation code
+      - google-drive-specs     # Technical specifications
+    limit_tool_output_tokens: 15000  # Large datasource results
 
 states:
   - id: gather-project-context
@@ -260,14 +260,14 @@ states:
 
   - id: handle-public
     assistant_id: public-doc-assistant
-    task: 'Answer query: {{user_query}}'
+    task: "Answer query: {{user_query}}"
     # Uses only public datasources
     next:
       state_id: end
 
   - id: handle-internal
     assistant_id: internal-assistant
-    task: 'Answer query: {{user_query}}'
+    task: "Answer query: {{user_query}}"
     # Uses internal datasources
     next:
       state_id: end
@@ -467,7 +467,7 @@ assistants:
         config:
           command: mcp-server-filesystem
           args:
-            - '/workspace'
+            - "/workspace"
 
 states:
   - id: analyze-file
@@ -603,16 +603,16 @@ assistants:
       You manage documentation knowledge bases.
       Keep documentation up-to-date and well-organized.
     tools:
-      - name: kb_search # Search knowledge base
-      - name: kb_add_document # Add new documents
-      - name: kb_update_document # Update existing docs
-      - name: kb_delete_document # Remove outdated docs
+      - name: kb_search  # Search knowledge base
+      - name: kb_add_document  # Add new documents
+      - name: kb_update_document  # Update existing docs
+      - name: kb_delete_document  # Remove outdated docs
     mcp_servers:
       - name: mcp-server-filesystem
         config:
           command: mcp-server-filesystem
           args:
-            - '/docs'
+            - "/docs"
 
 states:
   - id: find-outdated-docs
@@ -665,11 +665,11 @@ assistants:
     system_prompt: |
       You integrate with custom internal tools via NATS plugin system.
     tools:
-      - name: custom_salesforce_query # Custom plugin tool
+      - name: custom_salesforce_query  # Custom plugin tool
         integration_alias: salesforce-api
-      - name: custom_slack_notify # Custom plugin tool
+      - name: custom_slack_notify  # Custom plugin tool
         integration_alias: slack-webhook
-      - name: custom_datadog_metrics # Custom plugin tool
+      - name: custom_datadog_metrics  # Custom plugin tool
         integration_alias: datadog-api
 
 states:
@@ -721,7 +721,7 @@ states:
 ```yaml
 tools:
   - name: aws_s3_upload
-    integration_alias: aws-prod # Credentials managed centrally
+    integration_alias: aws-prod  # Credentials managed centrally
   # Avoids hardcoding AWS keys in workflow
 ```
 
@@ -732,7 +732,7 @@ tools:
 assistants:
   - id: read-only-auditor
     tools:
-      - name: aws_ec2_describe_instances # ✓ Read-only
+      - name: aws_ec2_describe_instances  # ✓ Read-only
       # NO write operations like aws_ec2_terminate_instances
 ```
 
@@ -742,9 +742,9 @@ assistants:
 states:
   - id: deploy-with-validation
     assistant_id: deployer
-    task: 'Deploy service and verify health checks pass'
+    task: "Deploy service and verify health checks pass"
     retry_policy:
-      max_attempts: 3 # Retry if deployment fails
+      max_attempts: 3  # Retry if deployment fails
     next:
       condition:
         expression: "deployment_status == 'healthy'"
@@ -758,7 +758,7 @@ states:
 tools:
   - id: large-api-response
     tool: http_request
-    tool_result_json_pointer: /data/items # Extract only needed data
+    tool_result_json_pointer: /data/items  # Extract only needed data
     # Reduces context size and token usage
 ```
 
@@ -766,9 +766,9 @@ tools:
 
 ```yaml
 tools:
-  - name: aws_s3_upload # Built-in AWS tool
-  - name: custom_virus_scan # Custom plugin via NATS
-  - name: slack_notify # Custom notification plugin
+  - name: aws_s3_upload  # Built-in AWS tool
+  - name: custom_virus_scan  # Custom plugin via NATS
+  - name: slack_notify  # Custom notification plugin
 
 # Workflow: Upload file → Scan for viruses → Notify team
 ```
@@ -785,15 +785,15 @@ assistants:
         enabled: true
         config:
           command: npx
-          args: ['-y', '@modelcontextprotocol/server-filesystem', '{{project_root_folder}}']
+          args: ["-y", "@modelcontextprotocol/server-filesystem", "{{project_root_folder}}"]
 
       - name: database
         enabled: true
         config:
           command: uvx
-          args: ['mcp-server-postgres']
+          args: ["mcp-server-postgres"]
           env:
-            DATABASE_URL: '{{db_connection_string}}'
+            DATABASE_URL: "{{db_connection_string}}"
         integration_alias: postgres-prod
         resolve_dynamic_values_in_arguments: true
 ```

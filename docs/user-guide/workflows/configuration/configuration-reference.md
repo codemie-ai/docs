@@ -15,7 +15,7 @@ sidebar_position: 3
 assistants:
   - id: assistant-1
     name: Optional Display Name
-    assistant_id: existing-assistant-id # OR define inline
+    assistant_id: existing-assistant-id  # OR define inline
     model: gpt-4.1-mini
     temperature: 0.7
     system_prompt: |
@@ -27,7 +27,7 @@ assistants:
       - datasource-id-1
       - datasource-id-2
     mcp_servers:
-      - { ... } # See Section 3.6 for MCP Server configuration
+      - {...}  # See Section 3.6 for MCP Server configuration
 ```
 
 #### Assistant Types:
@@ -66,14 +66,15 @@ assistants:
     model: gpt-4.1
     system_prompt: |
       You are a code analysis assistant. Use filesystem tools to read and analyze code files.
-    limit_tool_output_tokens: 5000 # Limit tool outputs to 5000 tokens
+    limit_tool_output_tokens: 5000  # Limit tool outputs to 5000 tokens
     mcp_servers:
       - name: mcp-server-filesystem
         description: Filesystem operations
         config:
           command: mcp-server-filesystem
           args:
-            - '/workspace'
+            - "/workspace"
+
 # Without limit_tool_output_tokens: Reading a 50KB file might consume 12,000+ tokens
 # With limit_tool_output_tokens: 5000: Tool output is truncated to 5000 tokens max
 # Use case: When processing large files where full content isn't needed
@@ -89,7 +90,7 @@ assistants:
     model: gpt-4.1-mini
     system_prompt: |
       You are a focused assistant with only specific tools available.
-    exclude_extra_context_tools: true # Disable automatic context/knowledge base tools
+    exclude_extra_context_tools: true  # Disable automatic context/knowledge base tools
     tools:
       - name: specific-tool-1
       - name: specific-tool-2
@@ -100,7 +101,7 @@ assistants:
     model: gpt-4.1
     system_prompt: |
       You have access to all tools plus automatic context tools.
-    exclude_extra_context_tools: false # Default: enables automatic tools
+    exclude_extra_context_tools: false  # Default: enables automatic tools
     tools:
       - name: specific-tool-1
     datasource_ids:
@@ -126,10 +127,10 @@ assistants:
       You are an AWS deployment specialist. Use AWS tools to manage infrastructure.
     tools:
       - name: aws_ec2_describe_instances
-        integration_alias: aws-prod-account # Credentials from integration
+        integration_alias: aws-prod-account  # Credentials from integration
       - name: aws_s3_list_buckets
         integration_alias: aws-prod-account
-    limit_tool_output_tokens: 8000 # Large AWS responses
+    limit_tool_output_tokens: 8000  # Large AWS responses
     datasource_ids:
       - aws-documentation
       - deployment-runbooks
@@ -170,20 +171,20 @@ max_concurrency: 10
 
 ```yaml
 # Optimized for processing many items in parallel
-enable_summarization_node: false # Disable for better performance
-recursion_limit: 200 # Allow deep iteration chains
-max_concurrency: 50 # Process up to 50 items simultaneously
-messages_limit_before_summarization: 100 # Not used (summarization disabled)
+enable_summarization_node: false  # Disable for better performance
+recursion_limit: 200              # Allow deep iteration chains
+max_concurrency: 50               # Process up to 50 items simultaneously
+messages_limit_before_summarization: 100  # Not used (summarization disabled)
 
 assistants:
   - id: batch-processor
-    model: gpt-4.1-mini # Fast, cost-effective model
+    model: gpt-4.1-mini  # Fast, cost-effective model
     system_prompt: Process items quickly
 
 states:
   - id: split-batch
     assistant_id: batch-processor
-    task: 'Return list of 100 items to process'
+    task: "Return list of 100 items to process"
     # Output: ["item1", "item2", ..., "item100"]
     next:
       state_id: process-item
@@ -191,7 +192,7 @@ states:
 
   - id: process-item
     assistant_id: batch-processor
-    task: 'Process {{task}}'
+    task: "Process {{task}}"
     # 50 items execute concurrently at a time
     # Next batch of 50 starts as previous items complete
     next:
@@ -203,8 +204,8 @@ states:
 ```yaml
 # Optimized for multi-step workflows with conversation history
 enable_summarization_node: true
-messages_limit_before_summarization: 20 # Summarize after 20 messages
-tokens_limit_before_summarization: 30000 # Or when reaching 30K tokens
+messages_limit_before_summarization: 20   # Summarize after 20 messages
+tokens_limit_before_summarization: 30000  # Or when reaching 30K tokens
 recursion_limit: 100
 max_concurrency: 5
 
@@ -216,14 +217,14 @@ assistants:
 states:
   - id: gather-info
     assistant_id: research-assistant
-    task: 'Gather information about {{topic}}'
+    task: "Gather information about {{topic}}"
     # Messages: 1-20
     next:
       state_id: analyze-step-1
 
   - id: analyze-step-1
     assistant_id: research-assistant
-    task: 'Analyze gathered information'
+    task: "Analyze gathered information"
     # Messages: 21 → triggers summarization
     # Previous 20 messages are summarized into 1-2 messages
     # Context preserved, tokens reduced
@@ -237,10 +238,10 @@ states:
 
 ```yaml
 # Minimal resource usage for simple workflows
-enable_summarization_node: false # Not needed for short workflows
-recursion_limit: 10 # Prevent runaway execution
-max_concurrency: 1 # Sequential processing only
-messages_limit_before_summarization: 25 # Default (not used)
+enable_summarization_node: false  # Not needed for short workflows
+recursion_limit: 10               # Prevent runaway execution
+max_concurrency: 1                # Sequential processing only
+messages_limit_before_summarization: 25  # Default (not used)
 
 assistants:
   - id: simple-assistant
@@ -250,13 +251,13 @@ assistants:
 states:
   - id: step-1
     assistant_id: simple-assistant
-    task: 'Task 1'
+    task: "Task 1"
     next:
       state_id: step-2
 
   - id: step-2
     assistant_id: simple-assistant
-    task: 'Task 2'
+    task: "Task 2"
     next:
       state_id: end
 ```
@@ -270,6 +271,7 @@ messages_limit_before_summarization: 25
 tokens_limit_before_summarization: 50000
 recursion_limit: 50
 max_concurrency: 10
+
 # Use case: General-purpose workflows with moderate complexity
 # - Automatic summarization prevents context overflow
 # - Reasonable concurrency for parallel processing
@@ -293,12 +295,12 @@ tools:
     tool: tool-method-name
     tool_args:
       param1: value1
-      param2: '{{dynamic_value}}'
+      param2: "{{dynamic_value}}"
     integration_alias: optional-alias
     tool_result_json_pointer: /path/to/result
     trace: false
     resolve_dynamic_values_in_response: false
-    mcp_server: { ... } # See Section 3.6 for MCP Server configuration
+    mcp_server: {...}  # See Section 3.6 for MCP Server configuration
 ```
 
 #### Tool Properties:
@@ -323,7 +325,7 @@ tools:
   - id: fetch-api-data
     tool: http_request
     tool_args:
-      url: 'https://api.example.com/users'
+      url: "https://api.example.com/users"
       method: GET
     tool_result_json_pointer: /data/users
     # API returns: {"status": "success", "data": {"users": [...], "count": 10}, "timestamp": "..."}
@@ -336,7 +338,7 @@ states:
     # Result is now just the users array: [{"id": 1, "name": "Alice"}, ...]
     next:
       state_id: process-users
-      iter_key: . # Iterate over the extracted users array
+      iter_key: .  # Iterate over the extracted users array
 ```
 
 **Example 2: Using `trace` for Debugging**
@@ -348,10 +350,10 @@ tools:
   - id: database-query
     tool: postgres_query
     tool_args:
-      query: 'SELECT * FROM users WHERE status = $1'
-      params: ['active']
+      query: "SELECT * FROM users WHERE status = $1"
+      params: ["active"]
     integration_alias: postgres-prod
-    trace: true # Enables detailed execution logs
+    trace: true  # Enables detailed execution logs
     # Logs include:
     # - Tool execution start time
     # - Input arguments
@@ -376,7 +378,7 @@ tools:
   - id: generate-template
     tool: template_generator
     tool_args:
-      template_name: 'welcome_email'
+      template_name: "welcome_email"
     resolve_dynamic_values_in_response: true
     # Tool returns: "Welcome {{user_name}}! Your account {{account_id}} is ready."
     # With resolve=true: Template variables are processed using context store
@@ -398,9 +400,9 @@ tools:
   - id: read-code-file
     tool: read_file
     tool_args:
-      path: '{{file_path}}' # Dynamic path from context
-    tool_result_json_pointer: /content # Extract only file content
-    trace: false # Disable for performance
+      path: "{{file_path}}"  # Dynamic path from context
+    tool_result_json_pointer: /content  # Extract only file content
+    trace: false  # Disable for performance
     resolve_dynamic_values_in_response: false
     mcp_server:
       name: mcp-server-filesystem
@@ -408,15 +410,15 @@ tools:
       config:
         command: npx
         args:
-          - '-y'
-          - '@modelcontextprotocol/server-filesystem'
-          - '/workspace'
+          - "-y"
+          - "@modelcontextprotocol/server-filesystem"
+          - "/workspace"
 
 states:
   - id: analyze-file
     tool_id: read-code-file
     tool_args:
-      path: '/workspace/src/main.py' # Override default path
+      path: "/workspace/src/main.py"  # Override default path
     # Tool reads file, extracts content using JSON Pointer
     # Result stored in context for next state
     next:
@@ -430,11 +432,11 @@ tools:
   - id: deploy-to-aws
     tool: aws_ecs_deploy_service
     tool_args:
-      cluster: 'production-cluster'
-      service: '{{service_name}}'
-      task_definition: '{{task_def_arn}}'
-    integration_alias: aws-prod-account # Injects AWS credentials
-    trace: true # Log deployment details
+      cluster: "production-cluster"
+      service: "{{service_name}}"
+      task_definition: "{{task_def_arn}}"
+    integration_alias: aws-prod-account  # Injects AWS credentials
+    trace: true  # Log deployment details
     tool_result_json_pointer: /deployment/status
 
 # Integration 'aws-prod-account' provides:
@@ -458,16 +460,16 @@ tools:
   - id: complex-api-call
     tool: http_request
     tool_args:
-      url: 'https://api.example.com/data'
+      url: "https://api.example.com/data"
       method: POST
       headers:
-        Authorization: 'Bearer {{api_token}}'
+        Authorization: "Bearer {{api_token}}"
       body:
-        query: '{{search_query}}'
-    integration_alias: api-credentials # Provides api_token
-    tool_result_json_pointer: /results/items # Extract specific data
-    trace: true # Enable debugging
-    resolve_dynamic_values_in_response: true # Process templates in response
+        query: "{{search_query}}"
+    integration_alias: api-credentials  # Provides api_token
+    tool_result_json_pointer: /results/items  # Extract specific data
+    trace: true  # Enable debugging
+    resolve_dynamic_values_in_response: true  # Process templates in response
     # Complete tool with all advanced features:
     # 1. Dynamic args from context (search_query)
     # 2. Credentials from integration (api_token)
@@ -489,7 +491,7 @@ The `states` section defines the workflow steps and their execution order.
 ```yaml
 states:
   - id: state-1
-    assistant_id: assistant-1 # OR tool_id OR custom_node_id
+    assistant_id: assistant-1  # OR tool_id OR custom_node_id
     task: Task instructions
     next:
       state_id: state-2
@@ -543,7 +545,7 @@ mcp_servers:
       command: npx
       args:
         - -y
-        - '@modelcontextprotocol/server-filesystem'
+        - "@modelcontextprotocol/server-filesystem"
         - /allowed/directory
       env:
         VAR_NAME: value
@@ -563,7 +565,7 @@ mcp_servers:
     config:
       url: https://mcp-server.example.com
       headers:
-        Authorization: 'Bearer {{auth_token}}'
+        Authorization: "Bearer {{auth_token}}"
         X-Custom-Header: value
       type: streamable-http # for legacy SSE transport simply skip type
       single_usage: false
@@ -615,7 +617,7 @@ Template variables in `command`, `url`, `headers`, `args`, and `env` can referen
   enabled: true
   config:
     command: npx
-    args: ['-y', '@modelcontextprotocol/server-filesystem', '{{project_workspace}}']
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "{{project_workspace}}"]
 ```
 
 **Database Server with Environment Variables:**
@@ -625,10 +627,10 @@ Template variables in `command`, `url`, `headers`, `args`, and `env` can referen
   enabled: true
   config:
     command: uvx
-    args: ['mcp-server-postgres']
+    args: ["mcp-server-postgres"]
     env:
-      DATABASE_URL: '{{db_connection_string}}'
-      POOL_SIZE: '10'
+      DATABASE_URL: "{{db_connection_string}}"
+      POOL_SIZE: "10"
   integration_alias: postgres-prod
   resolve_dynamic_values_in_arguments: true
 ```
@@ -641,7 +643,7 @@ Template variables in `command`, `url`, `headers`, `args`, and `env` can referen
   config:
     url: https://api.example.com/mcp
     headers:
-      Authorization: 'Bearer {{api_token}}'
+      Authorization: "Bearer {{api_token}}"
     type: streamable-http
 ```
 
