@@ -48,16 +48,16 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-git'
-            - '--repository'
-            - '/workspace/{{repository_path}}'
+            - "-y"
+            - "@modelcontextprotocol/server-git"
+            - "--repository"
+            - "/workspace/{{repository_path}}"
       - name: mcp-server-filesystem
         description: Filesystem access
         config:
           command: mcp-server-filesystem
           args:
-            - '/workspace'
+            - "/workspace"
 
   - id: code-reviewer
     system_prompt: |
@@ -89,7 +89,7 @@ assistants:
         config:
           command: mcp-server-filesystem
           args:
-            - '/workspace'
+            - "/workspace"
       - name: sequential-thinking
         description: Sequential thinking for complex analysis
         config:
@@ -114,7 +114,7 @@ assistants:
         config:
           command: /codemie/additional-tools/github-mcp-server/github-mcp-server
           env:
-            GITHUB_PERSONAL_ACCESS_TOKEN: '$GITHUB_TOKEN'
+            GITHUB_PERSONAL_ACCESS_TOKEN: "$GITHUB_TOKEN"
 
 states:
   - id: fetch-git-changes
@@ -273,9 +273,9 @@ tools:
       config:
         command: npx
         args:
-          - '-y'
-          - '@modelcontextprotocol/server-filesystem'
-          - '/documents'
+          - "-y"
+          - "@modelcontextprotocol/server-filesystem"
+          - "/documents"
 
   - id: store_result
     tool: write_file
@@ -288,9 +288,9 @@ tools:
       config:
         command: npx
         args:
-          - '-y'
-          - '@modelcontextprotocol/server-filesystem'
-          - '/documents/output'
+          - "-y"
+          - "@modelcontextprotocol/server-filesystem"
+          - "/documents/output"
 
 assistants:
   - id: content-extractor
@@ -321,19 +321,19 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-google-drive'
+            - "-y"
+            - "@modelcontextprotocol/server-google-drive"
           env:
-            GOOGLE_DRIVE_API_KEY: '$GDRIVE_API_KEY'
-            GOOGLE_DRIVE_CREDENTIALS: '$GDRIVE_CREDENTIALS'
+            GOOGLE_DRIVE_API_KEY: "$GDRIVE_API_KEY"
+            GOOGLE_DRIVE_CREDENTIALS: "$GDRIVE_CREDENTIALS"
       - name: mcp-server-filesystem
         description: Local filesystem fallback
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-filesystem'
-            - '/documents'
+            - "-y"
+            - "@modelcontextprotocol/server-filesystem"
+            - "/documents"
 
   - id: content-analyzer
     system_prompt: |
@@ -387,8 +387,8 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-memory'
+            - "-y"
+            - "@modelcontextprotocol/server-memory"
 
   - id: summary-generator
     system_prompt: |
@@ -616,10 +616,10 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-brave-search'
+            - "-y"
+            - "@modelcontextprotocol/server-brave-search"
           env:
-            BRAVE_API_KEY: '$BRAVE_API_KEY'
+            BRAVE_API_KEY: "$BRAVE_API_KEY"
 
   - id: competitor-researcher
     system_prompt: |
@@ -643,17 +643,17 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-brave-search'
+            - "-y"
+            - "@modelcontextprotocol/server-brave-search"
           env:
-            BRAVE_API_KEY: '$BRAVE_API_KEY'
+            BRAVE_API_KEY: "$BRAVE_API_KEY"
       - name: puppeteer
         description: Web scraping for competitor websites
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-puppeteer'
+            - "-y"
+            - "@modelcontextprotocol/server-puppeteer"
       - name: sequential-thinking
         description: Deep analysis capability
         config:
@@ -663,8 +663,8 @@ assistants:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-memory'
+            - "-y"
+            - "@modelcontextprotocol/server-memory"
 
   - id: swot-analyzer
     system_prompt: |
@@ -869,9 +869,9 @@ states:
         config:
           command: npx
           args:
-            - '-y'
-            - '@modelcontextprotocol/server-filesystem'
-            - '/reports'
+            - "-y"
+            - "@modelcontextprotocol/server-filesystem"
+            - "/reports"
     next:
       state_id: end
 ```
@@ -920,80 +920,80 @@ execution_config:
       custom_node_id: transform_node
       name: Extract PR Labels and Metadata
       config:
-        input_source: 'context_store'
-        input_key: 'github_event'
+        input_source: "context_store"
+        input_key: "github_event"
 
         mappings:
           # Extract basic PR information
-          - output_field: 'pr_number'
-            type: 'extract'
-            source_path: 'number'
+          - output_field: "pr_number"
+            type: "extract"
+            source_path: "number"
 
-          - output_field: 'pr_title'
-            type: 'extract'
-            source_path: 'pull_request.title'
+          - output_field: "pr_title"
+            type: "extract"
+            source_path: "pull_request.title"
 
-          - output_field: 'pr_author'
-            type: 'extract'
-            source_path: 'pull_request.user.login'
+          - output_field: "pr_author"
+            type: "extract"
+            source_path: "pull_request.user.login"
 
-          - output_field: 'pr_url'
-            type: 'extract'
-            source_path: 'pull_request.html_url'
+          - output_field: "pr_url"
+            type: "extract"
+            source_path: "pull_request.html_url"
 
-          - output_field: 'action'
-            type: 'extract'
-            source_path: 'action'
+          - output_field: "action"
+            type: "extract"
+            source_path: "action"
 
           # Extract all label names from labels array
-          - output_field: 'label_names'
-            type: 'array_map'
-            source_path: 'pull_request.labels'
-            item_field: 'name'
+          - output_field: "label_names"
+            type: "array_map"
+            source_path: "pull_request.labels"
+            item_field: "name"
 
           # Extract only target branch labels
-          - output_field: 'target_labels'
-            type: 'array_map'
-            source_path: 'pull_request.labels'
-            item_field: 'name'
+          - output_field: "target_labels"
+            type: "array_map"
+            source_path: "pull_request.labels"
+            item_field: "name"
             filter_condition: "item.get('name', '').startswith('target-')"
 
           # Check if WS label exists (references label_names from above)
-          - output_field: 'has_ws_label'
-            type: 'condition'
+          - output_field: "has_ws_label"
+            type: "condition"
             condition: "'WS' in label_names"
             then_value: true
             else_value: false
 
           # Check if any target label exists
-          - output_field: 'has_target_label'
-            type: 'condition'
-            condition: 'len(target_labels) > 0'
+          - output_field: "has_target_label"
+            type: "condition"
+            condition: "len(target_labels) > 0"
             then_value: true
             else_value: false
 
           # Check if PR action is actionable
-          - output_field: 'is_actionable'
-            type: 'condition'
+          - output_field: "is_actionable"
+            type: "condition"
             condition: "action in ['opened', 'updated', 'reopened', 'edited']"
             then_value: true
             else_value: false
 
           # Count total labels
-          - output_field: 'label_count'
-            type: 'script'
-            script: 'len(label_names)'
+          - output_field: "label_count"
+            type: "script"
+            script: "len(label_names)"
 
           # Determine priority
-          - output_field: 'priority'
-            type: 'condition'
+          - output_field: "priority"
+            type: "condition"
             condition: "has_ws_label or 'critical' in label_names"
-            then_value: 'high'
-            else_value: 'normal'
+            then_value: "high"
+            else_value: "normal"
 
           # Create human-readable summary
-          - output_field: 'summary'
-            type: 'template'
+          - output_field: "summary"
+            type: "template"
             template: >
               PR #{{ pr_number }}: {{ pr_title }}
               Author: @{{ pr_author }}
@@ -1003,29 +1003,29 @@ execution_config:
 
         # Validate output structure
         output_schema:
-          type: 'object'
+          type: "object"
           properties:
             pr_number:
-              type: 'integer'
+              type: "integer"
             pr_title:
-              type: 'string'
+              type: "string"
             pr_author:
-              type: 'string'
+              type: "string"
             label_names:
-              type: 'array'
+              type: "array"
             has_ws_label:
-              type: 'boolean'
+              type: "boolean"
             has_target_label:
-              type: 'boolean'
+              type: "boolean"
             is_actionable:
-              type: 'boolean'
+              type: "boolean"
             priority:
-              type: 'string'
+              type: "string"
             summary:
-              type: 'string'
-          required: ['pr_number', 'has_ws_label', 'is_actionable']
+              type: "string"
+          required: ["pr_number", "has_ws_label", "is_actionable"]
 
-        on_error: 'fail'
+        on_error: "fail"
 
   assistants:
     - id: ws_processor
@@ -1038,10 +1038,10 @@ execution_config:
           config:
             command: npx
             args:
-              - '-y'
-              - '@modelcontextprotocol/server-git'
-              - '--repository'
-              - '/workspace'
+              - "-y"
+              - "@modelcontextprotocol/server-git"
+              - "--repository"
+              - "/workspace"
 
     - id: target_processor
       system_prompt: |
@@ -1053,10 +1053,10 @@ execution_config:
           config:
             command: npx
             args:
-              - '-y'
-              - '@modelcontextprotocol/server-git'
-              - '--repository'
-              - '/workspace'
+              - "-y"
+              - "@modelcontextprotocol/server-git"
+              - "--repository"
+              - "/workspace"
 
     - id: default_processor
       system_prompt: |
@@ -1068,35 +1068,35 @@ execution_config:
           config:
             command: npx
             args:
-              - '-y'
-              - '@modelcontextprotocol/server-git'
-              - '--repository'
-              - '/workspace'
+              - "-y"
+              - "@modelcontextprotocol/server-git"
+              - "--repository"
+              - "/workspace"
 
   states:
     # Step 1: Transform webhook event
     - id: transform_event
       custom_node_id: transform_pr_event
-      task: 'Extract and transform PR event data'
+      task: "Extract and transform PR event data"
       next:
         state_id: check_actionable
-        output_key: 'pr_info'
+        output_key: "pr_info"
         store_in_context: true
 
     # Step 2: Check if event is actionable
     - id: check_actionable
       custom_node_id: transform_pr_event
-      task: 'Verify if PR event requires processing'
+      task: "Verify if PR event requires processing"
       next:
         condition:
-          expression: 'is_actionable == True'
+          expression: "is_actionable == True"
           then: route_by_labels
           otherwise: skip_processing
 
     # Step 3: Route based on labels
     - id: route_by_labels
       custom_node_id: transform_pr_event
-      task: 'Determine processing path based on labels'
+      task: "Determine processing path based on labels"
       next:
         switch:
           cases:
@@ -1105,7 +1105,7 @@ execution_config:
               state_id: process_ws_pr
 
             # Target branch deployments
-            - condition: 'has_target_label == True'
+            - condition: "has_target_label == True"
               state_id: process_target_pr
 
           # Default processing
@@ -1149,14 +1149,14 @@ execution_config:
     - id: skip_processing
       custom_node_id: transform_node
       config:
-        input_source: 'context_store'
+        input_source: "context_store"
         mappings:
-          - output_field: 'message'
-            type: 'constant'
-            value: 'Event skipped - not actionable'
-          - output_field: 'action'
-            type: 'extract'
-            source_path: 'action'
+          - output_field: "message"
+            type: "constant"
+            value: "Event skipped - not actionable"
+          - output_field: "action"
+            type: "extract"
+            source_path: "action"
       next:
         state_id: end
 ```

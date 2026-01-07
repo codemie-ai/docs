@@ -20,16 +20,16 @@ Each state should perform one clear, well-defined task. This makes workflows eas
 ```yaml
 states:
   - id: fetch-data
-    task: 'Fetch user data from database'
+    task: "Fetch user data from database"
 
   - id: validate-data
-    task: 'Validate data completeness and format'
+    task: "Validate data completeness and format"
 
   - id: process-data
-    task: 'Transform data into required format'
+    task: "Transform data into required format"
 
   - id: store-results
-    task: 'Store processed data'
+    task: "Store processed data"
 ```
 
 **Bad Example:**
@@ -37,7 +37,7 @@ states:
 ```yaml
 states:
   - id: do-everything
-    task: 'Fetch data, validate it, process it, and store results'
+    task: "Fetch data, validate it, process it, and store results"
     # Too many responsibilities in one state
 ```
 
@@ -110,7 +110,7 @@ task: |
 **Bad Task Description:**
 
 ```yaml
-task: 'Check the code'
+task: "Check the code"
 # Too vague - what to check? How to report?
 ```
 
@@ -131,7 +131,7 @@ Design workflows to handle failures gracefully using conditional transitions and
 states:
   - id: attempt-operation
     assistant_id: processor
-    task: 'Perform operation and return status'
+    task: "Perform operation and return status"
     retry_policy:
       max_attempts: 3
     next:
@@ -142,7 +142,7 @@ states:
 
   - id: handle-error
     assistant_id: error-handler
-    task: 'Log error and create fallback solution'
+    task: "Log error and create fallback solution"
     next:
       state_id: end
 ```
@@ -152,10 +152,10 @@ states:
 ```yaml
 states:
   - id: validate-input
-    task: 'Validate input data meets requirements'
+    task: "Validate input data meets requirements"
     next:
       condition:
-        expression: 'validation_passed == true'
+        expression: "validation_passed == true"
         then: process-data
         otherwise: report-validation-error
 ```
@@ -170,12 +170,12 @@ states:
   - id: fetch-from-api
     # Fetches raw data from external API
     # Depends on: api_endpoint in context
-    task: 'Fetch data from {{api_endpoint}}'
+    task: "Fetch data from {{api_endpoint}}"
 
   - id: fetch-from-database
     # Fetches supplementary data from internal DB
     # Parallel execution with fetch-from-api
-    task: 'Fetch reference data'
+    task: "Fetch reference data"
 ```
 
 **2. Group Related States Logically**
@@ -218,7 +218,7 @@ Large context stores impact performance and token usage. Store only what's neces
 ```yaml
 states:
   - id: process-large-dataset
-    task: 'Process dataset and return summary statistics'
+    task: "Process dataset and return summary statistics"
     # Output: {"count": 1000, "average": 42.5}
     next:
       store_in_context: true
@@ -230,10 +230,10 @@ states:
 ```yaml
 states:
   - id: process-large-dataset
-    task: 'Process dataset and return all 10,000 records'
+    task: "Process dataset and return all 10,000 records"
     # Output: {"records": [{...}, {...}, ...]}  # Huge!
     next:
-      store_in_context: true # Bloats context
+      store_in_context: true  # Bloats context
 ```
 
 #### Clear Unnecessary Data
@@ -245,7 +245,7 @@ Actively clean up context data that's no longer needed.
 ```yaml
 states:
   - id: complete-phase-1
-    task: 'Finalize phase 1'
+    task: "Finalize phase 1"
     next:
       state_id: start-phase-2
       reset_keys_in_context_store:
@@ -260,7 +260,7 @@ states:
 ```yaml
 states:
   - id: process-batch
-    task: 'Process batch of items'
+    task: "Process batch of items"
     next:
       state_id: next-batch
       reset_keys_in_context_store:
@@ -319,19 +319,19 @@ Don't create situations where states overwrite each other's critical data.
 ```yaml
 states:
   - id: state-a
-    task: 'Process data'
+    task: "Process data"
     # Output: {"result": "A"}
     next:
       state_id: state-b
 
   - id: state-b
-    task: 'Process data differently'
+    task: "Process data differently"
     # Output: {"result": "B"}  # Overwrites state-a's result!
     next:
       state_id: state-c
 
   - id: state-c
-    task: 'Use result from state-a'
+    task: "Use result from state-a"
     # BUG: {{result}} is now "B", not "A"
 ```
 
@@ -340,19 +340,19 @@ states:
 ```yaml
 states:
   - id: state-a
-    task: 'Process data'
+    task: "Process data"
     # Output: {"result_a": "A"}
     next:
       state_id: state-b
 
   - id: state-b
-    task: 'Process data differently'
+    task: "Process data differently"
     # Output: {"result_b": "B"}
     next:
       state_id: state-c
 
   - id: state-c
-    task: 'Use both results: {{result_a}} and {{result_b}}'
+    task: "Use both results: {{result_a}} and {{result_b}}"
 ```
 
 ### 10.3 Performance Optimization
@@ -363,9 +363,9 @@ While parallel processing is powerful, too much parallelization can overwhelm re
 
 **Guidelines:**
 
-- **Small datasets (`<10` items)**: Parallel processing is ideal
-- **Medium datasets (10-50 items)**: Use with `max_concurrency` limit
-- **Large datasets (`>50` items)**: Consider batching or sequential processing
+- **Small datasets (`<10 items`)**: Parallel processing is ideal
+- **Medium datasets (`10-50 items`)**: Use with `max_concurrency` limit
+- **Large datasets (`>50 items`)**: Consider batching or sequential processing
 
 **Example: Controlled Parallelization**
 
@@ -375,14 +375,14 @@ max_concurrency: 5
 
 states:
   - id: split-work
-    task: 'Split into 100 items'
+    task: "Split into 100 items"
     next:
       state_id: process-item
       iter_key: items
       # Only 5 items processed simultaneously
 
   - id: process-item
-    task: 'Process {{item}}'
+    task: "Process {{item}}"
     next:
       state_id: aggregate
 ```
@@ -447,6 +447,7 @@ For long-running workflows, enable automatic summarization.
 enable_summarization_node: true
 messages_limit_before_summarization: 25
 tokens_limit_before_summarization: 50000
+
 # When limits are exceeded, conversation history is automatically
 # summarized to maintain context while reducing token usage
 ```
@@ -456,7 +457,7 @@ tokens_limit_before_summarization: 50000
 **Workflow-Level Recursion Limit:**
 
 ```yaml
-recursion_limit: 50 # Maximum execution steps
+recursion_limit: 50  # Maximum execution steps
 # Default: 50
 # Increase for complex workflows with many iterations
 # Decrease for simple workflows to fail fast
@@ -495,14 +496,14 @@ retry_policy:
 states:
   - id: critical-external-call
     retry_policy:
-      max_attempts: 5 # More retries for critical operations
+      max_attempts: 5      # More retries for critical operations
       initial_interval: 2.0
       backoff_factor: 3.0
       max_interval: 120.0
 
   - id: non-critical-step
     retry_policy:
-      max_attempts: 1 # No retries for non-critical operations
+      max_attempts: 1      # No retries for non-critical operations
 ```
 
 **What Gets Retried Automatically:**
@@ -526,7 +527,7 @@ Implement explicit error handling paths using conditionals.
 ```yaml
 states:
   - id: attempt-operation
-    task: 'Attempt operation, return {status, error_message}'
+    task: "Attempt operation, return {status, error_message}"
     next:
       condition:
         expression: "status == 'success'"
@@ -534,7 +535,7 @@ states:
         otherwise: log-and-retry
 
   - id: log-and-retry
-    task: 'Log error: {{error_message}}'
+    task: "Log error: {{error_message}}"
     next:
       state_id: attempt-operation
 ```
@@ -563,7 +564,7 @@ Add validation states between critical operations.
 ```yaml
 states:
   - id: fetch-data
-    task: 'Fetch data from API'
+    task: "Fetch data from API"
     next:
       state_id: validate-data
 
@@ -576,7 +577,7 @@ states:
       Return: {valid: true/false, errors: [...]}
     next:
       condition:
-        expression: 'valid == true'
+        expression: "valid == true"
         then: process-data
         otherwise: handle-invalid-data
 ```
@@ -611,7 +612,7 @@ Use states to log important decisions and state transitions.
 ```yaml
 states:
   - id: make-critical-decision
-    task: 'Analyze data and make decision'
+    task: "Analyze data and make decision"
     next:
       state_id: log-decision
 
@@ -624,7 +625,7 @@ states:
       - Timestamp: {{timestamp}}
     next:
       state_id: execute-decision
-      include_in_llm_history: false # Logged but not needed for LLM
+      include_in_llm_history: false  # Logged but not needed for LLM
 ```
 
 ### 10.5 Security Considerations
@@ -639,8 +640,8 @@ Never include sensitive information directly in workflow configurations.
 tools:
   - id: api-call
     tool_args:
-      api_key: 'sk-1234567890abcdef' # gitleaks:allow - NEVER DO THIS
-      password: 'mypassword' # gitleaks:allow - NEVER DO THIS
+      api_key: "sk-****************"  # NEVER DO THIS
+      password: "mypassword"          # NEVER DO THIS
 ```
 
 **Good:**
@@ -694,7 +695,7 @@ states:
       Return: {valid: true/false, sanitized_input: {...}}
     next:
       condition:
-        expression: 'valid == true'
+        expression: "valid == true"
         then: process-input
         otherwise: reject-input
 ```

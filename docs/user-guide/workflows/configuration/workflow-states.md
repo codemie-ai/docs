@@ -75,6 +75,7 @@ states:
     # Output is guaranteed to match the schema structure
     next:
       state_id: process-user-data
+
 # Example successful output:
 # {
 #   "name": "Alice Johnson",
@@ -103,7 +104,7 @@ states:
 
   - id: await-approval
     assistant_id: approver
-    interrupt_before: true # Pause before executing this state
+    interrupt_before: true  # Pause before executing this state
     task: |
       Apply the approved changes.
 
@@ -117,7 +118,7 @@ states:
 
   - id: apply-changes
     assistant_id: approver
-    task: 'Execute the approved changes'
+    task: "Execute the approved changes"
     next:
       state_id: end
 ```
@@ -139,10 +140,10 @@ states:
       Call the external API at {{api_endpoint}} and retrieve data.
       Handle any rate limiting or temporary errors gracefully.
     retry_policy:
-      max_attempts: 5 # Retry up to 5 times
-      initial_interval: 2.0 # Wait 2 seconds before first retry
-      backoff_factor: 2.0 # Double wait time each retry (2s, 4s, 8s, 16s)
-      max_interval: 30.0 # Cap wait time at 30 seconds
+      max_attempts: 5         # Retry up to 5 times
+      initial_interval: 2.0   # Wait 2 seconds before first retry
+      backoff_factor: 2.0     # Double wait time each retry (2s, 4s, 8s, 16s)
+      max_interval: 30.0      # Cap wait time at 30 seconds
     # Automatically retries on:
     # - Network errors (5xx status codes)
     # - Timeout errors
@@ -150,6 +151,7 @@ states:
     # Does NOT retry on: 401, 403, 404 errors
     next:
       state_id: process-api-response
+
 # Retry timing example:
 # Attempt 1: Immediate
 # Attempt 2: After 2 seconds
@@ -173,7 +175,7 @@ assistants:
 states:
   - id: critical-data-processing
     assistant_id: critical-processor
-    interrupt_before: true # Require approval before running
+    interrupt_before: true  # Require approval before running
     task: |
       Process critical financial data for quarter {{quarter}}.
 
@@ -213,7 +215,7 @@ states:
 states:
   - id: personalized-analysis
     assistant_id: analyzer
-    resolve_dynamic_values_in_prompt: true # Enable template resolution
+    resolve_dynamic_values_in_prompt: true  # Enable template resolution
     task: |
       Analyze data for user {{user_name}} (ID: {{user_id}}).
 
@@ -227,6 +229,7 @@ states:
     # before sending task to the LLM
     next:
       state_id: next-step
+
 # With context:
 # {
 #   "user_name": "Alice",
@@ -255,7 +258,7 @@ states:
     tool_id: tool-1
     tool_args:
       param1: value1
-      param2: '{{context_value}}'
+      param2: "{{context_value}}"
     next:
       state_id: state-2
 ```

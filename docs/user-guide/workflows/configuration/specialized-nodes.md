@@ -19,7 +19,7 @@ custom_nodes:
     custom_node_id: state_processor_node
     model: gpt-4.1-mini
     config:
-      state_id: branch-processor # Filter by state ID
+      state_id: branch-processor  # Filter by state ID
       states_status_filter:
         - SUCCEEDED
         - FAILED
@@ -69,7 +69,7 @@ custom_nodes:
     config:
       datasource_ids:
         - datasource-1
-      documents_filtering_pattern: '**/*.md'
+      documents_filtering_pattern: "**/*.md"
       documents_filter:
         - id1
         - id2
@@ -93,41 +93,41 @@ custom_nodes:
     custom_node_id: transform_node
     name: Transform GitHub PR Event
     config:
-      input_source: 'context_store'
-      input_key: 'github_event'
+      input_source: "context_store"
+      input_key: "github_event"
 
       mappings:
         # Extract label names from array
-        - output_field: 'label_names'
-          type: 'array_map'
-          source_path: 'pull_request.labels'
-          item_field: 'name'
+        - output_field: "label_names"
+          type: "array_map"
+          source_path: "pull_request.labels"
+          item_field: "name"
 
         # Check if WS label exists (references label_names from above)
-        - output_field: 'has_ws_label'
-          type: 'condition'
+        - output_field: "has_ws_label"
+          type: "condition"
           condition: "'WS' in label_names"
           then_value: true
           else_value: false
 
         # Extract PR number
-        - output_field: 'pr_number'
-          type: 'extract'
-          source_path: 'number'
+        - output_field: "pr_number"
+          type: "extract"
+          source_path: "number"
 
       # Optional: validate output structure
       output_schema:
-        type: 'object'
+        type: "object"
         properties:
           label_names:
-            type: 'array'
+            type: "array"
           has_ws_label:
-            type: 'boolean'
+            type: "boolean"
           pr_number:
-            type: 'integer'
-        required: ['has_ws_label']
+            type: "integer"
+        required: ["has_ws_label"]
 
-      on_error: 'fail'
+      on_error: "fail"
 ```
 
 #### Configuration Parameters
@@ -150,10 +150,10 @@ Transform Node supports six mapping types:
 Extract fields using dot notation for nested objects.
 
 ```yaml
-- output_field: 'user_name'
-  type: 'extract'
-  source_path: 'pull_request.user.login'
-  default: 'unknown' # Optional
+- output_field: "user_name"
+  type: "extract"
+  source_path: "pull_request.user.login"
+  default: "unknown"  # Optional
 ```
 
 ##### 2. Array Map - Array Processing
@@ -162,16 +162,16 @@ Extract fields from arrays of objects, with optional filtering.
 
 ```yaml
 # Extract all label names
-- output_field: 'label_names'
-  type: 'array_map'
-  source_path: 'pull_request.labels'
-  item_field: 'name'
+- output_field: "label_names"
+  type: "array_map"
+  source_path: "pull_request.labels"
+  item_field: "name"
 
 # Extract only labels starting with "target-"
-- output_field: 'target_labels'
-  type: 'array_map'
-  source_path: 'pull_request.labels'
-  item_field: 'name'
+- output_field: "target_labels"
+  type: "array_map"
+  source_path: "pull_request.labels"
+  item_field: "name"
   filter_condition: "item.get('name', '').startswith('target-')"
 ```
 
@@ -180,8 +180,8 @@ Extract fields from arrays of objects, with optional filtering.
 Apply boolean logic to determine output values.
 
 ```yaml
-- output_field: 'is_actionable'
-  type: 'condition'
+- output_field: "is_actionable"
+  type: "condition"
   condition: "action in ['opened', 'updated', 'reopened']"
   then_value: true
   else_value: false
@@ -192,9 +192,9 @@ Apply boolean logic to determine output values.
 Use Jinja2 templates for complex string formatting.
 
 ```yaml
-- output_field: 'summary'
-  type: 'template'
-  template: 'PR #{{ number }}: {{ title }} by @{{ author }}'
+- output_field: "summary"
+  type: "template"
+  template: "PR #{{ number }}: {{ title }} by @{{ author }}"
 ```
 
 ##### 5. Constant - Static Values
@@ -202,9 +202,9 @@ Use Jinja2 templates for complex string formatting.
 Assign static values.
 
 ```yaml
-- output_field: 'source'
-  type: 'constant'
-  value: 'github_webhook'
+- output_field: "source"
+  type: "constant"
+  value: "github_webhook"
 ```
 
 ##### 6. Script - Python Expressions
@@ -212,9 +212,9 @@ Assign static values.
 Execute Python expressions with restricted namespace.
 
 ```yaml
-- output_field: 'priority_score'
-  type: 'script'
-  script: 'urgency * 2 + importance'
+- output_field: "priority_score"
+  type: "script"
+  script: "urgency * 2 + importance"
 ```
 
 #### Sequential Processing
@@ -224,20 +224,20 @@ Execute Python expressions with restricted namespace.
 ```yaml
 mappings:
   # Step 1: Extract array
-  - output_field: 'tags'
-    type: 'array_map'
-    source_path: 'items'
-    item_field: 'tag'
+  - output_field: "tags"
+    type: "array_map"
+    source_path: "items"
+    item_field: "tag"
 
   # Step 2: Count tags (uses 'tags' from Step 1)
-  - output_field: 'tag_count'
-    type: 'script'
-    script: 'len(tags)'
+  - output_field: "tag_count"
+    type: "script"
+    script: "len(tags)"
 
   # Step 3: Check count (uses 'tag_count' from Step 2)
-  - output_field: 'has_many_tags'
-    type: 'condition'
-    condition: 'tag_count > 5'
+  - output_field: "has_many_tags"
+    type: "condition"
+    condition: "tag_count > 5"
     then_value: true
     else_value: false
 ```
@@ -251,71 +251,71 @@ execution_config:
       custom_node_id: transform_node
       name: Extract and Check PR Labels
       config:
-        input_source: 'context_store'
-        input_key: 'github_event'
+        input_source: "context_store"
+        input_key: "github_event"
 
         mappings:
           # Extract all label names
-          - output_field: 'label_names'
-            type: 'array_map'
-            source_path: 'pull_request.labels'
-            item_field: 'name'
+          - output_field: "label_names"
+            type: "array_map"
+            source_path: "pull_request.labels"
+            item_field: "name"
 
           # Extract only target labels
-          - output_field: 'target_labels'
-            type: 'array_map'
-            source_path: 'pull_request.labels'
-            item_field: 'name'
+          - output_field: "target_labels"
+            type: "array_map"
+            source_path: "pull_request.labels"
+            item_field: "name"
             filter_condition: "item.get('name', '').startswith('target-')"
 
           # Check for WS label
-          - output_field: 'has_ws'
-            type: 'condition'
+          - output_field: "has_ws"
+            type: "condition"
             condition: "'WS' in label_names"
             then_value: true
             else_value: false
 
           # Check for any target label
-          - output_field: 'has_target'
-            type: 'condition'
-            condition: 'len(target_labels) > 0'
+          - output_field: "has_target"
+            type: "condition"
+            condition: "len(target_labels) > 0"
             then_value: true
             else_value: false
 
           # Extract PR info
-          - output_field: 'pr_number'
-            type: 'extract'
-            source_path: 'number'
+          - output_field: "pr_number"
+            type: "extract"
+            source_path: "number"
 
-          - output_field: 'pr_title'
-            type: 'extract'
-            source_path: 'pull_request.title'
+          - output_field: "pr_title"
+            type: "extract"
+            source_path: "pull_request.title"
 
           # Create summary
-          - output_field: 'summary'
-            type: 'template'
+          - output_field: "summary"
+            type: "template"
             template: "PR #{{ pr_number }}: {{ pr_title }} - Labels: {{ label_names | join(', ') }}"
 
-        on_error: 'fail'
+        on_error: "fail"
 
   states:
     - id: extract_labels
       custom_node_id: check_pr_labels
-      task: 'Extract and process PR labels'
+      task: "Extract and process PR labels"
       next:
         state_id: route_by_labels
-        output_key: 'pr_info'
+        output_key: "pr_info"
         store_in_context: true
 
     - id: route_by_labels
       assistant_id: processor
-      task: 'Route based on labels'
+      task: "Route based on labels"
       next:
         switch:
           cases:
-            - condition: 'has_ws == True'
+            - condition: "has_ws == True"
               state_id: ws_workflow
-            - condition: 'has_target == True'
+            - condition: "has_target == True"
               state_id: target_workflow
           default: default_workflow
 ```

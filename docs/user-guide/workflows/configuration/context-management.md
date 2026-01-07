@@ -48,12 +48,12 @@ The **context store** is a key-value storage system that persists throughout wor
 states:
   - id: fetch-user-data
     assistant_id: data-fetcher
-    task: 'Fetch user profile for user ID {{user_id}} from {{department}}'
+    task: "Fetch user profile for user ID {{user_id}} from {{department}}"
     # {{user_id}} and {{department}} come from user input
     # Output: {"name": "Alice", "email": "alice@example.com", "role": "admin"}
     next:
       state_id: process-user
-      store_in_context: true # Stores output in context
+      store_in_context: true  # Stores output in context
 
   - id: process-user
     assistant_id: processor
@@ -82,7 +82,7 @@ When a workflow is executed, the initial user input/prompt is automatically pars
 
 ```yaml
 # User executes workflow with JSON input:
-User Input: { 'file_path': '/project/main.py', 'mode': 'analysis', 'threshold': 85 }
+User Input: {"file_path": "/project/main.py", "mode": "analysis", "threshold": 85}
 
 # Before first state executes, context store is populated:
 # - file_path: "/project/main.py"
@@ -114,7 +114,7 @@ states:
 
 states:
   - id: fetch-data
-    task: 'Fetch {{config.max_items}} items from {{source}} in {{config.format}} format'
+    task: "Fetch {{config.max_items}} items from {{source}} in {{config.format}} format"
 ```
 
 **File Processing:**
@@ -125,10 +125,10 @@ states:
 
 states:
   - id: process-files
-    task: 'Process these files'
+    task: "Process these files"
     next:
       state_id: process-file
-      iter_key: files # Iterate over files from user input
+      iter_key: files  # Iterate over files from user input
 ```
 
 **Default Behavior for State Outputs:**
@@ -148,7 +148,7 @@ When `store_in_context: true` (the default), state outputs are automatically pro
 
 ```yaml
 # State outputs a dictionary (most common case)
-Output: { 'status': 'success', 'count': 42, 'items': ['a', 'b', 'c'] }
+Output: {"status": "success", "count": 42, "items": ["a", "b", "c"]}
 
 # Context store automatically contains all root-level keys:
 # - status: "success"
@@ -156,14 +156,15 @@ Output: { 'status': 'success', 'count': 42, 'items': ['a', 'b', 'c'] }
 # - items: ["a", "b", "c"]
 
 # Next state can access any key:
-task: 'The operation returned {{count}} items with status: {{status}}'
+task: "The operation returned {{count}} items with status: {{status}}"
 ```
 
 **List of Dictionaries Output:**
 
 ```yaml
 # State outputs a list containing dictionaries
-Output: [{ 'file': 'a.txt', 'size': 100 }, { 'file': 'b.txt', 'size': 200 }]
+Output: [{"file": "a.txt", "size": 100}, {"file": "b.txt", "size": 200}]
+
 # All dictionaries are merged into context store:
 # - file: "b.txt"  (last value wins if keys conflict)
 # - size: 200
@@ -176,7 +177,8 @@ Output: [{ 'file': 'a.txt', 'size': 100 }, { 'file': 'b.txt', 'size': 200 }]
 
 ```yaml
 # State outputs a simple list (strings, numbers, etc.)
-Output: ['file1.txt', 'file2.txt', 'file3.txt']
+Output: ["file1.txt", "file2.txt", "file3.txt"]
+
 # The list is NOT added to context store as individual variables
 # Use output_key to access the entire list, or output as a dict:
 # {"files": ["file1.txt", "file2.txt", "file3.txt"]}
@@ -186,7 +188,8 @@ Output: ['file1.txt', 'file2.txt', 'file3.txt']
 
 ```yaml
 # State outputs plain text (parsing fails)
-Output: 'The analysis completed successfully with no structured data'
+Output: "The analysis completed successfully with no structured data"
+
 # The entire string is NOT added to context store as variables
 # It remains in message history but not accessible via {{variable}}
 # To make it accessible, use output_key or have the assistant output JSON
@@ -202,13 +205,13 @@ If output cannot be parsed as structured data, you have two options:
 states:
   - id: generate-text
     assistant_id: writer
-    task: 'Write a paragraph'
+    task: "Write a paragraph"
     next:
       state_id: next-state
       output_key: paragraph_text
 
   - id: next-state
-    task: 'Use the paragraph: {{paragraph_text}}'
+    task: "Use the paragraph: {{paragraph_text}}"
 ```
 
 **Option 2: Output as JSON**
@@ -218,7 +221,6 @@ states:
 task: |
   Write a paragraph and return as JSON:
   {"paragraph": "your text here"}
-
 # Now accessible as {{paragraph}}
 ```
 
@@ -254,7 +256,7 @@ If context contains nested structures, you can access nested values:
 
 ```yaml
 # Context: {"user": {"profile": {"name": "Alice"}}}
-task: 'Welcome {{user.profile.name}}'
+task: "Welcome {{user.profile.name}}"
 ```
 
 **Default Values:**
@@ -271,13 +273,13 @@ Context behavior can be fine-tuned per state transition using configuration flag
 next:
   state_id: next-state
   # Context storage control
-  store_in_context: true # Store output in context store
-  include_in_llm_history: true # Include in message history
+  store_in_context: true           # Store output in context store
+  include_in_llm_history: true     # Include in message history
 
   # Context cleanup options
-  clear_prior_messages: false # Clear message history
-  clear_context_store: false # Clear entire context (false | true | "keep_current")
-  reset_keys_in_context_store: # Remove specific keys
+  clear_prior_messages: false      # Clear message history
+  clear_context_store: false       # Clear entire context (false | true | "keep_current")
+  reset_keys_in_context_store:     # Remove specific keys
     - temp_data
     - intermediate_result
 ```
@@ -301,11 +303,11 @@ Controls whether the current state's output is stored in the context store.
 states:
   - id: generate-large-report
     assistant_id: reporter
-    task: 'Generate detailed 10-page report'
+    task: "Generate detailed 10-page report"
     next:
       state_id: summarize-report
-      store_in_context: false # Don't store the large report
-      include_in_llm_history: true # But do include in LLM history for next state
+      store_in_context: false  # Don't store the large report
+      include_in_llm_history: true  # But do include in LLM history for next state
 ```
 
 **include_in_llm_history** (boolean, default: `true`)
@@ -325,12 +327,12 @@ Controls whether the current state's output is included in the message history s
 states:
   - id: fetch-database-ids
     tool_id: db-query
-    task: 'Fetch all user IDs'
+    task: "Fetch all user IDs"
     # Output: {"ids": [1, 2, 3, 4, 5, ... 1000]}
     next:
       state_id: process-users
-      store_in_context: true # Store IDs for iteration
-      include_in_llm_history: false # Don't show raw IDs to LLM
+      store_in_context: true       # Store IDs for iteration
+      include_in_llm_history: false  # Don't show raw IDs to LLM
 ```
 
 **clear_prior_messages** (boolean, default: `false`)
@@ -351,14 +353,14 @@ Clears all prior messages from the message history, creating a "fresh start" for
 states:
   - id: complete-phase-1
     assistant_id: assistant-1
-    task: 'Complete phase 1 tasks'
+    task: "Complete phase 1 tasks"
     next:
       state_id: start-phase-2
-      clear_prior_messages: true # Fresh start for phase 2
+      clear_prior_messages: true  # Fresh start for phase 2
 
   - id: start-phase-2
     assistant_id: assistant-2
-    task: 'Begin phase 2 with fresh context'
+    task: "Begin phase 2 with fresh context"
     # This assistant doesn't see phase 1's message history
     next:
       state_id: end
@@ -394,14 +396,14 @@ Controls context store clearing behavior after this state executes.
 states:
   - id: cleanup-phase
     assistant_id: cleaner
-    task: 'Finalize current phase'
+    task: "Finalize current phase"
     next:
       state_id: new-phase
-      clear_context_store: true # Remove ALL context (including current output)
+      clear_context_store: true  # Remove ALL context (including current output)
 
   - id: new-phase
     assistant_id: processor
-    task: 'Start fresh with no prior context'
+    task: "Start fresh with no prior context"
     # No variables available from previous states
     next:
       state_id: end
@@ -413,16 +415,16 @@ states:
 states:
   - id: summarize-phase
     assistant_id: summarizer
-    task: 'Summarize all previous analysis'
+    task: "Summarize all previous analysis"
     # Outputs: {"summary": "...", "key_findings": [...]}
     next:
       state_id: new-phase
-      clear_context_store: 'keep_current' # Keep only summary and key_findings
+      clear_context_store: "keep_current"  # Keep only summary and key_findings
       store_in_context: true
 
   - id: new-phase
     assistant_id: processor
-    task: 'Work with {{summary}} and findings'
+    task: "Work with {{summary}} and findings"
     # Has access to: summary, key_findings
     # Does NOT have access to: all previous context from earlier states
     next:
@@ -463,13 +465,13 @@ Removes specific keys from the context store while preserving all other keys. Pr
 states:
   - id: process-with-temp-data
     assistant_id: processor
-    task: 'Process data using temporary variables'
+    task: "Process data using temporary variables"
     # Uses: temp_file_path, temp_config, final_result
     next:
       state_id: finalize
       reset_keys_in_context_store:
-        - temp_file_path # Remove temporary file path
-        - temp_config # Remove temporary config
+        - temp_file_path   # Remove temporary file path
+        - temp_config      # Remove temporary config
       # final_result is preserved
 ```
 
@@ -522,7 +524,7 @@ Use case: Store current output but remove specific temporary variables.
 ```yaml
 next:
   store_in_context: true
-  clear_context_store: 'keep_current'
+  clear_context_store: "keep_current"
   clear_prior_messages: true
 ```
 
@@ -533,7 +535,7 @@ Use case: Start a new workflow phase with a clean slate but preserve the current
 ```yaml
 next:
   state_id: process-item
-  clear_context_store: 'keep_current'
+  clear_context_store: "keep_current"
   iter_key: items
 ```
 
@@ -587,9 +589,9 @@ states:
   - id: call-api
     tool_id: api-tool
     tool_args:
-      endpoint: '{{api_endpoint}}'
-      user_id: '{{user_id}}'
-      auth_token: '{{auth_token}}'
+      endpoint: "{{api_endpoint}}"
+      user_id: "{{user_id}}"
+      auth_token: "{{auth_token}}"
 ```
 
 **3. Conditional Expressions**
@@ -598,7 +600,7 @@ Variables in conditional expressions are accessed **without** `{{}}`:
 ```yaml
 next:
   condition:
-    expression: "user_role == 'admin'" # No {{}} here
+    expression: "user_role == 'admin'"  # No {{}} here
     then: admin-path
     otherwise: user-path
 ```
@@ -610,12 +612,12 @@ next:
 
 next:
   state_id: process-file
-  iter_key: files # Extracts the list from context
+  iter_key: files  # Extracts the list from context
 ```
 
 #### Enable Dynamic Resolution
 
-By default, dynamic value resolution is **enabled** for task descriptions. For additional control:
+By default, dynamic value resolution is **disabled** for task descriptions. For additional control:
 
 **resolve_dynamic_values_in_prompt** (state-level)
 
@@ -623,8 +625,8 @@ By default, dynamic value resolution is **enabled** for task descriptions. For a
 states:
   - id: my-state
     assistant_id: my-assistant
-    task: 'Process {{data}}'
-    resolve_dynamic_values_in_prompt: true # Explicitly enable
+    task: "Process {{data}}"
+    resolve_dynamic_values_in_prompt: true  # Explicitly enable
 ```
 
 **resolve_dynamic_values_in_response** (tool-level)
@@ -645,9 +647,74 @@ mcp_servers:
     resolve_dynamic_values_in_arguments: true
     config:
       args:
-        - '{{project_path}}'
-        - '{{config_file}}'
+        - "{{project_path}}"
+        - "{{config_file}}"
 ```
+
+#### How Dynamic Resolution Works
+
+When dynamic resolution is enabled, the system intelligently resolves variable references in the correct order, even when variables reference other variables. This happens automatically behind the scenes.
+
+**Where Values Come From:**
+
+The resolution process works with values from the **context store**, which accumulates data from multiple sources throughout workflow execution:
+
+- **User Input**: When you start a workflow with JSON input, all root-level keys are automatically added to the context store
+
+  ```yaml
+  # Input: {"user_id": "123", "mode": "fast"}
+  # Context now contains: user_id, mode
+  ```
+
+- **State Outputs**: Each state that executes with `store_in_context: true` adds its output to the context store
+  ```yaml
+  # State outputs: {"name": "Alice", "email": "alice@example.com"}
+  # Context now also contains: name, email
+  ```
+
+All these values merge together in the context store, and dynamic resolution can reference any of them using the `{{variable}}` syntax.
+
+**Important Note**: Intermediate resolved values created during resolution are NOT stored back to the context store. They exist only temporarily within the resolution operation to help resolve dependencies.
+
+**Resolution Process:**
+
+1. **Dependency Detection**: The system identifies which variables reference other variables by analyzing the template patterns (e.g., `{{variable_name}}`).
+
+2. **Smart Ordering**: Variables are resolved in dependency order - base variables first, then variables that reference them, and so on. This ensures that when a variable like `{{summary}}` references `{{data}}`, the system resolves `{{data}}` first.
+
+3. **Multi-Level Resolution**: Variables can form chains where variable A references variable B, which references variable C. The system resolves the entire chain automatically, starting from the deepest dependency.
+
+4. **Circular Dependency Protection**: If two variables reference each other (A references B, B references A), the system detects this and handles it gracefully to prevent infinite loops. In such cases, it uses the original variable values and logs a warning.
+
+**Example:**
+
+```yaml
+# Context store contains:
+# base: "hello"
+# middle: "{{base}} world"
+# final: "{{middle}}!"
+
+# You want to resolve the value of 'final' in a tool argument:
+# tool_args:
+#   message: "{{final}}"
+
+# Resolution process:
+# 1. Sees that 'final' ("{{middle}}!") depends on 'middle'
+# 2. Temporarily resolves 'middle' ("{{base}} world") → "hello world"
+# 3. Uses that to resolve 'final' ("{{middle}}!") → "hello world!"
+# 4. Returns: tool_args.message = "hello world!"
+# 5. Intermediate value (middle="hello world") is discarded, not stored
+```
+
+**Key Behaviors:**
+
+- Variables can reference multiple other variables: `"{{var1}} and {{var2}}"`
+- Resolution depth is limited to 10 levels to prevent performance issues
+- Non-string values (numbers, booleans, objects) are passed through unchanged
+- If a variable can't be resolved, it remains as the template pattern (e.g., `{{unknown}}` stays as-is)
+
+**Disabling Resolution:**
+If you need the literal template text without resolution (for example, to pass templates to another system), set the resolution flag to `false`.
 
 #### Advanced: Accessing Nested Data
 
@@ -657,14 +724,17 @@ When a state outputs nested JSON structures, the **entire nested structure** is 
 
 ```yaml
 # State outputs nested JSON:
-Output:
-  {
-    'user':
-      {
-        'profile': { 'name': 'Alice', 'email': 'alice@example.com' },
-        'preferences': { 'theme': 'dark' },
-      },
+Output: {
+  "user": {
+    "profile": {
+      "name": "Alice",
+      "email": "alice@example.com"
+    },
+    "preferences": {
+      "theme": "dark"
+    }
   }
+}
 
 # Context store contains:
 # - user: {"profile": {"name": "Alice", "email": "alice@example.com"}, "preferences": {"theme": "dark"}}
@@ -677,7 +747,7 @@ task: |
   Theme: {{user.preferences.theme}}
 ```
 
-:::note Important Notes
+**Important Notes:**
 
 - **Root-level keys only**: Only top-level keys from JSON output become context store keys
 - **Nested structures preserved**: The values can be complex nested objects/arrays
@@ -685,10 +755,9 @@ task: |
 - **Alternative: Flatten at source**: For simpler access, have assistants output flat structures:
   ```yaml
   # Easier to work with:
-  Output: { 'user_name': 'Alice', 'user_email': 'alice@example.com', 'user_theme': 'dark' }
+  Output: {"user_name": "Alice", "user_email": "alice@example.com", "user_theme": "dark"}
   # Direct access: {{user_name}}, {{user_email}}, {{user_theme}}
   ```
-  :::
 
 **Working with Arrays:**
 
@@ -736,7 +805,7 @@ states:
   - id: process-user
     # Requires: user_id, user_email from previous state
     assistant_id: processor
-    task: 'Process {{user_id}}'
+    task: "Process {{user_id}}"
 ```
 
 **3. Clean Up Temporary Data**
@@ -754,7 +823,7 @@ next:
 ```yaml
 # Don't store large outputs unnecessarily
 next:
-  store_in_context: false # If not needed later
+  store_in_context: false  # If not needed later
 ```
 
 **5. Use Conditional Cleanup**
@@ -762,7 +831,7 @@ next:
 ```yaml
 # Clear context between major workflow phases
 next:
-  clear_prior_messages: true # Start fresh
+  clear_prior_messages: true  # Start fresh
   reset_keys_in_context_store: [temp_data, cache]
 ```
 
