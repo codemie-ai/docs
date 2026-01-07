@@ -7,9 +7,26 @@ pagination_prev: admin/deployment/gcp/components-deployment/components-deploymen
 pagination_next: admin/configuration/index
 ---
 
-# Scripted Components Deployment
+# Scripted CodeMie Components Deployment
 
-The `helm-charts.sh` script ([codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository) automates the deployment of components using Helm charts.
+This guide walks you through deploying AI/Run CodeMie application components using the automated `helm-charts.sh` deployment script. The script handles the installation of all components in the correct dependency order using Helm charts.
+
+:::tip Recommended Approach
+Scripted deployment is recommended for standard installations as it automates component ordering, validates prerequisites, and ensures consistent configuration across all components.
+:::
+
+## Overview
+
+The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository automates the installation of:
+
+- **Infrastructure services** (Nginx Ingress, GCP Storage Class)
+- **Data layer** (Elasticsearch, PostgreSQL Operator)
+- **Security components** (Keycloak Operator, Keycloak, OAuth2 Proxy)
+- **Messaging system** (NATS, NATS Auth Callout)
+- **Core CodeMie services** (API, UI, MCP Connect, Mermaid Server)
+- **Observability stack** (Fluent Bit, Kibana, Kibana Dashboards)
+
+The script supports flexible deployment modes, allowing you to install all components at once or deploy specific component groups based on your needs.
 
 ## Prerequisites
 
