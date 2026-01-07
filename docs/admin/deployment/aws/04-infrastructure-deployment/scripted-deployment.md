@@ -88,7 +88,7 @@ TF_VAR_eks_admin_role_arn=""
 # The name of the policy that defines the permissions boundary
 TF_VAR_role_permissions_boundary_arn=""
 
-TF_VAR_cluster_version="1.33"
+TF_VAR_cluster_version="1.34"
 TF_VAR_demand_instance_types='[{ instance_type = "r5.xlarge" }]'
 TF_VAR_demand_max_nodes_count=2
 TF_VAR_demand_desired_nodes_count=2
