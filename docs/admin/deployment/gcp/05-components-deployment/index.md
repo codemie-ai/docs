@@ -218,6 +218,19 @@ Additional services for enhanced functionality:
 | ------------- | --------------- | ----------------------------------------------------------------------------------- |
 | **LLM Proxy** | –               | Load balancer and router for AI model requests (supports multiple providers/models) |
 
+### Deployment Order
+
+Components must be installed in the following sequence to satisfy dependencies:
+
+1. **Infrastructure** → Ingress Controller, Storage Class
+2. **Operators** → PostgreSQL Operator, Keycloak Operator
+3. **Data Layer** → Elasticsearch, PostgreSQL instances
+4. **Security** → Keycloak, OAuth2 Proxy
+5. **Messaging** → NATS
+6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
+7. **Observability** → Fluent Bit, Kibana
+8. **Optional** → LLM Proxy (if needed)
+
 ## Deployment Methods
 
 Choose your preferred deployment method:
