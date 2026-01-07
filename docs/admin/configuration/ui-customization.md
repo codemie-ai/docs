@@ -82,24 +82,6 @@ Controls whether the feedback feature is available.
 | ------- | ------- | -------- | --------------------------------------------------------------------- |
 | enabled | boolean | Yes      | Set to `true` to enable the feedback assistant, `false` to disable it |
 
-## Workflow Documentation
-
-Provides a link to workflow-specific documentation.
-
-```yaml
-- id: 'workflowDocumentation'
-  settings:
-    name: 'Workflow Documentation'
-    enabled: true
-    url: 'https://example-documentation.com'
-```
-
-| Setting | Type    | Required | Description                                                               |
-| ------- | ------- | -------- | ------------------------------------------------------------------------- |
-| name    | string  | Yes      | Display name for the workflow documentation link                          |
-| enabled | boolean | Yes      | Set to `true` to show the workflow documentation link, `false` to hide it |
-| url     | string  | Yes      | URL to your workflow documentation                                        |
-
 ## Configuration
 
 To configure it add the following blocks with specific for you configuration to the `codemie-helm-charts/codemie-api/values.yaml`:
@@ -130,11 +112,6 @@ extraObjects:
           - id: "feedbackAssistant"
             settings:
               enabled: false
-          - id: "workflowDocumentation"
-            settings:
-              name: "Workflow Documentation"
-              enabled: false
-              url: "https://example-documentation.com"
 ```
 
 ```yaml
