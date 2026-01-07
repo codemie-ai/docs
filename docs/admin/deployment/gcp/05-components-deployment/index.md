@@ -28,26 +28,78 @@ This phase assumes you have completed [Infrastructure Deployment](../infrastruct
 
 ## Prerequisites
 
-1. Obtain kubeconfig for created cluster.
-2. Make sure Kubernetes cluster has installed:
-   - Nginx Ingress Controller
-   - Storage class
+### Cluster Readiness
 
-:::info
-If your Kubernetes cluster does not already have an Nginx Ingress Controller and a Storage Class configured, don't worry. This guide includes detailed instructions for setting up both of these essential components in the appropriate sections that follow.
+Ensure your GKE cluster is ready for component deployment:
+
+- [x] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [x] **Cluster Access**: kubectl configured and authenticated to GKE cluster
+- [x] **Bastion/Jumpbox Access**: Connected to Bastion Host (for private clusters) or have authorized network access
+
+#### Configure Kubectl Access
+
+Obtain kubectl credentials using the appropriate Terraform output command based on your cluster access type:
+
+```bash
+# For public clusters or clusters with authorized networks
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_public_cluster
+
+# For completely private clusters (access via Bastion Host)
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_private_cluster
+```
+
+Verify cluster connectivity:
+
+```bash
+# Test cluster access
+kubectl get nodes
+
+# Check cluster information
+kubectl cluster-info
+```
+
+### Required Components
+
+The following components will be installed during this phase if not already present:
+
+- **Nginx Ingress Controller**: Routes external traffic to services
+- **GCP Storage Class**: Provides persistent storage for stateful components
+
+:::tip Automated Installation
+If your cluster doesn't have these components, don't worry. The deployment scripts and manual guides include steps to install them automatically.
 :::
 
-3. Clone [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
+### Repository and Access {#repository-and-access}
 
-4. Before deploying AI/Run CodeMie components, you need to properly set up pull secret:
+#### Helm Charts Repository
 
-Ask AI/Run CodeMie team to provide `key.json` file and email of a service account to pull images from our container registry. Create `codemie` namespace:
+Clone the Helm charts repository on your deployment machine (Bastion Host or local workstation):
+
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
+
+#### Container Registry Credentials
+
+Before deploying AI/Run CodeMie components, you need to set up authentication for the container registry.
+
+**Request Access**: Ask the AI/Run CodeMie team to provide:
+
+- `key.json` file (GCP service account credentials)
+- Service account email for pulling images from GCR
+
+**Create Namespace**:
 
 ```bash
 kubectl create namespace codemie
 ```
 
-Configure the secret in your cluster. Replace `%%PROJECT_NAME%%` with your project name:
+**Configure Registry Secret**:
+
+Replace `%%PROJECT_NAME%%` with your project name and create the pull secret:
 
 ```bash
 kubectl create secret docker-registry gcp-artifact-registry \
@@ -58,12 +110,23 @@ kubectl create secret docker-registry gcp-artifact-registry \
   -n codemie
 ```
 
-Reference the secret in `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service` and `mermaid-server` deployments:
+**Verify Secret**:
+
+```bash
+kubectl get secret gcp-artifact-registry -n codemie
+```
+
+:::info Pull Secret Usage
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+This is configured automatically in the values files:
 
 ```yaml
 imagePullSecrets:
   - name: gcp-artifact-registry
 ```
+
+:::
 
 ## AI/Run CodeMie Application Stack Overview
 
