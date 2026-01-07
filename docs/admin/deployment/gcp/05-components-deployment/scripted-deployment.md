@@ -30,17 +30,29 @@ The script supports flexible deployment modes, allowing you to install all compo
 
 ## Prerequisites
 
-- Make sure GKE cluster has installed:
-  - Nginx Ingress Controller
-  - GKE Storage Class
+Before starting deployment, ensure you have completed all requirements:
 
-:::info
-Use `all` script mode to install them, or step-by-step installation examples are available in the "Nginx Ingress Controller" and "GKE Storage Class" subsections under the "Manual AI/Run CodeMie Components Installation" section.
+### Verification Checklist
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [ ] **Cluster Access**: Connected to Bastion Host (for private clusters) or have authorized network access and kubectl configured for GKE
+- [ ] **Container Registry**: Completed [Container Registry Access Setup](./#repository-and-access) from overview page
+- [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
+- [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
+- [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
+
+:::warning Container Registry Access Required
+You must complete the Container Registry Access setup from the [Components Deployment Overview](./#repository-and-access) before proceeding. The script requires the `gcp-artifact-registry` pull secret to exist.
 :::
 
-- Ensure you have [Helm](https://helm.sh/docs/intro/install/) installed and configured
-- Ensure that the required cloud provider CLI tools and credentials are set up (e.g., Google Cloud SDK)
-- The script assumes that you are familiar with basic Helm chart deployment and the underlying cloud environment
+### Required Tools
+
+Ensure these tools are available on your deployment machine (Bastion Host or local workstation):
+
+- `kubectl` - Kubernetes cluster management
+- `helm` 3.16.0+ - Kubernetes package manager
+- `gcloud` CLI - For GCR authentication
+- `bash` - Script execution environment
 
 ## Script Parameters
 
