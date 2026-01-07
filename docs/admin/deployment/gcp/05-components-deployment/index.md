@@ -233,26 +233,54 @@ Components must be installed in the following sequence to satisfy dependencies:
 
 ## Deployment Methods
 
-Choose your preferred deployment method:
+Two deployment approaches are available depending on your needs:
 
-- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
-- **[Manual Deployment](./components-manual-deployment)** - Step-by-step manual installation of each component
+### Scripted Deployment (Recommended)
 
-## Finalizing Installation
+Automated deployment using the `helm-charts.sh` wrapper script:
 
-Regardless of your installation method, eventually you should have the following application stack available:
+- **Best for**: Standard deployments, quick setup, production environments
+- **Advantages**: Automated dependency ordering, validation checks, consistent configuration
+- **Duration**: ~20-30 minutes (depending on component count)
 
-| Component          | URL                                                   |
-| ------------------ | ----------------------------------------------------- |
-| AI/Run CodeMie UI  | `https://codemie.<your-domain>`                       |
-| AI/Run CodeMie API | `https://codemie.<your-domain>/code-assistant-api/v1` |
-| Keycloak UI        | `https://keycloak.<your-domain>/auth/admin`           |
-| Kibana             | `https://kibana.<your-domain>`                        |
+[→ Scripted Deployment Guide](./components-scripted-deployment)
 
-:::info
-Some components may be missing due to your setup configuration or use `http` protocol in private cluster.
+### Manual Deployment
+
+Step-by-step manual installation of each component:
+
+- **Best for**: Custom configurations, learning the stack, troubleshooting
+- **Advantages**: Full control over each component, easier to debug issues
+- **Duration**: ~1-2 hours (depending on familiarity)
+
+[→ Manual Deployment Guide](./components-manual-deployment)
+
+:::tip Recommendation
+Use **Scripted Deployment** for initial installations. Switch to manual deployment only if you need custom configurations or are troubleshooting specific issues.
 :::
+
+## Accessing Applications
+
+Once deployment is complete and validated, access the AI/Run CodeMie applications:
+
+### Application URLs
+
+Replace `<your-domain>` with your configured domain name (from infrastructure deployment):
+
+| Application        | URL                                                     | Description                      |
+| ------------------ | ------------------------------------------------------- | -------------------------------- |
+| **CodeMie UI**     | `http(s)://codemie.<your-domain>`                       | Main user interface              |
+| **CodeMie API**    | `http(s)://codemie.<your-domain>/code-assistant-api/v1` | REST API endpoint                |
+| **Keycloak Admin** | `http(s)://keycloak.<your-domain>/auth/admin`           | Identity management console      |
+| **Kibana**         | `http(s)://kibana.<your-domain>`                        | Data visualization and analytics |
+
+:::info Protocol and Domain
+
+- **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
+- **Domain Name**: Configured during infrastructure deployment (check Terraform outputs for `dns_name`)
+- **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
+  :::
 
 ## Next Steps
 
-After successful components deployment, proceed to [Configuration](../../../configuration/) to complete required setup steps.
+After successful component deployment, proceed to [Configuration](../../../configuration/) to set up users, AI models, and complete the platform configuration.
