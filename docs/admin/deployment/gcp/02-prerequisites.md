@@ -66,10 +66,6 @@ Your GKE cluster's firewall or VPC firewall rules must allow **outbound access**
 | `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
 | Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
 
-:::note Container Registry Access
-AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
-:::
-
 ## GKE Cluster Requirements
 
 ### Administrative Permissions
