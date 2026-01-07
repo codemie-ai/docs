@@ -165,6 +165,14 @@ Configure and save the mapper: Fill in the fields with the following values and 
 
 ![Attribute Mapper Configuration](@site/docs/admin/configuration/images/user-configuration/image-2025-9-19_4-43-39.png)
 
+Please note: Microsoft Azure Entra ID may provide email addresses using the following claims:
+
+- preferred_username
+- upn
+- email
+
+If the **applications** user attribute is not populated automatically, try using a different claim name.
+
 ---
 
 ### 5. Grant Admin Consent and Verify the Integration

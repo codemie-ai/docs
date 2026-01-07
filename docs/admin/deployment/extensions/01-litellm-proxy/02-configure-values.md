@@ -14,16 +14,8 @@ This step is required for both Automated and Manual setups.
 
 Add the following environment variables to your CodeMie API `values.yaml`: `codemie-api/values-<cloud>.yaml`
 
-:::note
-
-MODELS_ENV must equal the cloud you use for deployment: `aws`, `azure`, or `gcp`.
-
-:::
-
 ```yaml
 extraEnv:
-  - name: MODELS_ENV
-    value: 'aws'
   - name: LLM_PROXY_MODE
     value: 'lite_llm'
   - name: LLM_PROXY_ENABLED
