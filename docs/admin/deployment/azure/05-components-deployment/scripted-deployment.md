@@ -3,7 +3,6 @@ id: components-scripted-deployment
 sidebar_position: 1
 title: CodeMie Scripted Deployment
 sidebar_label: CodeMie Scripted Deployment
-pagination_next: admin/deployment/azure/ai-models-integration/ai-models-integration-overview
 ---
 
 # Scripted CodeMie Components Deployment

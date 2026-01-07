@@ -236,7 +236,7 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'category',
-          label: 'Deployment Guides',
+          label: 'Deployment',
           link: {
             type: 'doc',
             id: 'admin/deployment/index',
@@ -304,19 +304,6 @@ const sidebars: SidebarsConfig = {
                     },
                   ],
                 },
-                {
-                  type: 'category',
-                  label: 'AI Models Integration',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/aws/ai-models-integration/ai-models-integration-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/aws/ai-models-integration/aws-bedrock',
-                    'admin/deployment/aws/ai-models-integration/azure-openai',
-                  ],
-                },
               ],
             },
             {
@@ -379,19 +366,6 @@ const sidebars: SidebarsConfig = {
                     },
                   ],
                 },
-                {
-                  type: 'category',
-                  label: 'AI Models Integration',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/azure/ai-models-integration/ai-models-integration-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/azure/ai-models-integration/aws-bedrock',
-                    'admin/deployment/azure/ai-models-integration/azure-openai',
-                  ],
-                },
               ],
             },
             {
@@ -436,19 +410,6 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'admin/deployment/gcp/components-deployment/components-scripted-deployment',
                     'admin/deployment/gcp/components-deployment/components-manual-deployment',
-                  ],
-                },
-                {
-                  type: 'category',
-                  label: 'AI Models Integration',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/gcp/ai-models-integration/ai-models-integration-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/gcp/ai-models-integration/aws-bedrock',
-                    'admin/deployment/gcp/ai-models-integration/azure-openai',
                   ],
                 },
               ],
@@ -544,6 +505,28 @@ const sidebars: SidebarsConfig = {
           items: [
             'admin/configuration/datasources-configuration',
             'admin/configuration/ui-customization',
+            {
+              type: 'category',
+              label: 'AI Models Integration',
+              link: {
+                type: 'doc',
+                id: 'admin/configuration/ai-models-integration/ai-models-integration-overview',
+              },
+              collapsed: true,
+              items: [
+                'admin/configuration/ai-models-integration/codemie-native-llm-config',
+                {
+                  type: 'category',
+                  label: 'Enable LLM Models in Cloud accounts',
+                  collapsed: true,
+                  items: [
+                    'admin/configuration/ai-models-integration/azure-openai',
+                    'admin/configuration/ai-models-integration/aws-bedrock',
+                    'admin/configuration/ai-models-integration/google-vertex-ai',
+                  ],
+                },
+              ],
+            },
             {
               type: 'category',
               label: 'User Configuration',

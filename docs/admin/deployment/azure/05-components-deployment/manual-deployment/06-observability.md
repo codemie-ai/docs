@@ -3,7 +3,6 @@ id: observability
 sidebar_position: 6
 title: Observability
 sidebar_label: Observability
-pagination_next: admin/deployment/azure/ai-models-integration/ai-models-integration-overview
 ---
 
 # Observability Installation
