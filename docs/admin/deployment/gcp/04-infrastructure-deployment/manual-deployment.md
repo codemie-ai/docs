@@ -228,11 +228,11 @@ dns_domain = "codemie.example.com."           # Full domain with trailing dot
 # GKE API Access (optional)
 extra_authorized_networks = [
   {
-    cidr_block   = "203.0.113.0/24"           # Your office/VPN CIDR
+    cidr_block   = "x.x.x.x/24"               # Your office/VPN CIDR
     display_name = "Office Network"
   },
   {
-    cidr_block   = "198.51.100.0/24"          # Additional network if needed
+    cidr_block   = "x.x.x.x/24"               # Additional network if needed
     display_name = "VPN Network"
   }
 ]

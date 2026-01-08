@@ -162,7 +162,7 @@ Configure network access controls for Azure OpenAI services. All deployments inc
     TF_VAR_ai_models_public_network_access_enabled="true"
     TF_VAR_ai_models_network_acls='{
       "default_action": "Deny",
-      "ip_rules": ["203.0.113.0/24", "198.51.100.50"]
+      "ip_rules": ["x.x.x.x/24", "x.x.x.x"]
     }'
     ```
 

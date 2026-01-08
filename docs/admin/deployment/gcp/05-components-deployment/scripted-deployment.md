@@ -170,8 +170,8 @@ ingress-nginx:
       type: LoadBalancer
       # Define allowed IP ranges (REQUIRED for security)
       loadBalancerSourceRanges:
-        - 203.0.113.0/24      # Your office network
-        - 198.51.100.0/24     # Your VPN network
+        - x.x.x.x/24          # Your office network
+        - x.x.x.x/24          # Your VPN network
       enableHttp: false       # Force HTTPS only
 ```
 
@@ -193,7 +193,7 @@ service:
       type: LoadBalancer
       # Define allowed IP ranges for NATS access
       loadBalancerSourceRanges:
-        - 203.0.113.0/24      # Your office network
+        - x.x.x.x/24          # Your office network
 ```
 
 **3. Configure TLS Certificates**
@@ -355,8 +355,8 @@ kubectl get service codemie-nats -n codemie \
 **Example DNS Configuration:**
 
 ```
-*.example.com           A   35.204.123.45
-nats-codemie.example.com A   35.204.123.50
+*.example.com           A   x.x.x.x
+nats-codemie.example.com A   x.x.x.x
 ```
 
 ## Next Steps
