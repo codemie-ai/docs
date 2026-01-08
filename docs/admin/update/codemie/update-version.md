@@ -4,6 +4,8 @@ sidebar_position: 1
 title: Update AI/Run CodeMie
 sidebar_label: CodeMie Platform
 description: Step-by-step guide for updating AI/Run CodeMie components across AWS, Azure, and GCP deployments
+pagination_next: null
+pagination_prev: admin/update/update-overview
 ---
 
 # Update AI/Run CodeMie Core Components
