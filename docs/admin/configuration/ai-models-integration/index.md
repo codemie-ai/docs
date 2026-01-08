@@ -3,6 +3,7 @@ id: ai-models-integration-overview
 sidebar_position: 3
 title: AI Models Integration
 description: Configure LLM and embedding models for AI/Run CodeMie
+pagination_prev: admin/configuration/index
 ---
 
 # AI Models Integration

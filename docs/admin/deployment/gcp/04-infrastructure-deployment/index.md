@@ -3,6 +3,8 @@ id: infrastructure-deployment-overview
 title: GCP Infrastructure Deployment
 sidebar_label: Infrastructure Deployment
 sidebar_position: 4
+pagination_prev: admin/deployment/gcp/architecture
+pagination_next: admin/deployment/gcp/infrastructure-deployment/infrastructure-manual-deployment
 ---
 
 # GCP Infrastructure Deployment

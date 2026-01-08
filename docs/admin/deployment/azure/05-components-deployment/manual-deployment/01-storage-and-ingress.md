@@ -3,6 +3,7 @@ id: storage-and-ingress
 sidebar_position: 1
 title: Storage and Ingress
 sidebar_label: Storage and Ingress
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/data-layer
 ---
 

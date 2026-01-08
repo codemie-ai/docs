@@ -3,6 +3,7 @@ id: manual-deployment-overview
 sidebar_position: 2
 title: Manual Deployment Overview
 description: Overview of manual component installation process
+pagination_prev: admin/deployment/azure/components-deployment/components-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/storage-and-ingress
 ---
 

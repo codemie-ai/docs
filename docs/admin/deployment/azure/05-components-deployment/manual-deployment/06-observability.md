@@ -3,6 +3,8 @@ id: observability
 sidebar_position: 6
 title: Observability
 sidebar_label: Observability
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/configuration/index
 ---
 
 # Observability Installation

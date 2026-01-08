@@ -4,6 +4,8 @@ sidebar_label: Manual Deployment
 sidebar_position: 2
 title: Manual Deployment
 description: Deploy LiteLLM Proxy manually with granular control
+pagination_prev: admin/deployment/extensions/litellm-proxy/deployment/deployment-overview
+pagination_next: null
 ---
 
 # Manual Deployment

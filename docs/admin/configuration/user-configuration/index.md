@@ -3,6 +3,7 @@ id: user-configuration-overview
 sidebar_position: 1
 title: User Configuration Overview
 description: Complete workflow for configuring user authentication and authorization
+pagination_prev: admin/configuration/index
 ---
 
 This guide provides a complete workflow for configuring user authentication and authorization for the AI/Run CodeMie platform. The process is divided into three main parts that must be completed in sequence.

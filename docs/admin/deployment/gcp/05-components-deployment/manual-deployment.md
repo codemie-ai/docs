@@ -3,6 +3,8 @@ id: components-manual-deployment
 title: Manual Components Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 2
+pagination_prev: admin/deployment/gcp/components-deployment/components-deployment-overview
+pagination_next: admin/configuration/index
 ---
 
 # Manual Components Deployment

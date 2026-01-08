@@ -3,6 +3,8 @@ id: architecture
 title: AI/Run CodeMie Deployment Architecture
 sidebar_label: Architecture
 sidebar_position: 3
+pagination_prev: admin/deployment/azure/prerequisites
+pagination_next: admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview
 ---
 
 import ContainerResources from '../common/03-architecture/\_container-resources.mdx';

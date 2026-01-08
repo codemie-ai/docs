@@ -3,6 +3,8 @@ id: components-deployment-overview
 title: AI/Run CodeMie Components Deployment Overview
 sidebar_label: Components Deployment
 sidebar_position: 5
+pagination_prev: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/gcp/components-deployment/components-scripted-deployment
 ---
 
 # AI/Run CodeMie Components Deployment

@@ -4,6 +4,8 @@ sidebar_label: Configure Values
 sidebar_position: 3
 title: Step 2 - Configure API and Proxy Values
 description: Configure CodeMie API and LiteLLM values.yaml files
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Step 2: Configure CodeMie API and LiteLLM Values

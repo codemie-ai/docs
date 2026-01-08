@@ -3,6 +3,8 @@ id: platform-administration
 sidebar_position: 3
 title: Platform Administration
 description: Managing projects and platform settings
+pagination_prev: admin/configuration/user-configuration/user-configuration-overview
+pagination_next: null
 ---
 
 This guide is for users who have been assigned the global `admin` role. It explains how to create new projects and access existing ones within the AI/Run CodeMie platform.

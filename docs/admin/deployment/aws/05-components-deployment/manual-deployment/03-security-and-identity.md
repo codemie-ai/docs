@@ -3,6 +3,8 @@ id: security-and-identity
 sidebar_position: 4
 title: Security and Identity
 description: Install Keycloak and OAuth2 Proxy
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/plugin-engine
 ---
 
 # Security and Identity Installation

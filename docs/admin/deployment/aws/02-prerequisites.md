@@ -1,7 +1,10 @@
 ---
+id: prerequisites
 sidebar_position: 2
 title: Prerequisites
 description: Prerequisites for deploying AI/Run CodeMie on AWS
+pagination_prev: admin/deployment/aws/overview
+pagination_next: admin/deployment/aws/architecture
 ---
 
 # Prerequisites

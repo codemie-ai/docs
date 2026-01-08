@@ -3,6 +3,7 @@ id: user-authorization-overview
 sidebar_position: 1
 title: User Authorization Overview
 description: Assigning roles and attributes to users
+pagination_prev: admin/configuration/user-configuration/user-configuration-overview
 ---
 
 This section is a **mandatory** follow-up step for any user created in Part 1. Here, you will grant users permissions to access the platform and its projects.

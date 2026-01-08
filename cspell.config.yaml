@@ -118,6 +118,7 @@ words:
   - millicores
   - fluentbit
   - tfstate
+  - nslookup
   # Data
   - PostgreSQL
   - Postgres

@@ -1,7 +1,10 @@
 ---
+id: architecture
 sidebar_position: 3
 title: Architecture
 description: AI/Run CodeMie deployment architecture on AWS
+pagination_prev: admin/deployment/aws/prerequisites
+pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
 ---
 
 # AI/Run CodeMie Deployment Architecture

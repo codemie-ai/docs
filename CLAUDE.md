@@ -201,6 +201,83 @@ items: ['admin/deployment/01-overview']; // Will cause error!
 - **Document IDs**: Should be clean, semantic names without numbers (`overview`, `prerequisites`)
 - **Sidebar Position**: Use `sidebar_position` in front matter for ordering
 
+### Pagination Buttons (Previous/Next)
+
+Control Previous/Next navigation using front matter. Use pagination to create logical flows through sequential content.
+
+#### Navigation Patterns
+
+**1. Linear Workflows (Deployment Guides, Multi-Step Processes)**
+
+Chain pages together with both prev and next buttons:
+
+```yaml
+# Example: Deployment flow
+pagination_prev: admin/deployment/aws/prerequisites
+pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
+```
+
+**Complete flow**: Overview → Prerequisites → Architecture → Infrastructure → Components → Configuration
+
+**2. Section Overview Pages**
+
+Link back to parent, forward to recommended entry point:
+
+```yaml
+# Example: Components Deployment Overview
+pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/components-scripted-deployment
+```
+
+**3. Multi-Step Sequential Sections**
+
+Guide through each step, then to next section:
+
+```yaml
+# Manual deployment overview
+pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress
+
+# First step
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/data-layer
+
+# Last step
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/configuration/index  # Transition to next major section
+```
+
+**4. Terminal Pages (Standalone Topics)**
+
+Link back to section overview, no next button:
+
+```yaml
+# Configuration pages, reference docs, extension details
+pagination_prev: admin/configuration/index
+pagination_next: null
+```
+
+#### Decision Rules
+
+**Use next button when:**
+
+- Page is part of a sequential workflow
+- There's a clear "what's next" step
+- Users need guidance to the next logical action
+
+**Use `pagination_next: null` when:**
+
+- Page is standalone/reference material
+- Multiple valid paths exist (let users choose from sidebar)
+- Content doesn't require sequential reading
+
+**Best Practices:**
+
+- Use full document ID paths (`admin/deployment/aws/overview`)
+- Create clear, linear flows for processes
+- End workflows by guiding to the next logical section
+- Test navigation to avoid dead ends
+
 ## MDX Syntax Guidelines
 
 ### CRITICAL: Angle Brackets
@@ -384,6 +461,8 @@ id: new-page # Clean ID without numbers
 title: New Page Title # Full title
 sidebar_label: New Page # Short label for sidebar
 sidebar_position: 5 # Order in sidebar
+pagination_prev: section/overview # Link to section overview
+pagination_next: null # No next button for terminal pages
 ---
 ```
 
@@ -497,6 +576,7 @@ Before committing documentation changes:
 - Number filenames for ordering: `01-overview.md`
 - Use clean IDs in front matter: `id: overview`
 - Create nested categories for directories with multiple pages
+- Configure pagination buttons: section overviews link to parent, terminal pages set `pagination_next: null`
 
 ### ❌ Don't Do This
 

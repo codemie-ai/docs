@@ -26,7 +26,7 @@ Set up AI/Run CodeMie in your cloud environment with comprehensive deployment gu
   <FeatureCard
     icon="/img/cloud-providers/aws.svg"
     iconType="image"
-    invertInDarkTheme={true}
+    invertInDarkTheme={false}
     title="AWS Deployment"
     description="Deploy CodeMie on AWS with automated scripts or manual infrastructure setup using EKS, RDS, and other AWS services."
     link="/admin/deployment/aws/overview"
@@ -42,7 +42,7 @@ Set up AI/Run CodeMie in your cloud environment with comprehensive deployment gu
   <FeatureCard
     icon="/img/cloud-providers/gcp.svg"
     iconType="image"
-    invertInDarkTheme={true}
+    invertInDarkTheme={false}
     title="GCP Deployment"
     description="Deploy CodeMie on Google Cloud Platform using GKE and managed GCP services with Terraform automation."
     link="/admin/deployment/gcp/overview"
@@ -50,7 +50,7 @@ Set up AI/Run CodeMie in your cloud environment with comprehensive deployment gu
   <FeatureCard
     icon="/img/cloud-providers/aws.svg"
     iconType="image"
-    invertInDarkTheme={true}
+    invertInDarkTheme={false}
     title="AWS Marketplace"
     description="Deploy AI/Run CodeMie directly from AWS Marketplace with one-click installation and managed services."
     link="https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1"
@@ -105,15 +105,17 @@ Keep your CodeMie platform up-to-date with the latest features, security patches
 
 <FeatureGrid>
   <FeatureCard
-    icon="/img/icons/refresh.svg"
+    icon="/img/logo-light.svg"
     iconType="image"
-    title="Platform Updates"
+    invertInDarkTheme={false}
+    title="CodeMie Platform"
     description="Update AI/Run CodeMie to newer versions using automated scripts or manual procedures with detailed migration guidance."
     link="/admin/update/codemie/update-version"
   />
   <FeatureCard
     icon="/img/tools/keycloak.svg"
     iconType="image"
+    invertInDarkTheme={false}
     title="Keycloak Upgrade"
     description="Upgrade Keycloak identity and access management with version-specific migration guides and database updates."
     link="/admin/update/keycloak-upgrade/"
@@ -121,6 +123,7 @@ Keep your CodeMie platform up-to-date with the latest features, security patches
   <FeatureCard
     icon="/img/tools/elasticsearch.svg"
     iconType="image"
+    invertInDarkTheme={false}
     title="Observability Stack"
     description="Upgrade Elasticsearch and Kibana components for logging, monitoring, and analytics capabilities."
     link="/admin/update/elasticsearch-kibana-upgrade"
@@ -133,9 +136,9 @@ Keep your CodeMie platform up-to-date with the latest features, security patches
   <FeatureCard
     icon="/img/icons/info.svg"
     iconType="image"
-    title="Deployment FAQ"
+    title="FAQ"
     description="Find answers to frequently asked questions about deploying and managing AI/Run CodeMie."
-    link="/admin/deployment/faq"
+    link="/admin/faq"
   />
   <FeatureCard
     icon="/img/icons/chat.svg"
@@ -151,7 +154,7 @@ Keep your CodeMie platform up-to-date with the latest features, security patches
 For assistance with administration tasks:
 
 - Review component-specific troubleshooting sections
-- Consult the [FAQ](./deployment/faq) for common issues
+- Consult the [FAQ](./faq) for common issues
 - Contact your support team with detailed environment information
 - Check component logs for error messages and diagnostics
 

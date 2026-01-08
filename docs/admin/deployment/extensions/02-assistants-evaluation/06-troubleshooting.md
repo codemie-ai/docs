@@ -4,6 +4,8 @@ title: Troubleshooting
 sidebar_label: Troubleshooting
 sidebar_position: 7
 description: Troubleshooting common Langfuse deployment issues
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Troubleshooting

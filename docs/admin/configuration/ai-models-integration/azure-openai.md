@@ -3,6 +3,8 @@ id: azure-openai
 sidebar_position: 4
 title: Azure OpenAI
 description: Enable and configure Azure OpenAI models
+pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
+pagination_next: null
 ---
 
 # Azure OpenAI Configuration

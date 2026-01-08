@@ -4,6 +4,8 @@ title: Assistants Evaluation (Langfuse)
 sidebar_label: Assistants Evaluation
 sidebar_position: 2
 description: Install and configure Langfuse for LLM observability and evaluation
+pagination_prev: admin/deployment/extensions/extensions-overview
+pagination_next: null
 ---
 
 # Assistants Evaluation (Langfuse)

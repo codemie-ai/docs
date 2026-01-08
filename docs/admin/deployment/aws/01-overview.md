@@ -1,7 +1,10 @@
 ---
+id: overview
 sidebar_position: 1
 title: Overview
 description: Overview of AI/Run CodeMie deployment on AWS
+pagination_prev: admin/deployment/index
+pagination_next: admin/deployment/aws/prerequisites
 ---
 
 # AI/Run Deployment Guide on AWS
@@ -48,6 +51,6 @@ Learn how to update your AI/Run CodeMie installation.
 
 Optional extensions and additional features you can enable.
 
-### [FAQ](../faq)
+### [FAQ](../../faq)
 
 Frequently asked questions about deployment and configuration.

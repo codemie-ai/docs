@@ -3,6 +3,8 @@ id: observability
 sidebar_position: 7
 title: Observability
 description: Install Fluent Bit and Kibana Dashboards for logging and monitoring
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/configuration/index
 ---
 
 # Observability

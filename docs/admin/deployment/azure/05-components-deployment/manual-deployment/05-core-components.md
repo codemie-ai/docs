@@ -3,6 +3,7 @@ id: core-components
 sidebar_position: 5
 title: Core Components
 sidebar_label: Core Components
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/observability
 ---
 

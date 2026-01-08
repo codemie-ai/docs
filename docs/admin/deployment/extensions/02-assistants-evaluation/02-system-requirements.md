@@ -4,6 +4,8 @@ title: Langfuse System Requirements
 sidebar_label: System Requirements
 sidebar_position: 2
 description: System requirements and resource specifications for Langfuse
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Langfuse System Requirements

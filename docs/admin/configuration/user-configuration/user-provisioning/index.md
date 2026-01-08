@@ -3,6 +3,7 @@ id: user-provisioning-overview
 sidebar_position: 1
 title: User Provisioning Overview
 description: Methods for creating user accounts
+pagination_prev: admin/configuration/user-configuration/user-configuration-overview
 ---
 
 This section covers the first step of user configuration where you choose a method to create user entities in the system. After creating users through any of these methods, you must proceed to [User Authorization](../user-authorization/assign-roles) to grant them the necessary permissions.

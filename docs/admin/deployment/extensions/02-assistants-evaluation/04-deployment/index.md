@@ -4,6 +4,8 @@ title: Deployment
 sidebar_label: Deployment
 sidebar_position: 4
 description: Deploy Langfuse using automated or manual methods
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Deployment

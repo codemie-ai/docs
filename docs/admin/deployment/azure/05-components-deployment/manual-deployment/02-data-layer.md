@@ -3,6 +3,7 @@ id: data-layer
 sidebar_position: 2
 title: Data Layer
 sidebar_label: Data Layer
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/security-and-identity
 ---
 

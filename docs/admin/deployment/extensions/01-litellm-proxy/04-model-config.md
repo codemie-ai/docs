@@ -4,6 +4,8 @@ sidebar_label: Model Configuration
 sidebar_position: 5
 title: Step 4 - LiteLLM Model Configuration
 description: Configure LLM models and regions
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Step 4: LiteLLM Proxy Model Configuration

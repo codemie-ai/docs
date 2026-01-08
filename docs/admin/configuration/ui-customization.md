@@ -3,6 +3,8 @@ id: ui-customization
 sidebar_position: 3
 title: UI Customization
 description: Customize AI/Run CodeMie user interface
+pagination_next: null
+pagination_prev: admin/configuration/index
 ---
 
 To meet customer requirements, some of the UI elements on the AI/Run CodeMie can be hidden or changed via customer config. The `customer-config.yaml` file follows a YAML format with a specific structure:

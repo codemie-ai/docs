@@ -4,6 +4,8 @@ title: Manual Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 5
 description: Deploy Langfuse manually with granular control
+pagination_prev: admin/deployment/extensions/assistants-evaluation/deployment/deployment-overview
+pagination_next: null
 ---
 
 # Manual Deployment

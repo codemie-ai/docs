@@ -4,6 +4,8 @@ title: Prerequisites for Deployment
 sidebar_label: Deployment Prerequisites
 sidebar_position: 3
 description: Configuration steps required before deploying Langfuse
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Prerequisites for Deployment

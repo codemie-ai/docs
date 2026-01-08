@@ -3,6 +3,8 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
+pagination_prev: admin/deployment/azure/overview
+pagination_next: admin/deployment/azure/architecture
 ---
 
 import Tabs from '@theme/Tabs';

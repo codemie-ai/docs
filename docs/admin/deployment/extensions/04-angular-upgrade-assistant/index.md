@@ -4,6 +4,8 @@ title: Angular Upgrade Assistant
 sidebar_label: Angular Upgrade Assistant
 sidebar_position: 4
 description: AI-powered assistant for upgrading Angular projects to newer versions
+pagination_prev: admin/deployment/extensions/extensions-overview
+pagination_next: null
 ---
 
 # Angular Upgrade Assistant

@@ -4,6 +4,8 @@ title: Post-Deployment Configuration
 sidebar_label: Post-Deployment
 sidebar_position: 6
 description: Configure CodeMie integration and verify Langfuse deployment
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Post-Deployment Configuration

@@ -4,6 +4,8 @@ title: Salesforce DevForce AI
 sidebar_label: Salesforce DevForce AI
 sidebar_position: 5
 description: AI-powered development accelerator for Salesforce projects
+pagination_prev: admin/deployment/extensions/extensions-overview
+pagination_next: null
 ---
 
 # Salesforce DevForce AI
