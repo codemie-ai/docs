@@ -247,10 +247,6 @@ helm upgrade --install codemie-api \
 
 Replace `x.y.z` with the version identified in the Getting Started steps.
 
-:::warning API Startup Time
-The CodeMie API may take 5-10 minutes to fully start as it initializes connections to all dependent services (Elasticsearch, PostgreSQL, NATS, Keycloak).
-:::
-
 ### Step 5: Verify CodeMie API Deployment
 
 ```bash

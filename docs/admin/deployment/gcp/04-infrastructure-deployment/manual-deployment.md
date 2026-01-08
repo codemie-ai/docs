@@ -50,8 +50,6 @@ The manual deployment consists of two sequential phases. Each phase uses a dedic
 
 - Google Cloud Storage bucket for Terraform state files
 
-**Estimated Duration:** ~2-3 minutes
-
 ### Phase 2: Platform Infrastructure
 
 **Terraform Repository:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
@@ -66,8 +64,6 @@ The manual deployment consists of two sequential phases. Each phase uses a dedic
 - Cloud KMS Key
 - Cloud DNS Zones
 - Bastion Host (optional, for private clusters)
-
-**Estimated Duration:** ~25-35 minutes
 
 **Terraform Modules Used:**
 
@@ -294,8 +290,8 @@ terraform apply
 
 When prompted, review the planned changes and type `yes` to confirm deployment.
 
-:::warning Deployment Duration
-Platform deployment takes approximately **25-35 minutes**. The GKE cluster and Cloud SQL database are the longest operations. Do not interrupt the process once started.
+:::warning
+Do not interrupt the process once deployment is started.
 :::
 
 ### Step 5: Verify Deployment

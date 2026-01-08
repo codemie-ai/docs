@@ -207,10 +207,6 @@ Follow the component installation guides in the order listed above. Each guide p
 - Validation steps
 - Troubleshooting guidance
 
-:::tip Installation Duration
-Manual deployment typically takes 60-90 minutes to complete all components. You can pause between components if needed, as each step is independent once prerequisites are met.
-:::
-
 :::warning Respect Installation Order
 Installing components out of order will cause deployment failures. Always follow the numbered sequence to ensure dependencies are satisfied.
 :::

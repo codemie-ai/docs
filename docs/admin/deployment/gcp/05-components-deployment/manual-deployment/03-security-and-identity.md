@@ -97,10 +97,6 @@ helm upgrade --install keycloak keycloak-helm/. \
   --dependency-update
 ```
 
-:::warning Installation Time
-Keycloak installation may take 10-15 minutes as it initializes the database and configures realms.
-:::
-
 ### Step 3: Verify Keycloak Deployment
 
 Check that Keycloak is running:

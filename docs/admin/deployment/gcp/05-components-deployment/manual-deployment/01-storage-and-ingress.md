@@ -58,8 +58,8 @@ helm upgrade --install ingress-nginx ingress-nginx/. \
 - `--timeout 900s` - Maximum wait time (15 minutes)
 - `--dependency-update` - Updates chart dependencies before installation
 
-:::warning Installation Time
-This step typically takes 5-10 minutes as it provisions a GCP Load Balancer. Do not interrupt the process.
+:::warning
+Do not interrupt the process.
 :::
 
 ### Step 3: Verify Ingress Controller Deployment

@@ -277,8 +277,6 @@ Replace `<version>` with the version from Step 5 (e.g., `1.2.3`).
 The deployment script is idempotent, meaning you can safely re-run it multiple times. If the script fails or is interrupted, simply run it again with the same parameters to continue or retry the deployment.
 :::
 
-**Deployment will take approximately 20-30 minutes** depending on component count and cluster resources.
-
 ## Configuration Reference
 
 ### Script Parameters
