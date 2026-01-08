@@ -1,13 +1,14 @@
 ---
 id: components-scripted-deployment
 sidebar_position: 1
-title: Scripted Deployment
+title: CodeMie Scripted Deployment
+sidebar_label: CodeMie Scripted Deployment
 description: Automated components deployment using Helm charts
 pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
 pagination_next: admin/configuration/index
 ---
 
-# Scripted Components Deployment
+# Scripted CodeMie Components Deployment
 
 The `helm-charts.sh` script (from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository) automates the deployment of AI/Run CodeMie components using Helm charts.
 

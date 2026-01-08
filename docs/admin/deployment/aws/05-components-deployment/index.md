@@ -1,7 +1,8 @@
 ---
 id: components-deployment-overview
 sidebar_position: 5
-title: Components Deployment
+title: AI/Run CodeMie Components Deployment
+sidebar_label: CodeMie Components Deployment
 description: Deploy AI/Run CodeMie components on EKS
 pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
 pagination_next: admin/deployment/aws/components-deployment/components-scripted-deployment
@@ -80,7 +81,7 @@ Versions for Docker containers and Helm releases are matching
 | Keycloak                 | `docker.io/busybox:x.y.z`, `quay.io/keycloak/keycloak:x.y.z`, `registry.developers.crunchydata.com/crunchydata/crunchy-postgres:x.y.z` | Identity and access management solution that provides authentication and authorization capabilities for integration with oauth2-proxy component                                                                  |
 | Oauth2-Proxy             | `quay.io/oauth2-proxy/oauth2-proxy:x.y.z`                                                                                              | Authentication middleware that provides secure authentication for the AI/Run CodeMie application by integrating with Keycloak or any other IdP                                                                   |
 | NATS                     | `nats:x.y.z`, `natsio/nats-server-config-reloader:x.y.z`                                                                               | Message broker that serves as a crucial component of the AI/Run CodeMie Plugin Engine, facilitating communication between services                                                                               |
-| LLM Proxy                | –                                                                                                                                      | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
+| LLM Proxy                | `ghcr.io/berriai/litellm-database`                        | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
 | Fluent Bit               | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluent Bit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                             |
 
 ## Deployment Methods

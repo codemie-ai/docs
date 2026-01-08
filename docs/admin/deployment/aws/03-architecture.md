@@ -1,53 +1,39 @@
 ---
 id: architecture
+title: AI/Run CodeMie Deployment Architecture
+sidebar_label: Architecture
 sidebar_position: 3
-title: Architecture
-description: AI/Run CodeMie deployment architecture on AWS
 pagination_prev: admin/deployment/aws/prerequisites
 pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
 ---
 
+import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
+
 # AI/Run CodeMie Deployment Architecture
 
-The diagram below depicts the AI/Run CodeMie infrastructure deployment in one region (AZ) of the AWS public cloud environment.
+This page provides an overview of the AI/Run CodeMie deployment architecture on Amazon Web Services, including infrastructure components, network design, and resource requirements.
 
-![AI/Run CodeMie Architecture on AWS](./images/architecture-diagram.drawio.png)
+## Architecture Overview
 
-import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
+AI/Run CodeMie is deployed on Amazon Elastic Kubernetes Service (EKS) with supporting AWS services for networking, storage, and identity management.
+
+### High-Level Architecture Diagram
+
+The diagram below illustrates the complete AI/Run CodeMie infrastructure deployment on AWS:
+
+![AWS Architecture Diagram](./images/architecture-diagram.drawio.png)
+
+:::tip Architecture Customization
+The architecture can be customized based on your organization's security policies, compliance requirements, and operational preferences. Consult with your deployment team to discuss specific requirements.
+:::
+
+## Resource Requirements
 
 <ContainerResources />
 
-## Infrastructure Components
+## Next Steps
 
-The AI/Run CodeMie deployment on AWS includes the following main infrastructure components:
+After understanding the architecture, proceed to:
 
-### Compute
-
-- **Amazon EKS Cluster**: Managed Kubernetes service for running containerized applications
-- **Auto Scaling Groups (ASG)**: Automatically adjusts compute capacity for the EKS cluster
-
-### Networking
-
-- **VPC**: Isolated network environment
-- **Application Load Balancer (ALB)**: Distributes incoming HTTPS traffic to application services
-- **Network Load Balancer (NLB)**: Handles TCP traffic for NATS messaging system
-- **NAT Gateway**: Provides outbound internet connectivity for private subnets
-- **Route 53**: DNS service with automatically provisioned records
-
-### Storage
-
-- **Amazon RDS PostgreSQL**: Managed relational database service
-- **Amazon S3**: Object storage for application data and artifacts
-- **EBS Volumes**: Persistent block storage for Kubernetes pods
-
-### Security
-
-- **AWS KMS**: Key Management Service for encrypting and decrypting sensitive data
-- **IAM Roles**: Granular permissions for services and components
-- **AWS Certificate Manager**: Automated SSL/TLS certificate management for ALB and NLB
-- **Security Groups**: Network-level access control
-
-### Optional Features
-
-- **Internal ALB**: For private network communication when enabled
-- **Private DNS Hosted Zone**: For internal service discovery
+- [Infrastructure Deployment](./infrastructure-deployment) - Deploy the AWS infrastructure using Terraform
+- [Components Deployment](./components-deployment) - Deploy AI/Run CodeMie application components using Helm

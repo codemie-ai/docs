@@ -1,13 +1,13 @@
 ---
 id: manual-deployment-overview
-sidebar_position: 1
+sidebar_position: 2
 title: Manual Deployment Overview
 description: Overview of manual component installation process
 pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
 pagination_next: admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress
 ---
 
-# Manual Components Installation
+# Manual CodeMie Components Deployment
 
 Use this guide to manually install AI/Run CodeMie components one by one.
 

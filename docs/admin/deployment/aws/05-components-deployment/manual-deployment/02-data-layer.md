@@ -60,7 +60,7 @@ kubectl create secret generic codemie-postgresql \
 ```
 
 :::note
-Replace `<CODEMIE_POSTGRES_DATABASE_*>` placeholders with actual values from your `deployment_outputs.env` file (see [Infrastructure Deployment](../../infrastructure-deployment/infrastructure-scripted-deployment#3-generate-outputs)).
+Replace `<CODEMIE_POSTGRES_DATABASE_*>` placeholders with actual values from your `deployment_outputs.env` file (see [Infrastructure Deployment](../../infrastructure-deployment/infrastructure-scripted-deployment#deployment-outputs)).
 :::
 
 Secret example:
