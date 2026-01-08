@@ -3,6 +3,7 @@ id: datasources-configuration
 sidebar_position: 2
 title: Data Sources Configuration
 description: Configure data sources and loaders for AI/Run CodeMie
+pagination_next: null
 ---
 
 # Data Sources Configuration

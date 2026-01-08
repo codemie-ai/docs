@@ -4,7 +4,7 @@ title: Update Guide
 sidebar_label: Update Overview
 sidebar_position: 0
 pagination_next: null
-pagination_prev: null
+pagination_prev: admin/index
 ---
 
 # Update Guides

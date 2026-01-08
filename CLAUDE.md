@@ -201,6 +201,43 @@ items: ['admin/deployment/01-overview']; // Will cause error!
 - **Document IDs**: Should be clean, semantic names without numbers (`overview`, `prerequisites`)
 - **Sidebar Position**: Use `sidebar_position` in front matter for ordering
 
+### Pagination Buttons (Previous/Next)
+
+Control Previous/Next navigation buttons using front matter:
+
+**Section Overview/Index Pages:**
+```yaml
+pagination_prev: parent-section/index  # Link back to parent
+pagination_next: null                   # No next button
+```
+
+**Sub-pages (Terminal Pages):**
+```yaml
+pagination_prev: section/section-overview  # Link to section overview
+pagination_next: null                       # No next button
+```
+
+**Examples:**
+```yaml
+# admin/configuration/index.md
+pagination_prev: admin/index
+pagination_next: null
+
+# admin/configuration/ui-customization.md
+pagination_prev: admin/configuration/index
+pagination_next: null
+
+# admin/configuration/ai-models-integration/azure-openai.md
+pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
+pagination_next: null
+```
+
+**Key Rules:**
+- Section overviews: link back to parent, no next button
+- Terminal pages: no next button (`pagination_next: null`)
+- Sub-pages: link back to section overview
+- Use full document ID paths (e.g., `admin/configuration/index`)
+
 ## MDX Syntax Guidelines
 
 ### CRITICAL: Angle Brackets
@@ -384,6 +421,8 @@ id: new-page # Clean ID without numbers
 title: New Page Title # Full title
 sidebar_label: New Page # Short label for sidebar
 sidebar_position: 5 # Order in sidebar
+pagination_prev: section/overview # Link to section overview
+pagination_next: null # No next button for terminal pages
 ---
 ```
 
@@ -497,6 +536,7 @@ Before committing documentation changes:
 - Number filenames for ordering: `01-overview.md`
 - Use clean IDs in front matter: `id: overview`
 - Create nested categories for directories with multiple pages
+- Configure pagination buttons: section overviews link to parent, terminal pages set `pagination_next: null`
 
 ### ❌ Don't Do This
 

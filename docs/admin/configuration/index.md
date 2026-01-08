@@ -3,6 +3,8 @@ id: index
 title: Configuration Guide
 sidebar_label: Configuration
 sidebar_position: 2
+pagination_next: null
+pagination_prev: admin/index
 ---
 
 # Configuration Guide
@@ -53,4 +55,4 @@ Configure CodeMie API environment variables and application settings.
 
 ## Getting Help
 
-Each configuration guide provides detailed instructions and troubleshooting steps. For additional assistance, consult the [FAQ](../deployment/faq) or contact your support team.
+Each configuration guide provides detailed instructions and troubleshooting steps. For additional assistance, consult the [FAQ](../faq) or contact your support team.

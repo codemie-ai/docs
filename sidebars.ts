@@ -487,11 +487,6 @@ const sidebars: SidebarsConfig = {
                 'admin/deployment/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
               ],
             },
-            {
-              type: 'doc',
-              id: 'admin/deployment/faq',
-              label: 'FAQ',
-            },
           ],
         },
         {
@@ -549,7 +544,6 @@ const sidebars: SidebarsConfig = {
                     'admin/configuration/user-configuration/user-provisioning/manual-creation',
                     'admin/configuration/user-configuration/user-provisioning/keycloak-assistant',
                     'admin/configuration/user-configuration/user-provisioning/keycloak-entra-id',
-                    'admin/configuration/user-configuration/user-provisioning/entra-id-only',
                   ],
                 },
                 {
@@ -593,6 +587,11 @@ const sidebars: SidebarsConfig = {
             },
             'admin/update/elasticsearch-kibana-upgrade',
           ],
+        },
+        {
+          type: 'doc',
+          id: 'admin/faq',
+          label: 'FAQ',
         },
       ],
     },

@@ -3,6 +3,8 @@ id: google-vertex-ai
 sidebar_position: 6
 title: Google Vertex AI
 description: Enable Vertex AI API and configure partner models
+pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
+pagination_next: null
 ---
 
 # Google Vertex AI Configuration

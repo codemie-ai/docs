@@ -3,6 +3,8 @@ id: api-configuration
 title: CodeMie API Configuration Reference
 sidebar_label: API Configuration
 sidebar_position: 4
+pagination_prev: admin/configuration/index
+pagination_next: null
 ---
 
 # CodeMie API Configuration Reference

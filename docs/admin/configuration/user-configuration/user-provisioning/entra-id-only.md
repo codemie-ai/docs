@@ -3,6 +3,7 @@ id: entra-id-only
 sidebar_position: 5
 title: Entra ID Only
 description: Direct Entra ID integration without Keycloak
+draft: true
 ---
 
 This option allows you to use Microsoft Entra ID directly, without Keycloak, for authentication and user management.
