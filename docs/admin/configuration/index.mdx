@@ -1,0 +1,69 @@
+---
+id: index
+title: Configuration Guide
+sidebar_label: Configuration
+sidebar_position: 2
+pagination_next: null
+pagination_prev: admin/index
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Configuration Manuals
+
+Configure AI/Run CodeMie to match your organizational requirements and workflows.
+
+## Configuration Areas
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Data Sources"
+    description="Configure data source loaders for code files, Confluence, Jira, and file uploads. Set chunking strategies, token limits, batch sizes, and file extensions for optimal data processing."
+    link="/admin/configuration/datasources-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/appearance.svg"
+    iconType="image"
+    title="UI Customization"
+    description="Show or hide UI components like video portal, user guide, admin actions, feedback assistant, and workflow documentation. Configure custom URLs for help resources."
+    link="/admin/configuration/ui-customization"
+  />
+  <FeatureCard
+    icon="/img/icons/fingerprint.svg"
+    iconType="image"
+    title="User Configuration"
+    description="Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Microsoft Entra ID, Okta, etc."
+    link="/admin/configuration/user-configuration/"
+  />
+  <FeatureCard
+    icon="/img/icons/configuration.svg"
+    iconType="image"
+    title="AI Models Integration"
+    description="Configure LLM and embedding models from Azure OpenAI, AWS Bedrock, and Google Vertex AI. Choose between native integration or LiteLLM proxy."
+    link="/admin/configuration/ai-models-integration/"
+  />
+  <FeatureCard
+    icon="/img/icons/configuration.svg"
+    iconType="image"
+    title="API Configuration"
+    description="Comprehensive reference for all CodeMie API configuration parameters including application settings, AI provider integrations, database connections, security, file storage, NATS messaging, MCP protocol, tools configuration, and observability settings."
+    link="/admin/configuration/api-configuration"
+  />
+</FeatureGrid>
+
+## Before You Begin
+
+:::tip Configuration Prerequisites
+
+- Ensure AI/Run CodeMie is deployed and accessible
+- Have administrative access to Keycloak and the platform
+- Gather any credentials needed for external integrations (identity providers, data sources)
+
+:::
+
+## Getting Help
+
+Each configuration guide provides detailed instructions and troubleshooting steps. For additional assistance, consult the [FAQ](../faq) or contact your support team.

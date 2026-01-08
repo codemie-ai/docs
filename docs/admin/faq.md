@@ -26,6 +26,7 @@ Yes, all documentation including architecture and deployment guides can be share
 Yes, AI/Run CodeMie can be deployed with mock LLM configurations initially. Real LLM configurations can be provided later once client-side approvals are complete.
 
 This allows you to:
+
 - Begin infrastructure setup immediately
 - Test deployment and connectivity
 - Configure other components while waiting for LLM approvals
@@ -53,14 +54,17 @@ Integration actions, including supplying credentials and configuring connections
 Keycloak serves as a middleware identity broker that provides several key benefits:
 
 **Enhanced Flexibility:**
+
 - Greater configuration flexibility for CodeMie-specific authentication needs
 - Standardized authentication flow across different IdPs
 
 **Better Control:**
+
 - Enhanced control over user attributes and roles required by CodeMie
 - Custom attribute management for project access control
 
 **Seamless Integration:**
+
 - Works with OAuth2-proxy for application-level authentication
 - Easier management of authentication flows specific to AI/Run CodeMie
 
@@ -76,11 +80,13 @@ While you can integrate your existing IdP (OKTA, Entra ID, etc.) with Keycloak, 
 NATS is part of the AI/Run CodeMie Plugin Engine and enables tool execution in external environments beyond the CodeMie backend.
 
 **Use Cases:**
+
 - Execute tools on local developer laptops
 - Run tools in CI/CD environments
 - Connect to on-premises resources
 
 **Requirements:**
+
 - Network Load Balancer with public access
 - TLS certificate for secure communication
 - DNS name for consistent connectivity
@@ -95,21 +101,25 @@ This architecture allows CodeMie to securely connect to and execute tools in dis
 **Common Causes and Solutions:**
 
 **Credentials & Permissions:**
+
 - Verify cloud provider credentials are properly configured
 - Ensure IAM role/service principal has all required permissions
 - Check for MFA requirements or expired tokens
 
 **Quotas & Limits:**
+
 - Check cloud provider quotas and service limits
 - Request quota increases if needed
 - Verify subscription/account limits
 
 **Configuration Issues:**
+
 - Review Terraform logs for specific error messages
 - Validate variable values in `terraform.tfvars`
 - Ensure resource names are unique and comply with naming conventions
 
 **State Management:**
+
 - Check Terraform state file isn't corrupted
 - Verify state backend is accessible
 - Consider state file locking issues
@@ -124,21 +134,25 @@ Run `terraform plan` first to identify issues before applying changes.
 **Troubleshooting Steps:**
 
 **Resource Availability:**
+
 - Verify node groups are properly scaled and running
 - Check pod resource requests don't exceed available node capacity
 - Review node resource utilization
 
 **Networking:**
+
 - Verify security group and network ACL configurations
 - Check pod network policies
 - Ensure cluster networking add-ons are healthy
 
 **Image Access:**
+
 - Ensure container images are accessible from the cluster
 - Verify image pull secrets are configured correctly
 - Check container registry permissions
 
 **Pod Status:**
+
 ```bash
 kubectl get pods -n codemie
 kubectl describe pod <pod-name> -n codemie
@@ -155,26 +169,31 @@ Review events and logs for specific error messages.
 **Troubleshooting Steps:**
 
 **DNS Configuration:**
+
 - Verify DNS records are created and propagated (use `nslookup` or `dig`)
 - Check DNS points to correct load balancer endpoint
 - Allow time for DNS propagation (up to 48 hours in some cases)
 
 **SSL/TLS Certificates:**
+
 - Verify certificate status and validation
 - Check certificate covers the correct domain(s)
 - Ensure certificate is properly attached to load balancer
 
 **Load Balancer Health:**
+
 - Check load balancer target groups show healthy targets
 - Verify backend services are running
 - Review load balancer access logs
 
 **Network Security:**
+
 - Verify security group rules allow inbound traffic on ports 80/443
 - Check network ACLs aren't blocking traffic
 - Ensure firewall rules permit access
 
 **Testing:**
+
 ```bash
 # Test DNS resolution
 nslookup your-domain.com

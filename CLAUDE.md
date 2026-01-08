@@ -206,18 +206,21 @@ items: ['admin/deployment/01-overview']; // Will cause error!
 Control Previous/Next navigation buttons using front matter:
 
 **Section Overview/Index Pages:**
+
 ```yaml
 pagination_prev: parent-section/index  # Link back to parent
 pagination_next: null                   # No next button
 ```
 
 **Sub-pages (Terminal Pages):**
+
 ```yaml
 pagination_prev: section/section-overview  # Link to section overview
 pagination_next: null                       # No next button
 ```
 
 **Examples:**
+
 ```yaml
 # admin/configuration/index.md
 pagination_prev: admin/index
@@ -233,6 +236,7 @@ pagination_next: null
 ```
 
 **Key Rules:**
+
 - Section overviews: link back to parent, no next button
 - Terminal pages: no next button (`pagination_next: null`)
 - Sub-pages: link back to section overview
