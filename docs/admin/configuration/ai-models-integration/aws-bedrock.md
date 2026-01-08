@@ -46,7 +46,7 @@ Choose a region that:
 - Supports the models you need
 - Is close to your users for lower latency
 - Meets your data residency requirements
-:::
+  :::
 
 ## Step 2: Request Model Access
 
