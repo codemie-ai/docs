@@ -476,15 +476,6 @@ Once connected via RDP, open a web browser on the Bastion Host to access interna
 
 ### Tips for Using the Bastion Host
 
-#### Running Chrome on Bastion
-
-The Bastion Host may require root privileges to run Chrome:
-
-```bash
-# Run Chrome without sandbox (required for root user)
-/usr/bin/google-chrome --no-sandbox
-```
-
 #### Pasting Commands into Terminal
 
 Use the correct keyboard shortcut for pasting in Linux terminal:
