@@ -4,6 +4,8 @@ title: Automated Deployment (Recommended)
 sidebar_label: Automated Deployment
 sidebar_position: 4
 description: Deploy Langfuse automatically using the deployment script
+pagination_prev: admin/deployment/extensions/assistants-evaluation/deployment/deployment-overview
+pagination_next: null
 ---
 
 # Automated Deployment (Recommended)

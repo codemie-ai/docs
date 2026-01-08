@@ -4,6 +4,8 @@ title: Operational Queries
 sidebar_label: Operational Queries
 sidebar_position: 8
 description: ClickHouse queries for monitoring and analyzing Langfuse data
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Operational Queries

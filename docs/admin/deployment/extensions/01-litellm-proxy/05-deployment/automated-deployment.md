@@ -4,6 +4,8 @@ sidebar_label: Automated Deployment
 sidebar_position: 1
 title: Automated Deployment (Recommended)
 description: Deploy LiteLLM Proxy automatically using the deployment script
+pagination_prev: admin/deployment/extensions/litellm-proxy/deployment/deployment-overview
+pagination_next: null
 ---
 
 # Automated Deployment (Recommended)

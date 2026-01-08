@@ -3,6 +3,8 @@ id: infrastructure-scripted-deployment
 sidebar_position: 1
 title: Scripted Deployment
 description: Automated AWS infrastructure deployment using scripts
+pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/components-deployment-overview
 ---
 
 # Scripted Infrastructure Deployment

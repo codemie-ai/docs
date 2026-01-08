@@ -3,6 +3,8 @@ id: components-deployment-overview
 sidebar_position: 5
 title: AI/Run CodeMie Components Deployment
 sidebar_label: CodeMie Components Deployment
+pagination_prev: admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/azure/components-deployment/components-scripted-deployment
 ---
 
 # AI/Run CodeMie Components Deployment

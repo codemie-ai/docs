@@ -4,6 +4,8 @@ sidebar_label: Deployment
 sidebar_position: 6
 title: Step 5 - Deployment
 description: Deploy LiteLLM Proxy using automated or manual methods
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Step 5: Deployment

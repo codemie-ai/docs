@@ -3,6 +3,8 @@ id: infrastructure-deployment-overview
 sidebar_position: 4
 title: Infrastructure Deployment
 description: Deploy AWS infrastructure for AI/Run CodeMie
+pagination_prev: admin/deployment/aws/architecture
+pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-scripted-deployment
 ---
 
 # AWS Infrastructure Deployment

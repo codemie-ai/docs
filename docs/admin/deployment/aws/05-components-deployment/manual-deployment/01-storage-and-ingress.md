@@ -3,6 +3,8 @@ id: storage-and-ingress
 sidebar_position: 2
 title: Storage and Ingress
 description: Install storage class and ingress controller
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/data-layer
 ---
 
 # Storage and Ingress Setup

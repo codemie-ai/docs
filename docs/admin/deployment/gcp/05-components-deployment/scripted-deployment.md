@@ -3,6 +3,8 @@ id: components-scripted-deployment
 title: Scripted Components Deployment
 sidebar_label: Scripted Deployment
 sidebar_position: 1
+pagination_prev: admin/deployment/gcp/components-deployment/components-deployment-overview
+pagination_next: admin/configuration/index
 ---
 
 # Scripted Components Deployment

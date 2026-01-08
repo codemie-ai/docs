@@ -3,6 +3,7 @@ id: security-and-identity
 sidebar_position: 3
 title: Security and Identity
 sidebar_label: Security and Identity
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/plugin-engine
 ---
 

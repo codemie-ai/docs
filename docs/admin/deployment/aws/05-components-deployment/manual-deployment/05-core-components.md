@@ -3,6 +3,8 @@ id: core-components
 sidebar_position: 6
 title: Core Components
 description: Install AI/Run CodeMie core components
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/observability
 ---
 
 # AI/Run CodeMie Core Installation

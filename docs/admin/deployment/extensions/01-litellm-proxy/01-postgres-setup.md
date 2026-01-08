@@ -4,6 +4,8 @@ sidebar_label: PostgreSQL Setup
 sidebar_position: 2
 title: Step 1 - PostgreSQL Database Setup
 description: Configure PostgreSQL database for LiteLLM Proxy
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Step 1: PostgreSQL Database Setup

@@ -4,6 +4,8 @@ sidebar_label: LiteLLM Proxy
 sidebar_position: 1
 title: LiteLLM Proxy Installation and Configuration Guide
 description: Load balancing and high availability for LLM requests
+pagination_prev: admin/deployment/extensions/extensions-overview
+pagination_next: null
 ---
 
 # LiteLLM Proxy Installation and Configuration Guide

@@ -3,6 +3,7 @@ id: plugin-engine
 sidebar_position: 4
 title: Plugin Engine
 sidebar_label: Plugin Engine
+pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/core-components
 ---
 

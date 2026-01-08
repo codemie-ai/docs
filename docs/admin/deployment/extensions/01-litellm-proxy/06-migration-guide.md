@@ -4,6 +4,8 @@ sidebar_label: Migration from DIAL
 sidebar_position: 7
 title: Appendix - Migration Guide from DIAL to LiteLLM
 description: Migrate from deprecated DIAL Proxy to LiteLLM
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Appendix: Migration Guide from DIAL to LiteLLM

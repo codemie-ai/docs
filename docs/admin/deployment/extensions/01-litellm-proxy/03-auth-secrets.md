@@ -4,6 +4,8 @@ sidebar_label: Authentication
 sidebar_position: 4
 title: Step 3 - Cloud Provider Authentication
 description: Configure authentication secrets for AWS, Azure, and GCP
+pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
+pagination_next: null
 ---
 
 # Step 3: Cloud Provider Authentication Secrets

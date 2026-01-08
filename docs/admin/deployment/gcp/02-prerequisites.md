@@ -3,6 +3,8 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
+pagination_prev: admin/deployment/gcp/overview
+pagination_next: admin/deployment/gcp/architecture
 ---
 
 # Prerequisites

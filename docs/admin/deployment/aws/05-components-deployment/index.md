@@ -3,6 +3,8 @@ id: components-deployment-overview
 sidebar_position: 5
 title: Components Deployment
 description: Deploy AI/Run CodeMie components on EKS
+pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/components-scripted-deployment
 ---
 
 # AI/Run CodeMie Components Deployment

@@ -3,6 +3,8 @@ id: data-layer
 sidebar_position: 3
 title: Data Layer
 description: Install Elasticsearch, Kibana, and PostgreSQL
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/security-and-identity
 ---
 
 # Data Layer Installation

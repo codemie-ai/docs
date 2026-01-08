@@ -3,6 +3,8 @@ id: components-scripted-deployment
 sidebar_position: 1
 title: CodeMie Scripted Deployment
 sidebar_label: CodeMie Scripted Deployment
+pagination_prev: admin/deployment/azure/components-deployment/components-deployment-overview
+pagination_next: admin/configuration/index
 ---
 
 # Scripted CodeMie Components Deployment

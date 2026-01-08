@@ -4,6 +4,8 @@ title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 1
 description: Prerequisites for installing Langfuse
+pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+pagination_next: null
 ---
 
 # Prerequisites

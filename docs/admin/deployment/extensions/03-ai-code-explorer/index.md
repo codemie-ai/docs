@@ -4,6 +4,8 @@ title: AI Code Explorer (AICE)
 sidebar_label: AI Code Explorer
 sidebar_position: 3
 description: Deploy and configure AI Code Explorer for intelligent code analysis and exploration
+pagination_prev: admin/deployment/extensions/extensions-overview
+pagination_next: null
 ---
 
 # AI Code Explorer (AICE)

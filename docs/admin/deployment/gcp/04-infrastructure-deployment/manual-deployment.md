@@ -3,6 +3,8 @@ id: infrastructure-manual-deployment
 title: Manual Infrastructure Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 1
+pagination_prev: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/gcp/components-deployment/components-deployment-overview
 ---
 
 # Manual Infrastructure Deployment

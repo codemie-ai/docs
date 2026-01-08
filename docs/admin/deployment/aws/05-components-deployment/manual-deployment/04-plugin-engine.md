@@ -3,6 +3,8 @@ id: plugin-engine
 sidebar_position: 5
 title: Plugin Engine
 description: Install NATS and NATS Auth Callout
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/core-components
 ---
 
 # Plugin Engine Installation
