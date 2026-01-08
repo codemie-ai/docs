@@ -39,11 +39,11 @@ You must be authenticated to Azure CLI before running the deployment script. Run
 
 The script automatically deploys infrastructure in three sequential phases:
 
-| Phase                                | Description                                                      | Required | Duration   |
-| ------------------------------------ | ---------------------------------------------------------------- | -------- | ---------- |
-| **Phase 1: State Backend**           | Creates Azure Storage Account for Terraform state files          | Yes      | ~2-3 min   |
-| **Phase 2: Platform Infrastructure** | Deploys AKS, networking, storage, databases, security components | Yes      | ~25-35 min |
-| **Phase 3: AI Models**               | Provisions Azure OpenAI services (if enabled)                    | Optional | ~5-10 min  |
+| Phase                                | Description                                                      | Required |
+| ------------------------------------ | ---------------------------------------------------------------- | -------- |
+| **Phase 1: State Backend**           | Creates Azure Storage Account for Terraform state files          | Yes      |
+| **Phase 2: Platform Infrastructure** | Deploys AKS, networking, storage, databases, security components | Yes      |
+| **Phase 3: AI Models**               | Provisions Azure OpenAI services (if enabled)                    | Optional |
 
 :::info Skipping AI Models
 Set `DEPLOY_AI_MODELS="false"` in configuration to skip Phase 3 if using external AI providers.
@@ -113,7 +113,7 @@ The script will:
 6. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details than will be required during next phases
 
 :::warning Deployment in Progress
-Do not interrupt the script during execution. The deployment process can take 30-45 minutes. Monitor the output for any errors.
+Do not interrupt the script during execution. Monitor the output for any errors.
 :::
 
 ## Configuration Reference
@@ -563,7 +563,6 @@ kubectl cluster-info
 **Solutions**:
 
 - Check Azure Portal for resource provisioning status
-- AKS deployment typically takes 20-30 minutes
 - Review logs for stuck Terraform operations
 - Ensure Azure services in selected region are available
 
