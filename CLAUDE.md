@@ -203,44 +203,80 @@ items: ['admin/deployment/01-overview']; // Will cause error!
 
 ### Pagination Buttons (Previous/Next)
 
-Control Previous/Next navigation buttons using front matter:
+Control Previous/Next navigation using front matter. Use pagination to create logical flows through sequential content.
 
-**Section Overview/Index Pages:**
+#### Navigation Patterns
+
+**1. Linear Workflows (Deployment Guides, Multi-Step Processes)**
+
+Chain pages together with both prev and next buttons:
 
 ```yaml
-pagination_prev: parent-section/index  # Link back to parent
-pagination_next: null                   # No next button
+# Example: Deployment flow
+pagination_prev: admin/deployment/aws/prerequisites
+pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
 ```
 
-**Sub-pages (Terminal Pages):**
+**Complete flow**: Overview → Prerequisites → Architecture → Infrastructure → Components → Configuration
+
+**2. Section Overview Pages**
+
+Link back to parent, forward to recommended entry point:
 
 ```yaml
-pagination_prev: section/section-overview  # Link to section overview
-pagination_next: null                       # No next button
+# Example: Components Deployment Overview
+pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/components-scripted-deployment
 ```
 
-**Examples:**
+**3. Multi-Step Sequential Sections**
+
+Guide through each step, then to next section:
 
 ```yaml
-# admin/configuration/index.md
-pagination_prev: admin/index
-pagination_next: null
+# Manual deployment overview
+pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress
 
-# admin/configuration/ui-customization.md
+# First step
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/data-layer
+
+# Last step
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/configuration/index  # Transition to next major section
+```
+
+**4. Terminal Pages (Standalone Topics)**
+
+Link back to section overview, no next button:
+
+```yaml
+# Configuration pages, reference docs, extension details
 pagination_prev: admin/configuration/index
 pagination_next: null
-
-# admin/configuration/ai-models-integration/azure-openai.md
-pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
-pagination_next: null
 ```
 
-**Key Rules:**
+#### Decision Rules
 
-- Section overviews: link back to parent, no next button
-- Terminal pages: no next button (`pagination_next: null`)
-- Sub-pages: link back to section overview
-- Use full document ID paths (e.g., `admin/configuration/index`)
+**Use next button when:**
+
+- Page is part of a sequential workflow
+- There's a clear "what's next" step
+- Users need guidance to the next logical action
+
+**Use `pagination_next: null` when:**
+
+- Page is standalone/reference material
+- Multiple valid paths exist (let users choose from sidebar)
+- Content doesn't require sequential reading
+
+**Best Practices:**
+
+- Use full document ID paths (`admin/deployment/aws/overview`)
+- Create clear, linear flows for processes
+- End workflows by guiding to the next logical section
+- Test navigation to avoid dead ends
 
 ## MDX Syntax Guidelines
 
