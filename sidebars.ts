@@ -409,7 +409,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Components Deployment',
+                  label: 'CodeMie Components Deployment',
                   link: {
                     type: 'doc',
                     id: 'admin/deployment/gcp/components-deployment/components-deployment-overview',
@@ -419,7 +419,7 @@ const sidebars: SidebarsConfig = {
                     'admin/deployment/gcp/components-deployment/components-scripted-deployment',
                     {
                       type: 'category',
-                      label: 'Manual Deployment',
+                      label: 'CodeMie Manual Deployment',
                       link: {
                         type: 'doc',
                         id: 'admin/deployment/gcp/components-deployment/manual-deployment/manual-deployment-overview',
