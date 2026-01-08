@@ -762,9 +762,9 @@ Each model entry supports these configuration options:
 | `enabled`                          | boolean | Model available for selection (allows disabling without removal)             |
 | `provider`                         | string  | Provider type: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic` |
 | `default_for_categories`           | list    | Categories where this model is auto-selected                                 |
-| `cost.input`                       | float   | USD per million input tokens for cost tracking                               |
-| `cost.output`                      | float   | USD per million output tokens                                                |
-| `cost.cache_read_input_token_cost` | float   | USD per million cached tokens (for providers supporting caching)             |
+| `cost.input`                       | float   | USD per input token for cost tracking                                        |
+| `cost.output`                      | float   | USD per output token                                                         |
+| `cost.cache_read_input_token_cost` | float   | USD per cached token (for providers supporting caching)                      |
 | `max_output_tokens`                | integer | Maximum generation length supported by model                                 |
 | `features.streaming`               | boolean | Supports streaming responses for real-time output                            |
 | `features.tools`                   | boolean | Supports function calling / tool use                                         |

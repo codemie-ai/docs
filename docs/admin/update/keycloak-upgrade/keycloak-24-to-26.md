@@ -3,6 +3,7 @@ id: keycloak-24-to-26
 sidebar_position: 8
 title: Keycloak Upgrade 24.0.4 → 26.4.5
 description: Upgrade Keycloak from 24.0.4 to 26.4.5
+pagination_next: null
 ---
 
 # Upgrade Keycloak from 24.0.4 to 26.4.5

@@ -1,8 +1,10 @@
 ---
 id: update-overview
 title: Update Guide
-sidebar_label: Overview
+sidebar_label: Update Overview
 sidebar_position: 0
+pagination_next: null
+pagination_prev: null
 ---
 
 # Update Guides

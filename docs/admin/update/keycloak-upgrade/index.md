@@ -3,6 +3,8 @@ id: keycloak-upgrade
 sidebar_position: 1
 title: Keycloak Upgrade
 description: Keycloak upgrade guide
+pagination_next: null
+pagination_prev: admin/update/update-overview
 ---
 
 # Keycloak Upgrade
