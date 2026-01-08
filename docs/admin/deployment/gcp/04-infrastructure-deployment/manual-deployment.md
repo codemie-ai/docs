@@ -458,12 +458,6 @@ Open your Remote Desktop client and connect:
 | **Username** | `root`                     |
 | **Password** | Password set in SSH Step 2 |
 
-**Platform-specific clients:**
-
-- **Windows**: Remote Desktop Connection (built-in)
-- **macOS**: Microsoft Remote Desktop (from App Store)
-- **Linux**: Remmina, Vinagre, or xfreerdp
-
 #### Step 3: Access Web Applications
 
 Once connected via RDP, open a web browser on the Bastion Host to access internal services:
