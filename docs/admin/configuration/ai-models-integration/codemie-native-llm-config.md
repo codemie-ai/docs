@@ -19,6 +19,8 @@ Native integration uses environment-specific YAML configuration files to define 
 
 **Example**: `MODELS_ENV=production` → loads `llm-production-config.yaml`
 
+For detailed parameter descriptions, see the [LLM Model Configuration Reference](../api-configuration#llm-model-configuration).
+
 ### Reference Configurations
 
 <details>
@@ -651,74 +653,7 @@ kubectl logs -n codemie deployment/codemie-api | grep "LLMConfig initiated"
 
 ### Configuration Parameters Reference
 
-:::tip Cost Information
-Model pricing and cost details can be found in the [LiteLLM Models Database](https://models.litellm.ai/), which provides comprehensive cost information for all supported providers and models.
-:::
-
-#### LLM Models
-
-| Parameter                          | Required | Type    | Description                                                              |
-| ---------------------------------- | -------- | ------- | ------------------------------------------------------------------------ |
-| `base_name`                        | Yes      | string  | Model identifier used internally                                         |
-| `deployment_name`                  | Yes      | string  | Cloud provider deployment/model name                                     |
-| `label`                            | No       | string  | Display name shown in UI                                                 |
-| `multimodal`                       | No       | boolean | Model supports image/vision inputs                                       |
-| `enabled`                          | Yes      | boolean | Make model available to users                                            |
-| `provider`                         | Yes      | enum    | Provider: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic`  |
-| `default_for_categories`           | No       | list    | Categories where model is default: `global`, `chat`, `code`, `reasoning` |
-| `max_output_tokens`                | No       | integer | Maximum output tokens supported                                          |
-| `react_agent`                      | No       | boolean | Model supports ReAct agent patterns                                      |
-| `cost.input`                       | No       | float   | Input token cost in USD                                                  |
-| `cost.output`                      | No       | float   | Output token cost in USD                                                 |
-| `cost.cache_read_input_token_cost` | No       | float   | Cached input token cost in USD                                           |
-| `features`                         | No       | object  | Model capability flags (see below)                                       |
-
-#### Model Features
-
-Control which features are available for specific models:
-
-```yaml
-features:
-  streaming: true              # Supports streaming responses
-  tools: true                  # Supports function/tool calling
-  temperature: true            # Supports temperature parameter
-  parallel_tool_calls: false   # Supports parallel tool execution
-  system_prompt: true          # Supports system messages
-  max_tokens: true             # Supports max_tokens parameter
-  top_p: true                  # Supports top_p parameter
-```
-
-#### Model Categories
-
-Use `default_for_categories` to set model preferences:
-
-- `global`: Default for all operations
-- `chat`: General conversations
-- `code`: Code generation and analysis
-- `documentation`: Documentation generation
-- `summarization`: Text summarization
-- `translation`: Language translation
-- `knowledge_base`: RAG and knowledge retrieval
-- `workflow`: Workflow orchestration
-- `file_analysis`: File content analysis
-- `reasoning`: Complex reasoning tasks
-- `planning`: Planning and strategy
-
-:::warning Required Configuration
-At least one LLM model and one Embedding model must be configured as default for the `global` category using the `default_for_categories` parameter.
-:::
-
-#### Embedding Models
-
-| Parameter                | Required | Type    | Description                                   |
-| ------------------------ | -------- | ------- | --------------------------------------------- |
-| `base_name`              | Yes      | string  | Embedding model identifier                    |
-| `deployment_name`        | Yes      | string  | Provider deployment name                      |
-| `label`                  | No       | string  | Display name in UI                            |
-| `enabled`                | Yes      | boolean | Make model available                          |
-| `provider`               | Yes      | enum    | Provider: `azure_openai`, `aws_bedrock`, etc. |
-| `default_for_categories` | No       | list    | Default embedding model categories            |
-| `cost.input`             | No       | float   | Input token cost in USD                       |
+For detailed parameter descriptions, model categories, features, and embedding model configuration, see the [LLM Model Configuration Reference](../api-configuration#llm-model-configuration).
 
 ## Useful Resources
 

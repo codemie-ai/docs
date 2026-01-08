@@ -46,8 +46,6 @@ Choose a region that:
 - Supports the models you need
 - Is close to your users for lower latency
 - Meets your data residency requirements
-
-Common regions: `us-west-2`, `us-east-1`, `eu-central-1`
 :::
 
 ## Step 2: Request Model Access
@@ -77,9 +75,13 @@ Common regions: `us-west-2`, `us-east-1`, `eu-central-1`
 
 ### Cross-Region Model Availability
 
-Different models are available in different regions:
+Different models are available in different AWS regions. Not all foundation models are accessible in every region.
 
-Check current availability: [AWS Bedrock Model Availability](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html)
+**Before requesting access**:
+
+1. Verify model availability in your target region
+2. Check [AWS Bedrock Model Availability](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html)
+3. Consider data residency and compliance requirements
 
 ## Quota and Limits
 
@@ -98,4 +100,4 @@ AWS Bedrock has quotas for:
 3. Select the quota you need to increase
 4. Click **Request quota increase**
 5. Provide justification and desired limit
-6. Submit request (typically approved within 1-2 days)
+6. Submit request (typically approved within 2-7 days)

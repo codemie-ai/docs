@@ -53,7 +53,11 @@ Deploy LiteLLM as a centralized proxy gateway with enterprise features including
 
 **Configuration**: Requires [LiteLLM Proxy deployment](../../deployment/extensions/litellm-proxy/)
 
-**Proxy Mode**: `LLM_PROXY_MODE=lite_llm`
+**Required Environment Variables**:
+
+- `LLM_PROXY_MODE=lite_llm` - Enable LiteLLM Proxy mode
+- `LLM_PROXY_ENDPOINT=https://your-litellm-proxy-url` - LiteLLM Proxy URL
+- `LLM_PROXY_API_KEY=your-api-key` - LiteLLM Proxy authentication key
 
 [Learn more about LiteLLM Proxy →](../../deployment/extensions/litellm-proxy/)
 

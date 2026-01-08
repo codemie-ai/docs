@@ -9,10 +9,10 @@ description: Enable and configure Azure OpenAI models
 
 ## Overview
 
-This guide explains how to enable Azure OpenAI services in your Azure account and deploy AI models for use with AI/Run CodeMie. Azure OpenAI provides access to OpenAI models including GPT-4o, GPT-4.1, GPT-5, o1, and o3-series models.
+This guide explains how to enable Azure OpenAI services in your Azure account and deploy AI models for use with AI/Run CodeMie. Azure OpenAI provides access to OpenAI models including GPT-4.1, GPT-5, o1, and o3-series models.
 
 :::info When to Use This Guide
-This configuration is required if you plan to use Azure OpenAI models such as GPT-4o, GPT-4.1, GPT-5, or any OpenAI models hosted on Azure.
+This configuration is required if you plan to use Azure OpenAI models such as GPT-4.1, GPT-5, or any OpenAI models hosted on Azure.
 :::
 
 ## Prerequisites
@@ -49,7 +49,7 @@ Before starting, ensure you have:
 
 **Network Tab**:
 
-| Setting     | Recommendation |
+| Setting     | Recommendation | Description                                               |
 | ----------- | -------------- | --------------------------------------------------------- |
 | **Network** | All networks   | Allow access from all networks (configure security later) |
 
@@ -129,7 +129,18 @@ AZURE_OPENAI_REGION=eastus2
 
 ## Step 4: Deploy Additional Models (Optional)
 
-Repeat **Step 3** to deploy additional models:
+Repeat **Step 3** to deploy additional models based on your requirements:
+
+**Recommended Models**:
+
+- **GPT-4o**: General-purpose, multimodal reasoning and code generation
+- **GPT-4o-mini**: Cost-effective option for simpler tasks
+- **GPT-4.1**: Advanced reasoning with larger context window
+- **GPT-5**: Latest generation model with enhanced capabilities
+- **o1/o3-mini**: Specialized reasoning models for complex problem-solving
+- **Embedding models**: `text-embedding-ada-002` for vector embeddings
+
+Each model deployment allows you to set specific TPM limits and deployment configurations.
 
 ## Step 5: Configure Regional Deployments (Optional)
 
@@ -156,7 +167,7 @@ Azure OpenAI quotas are managed at the **region + model** level:
 3. Request quota increases if needed:
    - Click **Request quota**
    - Fill in justification and requirements
-   - Submit request (approval typically takes 1-2 business days)
+   - Submit request (approval typically takes 2-5 business days)
 
 ## Security Best Practices
 
