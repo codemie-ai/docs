@@ -51,6 +51,6 @@ Learn how to update your AI/Run CodeMie installation.
 
 Optional extensions and additional features you can enable.
 
-### [FAQ](../faq)
+### [FAQ](../../faq)
 
 Frequently asked questions about deployment and configuration.
