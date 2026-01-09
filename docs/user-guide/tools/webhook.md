@@ -9,17 +9,13 @@ sidebar_position: 10
 
 AI/Run CodeMie assistants and Workflows can be triggered using webhooks. It means that all the tools that support sending webhooks can be integrated with AI/Run CodeMie. Below is a list of some examples where webhooks can be beneficial:
 
-:::note
-Only users with the Project Admin role can create and manage Webhook integrations. If you are not a Project Admin, the "Webhook" option will not appear for you, and any previous user-level Webhook integrations you created will no longer function.
-:::
-
 1. You need to automatically trigger code review assistant when developers create pull requests.
 2. You need to send some real-time notifications via workflow when issues are created, updated, or resolved in Jira.
 3. You need to trigger a customer support assistant when a new support ticket is created in your help desk system.
 
-## Prerequisites
-
-- To create a webhook integration user Project Admin permissions (for project level integrations) access
+:::warning Access Required
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create and manage Webhook integrations.
+:::
 
 ## 1. Create Resource to Trigger
 
@@ -28,10 +24,6 @@ Only users with the Project Admin role can create and manage Webhook integration
 1.2. In the My Assistants list, click the assistant name copy **ASSISTANT ID** and **ACCESS LINKS**:
 
 ![Assistant ID](./images/image86.png)
-
-:::note
-You can also create a Workflow and Datasource as these resource types support webhooks as well.
-:::
 
 ## 2. Create Webhook Integration
 

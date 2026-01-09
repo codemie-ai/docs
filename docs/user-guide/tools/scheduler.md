@@ -11,9 +11,9 @@ sidebar_position: 18
 
 CRON Scheduler integrations allow you to automatically trigger CodeMie workflows, assistants and datasources indexing at specified times using cron expressions. You can also provide a starting prompt that will be used as the initial input when the workflow begins execution.
 
-## Prerequisites
-
-- To create a scheduler integration user Project Admin permissions (for project level integrations) access
+:::warning Access Required
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create and manage Scheduler integrations.
+:::
 
 ## Setting Up CRON Integration
 
