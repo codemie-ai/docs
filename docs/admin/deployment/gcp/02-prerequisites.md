@@ -9,6 +9,7 @@ pagination_next: admin/deployment/gcp/architecture
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import ClusterRequirements from '../common/\_cluster-requirements.mdx';
 
 # Prerequisites
 
@@ -66,63 +67,7 @@ Your GKE cluster's firewall or VPC firewall rules must allow **outbound access**
 | `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
 | Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
 
-## GKE Cluster Requirements
-
-### Administrative Permissions
-
-The deployment user must have:
-
-- **GKE Admin permissions** with the ability to create and manage namespaces
-- Access to configure cluster-level resources (if deploying to an existing cluster)
-
-### Admission Control and Resource Requirements
-
-If deploying to an **existing GKE cluster**, ensure that admission webhooks allow the creation of the following Kubernetes resources:
-
-<Tabs>
-  <TabItem value="nats" label="NATS Messaging" default>
-    **Kubernetes API:** `Service` (LoadBalancer type)
-
-    **Purpose:** NATS is a core component of the CodeMie Plugin Engine, providing messaging infrastructure for communication between the [codemie-plugins](https://pypi.org/project/codemie-plugins/) CLI tool with MCP and the AI/Run CodeMie platform.
-
-    The LoadBalancer configuration depends on where the CLI tool will be executed:
-
-    | CLI Tool Execution Location | LoadBalancer Type | Description |
-    |----------------|------------------|-------------|
-    | Same VPC as GKE cluster | Internal LoadBalancer | Secure, private network communication within the VPC |
-    | External to GKE VPC | Public LoadBalancer | Cross-network communication when CLI is run outside the VPC |
-
-  </TabItem>
-
-  <TabItem value="keycloak" label="Keycloak Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, `Role`, `RoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages Keycloak configuration including realms, clients, and user federation
-
-    :::note
-    Requires cluster-wide permissions for identity and access management operations.
-    :::
-
-  </TabItem>
-
-  <TabItem value="postgresql" label="PostgreSQL Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages PostgreSQL database instances and their lifecycle
-
-    :::note
-    Requires cluster-wide permissions for database provisioning and management.
-    :::
-
-  </TabItem>
-
-  <TabItem value="security" label="Security Context">
-    **Kubernetes API:** `Pod` with `securityContext`
-
-    **Requirement:** All AI/Run CodeMie components require `readOnlyRootFilesystem: false` in their security context for proper operation
-
-  </TabItem>
-</Tabs>
+<ClusterRequirements clusterName="GKE" networkName="VPC" />
 
 ## Deployment Machine Requirements
 
