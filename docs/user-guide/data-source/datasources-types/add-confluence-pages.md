@@ -2,6 +2,8 @@
 id: add-confluence-pages
 title: Add and Index Confluence Pages
 sidebar_label: Add and Index Confluence Pages
+pagination_prev: user-guide/data-source/datasources-types/add-git-data-sources
+pagination_next: user-guide/data-source/datasources-types/add-jira-data-source
 ---
 
 # Add and Index Confluence Pages

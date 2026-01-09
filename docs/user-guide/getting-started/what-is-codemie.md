@@ -3,6 +3,8 @@ id: what-is-codemie
 title: What is AI/Run CodeMie?
 sidebar_label: What is AI/Run CodeMie?
 sidebar_position: 1
+pagination_prev: user-guide/getting-started/index
+pagination_next: null
 ---
 
 # What is AI/Run CodeMie?

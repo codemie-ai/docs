@@ -2,6 +2,8 @@
 id: assistant-templates
 sidebar_position: 1
 title: Assistant Templates
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: user-guide/assistants/create-assistant-from-a-template
 description: Pre-built assistant templates for common development and project management tasks
 ---
 

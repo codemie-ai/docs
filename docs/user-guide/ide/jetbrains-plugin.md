@@ -2,8 +2,9 @@
 id: jetbrains-plugin
 title: JetBrains IDE Plugin
 sidebar_label: JetBrains Plugin
-sidebar_position: 1
+pagination_prev: user-guide/ide/index
 pagination_next: null
+sidebar_position: 1
 ---
 
 # CodeMie JetBrains IDE Plugin

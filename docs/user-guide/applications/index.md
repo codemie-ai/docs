@@ -2,9 +2,9 @@
 id: index
 title: Applications
 sidebar_label: Applications
-sidebar_position: 6
+pagination_prev: user-guide/index
 pagination_next: null
-pagination_prev: null
+sidebar_position: 6
 ---
 
 # Applications

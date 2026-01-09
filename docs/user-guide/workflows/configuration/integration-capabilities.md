@@ -2,6 +2,8 @@
 id: integration-capabilities
 title: Integration Capabilities
 sidebar_label: Integration Capabilities
+pagination_prev: user-guide/workflows/configuration/specialized-nodes
+pagination_next: user-guide/workflows/configuration/best-practices
 sidebar_position: 9
 ---
 

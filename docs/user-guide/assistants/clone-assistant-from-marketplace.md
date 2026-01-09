@@ -2,6 +2,8 @@
 id: clone-assistant-from-marketplace
 sidebar_position: 18
 title: Clone Assistant from Marketplace
+pagination_prev: user-guide/assistants/marketplace-publishing
+pagination_next: user-guide/assistants/sub-assistants-multi-assistant-orchestrator
 description: Create a copy of marketplace assistants for your own use
 ---
 

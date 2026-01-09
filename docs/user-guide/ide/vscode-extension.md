@@ -2,8 +2,9 @@
 id: vscode-native-extension
 title: VS Code Native Extension
 sidebar_label: VS Code Native Extension
-sidebar_position: 3
+pagination_prev: user-guide/ide/index
 pagination_next: null
+sidebar_position: 3
 ---
 
 # CodeMie VS Code Native Extension

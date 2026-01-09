@@ -2,6 +2,8 @@
 id: specialized-nodes
 title: Specialized Node Types
 sidebar_label: Specialized Nodes
+pagination_prev: user-guide/workflows/configuration/advanced-features
+pagination_next: user-guide/workflows/configuration/integration-capabilities
 sidebar_position: 8
 ---
 

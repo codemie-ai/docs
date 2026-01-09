@@ -1,8 +1,10 @@
 ---
 id: ai-katas
-title: How to Work With AI Katas
+title: AI Katas
+sidebar_label: AI Katas
 sidebar_position: 1
-pagination_prev: null
+pagination_prev: user-guide/index
+pagination_next: null
 ---
 
 # How to Work With AI Katas

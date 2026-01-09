@@ -2,7 +2,7 @@
 id: integrations
 title: Integrations
 sidebar_label: Integrations
-pagination_prev: null
+pagination_prev: user-guide/index
 pagination_next: null
 ---
 

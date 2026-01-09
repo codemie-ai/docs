@@ -1,8 +1,9 @@
 ---
 id: assistants-overview
-title: How to Work With Assistants
+title: Assistants
 sidebar_position: 1
-pagination_prev: null
+pagination_prev: user-guide/index
+pagination_next: null
 ---
 
 # How to Work With Assistants

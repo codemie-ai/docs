@@ -2,6 +2,8 @@
 id: delete-assistants-and-chats
 sidebar_position: 5
 title: Delete Assistants and Chats
+pagination_prev: user-guide/assistants/edit-assistants
+pagination_next: user-guide/assistants/sharing-assistants
 description: Remove unused assistants and chat conversations
 ---
 

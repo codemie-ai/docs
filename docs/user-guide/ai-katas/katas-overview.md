@@ -2,6 +2,8 @@
 id: katas-overview
 title: AI Katas Overview
 sidebar_label: Katas Overview
+pagination_prev: user-guide/ai-katas/ai-katas
+pagination_next: user-guide/ai-katas/working-with-katas
 sidebar_position: 2
 ---
 

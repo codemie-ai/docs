@@ -2,6 +2,8 @@
 id: workflows-overview
 title: Workflows Overview
 sidebar_label: Workflows Overview
+pagination_prev: user-guide/workflows/workflows-index
+pagination_next: user-guide/workflows/create-workflow
 sidebar_position: 1
 description: Overview of workflows in AI/Run CodeMie - create, manage, and execute multi-assistant workflows
 ---

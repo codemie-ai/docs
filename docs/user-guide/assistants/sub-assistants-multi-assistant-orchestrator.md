@@ -2,8 +2,9 @@
 id: sub-assistants-multi-assistant-orchestrator
 sidebar_position: 19
 title: Sub-Assistants and Orchestration
+pagination_prev: user-guide/assistants/clone-assistant-from-marketplace
+pagination_next: user-guide/assistants/html-preview
 description: Coordinate multiple assistants to handle complex tasks
-pagination_next: null
 ---
 
 # Sub-Assistants and Orchestration

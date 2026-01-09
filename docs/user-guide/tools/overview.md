@@ -1,9 +1,10 @@
 ---
 id: overview
 title: Assistant's Tools Overview
-sidebar_label: Overview
+sidebar_label: Tools
 sidebar_position: 1
-pagination_prev: null
+pagination_prev: user-guide/tools/tools
+pagination_next: null
 ---
 
 # Assistant's Tools Overview

@@ -2,6 +2,8 @@
 id: plugin
 title: Plugin
 sidebar_label: Plugin
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 19
 ---
 

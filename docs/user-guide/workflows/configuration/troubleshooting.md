@@ -2,8 +2,9 @@
 id: troubleshooting
 title: Troubleshooting
 sidebar_label: Troubleshooting
-sidebar_position: 12
+pagination_prev: user-guide/workflows/configuration/examples
 pagination_next: null
+sidebar_position: 12
 ---
 
 # Troubleshooting

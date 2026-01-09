@@ -2,6 +2,8 @@
 id: state-transitions
 title: State Transitions
 sidebar_label: State Transitions
+pagination_prev: user-guide/workflows/configuration/workflow-states
+pagination_next: user-guide/workflows/configuration/context-management
 sidebar_position: 5
 ---
 

@@ -2,6 +2,8 @@
 id: introduction
 title: Introduction & Getting Started
 sidebar_label: Introduction
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: user-guide/workflows/configuration/configuration-reference
 sidebar_position: 2
 ---
 

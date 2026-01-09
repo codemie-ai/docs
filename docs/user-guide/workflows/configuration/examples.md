@@ -2,6 +2,8 @@
 id: examples
 title: Complete Examples
 sidebar_label: Examples
+pagination_prev: user-guide/workflows/configuration/best-practices
+pagination_next: user-guide/workflows/configuration/troubleshooting
 sidebar_position: 11
 ---
 

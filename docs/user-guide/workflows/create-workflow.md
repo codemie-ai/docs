@@ -2,6 +2,8 @@
 id: create-workflow
 title: Create Workflow
 sidebar_label: Create Workflow
+pagination_prev: user-guide/workflows/workflows-overview
+pagination_next: user-guide/workflows/create-workflow-from-template
 sidebar_position: 2
 description: Step-by-step guide to creating custom workflows in AI/Run CodeMie
 ---

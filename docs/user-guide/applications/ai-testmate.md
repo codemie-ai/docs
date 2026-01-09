@@ -3,6 +3,7 @@ id: ai-testmate
 title: AI TestMate
 sidebar_label: AI TestMate
 sidebar_position: 1
+pagination_prev: user-guide/applications/index
 pagination_next: null
 ---
 

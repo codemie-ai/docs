@@ -2,9 +2,9 @@
 id: index
 title: API
 sidebar_label: API
-sidebar_position: 8
+pagination_prev: user-guide/index
 pagination_next: null
-pagination_prev: null
+sidebar_position: 8
 ---
 
 # Working with the CodeMie API

@@ -2,6 +2,8 @@
 id: git-azuredevops
 title: Git AzureDevops
 sidebar_label: Git AzureDevops
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 20
 ---
 

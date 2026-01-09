@@ -2,6 +2,8 @@
 id: indexing-duration
 title: Indexing Duration
 sidebar_label: Indexing Duration
+pagination_prev: user-guide/data-source/data-source-overview/indexing-data-sources
+pagination_next: user-guide/data-source/datasources-types/add-git-data-sources
 ---
 
 # Indexing Duration

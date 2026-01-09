@@ -1,7 +1,9 @@
 ---
 id: workflows-index
-title: How to Work With Workflows
+title: Workflows
 sidebar_position: 2
+pagination_prev: user-guide/index
+pagination_next: null
 ---
 
 # How to Work With Workflows

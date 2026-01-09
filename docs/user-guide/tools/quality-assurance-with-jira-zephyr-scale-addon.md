@@ -2,6 +2,8 @@
 id: quality-assurance-with-jira-zephyr-scale-addon
 title: Quality Assurance with Jira Zephyr Scale Addon
 sidebar_label: Quality Assurance
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 16
 ---
 

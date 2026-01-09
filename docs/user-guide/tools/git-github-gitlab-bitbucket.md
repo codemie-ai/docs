@@ -2,6 +2,8 @@
 id: git-github-gitlab-bitbucket
 title: GitHub/GitLab/Bitbucket
 sidebar_label: GitHub/GitLab/Bitbucket
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 1
 ---
 
