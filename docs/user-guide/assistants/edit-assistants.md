@@ -2,6 +2,8 @@
 id: edit-assistants
 sidebar_position: 4
 title: Edit Assistants
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Modify assistant configuration and settings
 ---
 

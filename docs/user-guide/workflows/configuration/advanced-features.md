@@ -2,6 +2,8 @@
 id: advanced-features
 title: Advanced Features
 sidebar_label: Advanced Features
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 7
 ---
 

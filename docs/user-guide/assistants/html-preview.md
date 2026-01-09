@@ -2,6 +2,8 @@
 id: html-preview
 title: HTML Preview
 sidebar_label: HTML Preview
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 sidebar_position: 11
 ---
 

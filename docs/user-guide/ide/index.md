@@ -2,9 +2,9 @@
 id: index
 title: IDE Extensions
 sidebar_label: IDE Extensions
-sidebar_position: 7
-pagination_next: null
 pagination_prev: null
+pagination_next: null
+sidebar_position: 7
 ---
 
 # IDE Extensions

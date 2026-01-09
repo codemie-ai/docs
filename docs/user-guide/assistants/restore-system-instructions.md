@@ -2,6 +2,8 @@
 id: restore-system-instructions
 sidebar_position: 9
 title: Restore System Instructions
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Revert assistant system instructions to previous versions using history tracking
 ---
 

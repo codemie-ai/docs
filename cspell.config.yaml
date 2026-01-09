@@ -218,6 +218,9 @@ words:
   # Google Drive
   - GDRIVE
   - gdrive
+  # codemie terms
+  - kata
+  - katas
   # Other
   - readonly
   - stateful

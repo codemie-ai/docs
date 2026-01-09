@@ -2,6 +2,8 @@
 id: codebase-tools
 title: Codebase Tools
 sidebar_label: Codebase Tools
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 13
 ---
 

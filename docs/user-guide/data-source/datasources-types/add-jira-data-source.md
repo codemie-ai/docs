@@ -2,6 +2,8 @@
 id: add-jira-data-source
 title: Add and Index Jira Data Source
 sidebar_label: Add and Index Jira Data Source
+pagination_prev: user-guide/data-source/data-source
+pagination_next: null
 ---
 
 # Add and Index Jira Data Source

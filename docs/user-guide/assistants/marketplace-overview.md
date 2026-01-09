@@ -2,6 +2,8 @@
 id: marketplace-overview
 sidebar_position: 16
 title: Marketplace Overview
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Discover and share assistants in the AI/Run CodeMie marketplace
 ---
 

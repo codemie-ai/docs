@@ -3,6 +3,8 @@ id: meet-faq-assistant
 title: Meet the FAQ Assistant
 sidebar_label: FAQ Assistant
 sidebar_position: 3
+pagination_prev: user-guide/getting-started/index
+pagination_next: null
 ---
 
 # Meet the FAQ Assistant

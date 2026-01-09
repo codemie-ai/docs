@@ -2,6 +2,8 @@
 id: best-practices
 title: Best Practices
 sidebar_label: Best Practices
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 10
 ---
 

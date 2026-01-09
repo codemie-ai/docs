@@ -2,6 +2,8 @@
 id: user-password-access
 title: User Password Access
 sidebar_label: User Password Access
+pagination_prev: user-guide/api/index
+pagination_next: null
 sidebar_position: 2
 ---
 

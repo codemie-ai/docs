@@ -2,6 +2,8 @@
 id: create-custom-assistants
 sidebar_position: 3
 title: Create Custom Assistants
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Build custom AI assistants tailored to your specific needs and workflows
 ---
 

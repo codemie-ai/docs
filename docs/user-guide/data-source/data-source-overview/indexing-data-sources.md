@@ -2,6 +2,8 @@
 id: indexing-data-sources
 title: Indexing Data Sources
 sidebar_label: Indexing Data Sources
+pagination_prev: user-guide/data-source/data-source
+pagination_next: null
 ---
 
 # Indexing Data Sources

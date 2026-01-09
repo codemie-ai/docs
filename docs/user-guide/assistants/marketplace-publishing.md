@@ -2,6 +2,8 @@
 id: marketplace-publishing
 sidebar_position: 17
 title: Publish to Marketplace
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Share your assistants with the community by publishing to the marketplace
 ---
 

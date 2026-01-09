@@ -2,6 +2,8 @@
 id: context-management
 title: Context Management
 sidebar_label: Context Management
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 6
 ---
 

@@ -2,6 +2,8 @@
 id: integration-capabilities
 title: Integration Capabilities
 sidebar_label: Integration Capabilities
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 9
 ---
 

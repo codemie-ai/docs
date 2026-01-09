@@ -2,6 +2,8 @@
 id: exporting-workflow-execution
 title: Exporting Workflow Execution
 sidebar_label: Export Execution
+pagination_prev: user-guide/workflows/workflows-index
+pagination_next: null
 sidebar_position: 7
 ---
 

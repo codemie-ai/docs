@@ -2,6 +2,8 @@
 id: share-assistant-chat-with-other-users
 sidebar_position: 13
 title: Share Chat Conversations
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Share assistant chat conversations with team members
 ---
 

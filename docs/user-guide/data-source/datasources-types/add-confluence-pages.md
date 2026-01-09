@@ -2,6 +2,8 @@
 id: add-confluence-pages
 title: Add and Index Confluence Pages
 sidebar_label: Add and Index Confluence Pages
+pagination_prev: user-guide/data-source/data-source
+pagination_next: null
 ---
 
 # Add and Index Confluence Pages

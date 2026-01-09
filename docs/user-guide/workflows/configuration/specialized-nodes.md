@@ -2,6 +2,8 @@
 id: specialized-nodes
 title: Specialized Node Types
 sidebar_label: Specialized Nodes
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 8
 ---
 

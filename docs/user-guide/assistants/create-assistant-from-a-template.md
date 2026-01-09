@@ -2,6 +2,8 @@
 id: create-assistant-from-a-template
 sidebar_position: 2
 title: Create Assistant From a Template
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Step-by-step guide to creating assistants from pre-built templates
 ---
 

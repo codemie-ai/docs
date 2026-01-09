@@ -86,7 +86,7 @@ const config: Config = {
         {
           to: 'user-guide/',
           position: 'left',
-          label: 'User Guides',
+          label: 'User Manuals',
         },
         {
           to: 'admin/',

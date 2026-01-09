@@ -2,6 +2,8 @@
 id: group-chats
 sidebar_position: 10
 title: Group Chats
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Communicate with multiple assistants in a single chat conversation
 ---
 

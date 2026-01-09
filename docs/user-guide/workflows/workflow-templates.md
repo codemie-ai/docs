@@ -2,6 +2,8 @@
 id: workflow-templates
 title: Workflow Templates
 sidebar_label: Workflow Templates
+pagination_prev: user-guide/workflows/workflows-index
+pagination_next: null
 sidebar_position: 5
 description: Comprehensive list of pre-built workflow templates available in AI/Run CodeMie
 ---

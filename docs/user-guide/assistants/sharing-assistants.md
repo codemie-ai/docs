@@ -2,6 +2,8 @@
 id: sharing-assistants
 sidebar_position: 8
 title: Share Assistants
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Share assistants with team members and collaborators
 ---
 

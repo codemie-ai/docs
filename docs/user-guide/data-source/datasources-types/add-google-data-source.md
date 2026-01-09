@@ -2,6 +2,8 @@
 id: add-google-data-source
 title: Add and Index Google Data Source
 sidebar_label: Add and Index Google Data Source
+pagination_prev: user-guide/data-source/data-source
+pagination_next: null
 ---
 
 # Add and Index Google Data Source

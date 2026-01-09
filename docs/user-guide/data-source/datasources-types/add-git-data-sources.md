@@ -2,6 +2,8 @@
 id: add-git-data-sources
 title: Add and Index Git Data Sources
 sidebar_label: Add and Index Git Data Sources
+pagination_prev: user-guide/data-source/data-source
+pagination_next: null
 ---
 
 import Tabs from '@theme/Tabs';

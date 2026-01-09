@@ -2,6 +2,8 @@
 id: folders-overview
 sidebar_position: 11
 title: Folders Overview
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: Organize chat history by assistant using folder grouping
 ---
 

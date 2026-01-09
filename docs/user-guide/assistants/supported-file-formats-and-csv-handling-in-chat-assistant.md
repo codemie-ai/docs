@@ -2,6 +2,8 @@
 id: supported-file-formats-and-csv-handling-in-chat-assistant
 sidebar_position: 12
 title: Supported File Formats
+pagination_prev: user-guide/assistants/assistants-overview
+pagination_next: null
 description: File formats and CSV handling capabilities in assistant chats
 ---
 

@@ -3,6 +3,8 @@ id: help-center
 title: Help Center
 sidebar_label: Help Center
 sidebar_position: 4
+pagination_prev: user-guide/getting-started/index
+pagination_next: null
 ---
 
 # Help Center

@@ -2,6 +2,8 @@
 id: openapi-tool
 title: OpenAPI Tool
 sidebar_label: OpenAPI Tool
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 15
 ---
 

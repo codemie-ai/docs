@@ -2,6 +2,8 @@
 id: sonarqube
 title: SonarQube
 sidebar_label: SonarQube
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 3
 ---
 

@@ -2,8 +2,9 @@
 id: sub-assistants-multi-assistant-orchestrator
 sidebar_position: 19
 title: Sub-Assistants and Orchestration
-description: Coordinate multiple assistants to handle complex tasks
+pagination_prev: user-guide/assistants/assistants-overview
 pagination_next: null
+description: Coordinate multiple assistants to handle complex tasks
 ---
 
 # Sub-Assistants and Orchestration

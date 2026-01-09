@@ -2,6 +2,8 @@
 id: configuration-reference
 title: Configuration Reference
 sidebar_label: Configuration Reference
+pagination_prev: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: null
 sidebar_position: 3
 ---
 
