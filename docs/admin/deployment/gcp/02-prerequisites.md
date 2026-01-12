@@ -87,10 +87,12 @@ If your cluster uses **GKE Network Policy** or **Calico**, container-native load
 service "namespace/service" is type "ClusterIP", expected "NodePort" or "LoadBalancer"
 ```
 
-**Solution:** Manually enable NEGs by adding this annotation to all Services exposed via Ingress:
+**Solution:** Manually enable NEGs by adding this annotation to all Services exposed via Ingress in chart values. For example:
 
 ```yaml
-metadata:
+service:
+  type: ClusterIP
+  port: 8080
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 ```
