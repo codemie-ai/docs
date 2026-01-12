@@ -69,6 +69,48 @@ Your GKE cluster's firewall or VPC firewall rules must allow **outbound access**
 
 <ClusterRequirements clusterName="GKE" networkName="VPC" />
 
+## GKE Cluster Configuration
+
+### VPC-Native Networking and Container-Native Load Balancing
+
+AI/Run CodeMie requires GKE clusters configured with **VPC-native networking** and **container-native load balancing (NEGs)** for proper Ingress functionality.
+
+**Required Configuration:**
+
+- **Networking Mode:** `VPC_NATIVE` with IP allocation policy (secondary ranges for pods and services)
+- **GKE Version:** `1.17.6-gke.7` or later
+- **HTTP Load Balancing Addon:** Enabled (default)
+
+:::warning Critical: Network Policy Disables Automatic NEGs
+If your cluster uses **GKE Network Policy** or **Calico**, container-native load balancing will NOT be enabled automatically. This causes Ingress errors:
+
+```
+service "namespace/service" is type "ClusterIP", expected "NodePort" or "LoadBalancer"
+```
+
+**Solution:** Manually enable NEGs by adding this annotation to all Services exposed via Ingress:
+
+```yaml
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+```
+
+:::
+
+**Verification:**
+
+```bash
+# Check VPC-native networking
+gcloud container clusters describe <cluster> --region=<region> \
+  --format="value(ipAllocationPolicy)"
+
+# Verify NEGs are created
+gcloud compute network-endpoint-groups list --project=<project-id>
+```
+
+**Recommended:** Use the [`safer-cluster`](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/safer-cluster) Terraform module, which automatically configures all required settings including VPC-native networking, HTTP Load Balancing, and Dataplane V2.
+
 ## Deployment Machine Requirements
 
 ### Required Software Tools
