@@ -163,7 +163,6 @@ Automated deployment using the `helm-charts.sh` wrapper script:
 
 - **Best for**: Standard deployments, quick setup, production environments
 - **Advantages**: Automated dependency ordering, validation checks, consistent configuration
-- **Duration**: ~20-30 minutes (depending on component count)
 
 [→ Scripted Deployment Guide](./components-scripted-deployment)
 
@@ -173,7 +172,6 @@ Step-by-step manual installation of each component:
 
 - **Best for**: Custom configurations, learning the stack, troubleshooting
 - **Advantages**: Full control over each component, easier to debug issues
-- **Duration**: ~1-2 hours (depending on familiarity)
 
 [→ Manual Deployment Guide](./manual-deployment/)
 

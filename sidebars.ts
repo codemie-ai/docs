@@ -409,7 +409,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Components Deployment',
+                  label: 'CodeMie Components Deployment',
                   link: {
                     type: 'doc',
                     id: 'admin/deployment/gcp/components-deployment/components-deployment-overview',
@@ -417,7 +417,23 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'admin/deployment/gcp/components-deployment/components-scripted-deployment',
-                    'admin/deployment/gcp/components-deployment/components-manual-deployment',
+                    {
+                      type: 'category',
+                      label: 'CodeMie Manual Deployment',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/deployment/gcp/components-deployment/manual-deployment/manual-deployment-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/deployment/gcp/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/data-layer',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/security-and-identity',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/plugin-engine',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/core-components',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/observability',
+                      ],
+                    },
                   ],
                 },
               ],

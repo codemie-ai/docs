@@ -1,253 +1,372 @@
 ---
 id: components-scripted-deployment
 title: Scripted Components Deployment
-sidebar_label: Scripted Deployment
+sidebar_label: CodeMie Scripted Deployment
 sidebar_position: 1
 pagination_prev: admin/deployment/gcp/components-deployment/components-deployment-overview
 pagination_next: admin/configuration/index
 ---
 
-# Scripted Components Deployment
+# Scripted CodeMie Components Deployment
 
-The `helm-charts.sh` script ([codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository) automates the deployment of components using Helm charts.
+This guide walks you through deploying AI/Run CodeMie application components using the automated `helm-charts.sh` deployment script. The script handles the installation of all components in the correct dependency order using Helm charts.
+
+:::tip Recommended Approach
+Scripted deployment is recommended for standard installations as it automates component ordering, validates prerequisites, and ensures consistent configuration across all components.
+:::
+
+## Overview
+
+The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository automates the installation of:
+
+- **Infrastructure services** (Nginx Ingress, GCP Storage Class)
+- **Data layer** (Elasticsearch, PostgreSQL Operator)
+- **Security components** (Keycloak Operator, Keycloak, OAuth2 Proxy)
+- **Messaging system** (NATS, NATS Auth Callout)
+- **Core CodeMie services** (API, UI, MCP Connect, Mermaid Server)
+- **Observability stack** (Fluent Bit, Kibana, Kibana Dashboards)
+
+The script supports flexible deployment modes, allowing you to install all components at once or deploy specific component groups based on your needs.
 
 ## Prerequisites
 
-- Make sure GKE cluster has installed:
-  - Nginx Ingress Controller
-  - GKE Storage Class
+Before starting deployment, ensure you have completed all requirements:
 
-:::info
-Use `all` script mode to install them, or step-by-step installation examples are available in the "Nginx Ingress Controller" and "GKE Storage Class" subsections under the "Manual AI/Run CodeMie Components Installation" section.
+### Verification Checklist
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [ ] **Cluster Access**: Connected to Bastion Host (for private clusters) or have authorized network access and kubectl configured for GKE
+- [ ] **Container Registry**: Completed [Container Registry Access Setup](./#repository-and-access) from overview page
+- [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
+- [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
+- [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
+
+:::warning Container Registry Access Required
+You must complete the Container Registry Access setup from the [Components Deployment Overview](./#repository-and-access) before proceeding. The script requires the `gcp-artifact-registry` pull secret to exist.
 :::
 
-- Ensure you have [Helm](https://helm.sh/docs/intro/install/) installed and configured
-- Ensure that the required cloud provider CLI tools and credentials are set up (e.g., Google Cloud SDK)
-- The script assumes that you are familiar with basic Helm chart deployment and the underlying cloud environment
+### Required Tools
 
-## Script Parameters
+Ensure these tools are available on your deployment machine (Bastion Host or local workstation):
 
-The script requires exactly three input parameters to control its behavior:
+- `kubectl` - Kubernetes cluster management
+- `helm` 3.16.0+ - Kubernetes package manager
+- `gcloud` CLI - For GCR authentication
+- `bash` - Script execution environment
 
-### 1. Cloud Provider
+## Quick Start
 
-The target cloud provider where the deployment should be executed.
+Follow these steps for a standard private cluster deployment:
 
-**Allowed Values:**
+### Step 1: Clone Repository
 
-- `aws`
-- `azure`
-- `gcp`
+Clone the Helm charts repository on your deployment machine:
 
-### 2. AI/Run Version
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
 
-The version of the AI/Run components to deploy. Format should follow semantic versioning, for example:
+### Step 2: Configure Domain and GCP Parameters
 
-- `x.y.z`
+Update the required placeholders in the values files. Replace these values with your GCP-specific configuration:
 
-### 3. Mode Name
+| Placeholder                 | Description             | Example Value    | Files to Edit                            |
+| --------------------------- | ----------------------- | ---------------- | ---------------------------------------- |
+| `%%DOMAIN%%`                | Your domain name        | `example.com`    | All `values-gcp.yaml` files listed below |
+| `%%GOOGLE_PROJECT_ID%%`     | GCP project ID          | `my-project-123` | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_REGION%%`         | GCP region              | `europe-west3`   | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID with KMS | `my-project-123` | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_KMS_REGION%%`     | GCP region with KMS     | `europe-west3`   | `codemie-api/values-gcp.yaml`            |
 
-Specifies which components are to be installed.
+**Files requiring domain configuration:**
 
-**Allowed Values:**
+- `kibana/values-gcp.yaml`
+- `keycloak-helm/values-gcp.yaml`
+- `oauth2-proxy/values-gcp.yaml`
+- `codemie-ui/values-gcp.yaml`
+- `codemie-api/values-gcp.yaml`
 
-- `all` – installs both AI/Run CodeMie components and 3rd-party components. Use for fresh installation on an empty cluster
-- `recommended` – installs both AI/Run components and the third-party components except Nginx Ingress Controller
-- `update` – when you want to update AI/Run CodeMie core components version
-
-## Component-Specific Placeholders
-
-:::info
-Fill these values before running installation script.
+:::tip Find Your Values
+Your domain name and GCP configuration were set during infrastructure deployment. Check Terraform outputs for `dns_name`, `project_id`, and `region`.
 :::
 
-| Component    | Placeholder / Env variable  | Description               | Example           | File to edit                                        |
-| ------------ | --------------------------- | ------------------------- | ----------------- | --------------------------------------------------- |
-| Kibana       | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/kibana/values-gcp.yaml`        |
-| Keycloak     | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/keycloak-helm/values-gcp.yaml` |
-| OAuth2 Proxy | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/oauth2-proxy/values-gcp.yaml`  |
-| CodeMie UI   | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/codemie-ui/values-gcp.yaml`    |
-| CodeMie API  | `%%DOMAIN%%`                | Your public domain        | `example.com`     | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_PROJECT_ID%%`     | GCP project ID            | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_REGION%%`         | GCP region                | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID of KMS Key | `some-project-id` | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
-| CodeMie API  | `%%GOOGLE_KMS_REGION%%`     | GCP region of KMS Key     | `europe-west3`    | `codemie-helm-charts/codemie-api/values-gcp.yaml`   |
+**Example sed commands to replace placeholders:**
 
-## Create Service Account Key for Kubernetes
+```bash
+# Set your values
+DOMAIN="example.com"
+PROJECT_ID="my-gcp-project"
+REGION="europe-west3"
+
+# Replace domain in all files
+find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
+
+# Replace GCP parameters in CodeMie API
+sed -i "s/%%GOOGLE_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
+```
+
+### Step 3: Create Service Account Key
+
+Create a service account key for Kubernetes to access GCP services:
 
 1. Access "IAM & Admin" in Google Cloud Console
-2. Create a key for the "codemie-gsa" service account
-3. Download and save the key to `codemie-helm-charts/codemie-gsa-key.json` file
+2. Locate the "codemie-gsa" service account (created by Terraform)
+3. Create a new JSON key for this service account
+4. Download and save the key file to `codemie-helm-charts/codemie-gsa-key.json`
 
-## Public or Private LoadBalancer for GKE NGINX Ingress Controller
+```bash
+# Verify the key file exists
+ls -la codemie-gsa-key.json
+```
 
-There are two main options for accessing resources deployed in a Google Kubernetes Engine (GKE) cluster:
+:::warning Key Security
+Keep this service account key secure. It grants access to GCP resources including Vertex AI and Cloud KMS.
+:::
 
-1. **Internal LoadBalancer (Private Access)**
-   - Use a Bastion Host to access services through a privately scoped Internal LoadBalancer
-   - Suitable when resources must not be exposed to the public internet
+### Step 4: Configure LoadBalancer Type (Private vs Public)
 
-2. **External LoadBalancer (Public Access)**
-   - Access resources directly from your laptop or any external network using an External LoadBalancer
+Choose your access model before running the deployment script. The default configuration is for **private access** (recommended).
 
-### Configuration Steps for Private Access
+#### Option A: Private Access (Default - No Changes Needed)
 
-No changes are required to the default Helm chart values of the NGINX Ingress Controller.
-
-:::info
-The "networking.gke.io/load-balancer-type: Internal" annotation is used to deploy GCP internal loadbalancer:
+For private cluster deployment with access via Bastion Host, **no changes are required**. The default Helm values are pre-configured for Internal LoadBalancer:
 
 ```yaml
+# Default configuration (already set)
 ingress-nginx:
   controller:
-    ...
     service:
       annotations:
         networking.gke.io/load-balancer-type: Internal
-    ...
 ```
 
-:::
+Skip to [Step 5](#step-5-authenticate-to-container-registry).
 
-Deploy the Ingress Controller with an internal (private) LoadBalancer.
+#### Option B: Public Access (Requires Configuration)
 
-### Configuration Steps for Public Access
+:::warning Prerequisites for Public Access
 
-:::warning
-For public access make sure you deployed initial infrastructure with public DNS name.
-:::
+- Infrastructure deployed with **public DNS zone**
+- Valid **TLS certificate** for your domain
+- **Authorized IP ranges** defined (never leave open to 0.0.0.0/0)
+  :::
 
-1. Modify your NGINX Ingress Controller Helm chart values in `codemie-helm-charts/ingress-nginx/values-gcp.yaml` to allow public access:
-   - The **"networking.gke.io/load-balancer-type: Internal" annotation** must be removed to deploy public LoadBalancer
+If you need public access from external networks, modify these files **before running the deployment script**:
 
-   - The **"loadBalancerSourceRanges"** is used to pass a list of allowed IP addresses that have access to resources provided through this LoadBalancer
+**1. Modify Nginx Ingress Controller**
 
-:::warning
-Do not leave **loadBalancerSourceRanges** empty when "**networking.gke.io/load-balancer-type: Internal**" annotation is removed, as it will expose your application to the world.
-:::
+Edit `codemie-helm-charts/ingress-nginx/values-gcp.yaml`:
 
 ```yaml
 ingress-nginx:
   controller:
-    ...
     service:
-      # The "networking.gke.io/load-balancer-type: Internal" annotation must be removed to deploy public LoadBalancer
+      # Remove the Internal annotation for public LoadBalancer
       annotations: {}
       type: LoadBalancer
-      # Allow external access to the NGINX Ingress Controller, list of IPs that are allowed to access the load balancer.
+      # Define allowed IP ranges (REQUIRED for security)
       loadBalancerSourceRanges:
-        - 85.223.209.0/24 # Example of IP range
-      enableHttp: false
-    ...
+        - x.x.x.x/24          # Your office network
+        - x.x.x.x/24          # Your VPN network
+      enableHttp: false       # Force HTTPS only
 ```
 
-2. Modify your NATS Helm chart values in `codemie-helm-charts/codemie-nats/values-gcp.yaml` to allow public access:
+:::danger Security Critical
+Never deploy a public LoadBalancer without `loadBalancerSourceRanges` configured. This would expose your application to the entire internet.
+:::
+
+**2. Modify NATS Service**
+
+Edit `codemie-helm-charts/codemie-nats/values-gcp.yaml`:
 
 ```yaml
 service:
   merge:
     metadata:
-      # The "networking.gke.io/load-balancer-type: Internal" annotation must be removed to deploy public LoadBalancer
+      # Remove the Internal annotation
       annotations: {}
     spec:
       type: LoadBalancer
-      # Allow external access to the NATS, list of IPs that are allowed to access the load balancer.
+      # Define allowed IP ranges for NATS access
       loadBalancerSourceRanges:
-        - 85.223.209.0/24 # Example of IP range
+        - x.x.x.x/24          # Your office network
 ```
 
-3. Create a TLS secret in `codemie` namespace:
+**3. Configure TLS Certificates**
+
+For public access, create and configure TLS certificates:
 
 ```bash
+# Create namespace
 kubectl create ns codemie
-kubectl -n codemie create secret tls custom-tls --key ${KEY_FILE} --cert ${CERT_FILE}
-```
 
-4. Copy it to `security`, `elastic` and `oauth2-proxy` namespaces:
+# Create TLS secret from your certificate files
+kubectl -n codemie create secret tls custom-tls \
+  --key ${KEY_FILE} \
+  --cert ${CERT_FILE}
 
-```bash
+# Copy secret to other namespaces
 kubectl get secret custom-tls -n codemie -o yaml | sed '/namespace:/d' | kubectl apply -n security -f -
 kubectl get secret custom-tls -n codemie -o yaml | sed '/namespace:/d' | kubectl apply -n elastic -f -
 kubectl get secret custom-tls -n codemie -o yaml | sed '/namespace:/d' | kubectl apply -n oauth2-proxy -f -
 ```
 
-:::info
-It's possible to use [cert-manager](https://cert-manager.io/) but this option is not covered by this guide. Please reference its official documentation.
-:::
+**4. Enable TLS in Ingress Configuration**
 
-5. Reference this secret in `ingress.tls` by uncommenting this section of files:
+Uncomment and configure the `ingress.tls` section in these files:
+
+- `codemie-api/values-gcp.yaml`
+- `codemie-ui/values-gcp.yaml`
+- `kibana/values-gcp.yaml`
+- `keycloak-helm/values-gcp.yaml`
+- `codemie-nats/values-gcp.yaml`
+
+Example configuration:
 
 ```yaml
 tls:
   - secretName: custom-tls
     hosts:
-      - %%DOMAIN%%
-# Hosts must match ingress hosts. For example,
-#tls:
-#   - secretName: custom-tls
-#     hosts:
-#       - airun-codemie.example.com
+      - example.com          # Replace with your domain
 ```
 
-In the following files:
+:::info Certificate Management
+You can use [cert-manager](https://cert-manager.io/) for automatic certificate management, but this is not covered in this guide.
+:::
 
-- `codemie-helm-charts/codemie-api/values-gcp.yaml`
-- `codemie-helm-charts/codemie-ui/values-gcp.yaml`
-- `codemie-helm-charts/kibana/values-gcp.yaml`
-- `codemie-helm-charts/keycloak-helm/values-gcp.yaml`
-- `codemie-helm-charts/codemie-nats/values-gcp.yaml`
+### Step 5: Authenticate to Container Registry
 
-## Usage
-
-Below is an example demonstrating how to run the script:
-
-### Example: Deploy AI/Run CodeMie + Third-Party Components
+Authenticate Helm to the Google Container Registry:
 
 ```bash
+# Set credentials path
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 
-bash helm-charts.sh --cloud gcp --version x.y.z --mode all
+# Login to GCR
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 ```
 
-## Setting up DNS Records
+### Step 6: Get Latest CodeMie Version
 
-To make your applications and components accessible via friendly domain names, you need to add **A records** in your DNS provider's zone.
-
-### Required DNS Records
-
-#### 1. The "\*" Wildcard Record for NGINX Ingress Controller
-
-This allows access to any subdomain managed by the NGINX Ingress Controller.
-
-DNS record to add:
-
-- **Type**: A
-- **Name**: "\*"
-- **Value**: `<public_or_private_ip_of_nginx_ingress_controller>`
-
-Get the Ingress Controller's IP:
+Retrieve the latest AI/Run CodeMie release version:
 
 ```bash
-kubectl get service ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+# Check latest version
+bash get-codemie-latest-release-version.sh -c key.json
+
+# Note the version output (e.g., 1.2.3) for the next step
 ```
 
-#### 2. The "nats-codemie" Record for NATS Component
+### Step 7: Run Deployment Script
 
-This allows direct access to the NATS service from outside the cluster.
+Execute the deployment script with your chosen mode:
 
-DNS record to add:
+```bash
+# For first-time installation (installs all components including Nginx Ingress)
+bash helm-charts.sh --cloud gcp --version <version> --mode all
+```
 
-- **Type**: A
-- **Name**: "nats-codemie"
-- **Value**: `<public_or_private_ip_of_nats_service>`
+Replace `<version>` with the version from Step 5 (e.g., `1.2.3`).
+
+:::tip Idempotent Script
+The deployment script is idempotent, meaning you can safely re-run it multiple times. If the script fails or is interrupted, simply run it again with the same parameters to continue or retry the deployment.
+:::
+
+## Configuration Reference
+
+### Script Parameters
+
+The deployment script accepts three required parameters:
+
+| Parameter   | Description               | Allowed Values                   |
+| ----------- | ------------------------- | -------------------------------- |
+| `--cloud`   | Target cloud provider     | `gcp`, `aws`, `azure`            |
+| `--version` | CodeMie component version | Semantic version (e.g., `1.2.3`) |
+| `--mode`    | Installation mode         | `all`, `recommended`, `update`   |
+
+### Deployment Modes
+
+| Mode            | Components Installed                                         | Use Case                                        |
+| --------------- | ------------------------------------------------------------ | ----------------------------------------------- |
+| **all**         | All components including Nginx Ingress Controller            | Fresh GKE cluster without existing ingress      |
+| **recommended** | All components except Nginx Ingress Controller               | Cluster with existing ingress controller        |
+| **update**      | Only CodeMie core components (API, UI, MCP Connect, Mermaid) | Updating existing installation to a new version |
+
+:::tip Choosing Deployment Mode
+
+- **First-time installation**: Use `all` or `recommended` depending on whether you need Nginx Ingress
+- **Version updates**: Use `update` to upgrade only CodeMie components
+- **Fresh GKE cluster**: Use `all` mode
+  :::
+
+## Advanced Configuration
+
+### Setting up DNS Records
+
+After deployment completes and LoadBalancers are provisioned, configure DNS records to make applications accessible.
+
+:::info When DNS is Required
+
+- **Private clusters with private DNS**: DNS is automatically configured by Terraform
+- **Public clusters**: You must manually add DNS A records to your DNS provider
+  :::
+
+#### Required DNS Records
+
+**1. Wildcard Record for Nginx Ingress Controller**
+
+This allows access to all subdomains managed by Nginx (CodeMie UI, API, Keycloak, Kibana):
+
+| Field     | Value                                       |
+| --------- | ------------------------------------------- |
+| **Type**  | A                                           |
+| **Name**  | `*` (wildcard)                              |
+| **Value** | LoadBalancer IP of Nginx Ingress Controller |
+
+Get the Nginx Ingress IP:
+
+```bash
+kubectl get service ingress-nginx-controller -n ingress-nginx \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+**2. NATS Record for Plugin Engine**
+
+This allows direct access to NATS for the CodeMie Plugin Engine:
+
+| Field     | Value                   |
+| --------- | ----------------------- |
+| **Type**  | A                       |
+| **Name**  | `nats-codemie`          |
+| **Value** | LoadBalancer IP of NATS |
 
 Get the NATS service IP:
 
 ```bash
-kubectl get service codemie-nats -n codemie -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+kubectl get service codemie-nats -n codemie \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+**Example DNS Configuration:**
+
+```
+*.example.com           A   x.x.x.x
+nats-codemie.example.com A   x.x.x.x
 ```
 
 ## Next Steps
 
-After successful deployment, proceed to [Configuration](../../../configuration/) to complete required setup steps.
+After successful deployment and validation, proceed to:
+
+**[Configuration](../../../configuration/)** - Complete required setup including:
+
+- Initial user configuration in Keycloak
+- AI model integration setup (Vertex AI)
+- Data source connections
+- Security and access control configuration
+- System health monitoring setup

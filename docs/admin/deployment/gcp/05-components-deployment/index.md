@@ -1,7 +1,7 @@
 ---
 id: components-deployment-overview
 title: AI/Run CodeMie Components Deployment Overview
-sidebar_label: Components Deployment
+sidebar_label: CodeMie Components Deployment
 sidebar_position: 5
 pagination_prev: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
 pagination_next: admin/deployment/gcp/components-deployment/components-scripted-deployment
@@ -11,39 +11,95 @@ pagination_next: admin/deployment/gcp/components-deployment/components-scripted-
 
 ## Overview
 
-This section describes the process of the main AI/Run CodeMie components deployment to the GCP GKE cluster. Before proceeding, make sure you obtained kubectl credentials using one of the following commands from terraform output depending on your cluster access type:
+This section guides you through deploying the AI/Run CodeMie application stack on your GKE cluster. After completing infrastructure deployment, this phase installs all necessary Kubernetes components including:
 
-```bash
-# Use the command from Terraform outputs
-# Parameters: "get_kubectl_credentials_for_public_cluster" or "get_kubectl_credentials_for_private_cluster"
-```
+- **Core AI/Run CodeMie services** (API, UI, MCP Connect, NATS Auth)
+- **Data layer** (Elasticsearch, PostgreSQL via operators)
+- **Security & Identity** (Keycloak, OAuth2 Proxy)
+- **Infrastructure services** (Ingress controller, storage)
+- **Observability** (Kibana, Fluent Bit)
+- **Optional LLM Proxy** (for load balancing AI model requests)
 
-:::info
-For infrastructure deployment details, refer to the [Infrastructure Deployment](../infrastructure-deployment) section.
+The deployment uses Helm charts to install and configure all components in the correct order, ensuring proper dependencies and integration.
+
+:::info Prerequisites
+This phase assumes you have completed [Infrastructure Deployment](../infrastructure-deployment/) and have a running GKE cluster with network, storage, and security configured.
 :::
 
 ## Prerequisites
 
-1. Obtain kubeconfig for created cluster.
-2. Make sure Kubernetes cluster has installed:
-   - Nginx Ingress Controller
-   - Storage class
+### Cluster Readiness
 
-:::info
-If your Kubernetes cluster does not already have an Nginx Ingress Controller and a Storage Class configured, don't worry. This guide includes detailed instructions for setting up both of these essential components in the appropriate sections that follow.
+Ensure your GKE cluster is ready for component deployment:
+
+- [x] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [x] **Cluster Access**: kubectl configured and authenticated to GKE cluster
+- [x] **Bastion/Jumpbox Access**: Connected to Bastion Host (for private clusters) or have authorized network access
+
+#### Configure Kubectl Access
+
+Obtain kubectl credentials using the appropriate Terraform output command based on your cluster access type:
+
+```bash
+# For public clusters or clusters with authorized networks
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_public_cluster
+
+# For completely private clusters (access via Bastion Host)
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_private_cluster
+```
+
+Verify cluster connectivity:
+
+```bash
+# Test cluster access
+kubectl get nodes
+
+# Check cluster information
+kubectl cluster-info
+```
+
+### Required Components
+
+The following components will be installed during this phase if not already present:
+
+- **Nginx Ingress Controller**: Routes external traffic to services
+- **GCP Storage Class**: Provides persistent storage for stateful components
+
+:::tip Automated Installation
+If your cluster doesn't have these components, don't worry. The deployment scripts and manual guides include steps to install them automatically.
 :::
 
-3. Clone [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
+### Repository and Access {#repository-and-access}
 
-4. Before deploying AI/Run CodeMie components, you need to properly set up pull secret:
+#### Helm Charts Repository
 
-Ask AI/Run CodeMie team to provide `key.json` file and email of a service account to pull images from our container registry. Create `codemie` namespace:
+Clone the Helm charts repository on your deployment machine (Bastion Host or local workstation):
+
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
+
+#### Container Registry Credentials
+
+Before deploying AI/Run CodeMie components, you need to set up authentication for the container registry.
+
+**Request Access**: Ask the AI/Run CodeMie team to provide:
+
+- `key.json` file (GCP service account credentials)
+- Service account email for pulling images from GCR
+
+**Create Namespace**:
 
 ```bash
 kubectl create namespace codemie
 ```
 
-Configure the secret in your cluster. Replace `%%PROJECT_NAME%%` with your project name:
+**Configure Registry Secret**:
+
+Replace `%%PROJECT_NAME%%` with your project name and create the pull secret:
 
 ```bash
 kubectl create secret docker-registry gcp-artifact-registry \
@@ -54,80 +110,175 @@ kubectl create secret docker-registry gcp-artifact-registry \
   -n codemie
 ```
 
-Reference the secret in `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service` and `mermaid-server` deployments:
+**Verify Secret**:
+
+```bash
+kubectl get secret gcp-artifact-registry -n codemie
+```
+
+:::info Pull Secret Usage
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+This is configured automatically in the values files:
 
 ```yaml
 imagePullSecrets:
   - name: gcp-artifact-registry
 ```
 
-## AI/Run CodeMie Application Stack Overview
+:::
+
+## Application Stack Components
+
+The AI/Run CodeMie application consists of multiple integrated components organized into functional categories. Understanding this architecture helps you plan the deployment sequence and troubleshoot issues effectively.
 
 ![Application Stack](../../common/images/application-stack-diagram.drawio.png)
 
-### Core AI/Run CodeMie Components
+### Component Categories
 
-:::info
-AI/Run CodeMie latest releases for core components versions can be found by executing the following script in the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository for each component.
+#### Core AI/Run CodeMie Services
+
+Proprietary services that provide the main AI/Run CodeMie functionality:
+
+| Component             | Container Image                                                     | Description                                                                           |
+| --------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **CodeMie API**       | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations          |
+| **CodeMie UI**        | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                                 |
+| **NATS Auth Callout** | `europe-west3-docker.pkg.dev/.../codemie-nats-auth-callout:x.y.z`   | Authentication and authorization service for NATS messaging (Plugin Engine component) |
+| **MCP Connect**       | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                               |
+| **Mermaid Server**    | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                                 |
+
+:::info Version Information
+To find the latest release versions for CodeMie components:
 
 ```bash
 bash get-codemie-latest-release-version.sh
-bash get-codemie-latest-release-version.sh -c ./path/to/key.json
+
+# Use the version detection script with GCP credentials
+bash get-codemie-latest-release-version.sh -c key.json
 ```
 
 Make sure you logged in with `key.json` shared with you.
 
-:::note
-Versions for Docker containers and Helm releases are matching.
-:::
+**Note**: Docker container versions match Helm chart release versions.
 :::
 
-| Component name                   | Images                                                                                              | Description                                                                                                                                                                                       |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI/Run CodeMie API               | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie:x.y.z`                     | The backend service of the AI/Run CodeMie application responsible for business logic, data processing, and API operations                                                                         |
-| AI/Run CodeMie UI                | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-ui:x.y.z`                  | The frontend service of the AI/Run CodeMie application that provides the user interface for interacting with the system                                                                           |
-| AI/Run CodeMie Nats Auth Callout | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-nats-auth-callout:x.y.z`   | Authorization component of AI/Run CodeMie Plugin Engine that handles authentication and authorization for the NATS messaging system                                                               |
-| AI/Run CodeMie MCP Connect       | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/codemie-mcp-connect-service:x.y.z` | A lightweight bridge tool that enables cloud-based AI services to communicate with local Model Context Protocol (MCP) servers via protocol translation while maintaining security and flexibility |
-| AI/Run Mermaid Server            | `europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/prod/mermaid-server:x.y.z`              | Implementation of open-source service that generates image URLs for diagrams based on the provided Mermaid code for workflow visualization                                                        |
+#### Data Layer Components
 
-### Required Third-Party Components
+Database and storage services for application data:
 
-| Component name           | Images                                                                                                                                 | Description                                                                                                                                                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ingress Nginx Controller | `registry.k8s.io/ingress-nginx/controller:x.y.z`                                                                                       | Handles external traffic routing to services within the Kubernetes cluster. The AI/Run CodeMie application uses oauth2-proxy, which relies on the Ingress Nginx Controller for proper routing and access control |
-| Storage Class            | –                                                                                                                                      | Provides persistent storage capabilities                                                                                                                                                                         |
-| Elasticsearch            | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z`                                                                                  | Database component that stores all AI/Run CodeMie data, including datasources, projects, and other application information                                                                                       |
-| Kibana                   | `docker.elastic.co/kibana/kibana:x.y.z`                                                                                                | Web-based analytics and visualization platform that provides visualization of the data stored in Elasticsearch. Allows monitoring and analyzing AI/Run CodeMie data                                              |
-| Postgres-operator        | `registry.developers.crunchydata.com/crunchydata/postgres-operator:x.y.z`                                                              | Manages PostgreSQL database instances required by other components in the stack. Handles database lifecycle operations                                                                                           |
-| Keycloak-operator        | `epamedp/keycloak-operator:x.y.z`                                                                                                      | Manages Keycloak identity and access management instance and its configuration                                                                                                                                   |
-| Keycloak                 | `docker.io/busybox:x.y.z`, `quay.io/keycloak/keycloak:x.y.z`, `registry.developers.crunchydata.com/crunchydata/crunchy-postgres:x.y.z` | Identity and access management solution that provides authentication and authorization capabilities for integration with oauth2-proxy component                                                                  |
-| Oauth2-Proxy             | `quay.io/oauth2-proxy/oauth2-proxy:x.y.z`                                                                                              | Authentication middleware that provides secure authentication for the AI/Run CodeMie application by integrating with Keycloak or any other IdP                                                                   |
-| NATS                     | `nats:x.y.z`, `natsio/nats-server-config-reloader:x.y.z`                                                                               | Message broker that serves as a crucial component of the AI/Run CodeMie Plugin Engine, facilitating communication between services                                                                               |
-| LLM Proxy                | –                                                                                                                                      | Optional proxy component that balances requests to Azure OpenAI language models (LLMs), providing high availability and load distribution                                                                        |
-| Fluentbit                | `cr.fluentbit.io/fluent/fluent-bit:x.y.z`                                                                                              | Fluentbit enables logs and metrics collection from AI/Run CodeMie enabling the Agents observability                                                                                                              |
+| Component               | Container Image                                                   | Description                                                                             |
+| ----------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Elasticsearch**       | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z`             | Document storage, full-text search engine, and analytics platform                       |
+| **Kibana**              | `docker.elastic.co/kibana/kibana:x.y.z`                           | Visualization and exploration tool for Elasticsearch data and logs                      |
+| **PostgreSQL Operator** | `registry.developers.crunchydata.com/.../postgres-operator:x.y.z` | Kubernetes operator for managing PostgreSQL database lifecycle                          |
+| **PostgreSQL**          | `registry.developers.crunchydata.com/.../crunchy-postgres:x.y.z`  | Relational database for structured application data (managed via operator or Cloud SQL) |
+
+#### Security & Identity Components
+
+Authentication, authorization, and access control services:
+
+| Component             | Container Image                           | Description                                                                   |
+| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------- |
+| **Keycloak Operator** | `epamedp/keycloak-operator:x.y.z`         | Kubernetes operator for managing Keycloak lifecycle and configuration         |
+| **Keycloak**          | `quay.io/keycloak/keycloak:x.y.z`         | Identity and access management (IAM) server for user authentication           |
+| **OAuth2 Proxy**      | `quay.io/oauth2-proxy/oauth2-proxy:x.y.z` | Reverse proxy providing authentication for web applications using OAuth2/OIDC |
+
+#### Infrastructure Components
+
+Foundational services for networking and storage:
+
+| Component                    | Container Image                                  | Description                                                            |
+| ---------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
+| **Nginx Ingress Controller** | `registry.k8s.io/ingress-nginx/controller:x.y.z` | HTTP/HTTPS load balancer and reverse proxy for cluster traffic routing |
+| **GCP Storage Class**        | –                                                | StorageClass for dynamic provisioning of GCP Persistent Disks          |
+
+#### Messaging Infrastructure (Plugin Engine)
+
+Message broker for inter-service communication and plugin system:
+
+| Component | Container Image | Description                                                                    |
+| --------- | --------------- | ------------------------------------------------------------------------------ |
+| **NATS**  | `nats:x.y.z`    | Lightweight, high-performance messaging system for microservices communication |
+
+#### Observability Components
+
+Logging, monitoring, and troubleshooting tools:
+
+| Component             | Container Image                           | Description                                                        |
+| --------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
+| **Fluent Bit**        | `cr.fluentbit.io/fluent/fluent-bit:x.y.z` | Lightweight log processor and forwarder for centralized logging    |
+| **Kibana Dashboards** | –                                         | Pre-configured dashboards for monitoring CodeMie metrics and usage |
+
+#### Optional Components
+
+Additional services for enhanced functionality:
+
+| Component     | Container Image | Description                                                                         |
+| ------------- | --------------- | ----------------------------------------------------------------------------------- |
+| **LLM Proxy** | –               | Load balancer and router for AI model requests (supports multiple providers/models) |
+
+### Deployment Order
+
+Components must be installed in the following sequence to satisfy dependencies:
+
+1. **Infrastructure** → Ingress Controller, Storage Class
+2. **Operators** → PostgreSQL Operator, Keycloak Operator
+3. **Data Layer** → Elasticsearch, PostgreSQL instances
+4. **Security** → Keycloak, OAuth2 Proxy
+5. **Messaging** → NATS
+6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
+7. **Observability** → Fluent Bit, Kibana
+8. **Optional** → LLM Proxy (if needed)
 
 ## Deployment Methods
 
-Choose your preferred deployment method:
+Two deployment approaches are available depending on your needs:
 
-- **[Scripted Deployment](./components-scripted-deployment)** - Automated deployment using helm-charts.sh script
-- **[Manual Deployment](./components-manual-deployment)** - Step-by-step manual installation of each component
+### Scripted Deployment (Recommended)
 
-## Finalizing Installation
+Automated deployment using the `helm-charts.sh` wrapper script:
 
-Regardless of your installation method, eventually you should have the following application stack available:
+- **Best for**: Standard deployments, quick setup, production environments
+- **Advantages**: Automated dependency ordering, validation checks, consistent configuration
 
-| Component          | URL                                                   |
-| ------------------ | ----------------------------------------------------- |
-| AI/Run CodeMie UI  | `https://codemie.<your-domain>`                       |
-| AI/Run CodeMie API | `https://codemie.<your-domain>/code-assistant-api/v1` |
-| Keycloak UI        | `https://keycloak.<your-domain>/auth/admin`           |
-| Kibana             | `https://kibana.<your-domain>`                        |
+[→ Scripted Deployment Guide](./components-scripted-deployment)
 
-:::info
-Some components may be missing due to your setup configuration or use `http` protocol in private cluster.
+### Manual Deployment
+
+Step-by-step manual installation of each component:
+
+- **Best for**: Custom configurations, learning the stack, troubleshooting
+- **Advantages**: Full control over each component, easier to debug issues
+
+[→ Manual Deployment Guide](./manual-deployment/)
+
+:::tip Recommendation
+Use **Scripted Deployment** for initial installations. Switch to manual deployment only if you need custom configurations or are troubleshooting specific issues.
 :::
+
+## Accessing Applications
+
+Once deployment is complete and validated, access the AI/Run CodeMie applications:
+
+### Application URLs
+
+Replace `<your-domain>` with your configured domain name (from infrastructure deployment):
+
+| Application        | URL                                                     | Description                      |
+| ------------------ | ------------------------------------------------------- | -------------------------------- |
+| **CodeMie UI**     | `http(s)://codemie.<your-domain>`                       | Main user interface              |
+| **CodeMie API**    | `http(s)://codemie.<your-domain>/code-assistant-api/v1` | REST API endpoint                |
+| **Keycloak Admin** | `http(s)://keycloak.<your-domain>/auth/admin`           | Identity management console      |
+| **Kibana**         | `http(s)://kibana.<your-domain>`                        | Data visualization and analytics |
+
+:::info Protocol and Domain
+
+- **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
+- **Domain Name**: Configured during infrastructure deployment (check Terraform outputs for `dns_name`)
+- **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
+  :::
 
 ## Next Steps
 
-After successful components deployment, proceed to [Configuration](../../../configuration/) to complete required setup steps.
+After successful component deployment, proceed to [Configuration](../../../configuration/) to set up users, AI models, and complete the platform configuration.

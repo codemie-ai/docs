@@ -9,6 +9,7 @@ pagination_next: admin/deployment/azure/architecture
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import ClusterRequirements from '../common/\_cluster-requirements.mdx';
 
 # Prerequisites
 
@@ -88,63 +89,7 @@ To restrict access to AI/Run CodeMie and prevent unauthorized access from the pu
 - **Office locations** and their public IP addresses or CIDR blocks
 - **Any other trusted networks** that require access to the platform
 
-## AKS Cluster Requirements
-
-### Administrative Permissions
-
-The deployment user must have:
-
-- **AKS Admin permissions** with the ability to create and manage namespaces
-- Access to configure cluster-level resources (if deploying to an existing cluster)
-
-### Admission Control and Resource Requirements
-
-If deploying to an **existing AKS cluster**, ensure that admission webhooks allow the creation of the following Kubernetes resources:
-
-<Tabs>
-  <TabItem value="nats" label="NATS Messaging" default>
-    **Kubernetes API:** `Service` (LoadBalancer type)
-
-    **Purpose:** NATS is a core component of the CodeMie Plugin Engine, providing messaging infrastructure for communication between the [codemie-plugins](https://pypi.org/project/codemie-plugins/) CLI tool with MCP and the AI/Run CodeMie platform.
-
-    The LoadBalancer configuration depends on where the CLI tool will be executed:
-
-    | CLI Tool Execution Location | LoadBalancer Type | Description |
-    |----------------|------------------|-------------|
-    | Same virtual network as AKS | Internal LoadBalancer | Secure, private network communication within the VNet |
-    | External to AKS virtual network | Public LoadBalancer | Cross-network communication when CLI is run outside the VNet |
-
-  </TabItem>
-
-  <TabItem value="keycloak" label="Keycloak Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, `Role`, `RoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages Keycloak configuration including realms, clients, and user federation
-
-    :::note
-    Requires cluster-wide permissions for identity and access management operations.
-    :::
-
-  </TabItem>
-
-  <TabItem value="postgresql" label="PostgreSQL Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages PostgreSQL database instances and their lifecycle
-
-    :::note
-    Requires cluster-wide permissions for database provisioning and management.
-    :::
-
-  </TabItem>
-
-  <TabItem value="security" label="Security Context">
-    **Kubernetes API:** `Pod` with `securityContext`
-
-    **Requirement:** All AI/Run CodeMie components require `readOnlyRootFilesystem: false` in their security context for proper operation
-
-  </TabItem>
-</Tabs>
+<ClusterRequirements clusterName="AKS" networkName="VNet" />
 
 ## Deployment Machine Requirements
 

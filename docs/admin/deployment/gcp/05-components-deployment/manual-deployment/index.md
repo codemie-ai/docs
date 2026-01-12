@@ -3,8 +3,6 @@ id: manual-deployment-overview
 sidebar_position: 2
 title: Manual Deployment Overview
 description: Overview of manual component installation process
-pagination_prev: admin/deployment/azure/components-deployment/components-deployment-overview
-pagination_next: admin/deployment/azure/components-deployment/manual-deployment/storage-and-ingress
 ---
 
 # Manual CodeMie Components Deployment
@@ -24,7 +22,7 @@ If you prefer automated deployment, see [Scripted Deployment](../components-scri
 
 ## Overview
 
-Manual deployment involves installing components individually in a specific dependency order. Each component is deployed using Helm charts with cloud-specific values files (`values-azure.yaml`).
+Manual deployment involves installing components individually in a specific dependency order. Each component is deployed using Helm charts with cloud-specific values files (`values-gcp.yaml`).
 
 ### Deployment Scope
 
@@ -44,7 +42,7 @@ Before starting manual deployment, ensure you have completed all requirements:
 ### Verification Checklist
 
 - [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../infrastructure-deployment/) phase
-- [ ] **Cluster Access**: Connected to Jumpbox VM and kubectl configured for AKS
+- [ ] **Cluster Access**: Connected to Bastion Host (for private clusters) or have authorized network access and kubectl configured for GKE
 - [ ] **Container Registry**: Completed [Container Registry Access Setup](../#repository-and-access) from overview page
 - [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
 - [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
@@ -57,12 +55,12 @@ You must complete the Container Registry Access setup from the [Components Deplo
 
 ### Required Tools
 
-Ensure these tools are available on your deployment machine (Jumpbox):
+Ensure these tools are available on your deployment machine (Bastion Host or local workstation):
 
 - `kubectl` - Kubernetes cluster management
 - `helm` 3.16.0+ - Kubernetes package manager
 - `gcloud` CLI - For GCR authentication
-- `az` CLI - For Azure operations
+- `bash` - Script execution environment
 
 ## Component Installation Order
 
@@ -74,7 +72,7 @@ Components must be installed in the following order to satisfy dependencies:
 
 **Components**:
 
-- Azure Storage Class (for dynamic volume provisioning)
+- GCP Storage Class (for dynamic volume provisioning)
 - Nginx Ingress Controller (for HTTP/HTTPS routing)
 
 **When to Skip**: If your cluster already has these components configured
@@ -86,8 +84,8 @@ Components must be installed in the following order to satisfy dependencies:
 **Components**:
 
 - Elasticsearch (document storage and search engine)
+- Kibana (visualization and exploration tool)
 - PostgreSQL Operator (database lifecycle management)
-- PostgreSQL (relational database instances)
 
 **Dependencies**: Requires storage class from Step 1
 
@@ -101,7 +99,7 @@ Components must be installed in the following order to satisfy dependencies:
 - Keycloak (identity and access management)
 - OAuth2 Proxy (authentication proxy)
 
-**Dependencies**: Requires PostgreSQL from Step 2
+**Dependencies**: None (standalone identity layer)
 
 ### 4. [Plugin Engine](./plugin-engine)
 
@@ -120,10 +118,11 @@ Components must be installed in the following order to satisfy dependencies:
 
 **Components**:
 
-- CodeMie API (backend REST API)
-- CodeMie UI (frontend web application)
+- PostgreSQL Secret (database credentials)
 - MCP Connect (Model Context Protocol connector)
+- CodeMie UI (frontend web application)
 - Mermaid Server (diagram rendering service)
+- CodeMie API (backend REST API)
 
 **Dependencies**: Requires all previous components (data layer, security, messaging)
 
@@ -134,7 +133,6 @@ Components must be installed in the following order to satisfy dependencies:
 **Components**:
 
 - Fluent Bit (log collection and forwarding)
-- Kibana (log visualization and analysis)
 - Kibana Dashboards (pre-configured monitoring views)
 
 **Dependencies**: Requires Elasticsearch from Step 2
@@ -143,30 +141,35 @@ Components must be installed in the following order to satisfy dependencies:
 
 ### Step 1: Clone Repository
 
-Clone the Helm charts repository on your Jumpbox VM:
+Clone the Helm charts repository on your deployment machine:
 
 ```bash
 git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
 cd codemie-helm-charts
 ```
 
-### Step 2: Configure Domain Name
+### Step 2: Configure Domain and GCP Parameters
 
-Update the domain name in values files. Replace `codemie.example.com` with your actual domain, or leave it if using the default one:
+Update the required placeholders in the values files. Replace these values with your GCP-specific configuration:
 
 ```bash
-# Use your domain from deployment_outputs.env
-YOUR_DOMAIN="codemie.example.com"
+# Set your values
+DOMAIN="example.com"
+PROJECT_ID="my-gcp-project"
+REGION="europe-west3"
 
-# Update all values-azure.yaml files
-find . -name "values-azure.yaml" -exec sed -i "s/codemie.example.com/$YOUR_DOMAIN/g" {} \;
+# Replace domain in all files
+find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
 
-# Update domain placeholder in CodeMie API values
-sed -i "s/%%DOMAIN%%/example.com/g" codemie-api/values-azure.yaml
+# Replace GCP parameters in CodeMie API
+sed -i "s/%%GOOGLE_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
 ```
 
-:::tip Domain Configuration
-Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
+:::tip Find Your Values
+Your domain name and GCP configuration were set during infrastructure deployment. Check Terraform outputs for `dns_name`, `project_id`, and `region`.
 :::
 
 ### Step 3: Authenticate to Container Registry
@@ -174,10 +177,10 @@ Your domain name was configured during infrastructure deployment. Find it in `de
 Authenticate Helm to the Google Container Registry:
 
 ```bash
-# Set credentials
+# Set credentials path
 export GOOGLE_APPLICATION_CREDENTIALS=key.json
 
-# Login to registry
+# Login to GCR
 gcloud auth application-default print-access-token | \
   helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
 ```

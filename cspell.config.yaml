@@ -196,6 +196,8 @@ words:
   - urandom
   - ingressip
   - codemiestorage
+  - nslookup
+  - curlimages
   # Python libraries
   - tiktoken
   - Uvicorn
