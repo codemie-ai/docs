@@ -78,10 +78,9 @@ AI/Run CodeMie requires GKE clusters configured with **VPC-native networking** a
 **Required Configuration:**
 
 - **Networking Mode:** `VPC_NATIVE` with IP allocation policy (secondary ranges for pods and services)
-- **GKE Version:** `1.17.6-gke.7` or later
 - **HTTP Load Balancing Addon:** Enabled (default)
 
-:::warning Critical: Network Policy Disables Automatic NEGs
+:::warning Network Policy Disables Automatic NEGs
 If your cluster uses **GKE Network Policy** or **Calico**, container-native load balancing will NOT be enabled automatically. This causes Ingress errors:
 
 ```
@@ -97,19 +96,6 @@ metadata:
 ```
 
 :::
-
-**Verification:**
-
-```bash
-# Check VPC-native networking
-gcloud container clusters describe <cluster> --region=<region> \
-  --format="value(ipAllocationPolicy)"
-
-# Verify NEGs are created
-gcloud compute network-endpoint-groups list --project=<project-id>
-```
-
-**Recommended:** Use the [`safer-cluster`](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/safer-cluster) Terraform module, which automatically configures all required settings including VPC-native networking, HTTP Load Balancing, and Dataplane V2.
 
 ## Deployment Machine Requirements
 
