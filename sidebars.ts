@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats',
             'user-guide/assistants/marketplace-overview',
             'user-guide/assistants/marketplace-publishing',
+            'user-guide/assistants/assistant-categories-management',
             'user-guide/assistants/clone-assistant-from-marketplace',
             'user-guide/assistants/sub-assistants-multi-assistant-orchestrator',
             'user-guide/assistants/html-preview',
