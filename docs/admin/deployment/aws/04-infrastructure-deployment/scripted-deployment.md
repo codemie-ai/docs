@@ -37,7 +37,7 @@ You must have configured AWS credentials before running the deployment script. V
 The script automatically deploys infrastructure in sequential phases:
 
 | Phase                                | Description                                                      | Required                              |
-| ------------------------------------ | ---------------------------------------------------------------- | --------                              |
+| ------------------------------------ | ---------------------------------------------------------------- | ------------------------------------- |
 | **Phase 1: IAM Deployer Role**       | Creates IAM role with required permissions for deployment        | Can be skipped if role already exists |
 | **Phase 2: State Backend**           | Creates S3 bucket and DynamoDB table for Terraform state files   | Yes                                   |
 | **Phase 3: Platform Infrastructure** | Deploys EKS, networking, storage, databases, security components | Yes                                   |
