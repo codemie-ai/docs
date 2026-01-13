@@ -2,6 +2,8 @@
 id: add-file-datasource
 title: Add and Index File DataSource
 sidebar_label: Add and Index File DataSource
+pagination_prev: user-guide/data-source/datasources-types/add-jira-data-source
+pagination_next: user-guide/data-source/datasources-types/add-google-data-source
 ---
 
 # Add and Index File DataSource

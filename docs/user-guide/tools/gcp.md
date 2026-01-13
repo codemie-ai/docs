@@ -2,6 +2,8 @@
 id: gcp
 title: GCP
 sidebar_label: GCP
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 7
 ---
 

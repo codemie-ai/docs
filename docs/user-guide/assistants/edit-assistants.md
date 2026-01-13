@@ -2,6 +2,8 @@
 id: edit-assistants
 sidebar_position: 4
 title: Edit Assistants
+pagination_prev: user-guide/assistants/create-custom-assistants
+pagination_next: user-guide/assistants/delete-assistants-and-chats
 description: Modify assistant configuration and settings
 ---
 

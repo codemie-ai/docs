@@ -2,6 +2,8 @@
 id: create-workflow-from-template
 title: Create a Workflow from a Template
 sidebar_label: Create from Template
+pagination_prev: user-guide/workflows/create-workflow
+pagination_next: user-guide/workflows/workflow-templates
 sidebar_position: 3
 description: Quick-start guide to creating workflows from pre-built templates
 ---

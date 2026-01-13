@@ -2,6 +2,8 @@
 id: advanced-features
 title: Advanced Features
 sidebar_label: Advanced Features
+pagination_prev: user-guide/workflows/configuration/context-management
+pagination_next: user-guide/workflows/configuration/specialized-nodes
 sidebar_position: 7
 ---
 

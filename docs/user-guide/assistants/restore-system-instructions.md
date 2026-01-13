@@ -2,6 +2,8 @@
 id: restore-system-instructions
 sidebar_position: 9
 title: Restore System Instructions
+pagination_prev: user-guide/assistants/sharing-assistants
+pagination_next: user-guide/assistants/group-chats
 description: Revert assistant system instructions to previous versions using history tracking
 ---
 

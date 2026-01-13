@@ -2,6 +2,8 @@
 id: workflow-states
 title: Workflow States
 sidebar_label: Workflow States
+pagination_prev: user-guide/workflows/configuration/configuration-reference
+pagination_next: user-guide/workflows/configuration/state-transitions
 sidebar_position: 4
 ---
 

@@ -2,6 +2,8 @@
 id: manage-katas-admin
 title: Manage Katas
 sidebar_label: Manage Katas
+pagination_prev: user-guide/ai-katas/leaderboard
+pagination_next: null
 sidebar_position: 6
 ---
 

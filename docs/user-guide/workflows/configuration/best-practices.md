@@ -2,6 +2,8 @@
 id: best-practices
 title: Best Practices
 sidebar_label: Best Practices
+pagination_prev: user-guide/workflows/configuration/integration-capabilities
+pagination_next: user-guide/workflows/configuration/examples
 sidebar_position: 10
 ---
 

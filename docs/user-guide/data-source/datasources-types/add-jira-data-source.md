@@ -2,6 +2,8 @@
 id: add-jira-data-source
 title: Add and Index Jira Data Source
 sidebar_label: Add and Index Jira Data Source
+pagination_prev: user-guide/data-source/datasources-types/add-confluence-pages
+pagination_next: user-guide/data-source/datasources-types/add-file-datasource
 ---
 
 # Add and Index Jira Data Source

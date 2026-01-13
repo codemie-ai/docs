@@ -2,6 +2,8 @@
 id: exporting-workflow-execution
 title: Exporting Workflow Execution
 sidebar_label: Export Execution
+pagination_prev: user-guide/workflows/share-workflow-execution
+pagination_next: user-guide/workflows/llm-model-name-in-workflow
 sidebar_position: 7
 ---
 

@@ -2,6 +2,8 @@
 id: leaderboard
 title: Leaderboard
 sidebar_label: Leaderboard
+pagination_prev: user-guide/ai-katas/working-with-katas
+pagination_next: user-guide/ai-katas/manage-katas-admin
 sidebar_position: 3
 ---
 

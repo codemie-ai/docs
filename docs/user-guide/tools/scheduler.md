@@ -2,6 +2,8 @@
 id: scheduler
 title: Scheduler
 sidebar_label: Scheduler
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 18
 ---
 

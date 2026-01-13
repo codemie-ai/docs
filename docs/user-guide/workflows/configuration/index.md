@@ -1,8 +1,9 @@
 ---
 id: workflow-configuration-overview
 title: Workflow Configuration Guide
-sidebar_label: Overview
 sidebar_position: 1
+pagination_prev: user-guide/workflows/workflows-index
+pagination_next: user-guide/workflows/configuration/introduction
 ---
 
 # Workflow YAML Configuration Reference

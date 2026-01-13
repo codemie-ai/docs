@@ -2,6 +2,8 @@
 id: email-sender-tool
 title: Email Sender Tool
 sidebar_label: Email Sender Tool
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 14
 ---
 

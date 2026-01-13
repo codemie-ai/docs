@@ -2,6 +2,8 @@
 id: azure
 title: Azure
 sidebar_label: Azure
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 6
 ---
 

@@ -2,6 +2,8 @@
 id: client-secret-access
 title: Client Secret Access
 sidebar_label: Client Secret Access
+pagination_prev: user-guide/api/index
+pagination_next: null
 sidebar_position: 1
 ---
 

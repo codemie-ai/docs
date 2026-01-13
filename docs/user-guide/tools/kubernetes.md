@@ -2,6 +2,8 @@
 id: kubernetes
 title: Kubernetes
 sidebar_label: Kubernetes
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 9
 ---
 

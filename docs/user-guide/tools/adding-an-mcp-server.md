@@ -2,6 +2,8 @@
 id: adding-an-mcp-server
 title: Adding an MCP Server
 sidebar_label: Adding an MCP Server
+pagination_prev: user-guide/tools/overview
+pagination_next: null
 sidebar_position: 21
 ---
 

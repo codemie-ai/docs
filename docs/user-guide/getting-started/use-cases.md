@@ -3,6 +3,8 @@ id: use-cases
 title: Use Cases
 sidebar_label: Use Cases
 sidebar_position: 3
+pagination_prev: user-guide/getting-started/index
+pagination_next: null
 ---
 
 # Use Cases

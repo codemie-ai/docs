@@ -3,6 +3,7 @@ id: glossary
 title: Glossary
 sidebar_label: Glossary
 sidebar_position: 20
+pagination_prev: user-guide/getting-started/index
 pagination_next: null
 ---
 

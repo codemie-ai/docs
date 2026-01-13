@@ -2,6 +2,7 @@
 id: add-aws-knowledge-bases
 title: Add AWS Knowledge Bases as Data Source
 sidebar_label: Add AWS Knowledge Bases as Data Source
+pagination_prev: user-guide/data-source/datasources-types/add-google-data-source
 pagination_next: null
 ---
 

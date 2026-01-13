@@ -3,6 +3,8 @@ id: codemie-capabilities
 title: CodeMie's capabilities
 sidebar_label: Capabilities
 sidebar_position: 2
+pagination_prev: user-guide/getting-started/index
+pagination_next: null
 ---
 
 # CodeMie's capabilities

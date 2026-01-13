@@ -2,6 +2,8 @@
 id: add-google-data-source
 title: Add and Index Google Data Source
 sidebar_label: Add and Index Google Data Source
+pagination_prev: user-guide/data-source/datasources-types/add-file-datasource
+pagination_next: user-guide/data-source/datasources-types/add-aws-knowledge-bases
 ---
 
 # Add and Index Google Data Source

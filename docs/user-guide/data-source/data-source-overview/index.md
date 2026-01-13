@@ -2,7 +2,8 @@
 id: data-source-overview
 title: Data Source Overview
 sidebar_label: Data Source Overview
-pagination_prev: null
+pagination_prev: user-guide/index
+pagination_next: user-guide/data-source/data-source-overview/indexing-data-sources
 ---
 
 # Data Source Overview

@@ -2,6 +2,8 @@
 id: working-with-katas
 title: Working with AI Katas
 sidebar_label: Working with Katas
+pagination_prev: user-guide/ai-katas/katas-overview
+pagination_next: user-guide/ai-katas/leaderboard
 sidebar_position: 2
 ---
 

@@ -2,6 +2,8 @@
 id: export-assistant-chat-messages-to-word-and-pdf-formats
 sidebar_position: 14
 title: Export Assistant Chat Messages
+pagination_prev: user-guide/assistants/share-assistant-chat-with-other-users
+pagination_next: user-guide/assistants/marketplace-overview
 description: Export chat messages to PPTX, Word, PDF, and JSON formats
 ---
 

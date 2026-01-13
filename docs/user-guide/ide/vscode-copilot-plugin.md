@@ -2,8 +2,9 @@
 id: vscode-copilot-extension
 title: VS Code GitHub Copilot Extension
 sidebar_label: VS Code Copilot Extension
-sidebar_position: 2
+pagination_prev: user-guide/ide/index
 pagination_next: null
+sidebar_position: 2
 ---
 
 # CodeMie VS Code GitHub Copilot Extension
