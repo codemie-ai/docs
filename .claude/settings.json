@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run format:prettier",
+            "description": "Auto-format with Prettier"
+          }
+        ]
+      }
+    ]
+  }
+}
