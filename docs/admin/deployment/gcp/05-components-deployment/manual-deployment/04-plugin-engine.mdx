@@ -5,6 +5,8 @@ title: Plugin Engine (NATS)
 sidebar_label: Plugin Engine
 ---
 
+import TLSConfiguration from '../../../common/_nats-tls-configuration.mdx';
+
 # Plugin Engine Installation
 
 This guide covers the installation of the messaging infrastructure that enables inter-service communication and plugin system functionality.
@@ -155,6 +157,11 @@ helm upgrade --install codemie-nats nats/nats \
 - `--namespace codemie` - Deploys to the codemie namespace
 - `--values ./codemie-nats/values-gcp.yaml` - Uses GCP-specific configuration
 
+<TLSConfiguration
+  cloudName="gcp"
+  scenario1Description="TLS is handled by Google Cloud Load Balancer with TLS certificate on the load balancer itself."
+/>
+
 ### Step 4: Verify NATS Deployment
 
 Check that NATS is running:
@@ -169,12 +176,6 @@ kubectl get svc -n codemie | grep nats
 # Check NATS logs
 kubectl logs -n codemie <nats-pod-name>
 ```
-
-:::info Plugin Engine NATS URL
-Use plugin engine NATS URL with `nats` protocol, for example: `nats://codemie-nats.example.com:30422`
-
-This URL should be used when configuring external plugin engines or debugging NATS connectivity.
-:::
 
 ## NATS Auth Callout Installation
 

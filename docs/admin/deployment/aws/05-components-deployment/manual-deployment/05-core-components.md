@@ -46,7 +46,7 @@ helm upgrade --install codemie-mcp-connect-service \
 - `-f ./codemie-mcp-connect-service/values.yaml` - Uses component configuration
 
 :::tip Version Number
-Use the same version number you retrieved in the [Getting Started](./#step-4-get-latest-codemie-version) section.
+Use the same version number you retrieved in the [Getting Started](./#step-5-get-latest-codemie-version) section.
 :::
 
 ### Verify MCP Connect Deployment
@@ -122,7 +122,7 @@ CodeMie UI provides the web-based user interface for interacting with AI assista
 
 ### Step 1: Configure UI Values
 
-The domain configuration should already be set from the [Getting Started](./#step-2-configure-domain-name) section. Verify the values in `codemie-ui/values-aws.yaml` are correct.
+The domain configuration should already be set from the [Getting Started](./#step-3-configure-domain-name) section. Verify the values in `codemie-ui/values-aws.yaml` are correct.
 
 ### Step 2: Install CodeMie UI Helm Chart
 
@@ -172,7 +172,7 @@ CodeMie API is the backend service that handles all business logic, AI orchestra
 
 ### Step 1: Configure API Values
 
-The domain configuration should already be set from the [Getting Started](./#step-2-configure-domain-name) section. Verify the values in `codemie-api/values-aws.yaml` are correct:
+The domain configuration should already be set from the [Getting Started](./#step-3-configure-domain-name) section. Verify the values in `codemie-api/values-aws.yaml` are correct:
 
 - `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
 - `%%AWS_DEFAULT_REGION%%` should be replaced with your AWS region (e.g., `us-east-1`)
@@ -182,7 +182,7 @@ The domain configuration should already be set from the [Getting Started](./#ste
 - `%%AWS_S3_REGION%%` should be replaced with your S3 bucket region
 
 :::tip Domain Configuration
-If you followed the [Getting Started](./#step-2-configure-domain-name) steps, these replacements should already be done.
+If you followed the [Getting Started](./#step-3-configure-domain-name) steps, these replacements should already be done.
 :::
 
 ### Step 2: Copy Elasticsearch Credentials
@@ -194,12 +194,6 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
   sed '/namespace:/d' | \
   kubectl apply -n codemie -f -
 ```
-
-**Command Breakdown**:
-
-- `kubectl get secret ... -o yaml` - Exports secret as YAML from elastic namespace
-- `sed '/namespace:/d'` - Removes namespace field to allow cross-namespace copy
-- `kubectl apply -n codemie -f -` - Applies to codemie namespace
 
 ### Step 3: Install CodeMie API Helm Chart
 

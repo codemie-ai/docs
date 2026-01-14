@@ -1,11 +1,13 @@
 ---
 id: plugin-engine
-sidebar_position: 4
+sidebar_position: 5
 title: Plugin Engine
 sidebar_label: Plugin Engine
-pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
-pagination_next: admin/deployment/azure/components-deployment/manual-deployment/core-components
+pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/core-components
 ---
+
+import TLSConfiguration from '../../../common/_nats-tls-configuration.mdx';
 
 # Plugin Engine Installation
 
@@ -31,7 +33,7 @@ Create the `codemie-nats-secrets` secret containing authentication credentials a
 Internal service URL for NATS communication:
 
 ```bash
-NATS_URL="nats://codemie-nats:443"
+NATS_URL="nats://codemie-nats:4222"
 ```
 
 #### 2. Callout User Credentials
@@ -161,7 +163,7 @@ Deploy NATS using the official Helm chart:
 helm upgrade --install codemie-nats nats/nats \
   --version 1.2.6 \
   --namespace codemie \
-  --values ./codemie-nats/values-azure.yaml \
+  --values ./codemie-nats/values-aws.yaml \
   --wait \
   --timeout 900s
 ```
@@ -171,7 +173,12 @@ helm upgrade --install codemie-nats nats/nats \
 - `codemie-nats` - Release name
 - `nats/nats --version 1.2.6` - Uses NATS official chart version 1.2.6
 - `--namespace codemie` - Deploys to codemie namespace
-- `--values ./codemie-nats/values-azure.yaml` - Uses Azure-specific configuration
+- `--values ./codemie-nats/values-aws.yaml` - Uses AWS-specific configuration
+
+<TLSConfiguration
+  cloudName="aws"
+  scenario1Description="TLS is handled by NLB (Network Load Balancer) with TLS certificate on the load balancer itself."
+/>
 
 ### Step 4: Verify NATS Deployment
 
@@ -207,7 +214,7 @@ helm upgrade --install codemie-nats-auth-callout \
   oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-nats-auth-callout \
   --version "x.y.z" \
   --namespace codemie \
-  -f ./codemie-nats-auth-callout/values-azure.yaml \
+  -f ./codemie-nats-auth-callout/values-aws.yaml \
   --wait \
   --timeout 600s
 ```
@@ -218,10 +225,10 @@ helm upgrade --install codemie-nats-auth-callout \
 - `oci://europe-west3-docker.pkg.dev/...` - OCI registry URL for CodeMie Helm charts
 - `--version "x.y.z"` - Replace with the CodeMie version you're deploying
 - `--namespace codemie` - Deploys to codemie namespace
-- `-f ./codemie-nats-auth-callout/values-azure.yaml` - Uses Azure-specific configuration
+- `-f ./codemie-nats-auth-callout/values-aws.yaml` - Uses AWS-specific configuration
 
 :::tip Version Number
-Use the same version number you retrieved in the [Getting Started](./#step-4-get-latest-codemie-version) section.
+Use the same version number you retrieved in the [Getting Started](./#step-5-get-latest-codemie-version) section.
 :::
 
 ### Step 2: Verify NATS Auth Callout Deployment
@@ -263,7 +270,7 @@ kubectl get service -n codemie codemie-nats
 kubectl get secret codemie-nats-secrets -n codemie
 
 # Test NATS connectivity (optional)
-kubectl run -it --rm nats-test --image=natsio/nats-box:latest --restart=Never -n codemie -- nats context create test --server=nats://codemie-nats:443
+kubectl run -it --rm nats-test --image=natsio/nats-box:latest --restart=Never -n codemie -- nats context create test --server=nats://codemie-nats:4222
 ```
 
 All checks should return successful results before proceeding.
