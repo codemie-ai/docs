@@ -66,26 +66,16 @@ CODEMIE_PASSWORD=$(pwgen -s -1 25)
 CODEMIE_BCRYPTED_PASSWORD=$(nats server passwd -p "$CODEMIE_PASSWORD")
 ```
 
-#### 4. NATS Account Keys
+#### 4. NATS Keys
 
-Generate NATS account keys for JWT authentication:
+Generate NATS keys for JWT authentication and encrypted connections:
 
 ```bash
-# Generate account NKey (save both outputs)
 nsc generate nkey --account
 # Output:
 # ISSUER_NSEED: SAXXXXX... (private seed, keep secure)
 # ISSUER_NKEY: AXXXXX... (public key)
-```
 
-Reference: [NATS Auth Callout Example](https://natsbyexample.com/examples/auth/callout/cli)
-
-#### 5. NATS Curve Keys
-
-Generate curve keys for encrypted connections:
-
-```bash
-# Generate curve XKey (save both outputs)
 nsc generate nkey --curve
 # Output:
 # ISSUER_XSEED: XSXXXXX... (private seed, keep secure)
@@ -94,7 +84,7 @@ nsc generate nkey --curve
 
 Reference: [NATS Auth Callout Example](https://natsbyexample.com/examples/auth/callout/cli)
 
-#### 6. Create the Secret
+#### 5. Create the Secret
 
 Create the secret using `kubectl` with all generated values:
 
