@@ -179,6 +179,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/data-source/datasources-types/add-file-datasource',
                 'user-guide/data-source/datasources-types/add-google-data-source',
                 'user-guide/data-source/datasources-types/add-aws-knowledge-bases',
+                'user-guide/data-source/datasources-types/add-provider-datasource',
               ],
             },
           ],

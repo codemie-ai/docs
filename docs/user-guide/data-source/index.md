@@ -32,3 +32,4 @@ Connect and configure different types of data sources:
 - [Add and Index File DataSource](./datasources-types/add-file-datasource) - Upload and index files
 - [Add and Index Google Data Source](./datasources-types/add-google-data-source) - Connect Google Docs and Drive
 - [Add AWS Knowledge Bases as Data Sources](./datasources-types/add-aws-knowledge-bases) - Integrate AWS Knowledge Bases
+- [Add and Index Provider Data Source](./datasources-types/add-provider-datasource) - Connect indexed repositories with external analysis toolkits
