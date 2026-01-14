@@ -3,7 +3,7 @@ id: marketplace-publishing
 sidebar_position: 17
 title: Publish to Marketplace
 pagination_prev: user-guide/assistants/marketplace-overview
-pagination_next: user-guide/assistants/clone-assistant-from-marketplace
+pagination_next: user-guide/assistants/assistant-categories-management
 description: Share your assistants with the community by publishing to the marketplace
 ---
 
@@ -89,6 +89,10 @@ Choose up to **3 relevant categories** to help users discover your assistant:
 | **Training**                  | Onboarding, employee training, internal knowledge sharing                         |
 | **Architecture**              | Scalable and reliable technical architecture design                               |
 | **Presales**                  | Client interactions, proposal generation, solution demonstrations                 |
+
+:::info Category Management
+Users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) permissions can create, edit, and delete assistant categories. Learn more in [Assistant Categories Management](./assistant-categories-management).
+:::
 
 ## Integration Requirements
 

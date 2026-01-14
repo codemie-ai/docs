@@ -54,6 +54,7 @@ Discover community assistants or create complex multi-assistant workflows.
 
 - [Marketplace Overview](./marketplace-overview) - Discover community-contributed assistants
 - [Publish to Marketplace](./marketplace-publishing) - Share your assistants with the community
+- [Assistant Categories Management](./assistant-categories-management) - Organize assistants with categories
 - [Clone Assistant from Marketplace](./clone-assistant-from-marketplace) - Customize marketplace assistants
 
 ### Orchestration
