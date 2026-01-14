@@ -21,9 +21,9 @@ The table below specifies resource requirements for AI/Run CodeMie components si
 
 The listed requirements are designed for high-scale production deployments (500+ users). For smaller teams and lower concurrency, some resources can be scaled down:
 
-- **User Concurrency**: Scale API replicas based on actual concurrent user counts
-- **Data Volume**: Elasticsearch storage grows with datasources amount and size and log retention policies
-- **Query Load**: PostgreSQL managed service tier depends on transaction volume and query complexity
+- **User Concurrency**: API replicas can be scaled depending on the load
+- **Data Volume**: Elasticsearch stores vector datasources, user metrics and container logs, therefore storage grows with datasources amount and size and log retention policies
+- **Database Sizing**: PostgreSQL managed service tier depends on user count, the amount of resources they create in CodeMie, and additional extensions connected to CodeMie that share the same database instance
 - **LLM Proxy**: Resource requirements depend on the exact LLM proxy type being used
 
 :::

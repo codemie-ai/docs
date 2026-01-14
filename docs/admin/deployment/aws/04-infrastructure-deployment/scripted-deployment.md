@@ -59,17 +59,20 @@ Review input variables in `variables.tf` and create a `terraform.tfvars` file wi
 
 ```hcl
 # Required: AWS Configuration
-region               = "us-east-1"
-role_arn             = "arn:aws:iam::123456789012:role/YourExistingRole"
-platform_domain_name = "codemie.example.com"
+region             = "us-east-1"
+platform_name      = "codemie"
+deployer_role_name = "AIRunDeployerRole"
 
-# Additional configuration variables
-# (See variables.tf for complete list)
+# Optional: IAM Permissions Boundary
+iam_permissions_boundary_policy_arn = ""
+
+# Optional: Custom tags
+tags = {
+  "SysName"     = "AI/Run"
+  "Environment" = "Production"
+  "Project"     = "AI/Run"
+}
 ```
-
-:::tip Required vs Optional Variables
-The configuration file contains many variables. Most have sensible defaults. Focus on the **Required** variables first. See `variables.tf` for all available options.
-:::
 
 ### Step 3: Deploy IAM Role
 
@@ -82,7 +85,7 @@ terraform apply
 ```
 
 :::info
-The created IAM role contains all required permissions to manage AWS resources for AI/Run CodeMie deployment.
+The created IAM role contains all required permissions to manage AWS resources for AI/Run CodeMie deployment. This role will be used for all subsequent platform infrastructure deployments and updates.
 :::
 
 ### Step 4: Clone Platform Repository
@@ -110,9 +113,9 @@ TF_VAR_platform_domain_name="codemie.example.com"                   # Domain nam
 # Required: EKS Configuration
 TF_VAR_cluster_version="1.34"
 TF_VAR_demand_instance_types='[{ instance_type = "r5.xlarge" }]'
-TF_VAR_demand_max_nodes_count=2
-TF_VAR_demand_desired_nodes_count=2
-TF_VAR_demand_min_nodes_count=2
+TF_VAR_demand_max_nodes_count=3
+TF_VAR_demand_desired_nodes_count=3
+TF_VAR_demand_min_nodes_count=3
 
 # Required: Platform Configuration
 TF_VAR_platform_name="codemie"
@@ -129,6 +132,7 @@ TF_VAR_enable_private_connections=true
 TF_VAR_lb_prefix_list_ids='[]'
 TF_VAR_lb_specific_ips='[]'
 TF_VAR_security_group_ids='[]'
+...
 ```
 
 :::info Complete Variable List
@@ -173,8 +177,17 @@ CODEMIE_POSTGRES_DATABASE_PASSWORD="generated-password"
 ```
 
 :::tip Save These Outputs
-The `deployment_outputs.env` file contains sensitive information. Store it securely and reference it during the Components Deployment phase.
+The `deployment_outputs.env` file contains sensitive information. Store it securely, do not commit to version control system and reference it during the Components Deployment phase.
 :::
+
+:::warning Security Groups
+Ensure that you allowed incoming traffic to the Security Group attached to LoadBalancers from:
+
+- Your VPN or from networks you're planning to work with AI/Run CodeMie
+- EKS Cluster NAT Gateway EIP (not required if `enable_private_connections` variable is set to `true`)
+  :::
+
+This concludes AWS infrastructure deployment.
 
 ## Post-Deployment Validation
 
@@ -200,9 +213,7 @@ aws rds describe-db-instances --db-instance-identifier <rds-instance-name> --reg
 Review the deployment logs in the `logs/` directory for any warnings or errors:
 
 ```bash
-ls -la logs/
-# Review logs
-cat logs/codemie_aws_deployment_YYYY-MM-DD-HHMMSS.log
+less logs/codemie_aws_deployment_YYYY-MM-DD-HHMMSS.log
 ```
 
 ## Next Steps
