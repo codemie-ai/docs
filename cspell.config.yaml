@@ -45,6 +45,7 @@ words:
   - Langchain
   - bitnami
   - litellm
+  - berriai
   # Cloud/Infrastructure
   - kubernetes
   - kubectl

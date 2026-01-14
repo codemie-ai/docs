@@ -190,12 +190,6 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
   kubectl apply -n codemie -f -
 ```
 
-**Command Breakdown**:
-
-- `kubectl get secret ... -o yaml` - Exports secret as YAML from elastic namespace
-- `sed '/namespace:/d'` - Removes namespace field to allow cross-namespace copy
-- `kubectl apply -n codemie -f -` - Applies to codemie namespace
-
 ### Step 3: Install CodeMie API Helm Chart
 
 Deploy CodeMie API:

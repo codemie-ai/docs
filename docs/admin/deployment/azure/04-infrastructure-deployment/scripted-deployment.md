@@ -382,7 +382,7 @@ The `deployment_outputs.env` file contains sensitive information. Store it secur
 
 After deployment completes, verify that all infrastructure was created successfully:
 
-### 1. Verify Azure Resources
+### Step 1: Verify Azure Resources
 
 Check that all expected resources were created in the Azure Portal:
 
@@ -397,7 +397,7 @@ az aks show --resource-group <resource-group-name> --name CodeMieAks --query "pr
 az postgres flexible-server show --resource-group <resource-group-name> --name <postgres-server-name>
 ```
 
-### 2. Check Deployment Logs
+### Step 2: Check Deployment Logs
 
 Review the deployment logs in the `logs/` directory for any warnings or errors:
 
@@ -407,7 +407,7 @@ ls -la logs/
 cat logs/codemie_azure_deployment_YYYY-MM-DD-HHMMSS.log
 ```
 
-### 3. Verify Key Resources
+### Step 3: Verify Key Resources
 
 Ensure critical resources are accessible:
 
@@ -464,19 +464,19 @@ sudo passwd azadmin
 
 Once connected to the Jumpbox via RDP, configure access to the AKS cluster:
 
-### 1. Authenticate to Azure
+### Step 1: Authenticate to Azure
 
 ```bash
 az login
 ```
 
-### 2. Set Active Subscription
+### Step 2: Set Active Subscription
 
 ```bash
 az account set --subscription <subscription-id>
 ```
 
-### 3. Configure kubectl Access
+### Step 3: Configure kubectl Access
 
 Retrieve AKS credentials and configure kubectl:
 
@@ -492,14 +492,14 @@ az aks get-credentials \
 kubelogin convert-kubeconfig -l azurecli
 ```
 
-### 4. Set Default Resource Group
+### Step 4: Set Default Resource Group
 
 ```bash
 # Set default resource group for Azure CLI commands
 az configure --defaults group=<resource-group-name>
 ```
 
-### 5. Verify Cluster Access
+### Step 5: Verify Cluster Access
 
 ```bash
 # Test cluster connectivity

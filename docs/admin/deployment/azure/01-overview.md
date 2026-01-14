@@ -14,7 +14,6 @@ This guide provides step-by-step instructions for deploying the AI/Run CodeMie a
 - Get along with AI/Run CodeMie architecture
 - Deploy Azure infrastructure using Terraform
 - Configure and deploy all AI/Run CodeMie application components
-- Integrate and configure AI models
 
 ## How to Use This Guide
 

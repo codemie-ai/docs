@@ -286,7 +286,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Components Deployment',
+                  label: 'CodeMie Components Deployment',
                   link: {
                     type: 'doc',
                     id: 'admin/deployment/aws/components-deployment/components-deployment-overview',
@@ -296,7 +296,7 @@ const sidebars: SidebarsConfig = {
                     'admin/deployment/aws/components-deployment/components-scripted-deployment',
                     {
                       type: 'category',
-                      label: 'Manual Deployment',
+                      label: 'CodeMie Manual Deployment',
                       link: {
                         type: 'doc',
                         id: 'admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview',

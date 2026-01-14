@@ -41,12 +41,6 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
   kubectl apply -n fluentbit -f -
 ```
 
-**Command Breakdown**:
-
-- `kubectl get secret ... -o yaml` - Exports secret as YAML from elastic namespace
-- `sed '/namespace:/d'` - Removes namespace field to allow cross-namespace copy
-- `kubectl apply -n fluentbit -f -` - Applies to fluentbit namespace
-
 ### Step 3: Install Fluent Bit Helm Chart
 
 Deploy Fluent Bit:
@@ -59,12 +53,6 @@ helm upgrade --install fluent-bit fluent-bit/. \
   --timeout 900s \
   --dependency-update
 ```
-
-**Command Breakdown**:
-
-- `fluent-bit` - Release name
-- `-n fluentbit` - Deploys to fluentbit namespace
-- `--values fluent-bit/values.yaml` - Uses Fluent Bit configuration
 
 ### Step 4: Verify Fluent Bit Deployment
 
@@ -103,13 +91,6 @@ kubectl create secret generic kibana-encryption-keys \
   --from-literal=security.encryptionKey="$(openssl rand -hex 16)" \
   --type=Opaque
 ```
-
-**Command Breakdown**:
-
-- `encryptedSavedObjects.encryptionKey` - Encrypts saved searches, dashboards, and visualizations
-- `reporting.encryptionKey` - Encrypts report generation data
-- `security.encryptionKey` - Encrypts session cookies and security tokens
-- `openssl rand -hex 16` - Generates 32-character (16-byte) random hex string
 
 **Secret Structure**:
 

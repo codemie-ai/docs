@@ -1,0 +1,129 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## TLS Configuration
+
+Choose the appropriate scenario based on your deployment architecture:
+
+<Tabs groupId="tls-scenario">
+  <TabItem value="lb-termination" label="TLS Termination on Load Balancer" default>
+
+### Load Balancer TLS Termination
+
+{props.scenario1Description}
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+params:
+  conf: |
+    tls: {}
+    allow_non_tls: true
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "false"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "0"
+```
+
+**Plugin URL Format**:
+
+```
+tls://<domain>:<port>
+```
+
+:::info
+The `tls://` prefix forces plugins to perform TLS handshake first, which is essential because the load balancer expects TLS negotiation before any NATS protocol communication.
+:::
+
+  </TabItem>
+  <TabItem value="no-tls" label="No TLS (Local)">
+
+### No TLS (Local envs only)
+
+Plain text communication without encryption.
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+params:
+  conf: |
+    tls: {}
+    allow_non_tls: true
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "false"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "0"
+```
+
+**Plugin URL Format**:
+
+```
+nats://<domain>:<port>
+```
+
+  </TabItem>
+  <TabItem value="nats-tls" label="Termination on Ingress">
+
+### NATS-Managed TLS
+
+NATS server handles TLS with its own certificate.
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+nats:
+  tls:
+    enabled: true
+    secretName: codemie-nats-tls
+  merge:
+    timeout: 10
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "true"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "1"
+```
+
+**Plugin URL Format**:
+
+```
+nats://<domain>:<port>
+```
+
+  </TabItem>
+</Tabs>

@@ -121,42 +121,6 @@ Azure OpenAI Services are optional. AI/Run CodeMie supports other external AI pr
 If using external AI providers or other models, skip Phase 3 entirely.
 :::
 
-## Security Architecture
-
-The infrastructure deployment implements security with multiple layers of protection:
-
-:::tip Security
-All resources are deployed with Azure security best practices enabled by default.
-:::
-
-### Network Security
-
-- **Private AKS Cluster**: API server accessible only through private endpoint, not exposed to internet
-- **Hub-Spoke Topology**: Centralized security controls in hub VNet with isolated spoke networks
-- **Private Endpoints**: All Azure PaaS services (Storage, ACR, PostgreSQL, Key Vault, OpenAI) accessible only through private IPs
-- **User Defined Routing (UDR)**: Custom route tables control traffic flow with NAT Gateway for internet egress
-- **Network Segmentation**: Dedicated subnets for different workload tiers (nodes, pods, databases, private endpoints)
-
-### Identity & Access Management
-
-- **Managed Identities**: System-assigned identities eliminate need for credential management
-- **Workload Identity**: OIDC federation enables Kubernetes pods to authenticate with Azure AD
-- **Azure RBAC**: Role-based access control for AKS cluster and Azure resource management
-- **Least Privilege**: Minimal permission sets granted through role assignments
-
-### Data Protection
-
-- **Encryption at Rest**: Azure Storage Service Encryption for all storage accounts
-- **Encryption in Transit**: HTTPS/TLS enforced for all service communications
-- **Key Vault**: Centralized management of encryption keys, secrets, and certificates
-- **Private Connectivity**: Database, storage, and AI services isolated from public internet
-
-### Compliance & Monitoring
-
-- **Audit Logging**: All resource activities logged to Log Analytics Workspace
-- **Diagnostic Settings**: Resource-level diagnostics for compliance and troubleshooting
-- **Bastion Access**: Jump server access through Azure Bastion eliminates need for public IPs on VMs
-
 ## Deployment Methods
 
 Proceed to the next step to deploy the infrastructure:

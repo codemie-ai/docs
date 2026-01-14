@@ -1,58 +1,82 @@
 ---
 id: infrastructure-scripted-deployment
+title: Infrastructure Scripted Deployment
+sidebar_label: Infrastructure Scripted Deployment
 sidebar_position: 1
-title: Scripted Deployment
-description: Automated AWS infrastructure deployment using scripts
 pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
 pagination_next: admin/deployment/aws/components-deployment/components-deployment-overview
 ---
 
 # Scripted Infrastructure Deployment
 
-The `aws-terraform.sh` script automates the deployment of infrastructure for AI/Run CodeMie on AWS.
+This guide walks you through deploying AWS infrastructure for AI/Run CodeMie using the automated `aws-terraform.sh` deployment script. The script handles all deployment phases automatically: IAM deployer role, Terraform state backend, and core platform infrastructure.
+
+:::tip Recommended Approach
+Scripted deployment is the recommended method as it handles prerequisite checks, configuration validation, and proper sequencing of Terraform operations automatically.
+:::
 
 ## Prerequisites
 
-Ensure you have completed all items in the [Prerequisites](../prerequisites) checklist.
+Before starting the deployment, ensure you have completed all requirements from the [Prerequisites](../prerequisites) page:
 
-## Deployment Order
+### Verification Checklist
 
-The script deploys resources in the following order:
+- [ ] **AWS Access**: Programmatic access with IAM permissions
+- [ ] **Tools Installed**: Terraform 1.5.7, AWS CLI, kubectl, Helm, gcloud CLI, Docker
+- [ ] **AWS Authentication**: Configured AWS credentials and region
+- [ ] **Repository Access**: Have access to Terraform and Helm repositories
+- [ ] **Network Planning**: Prepared list of allowed networks
+- [ ] **Domain Configuration**: Route 53 hosted zone ready
 
-| #   | Resource name      | Repository                                                                                        |
-| --- | ------------------ | ------------------------------------------------------------------------------------------------- |
-| 1   | IAM deployer role  | [codemie-terraform-aws-iam](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam)           |
-| 2   | Main AWS resources | [codemie-terraform-aws-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform) |
-
-## Step 1: IAM Deployer Role Creation
-
-This step creates the `DeployerRole` AWS IAM role that will be used for all subsequent infrastructure deployments.
-
-:::info
-The created IAM role contains required permissions to manage AWS resources
+:::warning Authentication Required
+You must have configured AWS credentials before running the deployment script. Verify with `aws sts get-caller-identity`.
 :::
 
-1. Clone the IAM repository:
+## Deployment Phases
+
+The script automatically deploys infrastructure in sequential phases:
+
+| Phase                                | Description                                                      | Required                              |
+| ------------------------------------ | ---------------------------------------------------------------- | ------------------------------------- |
+| **Phase 1: IAM Deployer Role**       | Creates IAM role with required permissions for deployment        | Can be skipped if role already exists |
+| **Phase 2: State Backend**           | Creates S3 bucket and DynamoDB table for Terraform state files   | Yes                                   |
+| **Phase 3: Platform Infrastructure** | Deploys EKS, networking, storage, databases, security components | Yes                                   |
+
+## Quick Start
+
+### Step 1: Clone IAM Repository
+
+Clone the IAM Terraform repository:
 
 ```bash
 git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam.git
 cd codemie-terraform-aws-iam
 ```
 
-2. Review input variables in `codemie-terraform-aws-iam/variables.tf` and create a `terraform.tfvars` file:
+### Step 2: Configure IAM Deployment
+
+Review input variables in `variables.tf` and create a `terraform.tfvars` file with your AWS-specific configuration:
 
 ```hcl
-region               = "your-region"
-role_arn             = "arn:aws:iam::xxx:role/yourRole"
-platform_domain_name = "your.domain"
-...
+# Required: AWS Configuration
+region             = "us-east-1"
+platform_name      = "codemie"
+deployer_role_name = "AIRunDeployerRole"
+
+# Optional: IAM Permissions Boundary
+iam_permissions_boundary_policy_arn = ""
+
+# Optional: Custom tags
+tags = {
+  "SysName"     = "AI/Run"
+  "Environment" = "Production"
+  "Project"     = "AI/Run"
+}
 ```
 
-:::info
-Ensure you have carefully reviewed all variables and replaced mock values with yours.
-:::
+### Step 3: Deploy IAM Role
 
-3. Initialize and apply Terraform:
+Initialize and apply Terraform to create the IAM deployer role:
 
 ```bash
 terraform init
@@ -60,108 +84,140 @@ terraform plan
 terraform apply
 ```
 
-## Step 2: Run Installation Script
+:::info
+The created IAM role contains all required permissions to manage AWS resources for AI/Run CodeMie deployment. This role will be used for all subsequent platform infrastructure deployments and updates.
+:::
 
-1. Clone the platform repository:
+### Step 4: Clone Platform Repository
+
+Clone the platform Terraform repository:
 
 ```bash
 git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform.git
 cd codemie-terraform-aws-platform
 ```
 
-2. Fill in configuration details in `deployment.conf`:
+### Step 5: Configure Platform Deployment
+
+Edit the `deployment.conf` file to provide your AWS-specific configuration:
 
 ```bash
-# AI/Run CodeMie deployment variables configuration
+# Required: AWS Account Information
 AWS_PROFILE="My_Profile"
 
-# AWS region where the platform will be deployed
-TF_VAR_region="eu-west-2"
+# Required: Basic Configuration
+TF_VAR_region="us-east-1"                                           # AWS region for deployment
+TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role created in Step 3
+TF_VAR_platform_domain_name="codemie.example.com"                   # Domain name for the platform
 
-# AWS IAM Role ARN for the deployment you created on a previous step
-TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"
-
-# The domain name for the platform
-TF_VAR_platform_domain_name="codemie.example.com"
-
-# The name of the AWS IAM Role to be used to access the EKS cluster
-TF_VAR_eks_admin_role_arn=""
-
-# The name of the policy that defines the permissions boundary
-TF_VAR_role_permissions_boundary_arn=""
-
+# Required: EKS Configuration
 TF_VAR_cluster_version="1.34"
 TF_VAR_demand_instance_types='[{ instance_type = "r5.xlarge" }]'
-TF_VAR_demand_max_nodes_count=2
-TF_VAR_demand_desired_nodes_count=2
-TF_VAR_demand_min_nodes_count=2
+TF_VAR_demand_max_nodes_count=3
+TF_VAR_demand_desired_nodes_count=3
+TF_VAR_demand_min_nodes_count=3
+
+# Required: Platform Configuration
 TF_VAR_platform_name="codemie"
-TF_VAR_subnet_azs='["eu-west-2a", "eu-west-2b", "eu-west-2c"]'
+TF_VAR_subnet_azs='["us-east-1a", "us-east-1b", "us-east-1c"]'
 TF_VAR_s3_states_bucket_name="codemie-terraform-states"
 TF_VAR_table_name="codemie_terraform_locks"
+
+# Optional: IAM Permissions Boundary
+TF_VAR_eks_admin_role_arn=""
+TF_VAR_role_permissions_boundary_arn=""
+
+# Optional: Network Access Control
 TF_VAR_enable_private_connections=true
-
-# List of optional prefix lists IDs for ALB and NLB to create security group from
 TF_VAR_lb_prefix_list_ids='[]'
-
-# List of optional specific IP addresses/CIDR blocks to allow access from to ALB and NLB
 TF_VAR_lb_specific_ips='[]'
-
-# Additional optional security group IDs to attach to ALB and NLB
 TF_VAR_security_group_ids='[]'
+...
 ```
 
-3. Run the installation script:
+:::info Complete Variable List
+For all available configuration options, refer to the `variables.tf` file in the platform repository.
+:::
+
+### Step 6: Run Deployment
+
+Execute the automated deployment script:
 
 ```bash
-bash aws-terraform.sh
+bash ./aws-terraform.sh
 ```
 
-## What the Script Does
+The script will:
 
-After execution, the script will:
+1. **Validate Environment**: Check for required tools and AWS authentication
+2. **Verify Configuration**: Validate `deployment.conf` parameters
+3. **Deploy Phase 1**: Create IAM deployer role (if not already created)
+4. **Deploy Phase 2**: Create Terraform state backend storage
+5. **Deploy Phase 3**: Provision core platform infrastructure (EKS, networking, storage, databases)
+6. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details required during next phases
 
-### 1. Validate Environment
+## Deployment Outputs
 
-- Check for required tools (`tfenv`, `AWS CLI`)
-- Verify AWS authentication status
-- Validate configuration parameters
-
-### 2. Deploy Infrastructure
-
-- Create Terraform backend storage (S3 bucket and DynamoDB table)
-- Deploy core AI/Run CodeMie Platform infrastructure
-- Set up necessary AWS resources
-
-### 3. Generate Outputs
-
-The script creates a `deployment_outputs.env` file with essential infrastructure details:
+Upon successful deployment, the script generates a `deployment_outputs.env` file containing essential infrastructure details needed for the next deployment phase:
 
 ```bash
-# Platform Outputs
-AWS_DEFAULT_REGION=eu-west-2
-EKS_AWS_ROLE_ARN=arn:aws:iam::123456789012:role/...
+# Platform Infrastructure Outputs
+AWS_DEFAULT_REGION=us-east-1
+EKS_AWS_ROLE_ARN=arn:aws:iam::123456789012:role/codemie-eks-role
 AWS_KMS_KEY_ID=12345678-90ab-cdef-1234-567890abcdef
 AWS_S3_BUCKET_NAME=codemie-platform-bucket
+CODEMIE_DOMAIN_NAME=codemie.example.com
 
-# RDS Database Outputs
-CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.eu-west-2.rds.amazonaws.com
+# Database Outputs
+CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.us-east-1.rds.amazonaws.com
 CODEMIE_POSTGRES_DATABASE_PORT=5432
 CODEMIE_POSTGRES_DATABASE_NAME=codemie
 CODEMIE_POSTGRES_DATABASE_USER=dbadmin
-CODEMIE_POSTGRES_DATABASE_PASSWORD="password"
+CODEMIE_POSTGRES_DATABASE_PASSWORD="generated-password"
 ```
 
-### 4. Complete Deployment
-
-- Success message confirms deployment
-- Logs available in `logs/codemie_aws_deployment_YYYY-MM-DD-HHMMSS.log`
-- Summary of deployed resources displayed
-
-:::warning Security
-Keep the `deployment_outputs.env` file secure as it contains sensitive information. Do not commit it to version control.
+:::tip Save These Outputs
+The `deployment_outputs.env` file contains sensitive information. Store it securely, do not commit to version control system and reference it during the Components Deployment phase.
 :::
+
+:::warning Security Groups
+Ensure that you allowed incoming traffic to the Security Group attached to LoadBalancers from:
+
+- Your VPN or from networks you're planning to work with AI/Run CodeMie
+- EKS Cluster NAT Gateway EIP (not required if `enable_private_connections` variable is set to `true`)
+  :::
+
+This concludes AWS infrastructure deployment.
+
+## Post-Deployment Validation
+
+After deployment completes, verify that all infrastructure was created successfully:
+
+### Step 1: Verify AWS Resources
+
+Check that all expected resources were created in the AWS Console or via CLI:
+
+```bash
+# List all resources in the region
+aws resourcegroupstaggingapi get-resources --region <region>
+
+# Verify EKS cluster status
+aws eks describe-cluster --name <cluster-name> --region <region> --query "cluster.status"
+
+# Verify RDS instance status
+aws rds describe-db-instances --db-instance-identifier <rds-instance-name> --region <region>
+```
+
+### Step 2: Check Deployment Logs
+
+Review the deployment logs in the `logs/` directory for any warnings or errors:
+
+```bash
+less logs/codemie_aws_deployment_YYYY-MM-DD-HHMMSS.log
+```
 
 ## Next Steps
 
-After successful deployment, proceed to [Components Deployment](../components-deployment/) to install AI/Run CodeMie application components.
+After successful infrastructure deployment and validation, proceed to:
+
+**[Components Deployment](../components-deployment/)** - Deploy AI/Run CodeMie application components to your EKS cluster

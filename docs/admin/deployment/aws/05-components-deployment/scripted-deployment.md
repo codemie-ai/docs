@@ -1,79 +1,202 @@
 ---
 id: components-scripted-deployment
 sidebar_position: 1
-title: Scripted Deployment
-description: Automated components deployment using Helm charts
+title: CodeMie Scripted Deployment
+sidebar_label: CodeMie Scripted Deployment
 pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
 pagination_next: admin/configuration/index
 ---
 
-# Scripted Components Deployment
+# Scripted CodeMie Components Deployment
 
-The `helm-charts.sh` script (from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository) automates the deployment of AI/Run CodeMie components using Helm charts.
+This guide walks you through deploying AI/Run CodeMie application components using the automated `helm-charts.sh` deployment script. The script handles the installation of all components in the correct dependency order using Helm charts.
+
+:::tip Recommended Approach
+Scripted deployment is recommended for standard installations as it automates component ordering, validates prerequisites, and ensures consistent configuration across all components.
+:::
+
+## Overview
+
+The deployment script automates the installation of:
+
+- **Infrastructure services** (Nginx Ingress, Storage Class)
+- **Data layer** (Elasticsearch, PostgreSQL Operator)
+- **Security components** (Keycloak, OAuth2 Proxy)
+- **Messaging system** (NATS)
+- **Core CodeMie services** (API, UI, MCP Connect)
+- **Observability stack** (Fluent Bit, Kibana)
 
 ## Prerequisites
 
-- EKS cluster with:
-  - Nginx Ingress Controller (or will be installed if using `--mode all`)
-  - AWS gp3 storage class
-- [Helm](https://helm.sh/docs/intro/install/) installed and configured
-- Required cloud provider CLI tools and credentials set up (AWS CLI, Google Cloud SDK)
-- `deployment_outputs.env` file from Infrastructure Deployment copied to root directory
+Before starting deployment, ensure you have completed all requirements:
 
-## Script Parameters
+### Verification Checklist
 
-The script requires exactly three input parameters:
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [ ] **Cluster Access**: kubectl configured for EKS cluster
+- [ ] **Container Registry**: Completed [Container Registry Access Setup](./#repository-and-access) from overview page
+- [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
+- [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
+- [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
+- [ ] **Deployment Outputs**: Have `deployment_outputs.env` file from infrastructure deployment
 
-### 1. Cloud Provider
+:::warning Container Registry Access Required
+You must complete the Container Registry Access setup from the [Components Deployment Overview](./#repository-and-access) before proceeding. The script requires the `gcp-artifact-registry` pull secret to exist.
+:::
 
-Target cloud provider where deployment should be executed.
+### Required Tools
 
-**Allowed Values:** `aws`, `azure`, `gcp`
+Ensure these tools are available on your deployment machine:
 
-### 2. AI/Run Version
+- `kubectl` - Kubernetes cluster management
+- `helm` 3.16.0+ - Kubernetes package manager
+- `gcloud` CLI - For GCR authentication
+- `aws` CLI - For AWS operations
 
-Version of AI/Run components to deploy (semantic versioning format).
+## Quick Start
 
-**Example:** `x.y.z`
+### Step 1: Clone Repository
 
-### 3. Mode Name
-
-Specifies which components to install.
-
-**Allowed Values:**
-
-- `all` - installs both AI/Run CodeMie and 3rd-party components (for fresh installation)
-- `recommended` - installs both AI/Run and 3rd-party components except Nginx Ingress Controller
-- `update` - updates only AI/Run CodeMie core components (see [Update AI/Run CodeMie](../../../update/codemie/update-version) for more details)
-
-## Component Configuration
-
-Before running the script, configure component-specific placeholders:
-
-| Component    | Placeholder              | Description           | Example                                          | File to Edit                    |
-| ------------ | ------------------------ | --------------------- | ------------------------------------------------ | ------------------------------- |
-| Kibana       | `%%DOMAIN%%`             | Your public domain    | `example.com`                                    | `kibana/values-aws.yaml`        |
-| Keycloak     | `%%DOMAIN%%`             | Your public domain    | `example.com`                                    | `keycloak-helm/values-aws.yaml` |
-| OAuth2 Proxy | `%%DOMAIN%%`             | Your public domain    | `example.com`                                    | `oauth2-proxy/values-aws.yaml`  |
-| CodeMie UI   | `%%DOMAIN%%`             | Your public domain    | `example.com`                                    | `codemie-ui/values-aws.yaml`    |
-| CodeMie API  | `%%DOMAIN%%`             | Your public domain    | `example.com`                                    | `codemie-api/values-aws.yaml`   |
-| CodeMie API  | `%%AWS_DEFAULT_REGION%%` | AWS region            | `us-west-2`                                      | `codemie-api/values-aws.yaml`   |
-| CodeMie API  | `%%EKS_AWS_ROLE_ARN%%`   | IAM role for EKS IRSA | `arn:aws:iam::0123456789012:role/AWSIRSA_AI_RUN` | `codemie-api/values-aws.yaml`   |
-| CodeMie API  | `%%AWS_KMS_KEY_ID%%`     | AWS KMS key ID        | `50f3f093-dc86-48de-8f2d-7a76e480348c`           | `codemie-api/values-aws.yaml`   |
-| CodeMie API  | `%%AWS_S3_BUCKET_NAME%%` | S3 bucket name        | `codemie-user-data-0123456789012`                | `codemie-api/values-aws.yaml`   |
-| CodeMie API  | `%%AWS_S3_REGION%%`      | S3 bucket region      | `us-west-2`                                      | `codemie-api/values-aws.yaml`   |
-
-## Usage Example
-
-To deploy AI/Run CodeMie with all third-party components:
+Clone the Helm charts repository on your deployment machine:
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=key.json
-gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
-
-bash helm-charts.sh --cloud aws --version x.y.z --mode all
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
 ```
+
+### Step 2: Configure AWS-Specific Values
+
+Update AWS-specific values in the CodeMie API configuration. Use values from your `deployment_outputs.env` file:
+
+```bash
+# Source the deployment outputs
+source deployment_outputs.env
+
+# Update CodeMie API values with AWS-specific configuration
+sed -i "s/%%DOMAIN%%/${CODEMIE_DOMAIN_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_DEFAULT_REGION%%/${AWS_DEFAULT_REGION}/g" codemie-api/values-aws.yaml
+sed -i "s|%%EKS_AWS_ROLE_ARN%%|${EKS_AWS_ROLE_ARN}|g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_KMS_KEY_ID%%/${AWS_KMS_KEY_ID}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_BUCKET_NAME%%/${AWS_S3_BUCKET_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_REGION%%/${AWS_S3_REGION}/g" codemie-api/values-aws.yaml
+```
+
+### Step 3: Configure Domain Name
+
+Update the domain name in remaining values files:
+
+```bash
+# Use your domain from deployment_outputs.env
+YOUR_DOMAIN="${CODEMIE_DOMAIN_NAME}"
+
+# Update all values-aws.yaml files
+find . -name "values-aws.yaml" -exec sed -i "s/codemie.example.com/$YOUR_DOMAIN/g" {} \;
+```
+
+:::tip Domain Configuration
+Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
+:::
+
+### Step 4: Authenticate to Container Registry
+
+Authenticate Helm to the Google Container Registry:
+
+```bash
+# Set credentials
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+
+# Login to registry
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
+```
+
+### Step 5: Get Latest CodeMie Version
+
+Retrieve the latest AI/Run CodeMie release version:
+
+```bash
+# Check latest version
+bash get-codemie-latest-release-version.sh -c key.json
+
+# Note the version (e.g., 1.2.3) for next step
+```
+
+### Step 6: Run Deployment Script
+
+Execute the deployment script with your chosen mode:
+
+```bash
+# For first-time installation (installs all components)
+bash helm-charts.sh --cloud aws --version <version> --mode all
+
+# OR for clusters with existing Nginx Ingress
+bash helm-charts.sh --cloud aws --version <version> --mode recommended
+```
+
+:::tip Idempotent Script
+The deployment script is idempotent, meaning you can safely re-run it multiple times. If the script fails or is interrupted, simply run it again with the same parameters to continue or retry the deployment.
+:::
+
+## Configuration Reference
+
+### Script Parameters
+
+The deployment script accepts three required parameters:
+
+| Parameter   | Description               | Values                           |
+| ----------- | ------------------------- | -------------------------------- |
+| `--cloud`   | Target cloud provider     | `aws`, `azure`, `gcp`            |
+| `--version` | CodeMie component version | Semantic version (e.g., `1.2.3`) |
+| `--mode`    | Installation mode         | `all`, `recommended`, `update`   |
+
+### Deployment Modes
+
+| Mode            | Components Installed                                         | Use Case                                      |
+| --------------- | ------------------------------------------------------------ | --------------------------------------------- |
+| **all**         | All components including Nginx Ingress Controller            | Fresh EKS cluster without existing ingress    |
+| **recommended** | All components except Nginx Ingress Controller               | Cluster with existing ingress controller      |
+| **update**      | Only CodeMie core components (API, UI, MCP Connect, Mermaid) | Updating existing installation to new version |
+
+:::tip Choosing Deployment Mode
+
+- **First-time installation**: Use `all` or `recommended` depending on whether you need Nginx Ingress
+- **Version updates**: Use `update` to upgrade only CodeMie components
+- **Fresh EKS cluster**: Use `all` mode
+  :::
+
+### AWS-Specific Configuration Values
+
+The following AWS-specific values must be configured in `codemie-api/values-aws.yaml` (automated by Step 2 in Quick Start):
+
+| Placeholder              | Description                   | Example Value                                    | Source File              |
+| ------------------------ | ----------------------------- | ------------------------------------------------ | ------------------------ |
+| `%%DOMAIN%%`             | Your domain name              | `example.com`                                    | `deployment_outputs.env` |
+| `%%AWS_DEFAULT_REGION%%` | AWS region                    | `us-west-2`                                      | `deployment_outputs.env` |
+| `%%EKS_AWS_ROLE_ARN%%`   | IAM role for EKS IRSA         | `arn:aws:iam::0123456789012:role/AWSIRSA_AI_RUN` | `deployment_outputs.env` |
+| `%%AWS_KMS_KEY_ID%%`     | AWS KMS key ID for encryption | `50f3f093-dc86-48de-8f2d-7a76e480348c`           | `deployment_outputs.env` |
+| `%%AWS_S3_BUCKET_NAME%%` | S3 bucket for user data       | `codemie-user-data-0123456789012`                | `deployment_outputs.env` |
+| `%%AWS_S3_REGION%%`      | S3 bucket region              | `us-west-2`                                      | `deployment_outputs.env` |
+
+### Domain Name Configuration
+
+The following files require domain name configuration (automated by Step 3 in Quick Start):
+
+| Component        | File                            | Placeholder           | Example Value         |
+| ---------------- | ------------------------------- | --------------------- | --------------------- |
+| **Kibana**       | `kibana/values-aws.yaml`        | `codemie.example.com` | `codemie.example.com` |
+| **Keycloak**     | `keycloak-helm/values-aws.yaml` | `codemie.example.com` | `codemie.example.com` |
+| **OAuth2 Proxy** | `oauth2-proxy/values-aws.yaml`  | `codemie.example.com` | `codemie.example.com` |
+| **CodeMie UI**   | `codemie-ui/values-aws.yaml`    | `codemie.example.com` | `codemie.example.com` |
+| **CodeMie API**  | `codemie-api/values-aws.yaml`   | `codemie.example.com` | `codemie.example.com` |
 
 ## Next Steps
 
-After successful deployment, proceed to [Configuration](../../../configuration/) to complete required setup steps.
+After successful deployment and validation, proceed to:
+
+**[Configuration](../../../configuration/)** - Complete required setup including:
+
+- Initial user configuration in Keycloak
+- AI model integration setup
+- Data source connections
+- Security and access control configuration
+- System health monitoring setup
