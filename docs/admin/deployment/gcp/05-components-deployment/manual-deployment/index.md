@@ -47,7 +47,6 @@ Before starting manual deployment, ensure you have completed all requirements:
 - [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
 - [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
 - [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
-- [ ] **Version Identified**: Know which CodeMie version you're deploying
 
 :::warning Container Registry Access Required
 You must complete the Container Registry Access setup from the [Components Deployment Overview](../#repository-and-access) before proceeding. Each component requires the `gcp-artifact-registry` pull secret to exist.
@@ -211,40 +210,6 @@ Follow the component installation guides in the order listed above. Each guide p
 Installing components out of order will cause deployment failures. Always follow the numbered sequence to ensure dependencies are satisfied.
 :::
 
-## Best Practices
-
-### Before You Begin
-
-1. **Review all guides first** - Familiarize yourself with the complete installation flow
-2. **Prepare configuration values** - Have your domain name, version number, and any custom settings ready
-3. **Set up monitoring** - Keep a terminal window open with `kubectl get pods -n codemie -w` to watch deployments
-4. **Document customizations** - Note any deviations from default configurations for future reference
-
-### During Installation
-
-1. **Verify each component** - Don't proceed to the next component until the current one is healthy
-2. **Check pod status** - Wait for all pods to reach `Running` or `Completed` state before continuing
-3. **Review logs for errors** - If a component fails, check logs before attempting fixes
-4. **Save configurations** - Keep copies of any modified values files
-
-### Validation Commands
-
-Use these commands after each component installation:
-
-```bash
-# Check pod status
-kubectl get pods -n codemie
-
-# View specific component
-kubectl get pods -n codemie | grep <component-name>
-
-# Check logs
-kubectl logs -n codemie <pod-name> --tail=50
-
-# Describe pod for events
-kubectl describe pod -n codemie <pod-name>
-```
-
 ## Common Issues
 
 ### Image Pull Failures
@@ -256,26 +221,6 @@ kubectl describe pod -n codemie <pod-name>
 - Verify `gcp-artifact-registry` secret exists: `kubectl get secret -n codemie`
 - Re-authenticate to registry (repeat Step 3)
 - Check network connectivity to `europe-west3-docker.pkg.dev`
-
-### Dependency Errors
-
-**Symptom**: Component fails to start with connection or dependency errors
-
-**Solution**:
-
-- Verify prerequisite components are running
-- Check component installation order was followed
-- Review service endpoints: `kubectl get svc -n codemie`
-
-### Resource Constraints
-
-**Symptom**: Pods remain in `Pending` state
-
-**Solution**:
-
-- Check node resources: `kubectl top nodes`
-- Review PVC status: `kubectl get pvc -n codemie`
-- Verify storage class exists: `kubectl get storageclass`
 
 ## Next Steps
 

@@ -2,88 +2,128 @@
 id: plugin-engine
 sidebar_position: 5
 title: Plugin Engine
-description: Install NATS and NATS Auth Callout
+sidebar_label: Plugin Engine
 pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/aws/components-deployment/manual-deployment/core-components
 ---
 
 # Plugin Engine Installation
 
-Plugins in the CodeMie context enable remote and distributed invocation of Agent tooling. They also facilitate the decoupling of the CodeMie backend codebase, simplifying the development of user functionality. Running tooling remotely is important and enables several use cases:
+This guide covers the installation of the messaging infrastructure that enables connecting MCP servers and plugins running somewhere else to CodeMie agents.
 
-- Running on a user workstation for development and research tasks
-- Running in secure perimeters close to integrated applications
-- Scaling tools for performance gains
-- Enabling least privilege access
+## Overview
 
-NATS based architecture enables seamless Assistant integration with tooling in any perimeter/appliance.
+The plugin engine consists of two components:
 
-## NATS
+- **NATS** - High-performance message broker enabling pub/sub and request/reply messaging patterns
+- **NATS Auth Callout** - Authentication service that validates NATS connections and enforces authorization policies
 
-To deploy NATS, follow the steps below:
+## NATS Installation
 
-### 1. Create NATS Secrets
+NATS provides the messaging backbone for CodeMie's plugin system, enabling real-time communication between the core application and distributed plugins.
 
-Create `codemie-nats-secrets` Kubernetes secret. To set it up, follow these steps to generate and encode the necessary values:
+### Step 1: Create NATS Secrets
 
-#### NATS_URL
+Create the `codemie-nats-secrets` secret containing authentication credentials and encryption keys. Follow these steps to generate and encode the necessary values:
 
-- Since NATS is deployed in the same namespace as the AI/Run CodeMie and NATS Callout services, use the internal URL `nats://codemie-nats:4222`
-- Base64 encode this URL before using it in the secret
+#### 1. NATS_URL
 
-#### CALLOUT_USERNAME
+Internal service URL for NATS communication:
 
-- Use the username `callout`
-- Base64 encode this username before using it in the secret
+```bash
+NATS_URL="nats://codemie-nats:4222"
+```
 
-#### CALLOUT_PASSWORD
+#### 2. Callout User Credentials
 
-- Generate a secure password using the command: `pwgen -s -1 25`
-- Base64 encode this password before using it in the secret
+Credentials for the NATS Auth Callout service:
 
-#### CALLOUT_BCRYPTED_PASSWORD
+```bash
+# Username
+CALLOUT_USERNAME="callout"
 
-- Use the NATS server to generate a bcrypt-hashed password based on the `CALLOUT_PASSWORD`
-- Command: `nats server passwd -p <CALLOUT_PASSWORD>`
-- Base64 encode the bcrypt-hashed password before using it in the secret
+# Generate secure password
+CALLOUT_PASSWORD=$(pwgen -s -1 25)
 
-#### CODEMIE_USERNAME
+# Generate bcrypt hash (requires nats CLI installed)
+CALLOUT_BCRYPTED_PASSWORD=$(nats server passwd -p "$CALLOUT_PASSWORD")
+```
 
-- Use the username `codemie`
-- Base64 encode this username before using it in the secret
+#### 3. CodeMie User Credentials
 
-#### CODEMIE_PASSWORD
+Credentials for CodeMie application to connect to NATS:
 
-- Generate a secure password using the command: `pwgen -s -1 25`
-- Base64 encode this password before using it in the secret
+```bash
+# Username
+CODEMIE_USERNAME="codemie"
 
-#### CODEMIE_BCRYPTED_PASSWORD
+# Generate secure password
+CODEMIE_PASSWORD=$(pwgen -s -1 25)
 
-- Use the NATS server to generate a bcrypt-hashed password based on the `CODEMIE_PASSWORD`
-- Command: `nats server passwd -p <CODEMIE_PASSWORD>`
-- Base64 encode the bcrypt-hashed password before using it in the secret
+# Generate bcrypt hash (requires nats CLI installed)
+CODEMIE_BCRYPTED_PASSWORD=$(nats server passwd -p "$CODEMIE_PASSWORD")
+```
 
-#### ISSUER_NKEY and ISSUER_NSEED
+#### 4. NATS Account Keys
 
-- Use the `nsc` tool to generate NATS account keys
-- Reference: https://natsbyexample.com/examples/auth/callout/cli
-- Command: `nsc generate nkey --account`
-- Base64 encode the NKEY and NSEED before using them in the secret
+Generate NATS account keys for JWT authentication:
 
-#### ISSUER_XKEY and ISSUER_XSEED
+```bash
+# Generate account NKey (save both outputs)
+nsc generate nkey --account
+# Output:
+# ISSUER_NSEED: SAXXXXX... (private seed, keep secure)
+# ISSUER_NKEY: AXXXXX... (public key)
+```
 
-- Use the `nsc` tool to generate NATS curve keys
-- Reference: https://natsbyexample.com/examples/auth/callout/cli
-- Command: `nsc generate nkey --curve`
-- Base64 encode the XKEY and XSEED before using them in the secret
+Reference: [NATS Auth Callout Example](https://natsbyexample.com/examples/auth/callout/cli)
 
-### Secret Example
+#### 5. NATS Curve Keys
+
+Generate curve keys for encrypted connections:
+
+```bash
+# Generate curve XKey (save both outputs)
+nsc generate nkey --curve
+# Output:
+# ISSUER_XSEED: XSXXXXX... (private seed, keep secure)
+# ISSUER_XKEY: XXXXXX... (public key)
+```
+
+Reference: [NATS Auth Callout Example](https://natsbyexample.com/examples/auth/callout/cli)
+
+#### 6. Create the Secret
+
+Create the secret using `kubectl` with all generated values:
+
+```bash
+kubectl -n codemie create secret generic codemie-nats-secrets \
+  --from-literal=NATS_URL="$NATS_URL" \
+  --from-literal=CALLOUT_USERNAME="$CALLOUT_USERNAME" \
+  --from-literal=CALLOUT_PASSWORD="$CALLOUT_PASSWORD" \
+  --from-literal=CALLOUT_BCRYPTED_PASSWORD="$CALLOUT_BCRYPTED_PASSWORD" \
+  --from-literal=CODEMIE_USERNAME="$CODEMIE_USERNAME" \
+  --from-literal=CODEMIE_PASSWORD="$CODEMIE_PASSWORD" \
+  --from-literal=CODEMIE_BCRYPTED_PASSWORD="$CODEMIE_BCRYPTED_PASSWORD" \
+  --from-literal=ISSUER_NKEY="<your-nkey>" \
+  --from-literal=ISSUER_NSEED="<your-nseed>" \
+  --from-literal=ISSUER_XKEY="<your-xkey>" \
+  --from-literal=ISSUER_XSEED="<your-xseed>" \
+  --type=Opaque
+```
+
+:::warning Save Credentials
+Save all generated passwords and keys securely. You'll need them for troubleshooting and future operations.
+:::
+
+**Alternative: YAML Secret Template**
 
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: codemie-nats-secrets
+  namespace: codemie
 type: Opaque
 data:
   NATS_URL: <base64-encoded-nats-url>
@@ -99,56 +139,139 @@ data:
   ISSUER_XSEED: <base64-encoded-issuer-xseed>
 ```
 
-:::info Encoding Secrets
-Use the following command to encode secret values:
+To encode values: `echo -n 'your-value-here' | base64`
+
+### Step 2: Add NATS Helm Repository
+
+Add the official NATS Helm repository:
 
 ```bash
-echo -n 'your-value-here' | base64
-```
-
-Or use `kubectl` to create secret directly:
-
-```bash
-kubectl -n codemie create secret generic codemie-nats-secrets \
-  --from-literal NATS_URL=nats://codemie-nats:4222 \
-  --from-literal CALLOUT_USERNAME=callout \
-  --from-literal CALLOUT_PASSWORD=<generated-password> \
-  # ... add remaining literals
-```
-
-:::
-
-### 2. Install NATS Helm Chart
-
-Install `codemie-nats` helm chart in the created namespace, applying custom values file with the command:
-
-```bash
+# Add repository
 helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+
+# Update repository index
 helm repo update nats
-helm upgrade --install codemie-nats nats/nats --version 1.2.6 \
-  --namespace codemie --values ./codemie-nats/values-aws.yaml \
-  --wait --timeout 900s
 ```
+
+### Step 3: Install NATS Helm Chart
+
+Deploy NATS using the official Helm chart:
+
+```bash
+helm upgrade --install codemie-nats nats/nats \
+  --version 1.2.6 \
+  --namespace codemie \
+  --values ./codemie-nats/values-aws.yaml \
+  --wait \
+  --timeout 900s
+```
+
+**Command Breakdown**:
+
+- `codemie-nats` - Release name
+- `nats/nats --version 1.2.6` - Uses NATS official chart version 1.2.6
+- `--namespace codemie` - Deploys to codemie namespace
+- `--values ./codemie-nats/values-aws.yaml` - Uses AWS-specific configuration
 
 :::info TLS Configuration for Plugin Engine
 In AWS, if TLS termination for Plugin Engine load balancer is handled by NLB (TLS certificate is on LB itself), then Plugin Engine NATS URL should start with `tls` protocol, for example: `tls://codemie-nats.example.com:30422`, otherwise use `nats://codemie-nats.example.com:30422`
 :::
 
-## NATS Auth Callout
+### Step 4: Verify NATS Deployment
 
-To deploy the NATS Auth Callout service, follow the steps below:
+Check that NATS is running:
 
-Install `codemie-nats-auth-callout` helm chart, applying custom values file with the command:
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep nats
+
+# Check NATS service
+kubectl get service -n codemie codemie-nats
+
+# Check NATS logs
+kubectl logs -n codemie statefulset/codemie-nats --tail=50
+```
+
+Expected output:
+
+- NATS pods should be in `Running` state
+- Service should show cluster IP assigned
+- Logs should indicate successful server startup
+
+## NATS Auth Callout Installation
+
+NATS Auth Callout validates authentication and authorization for NATS connections to CodeMie.
+
+### Step 1: Install NATS Auth Callout Helm Chart
+
+Deploy the NATS Auth Callout service:
 
 ```bash
 helm upgrade --install codemie-nats-auth-callout \
-  "oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-nats-auth-callout" \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-nats-auth-callout \
   --version "x.y.z" \
-  --namespace "codemie" \
-  -f "./codemie-nats-auth-callout/values-aws.yaml" \
-  --wait --timeout 600s
+  --namespace codemie \
+  -f ./codemie-nats-auth-callout/values-aws.yaml \
+  --wait \
+  --timeout 600s
 ```
+
+**Command Breakdown**:
+
+- `codemie-nats-auth-callout` - Release name
+- `oci://europe-west3-docker.pkg.dev/...` - OCI registry URL for CodeMie Helm charts
+- `--version "x.y.z"` - Replace with the CodeMie version you're deploying
+- `--namespace codemie` - Deploys to codemie namespace
+- `-f ./codemie-nats-auth-callout/values-aws.yaml` - Uses AWS-specific configuration
+
+:::tip Version Number
+Use the same version number you retrieved in the [Getting Started](./#step-4-get-latest-codemie-version) section.
+:::
+
+### Step 2: Verify NATS Auth Callout Deployment
+
+Check that the auth callout service is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep nats-auth-callout
+
+# Check deployment
+kubectl get deployment -n codemie codemie-nats-auth-callout
+
+# Check logs
+kubectl logs -n codemie deployment/codemie-nats-auth-callout --tail=50
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should indicate successful connection to NATS
+
+## Post-Installation Validation
+
+After completing plugin engine installation, verify the following:
+
+```bash
+# NATS is running
+kubectl get pods -n codemie | grep codemie-nats
+
+# NATS Auth Callout is running
+kubectl get pods -n codemie | grep nats-auth-callout
+
+# NATS service is available
+kubectl get service -n codemie codemie-nats
+
+# NATS secrets exist
+kubectl get secret codemie-nats-secrets -n codemie
+
+# Test NATS connectivity (optional)
+kubectl run -it --rm nats-test --image=natsio/nats-box:latest --restart=Never -n codemie -- nats context create test --server=nats://codemie-nats:4222
+```
+
+All checks should return successful results before proceeding.
 
 ## Next Steps
 
-Proceed to [Core Components](./core-components) installation.
+Once the plugin engine is configured, proceed to **[Core Components](./core-components)** installation to deploy the main CodeMie application services.
