@@ -224,6 +224,11 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'doc',
+          id: 'user-guide/analytics/analytics-overview',
+          label: 'Analytics',
+        },
+        {
           type: 'category',
           label: 'API',
           link: {
