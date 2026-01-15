@@ -83,6 +83,7 @@ words:
   - t1iylu
   - aiplatform
   - cloudkms
+  - Stackdriver
   # Azure
   - AKS
   - Azure

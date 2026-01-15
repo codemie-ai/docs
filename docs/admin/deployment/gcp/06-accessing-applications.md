@@ -37,11 +37,11 @@ After accessing the applications, complete the configuration to make AI/Run Code
 
 #### User Configuration
 
-Configure initial users and authentication in Keycloak. See [User Management](../../configuration/user-management) for details.
+Configure initial users and authentication in Keycloak. See [User Configuration](../../configuration/user-configuration/) for details.
 
 #### AI LLM Models Integration
 
-Set up AI model providers to enable AI capabilities. See [AI Models Configuration](../../configuration/ai-models) for details.
+Set up AI model providers to enable AI capabilities. See [AI Models Integration](../../configuration/ai-models-integration/) for details.
 
 ### Install Extensions
 

@@ -179,7 +179,7 @@ Replace `%%PROJECT_NAME%%` with your project name and create the pull secret:
 ```bash
 kubectl create secret docker-registry gcp-artifact-registry \
   --docker-server=https://europe-west3-docker.pkg.dev \
-  --docker-email=gsa-%%PROJECT_NAME%%-to-gcr@or2-msq-epmd-edp-anthos-t1iylu.iam.gserviceaccount.com \
+  --docker-email=`<client_email from shared with you key>` \
   --docker-username=_json_key \
   --docker-password="$(cat key.json)" \
   -n codemie
