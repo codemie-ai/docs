@@ -19,13 +19,11 @@ You can add various types of Data Sources to AI/Run CodeMie platform, such as:
 - **Code (Git)**: Git repositories for code analysis and development tasks
 - **Confluence**: Confluence pages for documentation and knowledge base
 - **Jira**: Jira spaces for project management and issue tracking
-- **File**: Various file formats (Max size: 50MB)
-  - Supported formats: `.yml`, `.yaml`, `.json`, `.pptx`, `.csv`, `.txt`, `.pdf`, `.docx`, `.xlsx`, `.xml`
+- **File**: Various file formats (Max size: 100Mb)
+  - Supported formats: PPTX, DOCX, XLSX, PDF, CSV (others as plain text)
 - **Google Docs**: Google documents for collaborative documentation
-
-:::info AWS Knowledge Bases
-AI/Run CodeMie also supports AWS Knowledge Bases for enterprise-scale data indexing. Learn more in [Add AWS Knowledge Bases](../datasources-types/add-aws-knowledge-bases).
-:::
+- **Azure Devops Wiki**: Azure DevOps wiki pages for team documentation
+- **Provider**: Connect indexed repositories with external analysis toolkits for advanced code exploration
 
 ## Adding a Data Source
 
@@ -84,7 +82,7 @@ Specify data source type. It can be:
 - Git repository
 - Confluence page
 - Jira space
-- File (`.pdf`, `.txt`, `.csv`, `.pptx`, `.xml`, `.json`, `.yaml`)
+- File (PPTX, DOCX, XLSX, PDF, CSV, and others as plain text)
 - Google document
 
 ## Filtering Data Sources

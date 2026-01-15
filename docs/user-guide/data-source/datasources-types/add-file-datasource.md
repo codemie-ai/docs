@@ -36,12 +36,14 @@ AI/Run CodeMie supports the following file formats:
 | **Word**       | `.docx`         | Microsoft Word documents                                   |
 | **Excel**      | `.xlsx`         | Microsoft Excel spreadsheets                               |
 
+**Other formats**: Processed as plain text
+
 ### File Size Limitations
 
-**Maximum file size**: 50MB per file
+**Maximum file size**: 100Mb per file
 
 :::warning Size Limit
-Files larger than 50MB cannot be uploaded. If you need to index larger files, consider splitting them into smaller chunks or using alternative data source types (e.g., Git repositories for code, Confluence for documentation).
+Files larger than 100Mb cannot be uploaded. If you need to index larger files, consider splitting them into smaller chunks or using alternative data source types (e.g., Git repositories for code, Confluence for documentation).
 :::
 
 :::tip Reducing File Size
@@ -65,7 +67,7 @@ Prepare the file(s) that will be used. Make sure the file(s) corresponds to the 
 
 **Requirements checklist:**
 
-- Max size: 50MB per file
+- Max size: 100Mb per file
 - File format is one of the supported types listed above
 - File content is relevant to your assistant's purpose
 - File is not corrupted or password-protected
