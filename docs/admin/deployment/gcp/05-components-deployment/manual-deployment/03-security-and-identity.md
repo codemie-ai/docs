@@ -223,41 +223,6 @@ curl -k https://keycloak.example.com/auth/
 
 All pods should be in `Running` state before proceeding.
 
-## Troubleshooting
-
-### Keycloak Fails to Start
-
-**Symptom**: Keycloak pods remain in `CrashLoopBackOff` or `Error` state
-
-**Solution**:
-
-- Check Keycloak logs: `kubectl logs -n security <keycloak-pod-name>`
-- Verify database connectivity (if using external database)
-- Check resource limits: `kubectl describe pod -n security <keycloak-pod-name>`
-- Ensure admin secret exists: `kubectl get secret keycloak-admin -n security`
-
-### OAuth2 Proxy Authentication Errors
-
-**Symptom**: OAuth2 Proxy fails to authenticate with Keycloak
-
-**Solution**:
-
-- Verify Keycloak is running and accessible
-- Check OAuth2 Proxy configuration: `kubectl get configmap -n oauth2-proxy`
-- Review OAuth2 Proxy logs: `kubectl logs -n oauth2-proxy <oauth2-proxy-pod-name>`
-- Ensure client secret matches Keycloak configuration
-
-### Ingress Not Working
-
-**Symptom**: Cannot access Keycloak via browser
-
-**Solution**:
-
-- Check ingress status: `kubectl get ingress -n security`
-- Verify Nginx Ingress Controller is running: `kubectl get pods -n ingress-nginx`
-- Check DNS resolution: `nslookup keycloak.example.com`
-- Review ingress logs: `kubectl logs -n ingress-nginx <ingress-controller-pod>`
-
 ## Next Steps
 
 Once security and identity components are deployed and validated, proceed to **[Plugin Engine](./plugin-engine)** installation to deploy NATS messaging system.

@@ -267,40 +267,6 @@ kubectl get secret codemie-nats-secrets -n codemie
 
 All NATS pods should be in `Running` state before proceeding.
 
-## Troubleshooting
-
-### NATS Pod Not Starting
-
-**Symptom**: NATS pod remains in `CrashLoopBackOff` or `Error` state
-
-**Solution**:
-
-- Check NATS logs: `kubectl logs -n codemie <nats-pod-name>`
-- Verify secret exists and is valid: `kubectl get secret codemie-nats-secrets -n codemie`
-- Check configuration: `kubectl get configmap -n codemie`
-- Review NATS values file: `cat codemie-nats/values-gcp.yaml`
-
-### NATS Auth Callout Connection Errors
-
-**Symptom**: NATS Auth Callout fails to connect to NATS
-
-**Solution**:
-
-- Verify NATS is running: `kubectl get pods -n codemie | grep nats`
-- Check NATS service: `kubectl get svc -n codemie codemie-nats`
-- Review auth callout logs: `kubectl logs -n codemie -l app=codemie-nats-auth-callout`
-- Verify credentials in secret match NATS configuration
-
-### Image Pull Errors
-
-**Symptom**: NATS Auth Callout pod stuck in `ImagePullBackOff`
-
-**Solution**:
-
-- Verify registry authentication: Re-run authentication command from Step 1
-- Check pull secret exists: `kubectl get secret gcp-artifact-registry -n codemie`
-- Verify network connectivity to `europe-west3-docker.pkg.dev`
-
 ## Next Steps
 
 Once the plugin engine is deployed and validated, proceed to **[Core Components](./core-components)** installation to deploy the main AI/Run CodeMie services.

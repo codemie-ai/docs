@@ -121,7 +121,7 @@ Azure OpenAI Services are optional. AI/Run CodeMie supports other external AI pr
 If using external AI providers or other models, skip Phase 3 entirely.
 :::
 
-## Deployment Methods
+## Next Steps
 
 Proceed to the next step to deploy the infrastructure:
 

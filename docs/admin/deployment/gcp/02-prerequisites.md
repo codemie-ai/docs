@@ -67,6 +67,26 @@ Your GKE cluster's firewall or VPC firewall rules must allow **outbound access**
 | `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
 | Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
 
+### Inbound Connectivity on Corporate Services
+
+If you plan to integrate AI/Run CodeMie with external corporate services (e.g., GitLab, GitHub, internal APIs):
+
+- Configure the **firewall on your external service** to allow inbound traffic from the AI/Run CodeMie Cloud NAT public IP address
+- This allows AI/Run CodeMie to make outbound API calls to your external services (e.g., GitLab API, GitHub API, internal services)
+
+:::warning
+The AI/Run CodeMie Cloud NAT public IP address will only be available **after infrastructure deployment**. You will need to configure external service firewalls after the installation is complete.
+:::
+
+### Access Control Network List
+
+To restrict access to AI/Run CodeMie and prevent unauthorized access from the public internet, prepare a list of allowed networks:
+
+- **Corporate network CIDR ranges** from which users will access AI/Run CodeMie
+- **VPN network ranges** if remote users connect via VPN
+- **Office locations** and their public IP addresses or CIDR blocks
+- **Any other trusted networks** that require access to the platform
+
 <ClusterRequirements clusterName="GKE" networkName="VPC" />
 
 ## GKE Cluster Configuration

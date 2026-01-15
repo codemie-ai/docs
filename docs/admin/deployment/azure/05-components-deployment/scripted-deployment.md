@@ -4,7 +4,7 @@ sidebar_position: 1
 title: CodeMie Scripted Deployment
 sidebar_label: CodeMie Scripted Deployment
 pagination_prev: admin/deployment/azure/components-deployment/components-deployment-overview
-pagination_next: admin/configuration/index
+pagination_next: admin/deployment/azure/accessing-applications
 ---
 
 # Scripted CodeMie Components Deployment
@@ -167,10 +167,4 @@ The following files require domain name configuration (automated by Step 2 in Qu
 
 After successful deployment and validation, proceed to:
 
-**[Configuration](../../../configuration/)** - Complete required setup including:
-
-- Initial user configuration in Keycloak
-- AI model integration setup
-- Data source connections
-- Security and access control configuration
-- System health monitoring setup
+**[Accessing Applications](../accessing-applications)** - Learn how to access the deployed AI/Run CodeMie applications and complete the required configuration steps.

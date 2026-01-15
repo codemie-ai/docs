@@ -22,8 +22,6 @@ The Terraform deployment is organized into two distinct phases, each with its ow
 1. **Terraform State Backend** - Infrastructure for storing Terraform state files securely
 2. **Core Platform Infrastructure** - Main GCP resources for running AI/Run CodeMie
 
-This modular approach allows you to deploy only what you need and maintain clear separation between infrastructure layers.
-
 ## Phase 1: Terraform State Backend
 
 The state backend is deployed first to provide secure, centralized storage for Terraform state files.
@@ -84,37 +82,22 @@ Some components like Cloud Storage buckets or public DNS zones may be optional d
 | **IAM Role Bindings**      | Role-based access control for service accounts                                |
 | **Private Service Access** | Secure, private network access to Cloud SQL                                   |
 
-## Security Architecture
+## Terraform Modules
 
-The infrastructure deployment implements security with multiple layers of protection:
+The core platform infrastructure leverages proven Terraform modules from the community to ensure reliability, security, and best practices:
 
-:::tip Security
-All resources are deployed with GCP security best practices enabled by default.
-:::
+- [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)
+- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
+- [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)
+- [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)
+- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
+- [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
+- [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)
+- [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)
+- [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql)
 
-### Network Security
+## Next Steps
 
-- **Private GKE Cluster** (optional): API server accessible only through private endpoint, not exposed to internet
-- **VPC Isolation**: Dedicated Virtual Private Cloud with network segmentation
-- **Cloud NAT**: Controlled outbound internet access with static IP
-- **Firewall Rules**: Restrict network traffic between subnets and external access
-- **Private Service Access**: Cloud SQL accessible only through private IPs
+With the infrastructure resources defined, you are now ready to proceed with the deployment of the GCP infrastructure.
 
-### Identity & Access Management
-
-- **Service Accounts**: Workload-specific identities eliminate need for credential management
-- **IAM Roles**: Role-based access control for GCP resource management with least privilege
-- **Workload Identity**: GKE pods can authenticate with GCP services securely
-
-### Data Protection
-
-- **Encryption at Rest**: Cloud SQL and Cloud Storage encrypted by default
-- **Encryption in Transit**: HTTPS/TLS enforced for all service communications
-- **Cloud KMS**: Centralized management of encryption keys for application secrets
-- **Private Connectivity**: Database isolated from public internet
-
-### Access Control
-
-- **Authorized Networks**: Restrict GKE API access to specific CIDR ranges
-- **Bastion Host**: Jump server access for private clusters (optional)
-- **IAM Policies**: Fine-grained permissions for resource access
+Continue to the [Infrastructure Deployment Guide](./infrastructure-manual-deployment) to execute the deployment process and provision all required GCP resources for AI/Run CodeMie.

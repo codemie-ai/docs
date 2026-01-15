@@ -29,8 +29,8 @@ Before starting the deployment, ensure you have completed all requirements from 
 - [ ] **GCP Access**: Project Owner or Editor role with IAM permissions
 - [ ] **Required APIs Enabled**: Cloud IAP, Service Networking, Secret Manager, Vertex AI APIs
 - [ ] **Tools Installed**: Terraform 1.5.7, gcloud CLI, kubectl, Helm, Docker
-- [ ] **GCP Authentication**: Logged in via `gcloud auth login` and project set
-- [ ] **Repository Access**: Have access to `codemie-terraform-gcp-remote-backend` and `codemie-terraform-gcp-platform` repositories
+- [ ] **GCP Authentication**: Logged in with gcloud CLI and project set
+- [ ] **Repository Access**: Have access to Terraform and Helm repositories
 - [ ] **Network Planning**: Prepared list of authorized networks (if accessing GKE API from workstation)
 - [ ] **Domain & Certificate**: DNS zone and TLS certificate ready (for public access) or will use private DNS
 
@@ -40,42 +40,12 @@ You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth 
 
 ## Deployment Phases
 
-The manual deployment consists of two sequential phases. Each phase uses a dedicated Terraform repository with specific GCP resources.
+Manual deployment involves two sequential phases:
 
-### Phase 1: Terraform State Backend
-
-**Terraform Repository:** [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)
-
-**Resources Deployed:**
-
-- Google Cloud Storage bucket for Terraform state files
-
-### Phase 2: Platform Infrastructure
-
-**Terraform Repository:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
-
-**Resources Deployed:**
-
-- VPC Network and Subnets
-- Cloud NAT and Cloud Router
-- GKE Cluster with Node Pools
-- Cloud SQL (PostgreSQL)
-- Google Service Accounts
-- Cloud KMS Key
-- Cloud DNS Zones
-- Bastion Host (optional, for private clusters)
-
-**Terraform Modules Used:**
-
-- [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)
-- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
-- [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)
-- [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)
-- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
-- [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
-- [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)
-- [TerraformFoundation/sql-db/google/private_service_access](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/private_service_access)
-- [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql)
+| Phase                                | Description                                                                        | Repository                                                                                                    |
+| ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Phase 1: State Backend**           | Creates GCS bucket for Terraform state files                                       | [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend) |
+| **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components, and Bastion Host | [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)             |
 
 :::info Bastion Host
 Bastion Host is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
@@ -154,19 +124,6 @@ The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform 
 
 This phase deploys all core GCP resources required to run AI/Run CodeMie. This includes the GKE cluster, networking components, databases, and security infrastructure.
 
-:::tip What Gets Deployed
-This phase will create:
-
-- **GKE Cluster** - Kubernetes cluster for running AI/Run CodeMie
-- **VPC Network** - Private network with subnets and firewall rules
-- **Cloud NAT** - Outbound internet connectivity with static IP
-- **Cloud SQL** - PostgreSQL database for application data
-- **Service Accounts** - Identity for accessing Vertex AI and other GCP services
-- **Cloud KMS Key** - Encryption key for sensitive data
-- **Cloud DNS** - Name resolution for CodeMie components
-- **Bastion Host** - Management VM for private cluster access (optional)
-  :::
-
 ### Step 1: Clone the Repository
 
 Clone the platform infrastructure Terraform repository:
@@ -188,10 +145,6 @@ backend "gcs" {
     prefix = "terraform/platform/state"       # Path prefix for state files
 }
 ```
-
-:::warning State Backend Required
-You must configure the remote backend before running `terraform init`. Without this, Terraform will store state locally, preventing team collaboration and risking state loss.
-:::
 
 ### Step 3: Review and Configure Variables
 
@@ -242,35 +195,11 @@ private_cluster = false                       # Set to true for completely priva
 create_private_dns_zone = false               # Set to true if using private DNS
 ```
 
-#### Variable Descriptions
-
-| Variable                    | Description                                                           | Required |
-| --------------------------- | --------------------------------------------------------------------- | -------- |
-| `project_id`                | GCP project ID where resources will be created                        | Yes      |
-| `platform_name`             | Identifier used in resource names (lowercase letters only)            | Yes      |
-| `bastion_members`           | IAM principals granted SSH access to Bastion Host                     | Yes      |
-| `dns_name`                  | DNS zone name (use hyphens instead of dots)                           | Yes      |
-| `dns_domain`                | Fully qualified domain name with trailing dot                         | Yes      |
-| `extra_authorized_networks` | CIDR blocks allowed to access GKE API (empty for Bastion-only access) | No       |
-| `private_cluster`           | Creates fully private GKE cluster (API not accessible from internet)  | No       |
-| `create_private_dns_zone`   | Creates private DNS zone instead of public (requires private cluster) | No       |
-
 :::info Configuration References
 For all available variables and their descriptions, see:
 
 - **Example configuration**: [terraform.tfvars.example](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/terraform.tfvars.example?ref_type=heads)
 - **Variable definitions**: [variables.tf](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/variables.tf?ref_type=heads)
-
-For Terraform module documentation, refer to:
-
-- [terraform-google-modules/service-accounts](https://registry.terraform.io/modules/terraform-google-modules/service-accounts/google/latest)
-- [terraform-google-modules/kubernetes-engine](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest)
-- [terraform-google-modules/network](https://registry.terraform.io/modules/terraform-google-modules/network/google/latest)
-- [terraform-google-modules/cloud-nat](https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest)
-- [terraform-google-modules/kms](https://registry.terraform.io/modules/terraform-google-modules/kms/google/latest)
-- [terraform-google-modules/bastion-host](https://registry.terraform.io/modules/terraform-google-modules/bastion-host/google/latest)
-- [terraform-google-modules/cloud-dns](https://registry.terraform.io/modules/terraform-google-modules/cloud-dns/google/latest)
-- [TerraformFoundation/sql-db/google/postgresql](https://registry.terraform.io/modules/TerraformFoundation/sql-db/google/latest/submodules/postgresql)
   :::
 
 ### Step 4: Deploy Platform Infrastructure
@@ -287,12 +216,6 @@ terraform plan
 # Deploy all infrastructure resources
 terraform apply
 ```
-
-When prompted, review the planned changes and type `yes` to confirm deployment.
-
-:::warning
-Do not interrupt the process once deployment is started.
-:::
 
 ### Step 5: Verify Deployment
 
@@ -392,16 +315,6 @@ terraform output get_kubectl_credentials_for_private_cluster
 gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
 ```
 
-Verify kubectl access:
-
-```bash
-# Test cluster connectivity
-kubectl get nodes
-
-# Check cluster information
-kubectl cluster-info
-```
-
 #### Step 4: Clone Deployment Repository
 
 Clone the Helm charts repository needed for component deployment:
@@ -444,10 +357,6 @@ gcloud compute start-iap-tunnel bastion-vm 3389 \
   --project=your-project
 ```
 
-:::warning Keep Terminal Open
-The tunnel will remain active as long as this terminal session is running. Do not close it while using RDP.
-:::
-
 #### Step 2: Connect with Remote Desktop Client
 
 Open your Remote Desktop client and connect:
@@ -457,16 +366,6 @@ Open your Remote Desktop client and connect:
 | **Computer** | `localhost:3389`           |
 | **Username** | `root`                     |
 | **Password** | Password set in SSH Step 2 |
-
-#### Step 3: Access Web Applications
-
-Once connected via RDP, open a web browser on the Bastion Host to access internal services:
-
-**Common internal URLs:**
-
-- Kibana: `https://kibana.your-domain.com` (if using private DNS)
-- Keycloak Admin: `https://keycloak.your-domain.com/auth/admin`
-- AI/Run CodeMie: `https://codemie.your-domain.com`
 
 ### Tips for Using the Bastion Host
 
@@ -496,4 +395,4 @@ gcloud compute scp bastion-vm:~/remote-file.txt ./local-file.txt \
 
 ## Next Steps
 
-After successful deployment, proceed to [Components Deployment](../components-deployment/) to install AI/Run CodeMie application components.
+After successful infrastructure deployment, proceed to [Components Deployment](../components-deployment/) to install AI/Run CodeMie application components.

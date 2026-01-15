@@ -42,7 +42,9 @@ The script automatically deploys infrastructure in sequential phases:
 | **Phase 2: State Backend**           | Creates S3 bucket and DynamoDB table for Terraform state files   | Yes                                   |
 | **Phase 3: Platform Infrastructure** | Deploys EKS, networking, storage, databases, security components | Yes                                   |
 
-## Quick Start
+## Phase 1: Deploy IAM Deployer Role
+
+The IAM deployer role is created first to provide necessary permissions for all subsequent infrastructure operations. This phase can be skipped if the role already exists.
 
 ### Step 1: Clone IAM Repository
 
@@ -88,7 +90,11 @@ terraform apply
 The created IAM role contains all required permissions to manage AWS resources for AI/Run CodeMie deployment. This role will be used for all subsequent platform infrastructure deployments and updates.
 :::
 
-### Step 4: Clone Platform Repository
+## Phase 2 & 3: Deploy Platform Infrastructure
+
+This phase deploys both the Terraform state backend (Phase 2) and core platform infrastructure (Phase 3) using the automated deployment script.
+
+### Step 1: Clone Platform Repository
 
 Clone the platform Terraform repository:
 
@@ -97,7 +103,7 @@ git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform.git
 cd codemie-terraform-aws-platform
 ```
 
-### Step 5: Configure Platform Deployment
+### Step 2: Configure Platform Deployment
 
 Edit the `deployment.conf` file to provide your AWS-specific configuration:
 
@@ -107,7 +113,7 @@ AWS_PROFILE="My_Profile"
 
 # Required: Basic Configuration
 TF_VAR_region="us-east-1"                                           # AWS region for deployment
-TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role created in Step 3
+TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role created in Phase 1
 TF_VAR_platform_domain_name="codemie.example.com"                   # Domain name for the platform
 
 # Required: EKS Configuration
@@ -139,7 +145,7 @@ TF_VAR_security_group_ids='[]'
 For all available configuration options, refer to the `variables.tf` file in the platform repository.
 :::
 
-### Step 6: Run Deployment
+### Step 3: Run Deployment Script
 
 Execute the automated deployment script:
 
@@ -147,14 +153,13 @@ Execute the automated deployment script:
 bash ./aws-terraform.sh
 ```
 
-The script will:
+The script will automatically execute the following operations:
 
 1. **Validate Environment**: Check for required tools and AWS authentication
 2. **Verify Configuration**: Validate `deployment.conf` parameters
-3. **Deploy Phase 1**: Create IAM deployer role (if not already created)
-4. **Deploy Phase 2**: Create Terraform state backend storage
-5. **Deploy Phase 3**: Provision core platform infrastructure (EKS, networking, storage, databases)
-6. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details required during next phases
+3. **Deploy State Backend**: Create S3 bucket and DynamoDB table for Terraform state files
+4. **Deploy Platform Infrastructure**: Provision core platform infrastructure (EKS, networking, storage, databases)
+5. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details required during next phases
 
 ## Deployment Outputs
 

@@ -23,8 +23,6 @@ The Terraform deployment is organized into three distinct phases, each with its 
 2. **Terraform State Backend** - Infrastructure for storing Terraform state files securely
 3. **Core Platform Infrastructure** - Main AWS resources for running AI/Run CodeMie
 
-This modular approach allows you to deploy only what you need and maintain clear separation between infrastructure layers.
-
 :::note Important
 The deployment uses a registered domain name in AWS Route 53, which allows Terraform to automatically create SSL/TLS certificates via AWS Certificate Manager for the Application Load Balancer (ALB) and Network Load Balancer (NLB).
 :::
@@ -124,7 +122,7 @@ The core platform infrastructure provisions all AWS resources needed to run AI/R
 | **Private DNS Hosted Zone** | Private Route 53 zone for internal service discovery |
 | **VPC Endpoints**           | Private connectivity to AWS services (S3, ECR, etc.) |
 
-## Deployment Methods
+## Next Steps
 
 Proceed to the next step to deploy the infrastructure:
 

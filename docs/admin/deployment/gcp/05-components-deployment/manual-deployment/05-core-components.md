@@ -19,15 +19,6 @@ This step installs the following core components in sequence:
 4. **Mermaid Server** - Diagram rendering service
 5. **CodeMie API** - Backend REST API service
 
-:::warning Prerequisites
-Before proceeding, ensure all previous components are installed and running:
-
-- Storage and Ingress (Step 1)
-- Data Layer (Step 2)
-- Security and Identity (Step 3)
-- Plugin Engine (Step 4)
-  :::
-
 ## Registry Authentication
 
 Before installing any core components, ensure you're authenticated to the container registry:
@@ -279,71 +270,7 @@ kubectl get svc -n codemie
 
 # Check ingress resources
 kubectl get ingress -n codemie
-
-# Verify CodeMie API health
-kubectl exec -n codemie -it <codemie-api-pod> -- curl http://localhost:8080/health
 ```
-
-Expected results:
-
-- All pods should be in `Running` state
-- Services should have ClusterIP or LoadBalancer IP assigned
-- Ingress should show correct hosts and addresses
-- API health check should return HTTP 200
-
-## Troubleshooting
-
-### CodeMie API Fails to Start
-
-**Symptom**: CodeMie API pod remains in `CrashLoopBackOff` or shows connection errors
-
-**Solution**:
-
-- Check logs: `kubectl logs -n codemie <codemie-api-pod> --tail=100`
-- Verify all dependencies are running:
-  - Elasticsearch: `kubectl get pods -n elastic`
-  - PostgreSQL: Check database connectivity
-  - NATS: `kubectl get pods -n codemie | grep nats`
-  - Keycloak: `kubectl get pods -n security | grep keycloak`
-- Verify secrets exist:
-  - `kubectl get secret codemie-postgresql -n codemie`
-  - `kubectl get secret elasticsearch-master-credentials -n codemie`
-  - `kubectl get secret google-service-account -n codemie`
-
-### UI Not Accessible
-
-**Symptom**: Cannot access CodeMie UI via browser
-
-**Solution**:
-
-- Check ingress: `kubectl get ingress -n codemie`
-- Verify DNS resolution: `nslookup codemie.example.com`
-- Check Nginx Ingress Controller: `kubectl get pods -n ingress-nginx`
-- Test from within cluster: `kubectl run -it --rm test --image=curlimages/curl --restart=Never -- curl http://codemie-ui.codemie.svc.cluster.local`
-
-### Image Pull Errors
-
-**Symptom**: Pods stuck in `ImagePullBackOff`
-
-**Solution**:
-
-- Verify registry authentication (repeat authentication step)
-- Check pull secret: `kubectl get secret gcp-artifact-registry -n codemie`
-- Verify network connectivity: `kubectl run -it --rm test --image=busybox --restart=Never -- ping europe-west3-docker.pkg.dev`
-
-### Database Connection Errors
-
-**Symptom**: CodeMie API logs show database connection failures
-
-**Solution**:
-
-- Verify PostgreSQL secret: `kubectl get secret codemie-postgresql -n codemie -o yaml`
-- Check database credentials are correct
-- Test database connectivity from a pod:
-  ```bash
-  kubectl run -it --rm psql-test --image=postgres:15 --restart=Never -- \
-    psql -h <PG_HOST> -U <PG_USER> -d <PG_NAME>
-  ```
 
 ## Next Steps
 

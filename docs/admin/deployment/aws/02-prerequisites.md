@@ -27,6 +27,8 @@ To deploy AI/Run CodeMie on AWS, you need:
   For a detailed list of all AWS resources that will be provisioned, refer to the [Infrastructure Deployment](./infrastructure-deployment) section or review the Terraform modules in the deployment repository.
   :::
 
+## Network Requirements
+
 ### DNS and Certificate Requirements
 
 AI/Run CodeMie requires proper DNS and TLS certificate configuration:
@@ -39,8 +41,6 @@ AI/Run CodeMie requires proper DNS and TLS certificate configuration:
 :::tip Automatic Setup
 DNS and certificate provisioning is fully automated through Terraform when using AI/Run CodeMie-managed infrastructure. You only need to provide the hosted zone. However, if you're using self-provisioned infrastructure, you will need to handle DNS records and certificates for it.
 :::
-
-## Network Requirements
 
 ### Outbound Connectivity
 
@@ -135,19 +135,6 @@ If deploying to an **existing EKS cluster**, ensure that admission webhooks allo
 
   </TabItem>
 </Tabs>
-
-## AI Model Requirements
-
-### AWS Bedrock Configuration
-
-To use AI models with AI/Run CodeMie, you need:
-
-- **Activated Region** where [AWS Bedrock Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html) are available
-- **Model Access** for desired LLMs and embeddings models in your AWS account (for example, Claude Sonnet 4.5, AWS Titan, etc)
-
-:::info Mock Configuration Support
-AI/Run CodeMie can be deployed with mock LLM configurations initially. Real configurations can be provided later if client-side approvals require additional time.
-:::
 
 ## Deployment Machine Requirements
 

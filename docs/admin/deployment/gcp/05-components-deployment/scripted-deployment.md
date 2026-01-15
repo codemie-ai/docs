@@ -4,7 +4,7 @@ title: Scripted Components Deployment
 sidebar_label: CodeMie Scripted Deployment
 sidebar_position: 1
 pagination_prev: admin/deployment/gcp/components-deployment/components-deployment-overview
-pagination_next: admin/configuration/index
+pagination_next: admin/deployment/gcp/accessing-applications
 ---
 
 # Scripted CodeMie Components Deployment
@@ -363,10 +363,4 @@ nats-codemie.example.com A   x.x.x.x
 
 After successful deployment and validation, proceed to:
 
-**[Configuration](../../../configuration/)** - Complete required setup including:
-
-- Initial user configuration in Keycloak
-- AI model integration setup (Vertex AI)
-- Data source connections
-- Security and access control configuration
-- System health monitoring setup
+**[Accessing Applications](../accessing-applications)** - Learn how to access the deployed AI/Run CodeMie applications and complete the required configuration steps.

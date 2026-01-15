@@ -4,7 +4,7 @@ sidebar_position: 6
 title: Observability
 sidebar_label: Observability
 pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
-pagination_next: admin/configuration/index
+pagination_next: admin/deployment/azure/accessing-applications
 ---
 
 # Observability Installation
@@ -21,7 +21,34 @@ The observability stack consists of three components:
 
 ## Fluent Bit Installation
 
-Fluent Bit collects logs from all Kubernetes pods and CodeMie application metrics and forwards them to Elasticsearch for storage and analysis.
+Fluent Bit collects and forwards data to Elasticsearch for monitoring and analysis. The default configuration collects two types of data:
+
+**1. User Metrics (Mandatory)**
+
+Collects structured usage metrics from CodeMie application pods, including:
+
+- User activity and engagement patterns
+- AI model usage and token consumption
+- API request metrics and performance data
+- Cost tracking and resource utilization
+
+These metrics are required for Kibana dashboards and usage analytics. They are stored in the `codemie_metrics_logs` index.
+
+**2. Infrastructure Logs (Optional)**
+
+Collects application logs from the following namespaces:
+
+- `codemie` - Core application logs
+- `oauth2-proxy` - Authentication proxy logs
+- `security` - Keycloak and security components
+- `elastic` - Elasticsearch and Kibana logs
+- `ingress-nginx` - Ingress controller logs
+
+These logs are stored in the `codemie_infra_logs` index for troubleshooting and operational insights.
+
+:::info Using External Logging System?
+If you have an existing logging solution (CloudWatch, Stackdriver, Splunk, etc.), you can disable infrastructure log collection by removing the first `[INPUT]` section (tagged `kube.codemie-infra.*`) and its corresponding `[OUTPUT]` section from `fluent-bit/values.yaml`. User metrics collection must remain enabled for Kibana dashboards to function.
+:::
 
 ### Step 1: Create Fluent Bit Namespace
 
@@ -69,12 +96,6 @@ kubectl get pods -n fluentbit
 kubectl logs -n fluentbit daemonset/fluent-bit --tail=50
 ```
 
-Expected output:
-
-- DaemonSet should show desired pods match ready pods
-- One Fluent Bit pod should be running on each cluster node
-- Logs should indicate successful connection to Elasticsearch
-
 ## Kibana Installation
 
 Kibana provides a web interface for searching, analyzing, and visualizing logs stored in Elasticsearch.
@@ -120,12 +141,6 @@ helm upgrade --install kibana kibana/. \
   --dependency-update
 ```
 
-**Command Breakdown**:
-
-- `kibana` - Release name
-- `-n elastic` - Deploys to elastic namespace
-- `--values kibana/values-azure.yaml` - Uses Azure-specific configuration
-
 ### Step 3: Verify Kibana Deployment
 
 Check that Kibana is running:
@@ -144,12 +159,6 @@ kubectl get service -n elastic kibana
 kubectl logs -n elastic deployment/kibana --tail=50
 ```
 
-Expected output:
-
-- Kibana pod should be in `Running` state
-- Deployment should show ready replicas
-- Logs should indicate successful connection to Elasticsearch
-
 ### Step 4: Access Kibana
 
 Kibana can be accessed at:
@@ -167,9 +176,9 @@ https://<your-domain>/kibana
 - Username: `elastic`
 - Password: Retrieved from Elasticsearch secret (see [Data Layer](./data-layer#step-2-create-elasticsearch-credentials-secret))
 
-### Step 5: Configure Log Index Pattern
+### Step 5: Configure Log Index Pattern (Optional)
 
-After accessing Kibana, configure the index pattern to view CodeMie logs:
+If you enabled infrastructure logging, configure the index pattern to view logs:
 
 1. Navigate to **Stack Management** → **Index Patterns**
 2. Click **Create index pattern**
@@ -177,7 +186,11 @@ After accessing Kibana, configure the index pattern to view CodeMie logs:
 4. Select timestamp field: `@timestamp`
 5. Click **Create index pattern**
 
-Now you can view logs in **Discover** section.
+Now you can view historical infrastructure logs in **Discover** section.
+
+:::note Metrics Index
+The `codemie_metrics_logs` index for user metrics is automatically configured during Kibana Dashboards installation. You don't need to create it manually.
+:::
 
 ## Kibana Dashboards Installation
 
@@ -263,10 +276,4 @@ All checks should return successful results.
 
 Congratulations! You have successfully completed the manual deployment of all AI/Run CodeMie components.
 
-Proceed to **[Configuration](../../../../configuration/)** to:
-
-- Create initial users and configure authentication
-- Set up AI model integrations
-- Configure data sources
-- Customize the UI and branding
-- Set up monitoring and alerts
+Proceed to **[Accessing Applications](../../accessing-applications)** - Learn how to access the deployed AI/Run CodeMie applications and complete the required configuration steps.
