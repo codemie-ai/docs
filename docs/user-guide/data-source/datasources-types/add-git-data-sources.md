@@ -107,12 +107,23 @@ Always use stable branches (e.g., `main`, `master`, `develop`) for indexing. Fea
 
 - Files Filter: Specify relevant file extensions to index in the field.
 
-:::tip File Filter Examples
+:::tip File Filter Behavior
 
-- Python projects: `*.py`
-- JavaScript/TypeScript: `*.js,*.ts,*.tsx,*.jsx`
-- Java: `src/**/*.java`
-- Multiple: `*.py,*.md,*.yaml`
+**Filter behavior:**
+
+- **Empty filter**: Include all files
+- **Patterns** (e.g., `*.py`): Include ONLY matching files (whitelist)
+- **!Patterns** (e.g., `!*.nupkg`): EXCLUDE matching files (blacklist)
+- **Combined** (e.g., `*.py,!test_*.py`): Include .py files except test\_\*.py files
+
+**Examples:**
+
+- Python projects: `*.py` - Only Python files
+- JavaScript/TypeScript: `*.js,*.ts,*.tsx,*.jsx` - Only JS/TS files
+- Exclude binaries: `!*.nupkg,!*.dll,!*.exe` - Exclude package and binary files
+- Java source only: `src/**/*.java` - Only Java files in src directory
+- Python without tests: `*.py,!test_*.py,!*_test.py` - Python files excluding tests
+- Documentation only: `*.md,*.rst,*.txt` - Only documentation files
   :::
 
 - Model Used for Embeddings: Select model Used for Embeddings.
