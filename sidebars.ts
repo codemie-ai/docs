@@ -314,6 +314,11 @@ const sidebars: SidebarsConfig = {
                     },
                   ],
                 },
+                {
+                  type: 'doc',
+                  id: 'admin/deployment/aws/accessing-applications',
+                  label: 'Accessing Applications',
+                },
               ],
             },
             {
@@ -376,6 +381,11 @@ const sidebars: SidebarsConfig = {
                     },
                   ],
                 },
+                {
+                  type: 'doc',
+                  id: 'admin/deployment/azure/accessing-applications',
+                  label: 'Accessing Applications',
+                },
               ],
             },
             {
@@ -437,6 +447,11 @@ const sidebars: SidebarsConfig = {
                       ],
                     },
                   ],
+                },
+                {
+                  type: 'doc',
+                  id: 'admin/deployment/gcp/accessing-applications',
+                  label: 'Accessing Applications',
                 },
               ],
             },

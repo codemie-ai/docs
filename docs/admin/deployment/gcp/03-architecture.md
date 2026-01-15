@@ -15,7 +15,7 @@ This page provides an overview of the AI/Run CodeMie deployment architecture on 
 
 ## Architecture Overview
 
-AI/Run CodeMie is deployed on Google Kubernetes Engine (GKE) with supporting GCP services for networking, storage, and identity management. The deployment is designed to operate within a single GCP region with high availability and security best practices.
+AI/Run CodeMie is deployed on Google Kubernetes Engine (GKE) with supporting GCP services for networking, storage, and identity management.
 
 ### Deployment Options
 

@@ -26,115 +26,11 @@ The deployment uses Helm charts to install and configure all components in the c
 This phase assumes you have completed [Infrastructure Deployment](../infrastructure-deployment/) and have a running GKE cluster with network, storage, and security configured.
 :::
 
-## Prerequisites
-
-### Cluster Readiness
-
-Ensure your GKE cluster is ready for component deployment:
-
-- [x] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
-- [x] **Cluster Access**: kubectl configured and authenticated to GKE cluster
-- [x] **Bastion/Jumpbox Access**: Connected to Bastion Host (for private clusters) or have authorized network access
-
-#### Configure Kubectl Access
-
-Obtain kubectl credentials using the appropriate Terraform output command based on your cluster access type:
-
-```bash
-# For public clusters or clusters with authorized networks
-# Use the command from Terraform outputs
-# Parameter: get_kubectl_credentials_for_public_cluster
-
-# For completely private clusters (access via Bastion Host)
-# Use the command from Terraform outputs
-# Parameter: get_kubectl_credentials_for_private_cluster
-```
-
-Verify cluster connectivity:
-
-```bash
-# Test cluster access
-kubectl get nodes
-
-# Check cluster information
-kubectl cluster-info
-```
-
-### Required Components
-
-The following components will be installed during this phase if not already present:
-
-- **Nginx Ingress Controller**: Routes external traffic to services
-- **GCP Storage Class**: Provides persistent storage for stateful components
-
-:::tip Automated Installation
-If your cluster doesn't have these components, don't worry. The deployment scripts and manual guides include steps to install them automatically.
-:::
-
-### Repository and Access {#repository-and-access}
-
-#### Helm Charts Repository
-
-Clone the Helm charts repository on your deployment machine (Bastion Host or local workstation):
-
-```bash
-git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
-cd codemie-helm-charts
-```
-
-#### Container Registry Credentials
-
-Before deploying AI/Run CodeMie components, you need to set up authentication for the container registry.
-
-**Request Access**: Ask the AI/Run CodeMie team to provide:
-
-- `key.json` file (GCP service account credentials)
-- Service account email for pulling images from GCR
-
-**Create Namespace**:
-
-```bash
-kubectl create namespace codemie
-```
-
-**Configure Registry Secret**:
-
-Replace `%%PROJECT_NAME%%` with your project name and create the pull secret:
-
-```bash
-kubectl create secret docker-registry gcp-artifact-registry \
-  --docker-server=https://europe-west3-docker.pkg.dev \
-  --docker-email=gsa-%%PROJECT_NAME%%-to-gcr@or2-msq-epmd-edp-anthos-t1iylu.iam.gserviceaccount.com \
-  --docker-username=_json_key \
-  --docker-password="$(cat key.json)" \
-  -n codemie
-```
-
-**Verify Secret**:
-
-```bash
-kubectl get secret gcp-artifact-registry -n codemie
-```
-
-:::info Pull Secret Usage
-The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
-
-This is configured automatically in the values files:
-
-```yaml
-imagePullSecrets:
-  - name: gcp-artifact-registry
-```
-
-:::
-
-## Application Stack Components
+### Application Stack Components
 
 The AI/Run CodeMie application consists of multiple integrated components organized into functional categories. Understanding this architecture helps you plan the deployment sequence and troubleshoot issues effectively.
 
 ![Application Stack](../../common/images/application-stack-diagram.drawio.png)
-
-### Component Categories
 
 #### Core AI/Run CodeMie Services
 
@@ -174,7 +70,7 @@ Database and storage services for application data:
 | **PostgreSQL Operator** | `registry.developers.crunchydata.com/.../postgres-operator:x.y.z` | Kubernetes operator for managing PostgreSQL database lifecycle                          |
 | **PostgreSQL**          | `registry.developers.crunchydata.com/.../crunchy-postgres:x.y.z`  | Relational database for structured application data (managed via operator or Cloud SQL) |
 
-#### Security & Identity Components
+##### Security & Identity Components
 
 Authentication, authorization, and access control services:
 
@@ -218,7 +114,7 @@ Additional services for enhanced functionality:
 | ------------- | --------------- | ----------------------------------------------------------------------------------- |
 | **LLM Proxy** | –               | Load balancer and router for AI model requests (supports multiple providers/models) |
 
-### Deployment Order
+#### Deployment Order
 
 Components must be installed in the following sequence to satisfy dependencies:
 
@@ -230,6 +126,108 @@ Components must be installed in the following sequence to satisfy dependencies:
 6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
 7. **Observability** → Fluent Bit, Kibana
 8. **Optional** → LLM Proxy (if needed)
+
+## Prerequisites
+
+### Cluster Readiness
+
+Ensure your GKE cluster is ready for component deployment:
+
+- [x] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../infrastructure-deployment/) phase
+- [x] **Cluster Access**: kubectl configured and authenticated to GKE cluster
+- [x] **Bastion/Jumpbox Access**: Connected to Bastion Host (for private clusters) or have authorized network access
+
+#### Configure Kubectl Access
+
+Obtain kubectl credentials using the appropriate Terraform output command based on your cluster access type:
+
+```bash
+# For public clusters or clusters with authorized networks
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_public_cluster
+
+# For completely private clusters (access via Bastion Host)
+# Use the command from Terraform outputs
+# Parameter: get_kubectl_credentials_for_private_cluster
+```
+
+Verify cluster connectivity:
+
+```bash
+# Test cluster access
+kubectl get nodes
+
+# Check cluster information
+kubectl cluster-info
+```
+
+### Required Components
+
+The following components will be installed during this phase if not already present:
+
+- **Nginx Ingress Controller**: Routes external traffic to services
+- **GCP Storage Class**: Provides persistent storage for stateful components
+
+:::info
+These components will be installed automatically if not already present in your cluster. Both scripted and manual deployment procedures include the necessary installation steps.
+:::
+
+### Repository and Access {#repository-and-access}
+
+#### Helm Charts Repository
+
+Clone the Helm charts repository on your deployment machine (Bastion Host or local workstation):
+
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
+
+#### Container Registry Credentials
+
+Before deploying AI/Run CodeMie components, you need to set up authentication for the container registry.
+
+**Request Access**: Ask the AI/Run CodeMie team to provide:
+
+- `key.json` file (GCP service account credentials)
+- Service account email for pulling images from GCR
+
+**Create Namespace**:
+
+```bash
+kubectl create namespace codemie
+```
+
+**Configure Registry Secret**:
+
+Replace `%%PROJECT_NAME%%` with your project name and create the pull secret:
+
+```bash
+kubectl create secret docker-registry gcp-artifact-registry \
+  --docker-server=https://europe-west3-docker.pkg.dev \
+  --docker-email=`<client_email from shared with you key>` \
+  --docker-username=_json_key \
+  --docker-password="$(cat key.json)" \
+  -n codemie
+```
+
+**Verify Secret**:
+
+```bash
+kubectl get secret gcp-artifact-registry -n codemie
+```
+
+:::info Pull Secret Usage
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+This is configured automatically in the values files:
+
+```yaml
+imagePullSecrets:
+  - name: gcp-artifact-registry
+```
+
+:::
 
 ## Deployment Methods
 
@@ -256,28 +254,6 @@ Step-by-step manual installation of each component:
 :::tip Recommendation
 Use **Scripted Deployment** for initial installations. Switch to manual deployment only if you need custom configurations or are troubleshooting specific issues.
 :::
-
-## Accessing Applications
-
-Once deployment is complete and validated, access the AI/Run CodeMie applications:
-
-### Application URLs
-
-Replace `<your-domain>` with your configured domain name (from infrastructure deployment):
-
-| Application        | URL                                                     | Description                      |
-| ------------------ | ------------------------------------------------------- | -------------------------------- |
-| **CodeMie UI**     | `http(s)://codemie.<your-domain>`                       | Main user interface              |
-| **CodeMie API**    | `http(s)://codemie.<your-domain>/code-assistant-api/v1` | REST API endpoint                |
-| **Keycloak Admin** | `http(s)://keycloak.<your-domain>/auth/admin`           | Identity management console      |
-| **Kibana**         | `http(s)://kibana.<your-domain>`                        | Data visualization and analytics |
-
-:::info Protocol and Domain
-
-- **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
-- **Domain Name**: Configured during infrastructure deployment (check Terraform outputs for `dns_name`)
-- **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
-  :::
 
 ## Next Steps
 

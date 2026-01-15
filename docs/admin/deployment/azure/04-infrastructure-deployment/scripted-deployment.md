@@ -49,7 +49,9 @@ The script automatically deploys infrastructure in three sequential phases:
 Set `DEPLOY_AI_MODELS="false"` in configuration to skip Phase 3 if using external AI providers.
 :::
 
-## Quick Start
+## Phase 1, 2 & 3: Deploy Infrastructure
+
+This phase deploys all infrastructure components using the automated deployment script: Terraform state backend (Phase 1), core platform infrastructure (Phase 2), and optionally AI model deployments (Phase 3).
 
 ### Step 1: Clone Repository
 
@@ -95,7 +97,7 @@ For all available configuration options, refer to the `variables.tf` files:
 - **AI models variables**: [ai-models/variables.tf](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure/-/blob/main/ai-models/variables.tf)
   :::
 
-### Step 3: Run Deployment
+### Step 3: Run Deployment Script
 
 Execute the automated deployment script:
 
@@ -103,14 +105,14 @@ Execute the automated deployment script:
 bash ./azure-terraform.sh
 ```
 
-The script will:
+The script will automatically execute the following operations:
 
 1. **Validate Environment**: Check for required tools and Azure authentication
 2. **Verify Configuration**: Validate `deployment.conf` parameters
-3. **Deploy Phase 1**: Create Terraform state backend storage
-4. **Deploy Phase 2**: Provision core platform infrastructure (AKS, networking, storage, databases)
-5. **Deploy Phase 3**: Provision AI models (if `DEPLOY_AI_MODELS="true"`)
-6. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details than will be required during next phases
+3. **Deploy State Backend**: Create Azure Storage Account for Terraform state files
+4. **Deploy Platform Infrastructure**: Provision core platform infrastructure (AKS, networking, storage, databases)
+5. **Deploy AI Models**: Provision Azure OpenAI services (if `DEPLOY_AI_MODELS="true"`)
+6. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details that will be required during next phases
 
 :::warning Deployment in Progress
 Do not interrupt the script during execution. Monitor the output for any errors.
@@ -508,63 +510,6 @@ kubectl get nodes
 # View cluster information
 kubectl cluster-info
 ```
-
-## Troubleshooting
-
-### Deployment Fails During Terraform Apply
-
-**Symptom**: Script fails with Terraform errors
-
-**Solutions**:
-
-- Check Azure quotas and limits for your subscription
-- Verify you have sufficient permissions (Contributor role)
-- Review Terraform logs in `logs/` directory for specific error messages
-- Ensure all required variables in `deployment.conf` are set correctly
-- Check Azure service health for the selected region
-
-### Cannot Connect to Bastion
-
-**Symptom**: Bastion connection fails or times out
-
-**Solutions**:
-
-- Verify Azure Bastion is deployed and in "Succeeded" state
-- Check NSG rules allow Bastion subnet access
-- Ensure your browser allows pop-ups from Azure Portal
-- Try a different browser
-
-### AKS Cluster Not Accessible from Jumpbox
-
-**Symptom**: `kubectl` commands fail or timeout
-
-**Solutions**:
-
-- Verify you ran `kubelogin convert-kubeconfig`
-- Ensure you're authenticated to Azure CLI: `az account show`
-- Check private DNS zones are properly configured
-- Verify VNet peering between Hub and AKS VNets
-
-### AI Models Deployment Fails
-
-**Symptom**: Phase 3 fails with OpenAI service errors
-
-**Solutions**:
-
-- Verify Azure OpenAI quota in selected regions
-- Check model availability in target regions
-- Ensure capacity values are within limits
-- Confirm `TF_VAR_cognitive_regions` JSON is properly formatted
-
-### Deployment Hangs or Takes Too Long
-
-**Symptom**: Deployment runs longer than expected
-
-**Solutions**:
-
-- Check Azure Portal for resource provisioning status
-- Review logs for stuck Terraform operations
-- Ensure Azure services in selected region are available
 
 ## Next Steps
 

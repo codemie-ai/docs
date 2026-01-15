@@ -219,29 +219,6 @@ kubectl get pods -n postgres-operator
 
 All pods should be in `Running` state before proceeding.
 
-## Troubleshooting
-
-### Elasticsearch Pods Not Starting
-
-**Symptom**: Elasticsearch pods remain in `Pending` or `CrashLoopBackOff` state
-
-**Solution**:
-
-- Check storage class availability: `kubectl get storageclass`
-- Verify PVC binding: `kubectl get pvc -n elastic`
-- Check pod logs: `kubectl logs -n elastic <pod-name>`
-- Ensure sufficient node resources: `kubectl top nodes`
-
-### Kibana Connection Errors
-
-**Symptom**: Kibana fails to connect to Elasticsearch
-
-**Solution**:
-
-- Verify Elasticsearch is healthy: `kubectl get pods -n elastic`
-- Check Elasticsearch service: `kubectl get svc -n elastic elasticsearch-master`
-- Review Kibana logs: `kubectl logs -n elastic <kibana-pod-name>`
-
 ## Next Steps
 
 Once the data layer is deployed and validated, proceed to **[Security and Identity](./security-and-identity)** installation to deploy Keycloak and OAuth2 Proxy components.

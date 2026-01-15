@@ -1,0 +1,69 @@
+---
+id: accessing-applications
+sidebar_position: 6
+title: Accessing AI/Run CodeMie Applications
+sidebar_label: Accessing Applications
+pagination_prev: admin/deployment/azure/components-deployment/components-deployment-overview
+pagination_next: admin/configuration/index
+---
+
+# Accessing AI/Run CodeMie Applications
+
+Once deployment is complete and validated, access the AI/Run CodeMie applications:
+
+## Application URLs
+
+Replace `<your-domain>` with your configured domain name (from infrastructure deployment):
+
+| Application        | URL                                                     | Description                      |
+| ------------------ | ------------------------------------------------------- | -------------------------------- |
+| **CodeMie UI**     | `http(s)://codemie.<your-domain>`                       | Main user interface              |
+| **CodeMie API**    | `http(s)://codemie.<your-domain>/code-assistant-api/v1` | REST API endpoint                |
+| **Keycloak Admin** | `http(s)://codemie.<your-domain>/keycloak/admin`        | Identity management console      |
+| **Kibana**         | `http(s)://codemie.<your-domain>/kibana`                | Data visualization and analytics |
+
+:::info Protocol and Domain
+
+- **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
+- **Domain Name**: Configured during infrastructure deployment (`CODEMIE_DOMAIN_NAME` in `deployment_outputs.env`)
+- **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
+  :::
+
+## Next Steps: Configuration
+
+After accessing the applications, complete the configuration to make AI/Run CodeMie fully operational.
+
+### Required Configuration
+
+#### User Configuration
+
+Configure initial users and authentication in Keycloak. See [User Configuration](../../configuration/user-configuration/) for details.
+
+#### AI LLM Models Integration
+
+Set up AI model providers to enable AI capabilities. See [AI Models Integration](../../configuration/ai-models-integration/) for details.
+
+### Install Extensions
+
+Enhance AI/Run CodeMie with optional extensions:
+
+- **[LiteLLM Proxy](../extensions/litellm-proxy)** - Load balancing and high availability for LLM requests
+- **[Assistants Evaluation](../extensions/assistants-evaluation)** - LLM observability, tracing, and performance analytics
+- **[AI Code Explorer](../extensions/ai-code-explorer)** - Intelligent code analysis and exploration platform
+- **[Angular Upgrade Assistant](../extensions/angular-upgrade-assistant)** - AI-powered Angular version upgrade assistant
+- **[Salesforce DevForce AI](../extensions/salesforce-devforce-ai)** - Salesforce development workflow accelerator
+
+See [Extensions Overview](../extensions/) for detailed setup guides.
+
+### Optional Configuration
+
+Additional configuration options include:
+
+- Data source connections
+- Security and access control policies
+- UI customization and branding
+- System health monitoring and alerts
+- Third-party integrations
+- Backup and recovery setup
+
+See the complete [Configuration Guide](../../configuration/) for all available options.
