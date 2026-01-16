@@ -17,6 +17,10 @@ This glossary provides definitions for key terms and concepts used throughout th
 
 A descriptive name given to an integration in the CodeMie platform. The alias helps users identify and distinguish between different integrations of the same type (e.g., "ServiceNow Production", "GitHub Enterprise", "Jira Team Project"). It is a user-friendly label that makes it easier to manage and reference integrations when configuring assistants and tools.
 
+### Analytics
+
+A monitoring dashboard for tracking project costs, LLM usage, and token consumption across assistants, workflows, and other platform resources.
+
 ### Applications
 
 Deployable AI-powered solutions that extend or complement CodeMie capabilities. Applications combine AI assistants, tools, integrations, custom workflows, and user interfaces to create custom solutions for specific use cases. Types include conversational applications (chatbots), workflow applications (automated processes), and integration applications (connecting CodeMie with external systems).
