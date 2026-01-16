@@ -7,79 +7,22 @@ pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/ma
 pagination_next: admin/deployment/aws/components-deployment/manual-deployment/data-layer
 ---
 
-# Storage and Ingress Installation
+import StorageIngressOverview from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-overview.mdx';
+import StorageIngressNginx from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-nginx.mdx';
+import StorageClassInstallation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-class-installation.mdx';
+import StorageIngressValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-validation.mdx';
 
-This guide covers the installation of foundational infrastructure components that provide storage provisioning and external access to your AI/Run CodeMie deployment.
+<StorageIngressOverview
+  storageClassName="AWS gp3 Storage Class"
+  clusterName="Amazon EKS"
+/>
 
-## Overview
-
-This step installs two critical infrastructure components:
-
-- **Nginx Ingress Controller** - Routes external HTTP/HTTPS traffic to services within the cluster
-- **AWS gp3 Storage Class** - Enables dynamic provisioning of persistent volumes for stateful workloads
-
-:::info When to Skip
-If your EKS cluster already has an ingress controller and storage class configured, you can skip the relevant sections and proceed to [Data Layer](./data-layer).
-:::
-
-## Nginx Ingress Controller Installation
-
-The Nginx Ingress Controller manages external access to services in your cluster, providing load balancing, SSL termination, and name-based virtual hosting.
-
-### Step 1: Create Ingress Namespace
-
-Create a dedicated namespace for the ingress controller:
-
-```bash
-kubectl create namespace ingress-nginx
-```
-
-:::tip Namespace Verification
-Check if the namespace already exists before creating: `kubectl get namespace ingress-nginx`
-:::
-
-### Step 2: Install Nginx Ingress Helm Chart
-
-Deploy the Nginx Ingress Controller using Helm:
-
-```bash
-helm upgrade --install ingress-nginx ingress-nginx/. \
-  -n ingress-nginx \
-  --values ingress-nginx/values-aws.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
-
-**Command Breakdown**:
-
-- `upgrade --install` - Installs or upgrades if already exists (idempotent)
-- `-n ingress-nginx` - Deploys to the ingress-nginx namespace
-- `--values ingress-nginx/values-aws.yaml` - Uses AWS-specific configuration
-- `--wait` - Waits for all resources to be ready
-- `--timeout 900s` - Maximum wait time (15 minutes)
-- `--dependency-update` - Updates chart dependencies before installation
-
-:::warning
-Do not interrupt the process.
-:::
-
-### Step 3: Verify Ingress Controller Deployment
-
-Check that the ingress controller is running:
-
-```bash
-# Check pod status
-kubectl get pods -n ingress-nginx
-
-# Verify service and load balancer hostname
-kubectl get service ingress-nginx-controller -n ingress-nginx
-```
-
-Expected output:
-
-- Pods should be in `Running` state
-- Service should have an `EXTERNAL-IP` assigned (AWS NLB/ALB hostname)
+<StorageIngressNginx
+  cloudName="aws"
+  cloudProvider="AWS"
+  loadBalancerType="hostname"
+  loadBalancerDescription="AWS NLB/ALB hostname"
+/>
 
 ### Step 4: Configure DNS Record
 
@@ -142,61 +85,21 @@ aws route53 list-resource-record-sets \
 nslookup codemie.example.com
 ```
 
-## AWS gp3 Storage Class Installation
+<StorageClassInstallation
+  storageClassName="AWS gp3 Storage Class"
+  storageType="Amazon EBS gp3 volumes"
+  existingStorageExamples="`gp2` or `gp3`"
+  cloudProvider="AWS"
+  storageClassFileName="storageclass-aws-gp3.yaml"
+/>
 
-The AWS gp3 Storage Class enables Kubernetes to dynamically provision Amazon EBS gp3 volumes for stateful workloads like databases.
-
-### Check Existing Storage Classes
-
-Before installing, verify if a suitable storage class already exists:
-
-```bash
-kubectl get storageclass
-```
-
-:::info Skip if Already Exists
-If your cluster already has appropriate storage classes (typically `gp2` or `gp3`), you can skip this installation.
-:::
-
-### Install Custom Storage Class
-
-If no suitable storage class exists, install the AWS gp3 storage class:
-
-```bash
-kubectl apply -f storage-class/storageclass-aws-gp3.yaml
-```
-
-### Verify Storage Class
-
-Check that the storage class was created:
-
-```bash
-kubectl get storageclass
-
-# View storage class details
-kubectl describe storageclass <storage-class-name>
-```
-
-## Post-Installation Validation
-
-After completing this step, verify the following:
-
-```bash
-# Ingress controller is running
-kubectl get pods -n ingress-nginx | grep Running
-
-# Load balancer has hostname/IP assigned
-kubectl get svc -n ingress-nginx ingress-nginx-controller
-
-# Storage class is available
-kubectl get storageclass
+<StorageIngressValidation
+loadBalancerType="hostname/IP"
+validationFilter=""
+dnsValidation={`
 
 # DNS record resolves correctly
-nslookup codemie.example.com
-```
 
-All checks should return successful results before proceeding.
-
-## Next Steps
-
-Once storage and ingress are configured, proceed to **[Data Layer](./data-layer)** installation to deploy Elasticsearch and PostgreSQL components.
+nslookup codemie.example.com`}
+dataLayerComponents="Elasticsearch and PostgreSQL components"
+/>

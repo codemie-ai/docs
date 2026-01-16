@@ -1,0 +1,24 @@
+## Post-Installation Validation
+
+After completing all data layer installations, verify the following:
+
+```bash
+# Elasticsearch is running
+kubectl get pods -n elastic | grep Running
+kubectl get statefulset -n elastic
+
+# PostgreSQL Operator is running
+kubectl get pods -n postgres-operator | grep Running
+
+# PostgreSQL secret exists
+kubectl get secret codemie-postgresql -n codemie
+
+# Check all PVCs are bound
+kubectl get pvc -n elastic
+```
+
+All checks should return successful results before proceeding.
+
+## Next Steps
+
+Once the data layer is configured, proceed to **[Security and Identity](./security-and-identity)** installation to deploy Keycloak and OAuth2 Proxy components.

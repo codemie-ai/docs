@@ -7,20 +7,6 @@ pagination_prev: admin/deployment/index
 pagination_next: admin/deployment/azure/prerequisites
 ---
 
-# Overview
+import OverviewContent from '../common/deployment/01-overview/\_overview-content.mdx';
 
-This guide provides step-by-step instructions for deploying the AI/Run CodeMie application to AKS and related Azure services. By following these instructions, you will:
-
-- Get along with AI/Run CodeMie architecture
-- Deploy Azure infrastructure using Terraform
-- Configure and deploy all AI/Run CodeMie application components
-
-## How to Use This Guide
-
-For successful deployment, please follow these steps in sequence:
-
-1. First, verify all prerequisites and set up your Azure environment accordingly. Next, deploy the required infrastructure using Terraform.
-2. Finally, deploy and configure the AI/Run CodeMie components on AKS cluster.
-3. Complete platform configuration using the Configuration section.
-
-Each section contains detailed instructions to ensure a smooth deployment process. The guide is structured to walk you through from initial setup to a fully functional AI/Run CodeMie environment on Azure.
+<OverviewContent cloudProvider="Azure" clusterName="AKS" />

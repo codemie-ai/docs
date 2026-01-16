@@ -7,79 +7,22 @@ pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/data-layer
 ---
 
-# Storage and Ingress Installation
+import StorageIngressOverview from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-overview.mdx';
+import StorageIngressNginx from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-nginx.mdx';
+import StorageClassInstallation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-class-installation.mdx';
+import StorageIngressValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-validation.mdx';
 
-This guide covers the installation of foundational infrastructure components that provide storage provisioning and external access to your AI/Run CodeMie deployment.
+<StorageIngressOverview
+  storageClassName="Azure Storage Class"
+  clusterName="AKS"
+/>
 
-## Overview
-
-This step installs two critical infrastructure components:
-
-- **Nginx Ingress Controller** - Routes external HTTP/HTTPS traffic to services within the cluster
-- **Azure Storage Class** - Enables dynamic provisioning of persistent volumes for stateful workloads
-
-:::info When to Skip
-If your AKS cluster already has an ingress controller and storage class configured, you can skip the relevant sections and proceed to [Data Layer](./data-layer).
-:::
-
-## Nginx Ingress Controller Installation
-
-The Nginx Ingress Controller manages external access to services in your cluster, providing load balancing, SSL termination, and name-based virtual hosting.
-
-### Step 1: Create Ingress Namespace
-
-Create a dedicated namespace for the ingress controller:
-
-```bash
-kubectl create namespace ingress-nginx
-```
-
-:::tip Namespace Verification
-Check if the namespace already exists before creating: `kubectl get namespace ingress-nginx`
-:::
-
-### Step 2: Install Nginx Ingress Helm Chart
-
-Deploy the Nginx Ingress Controller using Helm:
-
-```bash
-helm upgrade --install ingress-nginx ingress-nginx/. \
-  -n ingress-nginx \
-  --values ingress-nginx/values-azure.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
-
-**Command Breakdown**:
-
-- `upgrade --install` - Installs or upgrades if already exists (idempotent)
-- `-n ingress-nginx` - Deploys to the ingress-nginx namespace
-- `--values ingress-nginx/values-azure.yaml` - Uses Azure-specific configuration
-- `--wait` - Waits for all resources to be ready
-- `--timeout 900s` - Maximum wait time (15 minutes)
-- `--dependency-update` - Updates chart dependencies before installation
-
-:::warning
-Do not interrupt the process.
-:::
-
-### Step 3: Verify Ingress Controller Deployment
-
-Check that the ingress controller is running:
-
-```bash
-# Check pod status
-kubectl get pods -n ingress-nginx
-
-# Verify service and load balancer IP
-kubectl get service ingress-nginx-controller -n ingress-nginx
-```
-
-Expected output:
-
-- Pods should be in `Running` state
-- Service should have an `EXTERNAL-IP` assigned (Azure Load Balancer IP)
+<StorageIngressNginx
+  cloudName="azure"
+  cloudProvider="Azure"
+  loadBalancerType="IP"
+  loadBalancerDescription="Azure Load Balancer IP"
+/>
 
 ### Step 4: Configure DNS Record
 
@@ -124,64 +67,24 @@ az network private-dns record-set a list \
 nslookup codemie.example.com
 ```
 
-## Azure Storage Class Installation
+<StorageClassInstallation
+  storageClassName="Azure Storage Class"
+  storageType="Azure Disk volumes"
+  existingStorageExamples="`managed-premium` or similar"
+  cloudProvider="Azure"
+  storageClassFileName="storageclass-azure.yaml"
+/>
 
-The Azure Storage Class enables Kubernetes to dynamically provision Azure Disk volumes for stateful workloads like databases.
-
-### Check Existing Storage Classes
-
-Before installing, verify if a suitable storage class already exists:
-
-```bash
-kubectl get storageclass
-```
-
-:::info Skip if Already Exists
-If your cluster already has appropriate storage classes (typically `managed-premium` or similar), you can skip this installation.
-:::
-
-### Install Custom Storage Class
-
-If no suitable storage class exists, install the Azure storage class:
-
-```bash
-kubectl apply -f storage-class/storageclass-azure.yaml
-```
-
-### Verify Storage Class
-
-Check that the storage class was created:
-
-```bash
-kubectl get storageclass
-
-# View storage class details
-kubectl describe storageclass <storage-class-name>
-```
-
-## Post-Installation Validation
-
-After completing this step, verify the following:
-
-```bash
-# Ingress controller is running
-kubectl get pods -n ingress-nginx | grep Running
-
-# Load balancer has IP assigned
-kubectl get svc -n ingress-nginx ingress-nginx-controller | grep -v pending
-
-# Storage class is available
-kubectl get storageclass
+<StorageIngressValidation
+loadBalancerType="IP"
+validationFilter=" | grep -v pending"
+dnsValidation={`
 
 # DNS record exists
-az network private-dns record-set a show \
-  -g CodeMieRG \
-  -z example.com \
-  -n codemie
-```
 
-All checks should return successful results before proceeding.
-
-## Next Steps
-
-Once storage and ingress are configured, proceed to **[Data Layer](./data-layer)** installation to deploy Elasticsearch and PostgreSQL components.
+az network private-dns record-set a show \\
+-g CodeMieRG \\
+-z example.com \\
+-n codemie`}
+dataLayerComponents="Elasticsearch and PostgreSQL components"
+/>

@@ -1,0 +1,26 @@
+## Post-Installation Validation
+
+After completing all core component installations, verify the following:
+
+```bash
+# All core components are running
+kubectl get pods -n codemie | grep -E "(mcp-connect|mermaid|codemie-ui|codemie-api)"
+
+# Check all deployments
+kubectl get deployments -n codemie
+
+# Check all services
+kubectl get services -n codemie
+
+# Verify ingress is configured
+kubectl get ingress -n codemie
+
+# Check overall namespace status
+kubectl get all -n codemie
+```
+
+All checks should return successful results before proceeding.
+
+## Next Steps
+
+Once core components are deployed and verified, proceed to **[Observability](./observability)** installation to deploy logging and monitoring infrastructure.

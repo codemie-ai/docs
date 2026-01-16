@@ -1,0 +1,107 @@
+## OAuth2 Proxy Installation
+
+OAuth2 Proxy acts as an authentication middleware, securing access to CodeMie applications by validating user sessions with Keycloak.
+
+### Step 1: Create OAuth2 Proxy Namespace
+
+Create a dedicated namespace:
+
+```bash
+kubectl create namespace oauth2-proxy
+```
+
+### Step 2: Create OAuth2 Proxy Secret
+
+Generate OAuth2 Proxy credentials and secrets:
+
+```bash
+kubectl create secret generic oauth2-proxy \
+  --namespace=oauth2-proxy \
+  --from-literal=client-id='codemie' \
+  --from-literal=client-secret="$(openssl rand -base64 12)" \
+  --from-literal=cookie-secret=$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | base64 | tr -d -- '\n' | tr -- '+/' '-_' ; echo) \
+  --type=Opaque
+```
+
+**Command Breakdown**:
+
+- `client-id='codemie'` - OAuth2 client ID matching Keycloak configuration
+- `client-secret="$(openssl rand -base64 12)"` - Generates random client secret
+- `cookie-secret=$(...)` - Generates URL-safe base64-encoded 32-byte secret for cookie encryption
+
+**Secret Structure**:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+type: Opaque
+data:
+  client-id: <base64-encoded-client-id>
+  client-secret: <base64-encoded-client-secret>
+  cookie-secret: <base64-encoded-cookie-secret>
+```
+
+:::tip Save Client Secret
+Save the client secret for Keycloak configuration: `kubectl get secret oauth2-proxy -n oauth2-proxy -o jsonpath='{.data.client-secret}' | base64 -d`
+:::
+
+### Step 3: Copy Keycloak Admin Secret
+
+OAuth2 Proxy needs Keycloak admin credentials for setup. Copy the secret:
+
+```bash
+kubectl get secret keycloak-admin -n security -o yaml | \
+  sed '/namespace:/d' | \
+  kubectl apply -n oauth2-proxy -f -
+```
+
+**Command Breakdown**:
+
+- `kubectl get secret keycloak-admin -n security -o yaml` - Exports secret as YAML
+- `sed '/namespace:/d'` - Removes namespace field to allow cross-namespace copy
+- `kubectl apply -n oauth2-proxy -f -` - Applies to oauth2-proxy namespace
+
+{props.domainConfigStep}
+
+### Step {props.installStepNumber}: Install OAuth2 Proxy Helm Chart
+
+Deploy OAuth2 Proxy:
+
+```bash
+helm upgrade --install oauth2-proxy oauth2-proxy/. \
+  -n oauth2-proxy \
+  --values oauth2-proxy/values-{props.cloudName}.yaml \
+  --wait \
+  --timeout 900s \
+  --dependency-update
+```
+
+**Command Breakdown**:
+
+- `oauth2-proxy` - Release name
+- `-n oauth2-proxy` - Deploys to the oauth2-proxy namespace
+- `--values oauth2-proxy/values-{props.cloudName}.yaml` - Uses {props.cloudProvider}-specific configuration
+
+### Step {props.verifyStepNumber}: Verify OAuth2 Proxy Deployment
+
+Check that OAuth2 Proxy is running:
+
+```bash
+# Check pod status
+kubectl get pods -n oauth2-proxy
+
+# Check service
+kubectl get service -n oauth2-proxy
+
+# Check logs
+kubectl logs -n oauth2-proxy deployment/oauth2-proxy --tail=50
+```
+
+Expected output:
+
+- OAuth2 Proxy pod should be in `Running` state
+- Service should be available
+- Logs should show successful connection to Keycloak

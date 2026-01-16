@@ -7,7 +7,7 @@ pagination_prev: admin/deployment/azure/prerequisites
 pagination_next: admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview
 ---
 
-import ContainerResources from '../common/03-architecture/\_container-resources.mdx';
+import ContainerResources from '../common/deployment/03-architecture/\_container-resources.mdx';
 
 # AI/Run CodeMie Deployment Architecture
 
