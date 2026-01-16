@@ -46,6 +46,8 @@ words:
   - bitnami
   - litellm
   - berriai
+  - Vercel
+  - Infima
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
@@ -262,6 +264,9 @@ words:
   - xforwarded
   - CIBA
   - urlencode
+  - themer
+  - sublist
+  - hideable
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore hex colors

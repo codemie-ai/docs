@@ -2,12 +2,13 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './FeatureCard.module.css';
+import { getIconComponent } from './IconRegistry';
 
 interface FeatureCardProps {
   title: string;
   description: string;
   link: string;
-  icon?: string;
+  icon?: string | React.ReactNode;
   iconType?: 'emoji' | 'image';
   invertInDarkTheme?: boolean;
   invertInLightTheme?: boolean;
@@ -22,12 +23,34 @@ export default function FeatureCard({
   invertInDarkTheme = true,
   invertInLightTheme = false,
 }: FeatureCardProps): React.JSX.Element {
-  const iconUrl = useBaseUrl(icon);
+  const iconUrl = useBaseUrl(typeof icon === 'string' ? icon : '');
 
   const renderIcon = () => {
     if (iconType === 'image') {
-      const imageClasses = `${styles.featureCardImage} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''} no-zoom`;
-      return <img src={iconUrl} alt={`${title} logo`} className={imageClasses} />;
+      if (typeof icon === 'string') {
+        // Try to get SVG component from registry first
+        const SvgComponent = getIconComponent(icon);
+        if (SvgComponent) {
+          return (
+            <div
+              className={`${styles.featureCardSvg} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''}`}
+            >
+              <SvgComponent />
+            </div>
+          );
+        }
+        // Fallback to img tag for regular images or non-registered SVGs
+        const imageClasses = `${styles.featureCardImage} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''} no-zoom`;
+        return <img src={iconUrl} alt={`${title} logo`} className={imageClasses} />;
+      }
+      // Render inline SVG React node
+      return (
+        <div
+          className={`${styles.featureCardSvg} ${invertInDarkTheme ? styles.invertInDarkTheme : ''} ${invertInLightTheme ? styles.invertInLightTheme : ''}`}
+        >
+          {icon}
+        </div>
+      );
     }
     return <div className={styles.featureCardIcon}>{icon}</div>;
   };
