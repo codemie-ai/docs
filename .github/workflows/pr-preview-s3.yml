@@ -13,11 +13,11 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'PR number to deploy'
+        description: 'PR number to deploy (e.g., 81)'
         required: true
         type: number
       run_id:
-        description: 'Workflow run ID with the build artifact'
+        description: 'Workflow run ID with the build artifact (e.g., 21067393377 - find in PR Checks tab → Documentation Pipeline → URL)'
         required: true
         type: number
 
