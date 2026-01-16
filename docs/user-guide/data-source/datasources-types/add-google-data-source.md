@@ -103,4 +103,29 @@ Follow these detailed steps to add a Google Document as a data source:
 
 ![Google Data Source Form](./add-google-data-source/google-datasource-form.png)
 
+### Configuration Steps
+
+1. Navigate to **Data Sources** section in AI/Run CodeMie
+2. Click **+ Create Datasource**
+3. Fill in required fields:
+   - **Project**: Select target project
+   - **Name**: Provide a descriptive name for the data source
+   - **Description**: Add details about the document content
+   - **Datasource Type**: Select **Google**
+   - **Document URL**: Paste the Google Document link
+   - **Model used for embeddings**: Select embedding model
+
+4. **Configure Reindex Schedule (Optional)**
+
+   In the **Reindex Type** section, configure automatic reindexing:
+   - **Scheduler**: Choose your preferred reindexing schedule
+     - **No schedule (manual only)** - Default, requires manual reindexing
+     - **Every hour** - For frequently updated documentation
+     - **Daily at midnight** - Recommended for most Google Docs
+     - **Weekly on Sunday at midnight** - For stable documents
+     - **Monthly on the 1st at midnight** - For rarely updated documents
+     - **Custom cron expression** - Enter custom cron expression (e.g., `0 8 * * *` for daily at 8 AM)
+
+5. Click **+ Create** to create the data source
+
 Now you can select data source from the drop down list in Data Source Context section of your assistant.

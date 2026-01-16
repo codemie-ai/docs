@@ -64,6 +64,44 @@ Incremental indexing is currently only available for Jira. Other data sources re
 Full reindex is also available on **Data Source Details** page: Data Source tab → Selected data source → 3 dots → View → scroll the page to the bottom
 :::
 
+## Automatic Reindexing with Scheduler
+
+Instead of manually triggering reindexing, you can configure automatic reindexing schedules directly in the data source settings. The built-in scheduler is available for all data source types except Provider and File data sources.
+
+### Setting Up Automatic Reindexing
+
+The scheduler can be configured when creating a new data source or when updating an existing one:
+
+1. Navigate to your data source creation or update form
+2. Locate the **Reindex Type** section
+3. Select your preferred schedule from the **Scheduler** dropdown
+
+### Available Schedules
+
+- **No schedule (manual only)** - Default, manual reindexing only
+- **Every hour** - Automatic reindexing every hour
+- **Daily at midnight** - Once per day at midnight
+- **Weekly on Sunday at midnight** - Once per week
+- **Monthly on the 1st at midnight** - Once per month
+- **Custom cron expression** - Enter your own cron expression for custom timing
+
+### When to Use Scheduled Reindexing
+
+**Use automatic scheduling when:**
+
+- Data source updates regularly (Git repos, Confluence, Jira)
+- You want assistants to always have access to latest content
+- You prefer a "set it and forget it" approach
+
+**Use manual reindexing when:**
+
+- Data source rarely changes
+- You have full control over update timing
+- Working in development/testing environments
+- Data source is very large and updates infrequently
+
+For detailed scheduler configuration, see the [Scheduler documentation](/user-guide/tools/scheduler).
+
 ## Resuming Indexing
 
 If indexing is interrupted or paused, you can resume the process by clicking the **Resume Indexing** button:
@@ -72,17 +110,19 @@ If indexing is interrupted or paused, you can resume the process by clicking the
 
 ## Indexing Best Practices
 
-### Regular Reindexing Schedule
+### Data Sources with Scheduler Support
 
-- **Git Repositories**: Reindex after major commits or releases
-- **Confluence**: Reindex when documentation is updated
-- **Jira**: Use incremental indexing for daily updates, full reindex weekly or monthly
-- **Files**: Reindex when files are modified or replaced
-- **Google Docs**: Reindex after document updates
+The built-in automatic reindexing scheduler availability by data source type:
 
-:::info Automation Coming Soon
-Automatic reindexing on data source changes is planned for future releases. Currently, all reindexing must be triggered manually.
-:::
+| Data Source Type    | Automatic Scheduler |
+| ------------------- | ------------------- |
+| Git Repositories    | ✅ Available        |
+| Confluence          | ✅ Available        |
+| Jira                | ✅ Available        |
+| Google Docs         | ✅ Available        |
+| AWS Knowledge Bases | ✅ Available        |
+| File                | ❌ Not available    |
+| Provider            | ❌ Not available    |
 
 ### Monitoring Indexing Status
 

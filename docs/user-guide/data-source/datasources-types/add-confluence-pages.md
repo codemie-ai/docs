@@ -88,7 +88,19 @@ For more information on writing CQL expressions, refer to the [Atlassian CQL doc
 Test your CQL query directly in Confluence search before using it in AI/Run CodeMie. This helps catch syntax errors early.
 :::
 
-#### 5. Create the Data Source
+#### 5. Configure Reindex Schedule (Optional)
+
+In the **Reindex Type** section, configure automatic reindexing:
+
+- **Scheduler**: Choose your preferred reindexing schedule
+  - **No schedule (manual only)** - Default, requires manual reindexing
+  - **Every hour** - For highly dynamic spaces with frequent updates
+  - **Daily at midnight** - Recommended for most documentation spaces
+  - **Weekly on Sunday at midnight** - For stable knowledge bases
+  - **Monthly on the 1st at midnight** - For archive or reference spaces
+  - **Custom cron expression** - Enter custom cron expression (e.g., `0 */6 * * *` for every 6 hours)
+
+#### 6. Create the Data Source
 
 Click the **+ Create** button and wait for the process to finish.
 

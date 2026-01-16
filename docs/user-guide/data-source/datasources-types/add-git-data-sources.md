@@ -129,6 +129,20 @@ Always use stable branches (e.g., `main`, `master`, `develop`) for indexing. Fea
 - Model Used for Embeddings: Select model Used for Embeddings.
 - Select integration for Git: Choose integration.
 
+#### 5. Configure Reindex Schedule (Optional)
+
+In the **Reindex Type** section, configure automatic reindexing:
+
+- **Scheduler**: Choose your preferred reindexing schedule
+  - **No schedule (manual only)** - Default, requires manual reindexing
+  - **Every hour** - For rapidly changing repositories
+  - **Daily at midnight** - Recommended for most active repositories
+  - **Weekly on Sunday at midnight** - For stable repositories
+  - **Monthly on the 1st at midnight** - For rarely updated repositories
+  - **Custom cron expression** - Enter custom cron expression (e.g., `0 9 * * MON-FRI`)
+
+#### 6. Create Data Source
+
 Click the **+ Create** button and wait for the process to finish.
 
 :::info Indexing Time
