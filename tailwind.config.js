@@ -59,7 +59,10 @@ module.exports = {
               primary: '#CCCCCC',
               control: '#CCCCCC',
             },
-            background: 'rgb(255, 255, 255)',
+            background: {
+              DEFAULT: 'rgb(255, 255, 255)',
+              'action-hover': 'rgb(0, 0, 0, 0.05)',
+            },
             surface: {
               DEFAULT: 'rgb(250, 250, 250)',
               navigation: '#FAFAFC',
@@ -70,9 +73,35 @@ module.exports = {
               secondary: 'rgb(82, 88, 96)',
               tertiary: '#333333',
               accent: '#007AFF',
+              'accent-secondary': '#007AFF',
             },
             icon: {
               primary: '#47485A',
+            },
+            info: {
+              main: '#2297F6',
+              background: '#C9E7FF',
+              border: '#2297F6',
+            },
+            advanced: {
+              main: '#8B5CF6',
+              secondary: '#F3E8FF',
+              border: '#A78BFA',
+            },
+            error: {
+              main: '#FE3B4C',
+              secondary: '#FFE5E7',
+              border: '#FE3B4C',
+            },
+            warning: {
+              main: '#F5A534',
+              secondary: '#FAF2E7',
+              border: '#F5A534',
+            },
+            success: {
+              main: '#00A902',
+              secondary: '#e6f7e6',
+              border: '#00A902',
             },
           },
           boxShadow: {
@@ -96,7 +125,10 @@ module.exports = {
                 lighter: '#a782cd',
                 lightest: '#bea0db',
               },
-              background: 'rgb(24, 25, 26)',
+              background: {
+                DEFAULT: 'rgb(24, 25, 26)',
+                'action-hover': 'rgb(255, 255, 255, 0.05)',
+              },
               border: {
                 primary: '#333436',
                 control: '#27272A',
@@ -111,9 +143,35 @@ module.exports = {
                 secondary: 'rgb(180, 180, 180)',
                 tertiary: '#CCCCCC',
                 accent: '#C447EB',
+                'accent-secondary': '#FFFFFF',
               },
               icon: {
                 primary: '#FFFFFF',
+              },
+              info: {
+                main: '#2297F6',
+                secondary: '#002442',
+                border: '#003A69',
+              },
+              advanced: {
+                main: '#C084FC',
+                secondary: '#2D1B3D',
+                border: '#7C3AAD',
+              },
+              error: {
+                main: '#FE3B4C',
+                secondary: '#2F201F',
+                border: '#FE3B4C',
+              },
+              warning: {
+                main: '#F5A534',
+                secondary: '#492B00',
+                border: '#663B00',
+              },
+              success: {
+                main: '#259F4C',
+                secondary: '#1B271F',
+                border: '#259F4C',
               },
             },
             borderColor: {

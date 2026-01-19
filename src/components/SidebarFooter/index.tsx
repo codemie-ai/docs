@@ -14,7 +14,7 @@ export default function SidebarFooter() {
             href="https://github.com/codemie-ai/docs"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 text-sm text-text-tertiary no-underline transition-colors font-bold hover:text-text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-sm !text-text-primary !no-underline transition-colors font-bold hover:bg-background-action-hover rounded-md mr-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@ export default function SidebarFooter() {
             href="https://www.youtube.com/@EPAMAIRunCodeMie"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 text-sm text-text-tertiary no-underline transition-colors font-bold hover:text-text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-sm !text-text-primary !no-underline transition-colors font-bold hover:bg-background-action-hover rounded-md mr-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export default function SidebarFooter() {
             href="https://github.com/codemie-ai/docs/issues"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 text-sm text-text-tertiary no-underline transition-colors font-bold hover:text-text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-sm !text-text-primary !no-underline transition-colors font-bold hover:bg-background-action-hover rounded-md mr-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

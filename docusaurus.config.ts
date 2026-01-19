@@ -72,11 +72,11 @@ const config: Config = {
   themeConfig: {
     image: 'img/codemie-social-card.jpg',
     navbar: {
-      title: 'AI/Run CodeMie',
+      title: '',
       logo: {
         alt: 'AI/Run CodeMie Logo',
-        src: 'img/logo-light.svg',
-        srcDark: 'img/logo.svg',
+        src: 'img/logo-full-light.svg',
+        srcDark: 'img/logo-full-dark.svg',
       },
     },
     prism: {

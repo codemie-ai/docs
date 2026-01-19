@@ -21,6 +21,7 @@
     --ifm-color-primary-lighter: theme('colors.primary.lighter');
     --ifm-color-primary-lightest: theme('colors.primary.lightest');
     --ifm-menu-color: theme('colors.text.primary');
+    --ifm-menu-color-background-hover: theme('colors.background.action-hover');
     --ifm-code-font-size: 95%;
     --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   }
@@ -53,9 +54,12 @@ samp,
   font-family: var(--ifm-font-family-monospace) !important;
 }
 
-h1,
-h2 {
+h1 {
   @apply text-text-accent;
+}
+
+h2 {
+  @apply text-text-accent-secondary;
 }
 
 /**
@@ -72,6 +76,10 @@ h2 {
 }
 
 .menu__link--active {
+  @apply !bg-transparent;
+}
+
+.menu__caret {
   @apply !bg-transparent;
 }
 
@@ -147,6 +155,20 @@ h2 {
 .DocSearch-Button {
   @apply !shadow-none;
   background-image: none !important;
+}
+
+/* Alerts */
+
+.alert--success {
+  @apply bg-success-secondary !border-success-border;
+}
+
+.alert--info {
+  @apply !bg-info-secondary !border-info-border;
+}
+
+.alert--warning {
+  @apply !bg-warning-secondary !border-warning-border;
 }
 
 /**
