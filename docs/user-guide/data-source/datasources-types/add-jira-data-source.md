@@ -89,6 +89,22 @@ This example filters:
 For more information on writing JQL expressions, refer to the [Atlassian JQL documentation](https://www.atlassian.com/software/jira/guides/jql/cheat-sheet#intro-to-jql).
 :::
 
+#### 5. Configure Reindex Schedule (Optional)
+
+In the **Reindex Type** section, configure automatic reindexing:
+
+- **Scheduler**: Choose your preferred reindexing schedule
+  - **No schedule (manual only)** - Default, requires manual reindexing
+  - **Every hour** - Recommended for active projects with frequent issue updates
+  - **Daily at midnight** - For projects with regular daily activity
+  - **Weekly on Sunday at midnight** - For less active projects
+  - **Monthly on the 1st at midnight** - For archived or completed projects
+  - **Custom cron expression** - Enter custom cron expression (e.g., `0 */4 * * *` for every 4 hours)
+
+#### 6. Create Data Source
+
+Click the **+ Create** button to create the Jira data source. Indexing will begin automatically based on your scheduler configuration.
+
 ## Error Handling for Jira Data Sources
 
 ### Common Errors

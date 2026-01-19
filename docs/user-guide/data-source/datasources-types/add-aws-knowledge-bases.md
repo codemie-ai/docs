@@ -169,6 +169,36 @@ To verify connection click on Profile Icon -> Settings -> EXTERNAL VENDORS -> Kn
 
 ![AWS Knowledge Bases Settings](./add-aws-knowledge-bases/aws-knowledge-bases-settings.png)
 
+## Adding AWS Knowledge Base as Data Source
+
+After setting up the AWS integration, you can add AWS Knowledge Bases as data sources:
+
+### Configuration Steps
+
+1. Navigate to **Data Sources** section in AI/Run CodeMie
+2. Click **+ Create Datasource**
+3. Fill in required fields:
+   - **Project**: Select target project
+   - **Name**: Provide a descriptive name for the data source
+   - **Description**: Add details about the knowledge base content
+   - **Datasource Type**: Select **AWS Knowledge Bases**
+   - **Knowledge Base ID**: Enter your AWS Knowledge Base ID
+   - **Select integration for AWS**: Choose the AWS integration you created earlier
+   - **Model used for embeddings**: Select embedding model
+
+4. **Configure Reindex Schedule (Optional)**
+
+   In the **Reindex Type** section, configure automatic reindexing:
+   - **Scheduler**: Choose your preferred reindexing schedule
+     - **No schedule (manual only)** - Default, requires manual reindexing
+     - **Every hour** - For frequently updated knowledge bases
+     - **Daily at midnight** - Recommended for most AWS Knowledge Bases
+     - **Weekly on Sunday at midnight** - For stable knowledge bases
+     - **Monthly on the 1st at midnight** - For rarely updated knowledge bases
+     - **Custom cron expression** - Enter custom cron expression (e.g., `0 2 * * *` for daily at 2 AM)
+
+5. Click **+ Create** to create the data source
+
 Now you can select data source from the drop down list in **Data Source Context section** of your assistant:
 
 ![AWS DataSource Dropdown Select](./add-aws-knowledge-bases/aws-datasource-dropdown-select.png)
