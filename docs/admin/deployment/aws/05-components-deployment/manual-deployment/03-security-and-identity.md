@@ -7,11 +7,11 @@ pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/ma
 pagination_next: admin/deployment/aws/components-deployment/manual-deployment/plugin-engine
 ---
 
-import SecurityOverview from '../../../common/deployment/05-components-deployment/manual-deployment/\_security-overview.mdx';
-import SecurityKeycloakOperator from '../../../common/deployment/05-components-deployment/manual-deployment/\_security-keycloak-operator.mdx';
-import SecurityKeycloakInstall from '../../../common/deployment/05-components-deployment/manual-deployment/\_security-keycloak-install.mdx';
-import SecurityOauth2Proxy from '../../../common/deployment/05-components-deployment/manual-deployment/\_security-oauth2-proxy.mdx';
-import SecurityValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_security-validation.mdx';
+import SecurityOverview from '../../../common/deployment/05-components-deployment/manual-deployment/security/\_security-overview.mdx';
+import SecurityKeycloakOperator from '../../../common/deployment/05-components-deployment/manual-deployment/security/\_security-keycloak-operator.mdx';
+import SecurityKeycloakInstall from '../../../common/deployment/05-components-deployment/manual-deployment/security/\_security-keycloak-install.mdx';
+import SecurityOauth2Proxy from '../../../common/deployment/05-components-deployment/manual-deployment/security/\_security-oauth2-proxy.mdx';
+import SecurityValidation from '../../../common/deployment/05-components-deployment/manual-deployment/security/\_security-validation.mdx';
 
 <SecurityOverview />
 

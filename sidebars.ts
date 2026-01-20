@@ -311,7 +311,7 @@ const sidebars: SidebarsConfig = {
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/aws/components-deployment/manual-deployment/k8s-components',
                         'admin/deployment/aws/components-deployment/manual-deployment/data-layer',
                         'admin/deployment/aws/components-deployment/manual-deployment/security-and-identity',
                         'admin/deployment/aws/components-deployment/manual-deployment/plugin-engine',
@@ -378,7 +378,7 @@ const sidebars: SidebarsConfig = {
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/azure/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/azure/components-deployment/manual-deployment/k8s-components',
                         'admin/deployment/azure/components-deployment/manual-deployment/data-layer',
                         'admin/deployment/azure/components-deployment/manual-deployment/security-and-identity',
                         'admin/deployment/azure/components-deployment/manual-deployment/plugin-engine',
@@ -445,7 +445,7 @@ const sidebars: SidebarsConfig = {
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/gcp/components-deployment/manual-deployment/storage-and-ingress',
+                        'admin/deployment/gcp/components-deployment/manual-deployment/k8s-components',
                         'admin/deployment/gcp/components-deployment/manual-deployment/data-layer',
                         'admin/deployment/gcp/components-deployment/manual-deployment/security-and-identity',
                         'admin/deployment/gcp/components-deployment/manual-deployment/plugin-engine',

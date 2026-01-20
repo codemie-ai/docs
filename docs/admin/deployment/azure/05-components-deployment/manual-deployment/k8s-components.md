@@ -1,16 +1,16 @@
 ---
-id: storage-and-ingress
+id: k8s-components
 sidebar_position: 1
-title: Storage and Ingress
-sidebar_label: Storage and Ingress
+title: Kubernetes Components
+sidebar_label: Kubernetes Components
 pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/manual-deployment-overview
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/data-layer
 ---
 
-import StorageIngressOverview from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-overview.mdx';
-import StorageIngressNginx from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-nginx.mdx';
-import StorageClassInstallation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-class-installation.mdx';
-import StorageIngressValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-validation.mdx';
+import StorageIngressOverview from '../../../common/deployment/05-components-deployment/manual-deployment/k8s/\_storage-ingress-overview.mdx';
+import StorageIngressNginx from '../../../common/deployment/05-components-deployment/manual-deployment/k8s/\_storage-ingress-nginx.mdx';
+import StorageClassInstallation from '../../../common/deployment/05-components-deployment/manual-deployment/k8s/\_storage-class-installation.mdx';
+import StorageIngressValidation from '../../../common/deployment/05-components-deployment/manual-deployment/k8s/\_storage-ingress-validation.mdx';
 
 <StorageIngressOverview
   storageClassName="Azure Storage Class"

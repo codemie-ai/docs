@@ -4,7 +4,7 @@ sidebar_position: 2
 title: Manual Deployment Overview
 description: Overview of manual component installation process
 pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
-pagination_next: admin/deployment/aws/components-deployment/manual-deployment/storage-and-ingress
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/k8s-components
 ---
 
 # Manual CodeMie Components Deployment
@@ -68,7 +68,7 @@ Ensure these tools are available on your deployment machine:
 
 Components must be installed in the following order to satisfy dependencies:
 
-### 1. [Storage and Ingress](./storage-and-ingress)
+### 1. [Kubernetes Components](./k8s-components)
 
 **Purpose**: Foundation infrastructure for storage provisioning and external access
 
@@ -236,6 +236,6 @@ Installing components out of order will cause deployment failures. Always follow
 
 ## Next Steps
 
-Begin the installation process by following the guides in order, starting with **[Storage and Ingress](./storage-and-ingress)**.
+Begin the installation process by following the guides in order, starting with **[Kubernetes Components](./k8s-components)**.
 
 After completing all component installations, proceed to **[Configuration](../../../../configuration/)** to configure users, AI models, and data sources.

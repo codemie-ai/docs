@@ -7,11 +7,11 @@ pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/
 pagination_next: admin/deployment/azure/accessing-applications
 ---
 
-import ObservabilityOverview from '../../../common/deployment/05-components-deployment/manual-deployment/\_observability-overview.mdx';
-import ObservabilityFluentBit from '../../../common/deployment/05-components-deployment/manual-deployment/\_observability-fluent-bit.mdx';
-import ObservabilityKibana from '../../../common/deployment/05-components-deployment/manual-deployment/\_observability-kibana.mdx';
-import ObservabilityDashboards from '../../../common/deployment/05-components-deployment/manual-deployment/\_observability-dashboards.mdx';
-import ObservabilityValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_observability-validation.mdx';
+import ObservabilityOverview from '../../../common/deployment/05-components-deployment/manual-deployment/observability/\_observability-overview.mdx';
+import ObservabilityFluentBit from '../../../common/deployment/05-components-deployment/manual-deployment/observability/\_observability-fluent-bit.mdx';
+import ObservabilityKibana from '../../../common/deployment/05-components-deployment/manual-deployment/observability/\_observability-kibana.mdx';
+import ObservabilityDashboards from '../../../common/deployment/05-components-deployment/manual-deployment/observability/\_observability-dashboards.mdx';
+import ObservabilityValidation from '../../../common/deployment/05-components-deployment/manual-deployment/observability/\_observability-validation.mdx';
 
 <ObservabilityOverview />
 
