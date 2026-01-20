@@ -48,11 +48,11 @@ Check that the ingress controller is running:
 # Check pod status
 kubectl get pods -n ingress-nginx
 
-# Verify service and load balancer {props.loadBalancerType}
+# Verify service and load balancer IP
 kubectl get service ingress-nginx-controller -n ingress-nginx
 ```
 
 Expected output:
 
 - Pods should be in `Running` state
-- Service should have an `EXTERNAL-IP` assigned ({props.loadBalancerDescription})
+- Service should have an `EXTERNAL-IP` assigned load balancer IP

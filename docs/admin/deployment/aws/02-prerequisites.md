@@ -10,7 +10,7 @@ pagination_next: admin/deployment/aws/architecture
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import NetworkRequirements from '../common/deployment/02-prerequisites/\_network-requirements.mdx';
-import ClusterRequirements from '../common/deployment/\_cluster-requirements.mdx';
+import ClusterRequirements from '../common/deployment/02-prerequisites/\_cluster-requirements.mdx';
 import DeploymentMachineTools from '../common/deployment/02-prerequisites/\_deployment-machine-tools.mdx';
 import NextSteps from '../common/deployment/02-prerequisites/\_next-steps.mdx';
 
@@ -56,7 +56,7 @@ DNS and certificate provisioning is fully automated through Terraform when using
 
 | Tool                                                                                     | Version | Purpose                 |
 | ---------------------------------------------------------------------------------------- | ------- | ----------------------- |
-| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | Latest  | AWS resource management |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | latest  | AWS resource management |
 
 ### Required Repository Access
 

@@ -18,8 +18,6 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
 <StorageIngressNginx
   cloudName="gcp"
   cloudProvider="GCP"
-  loadBalancerType="IP"
-  loadBalancerDescription="GCP Load Balancer IP"
 />
 
 <StorageClassInstallation
@@ -30,9 +28,4 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
   storageClassFileName="storageclass-gcp-pd-balanced.yaml"
 />
 
-<StorageIngressValidation
-  loadBalancerType="IP"
-  validationFilter=" | grep -v pending"
-  dnsValidation=""
-  dataLayerComponents="Elasticsearch, Kibana, and PostgreSQL components"
-/>
+<StorageIngressValidation />

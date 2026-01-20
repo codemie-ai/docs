@@ -6,16 +6,15 @@ After completing this step, verify the following:
 # Ingress controller is running
 kubectl get pods -n ingress-nginx | grep Running
 
-# Load balancer has {props.loadBalancerType} assigned
-kubectl get svc -n ingress-nginx ingress-nginx-controller{props.validationFilter}
+# Load balancer has IP assigned
+kubectl get svc -n ingress-nginx ingress-nginx-controller
 
 # Storage class is available
 kubectl get storageclass
-{props.dnsValidation}
 ```
 
 All checks should return successful results before proceeding.
 
 ## Next Steps
 
-Once storage and ingress are configured, proceed to **[Data Layer](./data-layer)** installation to deploy {props.dataLayerComponents}.
+Once storage and ingress are configured, proceed to **[Data Layer](./data-layer)** installation to deploy Elasticsearch, Kibana, and PostgreSQL components.

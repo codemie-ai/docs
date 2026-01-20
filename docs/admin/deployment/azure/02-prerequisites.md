@@ -9,7 +9,7 @@ pagination_next: admin/deployment/azure/architecture
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import ClusterRequirements from '../common/deployment/\_cluster-requirements.mdx';
+import ClusterRequirements from '../common/deployment/02-prerequisites/\_cluster-requirements.mdx';
 import NetworkRequirements from '../common/deployment/02-prerequisites/\_network-requirements.mdx';
 import DeploymentMachineTools from '../common/deployment/02-prerequisites/\_deployment-machine-tools.mdx';
 import NextSteps from '../common/deployment/02-prerequisites/\_next-steps.mdx';
@@ -66,8 +66,8 @@ DNS and TLS certificate requirements depend on your access model:
 
 | Tool                                                                       | Version | Purpose                   |
 | -------------------------------------------------------------------------- | ------- | ------------------------- |
-| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | Latest  | Azure resource management |
-| [kubelogin](https://azure.github.io/kubelogin/install.html)                | Latest  | AKS authentication plugin |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure resource management |
+| [kubelogin](https://azure.github.io/kubelogin/install.html)                | latest  | AKS authentication plugin |
 
 ### Required Repository Access
 

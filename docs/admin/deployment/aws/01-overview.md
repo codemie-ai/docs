@@ -9,4 +9,4 @@ pagination_next: admin/deployment/aws/prerequisites
 
 import OverviewContent from '../common/deployment/01-overview/\_overview-content.mdx';
 
-<OverviewContent cloudProvider="AWS" clusterName="Amazon EKS" />
+<OverviewContent cloudProvider="AWS" clusterName="EKS" />

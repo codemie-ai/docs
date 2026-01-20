@@ -13,15 +13,13 @@ import StorageClassInstallation from '../../../common/deployment/05-components-d
 import StorageIngressValidation from '../../../common/deployment/05-components-deployment/manual-deployment/\_storage-ingress-validation.mdx';
 
 <StorageIngressOverview
-  storageClassName="AWS gp3 Storage Class"
-  clusterName="Amazon EKS"
+  storageClassName="AWS gp3"
+  clusterName="EKS"
 />
 
 <StorageIngressNginx
   cloudName="aws"
   cloudProvider="AWS"
-  loadBalancerType="hostname"
-  loadBalancerDescription="AWS NLB/ALB hostname"
 />
 
 ### Step 4: Configure DNS Record
@@ -86,20 +84,11 @@ nslookup codemie.example.com
 ```
 
 <StorageClassInstallation
-  storageClassName="AWS gp3 Storage Class"
+  storageClassName="AWS gp3"
   storageType="Amazon EBS gp3 volumes"
   existingStorageExamples="`gp2` or `gp3`"
   cloudProvider="AWS"
   storageClassFileName="storageclass-aws-gp3.yaml"
 />
 
-<StorageIngressValidation
-loadBalancerType="hostname/IP"
-validationFilter=""
-dnsValidation={`
-
-# DNS record resolves correctly
-
-nslookup codemie.example.com`}
-dataLayerComponents="Elasticsearch and PostgreSQL components"
-/>
+<StorageIngressValidation />

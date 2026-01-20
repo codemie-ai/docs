@@ -20,8 +20,6 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
 <StorageIngressNginx
   cloudName="azure"
   cloudProvider="Azure"
-  loadBalancerType="IP"
-  loadBalancerDescription="Azure Load Balancer IP"
 />
 
 ### Step 4: Configure DNS Record
@@ -75,16 +73,4 @@ nslookup codemie.example.com
   storageClassFileName="storageclass-azure.yaml"
 />
 
-<StorageIngressValidation
-loadBalancerType="IP"
-validationFilter=" | grep -v pending"
-dnsValidation={`
-
-# DNS record exists
-
-az network private-dns record-set a show \\
--g CodeMieRG \\
--z example.com \\
--n codemie`}
-dataLayerComponents="Elasticsearch and PostgreSQL components"
-/>
+<StorageIngressValidation />
