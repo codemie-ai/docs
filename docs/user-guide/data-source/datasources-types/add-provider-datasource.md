@@ -100,3 +100,26 @@ Provider tools can be used:
    ↓
 5. Assistant uses provider tools with or without data source context
 ```
+
+## Using Provider Data Source in Assistants
+
+After successfully creating and indexing your Provider data source, you can connect it to any assistant to provide access to external analysis capabilities.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your Provider data source from the list
+5. In the **Available tools** section, enable the provider-specific tools
+6. Save the assistant configuration
+
+Now your assistant can access and analyze code through the provider's external tooling, enabling it to:
+
+- Perform advanced code analysis with specialized tools
+- Leverage external analysis engines and capabilities
+- Access provider-specific insights and metrics
+- Combine indexed data with real-time analysis
+- Utilize both data source context and independent tool operations
+
+Your Provider data source is now configured and ready to enhance your assistants with external analysis toolkit integration.

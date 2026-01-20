@@ -186,6 +186,7 @@ words:
   - statefulset
   - ANTLR
   - dozerdb
+  - issuetype
   # File types
   - tsx
   - jsx

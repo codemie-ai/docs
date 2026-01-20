@@ -265,4 +265,24 @@ Click the **+ Create** button and wait for the process to finish.
 - Check the original source for a valid copy
 - Use file repair tools if available
 
-Now your files are configured as data sources and ready to enhance your assistants with document knowledge.
+## Using File Data Source in Assistants
+
+After successfully uploading and indexing your files, you can connect the data source to any assistant to provide access to document content.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your File data source from the list
+5. Save the assistant configuration
+
+Now your assistant can access and analyze content from the uploaded files, enabling it to:
+
+- Answer questions about document content
+- Extract specific information from files
+- Summarize document sections
+- Compare information across multiple files
+- Provide insights based on uploaded data
+
+Your files are now configured and ready to enhance your assistants with document knowledge.

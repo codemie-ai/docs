@@ -127,6 +127,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/tools/quality-assurance-with-jira-zephyr-scale-addon',
             'user-guide/tools/servicenow',
             'user-guide/tools/scheduler',
+            'user-guide/tools/xray',
             'user-guide/tools/plugin',
             {
               type: 'category',
@@ -176,6 +177,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/data-source/datasources-types/add-git-data-sources',
                 'user-guide/data-source/datasources-types/add-confluence-pages',
                 'user-guide/data-source/datasources-types/add-jira-data-source',
+                'user-guide/data-source/datasources-types/add-xray-data-source',
                 'user-guide/data-source/datasources-types/add-file-datasource',
                 'user-guide/data-source/datasources-types/add-google-data-source',
                 'user-guide/data-source/datasources-types/add-aws-knowledge-bases',
