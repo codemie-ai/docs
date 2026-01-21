@@ -1,0 +1,13 @@
+This guide covers the installation of authentication and authorization components that provide secure access control for AI/Run CodeMie.
+
+## Overview
+
+The security layer consists of three components:
+
+- **Keycloak Operator** - Kubernetes operator for managing Keycloak lifecycle
+- **Keycloak** - Identity and access management (IAM) system providing authentication, authorization, and user management
+- **OAuth2 Proxy** - Authentication proxy that secures application endpoints by integrating with Keycloak
+
+:::info Installation Order
+These components must be installed in the order presented. Keycloak requires the operator, and OAuth2 Proxy requires Keycloak to be running.
+:::

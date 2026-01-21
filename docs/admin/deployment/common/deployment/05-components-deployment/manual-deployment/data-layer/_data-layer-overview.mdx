@@ -1,0 +1,13 @@
+This guide covers the installation of data storage components that provide persistent storage for AI/Run CodeMie application data, logs, and user content.
+
+## Overview
+
+The data layer consists of three components:
+
+- **Elasticsearch** - Document storage and search engine for application logs, embeddings, and search functionality
+- **PostgreSQL Operator** - Kubernetes operator for managing PostgreSQL database lifecycle
+- **PostgreSQL** - Cloud-managed relational database for Keycloak and application metadata
+
+:::info Installation Order
+These components must be installed in the order presented, as PostgreSQL Operator is required before configuring PostgreSQL secrets.
+:::

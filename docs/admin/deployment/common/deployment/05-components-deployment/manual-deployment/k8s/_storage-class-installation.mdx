@@ -1,0 +1,36 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Storage Class Installation
+
+The {props.storageClassName} enables Kubernetes to dynamically provision {props.storageType} for stateful workloads like databases.
+
+### Step 1: Check Existing Storage Classes
+
+Before installing, verify if a suitable storage class already exists:
+
+```bash
+kubectl get storageclass
+```
+
+:::info Skip if Already Exists
+If your cluster already has appropriate storage classes (typically {props.existingStorageExamples}), you can skip this installation.
+:::
+
+### Step 2: Install Custom Storage Class
+
+If no suitable storage class exists, install the {props.cloudProvider} storage class:
+
+<CodeBlock language="bash">
+{`kubectl apply -f storage-class/${props.storageClassFileName}`}
+</CodeBlock>
+
+### Step 3: Verify Storage Class
+
+Check that the storage class was created:
+
+```bash
+kubectl get storageclass
+
+# View storage class details
+kubectl describe storageclass <storage-class-name>
+```

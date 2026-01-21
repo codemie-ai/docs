@@ -1,0 +1,65 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## CodeMie API Installation
+
+CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
+
+### Step 1: Configure API Values
+
+The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-api/{props.valuesFileName}</code> are correct:
+
+- `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
+  {props.additionalConfigParams}
+
+:::tip Domain Configuration
+If you followed the Getting Started steps, these replacements should already be done.
+:::
+
+### Step 2: Copy Elasticsearch Credentials
+
+CodeMie API needs access to Elasticsearch. Copy the credentials to the codemie namespace:
+
+```bash
+kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
+  sed '/namespace:/d' | \
+  kubectl apply -n codemie -f -
+```
+
+### Step 3: Install CodeMie API Helm Chart
+
+Deploy CodeMie API:
+
+<CodeBlock language="bash">
+{`helm upgrade --install codemie-api \\
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
+  --version x.y.z \\
+  --namespace codemie \\
+  -f ./codemie-api/${props.valuesFileName} \\
+  --wait \\
+  --timeout 600s`}
+</CodeBlock>
+
+### Step 4: Verify CodeMie API Deployment
+
+Check that CodeMie API is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep codemie-api
+
+# Check deployment
+kubectl get deployment -n codemie codemie-api
+
+# Check logs
+kubectl logs -n codemie deployment/codemie-api --tail=100
+
+# Check API health endpoint
+kubectl exec -n codemie deployment/codemie-api -- curl -s http://localhost:8080/health
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should show successful connections to all dependencies
+- Health endpoint should return healthy status

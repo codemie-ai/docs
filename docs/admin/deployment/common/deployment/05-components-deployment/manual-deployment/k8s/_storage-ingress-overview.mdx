@@ -1,0 +1,12 @@
+This guide covers the installation of foundational infrastructure components that provide storage provisioning and external access to your AI/Run CodeMie deployment.
+
+## Overview
+
+This step installs two critical infrastructure components:
+
+- **Nginx Ingress Controller** - Routes external HTTP/HTTPS traffic to services within the cluster
+- **{props.storageClassName}** - Enables dynamic provisioning of persistent volumes for stateful workloads
+
+:::info When to Skip
+If your {props.clusterName} cluster already has an ingress controller and storage class configured, you can skip the relevant sections and proceed to [Data Layer](./data-layer).
+:::

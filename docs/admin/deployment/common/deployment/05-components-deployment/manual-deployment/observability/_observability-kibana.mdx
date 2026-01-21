@@ -1,0 +1,99 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Kibana Installation
+
+Kibana provides a web interface for searching, analyzing, and visualizing logs stored in Elasticsearch.
+
+### Step 1: Create Kibana Encryption Keys Secret
+
+Generate encryption keys for Kibana's saved objects, reports, and security features:
+
+```bash
+kubectl create secret generic kibana-encryption-keys \
+  --namespace=elastic \
+  --from-literal=encryptedSavedObjects.encryptionKey="$(openssl rand -hex 16)" \
+  --from-literal=reporting.encryptionKey="$(openssl rand -hex 16)" \
+  --from-literal=security.encryptionKey="$(openssl rand -hex 16)" \
+  --type=Opaque
+```
+
+**Secret Structure**:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kibana-encryption-keys
+  namespace: elastic
+type: Opaque
+data:
+  encryptedSavedObjects.encryptionKey: <base64-encoded-32-char-key>
+  reporting.encryptionKey: <base64-encoded-32-char-key>
+  security.encryptionKey: <base64-encoded-32-char-key>
+```
+
+### Step 2: Configure Domain Name
+
+Fill in values in <code>kibana/{props.valuesFileName}</code> file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+
+:::tip Domain Configuration
+If you followed the Getting Started steps, this should already be configured.
+:::
+
+### Step 3: Install Kibana Helm Chart
+
+Deploy Kibana:
+
+<CodeBlock language="bash">
+{`helm upgrade --install kibana kibana/. \\
+  -n elastic \\
+  --values kibana/${props.valuesFileName} \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
+
+### Step 4: Verify Kibana Deployment
+
+Check that Kibana is running:
+
+```bash
+# Check pod status
+kubectl get pods -n elastic | grep kibana
+
+# Check deployment
+kubectl get deployment -n elastic kibana
+
+# Check service
+kubectl get service -n elastic kibana
+
+# Check logs
+kubectl logs -n elastic deployment/kibana --tail=50
+```
+
+### Step 5: Access Kibana
+
+Kibana can be accessed at:
+
+{props.kibanaUrl}
+
+**Login Credentials**:
+
+- Username: `elastic`
+- Password: Retrieved from Elasticsearch secret (see [Data Layer](./data-layer#step-2-create-elasticsearch-credentials-secret))
+
+### Step 6: Configure Log Index Pattern (Optional)
+
+If you enabled infrastructure logging, configure the index pattern to view logs:
+
+1. Navigate to **Stack Management** → **Index Patterns**
+2. Click **Create index pattern**
+3. Enter index pattern: `codemie_infra_logs*`
+4. Select timestamp field: `@timestamp`
+5. Click **Create index pattern**
+
+Now you can view historical infrastructure logs in **Discover** section.
+
+:::note Metrics Index
+The `codemie_metrics_logs` index for user metrics is automatically configured during Kibana Dashboards installation. You don't need to create it manually.
+:::

@@ -1,0 +1,78 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## PostgreSQL Configuration
+
+CodeMie uses {props.postgresServiceName} (created during infrastructure deployment) rather than running PostgreSQL in the cluster. This section configures the connection credentials.
+
+### Step 1: Retrieve Database Credentials
+
+Get your {props.postgresServiceName} connection details from the infrastructure deployment outputs:
+
+```bash
+# From your deployment_outputs.env file, note these values:
+# - CODEMIE_POSTGRES_DATABASE_HOST
+# - CODEMIE_POSTGRES_DATABASE_NAME
+# - CODEMIE_POSTGRES_DATABASE_USER
+# - CODEMIE_POSTGRES_DATABASE_PASSWORD
+```
+
+:::tip Finding Credentials
+Your `deployment_outputs.env` file was created during [Infrastructure Deployment](../../infrastructure-deployment). It should be located in your Terraform working directory.
+:::
+
+### Step 2: Create PostgreSQL Connection Secret
+
+Create a secret with the cloud-managed PostgreSQL credentials:
+
+```bash
+kubectl create secret generic codemie-postgresql \
+  --from-literal=PG_PASS=<CODEMIE_POSTGRES_DATABASE_PASSWORD> \
+  --from-literal=PG_USER=<CODEMIE_POSTGRES_DATABASE_USER> \
+  --from-literal=PG_HOST=<CODEMIE_POSTGRES_DATABASE_HOST> \
+  --from-literal=PG_NAME=<CODEMIE_POSTGRES_DATABASE_NAME> \
+  --namespace codemie
+```
+
+:::warning Replace Placeholders
+Replace all `<CODEMIE_POSTGRES_DATABASE_*>` placeholders with actual values from your `deployment_outputs.env` file. Do not use angle brackets in the actual command.
+:::
+
+**Example with Real Values**:
+
+<CodeBlock language="bash">
+{`kubectl create secret generic codemie-postgresql \\
+  --from-literal=PG_PASS='MySecureP@ssw0rd!' \\
+  --from-literal=PG_USER='codemie_admin' \\
+  --from-literal=PG_HOST='${props.postgresExampleHost}' \\
+  --from-literal=PG_NAME='codemie' \\
+  --namespace codemie`}
+</CodeBlock>
+
+**Secret Structure**:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: codemie-postgresql
+  namespace: codemie
+type: Opaque
+data:
+  PG_HOST: <base64-encoded-host>
+  PG_NAME: <base64-encoded-db-name>
+  PG_PASS: <base64-encoded-password>
+  PG_USER: <base64-encoded-user>
+```
+
+### Step 3: Verify PostgreSQL Secret
+
+Confirm the secret was created correctly:
+
+```bash
+# Check secret exists
+kubectl get secret codemie-postgresql -n codemie
+
+# Verify secret contents (decode to check values)
+kubectl get secret codemie-postgresql -n codemie -o jsonpath='{.data.PG_HOST}' | base64 -d
+kubectl get secret codemie-postgresql -n codemie -o jsonpath='{.data.PG_USER}' | base64 -d
+```

@@ -1,0 +1,29 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Post-Installation Validation
+
+After completing observability stack installation, verify the following:
+
+<CodeBlock language="bash">
+{`# Fluent Bit is running on all nodes
+kubectl get daemonset -n fluentbit
+kubectl get pods -n fluentbit
+
+# Kibana is running
+
+kubectl get pods -n elastic | grep kibana
+kubectl get deployment -n elastic kibana
+
+# Check Kibana is accessible
+
+curl -k ${props.kibanaUrl}`}
+
+</CodeBlock>
+
+All checks should return successful results.
+
+## Next Steps
+
+Congratulations! You have successfully completed the manual deployment of all AI/Run CodeMie components.
+
+Proceed to **[Accessing Applications](../../accessing-applications)** - Learn how to access the deployed AI/Run CodeMie applications and complete the required configuration steps.

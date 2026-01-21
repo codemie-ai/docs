@@ -30,7 +30,7 @@ This phase assumes you have completed [Infrastructure Deployment](../infrastruct
 
 The AI/Run CodeMie application consists of multiple integrated components organized into functional categories. Understanding this architecture helps you plan the deployment sequence and troubleshoot issues effectively.
 
-![Application Stack](../../common/images/application-stack-diagram.drawio.png)
+![Application Stack](../../common/deployment/images/application-stack-diagram.drawio.png)
 
 #### Core AI/Run CodeMie Services
 

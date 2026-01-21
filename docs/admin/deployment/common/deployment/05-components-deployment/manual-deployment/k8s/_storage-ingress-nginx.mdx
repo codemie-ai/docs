@@ -1,0 +1,51 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Nginx Ingress Controller Installation
+
+The Nginx Ingress Controller manages external access to services in your cluster, providing load balancing, SSL termination, and name-based virtual hosting.
+
+### Step 1: Create Ingress Namespace
+
+Create a dedicated namespace for the ingress controller:
+
+```bash
+kubectl create namespace ingress-nginx
+```
+
+:::tip Namespace Verification
+Check if the namespace already exists before creating: `kubectl get namespace ingress-nginx`
+:::
+
+### Step 2: Install Nginx Ingress Helm Chart
+
+Deploy the Nginx Ingress Controller using Helm:
+
+<CodeBlock language="bash">
+{`helm upgrade --install ingress-nginx ingress-nginx/. \\
+  -n ingress-nginx \\
+  --values ingress-nginx/${props.valuesFileName} \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
+
+:::warning
+Do not interrupt the process.
+:::
+
+### Step 3: Verify Ingress Controller Deployment
+
+Check that the ingress controller is running:
+
+```bash
+# Check pod status
+kubectl get pods -n ingress-nginx
+
+# Verify service and load balancer IP
+kubectl get service ingress-nginx-controller -n ingress-nginx
+```
+
+Expected output:
+
+- Pods should be in `Running` state
+- Service should have an `EXTERNAL-IP` assigned load balancer IP

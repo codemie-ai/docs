@@ -1,0 +1,97 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Elasticsearch Installation
+
+Elasticsearch provides document storage and full-text search capabilities for AI/Run CodeMie. It stores conversation history, embeddings, logs, and provides search functionality.
+
+### Step 1: Create Elasticsearch Namespace
+
+Create a dedicated namespace for Elasticsearch:
+
+```bash
+kubectl create namespace elastic
+```
+
+:::tip Namespace Verification
+Check if the namespace already exists: `kubectl get namespace elastic`
+:::
+
+### Step 2: Create Elasticsearch Credentials Secret
+
+Generate and store Elasticsearch authentication credentials:
+
+```bash
+kubectl -n elastic create secret generic elasticsearch-master-credentials \
+  --from-literal=username=elastic \
+  --from-literal=password="$(openssl rand -base64 12)" \
+  --type=Opaque \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+**Secret Structure**:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elasticsearch-master-credentials
+  namespace: elastic
+type: Opaque
+data:
+  username: <base64-encoded-username>
+  password: <base64-encoded-password>
+```
+
+:::tip Retrieve Password
+Save the generated password for troubleshooting: `kubectl get secret elasticsearch-master-credentials -n elastic -o jsonpath='{.data.password}' | base64 -d`
+:::
+
+### Step 3: Install Elasticsearch Helm Chart
+
+Deploy Elasticsearch using Helm:
+
+<CodeBlock language="bash">
+{`helm upgrade --install elastic elasticsearch/. \\
+  -n elastic \\
+  --values elasticsearch/${props.valuesFileName} \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
+
+### Step 4: Verify Elasticsearch Deployment
+
+Check that Elasticsearch is running:
+
+```bash
+# Check pod status
+kubectl get pods -n elastic
+
+# Check StatefulSet
+kubectl get statefulset -n elastic
+
+# Verify persistent volumes
+kubectl get pvc -n elastic
+```
+
+Expected output:
+
+- Pods should be in `Running` state (typically 3 pods for a cluster)
+- StatefulSet should show desired replicas match ready replicas
+- PVCs should be in `Bound` state
+
+### Step 5: Test Elasticsearch Health
+
+Verify Elasticsearch cluster health:
+
+```bash
+# Port-forward to Elasticsearch
+kubectl port-forward -n elastic svc/elasticsearch-master 9200:9200
+
+# Check cluster health (use saved password from Step 2)
+curl -u elastic:<password> http://localhost:9200/_cluster/health?pretty
+
+# Stop port-forward when done
+```
+
+Expected response should show `"status" : "green"` or `"status" : "yellow"` (yellow is acceptable for single-node clusters).

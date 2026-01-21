@@ -9,7 +9,10 @@ pagination_next: admin/deployment/azure/architecture
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import ClusterRequirements from '../common/\_cluster-requirements.mdx';
+import ClusterRequirements from '../common/deployment/02-prerequisites/\_cluster-requirements.mdx';
+import NetworkRequirements from '../common/deployment/02-prerequisites/\_network-requirements.mdx';
+import DeploymentMachineTools from '../common/deployment/02-prerequisites/\_deployment-machine-tools.mdx';
+import NextSteps from '../common/deployment/02-prerequisites/\_next-steps.mdx';
 
 # Prerequisites
 
@@ -53,64 +56,18 @@ DNS and TLS certificate requirements depend on your access model:
 
 ## Network Requirements
 
-### Outbound Connectivity
-
-Your AKS cluster's Network Security Group (NSG) or firewall must allow **outbound access** to the following endpoints:
-
-| Destination                           | Purpose                                                        |
-| ------------------------------------- | -------------------------------------------------------------- |
-| `europe-west3-docker.pkg.dev`         | AI/Run CodeMie container registry (Google Container Registry)  |
-| `quay.io`                             | Third-party container images                                   |
-| `docker.io`                           | Docker Hub container images                                    |
-| `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
-| Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
-
-:::note Container Registry Access
-AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
-:::
-
-### Inbound Connectivity on Corporate Services
-
-If you plan to integrate AI/Run CodeMie with external corporate services (e.g., GitLab, GitHub, internal APIs):
-
-- Configure the **firewall on your external service** to allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
-- This allows AI/Run CodeMie to make outbound API calls to your external services (e.g., GitLab API, GitHub API, internal services)
-
-:::warning
-The AI/Run CodeMie NAT Gateway public IP address will only be available **after infrastructure deployment**. You will need to configure external service firewalls after the installation is complete.
-:::
-
-### Access Control Network List
-
-To restrict access to AI/Run CodeMie and prevent unauthorized access from the public internet, prepare a list of allowed networks:
-
-- **Corporate network CIDR ranges** from which users will access AI/Run CodeMie
-- **VPN network ranges** if remote users connect via VPN
-- **Office locations** and their public IP addresses or CIDR blocks
-- **Any other trusted networks** that require access to the platform
+<NetworkRequirements clusterName="AKS" networkSecurityName="Network Security Group (NSG) or firewall" natGatewayName="NAT Gateway" />
 
 <ClusterRequirements clusterName="AKS" networkName="VNet" />
 
-## Deployment Machine Requirements
+<DeploymentMachineTools />
 
-### Required Software Tools
+**Cloud-Specific Tools:**
 
-The following tools must be pre-installed and properly configured on your deployment machine (laptop, workstation, or VDI instance):
-
-| Tool                                                                       | Version        | Purpose                                                   |
-| -------------------------------------------------------------------------- | -------------- | --------------------------------------------------------- |
-| [Terraform](https://developer.hashicorp.com/terraform/install)             | `1.5.7`        | Infrastructure as Code provisioning                       |
-| [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)                 | Latest stable  | Kubernetes cluster management                             |
-| [Helm](https://helm.sh/docs/intro/install/)                                | `3.16.0+`      | Kubernetes package management                             |
-| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | Latest         | Azure resource management                                 |
-| [kubelogin](https://azure.github.io/kubelogin/install.html)                | Latest         | AKS authentication plugin                                 |
-| [gcloud CLI](https://cloud.google.com/sdk/docs/install)                    | Latest         | Authentication to AI/Run CodeMie container registry (GCR) |
-| [Docker](https://docs.docker.com/get-started/get-docker/)                  | Latest stable  | Container operations                                      |
-| [natscli](https://github.com/nats-io/natscli#installation)                 | Latest         | NATS messaging CLI                                        |
-| [nsc](https://github.com/nats-io/nsc)                                      | Latest         | NATS security configuration                               |
-| [jq](https://jqlang.org/download/)                                         | Latest         | JSON processing and parsing                               |
-| [curl](https://curl.se/download.html)                                      | Latest         | HTTP requests and file transfers                          |
-| `htpasswd`                                                                 | System package | Password hash generation                                  |
+| Tool                                                                       | Version | Purpose                   |
+| -------------------------------------------------------------------------- | ------- | ------------------------- |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure resource management |
+| [kubelogin](https://azure.github.io/kubelogin/install.html)                | latest  | AKS authentication plugin |
 
 ### Required Repository Access
 
@@ -123,6 +80,4 @@ You will need access to the following repositories to complete the deployment:
 If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
 :::
 
-## Next Steps
-
-Once all prerequisites are met, proceed to the [Architecture Overview](./architecture) to understand the deployment architecture, or continue directly to [Infrastructure Deployment](./infrastructure-deployment) to begin the installation process.
+<NextSteps />

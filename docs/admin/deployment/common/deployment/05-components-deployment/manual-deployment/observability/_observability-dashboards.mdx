@@ -1,0 +1,62 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Kibana Dashboards Installation
+
+Install pre-configured dashboards that provide operational insights into CodeMie performance, usage, and health using the `manage-kibana-dashboards.sh` script.
+
+### Option 1: Kubernetes Secret Authentication (Recommended)
+
+This method automatically retrieves Elasticsearch credentials from the Kubernetes secret:
+
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}" \\
+  --k8s-auth \\
+  --non-interactive`}
+</CodeBlock>
+
+**Parameters**:
+
+- `--url` - Your Kibana URL (replace `<your-domain>` with your actual domain)
+- `--k8s-auth` - Use Kubernetes secret for authentication
+- `--non-interactive` - Run without prompts (uses `elasticsearch-master-credentials` from `elastic` namespace)
+
+**Example**:
+
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}" \\
+  --k8s-auth \\
+  --non-interactive`}
+</CodeBlock>
+
+### Option 2: Manual Authentication
+
+This method prompts for Elasticsearch credentials interactively:
+
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}"`}
+</CodeBlock>
+
+You'll be prompted to enter the Elasticsearch username and password.
+
+### Verify Dashboard Installation
+
+After running the script:
+
+1. Log in to Kibana
+2. Navigate to **Dashboard** section
+3. You should see pre-configured CodeMie dashboards including:
+   - **AI/Run Adoption** - Platform adoption metrics and user engagement
+   - **CodeMie Assistants Dashboard** - Assistant usage and performance metrics
+   - **CodeMie Datasource Observability** - Data source indexing and query performance
+   - **CodeMie Workflow Usage** - Workflow execution metrics and analytics
+
+### Additional Options
+
+For more configuration options and help:
+
+```bash
+bash ./kibana-dashboards/manage-kibana-dashboards.sh --help
+```

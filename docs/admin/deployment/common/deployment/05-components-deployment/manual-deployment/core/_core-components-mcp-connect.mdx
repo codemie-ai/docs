@@ -1,0 +1,42 @@
+## MCP Connect Installation
+
+MCP Connect implements the Model Context Protocol, enabling CodeMie to integrate with AI models and external tooling.
+
+### Step 1: Install MCP Connect Helm Chart
+
+Deploy MCP Connect:
+
+```bash
+helm upgrade --install codemie-mcp-connect-service \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-mcp-connect-service \
+  --version x.y.z \
+  --namespace codemie \
+  -f ./codemie-mcp-connect-service/values.yaml \
+  --wait \
+  --timeout 600s
+```
+
+:::tip Version Number
+Use the same version number you retrieved in the Getting Started section.
+:::
+
+### Step 2: Verify MCP Connect Deployment
+
+Check that MCP Connect is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep mcp-connect
+
+# Check deployment
+kubectl get deployment -n codemie codemie-mcp-connect-service
+
+# Check logs
+kubectl logs -n codemie deployment/codemie-mcp-connect-service --tail=50
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should indicate successful startup

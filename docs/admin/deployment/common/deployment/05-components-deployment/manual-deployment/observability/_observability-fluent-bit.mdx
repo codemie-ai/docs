@@ -1,0 +1,76 @@
+## Fluent Bit Installation
+
+Fluent Bit collects and forwards data to Elasticsearch for monitoring and analysis. The default configuration collects two types of data:
+
+**1. User Metrics (Mandatory)**
+
+Collects structured usage metrics from CodeMie application pods, including:
+
+- User activity and engagement patterns
+- AI model usage and token consumption
+- API request metrics and performance data
+- Cost tracking and resource utilization
+
+These metrics are required for Kibana dashboards and usage analytics. They are stored in the `codemie_metrics_logs` index.
+
+**2. Infrastructure Logs (Optional)**
+
+Collects application logs from the following namespaces:
+
+- `codemie` - Core application logs
+- `oauth2-proxy` - Authentication proxy logs
+- `security` - Keycloak and security components
+- `elastic` - Elasticsearch and Kibana logs
+- `ingress-nginx` - Ingress controller logs
+
+These logs are stored in the `codemie_infra_logs` index for troubleshooting and operational insights.
+
+:::info Using External Logging System?
+If you have an existing logging solution (CloudWatch, Stackdriver, Splunk, etc.), you can disable infrastructure log collection by removing the first `[INPUT]` section (tagged `kube.codemie-infra.*`) and its corresponding `[OUTPUT]` section from `fluent-bit/values.yaml`. User metrics collection must remain enabled for Kibana dashboards to function.
+:::
+
+### Step 1: Create Fluent Bit Namespace
+
+Create a dedicated namespace for Fluent Bit:
+
+```bash
+kubectl create namespace fluentbit
+```
+
+### Step 2: Copy Elasticsearch Credentials
+
+Fluent Bit needs Elasticsearch credentials to forward logs. Copy the credentials:
+
+```bash
+kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
+  sed '/namespace:/d' | \
+  kubectl apply -n fluentbit -f -
+```
+
+### Step 3: Install Fluent Bit Helm Chart
+
+Deploy Fluent Bit:
+
+```bash
+helm upgrade --install fluent-bit fluent-bit/. \
+  -n fluentbit \
+  --values fluent-bit/values.yaml \
+  --wait \
+  --timeout 900s \
+  --dependency-update
+```
+
+### Step 4: Verify Fluent Bit Deployment
+
+Check that Fluent Bit is running:
+
+```bash
+# Check DaemonSet
+kubectl get daemonset -n fluentbit
+
+# Check pods (should be one per node)
+kubectl get pods -n fluentbit
+
+# Check logs
+kubectl logs -n fluentbit daemonset/fluent-bit --tail=50
+```

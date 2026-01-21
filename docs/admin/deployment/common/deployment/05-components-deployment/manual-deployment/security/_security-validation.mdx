@@ -1,0 +1,25 @@
+## Post-Installation Validation
+
+After completing all security component installations, verify the following:
+
+```bash
+# Keycloak Operator is running
+kubectl get pods -n security | grep keycloak-operator
+
+# Keycloak is running
+kubectl get keycloak -n security
+kubectl get pods -n security | grep keycloak
+
+# OAuth2 Proxy is running
+kubectl get pods -n oauth2-proxy | grep Running
+
+# All secrets exist
+kubectl get secret keycloak-admin -n security
+kubectl get secret oauth2-proxy -n oauth2-proxy
+```
+
+All checks should return successful results before proceeding.
+
+## Next Steps
+
+Once security and identity components are configured, proceed to **[Plugin Engine](./plugin-engine)** installation to deploy NATS messaging infrastructure.

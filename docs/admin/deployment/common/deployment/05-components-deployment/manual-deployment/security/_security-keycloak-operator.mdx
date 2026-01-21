@@ -1,0 +1,50 @@
+## Keycloak Operator Installation
+
+The Keycloak Operator manages the Keycloak deployment lifecycle, handling updates, scaling, and configuration management.
+
+### Step 1: Create Security Namespace and Admin Secret
+
+Create a dedicated namespace for security components and generate Keycloak admin credentials:
+
+```bash
+# Create namespace
+kubectl create namespace security
+
+# Create admin secret with random password
+kubectl -n security create secret generic keycloak-admin \
+  --from-literal=username=admin \
+  --from-literal=password="$(openssl rand -base64 12)" \
+  --type=Opaque \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+### Step 2: Install Keycloak Operator Helm Chart
+
+Deploy the Keycloak Operator:
+
+```bash
+helm upgrade --install keycloak-operator-helm keycloak-operator-helm/. \
+  -n security \
+  --create-namespace \
+  --values keycloak-operator-helm/values.yaml \
+  --wait \
+  --timeout 900s \
+  --dependency-update
+```
+
+### Step 3: Verify Keycloak Operator Deployment
+
+Check that the operator is running:
+
+```bash
+# Check pod status
+kubectl get pods -n security
+
+# Check operator logs
+kubectl logs -n security deployment/keycloak-operator --tail=50
+```
+
+Expected output:
+
+- Operator pod should be in `Running` state
+- Logs should indicate successful controller startup

@@ -1,0 +1,62 @@
+import CodeBlock from '@theme/CodeBlock';
+
+## Keycloak Installation
+
+Keycloak provides centralized authentication and user management for AI/Run CodeMie.
+
+### Step 1: Configure Domain Name
+
+Fill in values in `keycloak-helm/values-gcp.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+
+:::tip Domain Configuration
+If you followed the Getting Started steps in the [overview](./), this should already be configured.
+:::
+
+### Step 2: Install Keycloak Helm Chart
+
+Deploy Keycloak using Helm:
+
+<CodeBlock language="bash">
+{`helm upgrade --install keycloak keycloak-helm/. \\
+  -n security \\
+  --values keycloak-helm/${props.valuesFileName} \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
+
+### Step 3: Verify Keycloak Deployment
+
+Check that Keycloak is running:
+
+```bash
+# Check Keycloak custom resource
+kubectl get keycloak -n security
+
+# Check Keycloak pods
+kubectl get pods -n security | grep keycloak
+
+# Check Keycloak logs
+kubectl logs -n security deployment/keycloak --tail=50
+```
+
+Expected output:
+
+- Keycloak custom resource should show `Ready` status
+- Keycloak pods should be in `Running` state
+- Logs should indicate successful startup
+
+### Step 4: Access Keycloak Admin Console
+
+Keycloak Admin UI can be accessed at:
+
+{props.keycloakUrl}
+
+**Login Credentials**:
+
+- Username: `admin`
+- Password: Retrieved from secret (Step 1 of Keycloak Operator section)
+
+:::tip First Login
+You may need to wait 1-2 minutes after deployment for Keycloak to be fully ready. If the admin console is not immediately accessible, wait and try again.
+:::

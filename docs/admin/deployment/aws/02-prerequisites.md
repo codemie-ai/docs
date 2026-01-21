@@ -9,6 +9,10 @@ pagination_next: admin/deployment/aws/architecture
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import NetworkRequirements from '../common/deployment/02-prerequisites/\_network-requirements.mdx';
+import ClusterRequirements from '../common/deployment/02-prerequisites/\_cluster-requirements.mdx';
+import DeploymentMachineTools from '../common/deployment/02-prerequisites/\_deployment-machine-tools.mdx';
+import NextSteps from '../common/deployment/02-prerequisites/\_next-steps.mdx';
 
 # Prerequisites
 
@@ -42,119 +46,17 @@ AI/Run CodeMie requires proper DNS and TLS certificate configuration:
 DNS and certificate provisioning is fully automated through Terraform when using AI/Run CodeMie-managed infrastructure. You only need to provide the hosted zone. However, if you're using self-provisioned infrastructure, you will need to handle DNS records and certificates for it.
 :::
 
-### Outbound Connectivity
+<NetworkRequirements clusterName="EKS" networkSecurityName="Security Groups and Network ACLs" natGatewayName="NAT Gateway" />
 
-Your EKS cluster's Security Groups and Network ACLs must allow **outbound access** to the following endpoints:
+<ClusterRequirements clusterName="EKS" networkName="VPC" />
 
-| Destination                           | Purpose                                                        |
-| ------------------------------------- | -------------------------------------------------------------- |
-| `europe-west3-docker.pkg.dev`         | AI/Run CodeMie container registry (Google Container Registry)  |
-| `quay.io`                             | Third-party container images                                   |
-| `docker.io`                           | Docker Hub container images                                    |
-| `registry.developers.crunchydata.com` | PostgreSQL operator images                                     |
-| Your integration services             | GitLab, GitHub, or other services you plan to use with CodeMie |
+<DeploymentMachineTools />
 
-:::note Container Registry Access
-AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
-:::
+**Cloud-Specific Tools:**
 
-### Inbound Connectivity on Corporate Services
-
-If you plan to integrate AI/Run CodeMie with external corporate services (e.g., GitLab, GitHub, internal APIs):
-
-- Configure the **firewall on your external service** to allow inbound traffic from the AI/Run CodeMie NAT Gateway public IP address
-- This allows AI/Run CodeMie to make outbound API calls to your external services (e.g., GitLab API, GitHub API, internal services)
-
-:::warning
-The AI/Run CodeMie NAT Gateway public IP address will only be available **after infrastructure deployment**. You will need to configure external service firewalls after the installation is complete.
-:::
-
-### Access Control Network List
-
-To restrict access to AI/Run CodeMie and prevent unauthorized access from the public internet, prepare a list of allowed networks:
-
-- **Corporate network CIDR ranges** from which users will access AI/Run CodeMie
-- **VPN network ranges** if remote users connect via VPN
-- **Office locations** and their public IP addresses or CIDR blocks
-- **Any other trusted networks** that require access to the platform
-
-## EKS Cluster Requirements
-
-### Administrative Permissions
-
-The deployment user must have:
-
-- **EKS Admin permissions** with the ability to create and manage namespaces
-- Access to configure cluster-level resources (if deploying to an existing cluster)
-
-### Admission Control and Resource Requirements
-
-If deploying to an **existing EKS cluster**, ensure that admission webhooks allow the creation of the following Kubernetes resources:
-
-<Tabs>
-  <TabItem value="nats" label="NATS Messaging" default>
-    **Kubernetes API:** `Service` (LoadBalancer type)
-
-    **Purpose:** NATS is a core component of the CodeMie Plugin Engine, providing messaging infrastructure for communication between the [codemie-plugins](https://pypi.org/project/codemie-plugins/) CLI tool with MCP and the AI/Run CodeMie platform.
-
-    The LoadBalancer configuration depends on where the CLI tool will be executed:
-
-    | CLI Tool Execution Location | LoadBalancer Type | Description |
-    |----------------|------------------|-------------|
-    | Same VPC as EKS | Internal LoadBalancer | Secure, private network communication within the VPC |
-    | External to EKS VPC | Public LoadBalancer | Cross-network communication when CLI is run outside the VPC |
-
-  </TabItem>
-
-  <TabItem value="keycloak" label="Keycloak Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, `Role`, `RoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages Keycloak configuration including realms, clients, and user federation
-
-    :::note
-    Requires cluster-wide permissions for identity and access management operations.
-    :::
-
-  </TabItem>
-
-  <TabItem value="postgresql" label="PostgreSQL Operator">
-    **Kubernetes APIs:** `ClusterRole`, `ClusterRoleBinding`, Custom Resource Definitions (CRDs), Custom Resources (CRs)
-
-    **Purpose:** Manages PostgreSQL database instances and their lifecycle
-
-    :::note
-    Requires cluster-wide permissions for database provisioning and management.
-    :::
-
-  </TabItem>
-
-  <TabItem value="security" label="Security Context">
-    **Kubernetes API:** `Pod` with `securityContext`
-
-    **Requirement:** All AI/Run CodeMie components require `readOnlyRootFilesystem: false` in their security context for proper operation
-
-  </TabItem>
-</Tabs>
-
-## Deployment Machine Requirements
-
-### Required Software Tools
-
-The following tools must be pre-installed and properly configured on your deployment machine (laptop, workstation, or VDI instance):
-
-| Tool                                                                                         | Version        | Purpose                                                   |
-| -------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------- |
-| [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) | `1.5.7`        | Infrastructure as Code provisioning                       |
-| [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)                                   | Latest stable  | Kubernetes cluster management                             |
-| [Helm](https://helm.sh/docs/intro/install/)                                                  | `3.16.0+`      | Kubernetes package management                             |
-| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)     | Latest         | AWS resource management                                   |
-| [gcloud CLI](https://cloud.google.com/sdk/docs/install)                                      | Latest         | Authentication to AI/Run CodeMie container registry (GCR) |
-| [Docker](https://docs.docker.com/get-started/get-docker/)                                    | Latest stable  | Container operations                                      |
-| [natscli](https://github.com/nats-io/natscli#installation)                                   | Latest         | NATS messaging CLI                                        |
-| [nsc](https://github.com/nats-io/nsc)                                                        | Latest         | NATS security configuration                               |
-| [jq](https://jqlang.org/download/)                                                           | Latest         | JSON processing and parsing                               |
-| [curl](https://curl.se/download.html)                                                        | Latest         | HTTP requests and file transfers                          |
-| `htpasswd`                                                                                   | System package | Password hash generation                                  |
+| Tool                                                                                     | Version | Purpose                 |
+| ---------------------------------------------------------------------------------------- | ------- | ----------------------- |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | latest  | AWS resource management |
 
 ### Required Repository Access
 
@@ -169,6 +71,4 @@ You will need access to the following repositories to complete the deployment:
 If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
 :::
 
-## Next Steps
-
-Once all prerequisites are met, proceed to the [Architecture Overview](./architecture) to understand the deployment architecture, or continue directly to [Infrastructure Deployment](./infrastructure-deployment) to begin the installation process.
+<NextSteps />

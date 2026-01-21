@@ -1,0 +1,38 @@
+## Mermaid Server Installation
+
+Mermaid Server provides diagram rendering capabilities for visualizing workflows, architecture diagrams, and process flows.
+
+### Step 1: Install Mermaid Server Helm Chart
+
+Deploy Mermaid Server:
+
+```bash
+helm upgrade --install mermaid-server \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/mermaid-server \
+  --version x.y.z \
+  --namespace codemie \
+  -f ./mermaid-server/values.yaml \
+  --wait \
+  --timeout 600s
+```
+
+### Step 2: Verify Mermaid Server Deployment
+
+Check that Mermaid Server is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep mermaid-server
+
+# Check deployment
+kubectl get deployment -n codemie mermaid-server
+
+# Check logs
+kubectl logs -n codemie deployment/mermaid-server --tail=50
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should indicate successful HTTP server startup

@@ -1,0 +1,20 @@
+## Post-Installation Validation
+
+After completing this step, verify the following:
+
+```bash
+# Ingress controller is running
+kubectl get pods -n ingress-nginx | grep Running
+
+# Load balancer has IP assigned
+kubectl get svc -n ingress-nginx ingress-nginx-controller
+
+# Storage class is available
+kubectl get storageclass
+```
+
+All checks should return successful results before proceeding.
+
+## Next Steps
+
+Once storage and ingress are configured, proceed to **[Data Layer](./data-layer)** installation to deploy Elasticsearch, Kibana, and PostgreSQL components.

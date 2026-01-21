@@ -1,0 +1,106 @@
+---
+id: core-components
+sidebar_position: 5
+title: AI/Run CodeMie Core Components
+sidebar_label: Core Components
+---
+
+import CoreComponentsOverview from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-overview.mdx';
+import CoreComponentsMcpConnect from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-mcp-connect.mdx';
+import CoreComponentsMermaid from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-mermaid.mdx';
+import CoreComponentsUi from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-ui.mdx';
+import CoreComponentsAccess from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-access.mdx';
+import CoreComponentsValidation from '../../../common/deployment/05-components-deployment/manual-deployment/core/_core-components-validation.mdx';
+
+<CoreComponentsOverview />
+
+<CoreComponentsMcpConnect />
+
+<CoreComponentsMermaid />
+
+<CoreComponentsUi cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
+
+## CodeMie API Installation
+
+CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
+
+### Step 1: Configure API Values
+
+The domain configuration should already be set from the Getting Started section. Verify the values in `codemie-api/values-gcp.yaml` are correct:
+
+- `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
+- `%%GOOGLE_PROJECT_ID%%` should be replaced with your GCP project ID where Vertex AI is available
+- `%%GOOGLE_KMS_PROJECT_ID%%` should be replaced with your GCP project ID where KMS key is available
+- `%%GOOGLE_REGION%%` should be replaced with your GCP region (e.g., `europe-west3`)
+- `%%GOOGLE_KMS_REGION%%` should be replaced with your GCP KMS region (e.g., `europe-west3`)
+
+:::tip Domain Configuration
+If you followed the Getting Started steps, these replacements should already be done.
+:::
+
+### Step 2: Copy Elasticsearch Credentials
+
+CodeMie API needs access to Elasticsearch. Copy the credentials to the codemie namespace:
+
+```bash
+kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
+  sed '/namespace:/d' | \
+  kubectl apply -n codemie -f -
+```
+
+### Step 3: Create Google Service Account Secret
+
+Create the secret with the GCP service account key for Vertex AI and KMS access:
+
+```bash
+kubectl create secret generic google-service-account \
+  --namespace codemie \
+  --from-file=gcp-service-account.json=codemie-gsa-key.json
+```
+
+:::warning Service Account Key
+Ensure the `codemie-gsa-key.json` file exists in your current directory. This key was created during the Getting Started steps and grants access to Vertex AI and Cloud KMS.
+:::
+
+### Step 4: Install CodeMie API Helm Chart
+
+Deploy CodeMie API:
+
+```bash
+helm upgrade --install codemie-api \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
+  --version x.y.z \
+  --namespace codemie \
+  -f ./codemie-api/values-gcp.yaml \
+  --wait \
+  --timeout 600s
+```
+
+### Step 5: Verify CodeMie API Deployment
+
+Check that CodeMie API is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep codemie-api
+
+# Check deployment
+kubectl get deployment -n codemie codemie-api
+
+# Check logs
+kubectl logs -n codemie deployment/codemie-api --tail=100
+
+# Check API health endpoint
+kubectl exec -n codemie deployment/codemie-api -- curl -s http://localhost:8080/health
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should show successful connections to all dependencies
+- Health endpoint should return healthy status
+
+<CoreComponentsAccess />
+
+<CoreComponentsValidation />
