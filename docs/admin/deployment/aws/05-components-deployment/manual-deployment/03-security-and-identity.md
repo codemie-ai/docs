@@ -20,21 +20,12 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakInstall
   cloudName="aws"
   cloudProvider="AWS"
-  domainConfigStep=""
-  installStepNumber="1"
-  verifyStepNumber="2"
-  accessStepNumber="3"
-  databaseInfo=" including RDS PostgreSQL connection"
-  keycloakUrl="https://keycloak.<your-domain>/auth/admin"
-  keycloakExample="`https://keycloak.codemie.example.com/auth/admin`"
+  keycloakUrl="https://keycloak.codemie.example.com/auth/admin"
 />
 
 <SecurityOauth2Proxy
   cloudName="aws"
   cloudProvider="AWS"
-  domainConfigStep=""
-  installStepNumber="4"
-  verifyStepNumber="5"
 />
 
 <SecurityValidation />

@@ -18,17 +18,6 @@ kubectl -n security create secret generic keycloak-admin \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 
-**Command Breakdown**:
-
-- `--from-literal=username=admin` - Sets Keycloak admin username
-- `--from-literal=password="$(openssl rand -base64 12)"` - Generates random 12-character password
-- `--dry-run=client -o yaml` - Creates YAML without applying
-- `kubectl apply -f -` - Applies the generated secret (idempotent)
-
-:::tip Retrieve Admin Password
-Save the admin password for later use: `kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | base64 -d`
-:::
-
 ### Step 2: Install Keycloak Operator Helm Chart
 
 Deploy the Keycloak Operator:
@@ -42,13 +31,6 @@ helm upgrade --install keycloak-operator-helm keycloak-operator-helm/. \
   --timeout 900s \
   --dependency-update
 ```
-
-**Command Breakdown**:
-
-- `keycloak-operator-helm` - Release name
-- `-n security` - Deploys to the security namespace
-- `--create-namespace` - Creates namespace if it doesn't exist
-- `--values keycloak-operator-helm/values.yaml` - Uses operator-specific configuration
 
 ### Step 3: Verify Keycloak Operator Deployment
 

@@ -7,24 +7,10 @@ pagination_prev: admin/deployment/azure/components-deployment/manual-deployment/
 pagination_next: admin/deployment/azure/components-deployment/manual-deployment/core-components
 ---
 
-import TLSConfiguration from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_nats-tls-configuration.mdx';
 import PluginEngineContent from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_plugin-engine-content.mdx';
-
-# Plugin Engine Installation
-
-This guide covers the installation of the messaging infrastructure that enables connecting MCP servers and plugins running somewhere else to CodeMie agents.
 
 <PluginEngineContent
   cloudName="Azure"
   natsUrl="nats://codemie-nats:443"
   valuesFileName="values-azure.yaml"
-  authStepContent=""
-  installStepNumber="1"
-  verifyStepNumber="2"
-  gettingStartedLink="./#step-4-get-latest-codemie-version"
-/>
-
-<TLSConfiguration
-  cloudName="azure"
-  scenario1Description="TLS is handled by Azure Application Gateway with TLS certificate on the gateway itself."
 />

@@ -25,12 +25,6 @@ kubectl create secret generic oauth2-proxy \
   --type=Opaque
 ```
 
-**Command Breakdown**:
-
-- `client-id='codemie'` - OAuth2 client ID matching Keycloak configuration
-- `client-secret="$(openssl rand -base64 12)"` - Generates random client secret
-- `cookie-secret=$(...)` - Generates URL-safe base64-encoded 32-byte secret for cookie encryption
-
 **Secret Structure**:
 
 ```yaml
@@ -60,15 +54,15 @@ kubectl get secret keycloak-admin -n security -o yaml | \
   kubectl apply -n oauth2-proxy -f -
 ```
 
-**Command Breakdown**:
+### Step 4: Configure Domain Name
 
-- `kubectl get secret keycloak-admin -n security -o yaml` - Exports secret as YAML
-- `sed '/namespace:/d'` - Removes namespace field to allow cross-namespace copy
-- `kubectl apply -n oauth2-proxy -f -` - Applies to oauth2-proxy namespace
+Fill in missing values in `oauth2-proxy/values-gcp.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
 
-{props.domainConfigStep}
+:::tip Domain Configuration
+If you followed the Getting Started steps in the [overview](./), this should already be configured.
+:::
 
-### Step {props.installStepNumber}: Install OAuth2 Proxy Helm Chart
+### Step 5: Install OAuth2 Proxy Helm Chart
 
 Deploy OAuth2 Proxy:
 
@@ -81,13 +75,7 @@ Deploy OAuth2 Proxy:
   --dependency-update`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `oauth2-proxy` - Release name
-- `-n oauth2-proxy` - Deploys to the oauth2-proxy namespace
-- <code>--values oauth2-proxy/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
-
-### Step {props.verifyStepNumber}: Verify OAuth2 Proxy Deployment
+### Step 6: Verify OAuth2 Proxy Deployment
 
 Check that OAuth2 Proxy is running:
 

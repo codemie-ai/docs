@@ -4,9 +4,15 @@ import CodeBlock from '@theme/CodeBlock';
 
 Keycloak provides centralized authentication and user management for AI/Run CodeMie.
 
-{props.domainConfigStep}
+### Step 1: Configure Domain Name
 
-### Step {props.installStepNumber}: Install Keycloak Helm Chart
+Fill in values in `keycloak-helm/values-gcp.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+
+:::tip Domain Configuration
+If you followed the Getting Started steps in the [overview](./), this should already be configured.
+:::
+
+### Step 2: Install Keycloak Helm Chart
 
 Deploy Keycloak using Helm:
 
@@ -19,13 +25,7 @@ Deploy Keycloak using Helm:
   --dependency-update`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `keycloak` - Release name
-- `-n security` - Deploys to the security namespace
-- <code>--values keycloak-helm/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration{props.databaseInfo}
-
-### Step {props.verifyStepNumber}: Verify Keycloak Deployment
+### Step 3: Verify Keycloak Deployment
 
 Check that Keycloak is running:
 
@@ -46,15 +46,11 @@ Expected output:
 - Keycloak pods should be in `Running` state
 - Logs should indicate successful startup
 
-### Step {props.accessStepNumber}: Access Keycloak Admin Console
+### Step 4: Access Keycloak Admin Console
 
 Keycloak Admin UI can be accessed at:
 
 {props.keycloakUrl}
-
-**Example URLs**:
-
-- {props.keycloakExample}
 
 **Login Credentials**:
 

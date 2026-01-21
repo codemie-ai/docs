@@ -20,21 +20,12 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakInstall
   cloudName="azure"
   cloudProvider="Azure"
-  domainConfigStep=""
-  installStepNumber="1"
-  verifyStepNumber="2"
-  accessStepNumber="3"
-  databaseInfo=" including PostgreSQL connection"
-  keycloakUrl="https://<your-domain>/keycloak/admin"
-  keycloakExample="`https://codemie.example.com/keycloak/admin`"
+  keycloakUrl="https://codemie.example.com/keycloak/admin"
 />
 
 <SecurityOauth2Proxy
   cloudName="azure"
   cloudProvider="Azure"
-  domainConfigStep=""
-  installStepNumber="4"
-  verifyStepNumber="5"
 />
 
 <SecurityValidation />

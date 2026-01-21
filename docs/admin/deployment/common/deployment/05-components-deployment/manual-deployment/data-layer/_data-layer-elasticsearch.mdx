@@ -28,13 +28,6 @@ kubectl -n elastic create secret generic elasticsearch-master-credentials \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
 
-**Command Breakdown**:
-
-- `--from-literal=username=elastic` - Default Elasticsearch superuser
-- `--from-literal=password="$(openssl rand -base64 12)"` - Generates random 12-character password
-- `--dry-run=client -o yaml` - Creates YAML without applying
-- `kubectl apply -f -` - Applies the generated secret (idempotent)
-
 **Secret Structure**:
 
 ```yaml
@@ -65,14 +58,6 @@ Deploy Elasticsearch using Helm:
   --timeout 900s \\
   --dependency-update`}
 </CodeBlock>
-
-**Command Breakdown**:
-
-- `upgrade --install elastic` - Installs or upgrades release named "elastic"
-- `-n elastic` - Deploys to the elastic namespace
-- <code>--values elasticsearch/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
-- `--wait` - Waits for all resources to be ready
-- `--timeout 900s` - Maximum wait time (15 minutes)
 
 ### Step 4: Verify Elasticsearch Deployment
 

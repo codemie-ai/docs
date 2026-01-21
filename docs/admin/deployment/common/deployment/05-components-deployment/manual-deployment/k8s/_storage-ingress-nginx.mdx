@@ -29,15 +29,6 @@ Deploy the Nginx Ingress Controller using Helm:
   --dependency-update`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `upgrade --install` - Installs or upgrades if already exists (idempotent)
-- `-n ingress-nginx` - Deploys to the ingress-nginx namespace
-- <code>--values ingress-nginx/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
-- `--wait` - Waits for all resources to be ready
-- `--timeout 900s` - Maximum wait time (15 minutes)
-- `--dependency-update` - Updates chart dependencies before installation
-
 :::warning
 Do not interrupt the process.
 :::

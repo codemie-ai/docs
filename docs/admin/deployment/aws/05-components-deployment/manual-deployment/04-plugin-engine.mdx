@@ -7,24 +7,10 @@ pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/ma
 pagination_next: admin/deployment/aws/components-deployment/manual-deployment/core-components
 ---
 
-import TLSConfiguration from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_nats-tls-configuration.mdx';
 import PluginEngineContent from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_plugin-engine-content.mdx';
-
-# Plugin Engine Installation
-
-This guide covers the installation of the messaging infrastructure that enables connecting MCP servers and plugins running somewhere else to CodeMie agents.
 
 <PluginEngineContent
   cloudName="AWS"
   natsUrl="nats://codemie-nats:4222"
   valuesFileName="values-aws.yaml"
-  authStepContent=""
-  installStepNumber="1"
-  verifyStepNumber="2"
-  gettingStartedLink="./#step-5-get-latest-codemie-version"
-/>
-
-<TLSConfiguration
-  cloudName="aws"
-  scenario1Description="TLS is handled by NLB (Network Load Balancer) with TLS certificate on the load balancer itself."
 />

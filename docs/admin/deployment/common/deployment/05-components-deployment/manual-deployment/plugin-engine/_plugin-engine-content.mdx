@@ -1,6 +1,10 @@
 import CodeBlock from '@theme/CodeBlock';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Overview
+
+This guide covers the installation of the messaging infrastructure that enables connecting MCP servers and plugins running externally to AI/Run CodeMie infrastructure.
 
 The plugin engine consists of two components:
 
@@ -145,13 +149,6 @@ Deploy NATS using the official Helm chart:
   --timeout 900s`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `codemie-nats` - Release name
-- `nats/nats --version 1.2.6` - Uses NATS official chart version 1.2.6
-- `--namespace codemie` - Deploys to codemie namespace
-- <code>--values ./codemie-nats/{props.valuesFileName}</code> - Uses {props.cloudName}-specific configuration
-
 ### Step 4: Verify NATS Deployment
 
 Check that NATS is running:
@@ -177,9 +174,23 @@ Expected output:
 
 NATS Auth Callout validates authentication and authorization for NATS connections to CodeMie.
 
-{props.authStepContent}
+### Step 1: Authenticate to Container Registry
 
-### Step {props.installStepNumber}: Install NATS Auth Callout Helm Chart
+Before deploying NATS Auth Callout, authenticate to the AI/Run CodeMie container registry:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
+```
+
+:::tip Registry Authentication
+This step is required for all AI/Run CodeMie proprietary components: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+If you already authenticated during the Getting Started steps, you can skip this.
+:::
+
+### Step 2: Install NATS Auth Callout Helm Chart
 
 Deploy the NATS Auth Callout service:
 
@@ -193,19 +204,7 @@ Deploy the NATS Auth Callout service:
   --timeout 600s`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `codemie-nats-auth-callout` - Release name
-- `oci://europe-west3-docker.pkg.dev/...` - OCI registry URL for CodeMie Helm charts
-- `--version "x.y.z"` - Replace with the CodeMie version you're deploying
-- `--namespace codemie` - Deploys to codemie namespace
-- <code>-f ./codemie-nats-auth-callout/{props.valuesFileName}</code> - Uses {props.cloudName}-specific configuration
-
-:::tip Version Number
-Use the same version number you retrieved in the <a href={props.gettingStartedLink}>Getting Started</a> section.
-:::
-
-### Step {props.verifyStepNumber}: Verify NATS Auth Callout Deployment
+### Step 3: Verify NATS Auth Callout Deployment
 
 Check that the auth callout service is running:
 
@@ -225,6 +224,133 @@ Expected output:
 - Pod should be in `Running` state
 - Deployment should show ready replicas
 - Logs should indicate successful connection to NATS
+
+## TLS Configuration
+
+Choose the appropriate scenario based on your deployment architecture:
+
+<Tabs groupId="tls-scenario">
+  <TabItem value="lb-termination" label="TLS Termination on Load Balancer" default>
+
+### Load Balancer TLS Termination
+
+TLS is handled by Network Load Balancer with TLS certificate on the load balancer itself.
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+params:
+  conf: |
+    tls: {}
+    allow_non_tls: true
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "false"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "0"
+```
+
+**Plugin URL Format**:
+
+```
+tls://<domain>:<port>
+```
+
+:::info
+The `tls://` prefix forces plugins to perform TLS handshake first, which is essential because the load balancer expects TLS negotiation before any NATS protocol communication.
+:::
+
+  </TabItem>
+  <TabItem value="no-tls" label="No TLS (Local)">
+
+### No TLS (Local envs only)
+
+Plain text communication without encryption.
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+params:
+  conf: |
+    tls: {}
+    allow_non_tls: true
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "false"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "0"
+```
+
+**Plugin URL Format**:
+
+```
+nats://<domain>:<port>
+```
+
+  </TabItem>
+  <TabItem value="nats-tls" label="Termination on Ingress">
+
+### NATS-Managed TLS
+
+NATS server handles TLS with its own certificate.
+
+**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+
+```yaml
+nats:
+  tls:
+    enabled: true
+    secretName: codemie-nats-tls
+  merge:
+    timeout: 10
+```
+
+**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+
+```yaml
+extraEnv:
+  - name: NATS_SKIP_TLS_VERIFY
+    value: "true"
+```
+
+**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+
+```yaml
+env:
+  - name: SKIPTLSVERIFY
+    value: "1"
+```
+
+**Plugin URL Format**:
+
+```
+nats://<domain>:<port>
+```
+
+  </TabItem>
+</Tabs>
 
 ## Post-Installation Validation
 

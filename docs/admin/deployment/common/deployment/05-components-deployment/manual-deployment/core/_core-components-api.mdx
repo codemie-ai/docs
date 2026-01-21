@@ -39,14 +39,6 @@ Deploy CodeMie API:
   --timeout 600s`}
 </CodeBlock>
 
-**Command Breakdown**:
-
-- `codemie-api` - Release name
-- Chart name is `codemie` (the main backend chart)
-- `--version x.y.z` - Replace with your CodeMie version
-- `--namespace codemie` - Deploys to codemie namespace
-- <code>-f ./codemie-api/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
-
 ### Step 4: Verify CodeMie API Deployment
 
 Check that CodeMie API is running:

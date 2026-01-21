@@ -7,45 +7,10 @@ pagination_prev: admin/deployment/gcp/components-deployment/manual-deployment/ma
 pagination_next: admin/deployment/gcp/components-deployment/manual-deployment/core-components
 ---
 
-import TLSConfiguration from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_nats-tls-configuration.mdx';
 import PluginEngineContent from '../../../common/deployment/05-components-deployment/manual-deployment/plugin-engine/_plugin-engine-content.mdx';
-
-# Plugin Engine Installation
-
-This guide covers the installation of the messaging infrastructure that enables connecting MCP servers and plugins running somewhere else to CodeMie agents.
-
-export const GCPAuthStep = () => (
-  <>
-    ### Step 1: Authenticate to Container Registry
-
-    Before deploying NATS Auth Callout, authenticate to the AI/Run CodeMie container registry:
-
-    ```bash
-    export GOOGLE_APPLICATION_CREDENTIALS=key.json
-    gcloud auth application-default print-access-token | \
-      helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
-    ```
-
-    :::tip Registry Authentication
-    This step is required for all AI/Run CodeMie proprietary components: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
-
-    If you already authenticated during the Getting Started steps, you can skip this.
-    :::
-
-  </>
-);
 
 <PluginEngineContent
   cloudName="GCP"
   natsUrl="nats://codemie-nats:4222"
   valuesFileName="values-gcp.yaml"
-  authStepContent={<GCPAuthStep />}
-  installStepNumber="2"
-  verifyStepNumber="3"
-  gettingStartedLink="./#step-4-get-latest-codemie-version"
-/>
-
-<TLSConfiguration
-  cloudName="gcp"
-  scenario1Description="TLS is handled by Google Cloud Load Balancer with TLS certificate on the load balancer itself."
 />
