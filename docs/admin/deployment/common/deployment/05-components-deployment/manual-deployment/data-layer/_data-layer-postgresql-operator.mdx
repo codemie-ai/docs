@@ -2,7 +2,7 @@
 
 The PostgreSQL Operator automates the management of PostgreSQL databases in Kubernetes. While CodeMie uses a cloud-managed {props.postgresServiceName}, the operator is required for Keycloak database configuration.
 
-### Install PostgreSQL Operator Helm Chart
+### Step 1: Install PostgreSQL Operator Helm Chart
 
 Deploy the PostgreSQL Operator:
 
@@ -15,7 +15,7 @@ helm upgrade --install postgres-operator postgres-operator-helm/. \
   --dependency-update
 ```
 
-### Verify PostgreSQL Operator Deployment
+### Step 2: Verify PostgreSQL Operator Deployment
 
 Check that the operator is running:
 
