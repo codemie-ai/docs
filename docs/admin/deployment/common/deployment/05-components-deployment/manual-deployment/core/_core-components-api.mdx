@@ -6,7 +6,7 @@ CodeMie API is the backend service that handles all business logic, AI orchestra
 
 ### Step 1: Configure API Values
 
-The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-api/values-{props.cloudName}.yaml</code> are correct:
+The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-api/{props.valuesFileName}</code> are correct:
 
 - `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
   {props.additionalConfigParams}
@@ -34,7 +34,7 @@ Deploy CodeMie API:
   oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
   --version x.y.z \\
   --namespace codemie \\
-  -f ./codemie-api/values-${props.cloudName}.yaml \\
+  -f ./codemie-api/${props.valuesFileName} \\
   --wait \\
   --timeout 600s`}
 </CodeBlock>

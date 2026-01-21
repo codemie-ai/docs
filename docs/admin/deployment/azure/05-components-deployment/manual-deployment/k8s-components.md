@@ -18,8 +18,8 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
 />
 
 <StorageIngressNginx
-  cloudName="azure"
   cloudProvider="Azure"
+  valuesFileName="values-azure.yaml"
 />
 
 ### Step 4: Configure DNS Record

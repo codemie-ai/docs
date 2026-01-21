@@ -236,7 +236,7 @@ Choose the appropriate scenario based on your deployment architecture:
 
 TLS is handled by Network Load Balancer with TLS certificate on the load balancer itself.
 
-**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+**NATS Helm Values** (<code>codemie-nats/{props.valuesFileName}</code>):
 
 ```yaml
 params:
@@ -245,7 +245,7 @@ params:
     allow_non_tls: true
 ```
 
-**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+**CodeMie API Configuration** (<code>codemie-api/{props.valuesFileName}</code>):
 
 ```yaml
 extraEnv:
@@ -253,7 +253,7 @@ extraEnv:
     value: "false"
 ```
 
-**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+**NATS Auth Callout Configuration** (<code>codemie-nats-auth-callout/{props.valuesFileName}</code>):
 
 ```yaml
 env:
@@ -278,7 +278,7 @@ The `tls://` prefix forces plugins to perform TLS handshake first, which is esse
 
 Plain text communication without encryption.
 
-**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+**NATS Helm Values** (<code>codemie-nats/{props.valuesFileName}</code>):
 
 ```yaml
 params:
@@ -287,7 +287,7 @@ params:
     allow_non_tls: true
 ```
 
-**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+**CodeMie API Configuration** (<code>codemie-api/{props.valuesFileName}</code>):
 
 ```yaml
 extraEnv:
@@ -295,7 +295,7 @@ extraEnv:
     value: "false"
 ```
 
-**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+**NATS Auth Callout Configuration** (<code>codemie-nats-auth-callout/{props.valuesFileName}</code>):
 
 ```yaml
 env:
@@ -316,7 +316,7 @@ nats://<domain>:<port>
 
 NATS server handles TLS with its own certificate.
 
-**NATS Helm Values** (codemie-nats/values-{props.cloudName}.yaml):
+**NATS Helm Values** (<code>codemie-nats/{props.valuesFileName}</code>):
 
 ```yaml
 nats:
@@ -327,7 +327,7 @@ nats:
     timeout: 10
 ```
 
-**CodeMie API Configuration** (codemie-api/values-{props.cloudName}.yaml):
+**CodeMie API Configuration** (<code>codemie-api/{props.valuesFileName}</code>):
 
 ```yaml
 extraEnv:
@@ -335,7 +335,7 @@ extraEnv:
     value: "true"
 ```
 
-**NATS Auth Callout Configuration** (codemie-nats-auth-callout/values-{props.cloudName}.yaml):
+**NATS Auth Callout Configuration** (<code>codemie-nats-auth-callout/{props.valuesFileName}</code>):
 
 ```yaml
 env:

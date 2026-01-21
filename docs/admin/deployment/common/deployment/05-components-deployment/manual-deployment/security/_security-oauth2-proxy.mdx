@@ -69,7 +69,7 @@ Deploy OAuth2 Proxy:
 <CodeBlock language="bash">
 {`helm upgrade --install oauth2-proxy oauth2-proxy/. \\
   -n oauth2-proxy \\
-  --values oauth2-proxy/values-${props.cloudName}.yaml \\
+  --values oauth2-proxy/${props.valuesFileName} \\
   --wait \\
   --timeout 900s \\
   --dependency-update`}

@@ -18,14 +18,14 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakOperator />
 
 <SecurityKeycloakInstall
-  cloudName="azure"
   cloudProvider="Azure"
+  valuesFileName="values-azure.yaml"
   keycloakUrl="https://codemie.example.com/keycloak/admin"
 />
 
 <SecurityOauth2Proxy
-  cloudName="azure"
   cloudProvider="Azure"
+  valuesFileName="values-azure.yaml"
 />
 
 <SecurityValidation />

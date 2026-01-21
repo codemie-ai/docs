@@ -53,7 +53,7 @@ Deploy Elasticsearch using Helm:
 <CodeBlock language="bash">
 {`helm upgrade --install elastic elasticsearch/. \\
   -n elastic \\
-  --values elasticsearch/values-${props.cloudName}.yaml \\
+  --values elasticsearch/${props.valuesFileName} \\
   --wait \\
   --timeout 900s \\
   --dependency-update`}

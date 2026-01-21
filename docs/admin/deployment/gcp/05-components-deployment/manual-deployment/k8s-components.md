@@ -16,8 +16,8 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
 />
 
 <StorageIngressNginx
-  cloudName="gcp"
   cloudProvider="GCP"
+  valuesFileName="values-gcp.yaml"
 />
 
 <StorageClassInstallation

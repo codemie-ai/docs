@@ -18,8 +18,8 @@ import StorageIngressValidation from '../../../common/deployment/05-components-d
 />
 
 <StorageIngressNginx
-  cloudName="aws"
   cloudProvider="AWS"
+  valuesFileName="values-aws.yaml"
 />
 
 ### Step 4: Configure DNS Record

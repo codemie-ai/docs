@@ -18,7 +18,7 @@ import ObservabilityValidation from '../../../common/deployment/05-components-de
 <ObservabilityFluentBit />
 
 <ObservabilityKibana
-  cloudName="azure"
+  valuesFileName="values-azure.yaml"
   kibanaUrl="https://codemie.example.com/kibana"
 />
 

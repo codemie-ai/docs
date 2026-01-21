@@ -18,14 +18,14 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakOperator />
 
 <SecurityKeycloakInstall
-  cloudName="aws"
   cloudProvider="AWS"
+  valuesFileName="values-aws.yaml"
   keycloakUrl="https://keycloak.codemie.example.com/auth/admin"
 />
 
 <SecurityOauth2Proxy
-  cloudName="aws"
   cloudProvider="AWS"
+  valuesFileName="values-aws.yaml"
 />
 
 <SecurityValidation />

@@ -16,14 +16,14 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakOperator />
 
 <SecurityKeycloakInstall
-cloudName="gcp"
 cloudProvider="GCP"
+valuesFileName="values-gcp.yaml"
 keycloakUrl="https://keycloak.example.com/auth/admin"
 />
 
 <SecurityOauth2Proxy
-cloudName="gcp"
 cloudProvider="GCP"
+valuesFileName="values-gcp.yaml"
 />
 
 <SecurityValidation />

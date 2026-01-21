@@ -19,7 +19,7 @@ Deploy Keycloak using Helm:
 <CodeBlock language="bash">
 {`helm upgrade --install keycloak keycloak-helm/. \\
   -n security \\
-  --values keycloak-helm/values-${props.cloudName}.yaml \\
+  --values keycloak-helm/${props.valuesFileName} \\
   --wait \\
   --timeout 900s \\
   --dependency-update`}

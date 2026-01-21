@@ -21,11 +21,11 @@ import CoreComponentsValidation from '../../../common/deployment/05-components-d
 
 <CoreComponentsMermaid />
 
-<CoreComponentsUi cloudProvider="Azure" cloudName="azure" />
+<CoreComponentsUi cloudProvider="Azure" valuesFileName="values-azure.yaml" />
 
 <CoreComponentsApi
   cloudProvider="Azure"
-  cloudName="azure"
+  valuesFileName="values-azure.yaml"
   additionalConfigParams=""
 />
 

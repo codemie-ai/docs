@@ -21,11 +21,11 @@ import CoreComponentsValidation from '../../../common/deployment/05-components-d
 
 <CoreComponentsMermaid />
 
-<CoreComponentsUi cloudProvider="AWS" cloudName="aws" />
+<CoreComponentsUi cloudProvider="AWS" valuesFileName="values-aws.yaml" />
 
 <CoreComponentsApi
 cloudProvider="AWS"
-cloudName="aws"
+valuesFileName="values-aws.yaml"
 additionalConfigParams={`- \`%%AWS_DEFAULT_REGION%%\` should be replaced with your AWS region (e.g., \`us-east-1\`)
 
 - \`%%EKS_AWS_ROLE_ARN%%\` should be replaced with your EKS service account IAM role ARN

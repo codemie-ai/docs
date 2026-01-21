@@ -18,7 +18,7 @@ import ObservabilityValidation from '../../../common/deployment/05-components-de
 <ObservabilityFluentBit />
 
 <ObservabilityKibana
-  cloudName="gcp"
+  valuesFileName="values-gcp.yaml"
   kibanaUrl="https://kibana.example.com"
 />
 

@@ -13,7 +13,7 @@ import DataLayerValidation from '../../../common/deployment/05-components-deploy
 
 <DataLayerOverview />
 
-<DataLayerElasticsearch cloudProvider="GCP" cloudName="gcp" />
+<DataLayerElasticsearch cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
 
 <DataLayerPostgresOperator
   postgresServiceName="GCP Cloud SQL PostgreSQL"

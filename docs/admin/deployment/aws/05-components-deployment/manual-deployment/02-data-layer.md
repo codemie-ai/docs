@@ -15,7 +15,7 @@ import DataLayerValidation from '../../../common/deployment/05-components-deploy
 
 <DataLayerOverview />
 
-<DataLayerElasticsearch cloudProvider="AWS" cloudName="aws" />
+<DataLayerElasticsearch cloudProvider="AWS" valuesFileName="values-aws.yaml" />
 
 <DataLayerPostgresOperator
   postgresServiceName="AWS RDS PostgreSQL"

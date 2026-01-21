@@ -15,7 +15,7 @@ import DataLayerValidation from '../../../common/deployment/05-components-deploy
 
 <DataLayerOverview />
 
-<DataLayerElasticsearch cloudProvider="Azure" cloudName="azure" />
+<DataLayerElasticsearch cloudProvider="Azure" valuesFileName="values-azure.yaml" />
 
 <DataLayerPostgresOperator
   postgresServiceName="Azure Database for PostgreSQL"

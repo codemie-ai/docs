@@ -6,7 +6,7 @@ CodeMie UI provides the web-based user interface for interacting with AI assista
 
 ### Step 1: Configure UI Values
 
-The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-ui/values-{props.cloudName}.yaml</code> are correct.
+The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-ui/{props.valuesFileName}</code> are correct.
 
 ### Step 2: Install CodeMie UI Helm Chart
 
@@ -17,7 +17,7 @@ Deploy CodeMie UI:
   oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-ui \\
   --version x.y.z \\
   --namespace codemie \\
-  -f ./codemie-ui/values-${props.cloudName}.yaml \\
+  -f ./codemie-ui/${props.valuesFileName} \\
   --wait \\
   --timeout 180s`}
 </CodeBlock>
