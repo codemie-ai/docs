@@ -1,19 +1,24 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Post-Installation Validation
 
 After completing observability stack installation, verify the following:
 
-```bash
-# Fluent Bit is running on all nodes
+<CodeBlock language="bash">
+{`# Fluent Bit is running on all nodes
 kubectl get daemonset -n fluentbit
 kubectl get pods -n fluentbit
 
 # Kibana is running
+
 kubectl get pods -n elastic | grep kibana
 kubectl get deployment -n elastic kibana
 
 # Check Kibana is accessible
-curl -k {props.kibanaUrl}
-```
+
+curl -k ${props.kibanaUrl}`}
+
+</CodeBlock>
 
 All checks should return successful results.
 

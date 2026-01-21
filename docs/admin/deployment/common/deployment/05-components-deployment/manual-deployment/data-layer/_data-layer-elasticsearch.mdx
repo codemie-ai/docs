@@ -1,3 +1,5 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Elasticsearch Installation
 
 Elasticsearch provides document storage and full-text search capabilities for AI/Run CodeMie. It stores conversation history, embeddings, logs, and provides search functionality.
@@ -55,20 +57,20 @@ Save the generated password for troubleshooting: `kubectl get secret elasticsear
 
 Deploy Elasticsearch using Helm:
 
-```bash
-helm upgrade --install elastic elasticsearch/. \
-  -n elastic \
-  --values elasticsearch/values-{props.cloudName}.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
+<CodeBlock language="bash">
+{`helm upgrade --install elastic elasticsearch/. \\
+  -n elastic \\
+  --values elasticsearch/values-${props.cloudName}.yaml \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
 
 **Command Breakdown**:
 
 - `upgrade --install elastic` - Installs or upgrades release named "elastic"
 - `-n elastic` - Deploys to the elastic namespace
-- `--values elasticsearch/values-{props.cloudName}.yaml` - Uses {props.cloudProvider}-specific configuration
+- <code>--values elasticsearch/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
 - `--wait` - Waits for all resources to be ready
 - `--timeout 900s` - Maximum wait time (15 minutes)
 

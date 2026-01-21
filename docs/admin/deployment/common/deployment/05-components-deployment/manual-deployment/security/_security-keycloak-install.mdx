@@ -1,3 +1,5 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Keycloak Installation
 
 Keycloak provides centralized authentication and user management for AI/Run CodeMie.
@@ -8,20 +10,20 @@ Keycloak provides centralized authentication and user management for AI/Run Code
 
 Deploy Keycloak using Helm:
 
-```bash
-helm upgrade --install keycloak keycloak-helm/. \
-  -n security \
-  --values keycloak-helm/values-{props.cloudName}.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
+<CodeBlock language="bash">
+{`helm upgrade --install keycloak keycloak-helm/. \\
+  -n security \\
+  --values keycloak-helm/values-${props.cloudName}.yaml \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
 
 **Command Breakdown**:
 
 - `keycloak` - Release name
 - `-n security` - Deploys to the security namespace
-- `--values keycloak-helm/values-{props.cloudName}.yaml` - Uses {props.cloudProvider}-specific configuration{props.databaseInfo}
+- <code>--values keycloak-helm/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration{props.databaseInfo}
 
 ### Step {props.verifyStepNumber}: Verify Keycloak Deployment
 
@@ -48,9 +50,7 @@ Expected output:
 
 Keycloak Admin UI can be accessed at:
 
-```
 {props.keycloakUrl}
-```
 
 **Example URLs**:
 

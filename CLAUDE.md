@@ -338,6 +338,55 @@ Critical warning!
 :::
 ```
 
+### CRITICAL: Props Variables in Code Blocks
+
+MDX cannot interpolate `{props.*}` variables inside standard markdown code blocks or inline backticks. Use JSX alternatives.
+
+**Inline Code with Props:**
+
+```markdown
+# ❌ Won't render - backticks block interpolation
+`values-{props.cloudName}.yaml`
+
+# ✅ Correct - use <code> JSX element
+<code>values-{props.cloudName}.yaml</code>
+```
+
+**Code Blocks with Props:**
+
+````markdown
+# ❌ Won't render - markdown code block
+```bash
+helm install --values config-{props.cloudName}.yaml
+```
+
+# ✅ Correct - use CodeBlock component
+import CodeBlock from '@theme/CodeBlock';
+
+<CodeBlock language="bash">
+{`helm install --values config-${props.cloudName}.yaml`}
+</CodeBlock>
+````
+
+**Standalone Props (not in code blocks):**
+
+```markdown
+# ❌ Unnecessary code block wrapper
+```
+
+{props.kibanaUrl}
+
+```
+
+# ✅ Correct - direct JSX expression
+{props.kibanaUrl}
+
+# ✅ Also correct - in table cells
+| URL | Description |
+| --- | ----------- |
+| <span>{props.keycloakUrl}</span> | Admin console |
+```
+
 ### Code Blocks
 
 Always specify language for syntax highlighting:
@@ -571,6 +620,8 @@ Before committing documentation changes:
 - Use relative paths for internal links: `./page` or `../section/page`
 - Reference document IDs from front matter in sidebar
 - Wrap placeholders in backticks: `` `<placeholder>` ``
+- Use `<code>{props.var}</code>` for inline code with props variables
+- Use `<CodeBlock>` component for code blocks with props variables
 - Use Docusaurus admonitions: `:::info`, `:::warning`, `:::tip`
 - Specify language in code blocks: ` ```bash `
 - Number filenames for ordering: `01-overview.md`
@@ -585,6 +636,7 @@ Before committing documentation changes:
 - Don't use absolute paths for internal links (breaks PR previews)
 - Don't reference filenames in sidebar: `01-overview`
 - Don't use raw angle brackets: `<placeholder>`
+- Don't use backticks or markdown code blocks with `{props.*}` variables
 - Don't use HTML for callouts: `<div class="note">`
 - Don't skip language in code blocks
 - Don't use numbers in document IDs: `id: 01-overview`

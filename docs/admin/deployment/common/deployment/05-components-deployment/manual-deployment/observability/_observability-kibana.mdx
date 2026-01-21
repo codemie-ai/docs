@@ -1,3 +1,5 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Kibana Installation
 
 Kibana provides a web interface for searching, analyzing, and visualizing logs stored in Elasticsearch.
@@ -32,7 +34,7 @@ data:
 
 ### Step 2: Configure Domain Name
 
-Fill in values in `kibana/values-{props.cloudName}.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+Fill in values in <code>kibana/values-{props.cloudName}.yaml</code> file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
 
 :::tip Domain Configuration
 If you followed the Getting Started steps, this should already be configured.
@@ -42,14 +44,14 @@ If you followed the Getting Started steps, this should already be configured.
 
 Deploy Kibana:
 
-```bash
-helm upgrade --install kibana kibana/. \
-  -n elastic \
-  --values kibana/values-{props.cloudName}.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
+<CodeBlock language="bash">
+{`helm upgrade --install kibana kibana/. \\
+  -n elastic \\
+  --values kibana/values-${props.cloudName}.yaml \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
 
 ### Step 4: Verify Kibana Deployment
 
@@ -73,9 +75,7 @@ kubectl logs -n elastic deployment/kibana --tail=50
 
 Kibana can be accessed at:
 
-```s
 {props.kibanaUrl}
-```
 
 **Login Credentials**:
 

@@ -1,3 +1,5 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Kibana Dashboards Installation
 
 Install pre-configured dashboards that provide operational insights into CodeMie performance, usage, and health using the `manage-kibana-dashboards.sh` script.
@@ -6,12 +8,12 @@ Install pre-configured dashboards that provide operational insights into CodeMie
 
 This method automatically retrieves Elasticsearch credentials from the Kubernetes secret:
 
-```bash
-bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.kibanaUrl}" \
-  --k8s-auth \
-  --non-interactive
-```
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}" \\
+  --k8s-auth \\
+  --non-interactive`}
+</CodeBlock>
 
 **Parameters**:
 
@@ -21,21 +23,21 @@ bash ./kibana-dashboards/manage-kibana-dashboards.sh \
 
 **Example**:
 
-```bash
-bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.kibanaUrl}" \
-  --k8s-auth \
-  --non-interactive
-```
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}" \\
+  --k8s-auth \\
+  --non-interactive`}
+</CodeBlock>
 
 ### Option 2: Manual Authentication
 
 This method prompts for Elasticsearch credentials interactively:
 
-```bash
-bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.kibanaUrl}"
-```
+<CodeBlock language="bash">
+{`bash ./kibana-dashboards/manage-kibana-dashboards.sh \\
+  --url "${props.kibanaUrl}"`}
+</CodeBlock>
 
 You'll be prompted to enter the Elasticsearch username and password.
 

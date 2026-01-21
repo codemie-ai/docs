@@ -1,3 +1,5 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## Nginx Ingress Controller Installation
 
 The Nginx Ingress Controller manages external access to services in your cluster, providing load balancing, SSL termination, and name-based virtual hosting.
@@ -18,20 +20,20 @@ Check if the namespace already exists before creating: `kubectl get namespace in
 
 Deploy the Nginx Ingress Controller using Helm:
 
-```bash
-helm upgrade --install ingress-nginx ingress-nginx/. \
-  -n ingress-nginx \
-  --values ingress-nginx/values-{props.cloudName}.yaml \
-  --wait \
-  --timeout 900s \
-  --dependency-update
-```
+<CodeBlock language="bash">
+{`helm upgrade --install ingress-nginx ingress-nginx/. \\
+  -n ingress-nginx \\
+  --values ingress-nginx/values-${props.cloudName}.yaml \\
+  --wait \\
+  --timeout 900s \\
+  --dependency-update`}
+</CodeBlock>
 
 **Command Breakdown**:
 
 - `upgrade --install` - Installs or upgrades if already exists (idempotent)
 - `-n ingress-nginx` - Deploys to the ingress-nginx namespace
-- `--values ingress-nginx/values-{props.cloudName}.yaml` - Uses {props.cloudProvider}-specific configuration
+- <code>--values ingress-nginx/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
 - `--wait` - Waits for all resources to be ready
 - `--timeout 900s` - Maximum wait time (15 minutes)
 - `--dependency-update` - Updates chart dependencies before installation

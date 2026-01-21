@@ -1,10 +1,12 @@
+import CodeBlock from '@theme/CodeBlock';
+
 ## CodeMie API Installation
 
 CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
 
 ### Step 1: Configure API Values
 
-The domain configuration should already be set from the Getting Started section. Verify the values in `codemie-api/values-{props.cloudName}.yaml` are correct:
+The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-api/values-{props.cloudName}.yaml</code> are correct:
 
 - `%%DOMAIN%%` should be replaced with your domain (e.g., `example.com`)
   {props.additionalConfigParams}
@@ -27,15 +29,15 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
 
 Deploy CodeMie API:
 
-```bash
-helm upgrade --install codemie-api \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
-  --version x.y.z \
-  --namespace codemie \
-  -f ./codemie-api/values-{props.cloudName}.yaml \
-  --wait \
-  --timeout 600s
-```
+<CodeBlock language="bash">
+{`helm upgrade --install codemie-api \\
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \\
+  --version x.y.z \\
+  --namespace codemie \\
+  -f ./codemie-api/values-${props.cloudName}.yaml \\
+  --wait \\
+  --timeout 600s`}
+</CodeBlock>
 
 **Command Breakdown**:
 
@@ -43,7 +45,7 @@ helm upgrade --install codemie-api \
 - Chart name is `codemie` (the main backend chart)
 - `--version x.y.z` - Replace with your CodeMie version
 - `--namespace codemie` - Deploys to codemie namespace
-- `-f ./codemie-api/values-{props.cloudName}.yaml` - Uses {props.cloudProvider}-specific configuration
+- <code>-f ./codemie-api/values-{props.cloudName}.yaml</code> - Uses {props.cloudProvider}-specific configuration
 
 ### Step 4: Verify CodeMie API Deployment
 
