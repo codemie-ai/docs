@@ -13,13 +13,11 @@ The Analytics Dashboard provides comprehensive monitoring and management of LLM 
 
 ## Accessing the Analytics Dashboard
 
-To access the Analytics Dashboard, follow these steps:
+To access the Analytics Dashboard:
 
-1. Click on your **Profile icon** in the bottom left corner of the screen
-2. Select **Settings** from the profile menu
-3. Click on **Analytics** in the Settings navigation menu
+1. Click on the **Analytics** icon in the left sidebar navigation
 
-![Analytics Dashboard](./images/analytics-dashboard.png)
+![Analytics Dashboard Overview](./images/analytics-dashboard-overview.png)
 
 The Analytics Dashboard will open, displaying comprehensive monitoring and management tools for LLM usage, costs, and activity metrics.
 
