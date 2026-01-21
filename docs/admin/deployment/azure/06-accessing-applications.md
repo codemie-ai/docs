@@ -7,9 +7,9 @@ pagination_prev: admin/deployment/azure/components-deployment/components-deploym
 pagination_next: admin/configuration/index
 ---
 
-import AccessingApplicationsContent from '../common/deployment/06-accessing-applications/\_accessing-applications-content.mdx';
+import AccessingApplicationsContent from '../common/deployment/06-accessing-codemie/\_accessing-codemie-applications.mdx';
 
 <AccessingApplicationsContent
-  keycloakUrl="`http(s)://codemie.<your-domain>/keycloak/admin`"
-  kibanaUrl="`http(s)://codemie.<your-domain>/kibana`"
+  keycloakUrl="`http(s)://codemie.example.com/keycloak/admin`"
+  kibanaUrl="`http(s)://codemie.example.com/kibana`"
 />

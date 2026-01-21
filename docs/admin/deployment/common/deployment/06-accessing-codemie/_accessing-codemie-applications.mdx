@@ -6,17 +6,17 @@ Once deployment is complete and validated, access the AI/Run CodeMie application
 
 Replace `<your-domain>` with your configured domain name (from infrastructure deployment):
 
-| Application        | URL                                                     | Description                      |
-| ------------------ | ------------------------------------------------------- | -------------------------------- |
-| **CodeMie UI**     | `http(s)://codemie.<your-domain>`                       | Main user interface              |
-| **CodeMie API**    | `http(s)://codemie.<your-domain>/code-assistant-api/v1` | REST API endpoint                |
-| **Keycloak Admin** | {props.keycloakUrl}                                     | Identity management console      |
-| **Kibana**         | {props.kibanaUrl}                                       | Data visualization and analytics |
+| Application        | URL                                                   | Description                      |
+| ------------------ | ----------------------------------------------------- | -------------------------------- |
+| **CodeMie UI**     | `http(s)://codemie.example.com`                       | Main user interface              |
+| **CodeMie API**    | `http(s)://codemie.example.com/code-assistant-api/v1` | REST API endpoint                |
+| **Keycloak Admin** | {props.keycloakUrl}                                   | Identity management console      |
+| **Kibana**         | {props.kibanaUrl}                                     | Data visualization and analytics |
 
 :::info Protocol and Domain
 
 - **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
-- **Domain Name**: Configured during infrastructure deployment (`CODEMIE_DOMAIN_NAME` in `deployment_outputs.env`)
+- **Domain Name**: Use configured during infrastructure deployment (`CODEMIE_DOMAIN_NAME` in `deployment_outputs.env`)
 - **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
   :::
 

@@ -7,7 +7,7 @@ pagination_prev: admin/deployment/gcp/components-deployment/components-deploymen
 pagination_next: admin/configuration/index
 ---
 
-import AccessingApplicationsContent from '../common/deployment/06-accessing-applications/\_accessing-applications-content.mdx';
+import AccessingApplicationsContent from '../common/deployment/06-accessing-codemie/\_accessing-codemie-applications.mdx';
 
 <AccessingApplicationsContent
   keycloakUrl="`http(s)://keycloak.<your-domain>/auth/admin`"
