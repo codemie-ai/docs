@@ -30,9 +30,15 @@ data:
   security.encryptionKey: <base64-encoded-32-char-key>
 ```
 
-{props.domainConfigStep}
+### Step 2: Configure Domain Name
 
-### Step {props.installStepNumber}: Install Kibana Helm Chart
+Fill in values in `kibana/values-{props.cloudName}.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+
+:::tip Domain Configuration
+If you followed the Getting Started steps, this should already be configured.
+:::
+
+### Step 3: Install Kibana Helm Chart
 
 Deploy Kibana:
 
@@ -45,7 +51,7 @@ helm upgrade --install kibana kibana/. \
   --dependency-update
 ```
 
-### Step {props.verifyStepNumber}: Verify Kibana Deployment
+### Step 4: Verify Kibana Deployment
 
 Check that Kibana is running:
 
@@ -63,24 +69,20 @@ kubectl get service -n elastic kibana
 kubectl logs -n elastic deployment/kibana --tail=50
 ```
 
-### Step {props.accessStepNumber}: Access Kibana
+### Step 5: Access Kibana
 
 Kibana can be accessed at:
 
-```
+```s
 {props.kibanaUrl}
 ```
-
-**Example URLs**:
-
-- {props.kibanaExample}
 
 **Login Credentials**:
 
 - Username: `elastic`
 - Password: Retrieved from Elasticsearch secret (see [Data Layer](./data-layer#step-2-create-elasticsearch-credentials-secret))
 
-### Step {props.indexPatternStepNumber}: Configure Log Index Pattern (Optional)
+### Step 6: Configure Log Index Pattern (Optional)
 
 If you enabled infrastructure logging, configure the index pattern to view logs:
 

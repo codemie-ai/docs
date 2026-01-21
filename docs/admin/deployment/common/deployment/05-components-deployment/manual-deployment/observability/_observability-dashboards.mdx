@@ -8,7 +8,7 @@ This method automatically retrieves Elasticsearch credentials from the Kubernete
 
 ```bash
 bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.dashboardUrlExample}" \
+  --url "{props.kibanaUrl}" \
   --k8s-auth \
   --non-interactive
 ```
@@ -23,7 +23,7 @@ bash ./kibana-dashboards/manage-kibana-dashboards.sh \
 
 ```bash
 bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.dashboardUrlFullExample}" \
+  --url "{props.kibanaUrl}" \
   --k8s-auth \
   --non-interactive
 ```
@@ -34,7 +34,7 @@ This method prompts for Elasticsearch credentials interactively:
 
 ```bash
 bash ./kibana-dashboards/manage-kibana-dashboards.sh \
-  --url "{props.dashboardUrlExample}"
+  --url "{props.kibanaUrl}"
 ```
 
 You'll be prompted to enter the Elasticsearch username and password.

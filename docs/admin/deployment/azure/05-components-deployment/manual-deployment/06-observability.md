@@ -19,20 +19,13 @@ import ObservabilityValidation from '../../../common/deployment/05-components-de
 
 <ObservabilityKibana
   cloudName="azure"
-  domainConfigStep=""
-  installStepNumber="2"
-  verifyStepNumber="3"
-  accessStepNumber="4"
-  indexPatternStepNumber="5"
-  kibanaUrl="https://<your-domain>/kibana"
-  kibanaExample="`https://codemie.example.com/kibana` (custom domain)"
+  kibanaUrl="https://codemie.example.com/kibana"
 />
 
 <ObservabilityDashboards
-  dashboardUrlExample="https://<your-domain>/kibana"
-  dashboardUrlFullExample="https://codemie.example.com/kibana"
+  kibanaUrl="https://codemie.example.com/kibana"
 />
 
 <ObservabilityValidation
-  kibanaValidationUrl="https://<your-domain>/kibana"
+  kibanaUrl="https://codemie.example.com/kibana"
 />

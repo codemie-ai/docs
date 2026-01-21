@@ -12,7 +12,7 @@ kubectl get pods -n elastic | grep kibana
 kubectl get deployment -n elastic kibana
 
 # Check Kibana is accessible
-curl -k {props.kibanaValidationUrl}
+curl -k {props.kibanaUrl}
 ```
 
 All checks should return successful results.

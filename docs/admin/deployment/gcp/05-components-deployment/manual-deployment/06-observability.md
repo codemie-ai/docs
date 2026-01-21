@@ -18,30 +18,14 @@ import ObservabilityValidation from '../../../common/deployment/05-components-de
 <ObservabilityFluentBit />
 
 <ObservabilityKibana
-cloudName="gcp"
-domainConfigStep={<>
-
-### Step 2: Configure Domain Name
-
-Fill in values in `kibana/values-gcp.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
-
-:::tip Domain Configuration
-If you followed the Getting Started steps, this should already be configured.
-:::
-</>}
-installStepNumber="3"
-verifyStepNumber="4"
-accessStepNumber="5"
-indexPatternStepNumber="6"
-kibanaUrl="https://kibana.%%DOMAIN%%/"
-kibanaExample="`https://kibana.example.com`"
+  cloudName="gcp"
+  kibanaUrl="https://kibana.example.com"
 />
 
 <ObservabilityDashboards
-  dashboardUrlExample="https://kibana.<your-domain>"
-  dashboardUrlFullExample="https://kibana.example.com"
+  kibanaUrl="https://kibana.example.com"
 />
 
 <ObservabilityValidation
-  kibanaValidationUrl="https://kibana.example.com"
+  kibanaUrl="https://kibana.example.com"
 />
