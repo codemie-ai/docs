@@ -29,6 +29,6 @@ import CoreComponentsValidation from '../../../common/deployment/05-components-d
   additionalConfigParams=""
 />
 
-<CoreComponentsAccess applicationUrl="https://<your-domain>" />
+<CoreComponentsAccess />
 
 <CoreComponentsValidation />

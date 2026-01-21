@@ -34,6 +34,6 @@ additionalConfigParams={`- \`%%AWS_DEFAULT_REGION%%\` should be replaced with yo
 - \`%%AWS_S3_REGION%%\` should be replaced with your S3 bucket region`}
   />
 
-<CoreComponentsAccess applicationUrl="https://codemie.<your-domain>" />
+<CoreComponentsAccess />
 
 <CoreComponentsValidation />
