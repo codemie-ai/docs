@@ -46,6 +46,7 @@ The built-in automatic reindexing scheduler availability by data source type:
 | Jira                | ✅ Available        |
 | Google Docs         | ✅ Available        |
 | AWS Knowledge Bases | ✅ Available        |
+| X-ray               | ✅ Available        |
 | File                | ❌ Not available    |
 | Provider            | ❌ Not available    |
 

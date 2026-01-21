@@ -3,7 +3,7 @@ id: add-jira-data-source
 title: Add and Index Jira Data Source
 sidebar_label: Add and Index Jira Data Source
 pagination_prev: user-guide/data-source/datasources-types/add-confluence-pages
-pagination_next: user-guide/data-source/datasources-types/add-file-datasource
+pagination_next: user-guide/data-source/datasources-types/add-xray-data-source
 ---
 
 # Add and Index Jira Data Source
@@ -191,4 +191,24 @@ project = projectKey AND status = "In Progress"
 - Ensure API token has appropriate scopes
 - Request access from Jira project administrator
 
-Now your Jira projects are configured as data sources and ready to enhance your assistants with project and issue tracking knowledge.
+## Using Jira Data Source in Assistants
+
+After successfully creating and indexing your Jira data source, you can connect it to any assistant to provide access to project and issue information.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your Jira data source from the list
+5. Save the assistant configuration
+
+Now your assistant can access and analyze issues from the indexed Jira project, enabling it to:
+
+- Answer questions about project status and issues
+- Summarize sprint progress and backlog items
+- Identify blockers and dependencies
+- Provide insights on issue distribution and priorities
+- Help with project planning and tracking
+
+Your Jira projects are now configured and ready to enhance your assistants with project and issue tracking knowledge.

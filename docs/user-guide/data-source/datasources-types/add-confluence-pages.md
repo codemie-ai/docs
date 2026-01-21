@@ -170,4 +170,24 @@ Click the **+ Create** button and wait for the process to finish.
 - Ensure personal access token has appropriate scopes
 - Request access from Confluence space administrator
 
-Now your Confluence pages are configured as a data source and ready to enhance your assistants with documentation and knowledge base content.
+## Using Confluence Data Source in Assistants
+
+After successfully creating and indexing your Confluence data source, you can connect it to any assistant to provide access to your documentation.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your Confluence data source from the list
+5. Save the assistant configuration
+
+Now your assistant can access and analyze content from the indexed Confluence pages, enabling it to:
+
+- Answer questions about documentation and processes
+- Find relevant information across multiple pages
+- Summarize documentation content
+- Provide context-aware responses based on your knowledge base
+- Help with onboarding and training questions
+
+Your Confluence pages are now configured and ready to enhance your assistants with documentation and knowledge base content.

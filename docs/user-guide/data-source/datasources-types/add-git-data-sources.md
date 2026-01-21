@@ -214,3 +214,25 @@ Now your Git repository is configured as a data source and ready to enhance your
 - Check repository visibility settings (public/private)
 - Update integration credentials
 - Request access from repository owner
+
+## Using Git Data Source in Assistants
+
+After successfully creating and indexing your Git data source, you can connect it to any assistant to provide access to your codebase.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your Git data source from the list
+5. Save the assistant configuration
+
+Now your assistant can access and analyze code from the indexed repository, enabling it to:
+
+- Answer questions about code structure and implementation
+- Explain functions, classes, and modules
+- Suggest code improvements and refactoring
+- Help with debugging and troubleshooting
+- Provide codebase-specific recommendations
+
+Your Git repository is now configured and ready to enhance your assistants with codebase knowledge.

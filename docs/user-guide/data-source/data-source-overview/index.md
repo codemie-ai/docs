@@ -19,6 +19,7 @@ You can add various types of Data Sources to AI/Run CodeMie platform, such as:
 - **Code (Git)**: Git repositories for code analysis and development tasks
 - **Confluence**: Confluence pages for documentation and knowledge base
 - **Jira**: Jira spaces for project management and issue tracking
+- **X-ray**: Xray test cases for test management and QA workflows
 - **File**: Various file formats (Max size: 100Mb)
   - Supported formats: PPTX, DOCX, XLSX, PDF, CSV (others as plain text)
 - **Google Docs**: Google documents for collaborative documentation
@@ -82,6 +83,7 @@ Specify data source type. It can be:
 - Git repository
 - Confluence page
 - Jira space
+- X-ray test cases
 - File (PPTX, DOCX, XLSX, PDF, CSV, and others as plain text)
 - Google document
 
@@ -90,7 +92,7 @@ Specify data source type. It can be:
 As you work with CodeMie, the number of data sources will increase. To simplify navigation between data sources, use the **filters**. You can filter datasources by:
 
 - **NAME**: Filter by data source name
-- **TYPE**: Filter by data source type (Git, Confluence, Jira, File, Google Docs)
+- **TYPE**: Filter by data source type (Git, Confluence, Jira, X-ray, File, Google Docs)
 - **PROJECT**: Filter by project
 - **CREATED BY**: Filter by creator
 - **STATUS**: Filter by indexing status
@@ -135,6 +137,7 @@ Data sources enable various use cases:
 - **Code Analysis**: Index Git repositories for code review and analysis
 - **Documentation Search**: Index Confluence pages for quick documentation access
 - **Issue Tracking**: Index Jira spaces for issue and project management
+- **Test Management**: Index X-ray test cases for QA workflows and test coverage analysis
 - **File Processing**: Index documents for content analysis and extraction
 - **Knowledge Management**: Combine multiple data sources for comprehensive knowledge base
 

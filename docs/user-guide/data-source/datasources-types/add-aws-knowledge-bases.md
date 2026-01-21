@@ -199,6 +199,27 @@ After setting up the AWS integration, you can add AWS Knowledge Bases as data so
 
 5. Click **+ Create** to create the data source
 
-Now you can select data source from the drop down list in **Data Source Context section** of your assistant:
+## Using AWS Knowledge Bases in Assistants
+
+After successfully creating and indexing your AWS Knowledge Base data source, you can connect it to any assistant to provide access to your knowledge base content.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your AWS Knowledge Base data source from the list
 
 ![AWS DataSource Dropdown Select](./add-aws-knowledge-bases/aws-datasource-dropdown-select.png)
+
+5. Save the assistant configuration
+
+Now your assistant can access and analyze content from the AWS Knowledge Base, enabling it to:
+
+- Answer questions based on knowledge base content
+- Retrieve relevant information from indexed documents
+- Provide insights from multiple knowledge sources
+- Support complex queries with context-aware responses
+- Leverage AWS Bedrock capabilities for enhanced understanding
+
+Your AWS Knowledge Base is now configured and ready to enhance your assistants with enterprise knowledge.

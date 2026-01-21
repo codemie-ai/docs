@@ -128,4 +128,24 @@ Follow these detailed steps to add a Google Document as a data source:
 
 5. Click **+ Create** to create the data source
 
-Now you can select data source from the drop down list in Data Source Context section of your assistant.
+## Using Google Data Source in Assistants
+
+After successfully creating and indexing your Google data source, you can connect it to any assistant to provide access to your Google Docs content.
+
+### Adding Data Source to Assistant
+
+1. Navigate to **Assistants** section
+2. Click **+ Create Assistant** or edit an existing assistant
+3. In the **Data Source Context** section, click the dropdown menu
+4. Select your Google data source from the list
+5. Save the assistant configuration
+
+Now your assistant can access and analyze content from the indexed Google Documents, enabling it to:
+
+- Answer questions about document content
+- Summarize sections and key points
+- Extract specific information
+- Compare information across multiple documents
+- Provide context-aware responses based on your documentation
+
+Your Google Documents are now configured and ready to enhance your assistants with collaborative documentation knowledge.
