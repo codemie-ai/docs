@@ -31,6 +31,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Email Sender](./email-sender-tool)**                                   | Send email notifications from assistants                                                                          |
 | **[OpenAPI](./openapi-tool)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
 | **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
+| **[Xray](./xray)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
 | **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
 | **[Scheduler](./scheduler)**                                              | Task scheduling and automation (Admin role only)                                                                  |
 | **[Plugin](./plugin)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
@@ -132,6 +133,7 @@ The table below shows which tools require integration setup and the integration 
 | **Webhook**                                           |        ✅ Yes        |     Webhook      |         ✅ Yes         |
 | **Quality Assurance => ZephyrCloud**                  |        ✅ Yes        |   ZephyrCloud    |         ❌ No          |
 | **Quality Assurance => ZephyrSquad**                  |        ✅ Yes        |   ZephyrSquad    |         ❌ No          |
+| **Quality Assurance => Xray**                         |        ✅ Yes        |       Xray       |         ❌ No          |
 | **Research => Google Search**                         |        ❌ No         |       ---        |         ❌ No          |
 | **Research => Google Places**                         |        ❌ No         |       ---        |         ❌ No          |
 | **Research => Wikipedia**                             |        ❌ No         |       ---        |         ❌ No          |
