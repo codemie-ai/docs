@@ -3,7 +3,7 @@ id: initial-realm-setup
 sidebar_position: 2
 title: Initial Realm Setup
 description: One-time setup to enable custom attributes in Keycloak
-pagination_prev: admin/configuration/user-configuration/user-configuration-overview
+pagination_prev: admin/configuration/codemie/user-configuration/user-configuration-overview
 pagination_next: null
 ---
 

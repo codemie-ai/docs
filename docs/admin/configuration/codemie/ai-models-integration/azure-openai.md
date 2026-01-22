@@ -3,7 +3,7 @@ id: azure-openai
 sidebar_position: 4
 title: Azure OpenAI
 description: Enable and configure Azure OpenAI models
-pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
+pagination_prev: admin/configuration/codemie/ai-models-integration/ai-models-integration-overview
 pagination_next: null
 ---
 
@@ -150,7 +150,7 @@ For high availability and redundancy:
 
 1. Create Azure OpenAI resources in multiple regions
 2. Deploy same models in each region
-3. Configure load balancing using [LiteLLM Proxy](../../deployment/extensions/litellm-proxy/)
+3. Configure load balancing using [LiteLLM Proxy](../../../deployment/extensions/litellm-proxy/)
 
 ## Quota Management
 

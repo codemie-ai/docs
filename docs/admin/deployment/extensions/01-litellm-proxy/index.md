@@ -8,6 +8,9 @@ pagination_prev: admin/deployment/extensions/extensions-overview
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # LiteLLM Proxy Installation and Configuration Guide
 
 This guide provides instructions for installing and configuring the LiteLLM Proxy, which serves as a unified gateway for our platform. It enables seamless connection to a diverse range of Large Language Models (LLMs) from providers like AWS Bedrock, Azure OpenAI, and Google Vertex AI. LiteLLM is the recommended solution for implementations that require support for multiple LLM providers or advanced features such as spend tracking and user-based budgeting.
@@ -32,8 +35,8 @@ LiteLLM Proxy requires AI/Run CodeMie version 2.0.0 or higher. Ensure your CodeM
 
 Depending on which LLM providers you plan to use, prepare the appropriate credentials:
 
-<details>
-<summary><strong>AWS Bedrock</strong></summary>
+<Tabs>
+<TabItem value="aws" label="AWS Bedrock">
 
 Choose one of the following authentication methods:
 
@@ -41,10 +44,8 @@ Choose one of the following authentication methods:
 
 - **Option 2: AWS User with access to Bedrock services**
 
-</details>
-
-<details>
-<summary><strong>Azure OpenAI</strong></summary>
+</TabItem>
+<TabItem value="azure" label="Azure OpenAI">
 
 Choose one of the following authentication methods:
 
@@ -52,14 +53,13 @@ Choose one of the following authentication methods:
 
 - **Option 2: Direct API key authentication**
 
-</details>
-
-<details>
-<summary><strong>Google Vertex AI</strong></summary>
+</TabItem>
+<TabItem value="google" label="Google Vertex AI">
 
 - **GCP Service Account with access to Vertex AI**
 
-</details>
+</TabItem>
+</Tabs>
 
 ## LiteLLM Proxy System Requirements
 
@@ -73,10 +73,8 @@ The diagram below depicts the LiteLLM Proxy deployed on Kubernetes infrastructur
 | -------------------------- | --------------------- | ------------------------ | --------- |
 | LiteLLM Proxy x 2 Replicas | 2 / 2 (1 / 1)         | 4Gi / 4Gi (2Gi / 2Gi)    | —         |
 | Redis                      | 0.15 / 0.1            | 192Mi / 128Mi            | 2Gi       |
-| PostgreSQL[^1]             | —                     | —                        | —         |
+| PostgreSQL                 | —                     | —                        | —         |
 | **Total**                  | ~2.15 / ~2.1 vCPU     | ~4 / ~4 GiB RAM          | ~2 Gi PVC |
-
-[^1]: Reusing main AI/Run CodeMie PostgreSQL instance
 
 ## Deployment Workflow
 

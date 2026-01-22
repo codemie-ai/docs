@@ -546,71 +546,91 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'admin/configuration/datasources-configuration',
-            'admin/configuration/ui-customization',
             {
               type: 'category',
-              label: 'AI Models Integration',
-              link: {
-                type: 'doc',
-                id: 'admin/configuration/ai-models-integration/ai-models-integration-overview',
-              },
+              label: 'CodeMie',
               collapsed: true,
               items: [
-                'admin/configuration/ai-models-integration/codemie-native-llm-config',
+                'admin/configuration/codemie/datasources-configuration',
+                'admin/configuration/codemie/ui-customization',
                 {
                   type: 'category',
-                  label: 'Enable LLM Models in Cloud accounts',
+                  label: 'AI Models Integration',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/configuration/codemie/ai-models-integration/ai-models-integration-overview',
+                  },
                   collapsed: true,
                   items: [
-                    'admin/configuration/ai-models-integration/azure-openai',
-                    'admin/configuration/ai-models-integration/aws-bedrock',
-                    'admin/configuration/ai-models-integration/google-vertex-ai',
+                    'admin/configuration/codemie/ai-models-integration/codemie-native-llm-config',
+                    {
+                      type: 'category',
+                      label: 'Enable LLM Models in Cloud accounts',
+                      collapsed: true,
+                      items: [
+                        'admin/configuration/codemie/ai-models-integration/azure-openai',
+                        'admin/configuration/codemie/ai-models-integration/aws-bedrock',
+                        'admin/configuration/codemie/ai-models-integration/google-vertex-ai',
+                      ],
+                    },
                   ],
                 },
+                {
+                  type: 'category',
+                  label: 'User Configuration',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/configuration/codemie/user-configuration/user-configuration-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/configuration/codemie/user-configuration/initial-realm-setup',
+                    {
+                      type: 'category',
+                      label: 'User Provisioning',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/configuration/codemie/user-configuration/user-provisioning/user-provisioning-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/configuration/codemie/user-configuration/user-provisioning/manual-creation',
+                        'admin/configuration/codemie/user-configuration/user-provisioning/keycloak-assistant',
+                        'admin/configuration/codemie/user-configuration/user-provisioning/keycloak-entra-id',
+                      ],
+                    },
+                    {
+                      type: 'category',
+                      label: 'User Authorization',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/configuration/codemie/user-configuration/user-authorization/user-authorization-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/configuration/codemie/user-configuration/user-authorization/assign-roles',
+                        'admin/configuration/codemie/user-configuration/user-authorization/assign-attributes',
+                      ],
+                    },
+                    'admin/configuration/codemie/user-configuration/platform-administration',
+                  ],
+                },
+                'admin/configuration/codemie/api-configuration',
               ],
             },
             {
               type: 'category',
-              label: 'User Configuration',
-              link: {
-                type: 'doc',
-                id: 'admin/configuration/user-configuration/user-configuration-overview',
-              },
+              label: 'Extensions',
               collapsed: true,
               items: [
-                'admin/configuration/user-configuration/initial-realm-setup',
                 {
                   type: 'category',
-                  label: 'User Provisioning',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/configuration/user-configuration/user-provisioning/user-provisioning-overview',
-                  },
+                  label: 'LiteLLM Proxy',
                   collapsed: true,
-                  items: [
-                    'admin/configuration/user-configuration/user-provisioning/manual-creation',
-                    'admin/configuration/user-configuration/user-provisioning/keycloak-assistant',
-                    'admin/configuration/user-configuration/user-provisioning/keycloak-entra-id',
-                  ],
+                  items: ['admin/configuration/extensions/litellm-proxy/budget-configuration'],
                 },
-                {
-                  type: 'category',
-                  label: 'User Authorization',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/configuration/user-configuration/user-authorization/user-authorization-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/configuration/user-configuration/user-authorization/assign-roles',
-                    'admin/configuration/user-configuration/user-authorization/assign-attributes',
-                  ],
-                },
-                'admin/configuration/user-configuration/platform-administration',
               ],
             },
-            'admin/configuration/api-configuration',
           ],
         },
         {
