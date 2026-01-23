@@ -653,6 +653,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: ['admin/update/keycloak-upgrade/keycloak-24-to-26'],
             },
+            'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
           ],
         },
