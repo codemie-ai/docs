@@ -14,44 +14,60 @@ import FeatureGrid from '@site/src/components/FeatureGrid';
 
 Configure AI/Run CodeMie to match your organizational requirements and workflows.
 
-## Configuration Areas
+## AI/Run CodeMie Configuration Areas
 
 <FeatureGrid>
   <FeatureCard
     icon="/img/icons/cloud-data.svg"
     iconType="image"
     title="Data Sources"
-    description="Configure data source loaders for code files, Confluence, Jira, and file uploads. Set chunking strategies, token limits, batch sizes, and file extensions for optimal data processing."
-    link="/admin/configuration/datasources-configuration"
+    description="Configure data source loaders for code files, Confluence, Jira, and file uploads with custom chunking strategies and processing options."
+    link="/admin/configuration/codemie/datasources-configuration"
   />
   <FeatureCard
     icon="/img/icons/appearance.svg"
     iconType="image"
     title="UI Customization"
-    description="Show or hide UI components like video portal, user guide, admin actions, feedback assistant, and workflow documentation. Configure custom URLs for help resources."
-    link="/admin/configuration/ui-customization"
+    description="Show or hide UI components and configure custom URLs for video portal, user guide, admin actions, and help resources."
+    link="/admin/configuration/codemie/ui-customization"
   />
   <FeatureCard
     icon="/img/icons/fingerprint.svg"
     iconType="image"
     title="User Configuration"
-    description="Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Microsoft Entra ID, Okta, etc."
-    link="/admin/configuration/user-configuration/"
+    description="Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Entra ID or Okta."
+    link="/admin/configuration/codemie/user-configuration/"
   />
   <FeatureCard
     icon="/img/icons/configuration.svg"
     iconType="image"
     title="AI Models Integration"
-    description="Configure LLM and embedding models from Azure OpenAI, AWS Bedrock, and Google Vertex AI. Choose between native integration or LiteLLM proxy."
-    link="/admin/configuration/ai-models-integration/"
+    description="Configure LLM and embedding models from Azure OpenAI, AWS Bedrock, and Google Vertex AI with native or LiteLLM proxy integration."
+    link="/admin/configuration/codemie/ai-models-integration/"
   />
   <FeatureCard
     icon="/img/icons/configuration.svg"
     iconType="image"
     title="API Configuration"
-    description="Comprehensive reference for all CodeMie API configuration parameters including application settings, AI provider integrations, database connections, security, file storage, NATS messaging, MCP protocol, tools configuration, and observability settings."
-    link="/admin/configuration/api-configuration"
+    description="Configure CodeMie API settings including application parameters, AI providers, database connections, security, storage, and observability."
+    link="/admin/configuration/codemie/api-configuration"
   />
+</FeatureGrid>
+
+## Extensions Configuration
+
+Configure optional extensions to enhance AI/Run CodeMie capabilities.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/plugin.svg"
+    iconType="image"
+    title="LiteLLM Proxy"
+    description="Configure budgets, rate limits, and spending controls in LiteLLM Proxy for cost management and usage tracking."
+    link="/admin/configuration/extensions/litellm-proxy/budget-configuration"
+  />
+  <div style={{ visibility: 'hidden' }} />
+  <div style={{ visibility: 'hidden' }} />
 </FeatureGrid>
 
 ## Before You Begin

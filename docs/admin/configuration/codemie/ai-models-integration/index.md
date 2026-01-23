@@ -52,7 +52,7 @@ Deploy LiteLLM as a centralized proxy gateway with enterprise features including
 - **Caching**: Built-in response caching to reduce costs and latency
 - **Observability**: OpenTelemetry integration for monitoring and tracing
 
-**Configuration**: Requires [LiteLLM Proxy deployment](../../deployment/extensions/litellm-proxy/)
+**Configuration**: Requires [LiteLLM Proxy deployment](../../../deployment/extensions/litellm-proxy/)
 
 **Required Environment Variables**:
 
@@ -60,7 +60,7 @@ Deploy LiteLLM as a centralized proxy gateway with enterprise features including
 - `LLM_PROXY_ENDPOINT=https://your-litellm-proxy-url` - LiteLLM Proxy URL
 - `LLM_PROXY_API_KEY=your-api-key` - LiteLLM Proxy authentication key
 
-[Learn more about LiteLLM Proxy →](../../deployment/extensions/litellm-proxy/)
+[Learn more about LiteLLM Proxy →](../../../deployment/extensions/litellm-proxy/)
 
 ### Option 2: Native Provider Integration (Easiest & Fastest Setup)
 

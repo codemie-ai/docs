@@ -637,7 +637,7 @@ helm upgrade --install codemie-api \
 ```
 
 :::info Full Deployment Guide
-For detailed deployment instructions, troubleshooting, and additional options, see the [Update AI/Run CodeMie](../../update/codemie/update-version) documentation.
+For detailed deployment instructions, troubleshooting, and additional options, see the [Update AI/Run CodeMie](../../../update/codemie/update-version) documentation.
 :::
 
 #### Step 4: Verify Models

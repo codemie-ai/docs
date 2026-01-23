@@ -3,7 +3,7 @@ id: platform-administration
 sidebar_position: 3
 title: Platform Administration
 description: Managing projects and platform settings
-pagination_prev: admin/configuration/user-configuration/user-configuration-overview
+pagination_prev: admin/configuration/codemie/user-configuration/user-configuration-overview
 pagination_next: null
 ---
 

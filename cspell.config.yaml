@@ -16,6 +16,7 @@ ignorePaths:
   - '*.svg'
   - .vscode
   - cspell.config.yaml
+  - CLAUDE.md
 
 # Custom dictionary - project-specific words that are correct
 words:

@@ -421,7 +421,44 @@ See the [AWS Guide](../deployment/aws/overview) from another section.
 See the [Prerequisites](/docs/deployment-guide/gcp/prerequisites) section.
 ```
 
+**How to Calculate Relative Paths**:
+
+Count the directory levels between source and target files:
+
+```markdown
+# Example: Link from docs/admin/configuration/extensions/litellm-proxy/budget.md
+#          to docs/admin/deployment/extensions/litellm-proxy/index.md
+
+# Current location: admin/configuration/extensions/litellm-proxy/
+# Target location:  admin/deployment/extensions/litellm-proxy/
+
+# Steps:
+# 1. Go up to admin/configuration/extensions/ (../)
+# 2. Go up to admin/configuration/ (../../)
+# 3. Go up to admin/ (../../../)
+# 4. Go down to admin/deployment/extensions/litellm-proxy/
+
+# Result: ../../../deployment/extensions/litellm-proxy/
+[LiteLLM Guide](../../../deployment/extensions/litellm-proxy/)
+```
+
+**Verify Paths Before Committing**:
+
+```bash
+# Navigate to your file's directory
+cd docs/admin/configuration/extensions/litellm-proxy/
+
+# Verify the path resolves correctly
+realpath ../../../deployment/extensions/litellm-proxy/
+# Should output the correct absolute path
+
+# Or check if build succeeds
+npm run build  # Will fail with clear error if links are broken
+```
+
 **Exception**: FeatureCard components in `.mdx` files use Docusaurus paths like `/configuration-guide/page` which are handled with correct baseUrl.
+
+**See Also**: [Troubleshooting Broken Links](#broken-links) for debugging relative path issues.
 
 ## Sidebar Configuration
 
@@ -538,13 +575,93 @@ items: [
 ];
 ```
 
-6. **Test Locally**
+6. **Add Internal Links (if needed)**
+
+**CRITICAL**: When adding links to other documentation pages, use relative paths and verify them carefully.
+
+**Calculating Relative Paths**:
+
+To link from your new page to another page, count the directory levels:
+
+```markdown
+# Example: New page at docs/admin/configuration/extensions/litellm-proxy/budget.md
+# Linking to docs/admin/deployment/extensions/litellm-proxy/index.md
+
+# Path calculation:
+# 1. Go up from budget.md to docs/admin/configuration/extensions/litellm-proxy/ (start)
+# 2. Go up to docs/admin/configuration/extensions/ (../)
+# 3. Go up to docs/admin/configuration/ (../../)
+# 4. Go up to docs/admin/ (../../../)
+# 5. Go down to docs/admin/deployment/extensions/litellm-proxy/ (../../../deployment/extensions/litellm-proxy/)
+
+[LiteLLM Installation](../../../deployment/extensions/litellm-proxy/)
+```
+
+**Verification Method**:
+
+Use `realpath` to verify your relative path is correct:
+
+```bash
+# From the directory of your new file, verify the path resolves correctly
+cd docs/admin/configuration/extensions/litellm-proxy/
+realpath ../../../deployment/extensions/litellm-proxy/
+# Should output: /full/path/docs/admin/deployment/extensions/litellm-proxy/
+```
+
+**Common Patterns**:
+
+```markdown
+# Same directory
+[Other Page](./other-page)
+
+# Parent directory
+[Overview](../overview)
+
+# Sibling directory
+[Related Section](../related-section/page)
+
+# Two levels up, different branch
+[Deployment Guide](../../deployment/overview)
+
+# Three levels up, different branch
+[Configuration](../../../configuration/page)
+```
+
+7. **Build and Validate Links**
+
+**CRITICAL**: Always build before committing to catch broken links.
+
+```bash
+npm run build
+```
+
+Docusaurus will fail the build if there are broken links. Check the error output for:
+
+```
+Error: Docusaurus found broken links!
+- Broken link on source page path = /docs/your/page:
+   -> linking to ../path/to/page (resolved as: /docs/wrong/path)
+```
+
+If you see broken links:
+
+- Verify the relative path calculation
+- Check that the target document ID exists
+- Use `realpath` to validate the path resolution
+
+8. **Test Locally**
 
 ```bash
 npm start
 ```
 
-Verify: page renders, sidebar shows it, images display, links work.
+Verify:
+
+- Page renders correctly
+- Sidebar shows the page
+- Images display properly
+- All internal links navigate correctly
+- Build completes without broken link errors
 
 ## Troubleshooting Common Issues
 
@@ -576,6 +693,75 @@ Verify: page renders, sidebar shows it, images display, links work.
 **Cause**: Flat sidebar structure for nested directory
 
 **Solution**: Convert to nested category with dropdown (see Sidebar Configuration section)
+
+### Broken Links
+
+**Error**: "Docusaurus found broken links!"
+
+**Cause**: Incorrect relative paths in markdown links
+
+**Solution**: Follow this debugging process:
+
+1. **Identify the broken link** from build output:
+
+```
+- Broken link on source page path = /docs/admin/configuration/extensions/litellm-proxy/budget:
+   -> linking to ../../../deployment/extensions/litellm-proxy/
+      (resolved as: /docs/deployment/extensions/litellm-proxy/)
+```
+
+2. **Understand the resolution**:
+   - Source: `/docs/admin/configuration/extensions/litellm-proxy/budget`
+   - Link: `../../../deployment/extensions/litellm-proxy/`
+   - Resolved: `/docs/deployment/extensions/litellm-proxy/` (WRONG - missing `admin/`)
+
+3. **Calculate correct path**:
+
+```bash
+# Navigate to source file directory
+cd docs/admin/configuration/extensions/litellm-proxy/
+
+# Test path resolution
+realpath ../../../deployment/extensions/litellm-proxy/
+# Output: /full/path/docs/admin/deployment/extensions/litellm-proxy/ (CORRECT!)
+```
+
+4. **Common relative path mistakes**:
+
+```markdown
+# ❌ Too few levels up
+[Link](../../deployment/page)  # From deeply nested file
+
+# ❌ Too many levels up
+[Link](../../../../deployment/page)  # Goes above docs/
+
+# ✅ Correct - matches directory structure
+[Link](../../../deployment/page)  # Properly navigates from nested location
+```
+
+5. **Verification checklist**:
+   - [ ] Count directory levels between source and target
+   - [ ] Use `realpath` to verify path resolution
+   - [ ] Check target document exists at expected location
+   - [ ] Verify target has correct `id` in front matter (if linking to category page)
+   - [ ] Run `npm run build` to validate all links
+
+6. **Quick fix method**:
+
+If uncertain about path depth, use this bash command to find the correct relative path:
+
+```bash
+# From your new file's directory
+python3 -c "import os; print(os.path.relpath('/full/path/to/target', os.getcwd()))"
+```
+
+Or use realpath with trial and error:
+
+```bash
+realpath ../../../target/   # Try 3 levels
+realpath ../../../../target/ # Try 4 levels
+# Continue until you get the correct absolute path
+```
 
 ## CI/CD Pipeline
 

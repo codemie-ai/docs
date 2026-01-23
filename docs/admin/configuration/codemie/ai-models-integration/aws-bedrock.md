@@ -3,7 +3,7 @@ id: aws-bedrock
 sidebar_position: 5
 title: AWS Bedrock
 description: Enable and configure AWS Bedrock foundation models
-pagination_prev: admin/configuration/ai-models-integration/ai-models-integration-overview
+pagination_prev: admin/configuration/codemie/ai-models-integration/ai-models-integration-overview
 pagination_next: null
 ---
 
