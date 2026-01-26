@@ -124,6 +124,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/tools/codebase-tools',
             'user-guide/tools/email-sender-tool',
             'user-guide/tools/openapi-tool',
+            'user-guide/tools/jira',
             'user-guide/tools/quality-assurance-with-jira-zephyr-scale-addon',
             'user-guide/tools/servicenow',
             'user-guide/tools/scheduler',
