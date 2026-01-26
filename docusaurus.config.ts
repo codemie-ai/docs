@@ -8,8 +8,8 @@ const config: Config = {
   favicon: 'img/favicon.svg',
 
   // Use environment variables for PR previews, fallback to production values
-  url: process.env.DOCUSAURUS_URL || 'https://codemie-ai.github.io',
-  baseUrl: process.env.DOCUSAURUS_BASE_URL || '/docs/',
+  url: process.env.DOCUSAURUS_URL || 'https://docs.codemie.ai',
+  baseUrl: process.env.DOCUSAURUS_BASE_URL || '/',
 
   organizationName: 'codemie-ai',
   projectName: 'docs',
@@ -65,6 +65,18 @@ const config: Config = {
         indexPages: false,
         docsRouteBasePath: '/',
         highlightSearchTermsOnTargetPage: true,
+      },
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        createRedirects(existingPath: string) {
+          // Redirect any /docs/* path to /*
+          if (!existingPath.startsWith('/docs')) {
+            return [`/docs${existingPath}`];
+          }
+          return undefined;
+        },
       },
     ],
   ],
