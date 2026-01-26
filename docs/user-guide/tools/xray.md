@@ -89,7 +89,7 @@ Use natural language to query test cases. The assistant will translate your requ
 **Example queries:**
 
 ```
-Get 10 tests from project = "WEB - Flyporter" and issuetype = "Xray Test"
+Get 10 tests from project = "WEB - Xray" and issuetype = "Xray Test"
 ```
 
 ```
