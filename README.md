@@ -6,7 +6,7 @@ Official documentation for AI/Run CodeMie - an AI-powered development platform.
 
 ## Quick Start for Contributors
 
-**Prerequisites**: Node.js 18.0+
+**Prerequisites**: Node.js 24.0+
 
 ```bash
 # Install and activate predefined node version. Optional.
