@@ -30,6 +30,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Codebase Tools](./codebase-tools)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                   |
 | **[Email Sender](./email-sender-tool)**                                   | Send email notifications from assistants                                                                          |
 | **[OpenAPI](./openapi-tool)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
+| **[Jira](./jira)**                                                        | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
 | **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
 | **[Xray](./xray)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
 | **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
