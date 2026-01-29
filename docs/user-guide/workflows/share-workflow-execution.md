@@ -2,7 +2,7 @@
 id: share-workflow-execution
 title: Share Workflow Execution
 sidebar_label: Share Execution
-pagination_prev: user-guide/workflows/workflow-templates
+pagination_prev: user-guide/workflows/create-workflow-from-template
 pagination_next: user-guide/workflows/exporting-workflow-execution
 sidebar_position: 6
 description: How to share workflow execution results with team members

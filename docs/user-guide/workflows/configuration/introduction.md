@@ -183,7 +183,7 @@ Each assistant can have:
 - **MCP servers**: Integrate external capabilities via Model Context Protocol
 - **Token limits**: Control maximum tokens from tool outputs
 
-#### Tools and Integrations
+#### Integrations and Tools
 
 Tools extend workflow capabilities beyond AI reasoning:
 

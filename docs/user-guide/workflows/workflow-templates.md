@@ -2,9 +2,9 @@
 id: workflow-templates
 title: Workflow Templates
 sidebar_label: Workflow Templates
-pagination_prev: user-guide/workflows/create-workflow-from-template
-pagination_next: user-guide/workflows/share-workflow-execution
-sidebar_position: 5
+pagination_prev: user-guide/workflows/llm-model-name-in-workflow
+pagination_next: user-guide/workflows/create-workflow-from-template
+sidebar_position: 4
 description: Comprehensive list of pre-built workflow templates available in AI/Run CodeMie
 ---
 

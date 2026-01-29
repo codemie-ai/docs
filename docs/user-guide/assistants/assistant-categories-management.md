@@ -2,7 +2,7 @@
 id: assistant-categories-management
 title: Assistant Categories Management
 sidebar_label: Assistant Categories
-sidebar_position: 17.5
+sidebar_position: 10
 pagination_prev: user-guide/assistants/marketplace-publishing
 pagination_next: user-guide/assistants/clone-assistant-from-marketplace
 ---

@@ -1,6 +1,6 @@
 ---
 id: supported-file-formats-and-csv-handling-in-chat-assistant
-sidebar_position: 12
+sidebar_position: 15
 title: Supported File Formats
 pagination_prev: user-guide/assistants/folders-overview
 pagination_next: user-guide/assistants/share-assistant-chat-with-other-users

@@ -15,7 +15,7 @@ Confluence pages are powerful knowledge base sources in AI/Run CodeMie, enabling
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one Confluence integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../integrations/) guidelines.
+This data source requires you to have at least one Confluence integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
 :::
 
 Before adding a Confluence data source, ensure you have:

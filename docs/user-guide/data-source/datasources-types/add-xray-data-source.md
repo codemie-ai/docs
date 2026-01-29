@@ -15,7 +15,7 @@ X-ray is a comprehensive test management solution for Jira that enables AI/Run C
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one X-ray integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../integrations/) guidelines.
+This data source requires you to have at least one X-ray integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
 :::
 
 Before adding an X-ray data source, ensure you have:
@@ -53,7 +53,7 @@ Before adding a new X-ray data source, you need to create an integration with X-
 7. Provide your X-ray instance URL, Client ID, and Client Secret
 8. Save the integration for use in data sources
 
-**Refer to the [Integrations Overview](../../integrations/) guidelines for detailed integration setup instructions.**
+**Refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines for detailed integration setup instructions.**
 
 #### 2. Navigate to Data Sources
 

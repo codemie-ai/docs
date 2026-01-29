@@ -1,6 +1,6 @@
 ---
 id: share-assistant-chat-with-other-users
-sidebar_position: 13
+sidebar_position: 16
 title: Share Chat Conversations
 pagination_prev: user-guide/assistants/supported-file-formats-and-csv-handling-in-chat-assistant
 pagination_next: user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats

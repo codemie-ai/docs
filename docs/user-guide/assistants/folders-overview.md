@@ -1,6 +1,6 @@
 ---
 id: folders-overview
-sidebar_position: 11
+sidebar_position: 14
 title: Folders Overview
 pagination_prev: user-guide/assistants/group-chats
 pagination_next: user-guide/assistants/supported-file-formats-and-csv-handling-in-chat-assistant

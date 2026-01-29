@@ -2,9 +2,9 @@
 id: html-preview
 title: HTML Preview
 sidebar_label: HTML Preview
-pagination_prev: user-guide/assistants/sub-assistants-multi-assistant-orchestrator
+sidebar_position: 18
+pagination_prev: user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats
 pagination_next: null
-sidebar_position: 11
 ---
 
 # HTML Preview

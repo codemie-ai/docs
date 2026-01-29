@@ -1,9 +1,9 @@
 ---
 id: sharing-assistants
-sidebar_position: 8
+sidebar_position: 2
 title: Share Assistants
-pagination_prev: user-guide/assistants/delete-assistants-and-chats
-pagination_next: user-guide/assistants/restore-system-instructions
+pagination_prev: user-guide/assistants/create-assistant
+pagination_next: user-guide/assistants/edit-assistants
 description: Share assistants with team members and collaborators
 ---
 

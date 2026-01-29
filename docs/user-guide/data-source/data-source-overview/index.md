@@ -147,7 +147,7 @@ After creating data sources, you can:
 
 - [Index data sources](./indexing-data-sources) to make them available to assistants
 - [Configure assistants](../../assistants/) to use specific data sources
-- [Set up integrations](../../integrations/) for external services
+- [Set up integrations](../../tools_integrations/integrations/) for external services
 - [Create workflows](../../workflows/) that leverage multiple data sources
 
 :::tip

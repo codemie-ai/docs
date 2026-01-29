@@ -100,7 +100,7 @@ The scheduler can be configured when creating a new data source or when updating
 - Working in development/testing environments
 - Data source is very large and updates infrequently
 
-For detailed scheduler configuration, see the [Scheduler documentation](/user-guide/tools/scheduler).
+For detailed scheduler configuration, see the [Scheduler documentation](/user-guide/tools_integrations/tools/scheduler).
 
 ## Resuming Indexing
 

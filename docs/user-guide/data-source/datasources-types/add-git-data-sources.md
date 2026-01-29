@@ -18,7 +18,7 @@ Git repositories are one of the most powerful data sources in AI/Run CodeMie, en
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one Git integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../integrations/) guidelines.
+This data source requires you to have at least one Git integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
 :::
 
 Before adding a Git data source, ensure you have:
@@ -28,7 +28,7 @@ Before adding a Git data source, ensure you have:
 - Appropriate permissions to access repository content
 
 :::tip Integration Setup
-If you haven't configured a Git integration yet, follow the [Integrations Guide](../../integrations/) first.
+If you haven't configured a Git integration yet, follow the [Integrations Guide](../../tools_integrations/integrations/) first.
 :::
 
 ## Adding a Git Data Source

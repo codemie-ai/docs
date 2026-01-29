@@ -15,7 +15,7 @@ AWS Knowledge Bases is a powerful data source in AI/Run CodeMie, enabling assist
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one AWS integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../integrations/) guidelines.
+This data source requires you to have at least one AWS integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
 :::
 
 Before adding an AWS Knowledge Bases data source, ensure you have:
@@ -44,13 +44,13 @@ Navigate to the AWS Management Console and log in with your credentials.
 
 In the search bar, enter `IAM` to access the Identity and Access Management service.
 
-![AWS IAM Users](./add-aws-knowledge-bases/image37.png)
+![AWS IAM Users page](./add-aws-knowledge-bases/iam-users-list.png)
 
 #### 3. Navigate to Users
 
 Navigate to **Access management** → **Users**. Click **Create user**:
 
-![AWS Create User](./add-aws-knowledge-bases/image45.png)
+![AWS Create User review](./add-aws-knowledge-bases/iam-create-user-review.png)
 
 #### 4. Set User Details
 
@@ -67,8 +67,6 @@ Navigate to **Access management** → **Users**. Click **Create user**:
 Click **Next** to proceed to the permissions setup.
 
 #### 6. Attach Policies
-
-![AWS Attach Policies](./add-aws-knowledge-bases/image49.png)
 
 Attach the following AWS managed policy:
 
@@ -129,23 +127,29 @@ From the Users list, click on the newly created user.
 
 #### 2. Create Access Key
 
-![AWS User Created](./add-aws-knowledge-bases/image18.png)
+![AWS User details page](./add-aws-knowledge-bases/iam-user-details.png)
 
 Navigate to the **Security credentials** tab and scroll to **Access keys** section.
 
 Click **Create access key**.
 
-![AWS Create Access Key](./add-aws-knowledge-bases/image5.png)
+![AWS Create Access Key use case selection](./add-aws-knowledge-bases/iam-create-access-key-dialog.png)
 
 :::info
 Third-party service is the appropriate option when granting access to external applications like AI/Run CodeMie.
 :::
 
+#### 3. Retrieve Access Keys
+
+After selecting the use case, you'll see the access keys page where you can view and download your credentials:
+
+![AWS Retrieve Access Keys](./add-aws-knowledge-bases/iam-access-keys-retrieved.png)
+
 :::warning Security Best Practice
 Download your access keys immediately and store them securely. AWS shows them only once. If lost, you must create new access keys.
 :::
 
-#### 4. Retrieve Access Keys
+#### 4. Configure AI/Run CodeMie Integration
 
 1. In the AI/Run CodeMie main menu, click the Integrations button.
 2. Select User or Project and click the + Create button.
@@ -158,16 +162,16 @@ Download your access keys immediately and store them securely. AWS shows them on
 - Access Key ID: Paste the **Access Key** ID data copied from preview step.
 - Secret access key: Paste the **Secret Access Key** data copied from preview step.
 
-![AWS Integration Create Form](./add-aws-knowledge-bases/aws-integration-create-form.png)
+![AWS Integration Create Form](./add-aws-knowledge-bases/codemie-aws-integration-form.png)
 :::info
 You can “Test Integration” connection before creating.
 :::
 
-![AWS Integration Test Connection](./add-aws-knowledge-bases/aws-integration-test-connection.png)
+![AWS Integration Test Connection](./add-aws-knowledge-bases/codemie-aws-integration-test.png)
 
 To verify connection click on Profile Icon -> Settings -> EXTERNAL VENDORS -> Knowledge Bases
 
-![AWS Knowledge Bases Settings](./add-aws-knowledge-bases/aws-knowledge-bases-settings.png)
+![AWS Knowledge Bases Settings](./add-aws-knowledge-bases/codemie-kb-settings.png)
 
 ## Adding AWS Knowledge Base as Data Source
 
@@ -210,7 +214,7 @@ After successfully creating and indexing your AWS Knowledge Base data source, yo
 3. In the **Data Source Context** section, click the dropdown menu
 4. Select your AWS Knowledge Base data source from the list
 
-![AWS DataSource Dropdown Select](./add-aws-knowledge-bases/aws-datasource-dropdown-select.png)
+![AWS DataSource Dropdown Select](./add-aws-knowledge-bases/codemie-datasource-selector.png)
 
 5. Save the assistant configuration
 

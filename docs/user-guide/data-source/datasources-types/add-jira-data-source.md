@@ -15,7 +15,7 @@ Jira is a powerful project management and issue tracking data source in AI/Run C
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one Jira integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../integrations/) guidelines.
+This data source requires you to have at least one Jira integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
 :::
 
 Before adding a Jira data source, ensure you have:
@@ -48,7 +48,7 @@ Before adding a new Jira data source, you need to generate integration with Jira
 - Provide your Jira URL and API token
 - Save the integration for use in data sources
 
-**Refer to the [Integrations Overview](../../integrations/) guidelines for detailed integration setup instructions.**
+**Refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines for detailed integration setup instructions.**
 
 #### 2. Navigate to Data Sources
 

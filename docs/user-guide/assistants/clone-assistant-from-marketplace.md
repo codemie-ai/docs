@@ -1,6 +1,6 @@
 ---
 id: clone-assistant-from-marketplace
-sidebar_position: 18
+sidebar_position: 11
 title: Clone Assistant from Marketplace
 pagination_prev: user-guide/assistants/assistant-categories-management
 pagination_next: user-guide/assistants/sub-assistants-multi-assistant-orchestrator

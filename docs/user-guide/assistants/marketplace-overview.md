@@ -1,8 +1,8 @@
 ---
 id: marketplace-overview
-sidebar_position: 16
+sidebar_position: 8
 title: Marketplace Overview
-pagination_prev: user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats
+pagination_prev: user-guide/assistants/create-assistant-from-a-template
 pagination_next: user-guide/assistants/marketplace-publishing
 description: Discover and share assistants in the AI/Run CodeMie marketplace
 ---

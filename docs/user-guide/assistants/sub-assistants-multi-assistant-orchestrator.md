@@ -1,9 +1,9 @@
 ---
 id: sub-assistants-multi-assistant-orchestrator
-sidebar_position: 19
+sidebar_position: 12
 title: Sub-Assistants and Orchestration
 pagination_prev: user-guide/assistants/clone-assistant-from-marketplace
-pagination_next: user-guide/assistants/html-preview
+pagination_next: user-guide/assistants/group-chats
 description: Coordinate multiple assistants to handle complex tasks
 ---
 
@@ -106,6 +106,28 @@ To see which sub-assistants are configured:
 1. Open the orchestrator assistant details.
 2. Review the **Sub-assistants** section in the configuration panel.
 3. See the complete list of available sub-assistants and their descriptions.
+
+## Publishing Multi-Assistant to Marketplace
+
+If you decide to publish a multi-assistant orchestrator to the Marketplace, follow these steps:
+
+1. **Select the orchestrator** to publish.
+
+2. **Choose publishing scope** - decide whether you want to publish:
+   - Only the orchestrator assistant
+   - Both the orchestrator and individual sub-assistants
+
+3. Follow the standard [Publish to Marketplace](./marketplace-publishing) procedure.
+
+4. **Specify categories** for the orchestrator and each sub-assistant you're publishing.
+
+5. **Final validation** - The system will allow publishing once all required fields are completed.
+
+   ![Multi-assistant publishing](./images/multi-assistant-marketplace-publish.png)
+
+:::info Publishing Sub-assistants
+When publishing a multi-assistant setup, you can choose to make sub-assistants available separately in the Marketplace. This allows other users to either use your complete orchestrator solution or individual specialized assistants.
+:::
 
 ## Best Practices Summary
 
