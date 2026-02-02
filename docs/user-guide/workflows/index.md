@@ -36,7 +36,7 @@ Manage and share your workflow executions:
 ## Workflow Configuration
 
 :::info YAML Configuration Guide
-For building complex workflows, explore the comprehensive YAML configuration documentation.
+For building complex workflows, explore and use the comprehensive YAML configuration documentation.
 :::
 
 ### Core Documentation

@@ -3,8 +3,8 @@ id: analytics-overview
 title: Analytics Dashboard
 sidebar_label: Analytics
 sidebar_position: 8
-pagination_prev: user-guide/ide/vscode-native-extension
-pagination_next: user-guide/api/index
+pagination_prev: user-guide/index
+pagination_next: null
 ---
 
 # Analytics Dashboard
