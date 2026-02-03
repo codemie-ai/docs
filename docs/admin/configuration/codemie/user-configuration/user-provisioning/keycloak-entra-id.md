@@ -189,7 +189,7 @@ Navigate back to the **Mappers** tab and click **Add mapper** again.
 
 Configure and save the mapper: Fill in the fields with the following values and click **Save**:
 
-- **Name:** `picture`
+- **Name:** `codemie-attribute-picture`
 - **Sync Mode Override:** `Inherit`
 - **Mapper Type:** `Attribute Importer`
 - **Claim:** `picture`
