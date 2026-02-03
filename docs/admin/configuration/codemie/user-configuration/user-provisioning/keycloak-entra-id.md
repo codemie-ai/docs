@@ -96,6 +96,12 @@ Now, fill in the following fields on the Keycloak page and click `Add`:
 
 ![Provider Configuration](@site/docs/admin/configuration/images/user-configuration/image-2025-9-19_4-13-10.png)
 
+Expand the **Advanced** in the **OpenID Connect settings** section and configure:
+
+- **Scopes:** `openid profile email`
+
+![Default Scopes Configuration](@site/docs/admin/configuration/images/user-configuration/default-scopes.png)
+
 ### 3. Configure the Redirect URI
 
 This step creates the secure link between Keycloak and your Azure app.
@@ -172,6 +178,24 @@ Please note: Microsoft Azure Entra ID may provide email addresses using the foll
 - email
 
 If the **applications** user attribute is not populated automatically, try using a different claim name.
+
+---
+
+**Mapper 3: Sync Profile Picture (Optional)**
+
+This mapper automatically syncs the user's profile picture from Entra ID to their Keycloak profile.
+
+Navigate back to the **Mappers** tab and click **Add mapper** again.
+
+Configure and save the mapper: Fill in the fields with the following values and click **Save**:
+
+- **Name:** `picture`
+- **Sync Mode Override:** `Inherit`
+- **Mapper Type:** `Attribute Importer`
+- **Claim:** `picture`
+- **User Attribute Name:** `picture`
+
+![Picture Mapper Configuration](@site/docs/admin/configuration/images/user-configuration/picture-mapper.png)
 
 ---
 
