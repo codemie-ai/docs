@@ -30,7 +30,7 @@ This function is available for Admins roles only (Admin or Application Admin). A
 
    ![Create integration button](./images/integrations-list-create-button.png)
 
-3. Select the desired tool and specify the credentials and click **+ Create**:
+3. Select the desired tool and specify the credentials and click **Save**:
 
    ![Integration creation form](./images/integration-create-form.png)
 

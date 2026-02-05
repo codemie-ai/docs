@@ -207,6 +207,9 @@ words:
   - tiktoken
   - Uvicorn
   - Pydantic
+  - matplotlib
+  - numpy
+  - pandas
   # Python/Programming methods
   - startswith
   - endswith

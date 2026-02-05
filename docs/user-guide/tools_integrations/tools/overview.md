@@ -36,6 +36,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
 | **[Scheduler](./scheduler)**                                              | Task scheduling and automation (Admin role only)                                                                  |
 | **[Plugin](./plugin)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
+| **[FileSystem](./filesystem)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
 | **[Git](./git-overview)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
 | **[Adding MCP Server](./adding-an-mcp-server)**                           | Add and configure Model Context Protocol (MCP) servers                                                            |
 | **[Using MCP Tools](./using-mcp-tools-in-assistants)**                    | Use MCP tools in assistants for extended capabilities                                                             |
@@ -121,7 +122,8 @@ The table below shows which tools require integration setup and the integration 
 | **Data Management => Elasticsearch**                  |        ✅ Yes        |     Elastic      |         ❌ No          |
 | **OpenAPI**                                           |        ✅ Yes        |     OpenAPI      |         ❌ No          |
 | **Plugin**                                            |        ✅ Yes        |      Plugin      |         ❌ No          |
-| **FileSystem => Code Interpreter**                    |        ✅ Yes        |    FileSystem    |         ❌ No          |
+| **FileSystem => Code Interpreter**                    |        ❌ No         |       ---        |         ❌ No          |
+| **FileSystem => Code Executor**                       |        ❌ No         |       ---        |         ❌ No          |
 | **FileSystem => Generate Image**                      |        ❌ No         |       ---        |         ❌ No          |
 | **Notification => Email**                             |        ✅ Yes        |      Email       |         ❌ No          |
 | **Codebase Tools => Sonar**                           |        ✅ Yes        |      Sonar       |         ❌ No          |

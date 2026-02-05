@@ -151,6 +151,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/scheduler',
                 'user-guide/tools_integrations/tools/xray',
                 'user-guide/tools_integrations/tools/plugin',
+                'user-guide/tools_integrations/tools/filesystem',
                 {
                   type: 'category',
                   label: 'Git',

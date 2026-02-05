@@ -36,7 +36,7 @@ To integrate SonarQube with AI/Run CodeMie, follow the steps below:
 
 ![Create integration](./images/image34.png)
 
-2.2. Specify the integration parameters and click **+ Create**:
+2.2. Specify the integration parameters and click **+ Save**:
 
 - **Project**: enter your AI/Run CodeMie project name.
 - **Credential tool**: Sonar

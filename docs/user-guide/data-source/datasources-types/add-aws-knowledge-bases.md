@@ -153,7 +153,7 @@ Download your access keys immediately and store them securely. AWS shows them on
 
 1. In the AI/Run CodeMie main menu, click the Integrations button.
 2. Select User or Project and click the + Create button.
-3. Fill in the required fields and click Create:
+3. Fill in the required fields and click Save:
 
 - Project Name: Specify project name.
 - Credential Type: **AWS**
