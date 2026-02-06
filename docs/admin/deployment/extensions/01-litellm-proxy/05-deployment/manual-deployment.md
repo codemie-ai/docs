@@ -73,6 +73,29 @@ kubectl create secret generic litellm-postgresql \
 
 Refer to [Cloud Provider Authentication](../auth-secrets) for details on obtaining these credentials.
 
+**4. Vertex AI Secret (GCP only)**
+
+Create a secret with credentials for Vertex AI:
+
+```bash
+kubectl -n litellm create secret generic litellm-google-service-account \
+  --from-file=gcp-service-account.json=codemie-gsa-key.json
+```
+
+**5. Vertex AI ConfigMap (GCP only)**
+
+Create a ConfigMap with Vertex AI project configuration:
+
+```bash
+# Set your GCP project ID
+export VERTEX_PROJECT=<your project name>
+
+# Create the ConfigMap
+kubectl -n litellm create configmap litellm-vertex-ai \
+  --from-literal=VERTEX_PROJECT="$VERTEX_PROJECT" \
+  --from-literal=GOOGLE_APPLICATION_CREDENTIALS="/secrets/gcp-service-account.json"
+```
+
 ## Step 5.3: Deploy the LiteLLM Helm Chart
 
 Deploy the LiteLLM Proxy using your customized values file.
