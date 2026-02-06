@@ -234,6 +234,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/ai-katas/manage-katas-admin',
           ],
         },
+        'user-guide/codemie-cli/codemie-cli',
         {
           type: 'category',
           label: 'IDE Extensions',
@@ -496,7 +497,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'category',
-                  label: 'LiteLLM Proxy',
+                  label: '✨ LiteLLM Proxy',
                   link: {
                     type: 'doc',
                     id: 'admin/deployment/extensions/litellm-proxy/litellm-proxy-overview',
@@ -525,7 +526,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Assistants Evaluation',
+                  label: '✨ Assistants Evaluation',
                   link: {
                     type: 'doc',
                     id: 'admin/deployment/extensions/assistants-evaluation/assistants-evaluation',

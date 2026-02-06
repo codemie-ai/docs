@@ -1,14 +1,18 @@
 ---
 id: salesforce-devforce-ai
 title: Salesforce DevForce AI
-sidebar_label: Salesforce DevForce AI
+sidebar_label: ✨ Salesforce DevForce AI
 sidebar_position: 5
 description: AI-powered development accelerator for Salesforce projects
 pagination_prev: admin/deployment/extensions/extensions-overview
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # Salesforce DevForce AI
+
+<EnterpriseFeature />
 
 Salesforce DevForce AI is an AI-powered development accelerator designed to streamline and enhance Salesforce development workflows. This extension provides intelligent assistance for Salesforce-related development tasks.
 

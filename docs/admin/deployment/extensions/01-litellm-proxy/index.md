@@ -10,8 +10,11 @@ pagination_next: null
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 # LiteLLM Proxy Installation and Configuration Guide
+
+<EnterpriseFeature />
 
 This guide provides instructions for installing and configuring the LiteLLM Proxy, which serves as a unified gateway for our platform. It enables seamless connection to a diverse range of Large Language Models (LLMs) from providers like AWS Bedrock, Azure OpenAI, and Google Vertex AI. LiteLLM is the recommended solution for implementations that require support for multiple LLM providers or advanced features such as spend tracking and user-based budgeting.
 

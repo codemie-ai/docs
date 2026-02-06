@@ -8,7 +8,11 @@ pagination_prev: admin/deployment/extensions/extensions-overview
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # Assistants Evaluation (Langfuse)
+
+<EnterpriseFeature />
 
 This comprehensive guide explains how to install and configure Langfuse using Helm, with both automated and manual deployment methods.
 

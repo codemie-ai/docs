@@ -12,5 +12,9 @@
         ]
       }
     ]
+  },
+  "attribution": {
+    "commit": "Co-Authored-By: codemie-ai <codemie.ai@gmail.com>",
+    "pr": "Co-Authored-By: codemie-ai <codemie.ai@gmail.com>"
   }
 }

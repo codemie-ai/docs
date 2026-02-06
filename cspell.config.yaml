@@ -47,6 +47,7 @@ words:
   - bitnami
   - litellm
   - berriai
+  - Ollama
   # Cloud/Infrastructure
   - kubernetes
   - kubectl

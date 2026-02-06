@@ -1,14 +1,18 @@
 ---
 id: ai-code-explorer
 title: AI Code Explorer (AICE)
-sidebar_label: AI Code Explorer
+sidebar_label: ✨ AI Code Explorer
 sidebar_position: 3
 description: Deploy and configure AI Code Explorer for intelligent code analysis and exploration
 pagination_prev: admin/deployment/extensions/extensions-overview
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # AI Code Explorer (AICE)
+
+<EnterpriseFeature />
 
 AI Code Explorer (AICE) is an intelligent code analysis and exploration platform that provides advanced code understanding capabilities through graph-based knowledge representation and AI-powered insights.
 

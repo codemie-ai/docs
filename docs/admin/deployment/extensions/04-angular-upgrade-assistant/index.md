@@ -1,14 +1,18 @@
 ---
 id: angular-upgrade-assistant
 title: Angular Upgrade Assistant
-sidebar_label: Angular Upgrade Assistant
+sidebar_label: ✨ Angular Upgrade Assistant
 sidebar_position: 4
 description: AI-powered assistant for upgrading Angular projects to newer versions
 pagination_prev: admin/deployment/extensions/extensions-overview
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # Angular Upgrade Assistant
+
+<EnterpriseFeature />
 
 Angular Upgrade Assistant is an AI-enabled solution designed to streamline and simplify the process of upgrading Angular projects to newer Angular versions. Built with Vue.js and Vite, it provides an intuitive UI for managing dependency upgrades and fixing build errors.
 
