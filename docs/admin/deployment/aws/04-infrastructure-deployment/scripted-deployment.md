@@ -22,7 +22,7 @@ Before starting the deployment, ensure you have completed all requirements from 
 ### Verification Checklist
 
 - [ ] **AWS Access**: Programmatic access with IAM permissions
-- [ ] **Tools Installed**: Terraform 1.5.7, AWS CLI, kubectl, Helm, gcloud CLI, Docker
+- [ ] **Tools Installed**: Terraform 1.13.5, AWS CLI, kubectl, Helm, gcloud CLI, Docker
 - [ ] **AWS Authentication**: Configured AWS credentials and region
 - [ ] **Repository Access**: Have access to Terraform and Helm repositories
 - [ ] **Network Planning**: Prepared list of allowed networks
@@ -39,7 +39,7 @@ The script automatically deploys infrastructure in sequential phases:
 | Phase                                | Description                                                      | Required                              |
 | ------------------------------------ | ---------------------------------------------------------------- | ------------------------------------- |
 | **Phase 1: IAM Deployer Role**       | Creates IAM role with required permissions for deployment        | Can be skipped if role already exists |
-| **Phase 2: State Backend**           | Creates S3 bucket and DynamoDB table for Terraform state files   | Yes                                   |
+| **Phase 2: State Backend**           | Creates S3 bucket with native locking for Terraform state files  | Yes                                   |
 | **Phase 3: Platform Infrastructure** | Deploys EKS, networking, storage, databases, security components | Yes                                   |
 
 ## Phase 1: Deploy IAM Deployer Role
@@ -127,7 +127,6 @@ TF_VAR_demand_min_nodes_count=3
 TF_VAR_platform_name="codemie"
 TF_VAR_subnet_azs='["us-east-1a", "us-east-1b", "us-east-1c"]'
 TF_VAR_s3_states_bucket_name="codemie-terraform-states"
-TF_VAR_table_name="codemie_terraform_locks"
 
 # Optional: IAM Permissions Boundary
 TF_VAR_eks_admin_role_arn=""
@@ -157,7 +156,7 @@ The script will automatically execute the following operations:
 
 1. **Validate Environment**: Check for required tools and AWS authentication
 2. **Verify Configuration**: Validate `deployment.conf` parameters
-3. **Deploy State Backend**: Create S3 bucket and DynamoDB table for Terraform state files
+3. **Deploy State Backend**: Create S3 bucket with native locking for Terraform state files
 4. **Deploy Platform Infrastructure**: Provision core platform infrastructure (EKS, networking, storage, databases)
 5. **Generate Outputs**: Create `deployment_outputs.env` with infrastructure details required during next phases
 

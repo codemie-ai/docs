@@ -50,18 +50,17 @@ The IAM deployer role enables:
 
 The state backend is deployed to provide secure, centralized storage for Terraform state files.
 
-| Resource            | Purpose                                                     |
-| ------------------- | ----------------------------------------------------------- |
-| **S3 Bucket**       | Storage for Terraform state files with versioning enabled   |
-| **DynamoDB Table**  | State locking mechanism to prevent concurrent modifications |
-| **Bucket Policies** | Access control policies for state file security             |
-| **Encryption**      | Server-side encryption for state files at rest              |
+| Resource            | Purpose                                                                 |
+| ------------------- | ----------------------------------------------------------------------- |
+| **S3 Bucket**       | Storage for Terraform state files with versioning and native S3 locking |
+| **Bucket Policies** | Access control policies for state file security                         |
+| **Encryption**      | Server-side encryption for state files at rest                          |
 
 :::tip State Backend Purpose
 The Terraform state backend enables:
 
 - **Team Collaboration**: Multiple engineers can work on infrastructure simultaneously
-- **State Locking**: Prevents concurrent modifications that could corrupt state
+- **State Locking**: S3 native locking prevents concurrent modifications that could corrupt state
 - **Versioning**: Maintains history of infrastructure changes
 - **Security**: State files contain sensitive data and require secure storage
   :::
