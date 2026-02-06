@@ -278,7 +278,7 @@ platform_name = "codemie"
 subnet_azs    = ["us-east-1a", "us-east-1b", "us-east-1c"]
 
 # Required: EKS Configuration
-cluster_version            = "1.34"
+cluster_version            = "1.35"
 demand_instance_types      = [{ instance_type = "r5.xlarge" }]
 demand_max_nodes_count     = 3
 demand_desired_nodes_count = 3

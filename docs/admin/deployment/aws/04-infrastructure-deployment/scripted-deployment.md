@@ -117,7 +117,7 @@ TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role c
 TF_VAR_platform_domain_name="codemie.example.com"                   # Domain name for the platform
 
 # Required: EKS Configuration
-TF_VAR_cluster_version="1.34"
+TF_VAR_cluster_version="1.35"
 TF_VAR_demand_instance_types='[{ instance_type = "r5.xlarge" }]'
 TF_VAR_demand_max_nodes_count=3
 TF_VAR_demand_desired_nodes_count=3
