@@ -19,7 +19,29 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 <Tabs>
-<TabItem value="manual" label="Manual Creation" default>
+<TabItem value="ai" label="Generate with AI" default>
+
+You can create an assistant using AI generation, which automatically configures the assistant based on your requirements.
+
+1. Navigate to the **Assistants** section.
+
+2. Click **+ Create Assistant** in the Project Assistants menu.
+
+3. In the **Generate Assistant with AI** popup, describe your main idea and requirements for the assistant.
+
+4. If you enable the **Include tools** toggle, the platform recommends features and tools that fit the assistant's goals.
+
+   ![Generate with AI popup](./images/generate-assistant-with-ai.png)
+
+5. After clicking the **Generate with AI** button, the AI will configure the assistant for you—including its name, description, conversation starters, and system instructions.
+
+:::info AI-Powered Configuration
+Generate with AI analyzes your requirements and automatically sets up the assistant with appropriate configuration, saving time on initial setup and ensuring best practices.
+:::
+
+</TabItem>
+
+<TabItem value="manual" label="Manual Creation">
 
 1. Navigate to the **Assistants** section.
 
@@ -31,7 +53,7 @@ import TabItem from '@theme/TabItem';
 
    ![Assistant Configuration](../images/image182.png)
 
-### Configuration Fields
+**Configuration Fields**
 
 | Field                              | Description                                                                |
 | ---------------------------------- | -------------------------------------------------------------------------- |
@@ -45,7 +67,7 @@ import TabItem from '@theme/TabItem';
 | **Data Source Context** (Optional) | Project documentation or Git repository for context                        |
 | **Available Tools**                | Tools and integrations to extend the assistant's capabilities              |
 
-### Slug Configuration
+**Slug Configuration**
 
 The slug creates a unique URL for sharing your assistant:
 
@@ -55,7 +77,7 @@ The slug creates a unique URL for sharing your assistant:
 Only fill in the slug field if you plan to share the assistant with others.
 :::
 
-### Variables
+**Variables**
 
 Use variables in system instructions to create dynamic prompts:
 
@@ -70,7 +92,7 @@ Click on a variable to insert it into your System Instructions.
 
 Use the **Manage Prompt Vars** button to create custom dynamic variables for your specific use case.
 
-#### Managing Sensitive Prompt Variables
+**Managing Sensitive Prompt Variables**
 
 Sensitive prompt variables allow you to securely store credentials, API keys, passwords, and other confidential information that your assistant needs. These variables are encrypted and masked in the UI to protect sensitive data.
 
@@ -138,31 +160,9 @@ Always use these credentials securely and never expose them in responses.
   :::
 
 </TabItem>
-
-<TabItem value="ai" label="Generate with AI">
-
-You can create an assistant using AI generation, which automatically configures the assistant based on your requirements.
-
-1. Navigate to the **Assistants** section.
-
-2. Click **+ Create Assistant** in the Project Assistants menu.
-
-3. In the **Generate Assistant with AI** popup, describe your main idea and requirements for the assistant.
-
-4. If you enable the **Include tools** toggle, the platform recommends features and tools that fit the assistant's goals.
-
-   ![Generate with AI popup](./images/generate-assistant-with-ai.png)
-
-5. After clicking the **Generate with AI** button, the AI will configure the assistant for you—including its name, description, conversation starters, and system instructions.
-
-:::info AI-Powered Configuration
-Generate with AI analyzes your requirements and automatically sets up the assistant with appropriate configuration, saving time on initial setup and ensuring best practices.
-:::
-
-</TabItem>
 </Tabs>
 
-### Tools Configuration
+## Tools Configuration
 
 Select tools to extend your assistant's capabilities:
 
