@@ -95,9 +95,9 @@ npx @codemieai/code doctor
 
 **Note**: Agent shortcuts (`codemie-claude`, `codemie-code`, `codemie-gemini`) require global installation.
 
-### Setup Wizard
+### Setup Configuration
 
-The interactive setup wizard guides you through configuration:
+Run the interactive setup wizard to configure authentication and model selection:
 
 ```bash
 codemie setup
@@ -110,6 +110,30 @@ Configuration steps:
 3. **Authentication**: Configure API keys or CodeMie platform credentials
 4. **Model Selection**: Pick your preferred LLM model with real-time availability checking
 5. **Verification**: Test your configuration with a health check
+
+### Install Agents
+
+After setup, install the agents you want to use:
+
+```bash
+# Install Claude Code (latest supported version)
+codemie install claude --supported
+
+# Install Gemini CLI
+codemie install gemini --supported
+
+# Install OpenCode
+codemie install opencode --supported
+
+# Verify installation
+codemie doctor
+```
+
+The built-in agent (`codemie-code`) is available immediately after setup without installation.
+
+:::info Additional Documentation
+For detailed configuration, authentication methods, troubleshooting, and advanced usage, see the [CodeMie CLI GitHub Repository](https://github.com/codemie-ai/codemie-code).
+:::
 
 ## Commands
 
@@ -145,15 +169,25 @@ codemie --help                       # Show help
 
 **Run AI Assistants**
 
+All agents support two modes:
+
 ```bash
-codemie-code "<prompt>"              # Built-in CodeMie agent
-codemie-claude "<prompt>"            # Claude Code agent
-codemie-gemini "<prompt>"            # Gemini CLI agent
-codemie-opencode "<prompt>"          # OpenCode agent
+# Interactive mode (stays open for conversation)
+codemie-code                         # Built-in CodeMie agent
+codemie-claude                       # Claude Code agent
+codemie-gemini                       # Gemini CLI agent
+codemie-opencode                     # OpenCode agent
+
+# Single task mode (executes and exits)
+codemie-code --task "<prompt>"       # Built-in CodeMie agent
+codemie-claude --task "<prompt>"     # Claude Code agent
+codemie-gemini --task "<prompt>"     # Gemini CLI agent
+codemie-opencode --task "<prompt>"   # OpenCode agent
 ```
 
-**Options for all agents:**
+**Common Options:**
 
+- `--task "<prompt>"`: Execute single task and exit
 - `--profile <name>`: Use specific profile
 - `--model <model>`: Override default model
 - `--help`: Show agent-specific help
@@ -161,22 +195,29 @@ codemie-opencode "<prompt>"          # OpenCode agent
 **Example Workflows**
 
 ```bash
-# Code review
-codemie-code "Review this PR for security issues and performance bottlenecks"
+# Code review (single task)
+codemie-code --task "Review this PR for security issues and performance bottlenecks"
 
 # Bug fixing
-codemie-claude "Fix the authentication bug in src/auth.ts"
+codemie-claude --task "Fix the authentication bug in src/auth.ts"
 
 # Test generation
-codemie-gemini "Generate comprehensive unit tests for the API endpoints"
+codemie-gemini --task "Generate comprehensive unit tests for the API endpoints"
 
 # Documentation
-codemie-code "Document the functions in utils/helpers.js with JSDoc comments"
+codemie-code --task "Document the functions in utils/helpers.js with JSDoc comments"
 
 # Multi-profile usage
-codemie-claude --profile work "Review company codebase"
+codemie-claude --profile work --task "Review company codebase"
 codemie profile switch personal
-codemie-code "Help with my open source project"
+codemie-code --task "Help with my open source project"
+
+# Interactive mode for exploratory work
+codemie-claude
+> Review my authentication code
+> Now refactor it to use JWT tokens
+> Add error handling
+> exit
 ```
 
 ### Analytics and Monitoring

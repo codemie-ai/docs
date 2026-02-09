@@ -231,6 +231,7 @@ words:
   # codemie terms
   - kata
   - katas
+  - codemieai
   # Other
   - readonly
   - stateful
