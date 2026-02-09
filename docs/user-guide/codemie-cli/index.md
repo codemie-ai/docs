@@ -77,23 +77,11 @@ CodeMie CLI operates on a **bring-your-own-infrastructure** model. For enterpris
   - Azure OpenAI Service
   - Google Cloud Vertex AI
 
-### Global Installation (Recommended)
+### Global Installation
 
 ```bash
 npm install -g @codemieai/code
-codemie setup                        # Interactive configuration wizard
-codemie doctor                       # Verify installation
 ```
-
-### Local/Project Installation
-
-```bash
-npm install @codemieai/code
-npx @codemieai/code setup
-npx @codemieai/code doctor
-```
-
-**Note**: Agent shortcuts (`codemie-claude`, `codemie-code`, `codemie-gemini`) require global installation.
 
 ### Setup Configuration
 
