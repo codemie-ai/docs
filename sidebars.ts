@@ -653,7 +653,10 @@ const sidebars: SidebarsConfig = {
                   type: 'category',
                   label: 'LiteLLM Proxy',
                   collapsed: true,
-                  items: ['admin/configuration/extensions/litellm-proxy/budget-configuration'],
+                  items: [
+                    'admin/configuration/extensions/litellm-proxy/budget-configuration',
+                    'admin/configuration/extensions/litellm-proxy/spend-logs-retention',
+                  ],
                 },
               ],
             },
