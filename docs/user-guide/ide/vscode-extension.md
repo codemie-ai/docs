@@ -52,3 +52,24 @@ The CodeMie Native VS Code extension provides a dedicated sidebar interface for 
 1. Verify connection
 2. Clear extension cache in settings
 3. Reset login data through extension settings
+
+## Configure Claude Code extension to work through CodeMie proxy
+
+From version 0.1.22 there is an option to configure Claude Code VSCode extension to use Codemie as a proxy.
+This allows to use claude without Claude subscription and obtaining Anthropic API Key
+
+### Prerequisites
+1. "[Claude Code for VS Code]" extension is installed
+
+![Marketplace](./images/claude-code-extension.png)
+
+2. "[AI/Run CodeMie VS Code Extension]" version >= 0.1.22
+
+### Instructions
+1. Enable "Use Custom Claude Code Configuration" option in AI/Run Codemie extension settings
+
+![Marketplace](./images/configure-claude-proxy.png)
+
+2. Open Claude Code extension and start working with it
+
+![Marketplace](./images/claude-extension-usage.png)
