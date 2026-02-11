@@ -106,10 +106,25 @@ sidebars.ts                     # Documentation sidebar structure (700+ lines)
 
 - **docusaurus.config.ts**: Site config, navbar, footer, theme, plugins (local search, image zoom)
 - **sidebars.ts**: Large sidebar configuration (~700 lines) defining entire doc structure
-- **cspell.config.yaml**: Spell checker with project dictionary
 - **.prettierrc.json**: 2 spaces, single quotes, no trailing commas on embedded languages
 - **.markdownlint.json**: Many rules disabled for flexibility
 - **commitlint.config.js**: Commit message validation rules
+- **tailwind.config.js**: Tailwind CSS configuration with tailwindcss-themer
+- **postcss.config.js**: PostCSS configuration for Tailwind processing
+
+## Tailwind CSS Integration
+
+This project uses **Tailwind CSS v3** with **tailwindcss-themer** for theme management.
+
+### Theme Synchronization
+
+Tailwind themes automatically sync with the Docusaurus theme toggle via the `data-theme` attribute. When the user clicks the theme toggle button in the navbar, both Docusaurus and Tailwind themes switch seamlessly.
+
+**How it works:**
+
+- Docusaurus sets `data-theme="light"` or `data-theme="dark"` on the `<html>` element
+- tailwindcss-themer watches this attribute via `selectors: ['[data-theme="dark"]']`
+- No custom JavaScript synchronization required
 
 ## Docusaurus-Specific Configuration
 

@@ -43,6 +43,32 @@
   margin-bottom: 1rem;
   display: block;
   object-fit: contain;
+  color: var(--ifm-color-primary);
+}
+
+.featureCardSvg {
+  height: 3rem;
+  width: auto;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  color: var(--ifm-text-primary);
+}
+
+.featureCardSvg svg {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.featureCardSvg svg [fill]:not([fill='none']) {
+  fill: currentColor;
+}
+
+.featureCardSvg svg [stroke]:not([stroke='none']) {
+  stroke: currentColor;
 }
 
 [data-theme='dark'] .invertInDarkTheme {

@@ -1,59 +1,218 @@
 /**
- * Custom CSS for AI/Run CodeMie Documentation
+ * Geist Fonts from Vercel CDN
+ */
+@import url('https://cdn.jsdelivr.net/npm/geist@latest/dist/font.css');
+
+/**
+ * Tailwind CSS Integration
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Colors */
+    --ifm-color-primary: theme('colors.primary.DEFAULT');
+    --ifm-color-primary-dark: theme('colors.primary.dark');
+    --ifm-color-primary-darker: theme('colors.primary.darker');
+    --ifm-color-primary-darkest: theme('colors.primary.darkest');
+    --ifm-color-primary-light: theme('colors.primary.light');
+    --ifm-color-primary-lighter: theme('colors.primary.lighter');
+    --ifm-color-primary-lightest: theme('colors.primary.lightest');
+    --ifm-menu-color: theme('colors.text.primary');
+    --ifm-menu-color-background-hover: theme('colors.background.action-hover');
+    --ifm-code-font-size: 95%;
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme='dark'] {
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/**
+ * Geist Font Override - Must be outside @layer to override Infima
+ */
+:root {
+  --ifm-font-family-base:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  --ifm-font-family-monospace:
+    'Geist Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace !important;
+}
+
+html * {
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+code,
+pre,
+kbd,
+samp,
+.token {
+  font-family: var(--ifm-font-family-monospace) !important;
+}
+
+.markdown img:not(.no-zoom) {
+  @apply bg-white;
+}
+
+h1 {
+  @apply text-text-accent text-[2rem] leading-[2.5rem] !mb-2;
+}
+
+h2 {
+  @apply text-text-accent-secondary text-2xl !mb-2 !mt-6;
+}
+
+h3 {
+  @apply text-text-accent-secondary text-xl !mb-2 !mt-5;
+}
+
+p {
+  @apply !mb-2;
+}
+
+.hash-link {
+  @apply text-text-accent-secondary hover:!text-text-accent-secondary;
+}
+
+/**
+ * Navbar
  */
 
-:root {
-  --ifm-color-primary: #672d92;
-  --ifm-color-primary-dark: #5c2883;
-  --ifm-color-primary-darker: #53257a;
-  --ifm-color-primary-darkest: #461e66;
-  --ifm-color-primary-light: #7539a3;
-  --ifm-color-primary-lighter: #8346ac;
-  --ifm-color-primary-lightest: #9b64bb;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme='dark'] {
-  --ifm-color-primary: #8f5bb8;
-  --ifm-color-primary-dark: #8346ac;
-  --ifm-color-primary-darker: #7a3fa6;
-  --ifm-color-primary-darkest: #672d92;
-  --ifm-color-primary-light: #9b6fc4;
-  --ifm-color-primary-lighter: #a782cd;
-  --ifm-color-primary-lightest: #bea0db;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
-/* Navbar styling with brand colors */
 .navbar {
-  background-color: #672d92 !important;
-  box-shadow: 0 2px 8px rgba(103, 45, 146, 0.2);
+  @apply bg-surface-navigation !shadow-none !border-border-primary;
+  border-bottom: 1px solid;
+}
+
+.menu__link {
+  @apply text-sm;
+}
+
+.menu__link--active {
+  @apply !bg-transparent;
+}
+
+.menu__caret {
+  @apply !bg-transparent;
+}
+
+.menu__caret::before {
+  background: var(--ifm-menu-link-sublist-icon) 50% / 1.5rem 1.5rem;
 }
 
 .navbar__title,
 .navbar__link,
 .navbar__brand {
-  color: #ffffff !important;
+  @apply text-text-secondary;
 }
 
 .navbar__link:hover,
 .navbar__link--active {
-  color: #ffffff !important;
-  opacity: 0.8;
+  @apply text-white opacity-80;
 }
 
 .navbar__toggle {
-  color: #ffffff !important;
+  @apply text-text-primary;
 }
 
-[data-theme='dark'] .navbar {
-  background-color: #5c2883 !important;
-  box-shadow: 0 2px 8px rgba(92, 40, 131, 0.3);
+.navbar__items--right {
+  @apply flex-row-reverse flex-1 justify-between;
 }
 
-/* Fix for docusaurus-plugin-image-zoom z-index issue */
-/* Ensure the zoom overlay and image appear above the navbar */
+.theme-layout-navbar-left {
+  @apply flex-grow-0 min-w-[300px];
+}
+
+/**
+ * Search Input Styling
+ */
+
+.navbar__search {
+  kbd {
+    @apply hidden;
+  }
+}
+
+.DocSearch-Button,
+.navbar__search-input {
+  @apply !rounded-lg !px-4 !py-2.5 !pl-9 !text-base;
+  @apply !bg-surface-control !text-text-primary;
+  @apply !border !border-border-control;
+  @apply placeholder:!text-text-tertiary;
+  min-width: 300px;
+}
+
+.DocSearch-Button:hover,
+.navbar__search-input:hover {
+  @apply !border-primary;
+}
+
+.navbar__search-input:focus {
+  @apply !outline-none;
+}
+
+/* Search icon styling - Light theme */
+.navbar__search-input {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%2347485A" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" height="16px" width="16px"><path d="M6.02945,10.20327a4.17382,4.17382,0,1,1,4.17382-4.17382A4.15609,4.15609,0,0,1,6.02945,10.20327Zm9.69195,4.2199L10.8989,9.59979A5.88021,5.88021,0,0,0,12.058,6.02856,6.00467,6.00467,0,1,0,9.59979,10.8989l4.82338,4.82338a.89729.89729,0,0,0,1.29912,0,.89749.89749,0,0,0-.00087-1.29909Z"/></svg>') !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+  background-size: 14px !important;
+}
+
+/* Search icon styling - Dark theme */
+[data-theme='dark'] .navbar__search-input {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23FFFFFF" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" height="16px" width="16px"><path d="M6.02945,10.20327a4.17382,4.17382,0,1,1,4.17382-4.17382A4.15609,4.15609,0,0,1,6.02945,10.20327Zm9.69195,4.2199L10.8989,9.59979A5.88021,5.88021,0,0,0,12.058,6.02856,6.00467,6.00467,0,1,0,9.59979,10.8989l4.82338,4.82338a.89729.89729,0,0,0,1.29912,0,.89749.89749,0,0,0-.00087-1.29909Z"/></svg>') !important;
+}
+
+/* Remove default button styling */
+.DocSearch-Button {
+  @apply !shadow-none;
+  background-image: none !important;
+}
+
+/* Alerts */
+
+.alert {
+  @apply mt-4;
+}
+
+.alert--success {
+  @apply bg-success-secondary !border-success-border;
+}
+
+.alert--info {
+  @apply !bg-info-secondary !border-info-border;
+}
+
+.alert--secondary {
+  @apply !text-text-contrast bg-background-primary;
+}
+
+.alert--warning {
+  @apply !bg-warning-secondary !border-warning-border;
+}
+
+.alert--danger {
+  @apply !bg-error-secondary !border-error-border;
+}
+
+/**
+ * Code Blocks
+ */
+
+.theme-code-block {
+  .token {
+    @apply !not-italic;
+  }
+}
+
+/**
+ * Image Zoom Plugin - Z-index fixes
+ * Ensure the zoom overlay and image appear above the navbar
+ */
 .medium-zoom-overlay {
   z-index: 300;
 }

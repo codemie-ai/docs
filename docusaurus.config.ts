@@ -47,7 +47,7 @@ const config: Config = {
         },
         blog: false,
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: ['./src/css/custom.css'],
         },
       } satisfies Preset.Options,
     ],
@@ -84,69 +84,12 @@ const config: Config = {
   themeConfig: {
     image: 'img/codemie-social-card.jpg',
     navbar: {
-      title: 'AI/Run CodeMie',
+      title: '',
       logo: {
         alt: 'AI/Run CodeMie Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo-full-light.svg',
+        srcDark: 'img/logo-full-dark.svg',
       },
-      items: [
-        {
-          to: 'user-guide/getting-started/',
-          position: 'left',
-          label: 'Getting Started',
-        },
-        {
-          to: 'user-guide/',
-          position: 'left',
-          label: 'User Manuals',
-        },
-        {
-          to: 'admin/',
-          position: 'left',
-          label: 'Administration',
-        },
-        {
-          type: 'docsVersionDropdown',
-          position: 'right',
-        },
-        {
-          href: 'https://github.com/codemie-ai/docs',
-          label: 'GitHub',
-          position: 'right',
-        },
-      ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Documentation',
-          items: [
-            {
-              label: 'User Guide',
-              to: 'user-guide/',
-            },
-            {
-              label: 'Administration',
-              to: 'admin/',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/codemie-ai/docs',
-            },
-            {
-              label: 'YouTube',
-              href: 'https://www.youtube.com/@EPAMAIRunCodeMie',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} AI/Run CodeMie. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

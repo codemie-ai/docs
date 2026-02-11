@@ -5,5 +5,12 @@
     "paths": {
       "@site/*": ["./*"]
     }
-  }
+  },
+  "include": [
+    "src",
+    "tailwind.config.d.ts",
+    "docusaurus.config.ts",
+    "sidebars.ts",
+    "eslint.config.mjs"
+  ]
 }
