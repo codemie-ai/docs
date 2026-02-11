@@ -46,6 +46,7 @@ words:
   - Langchain
   - bitnami
   - litellm
+  - reportportal
   - berriai
   - Ollama
   # Cloud/Infrastructure
