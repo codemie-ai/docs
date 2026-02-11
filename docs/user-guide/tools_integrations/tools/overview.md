@@ -32,6 +32,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[OpenAPI](./openapi-tool)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
 | **[Jira](./jira)**                                                        | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
 | **[LiteLLM](./litellm)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
+| **[Confluence](./confluence)**                                            | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                  |
 | **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
 | **[Xray](./xray)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
 | **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |

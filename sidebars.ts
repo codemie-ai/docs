@@ -147,6 +147,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/openapi-tool',
                 'user-guide/tools_integrations/tools/jira',
                 'user-guide/tools_integrations/tools/litellm',
+                'user-guide/tools_integrations/tools/confluence',
                 'user-guide/tools_integrations/tools/quality-assurance-with-jira-zephyr-scale-addon',
                 'user-guide/tools_integrations/tools/servicenow',
                 'user-guide/tools_integrations/tools/scheduler',
