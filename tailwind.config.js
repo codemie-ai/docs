@@ -114,8 +114,13 @@ module.exports = {
       },
       themes: [
         {
+          name: 'lightTheme',
+          selectors: ['[data-theme="light"]', '[data-theme="lightTheme"]'],
+          extend: {},
+        },
+        {
           name: 'darkTheme',
-          selectors: ['[data-theme="dark"]'],
+          selectors: ['[data-theme="dark"]', '[data-theme="darkTheme"]'],
           extend: {
             colors: {
               primary: {

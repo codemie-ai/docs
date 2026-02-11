@@ -9,8 +9,16 @@ const Gradient: FC = () => {
         'absolute bottom-0 left-0 pointer-events-none transition-all duration-150 select-none opacity-50'
       }
     >
-      <img src={GradientLight} className="min-w-[450px] light:hidden" alt="background-gradient" />
-      <img src={GradientDark} className="min-w-[600px] dark:hidden" alt="background-gradient" />
+      <img
+        src={GradientLight}
+        className="min-w-[450px] lightTheme:hidden"
+        alt="background-gradient"
+      />
+      <img
+        src={GradientDark}
+        className="min-w-[600px] darkTheme:hidden"
+        alt="background-gradient"
+      />
     </div>
   );
 };
