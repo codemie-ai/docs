@@ -59,6 +59,7 @@ From version 0.1.22 there is an option to configure Claude Code VSCode extension
 This allows to use claude without Claude subscription and obtaining Anthropic API Key
 
 ### Prerequisites
+
 1. "[Claude Code for VS Code]" extension is installed
 
 ![Marketplace](./images/claude-code-extension.png)
@@ -66,6 +67,7 @@ This allows to use claude without Claude subscription and obtaining Anthropic AP
 2. "[AI/Run CodeMie VS Code Extension]" version >= 0.1.22
 
 ### Instructions
+
 1. Enable "Use Custom Claude Code Configuration" option in AI/Run Codemie extension settings
 
 ![Marketplace](./images/configure-claude-proxy.png)
