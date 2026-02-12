@@ -135,7 +135,7 @@ terraform plan -out=tfplan
 Apply the changes:
 
 ```bash
-terraform apply -auto-approve tfplan
+terraform apply tfplan
 ```
 
 Note the output for the S3 bucket (you'll need this for Phase 3):
@@ -178,7 +178,7 @@ Initialize and apply Terraform:
 ```bash
 terraform init
 terraform plan -out=tfplan
-terraform apply -auto-approve tfplan
+terraform apply tfplan
 ```
 
 Note the output for the S3 bucket (you'll need this for Phase 3):
@@ -235,7 +235,7 @@ set -a && source ../deployment.conf && set +a
 Initialize Terraform with backend configuration:
 
 ```bash
-terraform init -reconfigure \
+terraform init \
   -backend-config="bucket=${BACKEND_BUCKET}" \
   -backend-config="key=${TF_VAR_region}/codemie/platform_terraform.tfstate" \
   -backend-config="region=${TF_VAR_region}" \
@@ -253,7 +253,7 @@ terraform plan -out=tfplan
 Apply the changes:
 
 ```bash
-terraform apply -auto-approve tfplan
+terraform apply tfplan
 ```
 
 Check the outputs:
@@ -319,7 +319,7 @@ export REGION="us-east-1"
 Initialize Terraform with backend configuration:
 
 ```bash
-terraform init -reconfigure \
+terraform init \
   -backend-config="bucket=${BACKEND_BUCKET}" \
   -backend-config="key=${REGION}/codemie/platform_terraform.tfstate" \
   -backend-config="region=${REGION}" \
@@ -337,7 +337,7 @@ terraform plan -out=tfplan
 Apply the changes:
 
 ```bash
-terraform apply -auto-approve tfplan
+terraform apply tfplan
 ```
 
 Check the outputs:
