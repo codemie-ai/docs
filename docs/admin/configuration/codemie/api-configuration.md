@@ -7,6 +7,8 @@ pagination_prev: admin/configuration/index
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # CodeMie API Configuration Reference
 
 This document provides a comprehensive reference for all configuration parameters available in the CodeMie API.
@@ -506,6 +508,8 @@ Control which HTTP headers are forwarded to MCP servers for security and privacy
 
 ## LLM Proxy & LiteLLM Configuration
 
+<EnterpriseFeature />
+
 Configure LiteLLM proxy for unified LLM access, budget management, and usage tracking.
 
 ### Proxy Mode
@@ -674,6 +678,8 @@ Configuration for Azure DevOps work items, test plans, and wiki integrations.
 Track LLM usage, performance metrics, and debugging information.
 
 ### Langfuse Configuration
+
+<EnterpriseFeature />
 
 Send LLM traces to Langfuse for observability, debugging, and prompt optimization.
 
