@@ -25,7 +25,7 @@ Before starting the deployment, ensure you have completed all requirements from 
 ### Verification Checklist
 
 - [ ] **Azure Access**: Contributor role with Entra ID App Registration access
-- [ ] **Tools Installed**: Terraform 1.5.7, Azure CLI, kubectl, Helm, gcloud CLI, Docker
+- [ ] **Tools Installed**: Terraform 1.13.5, Azure CLI, kubectl, Helm, gcloud CLI, Docker
 - [ ] **Azure Authentication**: Logged in via `az login` and subscription set
 - [ ] **Repository Access**: Have access to `codemie-terraform-azure` repository
 - [ ] **Network Planning**: Prepared list of allowed networks
