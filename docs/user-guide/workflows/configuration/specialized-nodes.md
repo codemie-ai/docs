@@ -143,6 +143,71 @@ custom_nodes:
 | `on_error`       | string | No       | `fail`          | Error strategy: `fail`, `skip`, `default`, `partial`                            |
 | `default_output` | object | No       | `{}`            | Default output when `on_error: default`                                         |
 
+#### Input Key Path Extraction
+
+The `input_key` parameter controls how data is extracted from the context store and made available to your mappings.
+
+All examples below use this context store:
+
+```json
+{
+  "name": "Alice",
+  "age": 30,
+  "city": "NYC",
+  "user": {
+    "name": "Bob",
+    "age": 25
+  },
+  "api": {
+    "response": {
+      "data": {
+        "items": [1, 2, 3],
+        "total": 3
+      }
+    }
+  },
+  "stats": {
+    "total": {
+      "count": 42,
+      "sum": 1050,
+      "average": 25.0
+    }
+  },
+  "users": [
+    {"name": "Alice", "role": "admin"},
+    {"name": "Bob", "role": "user"}
+  ]
+}
+```
+
+##### Extraction Examples
+
+| Input Key                    | Extracted Value                      | Available Variables                                                                                           |
+| ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| _(null/omitted)_             | Entire context                       | `name`=`"Alice"`, `age`=`30`, `city`=`"NYC"`, `user`=`{...}`, `api`=`{...}`, `stats`=`{...}`, `users`=`[...]` |
+| `age`                        | `30`                                 | `age` = `30`                                                                                                  |
+| `user`                       | `{"name": "Bob", "age": 25}`         | `name` = `"Bob"`, `age` = `25`                                                                                |
+| `users`                      | `[{"name": "Alice", ...}, ...]`      | `users` = `[{"name": "Alice", "role": "admin"}, {"name": "Bob", "role": "user"}]`                             |
+| `api.response.data`          | `{"items": [1,2,3], "total": 3}`     | `data` = `{"items": [1, 2, 3], "total": 3}`                                                                   |
+| `api.response.data.total`    | `3`                                  | `total` = `3`                                                                                                 |
+| `stats.total`                | `{"count": 42, "sum": 1050, ...}`    | `total` = `{"count": 42, "sum": 1050, "average": 25.0}`                                                       |
+| `users[0]`                   | `{"name": "Alice", "role": "admin"}` | `users` = `{"name": "Alice", "role": "admin"}`                                                                |
+| `users[-1]`                  | `{"name": "Bob", "role": "user"}`    | `users` = `{"name": "Bob", "role": "user"}`                                                                   |
+| `users[0:2]`                 | `[{"name": "Alice", ...}, ...]`      | `users` = `[{"name": "Alice", "role": "admin"}, {"name": "Bob", "role": "user"}]`                             |
+| `users[0].name`              | `"Alice"`                            | `name` = `"Alice"`                                                                                            |
+| `users[1].role`              | `"user"`                             | `role` = `"user"`                                                                                             |
+| `api.response.data.items[0]` | `1`                                  | `items` = `1`                                                                                                 |
+
+##### Behavior Rules
+
+1. **No key** (`null` or omitted): Entire context store merged - all top-level keys become variables
+2. **Simple key** (no dots):
+   - If value is **dict**: Contents unwrapped → dict keys become variables
+   - If value is **not dict**: Value wrapped with key name
+3. **Nested key** (with dots): Value always wrapped with **last part** of the path
+4. **Array indexing** (`[n]`, `[-n]`, `[start:end]`): Element/slice wrapped with **array name** (part before `[`)
+5. **Chained indexing** (e.g., `users[0].name`): Continues path after index, wraps with **last part** of remaining path
+
 #### Mapping Types
 
 Transform Node supports six mapping types:
@@ -218,6 +283,20 @@ Execute Python expressions with restricted namespace.
   type: "script"
   script: "urgency * 2 + importance"
 ```
+
+**Available Python Builtins:**
+
+For security, scripts run in a restricted environment with only these Python builtins:
+
+| Category              | Available                         |
+| --------------------- | --------------------------------- |
+| **Constants**         | `True`, `False`, `None`           |
+| **Type Constructors** | `str`, `int`, `float`, `bool`     |
+| **Common Functions**  | `len`, `min`, `max`, `sum`, `abs` |
+| **Collections**       | `list`, `dict`, `set`, `tuple`    |
+| **Utilities**         | `any`, `all`                      |
+
+**Note:** Import statements, file I/O, and other Python builtins are not available for security reasons.
 
 #### Sequential Processing
 
