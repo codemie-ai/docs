@@ -81,13 +81,19 @@ s3:
 retention:
   langfuse:
     enabled: false              # Set to 'true' to automatically purge historical data
-    observationsDays: 90        # Retain observations for 90 days
-    tracesDays: 90              # Retain traces for 90 days
-    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days
+    observationsDays: 90        # Retain observations for 90 days (table: default.observations)
+    tracesDays: 90              # Retain traces for 90 days (table: default.traces)
+    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days (table: default.blob_storage_file_log)
 ```
 
 :::tip Data Retention
-The retention configuration automatically applies [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to Langfuse tables in ClickHouse. This helps manage storage costs by automatically removing old data. Adjust the retention periods based on your compliance and storage requirements.
+The retention configuration automatically applies [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to the largest Langfuse tables in ClickHouse:
+
+- **`default.observations`**
+- **`default.traces`**
+- **`default.blob_storage_file_log`**
+
+These three tables consume the most disk space and are the primary candidates for retention management. Other Langfuse tables have minimal storage impact and do not require TTL configuration. Adjust the retention periods based on your compliance and storage requirements.
 :::
 
 :::info ClickHouse System Tables Retention
