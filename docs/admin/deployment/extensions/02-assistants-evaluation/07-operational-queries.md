@@ -8,6 +8,9 @@ pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-ev
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Operational Queries
 
 This page provides useful SQL queries for monitoring and analyzing ClickHouse data in your Langfuse deployment. These queries help you understand storage usage, analyze data patterns, verify retention policies, and troubleshoot issues.
@@ -88,9 +91,9 @@ ORDER BY
     sum(bytes_on_disk) DESC;
 ```
 
-### List All Langfuse Tables
+### List All Tables
 
-Displays tables in the `default` database, sorted so that the largest tables appear at the top. Including their engine type, row count, and total size. This is the best way to distinguish between real storage and virtual views.
+Displays tables sorted by size, including their engine type, row count, and total size. This is the best way to distinguish between real storage and virtual views.
 
 **Key Columns:**
 
@@ -98,6 +101,11 @@ Displays tables in the `default` database, sorted so that the largest tables app
   - `MergeTree` / `Replicated...`: Real tables that store data.
   - `View`: Virtual tables (saved queries) that take up **0 bytes**.
 - **`total_rows`**: The number of records in the table.
+
+<Tabs>
+  <TabItem value="default" label="Langfuse (default)" default>
+
+Query to list all Langfuse application tables in the `default` database:
 
 ```sql
 SELECT
@@ -109,6 +117,25 @@ FROM system.tables
 WHERE database = 'default'
 ORDER BY total_bytes DESC;
 ```
+
+  </TabItem>
+  <TabItem value="system" label="ClickHouse (system)">
+
+Query to list all ClickHouse internal tables in the `system` database:
+
+```sql
+SELECT
+    name AS table_name,
+    engine,
+    total_rows,
+    formatReadableSize(total_bytes) AS size
+FROM system.tables
+WHERE database = 'system'
+ORDER BY total_bytes DESC;
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
