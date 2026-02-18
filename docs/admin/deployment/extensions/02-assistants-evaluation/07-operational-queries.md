@@ -50,7 +50,24 @@ clickhouse-client --password <password_from_above>
 
 ### Top Tables by Disk Size
 
-This query identifies which tables are consuming the most disk space across the entire server. It includes both business data (Langfuse) and internal system logs.
+This query identifies which tables are consuming the most disk space.
+
+:::info Database Types
+ClickHouse contains two types of databases:
+
+- **`default`** - Langfuse application database containing business data (Langfuse uses `default` as the [database name by default](https://langfuse.com/self-hosting/configuration#:~:text=CLICKHOUSE_DB,Name%20of%20the%20ClickHouse%20database%20to%20use.)):
+  - `observations`
+  - `traces`
+  - `scores`
+  - Other Langfuse tables and views
+
+- **`system`** - ClickHouse internal database containing metadata ([Located in the `system` database](https://clickhouse.com/docs/operations/system-tables/overview)):
+  - Server states, processes, and environment
+  - Server's internal processes
+  - Query history, logs, and performance metrics
+
+You may need to manage retention and cleanup for both databases depending on your disk usage patterns.
+:::
 
 :::note
 This query returns only tables that contain at least one record. **Empty tables** or **Views** (Virtual tables) will not be listed here because they do not have physical data parts on the disk.
@@ -95,9 +112,16 @@ ORDER BY total_bytes DESC;
 
 ---
 
-## 2. Time Series Analysis
+### Data Distribution by Time Period
 
-Before running these queries, check which column represents the event time in your specific table (see **Section 3** for how to check table structure).
+The following queries help you understand how data is distributed over time and identify which periods consume the most storage.
+
+:::info Fast vs Heavy Queries
+ClickHouse does not store per-day or per-month disk usage metrics in system tables. Therefore:
+
+- **Fast queries (Row Count)** - Execute instantly by reading indices only. Shows the number of records.
+- **Heavy queries (With Size)** - Physically read and decompress data to calculate approximate uncompressed size. This is **NOT** the actual compressed disk usage, but the raw text size (significantly larger). These queries can be slow on large datasets. Use this only when you need to understand relative size distribution, not actual disk space.
+  :::
 
 :::tip Date Column Names
 Check the date column name for your table:
@@ -105,11 +129,10 @@ Check the date column name for your table:
 - `default.observations` uses **`start_time`**
 - `default.traces` and `default.scores` uses **`timestamp`**
 
+To verify the date column for other tables, see [Table Structure](#2-table-structure) section.
 :::
 
-### Data by Month
-
-#### Option 1: Row Count (Fast)
+#### By Month: Row Count (Fast)
 
 Executes instantly by reading indices only.
 
@@ -122,13 +145,7 @@ GROUP BY month
 ORDER BY month ASC;
 ```
 
-#### Option 2: With Uncompressed Size (Heavy)
-
-Calculates the **approximate uncompressed size** of text data (JSON).
-
-:::warning Performance Warning
-This query physically reads and decompresses data, so it **can be slow**. The result represents raw text size, which is significantly larger than the actual compressed disk usage.
-:::
+#### By Month: Approximate Uncompressed Size (Heavy)
 
 ```sql
 SELECT
@@ -140,9 +157,7 @@ GROUP BY month
 ORDER BY month ASC;
 ```
 
-### Data by Day
-
-#### Option 1: Row Count (Fast)
+#### By Day: Row Count (Fast)
 
 Executes instantly by reading indices only.
 
@@ -155,7 +170,7 @@ GROUP BY day
 ORDER BY day ASC;
 ```
 
-#### Option 2: With Uncompressed Size (Heavy)
+#### By Day: Approximate Uncompressed Size (Heavy)
 
 ```sql
 SELECT
@@ -165,25 +180,11 @@ SELECT
 FROM default.observations
 GROUP BY day
 ORDER BY day ASC;
-```
-
-### Retention Check (Oldest Data)
-
-Shows the oldest available days to verify if TTL is working.
-
-```sql
-SELECT
-    toDate(start_time) AS day,
-    count() AS rows
-FROM default.observations
-GROUP BY day
-ORDER BY day ASC
-LIMIT 15;
 ```
 
 ---
 
-## 3. Table Structure
+## 2. Table Structure
 
 Use this command to view the full table definition. This is critical for:
 
@@ -203,7 +204,7 @@ SHOW CREATE TABLE default.observations;
 
 ---
 
-## 4. Manual Data Deletion
+## 3. Manual Data Deletion
 
 If you need to clean up data manually (e.g., before applying a new TTL or for testing), use the `ALTER ... DELETE` command.
 
@@ -237,7 +238,23 @@ LIMIT 5;
 
 ---
 
-## 5. TTL Monitoring
+## 4. TTL Monitoring
+
+### Retention Check (Oldest Data)
+
+Shows the oldest available days to verify if TTL is working correctly.
+
+```sql
+SELECT
+    toDate(start_time) AS day,
+    count() AS rows
+FROM default.observations
+GROUP BY day
+ORDER BY day ASC
+LIMIT 15;
+```
+
+### TTL Expiration Status
 
 Check the physical parts to see exactly when ClickHouse schedules data deletion.
 
@@ -254,14 +271,14 @@ WHERE database = 'default' AND table = 'observations' AND active
 ORDER BY min_ttl;
 ```
 
-### Column Meaning
+#### Column Meaning
 
 Since data is stored in files (parts) containing multiple rows:
 
 - **`min_ttl`**: The expiration time of the **oldest** row in the file.
 - **`max_ttl`**: The expiration time of the **newest** row in the file.
 
-### How to Interpret Status
+#### How to Interpret Status
 
 Compare `min_ttl` with the **Current Time**:
 
