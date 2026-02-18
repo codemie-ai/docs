@@ -708,7 +708,7 @@ Configuration examples for these models can be found in the provider-specific se
 # US Region
 - model_name: gpt-5-2-2025-12-11
   litellm_params:
-    model: azure/codemie-gpt-5.2-2025-12-11
+    model: azure/gpt-5.2-2025-12-11
     api_base: https://api-base-eastus2-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -719,7 +719,7 @@ Configuration examples for these models can be found in the provider-specific se
 # EU Region
 - model_name: gpt-5-2-2025-12-11
   litellm_params:
-    model: azure/codemie-gpt-5.2-2025-12-11
+    model: azure/gpt-5.2-2025-12-11
     api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -835,7 +835,7 @@ Configuration examples for these models can be found in the provider-specific se
 # EU Region
 - model_name: codemie-text-embedding-ada-002
   litellm_params:
-    model: azure/codemie-text-embedding-ada-002
+    model: azure/text-embedding-ada-002
     api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
