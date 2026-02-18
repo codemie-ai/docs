@@ -657,6 +657,7 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'admin/configuration/extensions/litellm-proxy/budget-configuration',
+                    'admin/configuration/extensions/litellm-proxy/model-configuration',
                     'admin/configuration/extensions/litellm-proxy/spend-logs-retention',
                   ],
                 },
