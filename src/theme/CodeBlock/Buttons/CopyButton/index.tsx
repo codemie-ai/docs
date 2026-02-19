@@ -8,6 +8,7 @@ import IconCopy from '@theme/Icon/Copy';
 import IconSuccess from '@theme/Icon/Success';
 
 import styles from './styles.module.css';
+import toaster from '@site/src/components/toaster';
 
 function title() {
   return translate({
@@ -39,12 +40,19 @@ function useCopyButton() {
   const copyTimeout = useRef<number | undefined>(undefined);
 
   const copyCode = useCallback(() => {
-    void navigator.clipboard.writeText(code).then(() => {
-      setIsCopied(true);
-      copyTimeout.current = window.setTimeout(() => {
-        setIsCopied(false);
-      }, 1000);
-    });
+    if (navigator.clipboard) {
+      void navigator.clipboard.writeText(code).then(() => {
+        setIsCopied(true);
+        copyTimeout.current = window.setTimeout(() => {
+          setIsCopied(false);
+          toaster.success('Copied to clipboard');
+        }, 1000);
+      });
+    } else {
+      toaster.error(
+        'This browser does not support clipboard copy functionality or it is blocked (e.g. site served using http://)'
+      );
+    }
   }, [code]);
 
   useEffect(() => () => window.clearTimeout(copyTimeout.current), []);

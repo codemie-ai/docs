@@ -11,12 +11,12 @@ const Gradient: FC = () => {
     >
       <img
         src={GradientLight}
-        className="min-w-[450px] lightTheme:hidden"
+        className="min-w-[450px] block lightTheme:hidden"
         alt="background-gradient"
       />
       <img
         src={GradientDark}
-        className="min-w-[600px] darkTheme:hidden"
+        className="min-w-[600px] block darkTheme:hidden"
         alt="background-gradient"
       />
     </div>

@@ -4,6 +4,12 @@
 @import url('https://cdn.jsdelivr.net/npm/geist@latest/dist/font.css');
 
 /**
+ * Toastify CSS
+ */
+@import 'toastify-js/src/toastify.css';
+@import './toastify.css';
+
+/**
  * Tailwind CSS Integration
  */
 @tailwind base;
