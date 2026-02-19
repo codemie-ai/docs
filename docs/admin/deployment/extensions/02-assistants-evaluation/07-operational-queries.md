@@ -61,6 +61,7 @@ ClickHouse contains two types of databases:
 - **`default`** - Langfuse application database containing business data (Langfuse uses `default` as the [database name by default](https://langfuse.com/self-hosting/configuration#:~:text=CLICKHOUSE_DB,Name%20of%20the%20ClickHouse%20database%20to%20use.)):
   - `observations`
   - `traces`
+  - `blob_storage_file_log`
   - `scores`
   - Other Langfuse tables and views
 
@@ -143,36 +144,33 @@ ORDER BY total_bytes DESC;
 
 The following queries help you understand how data is distributed over time and identify which periods consume the most storage.
 
-:::info Fast vs Heavy Queries
-ClickHouse does not store per-day or per-month disk usage metrics in system tables. Therefore:
+:::info Query Types
+Choose the appropriate query based on your needs:
 
-- **Fast queries (Row Count)** - Execute instantly by reading indices only. Shows the number of records.
-- **Heavy queries (With Size)** - Physically read and decompress data to calculate approximate uncompressed size. This is **NOT** the actual compressed disk usage, but the raw text size (significantly larger). These queries can be slow on large datasets. Use this only when you need to understand relative size distribution, not actual disk space.
-  :::
+- **[Compressed Size by Month](#compressed-size-by-month-fast)** Fast - Actual compressed disk usage and row counts by month
+- **[Row Count by Day](#by-day-row-count-fast)** Fast - Number of records by day
+- **[Uncompressed Size by Day](#uncompressed-size-by-day-heavy)** Heavy - Relative size distribution by day (not actual disk usage). Use this only to understand **relative size distribution** across days
 
-:::tip Date Column Names
-Check the date column name for your table:
-
-- `default.observations` uses **`start_time`**
-- `default.traces` and `default.scores` uses **`timestamp`**
-
-To verify the date column for other tables, see [Table Structure](#2-table-structure) section.
+:::note
+Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
 :::
 
-#### By Month: Row Count (Fast)
+#### Compressed Size by Month (Fast)
 
-Executes instantly by reading indices only.
+Reads partition metadata from `system.parts`. Shows actual compressed disk usage by month.
 
 <Tabs>
   <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT
-    toYYYYMM(start_time) AS month,
-    count() AS rows
-FROM default.observations
-GROUP BY month
-ORDER BY month ASC;
+    partition AS month,
+    sum(rows) AS rows,
+    formatReadableSize(sum(bytes_on_disk)) AS compressed_size
+FROM system.parts
+WHERE database = 'default' AND table = 'observations' AND active
+GROUP BY partition
+ORDER BY partition ASC;
 ```
 
   </TabItem>
@@ -180,66 +178,13 @@ ORDER BY month ASC;
 
 ```sql
 SELECT
-    toYYYYMM(timestamp) AS month,
-    count() AS rows
-FROM default.traces
-GROUP BY month
-ORDER BY month ASC;
-```
-
-  </TabItem>
-  <TabItem value="blob_storage" label="Blob Storage Logs">
-
-```sql
-SELECT
-    toYYYYMM(created_at) AS month,
-    count() AS rows
-FROM default.blob_storage_file_log
-GROUP BY month
-ORDER BY month ASC;
-```
-
-  </TabItem>
-</Tabs>
-
-#### By Month: Approximate Uncompressed Size (Heavy)
-
-<Tabs>
-  <TabItem value="observations" label="Observations" default>
-
-```sql
-SELECT
-    toYYYYMM(start_time) AS month,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
-FROM default.observations
-GROUP BY month
-ORDER BY month ASC;
-```
-
-  </TabItem>
-  <TabItem value="traces" label="Traces">
-
-```sql
-SELECT
-    toYYYYMM(timestamp) AS month,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
-FROM default.traces
-GROUP BY month
-ORDER BY month ASC;
-```
-
-  </TabItem>
-  <TabItem value="blob_storage" label="Blob Storage Logs">
-
-```sql
-SELECT
-    toYYYYMM(created_at) AS month,
-    count() AS rows
-FROM default.blob_storage_file_log
-GROUP BY month
-ORDER BY month ASC;
+    partition AS month,
+    sum(rows) AS rows,
+    formatReadableSize(sum(bytes_on_disk)) AS compressed_size
+FROM system.parts
+WHERE database = 'default' AND table = 'traces' AND active
+GROUP BY partition
+ORDER BY partition ASC;
 ```
 
   </TabItem>
@@ -288,7 +233,7 @@ ORDER BY day ASC;
   </TabItem>
 </Tabs>
 
-#### By Day: Approximate Uncompressed Size (Heavy)
+#### Uncompressed Size by Day (Heavy)
 
 <Tabs>
   <TabItem value="observations" label="Observations" default>
@@ -317,19 +262,20 @@ ORDER BY day ASC;
 ```
 
   </TabItem>
-  <TabItem value="blob_storage" label="Blob Storage Logs">
-
-```sql
-SELECT
-    toDate(created_at) AS day,
-    count() AS rows
-FROM default.blob_storage_file_log
-GROUP BY day
-ORDER BY day ASC;
-```
-
-  </TabItem>
 </Tabs>
+
+:::note Blob Storage Logs Table
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+:::
+
+:::tip Date Column Names
+Check the date column name for your table:
+
+- `default.observations` uses **`start_time`**
+- `default.traces` and `default.scores` uses **`timestamp`**
+
+To verify the date column for other tables, see [Table Structure](#2-table-structure) section.
+:::
 
 ---
 
