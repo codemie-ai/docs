@@ -35,6 +35,7 @@ The `config.yaml` file contains five main sections:
 <summary><strong>Example: Config Structure</strong></summary>
 
 ```yaml
+// highlight-next-line
 model_list:
   - model_name: fake-model-endpoint
     litellm_params:
@@ -44,16 +45,19 @@ model_list:
       base_model: fake-base-model-id
       label: "Fake Model Name for Testing"
 
+// highlight-next-line
 litellm_settings:
-  drop_params: True
+  # ... additional configuration fields
 
+// highlight-next-line
 general_settings:
   master_key: sk-1234
 
+// highlight-next-line
 router_settings:
-  fallbacks:
-    - claude-sonnet-4-6: ["claude-4-5-sonnet"]
+  # ... additional configuration fields
 
+// highlight-next-line
 credential_list:
   - credential_name: default_aws_credential
     aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
