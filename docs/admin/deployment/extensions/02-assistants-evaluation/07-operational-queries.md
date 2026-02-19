@@ -368,7 +368,10 @@ Automatic data deletion through Time-To-Live (TTL) policies. These queries help 
 
 #### Retention Check (Oldest Data)
 
-Shows the oldest available days to verify if TTL is working correctly.
+Shows the 15 oldest available days to verify if TTL is working correctly.
+
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT
@@ -380,47 +383,113 @@ ORDER BY day ASC
 LIMIT 15;
 ```
 
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    toDate(timestamp) AS day,
+    count() AS rows
+FROM default.traces
+GROUP BY day
+ORDER BY day ASC
+LIMIT 15;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    toDate(created_at) AS day,
+    count() AS rows
+FROM default.blob_storage_file_log
+GROUP BY day
+ORDER BY day ASC
+LIMIT 15;
+```
+
+  </TabItem>
+</Tabs>
+
 #### TTL Expiration Status
 
-Check the physical parts to see exactly when ClickHouse schedules data deletion.
+Check when ClickHouse will delete expired data. ClickHouse stores data in physical files called **parts**. Each part contains multiple rows, and TTL is checked during background merges.
+
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT
     partition,
     name AS part_name,
-    -- When the FIRST row in this part expires (Partial cleanup required)
     toDateTime(delete_ttl_info_min) AS min_ttl,
-    -- When the LAST row in this part expires (Whole part deletion)
     toDateTime(delete_ttl_info_max) AS max_ttl
 FROM system.parts
 WHERE database = 'default' AND table = 'observations' AND active
 ORDER BY min_ttl;
 ```
 
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    partition,
+    name AS part_name,
+    toDateTime(delete_ttl_info_min) AS min_ttl,
+    toDateTime(delete_ttl_info_max) AS max_ttl
+FROM system.parts
+WHERE database = 'default' AND table = 'traces' AND active
+ORDER BY min_ttl;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    partition,
+    name AS part_name,
+    toDateTime(delete_ttl_info_min) AS min_ttl,
+    toDateTime(delete_ttl_info_max) AS max_ttl
+FROM system.parts
+WHERE database = 'default' AND table = 'blob_storage_file_log' AND active
+ORDER BY min_ttl;
+```
+
+  </TabItem>
+</Tabs>
+
 ##### Column Meaning
 
-Since data is stored in files (parts) containing multiple rows:
+Since each partition contains multiple rows with different timestamps:
 
-- **`min_ttl`**: The expiration time of the **oldest** row in the file.
-- **`max_ttl`**: The expiration time of the **newest** row in the file.
+- **`min_ttl`**: When the **oldest** row in this partition will expire
+- **`max_ttl`**: When the **newest** row in this partition will expire
+- **`partition`**: The monthly partition (format: `YYYYMM`)
 
 ##### How to Interpret Status
 
-Compare `min_ttl` with the **Current Time**:
+Compare `min_ttl` with the **current date/time**:
 
-| Value            | Status             | Meaning                                                                                    |
-| :--------------- | :----------------- | :----------------------------------------------------------------------------------------- |
-| **`1970-01-01`** | **Not Calculated** | TTL rules applied but not processed yet. Wait for the next background merge.               |
-| **Past Date**    | **Expired**        | Retention period passed. Data physically exists but is queued for deletion (lazy cleanup). |
-| **Future Date**  | **Active**         | Data is safe. It is scheduled for deletion on this specific date.                          |
+| `min_ttl` Value  | Status                | What it means                                                                                                                         |
+| :--------------- | :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **`1970-01-01`** | **TTL Not Processed** | TTL rule exists but hasn't been evaluated yet. ClickHouse will process it during the next background merge.                           |
+| **Past Date**    | **Expired (Pending)** | Data should be deleted but still exists on disk. ClickHouse deletes it during the next merge. This is normal "lazy cleanup" behavior. |
+| **Future Date**  | **Active**            | Data is within retention period. It will be automatically deleted when this date is reached.                                          |
 
-:::tip Force Cleanup
-If you see expired dates but disk space is not freed yet, force a cleanup manually:
+**Why isn't expired data deleted immediately?**
+ClickHouse performs TTL cleanup during background merges to avoid impacting query performance.
+
+:::tip Force Immediate Cleanup
+If expired data still occupies disk space and you need to free it immediately:
 
 ```sql
 OPTIMIZE TABLE default.observations FINAL;
 ```
 
+This forces ClickHouse to merge all parts and apply TTL rules immediately.
 :::
 
 ---
