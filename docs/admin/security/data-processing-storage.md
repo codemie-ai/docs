@@ -7,11 +7,11 @@ pagination_prev: admin/security/index
 pagination_next: null
 ---
 
-# Codemie Platform - Data Processing & Storage Architecture
+# CodeMie Platform - Data Processing & Storage Architecture
 
 ## Overview
 
-The Codemie platform is an AI-powered coding assistant that processes user conversations and integrates with external services while maintaining data sovereignty and security through configurable regional deployment.
+The CodeMie platform is an AI-powered coding assistant that processes user conversations and integrates with external services while maintaining data sovereignty and security through configurable regional deployment.
 
 ![Data Processing Architecture](./images/data-processing-architecture.png)
 
@@ -19,10 +19,10 @@ The Codemie platform is an AI-powered coding assistant that processes user conve
 
 **1. Regional Data Isolation**
 
-- All persistent data (PostgreSQL, object storage) resides in a single configurable region
-- In-cluster components (Elasticsearch, NATS, etc.) run within the Kubernetes cluster region
-- AI processing occurs in model-specific regions based on LiteLLM configuration
-- Encryption keys can be stored in a separate region
+- Persistent storage regions are independently configurable - PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
+- In-cluster components (Elasticsearch, NATS, Redis) run within the Kubernetes cluster region
+- AI processing regions are configurable per LLM provider (AWS Bedrock, Azure OpenAI, Google Vertex AI, Anthropic, ...) - customers can select specific regions for each model based on compliance and latency requirements
+- PostgreSQL (Keycloak) is always deployed in the same region as the Kubernetes cluster
 
 **2. Data Encryption**
 
@@ -110,7 +110,7 @@ OAuth2 Proxy operates in **stateless mode** using encrypted browser cookies with
 ### 2. Chat Conversation Flow
 
 ```
-User submits prompt → Codemie API
+User submits prompt → CodeMie API
          ↓
     1. Store in PostgreSQL (Cloud SQL/RDS/Azure Database)
     2. Search Elasticsearch (context retrieval) (GKE/AKS/EKS)
@@ -193,7 +193,7 @@ For a complete list of supported data source types and configuration details, se
 | Component                 | Data Type                | Storage                             | Region                                    | Encryption                       |
 | ------------------------- | ------------------------ | ----------------------------------- | ----------------------------------------- | -------------------------------- |
 | **PostgreSQL (Keycloak)** | User auth, SSO mappings  | K8s cluster                         | GKE/AKS/EKS Region                        | StorageClass encryption + TLS    |
-| **PostgreSQL (Codemie)**  | Chat, Config, Roles      | Cloud SQL/RDS/Azure DB              | Cloud SQL/RDS/Azure Database Region       | KMS (at rest) + TLS (in transit) |
+| **PostgreSQL (CodeMie)**  | Chat, Config, Roles      | Cloud SQL/RDS/Azure DB              | Cloud SQL/RDS/Azure Database Region       | KMS (at rest) + TLS (in transit) |
 | **Elasticsearch**         | Knowledge Base, Indices  | K8s Persistent Volume               | GKE/AKS/EKS Region                        | StorageClass encryption + TLS    |
 | **Object Storage**        | Files, Attachments       | GCS/S3/Azure Blob                   | GCS/S3/Azure Blob Region                  | KMS (server-side)                |
 | **Redis (optional)**      | LiteLLM Cache            | K8s (memory) or Cloud Managed Cache | GKE/AKS/EKS Region or Cloud Cache Region  | None (ephemeral)                 |
@@ -224,20 +224,20 @@ For a complete list of supported data source types and configuration details, se
 
 - **SSO Federation**: Keycloak acts as SAML/OIDC broker, user data stored locally after federation
 - **API Keys**: External service credentials stored in PostgreSQL (Cloud SQL/RDS/Azure DB) as KMS-encrypted blobs, never exposed to users
-- **JWT Tokens**: Issued by Keycloak, validated by Codemie API for each request
+- **JWT Tokens**: Issued by Keycloak, validated by CodeMie API for each request
 - **Role-Based Access**: Permissions stored in PostgreSQL, enforced at API layer
 
 ## Data Retention & Compliance
 
 | Data Category                       | Default Retention                   | Configurable | Compliance Notes                 |
 | ----------------------------------- | ----------------------------------- | ------------ | -------------------------------- |
-| Chat History (PostgreSQL Codemie)   | 30 days                             | Yes          | GDPR right to erasure supported  |
+| Chat History (PostgreSQL CodeMie)   | 30 days                             | Yes          | GDPR right to erasure supported  |
 | User Profiles (PostgreSQL Keycloak) | Indefinite                          | Yes          | Deleted on user account deletion |
 | Elasticsearch Indices               | Indefinite (90 days if ILM enabled) | Yes          | Can be rebuilt from sources      |
 | Redis Cache                         | Ephemeral (lost on restart)         | Yes          | LiteLLM cache only, optional     |
 | Object Storage Files                | Indefinite                          | Yes          | Customer-controlled lifecycle    |
 | PostgreSQL Backups (Keycloak)       | 7 days                              | Yes          | K8s PGO point-in-time recovery   |
-| PostgreSQL Backups (Codemie)        | 7 days                              | Yes          | Cloud SQL/RDS/Azure DB backups   |
+| PostgreSQL Backups (CodeMie)        | 7 days                              | Yes          | Cloud SQL/RDS/Azure DB backups   |
 | External Service Data               | Indefinite                          | Yes          | Re-synced from source            |
 | KMS Keys                            | Indefinite                          | Yes          | Rotation disabled by default     |
 
@@ -265,7 +265,7 @@ Limitations:
 **Data Sovereignty**
 
 - **PostgreSQL (Keycloak)**: K8s cluster region - stores SSO federation mappings, local user credentials
-- **PostgreSQL (Codemie)**: Cloud SQL/RDS/Azure Database region - stores chat history, configuration, roles, external service credentials
+- **PostgreSQL (CodeMie)**: Cloud SQL/RDS/Azure Database region - stores chat history, configuration, roles, external service credentials
 - **Object Storage**: GCS/S3/Azure Blob region - stores user files and attachments
 - **Kubernetes cluster**: GKE/AKS/EKS region - contains Elasticsearch, NATS, Redis (optional), and Keycloak PostgreSQL
 - **KMS**: Configurable region (can be separate from data regions) - manages encryption keys
@@ -277,7 +277,7 @@ Limitations:
 
 **Scenario**: User asks "What's the status of JIRA-123?"
 
-1. **User submits question** → Codemie API
+1. **User submits question** → CodeMie API
 2. **API authenticates** user via JWT (validated against Keycloak → PostgreSQL)
 3. **API searches** Elasticsearch for "JIRA-123" (indexed data from Jira)
 4. **Elasticsearch returns** issue details (title, description, status, comments)
@@ -296,9 +296,9 @@ Limitations:
 
 ## Summary
 
-The Codemie platform follows a **local-first data architecture** where:
+The CodeMie platform follows a **local-first data architecture** where:
 
-- Persistent storage regions are independently configurable - PostgreSQL (Keycloak), PostgreSQL (Codemie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
+- Persistent storage regions are independently configurable - PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
 - External service data is indexed locally before AI processing
 - AI processing regions are configurable per LLM provider (AWS Bedrock, Azure OpenAI, Google Vertex AI, Anthropic, ...) - customers can select specific regions for each model based on compliance and latency requirements
 - Encryption keys can be geo-separated from data for compliance
@@ -308,5 +308,5 @@ The Codemie platform follows a **local-first data architecture** where:
 This architecture supports **data sovereignty**, **GDPR compliance**, and **multi-region AI processing** while maintaining security and performance.
 
 :::tip Data Residency Configuration
-Configure regional settings during deployment to match your organization's data residency and compliance requirements. PostgreSQL (Codemie), Object Storage, and KMS regions can be set independently from each other and from the Kubernetes cluster region. PostgreSQL (Keycloak) is always deployed in the same region as the Kubernetes cluster.
+Configure regional settings during deployment to match your organization's data residency and compliance requirements. PostgreSQL (CodeMie), Object Storage, and KMS regions can be set independently from each other and from the Kubernetes cluster region. PostgreSQL (Keycloak) is always deployed in the same region as the Kubernetes cluster.
 :::
