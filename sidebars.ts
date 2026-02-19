@@ -554,7 +554,6 @@ const sidebars: SidebarsConfig = {
                     },
                     'admin/deployment/extensions/assistants-evaluation/post-deployment',
                     'admin/deployment/extensions/assistants-evaluation/troubleshooting',
-                    'admin/deployment/extensions/assistants-evaluation/operational-queries',
                   ],
                 },
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
@@ -650,6 +649,14 @@ const sidebars: SidebarsConfig = {
               label: 'Extensions',
               collapsed: true,
               items: [
+                {
+                  type: 'category',
+                  label: 'Assistants Evaluation',
+                  collapsed: true,
+                  items: [
+                    'admin/configuration/extensions/assistants-evaluation/storage-management',
+                  ],
+                },
                 {
                   type: 'category',
                   label: 'LiteLLM Proxy',

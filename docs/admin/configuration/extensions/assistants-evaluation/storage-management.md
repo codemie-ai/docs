@@ -1,19 +1,19 @@
 ---
-id: operational-queries
-title: Operational Queries
-sidebar_label: Operational Queries
-sidebar_position: 8
-description: ClickHouse queries for monitoring and analyzing Langfuse data
-pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-evaluation
+id: storage-management
+title: Storage Management
+sidebar_label: Storage Management
+sidebar_position: 1
+description: ClickHouse storage management queries for Langfuse - disk usage analysis, data cleanup, and TTL monitoring
+pagination_prev: null
 pagination_next: null
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Operational Queries
+# Storage Management
 
-This page provides useful SQL queries for monitoring and analyzing ClickHouse data in your Langfuse deployment. These queries help you understand storage usage, analyze data patterns, verify retention policies, and troubleshoot issues.
+This guide provides SQL queries for managing ClickHouse storage in your Langfuse deployment. Use these queries to monitor disk usage, clean up old data, and verify retention policies.
 
 ## Prerequisites
 
@@ -66,11 +66,11 @@ ClickHouse contains two types of databases:
   - Other Langfuse tables and views
 
 - **`system`** - ClickHouse internal database containing metadata ([Located in the `system` database](https://clickhouse.com/docs/operations/system-tables/overview)):
-  - Server states, processes, and environment
-  - Server's internal processes
-  - Query history, logs, and performance metrics
+  - `query_log`
+  - `trace_log`
+  - `metric_log`
+  - Other ClickHouse tables
 
-You may need to manage retention and cleanup for both databases depending on your disk usage patterns.
 :::
 
 ```sql
