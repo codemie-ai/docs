@@ -179,7 +179,12 @@ Each model entry in the `model_list` array consists of three main sections:
 **`model_info`**
 
 - **`id`**: Unique identifier for the specific model instance
-- **`base_model`**: Base model identifier to retrieve defaults from [LiteLLM models database](https://models.litellm.ai/)
+- **`base_model`**: Base model identifier used to retrieve defaults and pricing from [LiteLLM models database](https://models.litellm.ai/).
+
+  :::info
+  Set `base_model` accurately — the same model across different providers or regions may have different costs and capabilities.
+  :::
+
 - **`label`**: Human-readable display name shown in CodeMie UI
 - **`forbidden_for_web`**: (Optional) Set to `true` to hide this model from CodeMie UI
 - **`default_for_categories`**: Array of categories for default model selection.
