@@ -364,11 +364,15 @@ LIMIT 5;
 
 ### TTL Monitoring
 
-Automatic data deletion through Time-To-Live (TTL) policies. These queries help verify that TTL is working correctly.
+Monitor automatic data deletion through Time-To-Live (TTL) policies.
 
-#### Retention Check (Oldest Data)
+:::tip First: Verify TTL is Configured
+Before monitoring, check if TTL exists in your table definition: [Table Structure](#3-table-structure). Look for the `TTL` line - if missing, automatic deletion is not configured.
+:::
 
-Shows the 15 oldest available days to verify if TTL is working correctly.
+#### Verify Old Data Deletion
+
+Shows the 15 oldest days with data to check if TTL is deleting old records as expected.
 
 <Tabs>
   <TabItem value="observations" label="Observations" default>
@@ -501,9 +505,29 @@ Use this command to view the full table definition. This is critical for:
 1. **Column Names:** Finding the correct date column (e.g., `start_time` vs `timestamp`).
 2. **TTL Verification:** Checking if a retention policy is currently configured.
 
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
+
 ```sql
 SHOW CREATE TABLE default.observations;
 ```
+
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SHOW CREATE TABLE default.traces;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SHOW CREATE TABLE default.blob_storage_file_log;
+```
+
+  </TabItem>
+</Tabs>
 
 :::tip What to Look For
 
