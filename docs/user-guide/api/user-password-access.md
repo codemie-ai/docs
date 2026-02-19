@@ -12,7 +12,7 @@ sidebar_position: 2
 This guide provides step-by-step instructions for creating and configuring a Keycloak client for CodeMie Client Password integration.
 
 :::note
-You can use scripts to create and manage User Password clients in Keycloak: [User Password Script](https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/tree/main/keycloak-onboarding/scripts/keycloak_sdk)
+Enterprise customers supplied by scripts to create and manage User Password clients in Keycloak
 :::
 
 ---
