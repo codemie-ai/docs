@@ -66,9 +66,10 @@ ClickHouse contains two types of databases:
   - Other Langfuse tables and views
 
 - **`system`** - ClickHouse internal database containing metadata ([Located in the `system` database](https://clickhouse.com/docs/operations/system-tables/overview)):
-  - `query_log`
   - `trace_log`
+  - `zookeeper_log`
   - `metric_log`
+  - `opentelemetry_span_log`
   - Other ClickHouse tables
 
 :::
