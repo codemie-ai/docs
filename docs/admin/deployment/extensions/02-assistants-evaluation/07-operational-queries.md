@@ -163,6 +163,9 @@ To verify the date column for other tables, see [Table Structure](#2-table-struc
 
 Executes instantly by reading indices only.
 
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
+
 ```sql
 SELECT
     toYYYYMM(start_time) AS month,
@@ -172,7 +175,37 @@ GROUP BY month
 ORDER BY month ASC;
 ```
 
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    toYYYYMM(timestamp) AS month,
+    count() AS rows
+FROM default.traces
+GROUP BY month
+ORDER BY month ASC;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    toYYYYMM(created_at) AS month,
+    count() AS rows
+FROM default.blob_storage_file_log
+GROUP BY month
+ORDER BY month ASC;
+```
+
+  </TabItem>
+</Tabs>
+
 #### By Month: Approximate Uncompressed Size (Heavy)
+
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT
@@ -183,11 +216,42 @@ FROM default.observations
 GROUP BY month
 ORDER BY month ASC;
 ```
+
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    toYYYYMM(timestamp) AS month,
+    count() AS rows,
+    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
+FROM default.traces
+GROUP BY month
+ORDER BY month ASC;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    toYYYYMM(created_at) AS month,
+    count() AS rows
+FROM default.blob_storage_file_log
+GROUP BY month
+ORDER BY month ASC;
+```
+
+  </TabItem>
+</Tabs>
 
 #### By Day: Row Count (Fast)
 
 Executes instantly by reading indices only.
 
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
+
 ```sql
 SELECT
     toDate(start_time) AS day,
@@ -197,7 +261,37 @@ GROUP BY day
 ORDER BY day ASC;
 ```
 
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    toDate(timestamp) AS day,
+    count() AS rows
+FROM default.traces
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    toDate(created_at) AS day,
+    count() AS rows
+FROM default.blob_storage_file_log
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+</Tabs>
+
 #### By Day: Approximate Uncompressed Size (Heavy)
+
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT
@@ -208,6 +302,34 @@ FROM default.observations
 GROUP BY day
 ORDER BY day ASC;
 ```
+
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT
+    toDate(timestamp) AS day,
+    count() AS rows,
+    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
+FROM default.traces
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT
+    toDate(created_at) AS day,
+    count() AS rows
+FROM default.blob_storage_file_log
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
