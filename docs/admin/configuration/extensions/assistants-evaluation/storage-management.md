@@ -184,6 +184,45 @@ ORDER BY partition ASC;
 ```
 
   </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+
+All use `event_date` for partitioning.
+:::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT
+    partition AS month,
+    sum(rows) AS rows,
+    formatReadableSize(sum(bytes_on_disk)) AS compressed_size
+FROM system.parts
+WHERE database = 'system' AND table = 'query_log' AND active
+GROUP BY partition
+ORDER BY partition ASC;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT
+    partition AS month,
+    sum(rows) AS rows,
+    formatReadableSize(sum(bytes_on_disk)) AS compressed_size
+FROM system.parts
+WHERE database = 'system' AND table = 'opentelemetry_span_log' AND active
+GROUP BY partition
+ORDER BY partition ASC;
+```
+
+  </TabItem>
 </Tabs>
 
 #### By Day: Row Count (Fast)
@@ -227,6 +266,41 @@ ORDER BY day ASC;
 ```
 
   </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+
+All use `event_date` for partitioning.
+:::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT
+    toDate(event_date) AS day,
+    count() AS rows
+FROM system.query_log
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT
+    toDate(finish_date) AS day,
+    count() AS rows
+FROM system.opentelemetry_span_log
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
 </Tabs>
 
 #### Uncompressed Size by Day (Heavy)
@@ -253,6 +327,43 @@ SELECT
     count() AS rows,
     formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
 FROM default.traces
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+
+All use `event_date` for partitioning.
+:::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT
+    event_date AS day,
+    count() AS rows,
+    formatReadableSize(sum(length(toString(query)))) AS approx_size
+FROM system.query_log
+GROUP BY day
+ORDER BY day ASC;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT
+    toDate(finish_date) AS day,
+    count() AS rows,
+    formatReadableSize(sum(length(toString(attribute)))) AS approx_size
+FROM system.opentelemetry_span_log
 GROUP BY day
 ORDER BY day ASC;
 ```
@@ -321,6 +432,31 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
 ```
 
   </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+  :::
+
+```sql
+-- Example: query_log (replace table name as needed)
+ALTER TABLE system.query_log
+DELETE WHERE toDate(event_date) < toDate('2025-07-13');
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+ALTER TABLE system.opentelemetry_span_log
+DELETE WHERE toDate(finish_date) < toDate('2025-07-13');
+```
+
+  </TabItem>
 </Tabs>
 
 #### Check Mutation Status
@@ -356,6 +492,29 @@ LIMIT 5;
 SELECT command, is_done
 FROM system.mutations
 WHERE table = 'blob_storage_file_log'
+ORDER BY create_time DESC
+LIMIT 5;
+```
+
+  </TabItem>
+  <TabItem value="system_logs" label="System Logs">
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT command, is_done
+FROM system.mutations
+WHERE table = 'query_log'
+ORDER BY create_time DESC
+LIMIT 5;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT command, is_done
+FROM system.mutations
+WHERE table = 'opentelemetry_span_log'
 ORDER BY create_time DESC
 LIMIT 5;
 ```
@@ -415,6 +574,41 @@ LIMIT 15;
 ```
 
   </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+  :::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT
+    toDate(event_date) AS day,
+    count() AS rows
+FROM system.query_log
+GROUP BY day
+ORDER BY day ASC
+LIMIT 15;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT
+    toDate(finish_date) AS day,
+    count() AS rows
+FROM system.opentelemetry_span_log
+GROUP BY day
+ORDER BY day ASC
+LIMIT 15;
+```
+
+  </TabItem>
 </Tabs>
 
 #### TTL Expiration Status
@@ -460,6 +654,43 @@ SELECT
     toDateTime(delete_ttl_info_max) AS max_ttl
 FROM system.parts
 WHERE database = 'default' AND table = 'blob_storage_file_log' AND active
+ORDER BY min_ttl;
+```
+
+  </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+  :::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SELECT
+    partition,
+    name AS part_name,
+    toDateTime(delete_ttl_info_min) AS min_ttl,
+    toDateTime(delete_ttl_info_max) AS max_ttl
+FROM system.parts
+WHERE database = 'system' AND table = 'query_log' AND active
+ORDER BY min_ttl;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SELECT
+    partition,
+    name AS part_name,
+    toDateTime(delete_ttl_info_min) AS min_ttl,
+    toDateTime(delete_ttl_info_max) AS max_ttl
+FROM system.parts
+WHERE database = 'system' AND table = 'opentelemetry_span_log' AND active
 ORDER BY min_ttl;
 ```
 
@@ -525,6 +756,29 @@ SHOW CREATE TABLE default.traces;
 
 ```sql
 SHOW CREATE TABLE default.blob_storage_file_log;
+```
+
+  </TabItem>
+  <TabItem value="system_logs" label="System Logs (event_date)">
+
+:::note Applies to these ClickHouse system tables
+
+- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+- `asynchronous_metric_log`, `text_log`, `part_log`
+- `processors_profile_log`, `latency_log`, `session_log`
+- `asynchronous_insert_log`, `error_log`
+  :::
+
+```sql
+-- Example: query_log (replace table name as needed)
+SHOW CREATE TABLE system.query_log;
+```
+
+  </TabItem>
+  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
+
+```sql
+SHOW CREATE TABLE system.opentelemetry_span_log;
 ```
 
   </TabItem>
