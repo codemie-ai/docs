@@ -27,12 +27,12 @@ The Codemie platform is built with security-first principles, implementing indus
 
 - **Data at Rest**: AES-256 encryption using cloud-native KMS (AWS KMS, Google Cloud KMS, Azure Key Vault)
 - **Data in Transit**: TLS 1.2+ for all external communications
-- **Secrets Management**: OAuth tokens, API keys, and credentials encrypted using cloud KMS/Secrets Manager
+- **Secrets Management**: OAuth tokens, API keys, and credentials encrypted using cloud KMS
 
 ### Access Control
 
 - **Single Sign-On (SSO)**: Integration with enterprise identity providers (Microsoft Entra ID, Okta, Google Workspace)
-- **Role-Based Access Control (RBAC)**: Granular permissions and role assignments
+- **Role-Based Access Control (RBAC)**: Role-driven access and permission assignments
 - **Multi-Tenant Isolation**: Data segregation between organizations and teams
 
 ### External Service Integration
@@ -41,16 +41,11 @@ The Codemie platform is built with security-first principles, implementing indus
 - **Credential Isolation**: External service credentials never leave the platform boundary
 - **OAuth 2.0/SAML**: Industry-standard authentication protocols for external integrations
 
-## Security Documentation
+## Core Security Principles & Architecture
 
-This section covers:
+This section describes the fundamental security patterns and practices implemented in the Codemie platform:
 
 - **[Data Processing & Storage Architecture](./data-processing-storage)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
-- **Authentication & Authorization**: SSO configuration, role management, and access control policies
-- **Compliance & Data Retention**: Data lifecycle policies, GDPR compliance, and audit capabilities
-- **Security Best Practices**: Hardening recommendations and operational security guidelines
-
-## Core Security Principles
 
 ### 1. Defense in Depth
 
@@ -65,7 +60,6 @@ Multiple layers of security controls protect data at every stage:
 
 - Service accounts have minimum required permissions
 - External service integrations use read-only access where possible
-- User roles follow principle of least privilege
 
 ### 3. Data Minimization
 
@@ -73,24 +67,8 @@ Multiple layers of security controls protect data at every stage:
 - External service credentials scoped to minimum required permissions
 - User data isolated by tenant/organization
 
-### 4. Audit & Monitoring
-
-- All API requests logged
-- Database query logs enabled
-- External API calls tracked
-- KMS key usage audited
-
-## Compliance Support
-
-The Codemie platform architecture supports compliance with:
-
-- **GDPR**: Right to erasure, data portability, consent management
-- **SOC 2**: Audit logging, access controls, encryption standards
-- **HIPAA**: Encryption, access controls (when deployed in compliant infrastructure)
-- **Regional Data Residency**: Configurable deployment regions
-
 :::tip Best Practice
-Always configure `var.region` to match your organization's data residency requirements during initial deployment.
+During deployment, ensure that the deployment region is configured to comply with your organization's data residency requirements across all infrastructure components, including the Codemie platform, LLM services, and external integrations. This is especially critical if your organization has security policies or compliance documentation that govern data processing and storage practices. Coordinate with your security team to verify that all deployed resources respect regional data sovereignty constraints.
 :::
 
 ## Getting Help
