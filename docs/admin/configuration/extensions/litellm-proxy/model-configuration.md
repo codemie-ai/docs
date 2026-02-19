@@ -75,9 +75,11 @@ Each model entry in the `model_list` array consists of three main sections:
 
   ```yaml
   model_list:
+    // highlight-next-line
     - model_name: claude-sonnet-4-5-20250929
       # ... additional configuration fields
 
+    // highlight-next-line
     - model_name: claude-sonnet-4-6
     # ... additional configuration fields
   ```
@@ -91,13 +93,17 @@ Each model entry in the `model_list` array consists of three main sections:
 
   ```yaml
   model_list:
+    // highlight-next-line
     - model_name: claude-sonnet-4-5-20250929
       model_info:
+        // highlight-next-line
         id: claude-sonnet-4-5-20250929-unique-id-0
       # ... additional configuration fields
 
+    // highlight-next-line
     - model_name: claude-sonnet-4-5-20250929
       model_info:
+        // highlight-next-line
         id: claude-sonnet-4-5-20250929-unique-id-1
       # ... additional configuration fields
   ```
@@ -115,16 +121,19 @@ Each model entry in the `model_list` array consists of three main sections:
   model_list:
     - model_name: claude-sonnet-4-5-20250929
       litellm_params:
+        // highlight-next-line
         model: bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0
       # ... additional configuration fields
 
     - model_name: gpt-5-2025-08-07
       litellm_params:
+        // highlight-next-line
         model: azure/gpt-5-2025-08-07
       # ... additional configuration fields
 
     - model_name: gemini-3-pro
       litellm_params:
+        // highlight-next-line
         model: vertex_ai/gemini-3-pro-preview
       # ... additional configuration fields
   ```
@@ -141,12 +150,14 @@ Each model entry in the `model_list` array consists of three main sections:
     - model_name: claude-sonnet-4-5-20250929
       litellm_params:
         model: bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0
+        // highlight-next-line
         litellm_credential_name: default_aws_bedrock_credential
       # ... additional configuration fields
 
     - model_name: gpt-5-2025-08-07
       litellm_params:
         model: azure/gpt-5-2025-08-07
+        // highlight-next-line
         litellm_credential_name: default_azure_openai_credential
       # ... additional configuration fields
 
@@ -195,18 +206,21 @@ Each model entry in the `model_list` array consists of three main sections:
   # Default chat model
   - model_name: gpt-4.1
     model_info:
+      // highlight-next-line
       default_for_categories: [global]
     # ... additional configuration fields
 
   # Default code model
   - model_name: claude-4-5-sonnet
     model_info:
+      // highlight-next-line
       default_for_categories: [code]
     # ... additional configuration fields
 
   # Default embedding model
   - model_name: codemie-text-embedding-ada-002
     model_info:
+      // highlight-next-line
       default_for_categories: [global]
     # ... additional configuration fields
   ```
@@ -269,6 +283,19 @@ Configuration examples for these models can be found in the provider-specific se
 
 ## AWS Bedrock Provider Examples
 
+:::info AWS Bedrock Region Configuration
+To use a different AWS region, modify the `aws_region_name` parameter in the model's configuration.
+
+```yaml
+model_list:
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      // highlight-next-line
+      aws_region_name: us-west-2
+```
+
+:::
+
 ### Claude Sonnet
 
 #### Claude Sonnet 4
@@ -311,8 +338,10 @@ Configuration examples for these models can be found in the provider-specific se
     model: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: us-west-2
+    // highlight-start
     extra_headers:
       anthropic-beta: "context-1m-2025-08-07"
+    // highlight-end
   model_info:
     id: claude-4-sonnet-1m-us-west-2
     base_model: us.anthropic.claude-sonnet-4-20250514-v1:0
@@ -512,6 +541,21 @@ Configuration examples for these models can be found in the provider-specific se
 </details>
 
 ## Azure OpenAI Provider Examples
+
+:::info Azure OpenAI Region Configuration
+For Azure, the region is determined by the endpoint URL in the `api_base` parameter.
+
+```yaml
+model_list:
+  - model_name: gpt-5-2-2025-12-11
+    litellm_params:
+      model: azure/gpt-5.2-2025-12-11
+      // highlight-next-line
+      api_base: https://your-resource.openai.azure.com/
+      litellm_credential_name: default_azure_openai_credential
+```
+
+:::
 
 ### GPT-4.1
 
