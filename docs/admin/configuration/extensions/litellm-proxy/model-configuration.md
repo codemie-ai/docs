@@ -215,11 +215,19 @@ Each model entry in the `model_list` array consists of three main sections:
       default_for_categories: [global]
     # ... additional configuration fields
 
+  # Model without default_for_categories - not selected as default for any category
+  - model_name: gpt-5-2-2025-12-11
+    # ... additional configuration fields
+
   # Default code model
   - model_name: claude-4-5-sonnet
     model_info:
       // highlight-next-line
       default_for_categories: [code]
+    # ... additional configuration fields
+
+  # Model without default_for_categories - not selected as default for any category
+  - model_name: claude-sonnet-4-6
     # ... additional configuration fields
 
   # Default embedding model
