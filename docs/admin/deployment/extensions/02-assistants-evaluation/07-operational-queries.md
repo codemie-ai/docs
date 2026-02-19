@@ -140,12 +140,11 @@ ORDER BY total_bytes DESC;
 
 The following queries help you understand how data is distributed over time and identify which periods consume the most storage.
 
-:::info Query Types
 Choose the appropriate query based on your needs:
 
-- **[Compressed Size by Month](#compressed-size-by-month-fast)** Fast - Actual compressed disk usage and row counts by month
-- **[Row Count by Day](#by-day-row-count-fast)** Fast - Number of records by day
-- **[Uncompressed Size by Day](#uncompressed-size-by-day-heavy)** Heavy - Relative size distribution by day (not actual disk usage). Use this only to understand **relative size distribution** across days
+- **[Compressed Size by Month (Fast)](#compressed-size-by-month-fast)** - Actual compressed disk usage and row counts by month
+- **[Row Count by Day (Fast)](#by-day-row-count-fast)** - Number of records by day
+- **[Uncompressed Size by Day (Heavy)](#uncompressed-size-by-day-heavy)** - Decompresses data to calculate approximate size. Not actual disk usage - use only for comparing relative data volume between days
 
 :::note
 Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
