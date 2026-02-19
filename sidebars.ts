@@ -603,47 +603,47 @@ const sidebars: SidebarsConfig = {
                     },
                   ],
                 },
+                'admin/configuration/codemie/api-configuration',
+                'admin/configuration/codemie/platform-administration',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Access Control',
+              link: {
+                type: 'doc',
+                id: 'admin/configuration/access-control/access-control-overview',
+              },
+              collapsed: true,
+              items: [
+                'admin/configuration/access-control/initial-realm-setup',
                 {
                   type: 'category',
-                  label: 'User Configuration',
+                  label: 'User Provisioning',
                   link: {
                     type: 'doc',
-                    id: 'admin/configuration/codemie/user-configuration/user-configuration-overview',
+                    id: 'admin/configuration/access-control/user-provisioning/user-provisioning-overview',
                   },
                   collapsed: true,
                   items: [
-                    'admin/configuration/codemie/user-configuration/initial-realm-setup',
-                    {
-                      type: 'category',
-                      label: 'User Provisioning',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/configuration/codemie/user-configuration/user-provisioning/user-provisioning-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/configuration/codemie/user-configuration/user-provisioning/manual-creation',
-                        'admin/configuration/codemie/user-configuration/user-provisioning/keycloak-assistant',
-                        'admin/configuration/codemie/user-configuration/user-provisioning/keycloak-entra-id',
-                      ],
-                    },
-                    {
-                      type: 'category',
-                      label: 'User Authorization',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/configuration/codemie/user-configuration/user-authorization/user-authorization-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/configuration/codemie/user-configuration/user-authorization/assign-roles',
-                        'admin/configuration/codemie/user-configuration/user-authorization/assign-attributes',
-                      ],
-                    },
-                    'admin/configuration/codemie/user-configuration/platform-administration',
+                    'admin/configuration/access-control/user-provisioning/manual-creation',
+                    'admin/configuration/access-control/user-provisioning/keycloak-assistant',
+                    'admin/configuration/access-control/user-provisioning/keycloak-entra-id',
                   ],
                 },
-                'admin/configuration/codemie/api-configuration',
+                {
+                  type: 'category',
+                  label: 'User Authorization',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/configuration/access-control/user-authorization/user-authorization-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/configuration/access-control/user-authorization/assign-roles',
+                    'admin/configuration/access-control/user-authorization/assign-attributes',
+                  ],
+                },
               ],
             },
             {

@@ -1,7 +1,7 @@
 ---
-id: user-configuration-overview
+id: access-control-overview
 sidebar_position: 1
-title: User Configuration Overview
+title: Access Control Overview
 description: Complete workflow for configuring user authentication and authorization
 pagination_prev: admin/configuration/index
 ---
@@ -60,7 +60,7 @@ Assigning permissions to users. The configuration path depends on the role:
 
 Additionally, this section includes:
 
-- **[Platform Administration Guide](./platform-administration)** - Explains how users with the `admin` role can create and manage projects
+- **[Platform Administration Guide](../codemie/platform-administration)** - Explains how users with the `admin` role can create and manage projects
 
 ## Next Steps
 
