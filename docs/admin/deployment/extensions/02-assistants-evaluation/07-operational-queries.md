@@ -308,15 +308,42 @@ Always use `toDate()` or specific date strings. Using non-deterministic function
 
 ### Delete Data Older Than a Specific Date
 
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
+
 ```sql
 -- Delete all records older than a specific date
 ALTER TABLE default.observations
 DELETE WHERE toDate(start_time) < toDate('2025-07-13');
 ```
 
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+-- Delete all records older than a specific date
+ALTER TABLE default.traces
+DELETE WHERE toDate(timestamp) < toDate('2025-07-13');
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+-- Delete all records older than a specific date
+ALTER TABLE default.blob_storage_file_log
+DELETE WHERE toDate(created_at) < toDate('2025-07-13');
+```
+
+  </TabItem>
+</Tabs>
+
 ### Check Mutation Status
 
 Since deletion is not instant, check the progress here:
+
+<Tabs>
+  <TabItem value="observations" label="Observations" default>
 
 ```sql
 SELECT command, is_done
@@ -325,6 +352,31 @@ WHERE table = 'observations'
 ORDER BY create_time DESC
 LIMIT 5;
 ```
+
+  </TabItem>
+  <TabItem value="traces" label="Traces">
+
+```sql
+SELECT command, is_done
+FROM system.mutations
+WHERE table = 'traces'
+ORDER BY create_time DESC
+LIMIT 5;
+```
+
+  </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+```sql
+SELECT command, is_done
+FROM system.mutations
+WHERE table = 'blob_storage_file_log'
+ORDER BY create_time DESC
+LIMIT 5;
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
