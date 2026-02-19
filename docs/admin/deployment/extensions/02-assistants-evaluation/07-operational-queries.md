@@ -269,32 +269,16 @@ Check the date column name for your table:
 - `default.observations` uses **`start_time`**
 - `default.traces` and `default.scores` uses **`timestamp`**
 
-To verify the date column for other tables, see [Table Structure](#2-table-structure) section.
+To verify the date column for other tables, see [Table Structure](#3-table-structure) section.
 :::
 
 ---
 
-## 2. Table Structure
+## 2. Data Cleanup
 
-Use this command to view the full table definition. This is critical for:
+This section covers both manual and automatic data cleanup strategies.
 
-1. **Column Names:** Finding the correct date column (e.g., `start_time` vs `timestamp`).
-2. **TTL Verification:** Checking if a retention policy is currently configured.
-
-```sql
-SHOW CREATE TABLE default.observations;
-```
-
-:::tip What to Look For
-
-- **`PARTITION BY`**: How data is split (usually by month).
-- **`TTL`**: The automatic deletion rule (e.g., `TTL toDateTime(start_time) + INTERVAL 60 DAY DELETE`). **If this line is missing, no retention is active.**
-
-:::
-
----
-
-## 3. Manual Data Deletion
+### Manual Data Deletion
 
 If you need to clean up data manually (e.g., before applying a new TTL or for testing), use the `ALTER ... DELETE` command.
 
@@ -338,7 +322,7 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
   </TabItem>
 </Tabs>
 
-### Check Mutation Status
+#### Check Mutation Status
 
 Since deletion is not instant, check the progress here:
 
@@ -378,11 +362,11 @@ LIMIT 5;
   </TabItem>
 </Tabs>
 
----
+### TTL Monitoring
 
-## 4. TTL Monitoring
+Automatic data deletion through Time-To-Live (TTL) policies. These queries help verify that TTL is working correctly.
 
-### Retention Check (Oldest Data)
+#### Retention Check (Oldest Data)
 
 Shows the oldest available days to verify if TTL is working correctly.
 
@@ -396,7 +380,7 @@ ORDER BY day ASC
 LIMIT 15;
 ```
 
-### TTL Expiration Status
+#### TTL Expiration Status
 
 Check the physical parts to see exactly when ClickHouse schedules data deletion.
 
@@ -413,14 +397,14 @@ WHERE database = 'default' AND table = 'observations' AND active
 ORDER BY min_ttl;
 ```
 
-#### Column Meaning
+##### Column Meaning
 
 Since data is stored in files (parts) containing multiple rows:
 
 - **`min_ttl`**: The expiration time of the **oldest** row in the file.
 - **`max_ttl`**: The expiration time of the **newest** row in the file.
 
-#### How to Interpret Status
+##### How to Interpret Status
 
 Compare `min_ttl` with the **Current Time**:
 
@@ -436,5 +420,25 @@ If you see expired dates but disk space is not freed yet, force a cleanup manual
 ```sql
 OPTIMIZE TABLE default.observations FINAL;
 ```
+
+:::
+
+---
+
+## 3. Table Structure
+
+Use this command to view the full table definition. This is critical for:
+
+1. **Column Names:** Finding the correct date column (e.g., `start_time` vs `timestamp`).
+2. **TTL Verification:** Checking if a retention policy is currently configured.
+
+```sql
+SHOW CREATE TABLE default.observations;
+```
+
+:::tip What to Look For
+
+- **`PARTITION BY`**: How data is split (usually by month).
+- **`TTL`**: The automatic deletion rule (e.g., `TTL toDateTime(start_time) + INTERVAL 60 DAY DELETE`). **If this line is missing, no retention is active.**
 
 :::
