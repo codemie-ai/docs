@@ -73,10 +73,6 @@ ClickHouse contains two types of databases:
 You may need to manage retention and cleanup for both databases depending on your disk usage patterns.
 :::
 
-:::note
-This query returns only tables that contain at least one record. **Empty tables** or **Views** (Virtual tables) will not be listed here because they do not have physical data parts on the disk.
-:::
-
 ```sql
 SELECT
     database,
@@ -94,7 +90,7 @@ ORDER BY
 
 ### List All Tables
 
-Displays tables sorted by size, including their engine type, row count, and total size. This is the best way to distinguish between real storage and virtual views.
+Displays tables sorted by size, including their engine type, row count, and total size.
 
 **Key Columns:**
 
