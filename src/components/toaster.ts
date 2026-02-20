@@ -46,7 +46,7 @@ const infoOpts: ToastOptions = {
 
 const successOpts: ToastOptions = {
   className: 'codemie-toast codemie-toast-success',
-  duration: 300000,
+  duration: 3000,
 };
 
 const errOpts: ToastOptions = {
