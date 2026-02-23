@@ -1,7 +1,7 @@
 ---
 id: terraform-upgrade
 title: Terraform Version Upgrade (1.5.7 → 1.13.5)
-sidebar_label: Terraform Upgrade
+sidebar_label: Terraform Upgrade (1.5.7 → 1.13.5)
 sidebar_position: 1
 pagination_next: null
 pagination_prev: admin/update/update-overview
@@ -12,15 +12,17 @@ import TabItem from '@theme/TabItem';
 
 # Terraform Version Upgrade (1.5.7 → 1.13.5)
 
-# What changed
+## What Changed
 
-| Area                       | AWS                                                                     | Azure                                                  |
-| -------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------ |
-| Terraform                  | 1.5.7 → **1.13.5**                                                      | 1.5.7 → **1.13.5**                                     |
-| Kubernetes                 | EKS 1.33 → **1.35** (two-step upgrade required)                         | AKS 1.33.5 → **1.34.2**                                |
-| State locking              | DynamoDB → **S3 native**                                                | —                                                      |
-| Provider versions          | —                                                                       | `azurerm`, `azapi`, `azuread`, `random`, `tls` updated |
-| Terraform registry modules | `vpc`, `alb`, `eks`, `iam`, `ecr`, `route53`, `acm`, `key-pair` updated | —                                                      |
+| Area                               | AWS                                    | Azure                                      |
+| ---------------------------------- | -------------------------------------- | ------------------------------------------ |
+| Terraform                          | 1.5.7 → **1.13.5**                     | 1.5.7 → **1.13.5**                         |
+| Kubernetes (default value changed) | EKS 1.33 → **1.35** (upgrade optional) | AKS 1.33.5 → **1.34.2** (upgrade optional) |
+| State locking                      | DynamoDB → **S3 native**               | No changes                                 |
+| Provider versions                  | No changes                             | Updated, see below                         |
+| Terraform registry modules         | Updated, see below                     | No changes                                 |
+
+## How to Upgrade
 
 Switch to Terraform 1.13.5:
 
@@ -46,9 +48,9 @@ Terraform registry modules in `platform` were updated:
 | `terraform-aws-modules/iam/aws`      | 5.47.1      | **5.60.0**  |
 | `terraform-aws-modules/ecr/aws`      | 2.3.0       | **2.4.0**   |
 
-Default EKS version: **1.33** → **1.35**.
-
-If upgrading from 1.33, apply twice — first set `cluster_version = "1.34"`, then `"1.35"`.
+:::info EKS upgrade is optional
+The default version changed to **1.35**, but you can keep the current version by pinning `cluster_version` in your `platform` config before applying. If upgrading from `1.33`, apply twice — first set `1.34`, then `1.35`.
+:::
 
 <Tabs>
   <TabItem value="aws-script" label="Deployment Script" default>
@@ -83,7 +85,7 @@ terraform apply
 export BACKEND_BUCKET=$(terraform output -raw terraform_states_s3_bucket_name)
 ```
 
-**Migrate platform** to S3 native locking (upgrades EKS to 1.35):
+**Migrate platform** to S3 native locking:
 
 ```bash
 cd ../platform
@@ -117,7 +119,9 @@ Provider versions updated across all three modules:
 | ai-models      | `azurerm` | 3.109.0     | `~> 3.117`  |
 | ai-models      | `azapi`   | 1.9.0       | `~> 1.15`   |
 
-Default AKS version: **1.33.5** → **1.34.2**.
+:::info AKS upgrade is optional
+The default version changed to **1.34.2**, but you can keep the current version by pinning `kubernetes_version` in your `platform` config before applying.
+:::
 
 <Tabs>
   <TabItem value="azure-script" label="Deployment Script" default>
@@ -152,7 +156,7 @@ export BC_STORAGE_ACCOUNT_NAME=$(terraform output -raw terraform_state_storage_a
 export STORAGE_ACCOUNT_KEY=$(terraform output -raw terraform_state_storage_account_key)
 ```
 
-**Upgrade platform** (upgrades AKS from 1.33.5 → 1.34.2):
+**Upgrade platform:**
 
 ```bash
 cd ../platform
