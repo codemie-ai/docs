@@ -29,12 +29,18 @@ Terraform registry modules in `platform` were updated:
 | `terraform-aws-modules/iam/aws`      | 5.47.1      | **5.60.0**  |
 | `terraform-aws-modules/ecr/aws`      | 2.3.0       | **2.4.0**   |
 
-Default EKS version: **1.33** → **1.35**. EKS requires upgrading one minor version at a time — apply this guide twice: first with `cluster_version = "1.34"`, then with `"1.35"`.
+Default EKS version: **1.33** → **1.35**. If upgrading from 1.33, apply twice — first set `cluster_version = "1.34"`, then `"1.35"`.
+
+Switch to Terraform 1.13.5:
+
+```bash
+tfenv use 1.13.5
+```
 
 <Tabs>
   <TabItem value="script" label="Deployment Script" default>
 
-Run the deployment script — it automatically handles the DynamoDB-to-S3 migration:
+Run the deployment script — it automatically handles upgrade:
 
 ```bash
 bash aws-terraform.sh
