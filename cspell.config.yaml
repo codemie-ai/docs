@@ -92,6 +92,9 @@ words:
   - Azure
   - azurecli
   - azuredevops
+  - azurerm
+  - azuread
+  - azapi
   - japaneast
   - eastus
   - westeurope
