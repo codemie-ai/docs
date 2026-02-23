@@ -19,10 +19,10 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 
 **1. Regional Data Isolation**
 
-- Persistent storage regions are independently configurable - PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
-- In-cluster components (Elasticsearch, NATS, Redis) run within the Kubernetes cluster region
-- AI processing regions are configurable per LLM provider (AWS Bedrock, Azure OpenAI, Google Vertex AI, Anthropic, ...) - customers can select specific regions for each model based on compliance and latency requirements
-- PostgreSQL (Keycloak) is always deployed in the same region as the Kubernetes cluster
+- Persistent storage regions are independently configurable – PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
+- In-cluster components (Elasticsearch, NATS, and other in-cluster services) run within the Kubernetes cluster region
+- AI processing regions are configurable per LLM provider (AWS Bedrock/Azure OpenAI/Google Vertex AI, etc.) – customers can select specific regions for each model based on compliance and latency requirements
+- PostgreSQL (Keycloak) is deployed in the same region as the Kubernetes cluster in default configuration, but can be configured to use an external managed PostgreSQL instance in a different region if required
 
 **2. Data Encryption**
 
@@ -31,158 +31,172 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 
 **3. External Data Isolation**
 
-- External service data (Jira, GitHub, etc.) is fetched via MCP Connect (or datasource), indexed locally in Elasticsearch, and only then passed as context to LLM models in the selected region - AI models never access external data sources directly
-- External credentials never leave the platform boundaries
+- External service data (Jira, GitHub, etc.) is fetched via MCP Connect (or datasource); for retrieval-based features it is normalized, embedded, and indexed locally in Elasticsearch
+- Some tools can query external data sources directly and return results to chat without indexing
+- AI model providers do not train on customer data under their enterprise agreements:
+  - **Azure OpenAI**: [Data Privacy](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy?view=foundry-classic)
+  - **Anthropic Claude**: [Data Training](https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training)
+  - **AWS Bedrock**: [Service Terms](https://aws.amazon.com/service-terms/) and [Third-Party Models](https://aws.amazon.com/legal/bedrock/third-party-models/)
+  - **Google Vertex AI**: [Data Governance](https://docs.cloud.google.com/generative-ai-app-builder/docs/data-governance)
+- External credentials are never sent to LLMs, and LLM models cannot access them
 
 ## Data Storage Layers
 
 ### Persistent Storage
 
-**PostgreSQL (Cloud SQL / RDS / Azure Database)**
+**PostgreSQL (Cloud SQL / RDS / Azure Database) – Data Stored**
 
-- **Authorization Data**: Role permissions, user-role mappings
-- **Conversation Data**: Chat history, prompts, AI responses, thread metadata
-- **Configuration Data**: Datasource configs, model preferences, system prompts, external service credentials (KMS-encrypted blobs)
-- **Encryption**: KMS-managed keys, SSL/TLS connections required
+- **Data Types**:
+  - **Authorization Data**: Role permissions, user-role mappings
+  - **Conversation Data**: Chat history, prompts, AI responses, thread metadata
+  - **Configuration Data**: Datasource configs, model preferences, system prompts, external service credentials (KMS-encrypted strings)
+- **Storage & Security**:
+  - **Encryption at rest**: Data encrypted with KMS-managed keys (customer-managed HashiCorp Vault can be used)
+  - **Encryption in transit**: SSL/TLS connections required
 
 :::info User Authentication Storage
 Keycloak uses a dedicated PostgreSQL cluster in Kubernetes that stores SSO federation mappings, IDP client secrets, and local user credentials. When SSO is enabled, user authentication (passwords, MFA) is managed by the external IDP (Entra ID, Okta, Google) rather than stored in Keycloak.
 :::
 
-**Object Storage (GCS / S3 / Azure Blob)**
+**Object Storage (GCS / S3 / Azure Blob) – Data Stored**
 
-- **User Files**: Uploaded attachments, documents, images
-- **Retention**: Based on customer policy
-- **Access**: Service account only, no public access
+- **Data Types**:
+  - **User Files**: Uploaded attachments, documents, images
+- **Storage & Security**:
+  - **Retention**: Configurable based on customer requirements
+  - **Access**: Service account only, no public access
+  - **Encryption at rest**: Server-side KMS encryption
 
 ### In-Cluster Storage
 
 **Elasticsearch**
 
-- **Knowledge Base Indices**: Document embeddings, code snippets, wiki content
-- **External Data Indices**: Jira issues, Confluence pages, GitHub repositories, Google Drive documents
-- **Vector Embeddings**: Semantic search vectors (generated by Vertex AI or embeddings models)
-
-**Redis (Optional - LiteLLM only)**
-
-- **LiteLLM Cache**: Temporary data for LiteLLM proxy
-- **Retention**: Ephemeral (lost on restart)
-
-**NATS (Messaging - Plugin Engine only)**
-
-- **Plugin Communication**: Event streaming for plugin engine
+- **Vector Embeddings**: Semantic search vectors (generated by embeddings models)
+- **Platform Components Logs**: Logs from core platform services (see [Core Components](../../deployment/aws/components-deployment/manual-deployment/core-components))
 
 ## Data Processing Flows
 
 ### 1. User Authentication Flow
 
-```
-User → NGINX Ingress
-         ↓
-    OAuth2 Proxy
-         ↓
-    Keycloak (K8s)
-         ↓
-    External IDP (Entra/Okta/Google) [SAML/OIDC]
-         ↓
-    Keycloak validates IDP token
-         ↓
-    Keycloak PostgreSQL (store federation mapping)
-         ↓
-    Keycloak returns JWT
-         ↓
-    OAuth2 Proxy creates encrypted session cookie
-         ↓
-    User receives JWT + session cookie
+```mermaid
+sequenceDiagram
+  participant User
+  participant NGINX as NGINX Ingress
+  participant OAuth as OAuth2 Proxy
+  participant Keycloak
+  participant IDP as External IDP (Entra/Okta/Google)
+  participant KCDB as Keycloak PostgreSQL
+
+  User->>NGINX: Request
+  NGINX->>OAuth: Forward
+  OAuth->>Keycloak: Authenticate
+  opt External IDP (SAML/OIDC)
+    Keycloak->>IDP: Redirect/Auth request
+    IDP-->>Keycloak: IDP token/claims
+  end
+  Keycloak->>Keycloak: Validate token & populate user attributes
+  Keycloak->>KCDB: Store user profile and federation mappings
+  Keycloak-->>OAuth: Issue JWT
+  OAuth-->>User: JWT + encrypted session cookie
 ```
 
 **Data Stored:**
 
 - User profile (email, name, roles) in Keycloak PostgreSQL (GKE/AKS/EKS)
-- IDP client secrets in Keycloak PostgreSQL (GKE/AKS/EKS)
-- OAuth2 Proxy secrets (client-secret, cookie-secret) in K8s Secrets (encrypted at-rest via StorageClass)
-- Session data: Encrypted browser cookie (no server-side storage, TLS 1.3 in-transit)
+- External IDP configuration in Keycloak PostgreSQL (GKE/AKS/EKS)
+- OAuth2 Proxy secrets (client-secret, cookie-secret) in K8s Secrets (encrypted at-rest via etcd)
+- Session data: Encrypted browser cookie (no server-side storage, TLS 1.2+ in-transit)
 
 :::info OAuth2 Proxy Security
-OAuth2 Proxy operates in **stateless mode** using encrypted browser cookies with HTTPS-only transmission and CSRF protection. Session secrets are stored in encrypted K8s Secrets.
+OAuth2 Proxy operates in **stateless mode** using encrypted browser cookies with HTTPS-only transmission and CSRF protection.
 :::
 
 ### 2. Chat Conversation Flow
 
-```
-User submits prompt → CodeMie API
-         ↓
-    1. Store in PostgreSQL (Cloud SQL/RDS/Azure Database)
-    2. Search Elasticsearch (context retrieval) (GKE/AKS/EKS)
-    3. Build prompt + context
-         ↓
-    LiteLLM Proxy → Vertex AI / Bedrock (external region)
-         ↓
-    AI Response
-         ↓
-    Store response in PostgreSQL (Cloud SQL/RDS/Azure Database)
-         ↓
-    Return to user
+```mermaid
+sequenceDiagram
+  participant User
+  participant API as CodeMie API
+  participant DB as PostgreSQL
+  participant ES as Elasticsearch
+  participant Tools as External Tools/Datasources
+  participant LiteLLM as LiteLLM Proxy
+  participant LLM as AWS Bedrock/Azure OpenAI/Google Vertex AI, etc.
+
+  User->>API: Submit prompt
+  API->>DB: 1. Store prompt
+  API->>ES: 2. Retrieve context (if applicable)
+  ES-->>API: Context snippets
+  opt Direct Tool Access
+    API->>Tools: 2. Call external tool
+    Tools-->>API: Results
+  end
+  API->>API: 3. Build prompt + context
+  opt LLM Processing
+    API->>LiteLLM: Send prompt + context
+    LiteLLM->>LLM: Forward to LLM service (external region)
+    LLM-->>LiteLLM: AI response
+    LiteLLM-->>API: Return response
+  end
+  API->>DB: Store response
+  API-->>User: Return to user
 ```
 
 **Data Stored:**
 
-- Prompt: PostgreSQL (Cloud SQL/RDS/Azure Database)
+- Conversation data: PostgreSQL (Cloud SQL/RDS/Azure Database)
 - Context snippets: Retrieved from Elasticsearch (GKE/AKS/EKS)
-- AI Response: PostgreSQL (Cloud SQL/RDS/Azure Database)
-- Tokens sent to LLM: AWS Bedrock/Azure OpenAI/Google Vertex AI (region configurable)
-
-:::info Important
-Only the final prompt + context is sent to AI models. Raw external data (Jira issues, code) is indexed locally first.
-:::
 
 ### 3. External Service Integration Flow
 
-```
-User configures datasource (Jira/GitHub/Confluence)
-         ↓
-    OAuth token/credentials encrypted via Cloud KMS → stored as blob in PostgreSQL (Cloud SQL/RDS/Azure Database)
-         ↓
-    User creates query/datasource request
-         ↓
-    API reads encrypted blob from PostgreSQL (Cloud SQL/RDS/Azure Database)
-         ↓
-    API calls Cloud KMS to decrypt credentials (in-memory only)
-         ↓
-    Datasource connector receives plaintext credentials (ephemeral, in-memory)
-         ↓
-    Connector calls external API/URL (REST/GraphQL/direct HTTP)
-         ↓
-    External Service returns raw data
-         ↓
-    Plaintext credentials deleted from memory (garbage collection)
-         ↓
-    Data processing and storage:
-      - Raw data → Object Storage (S3/GCS/Azure Blob)
-      - Processed data → Elasticsearch (with embeddings)
-      - Metadata → PostgreSQL (sync timestamp, config)
-         ↓
-    User queries include external context from Elasticsearch
+```mermaid
+sequenceDiagram
+  participant User
+  participant API as CodeMie API
+  participant DB as PostgreSQL
+  participant KMS as Cloud KMS
+  participant Connector as Datasource Connector
+  participant ExtSvc as External Service (Jira/GitHub/etc.)
+  participant ObjStor as Object Storage
+  participant ES as Elasticsearch
+
+  User->>API: Configure datasource & OAuth credentials
+  API->>KMS: Encrypt credentials
+  KMS-->>API: Encrypted string
+  API->>DB: Store encrypted credentials
+
+  User->>API: Initiate data indexing
+  API->>DB: Read encrypted credentials
+  DB-->>API: Encrypted string
+  API->>KMS: Request decryption
+  KMS-->>API: Plaintext credentials (ephemeral)
+  API->>Connector: Pass plaintext credentials (in-memory)
+
+  Connector->>ExtSvc: Call external API/URL (REST/GraphQL)
+  ExtSvc-->>Connector: Raw data
+
+  Note over Connector: Delete plaintext credentials<br/>(garbage collection)
+
+  Connector->>ObjStor: Store raw data
+  Connector->>ES: Store processed data with embeddings
+  Connector->>DB: Store metadata (sync timestamp, config)
+
+  User->>API: Query
+  API->>ES: Search context
+  ES-->>API: Results from external context
+  API-->>User: Query results
 ```
 
 **Data Stored:**
 
-- **External Service Credentials**: PostgreSQL (encrypted blob via KMS, plaintext never persisted)
-- **User files**: S3/Blob Storage/GCS (encrypted blob via KMS)
+- **External Service Credentials**: PostgreSQL (encrypted string via KMS, plaintext never persisted)
+- **User files**: S3/Blob Storage/GCS (KMS-encrypted objects)
 - **Indexed Data**: Elasticsearch (GKE/AKS/EKS)
 - **Metadata**: PostgreSQL (Cloud SQL/RDS/Azure Database)
 
 :::info Credential Security
-External service credentials are stored as KMS-encrypted blobs in PostgreSQL. Decryption happens on-demand via Cloud KMS API, and plaintext credentials exist only in memory for the duration of the API call, never persisted to disk.
+External service credentials are stored as KMS-encrypted strings in PostgreSQL. Decryption happens on-demand via Cloud KMS API, and plaintext credentials exist only in memory for the duration of the API call, never persisted to disk.
 :::
-
-**Supported Services:**
-
-- **Project Management**: Jira, Azure DevOps Boards
-- **Documentation**: Confluence, SharePoint, Azure DevOps Wiki
-- **Version Control**: GitHub, GitLab, Bitbucket, Azure Repos
-- **Cloud Storage**: Google Drive, OneDrive
-- **Testing**: Xray (Jira)
 
 :::tip Supported Data Sources
 For a complete list of supported data source types and configuration details, see [Data Source Overview](../../user-guide/data-source/data-source-overview/index.md#supported-data-source-types).
@@ -190,27 +204,25 @@ For a complete list of supported data source types and configuration details, se
 
 ## Regional Data Distribution
 
-| Component                 | Data Type                | Storage                             | Region                                    | Encryption                       |
-| ------------------------- | ------------------------ | ----------------------------------- | ----------------------------------------- | -------------------------------- |
-| **PostgreSQL (Keycloak)** | User auth, SSO mappings  | K8s cluster                         | GKE/AKS/EKS Region                        | StorageClass encryption + TLS    |
-| **PostgreSQL (CodeMie)**  | Chat, Config, Roles      | Cloud SQL/RDS/Azure DB              | Cloud SQL/RDS/Azure Database Region       | KMS (at rest) + TLS (in transit) |
-| **Elasticsearch**         | Knowledge Base, Indices  | K8s Persistent Volume               | GKE/AKS/EKS Region                        | StorageClass encryption + TLS    |
-| **Object Storage**        | Files, Attachments       | GCS/S3/Azure Blob                   | GCS/S3/Azure Blob Region                  | KMS (server-side)                |
-| **Redis (optional)**      | LiteLLM Cache            | K8s (memory) or Cloud Managed Cache | GKE/AKS/EKS Region or Cloud Cache Region  | None (ephemeral)                 |
-| **KMS**                   | Encryption Keys, Secrets | Cloud KMS/Secrets Manager           | KMS Region (configurable)                 | HSM-backed                       |
-| **NATS**                  | Plugin Communication     | K8s (memory)                        | GKE/AKS/EKS Region                        | TLS (in transit)                 |
-| **LLM Services**          | Prompt Processing        | External API                        | AWS Bedrock/Azure OpenAI/Vertex AI Region | TLS                              |
-| **External IDPs**         | Authentication           | External SaaS                       | Customer tenant                           | TLS + SAML/OIDC                  |
-| **External Services**     | Source Data              | External SaaS/Self-hosted           | Customer instance                         | TLS + OAuth 2.0                  |
+| Component                 | Data Type                | Storage                   | Region                                                 | Encryption                       |
+| ------------------------- | ------------------------ | ------------------------- | ------------------------------------------------------ | -------------------------------- |
+| **PostgreSQL (Keycloak)** | User auth, SSO mappings  | K8s cluster               | GKE/AKS/EKS Region                                     | StorageClass encryption + TLS    |
+| **PostgreSQL (CodeMie)**  | Chat, Config, Roles      | Cloud SQL/RDS/Azure DB    | Cloud SQL/RDS/Azure Database Region                    | KMS (at rest) + TLS (in transit) |
+| **Elasticsearch**         | Knowledge Base, Indices  | K8s Persistent Volume     | GKE/AKS/EKS Region                                     | StorageClass encryption + TLS    |
+| **Object Storage**        | Files, Attachments       | GCS/S3/Azure Blob         | GCS/S3/Azure Blob Region                               | KMS (server-side)                |
+| **KMS**                   | Encryption Keys, Secrets | Cloud KMS/Secrets Manager | KMS Region (configurable)                              | HSM-backed                       |
+| **LLM Services**          | Prompt Processing        | External API              | AWS Bedrock/Azure OpenAI/Google Vertex AI, etc. Region | TLS                              |
+| **External IDPs**         | Authentication           | External SaaS             | Customer tenant                                        | TLS + SAML/OIDC                  |
+| **External Services**     | Source Data              | External SaaS/Self-hosted | Customer instance                                      | TLS + OAuth 2.0                  |
 
 ## Data Processing Principles
 
 ### AI Model Interaction
 
 - **Input**: User prompt + locally indexed context (from Elasticsearch)
-- **Processing**: External AI service (AWS Bedrock/Azure OpenAI/Google Vertex AI) - data leaves platform boundary
+- **Processing**: External AI service (AWS Bedrock/Azure OpenAI/Google Vertex AI, etc.) – data leaves platform boundary
 - **Output**: AI-generated response stored in PostgreSQL (Cloud SQL/RDS/Azure DB)
-- **No Raw External Data**: External service data (Jira issues, code) is indexed locally before AI sees it
+- **External Data Usage**: External service data is indexed locally for retrieval; some tools can access external sources directly when requested
 - **Embeddings**: Generated by AI models but stored in Elasticsearch (GKE/AKS/EKS)
 
 ### External Service Data
@@ -223,7 +235,7 @@ For a complete list of supported data source types and configuration details, se
 ### Authentication & Authorization
 
 - **SSO Federation**: Keycloak acts as SAML/OIDC broker, user data stored locally after federation
-- **API Keys**: External service credentials stored in PostgreSQL (Cloud SQL/RDS/Azure DB) as KMS-encrypted blobs, never exposed to users
+- **API Keys**: External service credentials stored in PostgreSQL (Cloud SQL/RDS/Azure DB) as KMS-encrypted strings, never exposed to users
 - **JWT Tokens**: Issued by Keycloak, validated by CodeMie API for each request
 - **Role-Based Access**: Permissions stored in PostgreSQL, enforced at API layer
 
@@ -234,7 +246,6 @@ For a complete list of supported data source types and configuration details, se
 | Chat History (PostgreSQL CodeMie)   | 30 days                             | Yes          | GDPR right to erasure supported  |
 | User Profiles (PostgreSQL Keycloak) | Indefinite                          | Yes          | Deleted on user account deletion |
 | Elasticsearch Indices               | Indefinite (90 days if ILM enabled) | Yes          | Can be rebuilt from sources      |
-| Redis Cache                         | Ephemeral (lost on restart)         | Yes          | LiteLLM cache only, optional     |
 | Object Storage Files                | Indefinite                          | Yes          | Customer-controlled lifecycle    |
 | PostgreSQL Backups (Keycloak)       | 7 days                              | Yes          | K8s PGO point-in-time recovery   |
 | PostgreSQL Backups (CodeMie)        | 7 days                              | Yes          | Cloud SQL/RDS/Azure DB backups   |
@@ -264,12 +275,12 @@ Limitations:
 
 **Data Sovereignty**
 
-- **PostgreSQL (Keycloak)**: K8s cluster region - stores SSO federation mappings, local user credentials
-- **PostgreSQL (CodeMie)**: Cloud SQL/RDS/Azure Database region - stores chat history, configuration, roles, external service credentials
-- **Object Storage**: GCS/S3/Azure Blob region - stores user files and attachments
-- **Kubernetes cluster**: GKE/AKS/EKS region - contains Elasticsearch, NATS, Redis (optional), and Keycloak PostgreSQL
-- **KMS**: Configurable region (can be separate from data regions) - manages encryption keys
-- AI processing regions configurable per model in LiteLLM config (AWS Bedrock/Azure OpenAI/Google Vertex AI)
+- **PostgreSQL (Keycloak)**: K8s cluster region – stores SSO federation mappings, local user credentials
+- **PostgreSQL (CodeMie)**: Cloud SQL/RDS/Azure Database region – stores chat history, configuration, roles, external service credentials
+- **Object Storage**: GCS/S3/Azure Blob region – stores user files and attachments
+- **Kubernetes cluster**: GKE/AKS/EKS region – contains Elasticsearch and Keycloak PostgreSQL
+- **KMS**: Configurable region (can be separate from data regions) – manages encryption keys
+- AI processing regions configurable per model in LiteLLM config (AWS Bedrock/Azure OpenAI/Google Vertex AI, etc.)
 - External IDP/service regions determined by customer's own deployments/subscription locations
 - No data replication across regions without explicit configuration
 
@@ -277,15 +288,37 @@ Limitations:
 
 **Scenario**: User asks "What's the status of JIRA-123?"
 
-1. **User submits question** → CodeMie API
-2. **API authenticates** user via JWT (validated against Keycloak → PostgreSQL)
-3. **API searches** Elasticsearch for "JIRA-123" (indexed data from Jira)
-4. **Elasticsearch returns** issue details (title, description, status, comments)
-5. **API builds prompt**: User question + Jira issue context
-6. **LiteLLM sends** prompt to LLM service (AWS Bedrock/Azure OpenAI/Google Vertex AI)
-7. **LLM service processes** and returns response
-8. **API stores** conversation in PostgreSQL (prompt, response, timestamp)
-9. **Response returned** to user with reference to JIRA-123
+```mermaid
+sequenceDiagram
+  participant User
+  participant API as CodeMie API
+  participant Keycloak
+  participant KCDB as Keycloak PostgreSQL
+  participant ES as Elasticsearch
+  participant LiteLLM as LiteLLM Proxy
+  participant LLM as LLM Service<br/>(AWS Bedrock/Azure OpenAI/etc.)
+  participant CodeMieDB as CodeMie PostgreSQL
+
+  User->>API: Submit question: "What's the status of JIRA-123?"
+  API->>Keycloak: Validate JWT token
+  Keycloak->>KCDB: Check user roles/permissions
+  KCDB-->>Keycloak: User profile & permissions
+  Keycloak-->>API: Token valid, user authenticated
+
+  API->>ES: Search for "JIRA-123"
+  ES-->>API: Return issue details<br/>(title, description, status, comments)
+
+  API->>API: Build prompt + context<br/>(question + Jira issue details)
+
+  API->>LiteLLM: Send prompt + context
+  LiteLLM->>LLM: Forward to LLM service (external region)
+  LLM-->>LiteLLM: AI-generated response
+  LiteLLM-->>API: Return response
+
+  API->>CodeMieDB: Store conversation<br/>(prompt, response, timestamp, user_id)
+
+  API-->>User: Return response with JIRA-123 reference
+```
 
 **Data Movement:**
 
@@ -298,11 +331,10 @@ Limitations:
 
 The CodeMie platform follows a **local-first data architecture** where:
 
-- Persistent storage regions are independently configurable - PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
-- External service data is indexed locally before AI processing
-- AI processing regions are configurable per LLM provider (AWS Bedrock, Azure OpenAI, Google Vertex AI, Anthropic, ...) - customers can select specific regions for each model based on compliance and latency requirements
+- Persistent storage regions are independently configurable – PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS can be deployed in the same region or distributed across different regions based on customer requirements
+- External service data is indexed locally for retrieval; some tools can access external sources directly when requested
+- AI processing regions are configurable per LLM provider (AWS Bedrock/Azure OpenAI/Google Vertex AI, etc.) – customers can select specific regions for each model based on compliance and latency requirements
 - Encryption keys can be geo-separated from data for compliance
-- No raw external data sent to AI without local indexing first
 - External customer services (IDP, data sources) authenticate via OAuth 2.0/SAML/OIDC; cloud infrastructure (databases, storage, LLM services) uses IAM/service accounts; all communications encrypted with TLS 1.2+
 
 This architecture supports **data sovereignty**, **GDPR compliance**, and **multi-region AI processing** while maintaining security and performance.
