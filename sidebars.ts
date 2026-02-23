@@ -685,19 +685,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: ['admin/update/keycloak-upgrade/keycloak-24-to-26'],
             },
-            {
-              type: 'category',
-              label: 'Terraform Upgrade',
-              link: {
-                type: 'doc',
-                id: 'admin/update/terraform-upgrade/terraform-upgrade',
-              },
-              collapsed: true,
-              items: [
-                'admin/update/terraform-upgrade/terraform-upgrade-aws',
-                'admin/update/terraform-upgrade/terraform-upgrade-azure',
-              ],
-            },
+            'admin/update/terraform-upgrade/terraform-upgrade',
             'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
           ],
