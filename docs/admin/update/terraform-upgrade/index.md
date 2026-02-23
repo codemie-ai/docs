@@ -38,29 +38,3 @@ The Azure deployment requires updated provider versions across all three modules
 - **AI-models modules:** `azurerm ~> 3.117`, `azapi ~> 1.15`, `azuread ~> 2.53`
 
 See the [Azure guide](./azure.md) for exact old/new version numbers.
-
-## Prerequisites
-
-Before upgrading, install [tfenv](https://github.com/tfutils/tfenv#installation) and switch to the required version:
-
-```bash
-tfenv install 1.13.5 && tfenv use 1.13.5
-```
-
-Verify the installed version:
-
-```bash
-terraform version
-# Terraform v1.13.5
-```
-
-:::warning Back Up Your State
-
-Before running any migration commands, ensure your Terraform state is backed up and there are no pending changes (`terraform plan` shows no diff).
-
-:::
-
-## Cloud-Specific Guides
-
-- [AWS Migration](./aws.md) — remove DynamoDB, migrate to S3 native locking
-- [Azure Migration](./azure.md) — upgrade provider versions across all modules and Kubernetes to 1.34.2
