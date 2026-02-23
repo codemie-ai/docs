@@ -33,11 +33,13 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 
 - External service data (Jira, GitHub, etc.) is fetched via MCP Connect (or datasource); for retrieval-based features it is normalized, embedded, and indexed locally in Elasticsearch
 - Some tools can query external data sources directly and return results to chat without indexing
-- AI model providers do not train on customer data under their enterprise agreements:
+- AI model providers do not train on customer data under their enterprise agreements. Refer to the provider documentation for details:
   - **Azure OpenAI**: [Data Privacy](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy?view=foundry-classic)
-  - **Anthropic Claude**: [Data Training](https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training)
   - **AWS Bedrock**: [Service Terms](https://aws.amazon.com/service-terms/) and [Third-Party Models](https://aws.amazon.com/legal/bedrock/third-party-models/)
   - **Google Vertex AI**: [Data Governance](https://docs.cloud.google.com/generative-ai-app-builder/docs/data-governance)
+  - **Anthropic Claude**: [Data Training](https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training)
+  - **OpenAI**: [Enterprise Data Privacy](https://openai.com/enterprise-privacy/)
+  - etc.
 - External credentials are never sent to LLMs, and LLM models cannot access them
 
 ## Data Storage Layers
