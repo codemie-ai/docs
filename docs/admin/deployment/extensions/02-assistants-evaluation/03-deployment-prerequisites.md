@@ -250,7 +250,7 @@ If you're enabling TTL on an **existing** Langfuse deployment or **changing rete
 **Steps for changing TTL:**
 
 1. Update `values.yaml` with new retention settings (configure desired TTL periods)
-2. Connect to ClickHouse - see [how to connect to ClickHouse](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#prerequisites)
+2. Connect to ClickHouse - see [how to connect to ClickHouse](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#connect-to-clickhouse)
 3. Delete old data manually - see [Manual Data Deletion queries](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#manual-data-deletion)
 4. Redeploy Langfuse with `helm upgrade` to apply new TTL configuration
 

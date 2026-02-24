@@ -15,17 +15,17 @@ import TabItem from '@theme/TabItem';
 
 This guide provides SQL queries for maintaining ClickHouse data volume in your Langfuse deployment. Use these queries to monitor disk usage, clean up old data, and verify retention policies.
 
-## Prerequisites
+## Connect to ClickHouse
 
 To execute these queries, you need access to the ClickHouse pod. Here's how to connect:
 
-### Find the ClickHouse Pod
+#### Find the ClickHouse Pod
 
 ```bash
 kubectl get pods -n langfuse | grep clickhouse
 ```
 
-### Connect to ClickHouse Pod
+#### Connect to ClickHouse Pod
 
 ```bash
 kubectl exec -it langfuse-clickhouse-shard0-X -n langfuse -- /bin/bash
@@ -33,13 +33,13 @@ kubectl exec -it langfuse-clickhouse-shard0-X -n langfuse -- /bin/bash
 
 Replace `X` with your shard number.
 
-### Get ClickHouse Password
+#### Get ClickHouse Password
 
 ```bash
 kubectl get secret langfuse-clickhouse -n langfuse -o jsonpath='{.data.admin-password}' | base64 --decode; echo
 ```
 
-### Connect to ClickHouse Client
+#### Connect using ClickHouse Client
 
 Inside the pod, connect to ClickHouse using the password from above:
 
