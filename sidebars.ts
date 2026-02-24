@@ -651,7 +651,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'category',
-                  label: 'Assistants Evaluation',
+                  label: '✨ Assistants Evaluation',
                   collapsed: true,
                   items: [
                     'admin/configuration/extensions/assistants-evaluation/storage-management',
@@ -659,7 +659,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'LiteLLM Proxy',
+                  label: '✨ LiteLLM Proxy',
                   collapsed: true,
                   items: [
                     'admin/configuration/extensions/litellm-proxy/budget-configuration',

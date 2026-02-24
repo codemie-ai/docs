@@ -168,47 +168,6 @@ retention:
     blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days (table: default.blob_storage_file_log)
 ```
 
-:::tip Data Retention (Recommended)
-Enable [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to automatically delete old data and prevent disk overflow.
-
-**Langfuse Tables** (set `retention.langfuse.enabled: true`)
-
-TTL is configured only for the 3 largest tables:
-
-- **`default.observations`**
-- **`default.traces`**
-- **`default.blob_storage_file_log`**
-
-These three tables consume the most disk space and are the primary candidates for retention management. Other Langfuse tables have minimal storage impact and do not require TTL configuration.
-
-Default retention: 90 days.
-
-**ClickHouse System Tables** (uncomment the `clickhouse.extraOverrides` section)
-
-For ClickHouse internal logs:
-
-- **`system.query_log`**
-- **`system.trace_log`**
-- **`system.metric_log`**
-- **`and others`**
-
-Default retention: 90 days.
-
-:::
-
-:::warning Existing Deployments: Manual Cleanup Required
-If you're enabling TTL on an **existing** Langfuse deployment or **changing retention periods**, TTL does **not** retroactively delete old data. You must manually clean up data that exceeds your new retention policy before redeploying.
-
-**Steps for changing TTL:**
-
-1. Update `values.yaml` with new retention settings (configure desired TTL periods)
-2. Connect to ClickHouse - see [how to connect to ClickHouse](../../../configuration/extensions/assistants-evaluation/storage-management#prerequisites)
-3. Delete old data manually - see [Manual Data Deletion queries](../../../configuration/extensions/assistants-evaluation/storage-management#manual-data-deletion)
-4. Redeploy Langfuse with `helm upgrade` to apply new TTL configuration
-
-For detailed SQL queries and monitoring, see [Storage Management Guide](../../../configuration/extensions/assistants-evaluation/storage-management).
-:::
-
 ## Step 3: Configure PostgreSQL
 
 Configure PostgreSQL running in managed cloud.
@@ -261,3 +220,39 @@ Switch to the `postgres_langfuse` database and grant schema privileges:
 ```sql
 GRANT ALL ON SCHEMA public TO langfuse_admin;
 ```
+
+## Step 4: Configure Data Retention (Optional)
+
+To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
+
+### Langfuse Tables
+
+Set `retention.langfuse.enabled: true` in `values.yaml`. TTL is configured for the following tables:
+
+- **`default.observations`**
+- **`default.traces`**
+- **`default.blob_storage_file_log`**
+
+These three tables consume the most disk space. Other Langfuse tables have minimal storage impact and do not require TTL configuration.
+
+### ClickHouse System Tables
+
+Uncomment the `clickhouse.extraOverrides` section in `values.yaml`. TTL is configured for the following tables:
+
+- **`system.query_log`**
+- **`system.trace_log`**
+- **`system.metric_log`**
+- and other system tables
+
+:::warning Existing Deployments: Manual Cleanup Required
+If you're enabling TTL on an **existing** Langfuse deployment or **changing retention periods**, TTL does **not** retroactively delete old data. You must manually clean up data that exceeds your new retention policy before redeploying.
+
+**Steps for changing TTL:**
+
+1. Update `values.yaml` with new retention settings (configure desired TTL periods)
+2. Connect to ClickHouse - see [how to connect to ClickHouse](../../../configuration/extensions/assistants-evaluation/storage-management#prerequisites)
+3. Delete old data manually - see [Manual Data Deletion queries](../../../configuration/extensions/assistants-evaluation/storage-management#manual-data-deletion)
+4. Redeploy Langfuse with `helm upgrade` to apply new TTL configuration
+
+For detailed SQL queries and monitoring, see [Data Volume Maintenance guide](../../../configuration/extensions/assistants-evaluation/storage-management).
+:::

@@ -1,9 +1,9 @@
 ---
 id: storage-management
-title: Storage Management
-sidebar_label: Storage Management
+title: Data Volume Maintenance
+sidebar_label: Data Volume Maintenance
 sidebar_position: 1
-description: ClickHouse storage management queries for Langfuse - disk usage analysis, data cleanup, and TTL monitoring
+description: ClickHouse data volume maintenance queries for Langfuse - disk usage analysis, data cleanup, and TTL monitoring
 pagination_prev: null
 pagination_next: null
 ---
@@ -11,9 +11,9 @@ pagination_next: null
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Storage Management
+# Data Volume Maintenance
 
-This guide provides SQL queries for managing ClickHouse storage in your Langfuse deployment. Use these queries to monitor disk usage, clean up old data, and verify retention policies.
+This guide provides SQL queries for maintaining ClickHouse data volume in your Langfuse deployment. Use these queries to monitor disk usage, clean up old data, and verify retention policies.
 
 ## Prerequisites
 
@@ -55,24 +55,26 @@ clickhouse-client --password <password_from_above>
 
 This query identifies which tables are consuming the most disk space.
 
-:::info Database Types
+<details>
+<summary>Database Types</summary>
+
 ClickHouse contains two types of databases:
 
-- **`default`** - Langfuse application database containing business data (Langfuse uses `default` as the [database name by default](https://langfuse.com/self-hosting/configuration#:~:text=CLICKHOUSE_DB,Name%20of%20the%20ClickHouse%20database%20to%20use.)):
+- **`default`** – Langfuse application database containing business data (Langfuse uses `default` as the [database name by default](https://langfuse.com/self-hosting/configuration#:~:text=CLICKHOUSE_DB,Name%20of%20the%20ClickHouse%20database%20to%20use.)):
   - `observations`
   - `traces`
   - `blob_storage_file_log`
   - `scores`
   - Other Langfuse tables and views
 
-- **`system`** - ClickHouse internal database containing metadata ([Located in the `system` database](https://clickhouse.com/docs/operations/system-tables/overview)):
+- **`system`** – ClickHouse internal database containing metadata ([Located in the `system` database](https://clickhouse.com/docs/operations/system-tables/overview)):
   - `trace_log`
   - `zookeeper_log`
   - `metric_log`
   - `opentelemetry_span_log`
   - Other ClickHouse tables
 
-:::
+</details>
 
 ```sql
 SELECT
@@ -281,7 +283,7 @@ All use `event_date` for partitioning.
 ```sql
 -- Example: query_log (replace table name as needed)
 SELECT
-    toDate(event_date) AS day,
+    event_date AS day,
     count() AS rows
 FROM system.query_log
 GROUP BY day
@@ -293,7 +295,7 @@ ORDER BY day ASC;
 
 ```sql
 SELECT
-    toDate(finish_date) AS day,
+    finish_date AS day,
     count() AS rows
 FROM system.opentelemetry_span_log
 GROUP BY day
@@ -360,7 +362,7 @@ ORDER BY day ASC;
 
 ```sql
 SELECT
-    toDate(finish_date) AS day,
+    finish_date AS day,
     count() AS rows,
     formatReadableSize(sum(length(toString(attribute)))) AS approx_size
 FROM system.opentelemetry_span_log
@@ -587,7 +589,7 @@ LIMIT 15;
 ```sql
 -- Example: query_log (replace table name as needed)
 SELECT
-    toDate(event_date) AS day,
+    event_date AS day,
     count() AS rows
 FROM system.query_log
 GROUP BY day
@@ -600,7 +602,7 @@ LIMIT 15;
 
 ```sql
 SELECT
-    toDate(finish_date) AS day,
+    finish_date AS day,
     count() AS rows
 FROM system.opentelemetry_span_log
 GROUP BY day
