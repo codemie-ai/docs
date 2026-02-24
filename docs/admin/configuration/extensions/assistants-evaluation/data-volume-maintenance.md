@@ -205,7 +205,7 @@ You can replace `query_log` with any of the following tables.
 
 </details>
 
-```sql
+```sql {6}
 SELECT
     partition AS month,
     sum(rows) AS rows,
@@ -278,7 +278,7 @@ ORDER BY day ASC;
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {4}
 SELECT
     event_date AS day,
     count() AS rows
@@ -340,7 +340,7 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {5}
 SELECT
     event_date AS day,
     count() AS rows,
@@ -427,7 +427,7 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {1}
 ALTER TABLE system.query_log
 DELETE WHERE toDate(event_date) < toDate('2025-07-13');
 ```
@@ -485,7 +485,7 @@ LIMIT 5;
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {3}
 SELECT command, is_done
 FROM system.mutations
 WHERE table = 'query_log'
@@ -563,7 +563,7 @@ LIMIT 15;
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {4}
 SELECT
     event_date AS day,
     count() AS rows
@@ -640,7 +640,7 @@ ORDER BY min_ttl;
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {7}
 SELECT
     partition,
     name AS part_name,
@@ -734,7 +734,7 @@ SHOW CREATE TABLE default.blob_storage_file_log;
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql
+```sql {1}
 SHOW CREATE TABLE system.query_log;
 ```
 
