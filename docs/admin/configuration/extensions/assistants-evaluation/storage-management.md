@@ -186,6 +186,11 @@ ORDER BY partition ASC;
 ```
 
   </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+
+  </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
 :::note
@@ -227,7 +232,7 @@ ORDER BY partition ASC;
 
 #### By Day: Row Count (Fast)
 
-Executes instantly by reading indices only.
+Shows row count per day. Executes instantly by reading indices only.
 
 <Tabs>
   <TabItem value="observations" label="Observations" default>
@@ -330,6 +335,11 @@ ORDER BY day ASC;
 ```
 
   </TabItem>
+  <TabItem value="blob_storage" label="Blob Storage Logs">
+
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so uncompressed size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+
+  </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
 :::note
@@ -366,10 +376,6 @@ ORDER BY day ASC;
 
   </TabItem>
 </Tabs>
-
-:::note Blob Storage Logs Table
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
-:::
 
 :::tip Date Column Names
 Check the date column name for your table:
