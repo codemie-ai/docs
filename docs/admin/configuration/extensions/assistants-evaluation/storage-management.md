@@ -155,7 +155,7 @@ Per-day compressed size is not available because ClickHouse partitions data by m
 
 #### Compressed Size by Month (Fast)
 
-Reads partition metadata from `system.parts`. Shows actual compressed disk usage by month.
+Shows actual compressed disk usage by month. Reads partition metadata from `system.parts`.
 
 <Tabs>
   <TabItem value="observations" label="Observations" default>
@@ -188,18 +188,16 @@ ORDER BY partition ASC;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
 - `processors_profile_log`, `latency_log`, `session_log`
 - `asynchronous_insert_log`, `error_log`
-
-All use `event_date` for partitioning.
-:::
+  :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT
     partition AS month,
     sum(rows) AS rows,
@@ -270,18 +268,16 @@ ORDER BY day ASC;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
 - `processors_profile_log`, `latency_log`, `session_log`
 - `asynchronous_insert_log`, `error_log`
-
-All use `event_date` for partitioning.
-:::
+  :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT
     event_date AS day,
     count() AS rows
@@ -336,18 +332,16 @@ ORDER BY day ASC;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
 - `processors_profile_log`, `latency_log`, `session_log`
 - `asynchronous_insert_log`, `error_log`
-
-All use `event_date` for partitioning.
-:::
+  :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT
     event_date AS day,
     count() AS rows,
@@ -436,7 +430,8 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
@@ -445,7 +440,6 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
   :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 ALTER TABLE system.query_log
 DELETE WHERE toDate(event_date) < toDate('2025-07-13');
 ```
@@ -578,7 +572,8 @@ LIMIT 15;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
@@ -587,7 +582,6 @@ LIMIT 15;
   :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT
     event_date AS day,
     count() AS rows
@@ -662,7 +656,8 @@ ORDER BY min_ttl;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
@@ -671,7 +666,6 @@ ORDER BY min_ttl;
   :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT
     partition,
     name AS part_name,
@@ -763,7 +757,8 @@ SHOW CREATE TABLE default.blob_storage_file_log;
   </TabItem>
   <TabItem value="system_logs" label="System Logs (event_date)">
 
-:::note Applies to these ClickHouse system tables
+:::note
+Replace `query_log` with any of the following table names:
 
 - `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
@@ -772,7 +767,6 @@ SHOW CREATE TABLE default.blob_storage_file_log;
   :::
 
 ```sql
--- Example: query_log (replace table name as needed)
 SHOW CREATE TABLE system.query_log;
 ```
 
