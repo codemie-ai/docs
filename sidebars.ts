@@ -654,7 +654,7 @@ const sidebars: SidebarsConfig = {
                   label: '✨ Assistants Evaluation',
                   collapsed: true,
                   items: [
-                    'admin/configuration/extensions/assistants-evaluation/storage-management',
+                    'admin/configuration/extensions/assistants-evaluation/data-volume-maintenance',
                   ],
                 },
                 {
