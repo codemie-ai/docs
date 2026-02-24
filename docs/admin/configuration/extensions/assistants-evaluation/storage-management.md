@@ -157,7 +157,7 @@ Per-day compressed size is not available because ClickHouse partitions data by m
 
 Shows actual compressed disk usage by month. Reads partition metadata from `system.parts`.
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -191,7 +191,7 @@ ORDER BY partition ASC;
 The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -234,7 +234,7 @@ ORDER BY partition ASC;
 
 Shows row count per day. Executes instantly by reading indices only.
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -271,7 +271,7 @@ ORDER BY day ASC;
 ```
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -308,7 +308,7 @@ ORDER BY day ASC;
 
 #### Uncompressed Size by Day (Heavy)
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -340,7 +340,7 @@ ORDER BY day ASC;
 The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so uncompressed size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -406,7 +406,7 @@ Always use `toDate()` or specific date strings. Using non-deterministic function
 
 ### Delete Data Older Than a Specific Date
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -434,7 +434,7 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
 ```
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -465,7 +465,7 @@ DELETE WHERE toDate(finish_date) < toDate('2025-07-13');
 
 Since deletion is not instant, check the progress here:
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -536,7 +536,7 @@ Before monitoring, check if TTL exists in your table definition: [Table Structur
 
 Shows the 15 oldest days with data to check if TTL is deleting old records as expected.
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -576,7 +576,7 @@ LIMIT 15;
 ```
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -617,7 +617,7 @@ LIMIT 15;
 
 Check when ClickHouse will delete expired data. ClickHouse stores data in physical files called **parts**. Each part contains multiple rows, and TTL is checked during background merges.
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -660,7 +660,7 @@ ORDER BY min_ttl;
 ```
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
@@ -739,7 +739,7 @@ Use this command to view the full table definition. This is critical for:
 1. **Column Names:** Finding the correct date column (e.g., `start_time` vs `timestamp`).
 2. **TTL Verification:** Checking if a retention policy is currently configured.
 
-<Tabs>
+<Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
@@ -761,7 +761,7 @@ SHOW CREATE TABLE default.blob_storage_file_log;
 ```
 
   </TabItem>
-  <TabItem value="system_logs" label="System Logs (event_date)">
+  <TabItem value="system_logs" label="System Logs">
 
 :::note
 Replace `query_log` with any of the following table names:
