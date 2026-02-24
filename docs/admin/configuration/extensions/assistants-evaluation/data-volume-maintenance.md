@@ -193,14 +193,17 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
+<details id="system-log-tables">
+<summary>System log tables</summary>
 
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
+You can replace `query_log` with any of the following tables.
+
+- `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
 - `processors_profile_log`, `latency_log`, `session_log`
 - `asynchronous_insert_log`, `error_log`
-  :::
+
+</details>
 
 ```sql
 SELECT
@@ -273,14 +276,7 @@ ORDER BY day ASC;
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 SELECT
@@ -342,14 +338,7 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 SELECT
@@ -436,14 +425,7 @@ DELETE WHERE toDate(created_at) < toDate('2025-07-13');
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 ALTER TABLE system.query_log
@@ -501,8 +483,9 @@ LIMIT 5;
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
+You can replace `query_log` with a table from [this list](#system-log-tables).
+
 ```sql
--- Example: query_log (replace table name as needed)
 SELECT command, is_done
 FROM system.mutations
 WHERE table = 'query_log'
@@ -578,14 +561,7 @@ LIMIT 15;
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 SELECT
@@ -662,14 +638,7 @@ ORDER BY min_ttl;
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 SELECT
@@ -763,14 +732,7 @@ SHOW CREATE TABLE default.blob_storage_file_log;
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-:::note
-Replace `query_log` with any of the following table names:
-
-- `query_log`, `trace_log`, `zookeeper_log`, `metric_log`
-- `asynchronous_metric_log`, `text_log`, `part_log`
-- `processors_profile_log`, `latency_log`, `session_log`
-- `asynchronous_insert_log`, `error_log`
-  :::
+You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql
 SHOW CREATE TABLE system.query_log;
