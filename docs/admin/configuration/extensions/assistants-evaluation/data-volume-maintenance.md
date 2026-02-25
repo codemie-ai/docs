@@ -193,10 +193,10 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-<details id="system-log-tables">
-<summary>System log tables</summary>
+#### You can replace `query_log` with any of the following system log tables. {#system-log-tables}
 
-You can replace `query_log` with any of the following system log tables.
+<details>
+<summary>Show supported tables</summary>
 
 - `trace_log`, `zookeeper_log`, `metric_log`
 - `asynchronous_metric_log`, `text_log`, `part_log`
