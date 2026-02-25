@@ -125,7 +125,7 @@ sequenceDiagram
   participant API as CodeMie API
   participant DB as PostgreSQL
   participant ES as Elasticsearch (Datasource Index)
-  participant Tools as External Tools
+  participant Tools as External Systems
   participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
 
@@ -289,7 +289,7 @@ sequenceDiagram
   participant NGINX as NGINX Ingress
   participant OAuth as OAuth2 Proxy
   participant API as CodeMie API
-  participant Tools as External Tools (Jira API)
+  participant Tools as External System (Jira API)
   participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
   participant CodeMieDB as CodeMie PostgreSQL
