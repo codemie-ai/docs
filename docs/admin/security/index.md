@@ -31,13 +31,13 @@ The CodeMie platform is built with security-first principles, implementing indus
 
 ### Access Control
 
-- **Single Sign-On (SSO)**: Integration with enterprise identity providers (Microsoft Entra ID, Okta, Google Workspace)
+- **Single Sign-On (SSO)**: Integration with enterprise identity providers (Microsoft Entra ID, Okta, Google Workspace, etc.)
 - **Role-Based Access Control (RBAC)**: Role-driven access and permission assignments
 - **Multi-Tenant Isolation**: Data segregation between organizations and teams
 
 ### External Service Integration
 
-- **Local-First Architecture**: External service data (Jira, GitHub, Confluence) is fetched, indexed, and stored locally
+- **Local-First Architecture**: External service data (Jira, GitHub, Confluence, etc.) is fetched, indexed, and stored locally
 - **Credential Isolation**: External service credentials never leave the platform boundary
 - **OAuth 2.0/SAML**: Industry-standard authentication protocols for external integrations
 
