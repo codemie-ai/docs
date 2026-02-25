@@ -129,8 +129,6 @@ sequenceDiagram
   participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
 
-  style LiteLLM fill:#efe7ff,stroke:#672d92,stroke-width:1px
-
   User->>API: Submit prompt
   API->>DB: 1. Store prompt
   API->>ES: 2. Retrieve context (if applicable)
@@ -295,8 +293,6 @@ sequenceDiagram
   participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
   participant CodeMieDB as CodeMie PostgreSQL
-
-  style LiteLLM fill:#efe7ff,stroke:#672d92,stroke-width:1px
 
   User->>NGINX: Submit question: "What's the status of JIRA-123?"
   NGINX->>OAuth: Forward request
