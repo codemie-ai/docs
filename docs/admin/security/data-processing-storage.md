@@ -26,7 +26,7 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 
 **2. Data Encryption**
 
-- Data at rest: Encrypted using Cloud KMS (AES-256)
+- Data at rest: Encrypted using KMS/Vault (AES-256)
 - Data in transit: TLS 1.2+ for all external communications
 
 **3. External Data Isolation**
@@ -71,7 +71,7 @@ Keycloak uses a dedicated PostgreSQL cluster in Kubernetes that stores SSO feder
 - **Storage & Security**:
   - **Retention**: Configurable based on customer requirements
   - **Access**: Managed identities/service accounts only, no public access
-  - **Encryption at rest**: Server-side KMS encryption
+  - **Encryption at rest**: Server-side KMS/Vault encryption
 
 ### In-Cluster Storage
 
@@ -162,11 +162,10 @@ sequenceDiagram
   participant User
   participant API as CodeMie API
   participant DB as PostgreSQL
-  participant KMS as Cloud KMS
-  participant Connector as Datasource Connector
-  participant ExtSvc as External Service (Jira/GitHub/etc.)
-  participant ObjStor as Object Storage
-  participant ES as Elasticsearch
+  participant KMS as KMS/Vault
+  participant DS as Data Source
+  participant ES as Vector Database (Elasticsearch)
+  participant Assistant as Assistant
 
   User->>API: Configure user integration & OAuth credentials
   API->>KMS: Encrypt credentials
@@ -178,31 +177,30 @@ sequenceDiagram
   DB-->>API: Encrypted string
   API->>KMS: Request decryption
   KMS-->>API: Plaintext credentials (ephemeral)
-  API->>Connector: Pass plaintext credentials (in-memory)
 
-  Connector->>ExtSvc: Call external API/URL (REST/GraphQL)
-  ExtSvc-->>Connector: Raw data
+  API->>DS: Fetch content
+  DS-->>API: Textual data
+  API->>API: Transform text into embeddings
+  API->>ES: Store embeddings (indexing)
 
-  Note over Connector: Delete plaintext credentials<br/>(garbage collection)
+  Note over ES: Indexed data remains static
+  Note over API: If source content changes,<br/>reindex or replace data source
 
-  Connector->>ObjStor: Store raw data
-  Connector->>ES: Store processed data with embeddings
-  Connector->>DB: Store metadata (sync timestamp, config)
-
-  User->>API: Query
-  API->>ES: Search context
-  ES-->>API: Results from external context
-  API-->>User: Query results
+  Assistant->>API: Send user query
+  API->>API: Transform query into embeddings
+  API->>ES: Semantic search (vector similarity)
+  ES-->>API: Relevant context
+  API-->>Assistant: Return context snippets
 ```
 
 **Data Stored:**
 
 - **Integration/Datasource Credentials**: PostgreSQL (encrypted string via KMS/Vault, plaintext never persisted)
-- **Indexed Data**: Elasticsearch (GKE/AKS/EKS)
-- **Metadata**: PostgreSQL (Cloud SQL/RDS/Azure Database)
+- **Indexed Data (Embeddings)**: Elasticsearch (vector database; GKE/AKS/EKS)
+- **Metadata**: PostgreSQL (Cloud SQL/RDS/Azure Database) — datasource config, indexing status, timestamps
 
 :::info Credential Security
-Integration/datasource credentials are stored as KMS/Vault-encrypted strings in PostgreSQL. Decryption happens on-demand via Cloud KMS or HashiCorp Vault API, and plaintext credentials exist only in memory for the duration of the API call, never persisted to disk.
+Integration/datasource credentials are stored as KMS/Vault-encrypted strings in PostgreSQL. Decryption happens on-demand via KMS/Vault APIs, and plaintext credentials exist only in memory for the duration of the API call, never persisted to disk.
 :::
 
 :::tip Supported Data Sources
@@ -217,7 +215,7 @@ For a complete list of supported data source types and configuration details, se
 | **PostgreSQL (CodeMie)**  | Chat, Config, Roles      | Cloud SQL/RDS/Azure DB                          | Cloud SQL/RDS/Azure Database Region       | KMS/Vault (at rest) + TLS (in transit) |
 | **Elasticsearch**         | Knowledge Base, Indices  | K8s Persistent Volume                           | GKE/AKS/EKS Region                        | StorageClass encryption + TLS          |
 | **Object Storage**        | Files, Attachments       | GCS/S3/Azure Blob                               | GCS/S3/Azure Blob Region                  | KMS/Vault (server-side)                |
-| **KMS/Vault**             | Encryption Keys, Secrets | Cloud KMS/HashiCorp Vault                       | KMS/Vault Region (configurable)           | HSM-backed                             |
+| **KMS/Vault**             | Encryption Keys, Secrets | KMS/Vault                                       | KMS/Vault Region (configurable)           | HSM-backed                             |
 | **LLM Services**          | Prompt Processing        | External API                                    | LLM Provider Region                       | TLS                                    |
 | **External IDPs**         | Authentication           | External SaaS                                   | Customer tenant                           | TLS + SAML/OIDC                        |
 | **External Services**     | Source Data              | External SaaS/Self-hosted                       | Managed by customer                       | TLS + OAuth 2.0                        |
@@ -257,7 +255,7 @@ For a complete list of supported data source types and configuration details, se
 | PostgreSQL Backups (Keycloak)       | 7 days                              | Yes          | K8s PGO point-in-time recovery   |
 | PostgreSQL Backups (CodeMie)        | 7 days                              | Yes          | Cloud SQL/RDS/Azure DB backups   |
 | External Service Data               | Indefinite                          | Yes          | Re-synced from source            |
-| KMS Keys                            | Indefinite                          | Yes          | Rotation disabled by default     |
+| KMS/Vault Keys                      | Indefinite                          | Yes          | Rotation disabled by default     |
 
 ## Security & Privacy
 
