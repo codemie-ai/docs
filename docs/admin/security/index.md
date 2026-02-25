@@ -13,21 +13,21 @@ Welcome to the AI/Run CodeMie Security & Compliance documentation. This section 
 
 ## Overview
 
-The Codemie platform is built with security-first principles, implementing industry-standard encryption, access controls, and data isolation mechanisms. The platform supports deployment in customer-controlled cloud environments, ensuring data sovereignty and compliance with regional data protection regulations.
+The CodeMie platform is built with security-first principles, implementing industry-standard encryption, access controls, and data isolation mechanisms. The platform supports deployment in customer-controlled cloud environments, ensuring data sovereignty and compliance with regional data protection regulations.
 
 ## Key Security Features
 
 ### Data Sovereignty
 
-- **Regional Isolation**: All persistent data resides in a single configurable region
-- **No Cross-Region Replication**: Data remains within the specified deployment region unless explicitly configured
+- **Regional Isolation**: Persistent storage regions are independently configurable (PostgreSQL, Object Storage, KMS/Vault)
+- **Configurable Distribution**: Storage services can be deployed in the same region or distributed across regions based on requirements
 - **Customer-Controlled Infrastructure**: Deploy in your own cloud account with full control over data location
 
 ### Encryption
 
-- **Data at Rest**: AES-256 encryption using cloud-native KMS (AWS KMS, Google Cloud KMS, Azure Key Vault)
+- **Data at Rest**: AES-256 encryption using KMS/Vault
 - **Data in Transit**: TLS 1.2+ for all external communications
-- **Secrets Management**: OAuth tokens, API keys, and credentials encrypted using cloud KMS
+- **Secrets Management**: OAuth tokens, API keys, and credentials encrypted using KMS/Vault
 
 ### Access Control
 
@@ -43,7 +43,7 @@ The Codemie platform is built with security-first principles, implementing indus
 
 ## Core Security Principles & Architecture
 
-This section describes the fundamental security patterns and practices implemented in the Codemie platform:
+This section describes the fundamental security patterns and practices implemented in the CodeMie platform:
 
 - **[Data Processing & Storage Architecture](./data-processing-storage)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
 
@@ -68,7 +68,7 @@ Multiple layers of security controls protect data at every stage:
 - User data isolated by tenant/organization
 
 :::tip Best Practice
-During deployment, ensure that the deployment region is configured to comply with your organization's data residency requirements across all infrastructure components, including the Codemie platform, LLM services, and external integrations. This is especially critical if your organization has security policies or compliance documentation that govern data processing and storage practices. Coordinate with your security team to verify that all deployed resources respect regional data sovereignty constraints.
+During deployment, ensure that the deployment region is configured to comply with your organization's data residency requirements across all infrastructure components, including the CodeMie platform, LLM services, and external integrations. This is especially critical if your organization has security policies or compliance documentation that govern data processing and storage practices. Coordinate with your security team to verify that all deployed resources respect regional data sovereignty constraints.
 :::
 
 ## Getting Help
@@ -81,5 +81,5 @@ For security-related questions:
 - Enable audit logging for security event monitoring
 
 :::warning Security Updates
-Regularly update the Codemie platform and its components to receive the latest security patches. See the [Update Guide](../update/) for procedures.
+Regularly update the CodeMie platform and its components to receive the latest security patches. See the [Update Guide](../update/) for procedures.
 :::
