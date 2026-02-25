@@ -32,7 +32,7 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 **3. External Data Isolation**
 
 - External service data (Jira, GitHub, etc.) is fetched via integration/datasource; for retrieval-based features it is normalized, embedded, and indexed locally in Elasticsearch
-- Some tools can query external data sources directly and return results to chat without indexing
+- Some tools can query external datasources directly and return results to chat without indexing
 - LLM providers do not train on customer data under their enterprise agreements. Refer to the provider documentation for details:
   - **Azure OpenAI**: [Data Privacy](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy?view=foundry-classic)
   - **AWS Bedrock**: [Service Terms](https://aws.amazon.com/service-terms/) and [Third-Party Models](https://aws.amazon.com/legal/bedrock/third-party-models/)
@@ -124,10 +124,12 @@ sequenceDiagram
   participant User
   participant API as CodeMie API
   participant DB as PostgreSQL
-  participant ES as Elasticsearch
-  participant Tools as External Tools/Datasources
-  participant LiteLLM as LiteLLM Proxy
+  participant ES as Elasticsearch (Datasource Index)
+  participant Tools as External Tools
+  participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
+
+  style LiteLLM fill:#efe7ff,stroke:#672d92,stroke-width:1px
 
   User->>API: Submit prompt
   API->>DB: 1. Store prompt
@@ -135,18 +137,25 @@ sequenceDiagram
   ES-->>API: Context snippets
   opt Direct Tool Access
     API->>Tools: 2. Call external tool
-    Tools-->>API: Results
+    Tools-->>API: Results (real-time CRUD)
+    Note over Tools: Real-time updates (no reindexing required)
+    Note over Tools: Lookup uses keyword/full-text search
   end
   API->>API: 3. Build prompt + context
-  opt LLM Processing
+  alt LiteLLM available (optional)
     API->>LiteLLM: Send prompt + context
     LiteLLM->>LLM: Forward to LLM service (external region)
     LLM-->>LiteLLM: AI response
     LiteLLM-->>API: Return response
+  else Direct LLM
+    API->>LLM: Send prompt + context
+    LLM-->>API: AI response
   end
   API->>DB: Store response
   API->>DB: Store analytics
   API-->>User: Return to user
+
+  Note over ES: Context comes from indexed embeddings
 ```
 
 **Data Stored:**
@@ -163,7 +172,7 @@ sequenceDiagram
   participant API as CodeMie API
   participant DB as PostgreSQL
   participant KMS as KMS/Vault
-  participant DS as Data Source
+  participant DS as Datasource
   participant ES as Vector Database (Elasticsearch)
   participant Assistant as Assistant
 
@@ -184,7 +193,7 @@ sequenceDiagram
   API->>ES: Store embeddings (indexing)
 
   Note over ES: Indexed data remains static
-  Note over API: If source content changes,<br/>reindex or replace data source
+  Note over API: If source content changes,<br/>reindex or replace datasource
 
   Assistant->>API: Send user query
   API->>API: Transform query into embeddings
@@ -203,8 +212,8 @@ sequenceDiagram
 Integration/datasource credentials are stored as KMS/Vault-encrypted strings in PostgreSQL. Decryption happens on-demand via KMS/Vault APIs, and plaintext credentials exist only in memory for the duration of the API call, never persisted to disk.
 :::
 
-:::tip Supported Data Sources
-For a complete list of supported data source types and configuration details, see [Data Source Overview](../../user-guide/data-source/data-source-overview/index.md#supported-data-source-types).
+:::tip Supported Datasources
+For a complete list of supported datasource types and configuration details, see [Data Source Overview](../../user-guide/data-source/data-source-overview/index.md#supported-data-source-types).
 :::
 
 ## Regional Data Distribution
@@ -246,16 +255,15 @@ For a complete list of supported data source types and configuration details, se
 
 ## Data Retention & Compliance
 
-| Data Category                       | Default Retention                   | Configurable | Compliance Notes                 |
-| ----------------------------------- | ----------------------------------- | ------------ | -------------------------------- |
-| Chat History (PostgreSQL CodeMie)   | 30 days                             | Yes          | Right to erasure supported       |
-| User Profiles (PostgreSQL Keycloak) | Indefinite                          | Yes          | Deleted on user account deletion |
-| Elasticsearch Indices               | Indefinite (90 days if ILM enabled) | Yes          | Can be rebuilt from sources      |
-| Object Storage Files                | Indefinite                          | Yes          | Customer-controlled lifecycle    |
-| PostgreSQL Backups (Keycloak)       | 7 days                              | Yes          | K8s PGO point-in-time recovery   |
-| PostgreSQL Backups (CodeMie)        | 7 days                              | Yes          | Cloud SQL/RDS/Azure DB backups   |
-| External Service Data               | Indefinite                          | Yes          | Re-synced from source            |
-| KMS/Vault Keys                      | Indefinite                          | Yes          | Rotation disabled by default     |
+| Data Category                       | Default Retention | Configurable         | Compliance Notes                            |
+| ----------------------------------- | ----------------- | -------------------- | ------------------------------------------- |
+| Chat History (PostgreSQL CodeMie)   | Indefinite        | No                   | Right to erasure supported                  |
+| User Profiles (PostgreSQL Keycloak) | Indefinite        | No                   | Deleted on user account deletion            |
+| Elasticsearch Indices               | Indefinite        | Yes (if ILM enabled) | Can be rebuilt from sources                 |
+| Object Storage Files                | Indefinite        | Yes                  | Can be configured according to requirements |
+| PostgreSQL Backups (Keycloak)       | 7 days            | Yes                  | K8s PGO point-in-time recovery              |
+| PostgreSQL Backups (CodeMie)        | 7 days            | Yes                  | Cloud SQL/RDS/Azure DB backups              |
+| KMS/Vault Keys                      | Indefinite        | Yes                  | Rotation disabled by default                |
 
 ## Security & Privacy
 
@@ -283,18 +291,24 @@ sequenceDiagram
   participant NGINX as NGINX Ingress
   participant OAuth as OAuth2 Proxy
   participant API as CodeMie API
-  participant Jira as Datasource (Jira)
+  participant Tools as External Tools (Jira API)
   participant LiteLLM as LiteLLM Proxy (optional)
   participant LLM as LLM Provider
   participant CodeMieDB as CodeMie PostgreSQL
+
+  style LiteLLM fill:#efe7ff,stroke:#672d92,stroke-width:1px
 
   User->>NGINX: Submit question: "What's the status of JIRA-123?"
   NGINX->>OAuth: Forward request
   OAuth->>OAuth: Validate JWT token
   OAuth-->>API: Authorized request
 
-  API->>Jira: Query JIRA-123
-  Jira-->>API: Return issue details<br/>(title, description, status, comments)
+  opt Direct Tool Access
+    API->>Tools: Call external tool
+    Tools-->>API: Results (real-time CRUD)
+    Note over Tools: Real-time updates (no reindexing required)
+    Note over Tools: Lookup uses keyword/full-text search
+  end
 
   API->>API: Build prompt + context<br/>(question + Jira issue details)
 
@@ -310,7 +324,7 @@ sequenceDiagram
 
 **Data Movement:**
 
-- Jira data: External → CodeMie API → Datasource (indexed)
+- Jira data: External → CodeMie API → Tools (real-time)
 - Prompt: User → API → PostgreSQL (Cloud SQL/RDS/Azure DB region) → LLM service
 - Response: LLM service → API → PostgreSQL (Cloud SQL/RDS/Azure DB region) → User
 - Credentials: KMS/Vault (configurable region) → CodeMie API (ephemeral memory)
@@ -321,12 +335,12 @@ The CodeMie platform follows a **local-first data architecture** where:
 
 - Persistent storage regions are independently configurable – PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS/Vault can be deployed in the same region or distributed across different regions based on customer requirements
 - External service data is indexed locally for retrieval; some tools can access external sources directly when requested
-- AI processing regions are configurable per LLM provider – customers can select specific regions for each model based on compliance and latency requirements
+- AI processing regions are configurable per LLM provider – customers can select specific regions for each model based on compliance and latency requirements (optional)
 - Encryption keys can be geo-separated from data for compliance
-- External customer services (IDP, data sources) authenticate via OAuth 2.0/SAML/OIDC; cloud infrastructure (databases, storage, LLM services) uses IAM/managed identities; all communications encrypted with TLS 1.2+
+- External customer services (IDP, datasources) authenticate via OAuth 2.0/SAML/OIDC; cloud infrastructure (compute,databases, storage, LLM services, etc.) uses IAM/managed identities; all communications encrypted with TLS 1.2+
 
 This architecture supports **data sovereignty** and **multi-region AI processing** while maintaining security and performance.
 
 :::tip Data Residency Configuration
-Configure regional settings during deployment to match your organization's data residency and compliance requirements. PostgreSQL (CodeMie), Object Storage, and KMS/Vault regions can be set independently from each other and from the Kubernetes cluster region. PostgreSQL (Keycloak) is always deployed in the same region as the Kubernetes cluster.
+Configure regional settings during deployment to match your organization's data residency and compliance requirements. PostgreSQL (CodeMie), Object Storage, and KMS/Vault regions can be set independently from each other and from the Kubernetes cluster region. PostgreSQL (Keycloak) is deployed in the same region as the Kubernetes cluster by default and can be configured otherwise according to customer requirements.
 :::
