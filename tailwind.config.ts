@@ -235,6 +235,9 @@ export default {
             ...c,
             ...themes.dark,
           },
+          backgroundImage: {
+            magical: 'linear-gradient(90deg, #672D92 0%, #5677C8 100%)',
+          },
           boxShadow: {
             card: `0 4px 12px ${c.shadow['card-dark']}`,
             'card-hover': `0 4px 12px ${c.shadow['card-hover-dark']}`,
@@ -248,6 +251,9 @@ export default {
           extend: {
             colors: {
               ...themes.light,
+            },
+            backgroundImage: {
+              magical: 'linear-gradient(90deg, #3676f7 0%, #cc22f2 100%)',
             },
             boxShadow: {
               card: `0 4px 12px ${c.shadow['card-light']}`,
