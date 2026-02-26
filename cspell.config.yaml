@@ -46,6 +46,7 @@ words:
   - Langchain
   - bitnami
   - litellm
+  - reportportal
   - berriai
   - Ollama
   # Cloud/Infrastructure
@@ -91,6 +92,9 @@ words:
   - Azure
   - azurecli
   - azuredevops
+  - azurerm
+  - azuread
+  - azapi
   - japaneast
   - eastus
   - westeurope

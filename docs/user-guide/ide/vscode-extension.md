@@ -75,3 +75,8 @@ This allows to use claude without Claude subscription and obtaining Anthropic AP
 2. Open Claude Code extension and start working with it
 
 ![Marketplace](./images/claude-extension-usage.png)
+
+### Potential issues
+
+1. Sometimes VS Code doesn't request to "Restart Extension" after update. In this case [Use Custom Claude Code Configuration] option will not appear in extension settings. In this case try to restart VSCode, then open [AI/Run CodeMie VS Code Extension] and check if [Use Custom Claude Code Configuration] option present in extension settings. If restart doesn't help - Uninstall the extension and then Install the most recent version from scratch
+2. Updating from early versions( 0.0.1, 0.0.2 ) may not be successful. If you have these versions installed - it's better to remove the extension first and then install actual version from scratch.

@@ -153,6 +153,8 @@ An industry-standard protocol for integrating external tools with AI assistants.
 
 A workspace within the CodeMie platform that delineates and isolates working environments, ensuring that users' activities do not interfere with one another. Projects are typically created by team leaders or administrators and facilitate structured project management. All data sources, integrations, and assistants are associated with a specific project.
 
+**Important**: Project names must be in lowercase only. Uppercase characters are not allowed in project names.
+
 ### Project Admin
 
 A user with administrative privileges within the CodeMie platform. Project Admins have extended functionality including the ability configure Project Integrations (available to all team members), view all project assistants and workflows and manage project-level settings. Only Admin roles or user with attribute applications_admin have access to these administrative functions.

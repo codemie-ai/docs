@@ -30,11 +30,8 @@ Use this method for programmatic or backend access without relying on individual
 [Learn more about Client Secret Access →](./client-secret-access)
 
 :::note
-You can use scripts to create and manage User Password and Client Secret clients in Keycloak:
-
-- [User Password Script](https://github.com/epam-gen-ai-run/ai-run-install/tree/main/scripts/keycloak_sdk)
-- [Client Secret Script](https://github.com/epam-gen-ai-run/ai-run-install/tree/main/scripts/keycloak_api_client)
-  :::
+Enterprise customers supplied by scripts to create and manage User Password and Client Secret clients in Keycloak
+:::
 
 ---
 
