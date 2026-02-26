@@ -667,6 +667,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Security & Compliance',
+          link: {
+            type: 'doc',
+            id: 'admin/security/index',
+          },
+          collapsed: true,
+          items: ['admin/security/data-processing-storage'],
+        },
+        {
+          type: 'category',
           label: 'Update',
           link: {
             type: 'doc',
