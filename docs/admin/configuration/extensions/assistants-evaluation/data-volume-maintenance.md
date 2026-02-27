@@ -145,9 +145,9 @@ The following queries help you understand how data is distributed over time and 
 
 Choose the appropriate query based on your needs:
 
-- **[Compressed Size by Month (Fast)](#compressed-size-by-month-fast)** - Actual compressed disk usage and row counts by month
-- **[Row Count by Day (Fast)](#by-day-row-count-fast)** - Number of records by day
-- **[Uncompressed Size by Day (Heavy)](#uncompressed-size-by-day-heavy)** - Decompresses data to calculate approximate size. Not actual disk usage - use only for comparing relative data volume between days
+- **[Compressed Size by Month (Fast)](#compressed-size-by-month-fast)** – Actual compressed disk usage and row counts by month
+- **[Row Count by Day (Fast)](#by-day-row-count-fast)** – Number of records by day
+- **[Uncompressed Size by Day (Heavy)](#uncompressed-size-by-day-heavy)** – Decompresses data to calculate approximate size. Not actual disk usage – use only for comparing relative data volume between days
 
 :::note
 Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
@@ -512,7 +512,7 @@ LIMIT 5;
 Monitor automatic data deletion through Time-To-Live (TTL) policies.
 
 :::tip First: Verify TTL is Configured
-Before monitoring, check if TTL exists in your table definition: [Table Structure](#3-table-structure). Look for the `TTL` line - if missing, automatic deletion is not configured.
+Before monitoring, check if TTL exists in your table definition: [Table Structure](#3-table-structure). Look for the `TTL` line – if missing, automatic deletion is not configured.
 :::
 
 #### Verify Old Data Deletion
