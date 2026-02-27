@@ -186,7 +186,7 @@ Each model entry in the `model_list` array consists of three main sections:
 - **`base_model`**: Base model identifier used to retrieve defaults and pricing from [LiteLLM models database](https://models.litellm.ai/).
 
   :::info
-  Set `base_model` accurately — the same model across different providers or regions may have different costs and capabilities.
+  Set `base_model` accurately – the same model across different providers or regions may have different costs and capabilities.
   :::
 
 - **`label`**: Human-readable display name shown in CodeMie UI
@@ -299,6 +299,19 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3-pro`](#gemini-3-pro)                   | Gemini 3 Pro      |
 | [`gemini-3.1-pro`](#gemini-31-pro)                | Gemini 3.1 Pro    |
 | [`text-embedding-005`](#embeddings-for-text)      | Text Embedding    |
+
+### GitHub Copilot Models
+
+| Model Name                                                             | Description       |
+| ---------------------------------------------------------------------- | ----------------- |
+| [`github-copilot-gpt-5`](#github-copilot-gpt-5)                        | GPT-5             |
+| [`github-copilot-gpt-5-mini`](#github-copilot-gpt-5-mini)              | GPT-5 Mini        |
+| [`github-copilot-gpt-5-1`](#github-copilot-gpt-51)                     | GPT-5.1           |
+| [`github-copilot-gpt-5-1-codex-max`](#github-copilot-gpt-51-codex-max) | GPT-5.1 Codex Max |
+| [`github-copilot-gpt-5-2`](#github-copilot-gpt-52)                     | GPT-5.2           |
+| [`github-copilot-claude-haiku-4.5`](#github-copilot-claude-haiku)      | Claude Haiku 4.5  |
+| [`github-copilot-claude-sonnet-4.5`](#github-copilot-claude-sonnet)    | Claude Sonnet 4.5 |
+| [`github-copilot-claude-opus-4-5`](#github-copilot-claude-opus)        | Claude Opus 4.5   |
 
 ## AWS Bedrock Provider Examples
 
@@ -950,7 +963,7 @@ model_list:
 :::info Gemini Region Configuration
 For Gemini models, `vertex_project` and `vertex_location` can be set in two ways:
 
-- **Globally** in `litellm_settings` — applies to all Gemini models at once:
+- **Globally** in `litellm_settings` – applies to all Gemini models at once:
 
   ```yaml
   litellm_settings:
@@ -958,7 +971,7 @@ For Gemini models, `vertex_project` and `vertex_location` can be set in two ways
     vertex_location: "us-central1"
   ```
 
-- **Per model** in `litellm_params` — overrides the global value for a specific entry:
+- **Per model** in `litellm_params` – overrides the global value for a specific entry:
 
   ```yaml
   - model_name: gemini-3-flash
@@ -1091,8 +1104,8 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
 :::info Claude on Vertex AI: Required Parameters
 Claude models on Vertex AI **require** two parameters specified per model entry:
 
-- `vertex_ai_project` — your GCP project ID (e.g. `os.environ/VERTEX_PROJECT`)
-- `vertex_ai_location` — the region where the model is deployed (e.g. `"europe-west1"`, `"us-east5"`)
+- `vertex_ai_project` – your GCP project ID (e.g. `os.environ/VERTEX_PROJECT`)
+- `vertex_ai_location` – the region where the model is deployed (e.g. `"europe-west1"`, `"us-east5"`)
 
 :::
 
@@ -1138,6 +1151,172 @@ Claude models on Vertex AI **require** two parameters specified per model entry:
     id: gecko
     base_model: text-embedding-005
     label: "Text Embedding Gecko"
+```
+
+</details>
+
+## GitHub Copilot Provider Examples
+
+:::info GitHub Copilot Authentication
+GitHub Copilot requires an OAuth access token mounted as a file. See [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets) for setup instructions.
+:::
+
+### GitHub Copilot GPT-5
+
+<details>
+<summary><strong>GitHub Copilot GPT-5</strong></summary>
+
+```yaml
+- model_name: github-copilot-gpt-5
+  litellm_params:
+    model: github_copilot/gpt-5
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-gpt-5
+    base_model: github_copilot/gpt-5
+    label: "GitHub Copilot GPT-5"
+```
+
+</details>
+
+### GitHub Copilot GPT-5 Mini
+
+<details>
+<summary><strong>GitHub Copilot GPT-5 Mini</strong></summary>
+
+```yaml
+- model_name: github-copilot-gpt-5-mini
+  litellm_params:
+    model: github_copilot/gpt-5-mini
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-gpt-5-mini
+    base_model: github_copilot/gpt-5-mini
+    label: "GitHub Copilot GPT-5 Mini"
+```
+
+</details>
+
+### GitHub Copilot GPT-5.1
+
+<details>
+<summary><strong>GitHub Copilot GPT-5.1</strong></summary>
+
+```yaml
+- model_name: github-copilot-gpt-5-1
+  litellm_params:
+    model: github_copilot/gpt-5.1
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-gpt-5-1
+    base_model: github_copilot/gpt-5.1
+    label: "GitHub Copilot GPT-5.1"
+```
+
+</details>
+
+### GitHub Copilot GPT-5.1 Codex Max
+
+<details>
+<summary><strong>GitHub Copilot GPT-5.1 Codex Max</strong></summary>
+
+```yaml
+- model_name: github-copilot-gpt-5-1-codex-max
+  litellm_params:
+    model: github_copilot/gpt-5.1-codex-max
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-gpt-5-1-codex-max
+    base_model: github_copilot/gpt-5.1-codex-max
+    label: "GitHub Copilot GPT-5.1 Codex Max"
+```
+
+</details>
+
+### GitHub Copilot GPT-5.2
+
+<details>
+<summary><strong>GitHub Copilot GPT-5.2</strong></summary>
+
+```yaml
+- model_name: github-copilot-gpt-5-2
+  litellm_params:
+    model: github_copilot/gpt-5.2
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-gpt-5-2
+    base_model: github_copilot/gpt-5.2
+    label: "GitHub Copilot GPT-5.2"
+```
+
+</details>
+
+### GitHub Copilot Claude Haiku
+
+<details>
+<summary><strong>GitHub Copilot Claude Haiku 4.5</strong></summary>
+
+```yaml
+- model_name: github-copilot-claude-haiku-4.5
+  litellm_params:
+    model: github_copilot/claude-haiku-4.5
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-claude-haiku-4-5
+    base_model: github_copilot/claude-haiku-4.5
+    label: "GitHub Copilot Claude Haiku 4.5"
+```
+
+</details>
+
+### GitHub Copilot Claude Sonnet
+
+<details>
+<summary><strong>GitHub Copilot Claude Sonnet 4.5</strong></summary>
+
+```yaml
+- model_name: github-copilot-claude-sonnet-4.5
+  litellm_params:
+    model: github_copilot/claude-sonnet-4.5
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-claude-sonnet-4-5
+    base_model: github_copilot/claude-sonnet-4.5
+    label: "GitHub Copilot Claude Sonnet 4.5"
+```
+
+</details>
+
+### GitHub Copilot Claude Opus
+
+<details>
+<summary><strong>GitHub Copilot Claude Opus 4.5</strong></summary>
+
+```yaml
+- model_name: github-copilot-claude-opus-4-5
+  litellm_params:
+    model: github_copilot/claude-opus-4.5
+    extra_headers:
+      Editor-Version: "vscode/1.85.1"
+      Copilot-Integration-Id: "vscode-chat"
+  model_info:
+    id: gh-copilot-claude-opus-4-5
+    base_model: github_copilot/claude-opus-4.5
+    label: "GitHub Copilot Claude Opus 4.5"
 ```
 
 </details>

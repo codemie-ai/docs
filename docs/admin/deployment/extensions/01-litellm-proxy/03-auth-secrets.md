@@ -14,17 +14,17 @@ LiteLLM Proxy requires credentials to authenticate with cloud provider services.
 
 ## Cloud Authentication Methods
 
-| Cluster Environment     | AWS Bedrock                                                                          | GCP Vertex AI                                     | Azure OpenAI                                             |
-| ----------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------------------- |
-| **AWS (EKS Cluster)**   | <ul><li>IRSA (IAM Roles for Service Accounts)</li><li>AWS User Credentials</li></ul> | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> |
-| **GCP (GKE Cluster)**   | <ul><li>AWS User Credentials</li></ul>                                               | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> |
-| **Azure (AKS Cluster)** | <ul><li>AWS User Credentials</li></ul>                                               | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> |
+| Cluster Environment     | AWS Bedrock                                                                          | GCP Vertex AI                                     | Azure OpenAI                                             | GitHub Copilot                              |
+| ----------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------- |
+| **AWS (EKS Cluster)**   | <ul><li>IRSA (IAM Roles for Service Accounts)</li><li>AWS User Credentials</li></ul> | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> | <ul><li>OAuth Access Token (file)</li></ul> |
+| **GCP (GKE Cluster)**   | <ul><li>AWS User Credentials</li></ul>                                               | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> | <ul><li>OAuth Access Token (file)</li></ul> |
+| **Azure (AKS Cluster)** | <ul><li>AWS User Credentials</li></ul>                                               | <ul><li>GCP Service Account Credentials</li></ul> | <ul><li>Azure Entra ID Application Credentials</li></ul> | <ul><li>OAuth Access Token (file)</li></ul> |
 
 ## AWS Bedrock Authentication
 
 _Required only if you plan to use models from AWS Bedrock._
 
-### Option 1: IRSA (IAM Roles for Service Accounts) - Recommended for EKS
+### Option 1: IRSA (IAM Roles for Service Accounts) – Recommended for EKS
 
 This method securely associates an IAM role with the LiteLLM Proxy's Kubernetes service account, avoiding the need to store static AWS credentials as secrets.
 
@@ -116,6 +116,159 @@ If you select **GCP** as your cloud provider during the automated installation, 
 During the script's execution, you will be prompted to enter the following value:
 
 - `VERTEX_PROJECT`: Your Google Cloud project ID where Vertex AI is enabled.
+
+## GitHub Copilot Authentication
+
+_Required only if you plan to use models from GitHub Copilot._
+
+**Prerequisites:** A GitHub account with an active Copilot subscription.
+
+GitHub Copilot authenticates via an OAuth access token mounted as a file into the LiteLLM container.
+
+### Obtain GitHub Copilot Token
+
+Create a script file `get_copilot_token.sh`. When run, it will:
+
+- Display a verification URL and a one-time code
+- Wait until you open the URL in a browser and enter the code using a GitHub account with access to a Copilot subscription
+- Save the token automatically to `access-token`
+
+<details>
+<summary><strong>get_copilot_token.sh</strong></summary>
+
+```bash
+#!/bin/bash
+CLIENT_ID="Iv1.b507a08c87ecfe98"
+
+echo "Requesting device code..."
+response=$(curl -s -X POST "https://github.com/login/device/code" \
+  -H "accept: application/json" \
+  -H "editor-version: Neovim/0.6.1" \
+  -H "editor-plugin-version: copilot.vim/1.16.0" \
+  -H "content-type: application/json" \
+  -H "user-agent: GithubCopilot/1.155.0" \
+  -d "{\"client_id\":\"$CLIENT_ID\",\"scope\":\"read:user\"}")
+
+device_code=$(echo "$response" | jq -r '.device_code')
+user_code=$(echo "$response" | jq -r '.user_code')
+verification_uri=$(echo "$response" | jq -r '.verification_uri')
+
+echo ""
+echo "========================================="
+echo "Please visit: $verification_uri"
+echo "Enter code:   $user_code"
+echo "========================================="
+echo ""
+echo "Waiting for authentication..."
+
+while true; do
+  sleep 10
+  response=$(curl -s -X POST "https://github.com/login/oauth/access_token" \
+    -H "accept: application/json" \
+    -H "editor-version: Neovim/0.6.1" \
+    -H "content-type: application/json" \
+    -H "user-agent: GithubCopilot/1.155.0" \
+    -d "{\"client_id\":\"$CLIENT_ID\",\"device_code\":\"$device_code\",\"grant_type\":\"urn:ietf:params:oauth:grant-type:device_code\"}")
+
+  access_token=$(echo "$response" | jq -r '.access_token // empty')
+
+  if [ -n "$access_token" ]; then
+    echo ""
+    echo "Authentication success!"
+    echo "Access Token: $access_token"
+    echo "$access_token" > access-token
+    echo "Token saved to: access-token"
+    break
+  fi
+
+  echo -n "."
+done
+```
+
+</details>
+
+Run the script. Follow the prompts to authenticate with GitHub. The token will be saved to `access-token`.
+
+### Mount the Token
+
+#### Helm
+
+Create a Kubernetes secret from the token file:
+
+```bash
+kubectl create secret generic litellm-github-copilot \
+  --namespace litellm \
+  --from-file=access-token=./access-token \
+  --type=Opaque
+```
+
+Then configure your `litellm/values.yaml` to mount the secret and set the required environment variable:
+
+```yaml
+litellm-helm:
+  # ... additional configuration fields
+  volumes:
+    - name: github-copilot-token
+      secret:
+        secretName: litellm-github-copilot
+
+  volumeMounts:
+  - name: github-copilot-token
+    mountPath: "/app/github_copilot_custom/access-token"
+    subPath: access-token
+    readOnly: true
+
+  envVars: {
+    # ... additional configuration fields
+    GITHUB_COPILOT_TOKEN_DIR: "/app/github_copilot_custom",
+    # ... additional configuration fields
+  }
+```
+
+#### Docker Compose
+
+_Optional – for local verification._
+
+Mount the `access-token` file directly as a volume and set the environment variable:
+
+<details>
+<summary><strong>docker-compose.yml</strong></summary>
+
+```yaml
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=litellm
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  litellm:
+    image: ghcr.io/berriai/litellm-database:main-v1.81.0-stable
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml
+      - ./access-token:/app/github_copilot_custom/access-token
+    command:
+      - "--config=/app/config.yaml"
+    ports:
+      - "4000:4000"
+    environment:
+      GITHUB_COPILOT_TOKEN_DIR: "/app/github_copilot_custom"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/litellm"
+      STORE_MODEL_IN_DB: "True"
+    depends_on:
+      - postgres
+```
+
+</details>
 
 ## Next Steps
 
