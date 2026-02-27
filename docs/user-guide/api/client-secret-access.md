@@ -12,7 +12,7 @@ sidebar_position: 1
 This guide provides step-by-step instructions for creating and configuring a Keycloak client for CodeMie Client Secret integration.
 
 :::note
-You can use scripts to create and manage Client Secret clients in Keycloak: [Client Secret Script](https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/tree/main/keycloak-onboarding/scripts/keycloak_api_client)
+Enterprise customers supplied by scripts to create and manage Client Secret clients in Keycloak
 :::
 
 ---

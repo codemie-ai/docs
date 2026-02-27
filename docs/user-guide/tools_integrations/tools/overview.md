@@ -32,6 +32,8 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[OpenAPI](./openapi-tool)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
 | **[Jira](./jira)**                                                        | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
 | **[LiteLLM](./litellm)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
+| **[Confluence](./confluence)**                                            | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                  |
+| **[ReportPortal](./reportportal)**                                        | AI-powered test execution analysis, launch data retrieval, and failure recommendations                            |
 | **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
 | **[Xray](./xray)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
 | **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
@@ -128,6 +130,7 @@ The table below shows which tools require integration setup and the integration 
 | **FileSystem => Generate Image**                      |        ❌ No         |       ---        |         ❌ No          |
 | **Notification => Email**                             |        ✅ Yes        |      Email       |         ❌ No          |
 | **LiteLLM**                                           |        ✅ Yes        |     LiteLLM      |         ❌ No          |
+| **Report Portal**                                     |        ✅ Yes        |   ReportPortal   |         ❌ No          |
 | **Codebase Tools => Sonar**                           |        ✅ Yes        |      Sonar       |         ❌ No          |
 | **Codebase Tools => Get Repo Tree** (Experimental)    |        ❌ No         |      --- \*      |         ❌ No          |
 | **Codebase Tools => Search Code** (Experimental)      |        ❌ No         |      --- \*      |         ❌ No          |

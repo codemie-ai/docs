@@ -3,7 +3,7 @@ id: platform-administration
 sidebar_position: 3
 title: Platform Administration
 description: Managing projects and platform settings
-pagination_prev: admin/configuration/codemie/user-configuration/user-configuration-overview
+pagination_prev: admin/configuration/access-control/access-control-overview
 pagination_next: null
 ---
 
@@ -40,7 +40,7 @@ Fill in a unique **Project Name** (e.g., `sample_project`) and click **Add**.
 ![Project Creation Form](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_9-4-43.png)
 
 :::note Next Step
-After creating the project, you can now assign it to users by following the instructions in [Step 2.2: Assign Attributes](./user-authorization/assign-attributes).
+After creating the project, you can now assign it to users by following the instructions in [Step 2.2: Assign Attributes](../access-control/user-authorization/assign-attributes).
 :::
 
 ## Accessing Existing Projects
@@ -57,4 +57,4 @@ _Example: The project dropdown is initially empty, but projects appear after typ
 
 ---
 
-**Optional Convenience Tip:** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Step 2.2: Assign Attributes](./user-authorization/assign-attributes).
+**Optional Convenience Tip:** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Assign Attributes](../access-control/user-authorization/assign-attributes).

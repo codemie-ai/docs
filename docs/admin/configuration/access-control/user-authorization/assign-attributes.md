@@ -22,7 +22,7 @@ This behavior applies to both personal and shared projects:
 - **Personal Project Example:** If you assign the value `john_doe` to a user with the username `john_doe`, a personal project named `john_doe` is created for them.
 - **Shared Project Example:** If you assign the value `team-alpha` to one or more users, a shared project named `team-alpha` will be automatically created the first time it is assigned.
 
-_**Note for Administrators:** Manual project creation (as described in the [Platform Administration Guide](../platform-administration)) is now only necessary if a project needs to be set up for administrative purposes before any users are assigned to it._
+_**Note for Administrators:** Manual project creation (as described in the [Platform Administration Guide](../../codemie/platform-administration)) is now only necessary if a project needs to be set up for administrative purposes before any users are assigned to it._
 :::
 
 :::note How to Configure a Project Administrator

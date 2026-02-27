@@ -69,6 +69,88 @@ clickhouse:
   persistence:
     size: "100Gi"         # Adjust as needed
 
+  # Uncomment this to enable TTL (automatic deletion of old logs) for ClickHouse system logs. Default is 90 days.
+  # extraOverrides: |
+  #   <clickhouse>
+  #       <!--
+  #         Standard System Tables:
+  #         These settings merge with the default configuration in /etc/clickhouse-server/config.xml.
+  #         We simply inject the <ttl> parameter to enable retention, preserving other default settings
+  #         (partitioning, flush intervals).
+  #       -->
+  #       <query_log>
+  #         <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </query_log>
+  #       <part_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </part_log>
+  #       <trace_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </trace_log>
+  #       <asynchronous_insert_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </asynchronous_insert_log>
+  #       <asynchronous_metric_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </asynchronous_metric_log>
+  #       <backup_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </backup_log>
+  #       <blob_storage_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </blob_storage_log>
+  #       <crash_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </crash_log>
+  #       <metric_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </metric_log>
+  #       <query_thread_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </query_thread_log>
+  #       <query_views_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </query_views_log>
+  #       <session_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </session_log>
+  #       <zookeeper_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </zookeeper_log>
+  #       <processors_profile_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </processors_profile_log>
+  #       <text_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </text_log>
+  #       <error_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </error_log>
+  #       <query_metric_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </query_metric_log>
+  #       <latency_log>
+  #           <ttl>event_date + INTERVAL 90 DAY DELETE</ttl>
+  #       </latency_log>
+  #       <!--
+  #         OpenTelemetry Span Log:
+  #         We must fully redefine this table configuration (using replace="1") instead of merging.
+  #         Adding a standalone <ttl> tag fails when <engine> is already defined in the default config.
+  #         See bug: https://github.com/ClickHouse/ClickHouse/issues/88366
+  #       -->
+  #       <opentelemetry_span_log replace="1">
+  #           <database>system</database>
+  #           <table>opentelemetry_span_log</table>
+
+  #           <engine>ENGINE = MergeTree PARTITION BY toYYYYMM(finish_date) ORDER BY (finish_date, finish_time_us, trace_id) TTL finish_date + INTERVAL 90 DAY DELETE</engine>
+
+  #           <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+  #           <max_size_rows>1048576</max_size_rows>
+  #           <reserved_size_rows>8192</reserved_size_rows>
+  #           <buffer_size_rows_flush_threshold>524288</buffer_size_rows_flush_threshold>
+  #           <flush_on_crash>false</flush_on_crash>
+  #       </opentelemetry_span_log>
+  #   </clickhouse>
 redis:
   persistence:
     size: "2Gi"         # Adjust as needed
@@ -81,112 +163,10 @@ s3:
 retention:
   langfuse:
     enabled: false              # Set to 'true' to automatically purge historical data
-    observationsDays: 90        # Retain observations for 90 days
-    tracesDays: 90              # Retain traces for 90 days
-    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days
+    observationsDays: 90        # Retain observations for 90 days (table: default.observations)
+    tracesDays: 90              # Retain traces for 90 days (table: default.traces)
+    blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days (table: default.blob_storage_file_log)
 ```
-
-:::tip Data Retention
-The retention configuration automatically applies [TTL (Time-To-Live)](https://clickhouse.com/docs/guides/developer/ttl) policies to Langfuse tables in ClickHouse. This helps manage storage costs by automatically removing old data. Adjust the retention periods based on your compliance and storage requirements.
-:::
-
-:::info ClickHouse System Tables Retention
-The `clickhouse.extraOverrides` section in `values.yaml` contains optional configuration for ClickHouse system tables TTL. By default, it's commented out to avoid modifying ClickHouse's internal logging behavior.
-
-**When to enable:**
-
-- You need to manage storage used by ClickHouse system logs (query_log, trace_log, metric_log, etc.)
-- You want to limit retention of internal ClickHouse operational logs
-
-**How to enable:**
-
-1. Uncomment the `extraOverrides` section in `langfuse/values.yaml`
-2. Adjust the TTL intervals as needed (default is 90 days)
-3. Redeploy Langfuse with `helm upgrade`
-
-This configuration is separate from Langfuse data retention and only affects ClickHouse's internal system tables.
-:::
-
-## Step 2.1: Managing ClickHouse Data Retention
-
-When you enable `retention.langfuse.enabled: true` in the configuration above, a Kubernetes Job automatically applies TTL (Time-To-Live) policies to Langfuse tables in ClickHouse. The TTL policies automatically delete data older than the specified retention period.
-
-### Scenario A: New Langfuse Installation
-
-If you're deploying Langfuse for the first time:
-
-1. Simply enable retention in `values.yaml` (as shown above)
-2. Deploy Langfuse following the deployment instructions
-3. TTL policies will be applied automatically during deployment
-4. No manual data cleanup is needed
-
-### Scenario B: Existing Installation or Changing TTL Settings
-
-If you have an existing Langfuse installation with data and want to:
-
-- Enable retention for the first time, OR
-- Reduce the retention period (e.g., from 90 days to 30 days)
-
-You **must manually delete old data** before enabling or updating retention settings.
-
-#### Step 1: Connect to ClickHouse
-
-Find the ClickHouse pod name:
-
-```bash
-kubectl get pods -n langfuse | grep clickhouse
-```
-
-Connect to the ClickHouse pod (replace `X` with your shard number):
-
-```bash
-kubectl exec -it langfuse-clickhouse-shard0-X -n langfuse -- /bin/bash
-```
-
-#### Step 2: Get ClickHouse Password
-
-Retrieve the admin password from the Kubernetes secret:
-
-```bash
-kubectl get secret langfuse-clickhouse -n langfuse -o jsonpath='{.data.admin-password}' | base64 --decode; echo
-```
-
-#### Step 3: Connect to ClickHouse Client
-
-Inside the pod, connect to ClickHouse using the password from Step 2:
-
-```bash
-clickhouse-client --password <password_from_step_2>
-```
-
-#### Step 4: Delete Old Data
-
-Execute the following SQL commands to delete data older than your desired retention date.
-
-**Example:** Delete data older than July 13, 2025:
-
-```sql
--- Delete old observations
-ALTER TABLE default.observations DELETE WHERE toDate(start_time) < toDate('2025-07-13');
-
--- Delete old traces
-ALTER TABLE default.traces DELETE WHERE toDate(timestamp) < toDate('2025-07-13');
-
--- Delete old blob storage logs
-ALTER TABLE default.blob_storage_file_log DELETE WHERE toDate(created_at) < toDate('2025-07-13');
-```
-
-:::warning
-These DELETE operations are irreversible. Make sure you have backups if needed and verify the date before executing.
-:::
-
-:::info
-After deleting old data manually, you can enable or update the retention configuration in `values.yaml` and redeploy Langfuse. The TTL policies will then automatically manage future data cleanup.
-:::
-
-:::tip Monitoring Queries
-For useful SQL queries to monitor disk usage, verify retention policies, and analyze data patterns, see [Operational Queries](./operational-queries).
-:::
 
 ## Step 3: Configure PostgreSQL
 
@@ -240,3 +220,39 @@ Switch to the `postgres_langfuse` database and grant schema privileges:
 ```sql
 GRANT ALL ON SCHEMA public TO langfuse_admin;
 ```
+
+## Step 4: Configure Data Retention (Optional)
+
+To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
+
+### Langfuse Tables
+
+Set `retention.langfuse.enabled: true` in `values.yaml`. TTL is configured for the following tables:
+
+- **`default.observations`**
+- **`default.traces`**
+- **`default.blob_storage_file_log`**
+
+These three tables consume the most disk space. Other Langfuse tables have minimal storage impact and do not require TTL configuration.
+
+### ClickHouse System Tables
+
+Uncomment the `clickhouse.extraOverrides` section in `values.yaml`. TTL is configured for the following tables:
+
+- **`system.query_log`**
+- **`system.trace_log`**
+- **`system.metric_log`**
+- and other system tables
+
+:::warning Existing Deployments: Manual Cleanup Required
+If you're enabling TTL on an **existing** Langfuse deployment or **changing retention periods**, TTL does **not** retroactively delete old data. You must manually clean up data that exceeds your new retention policy before redeploying.
+
+**Steps for changing TTL:**
+
+1. Update `values.yaml` with new retention settings (configure desired TTL periods)
+2. Connect to ClickHouse - see [how to connect to ClickHouse](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#connect-to-clickhouse)
+3. Delete old data manually - see [Manual Data Deletion queries](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#manual-data-deletion)
+4. Redeploy Langfuse with `helm upgrade` to apply new TTL configuration
+
+For detailed SQL queries and monitoring, see [Data Volume Maintenance guide](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance).
+:::
