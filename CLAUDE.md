@@ -35,8 +35,8 @@ npm run lint:eslint          # ESLint only
 npm run lint:prettier        # Prettier check only
 npm run lint:markdown        # Markdown linting only
 npm run lint:spelling        # Spell checking only
-npm run format:eslint        # ESLint auto-fix
 npm run format:prettier      # Prettier auto-fix
+npm run format:eslint        # ESLint auto-fix
 ```
 
 ### Commit Message Validation
