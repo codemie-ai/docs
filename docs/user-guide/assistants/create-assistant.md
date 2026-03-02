@@ -58,7 +58,7 @@ Generate with AI analyzes your requirements and automatically sets up the assist
 | Field                              | Description                                                                |
 | ---------------------------------- | -------------------------------------------------------------------------- |
 | **Project**                        | The project where the assistant will be created                            |
-| **Shared with Project Team**       | Enable to allow team members to view and use the assistant                 |
+| **Shared with Project**            | Enable to allow team members to view and use the assistant                 |
 | **Name**                           | Descriptive name for the assistant                                         |
 | **Slug**                           | Unique human-readable identifier for sharing (e.g., `my-custom-assistant`) |
 | **Description**                    | Brief description of the assistant's purpose and capabilities              |

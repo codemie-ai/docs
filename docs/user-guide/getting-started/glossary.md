@@ -40,9 +40,17 @@ A predefined configuration for creating assistants or workflows in the CodeMie p
 
 ## C
 
+### Categories
+
+Organizational labels used to group and filter assistants and skills in the CodeMie platform. [Learn more about Categories Management](../assistants/assistant-categories-management).
+
 ### Chat
 
 A conversation interface for interacting with assistants. Users can communicate with AI assistants, ask questions, and receive responses. Chats can be organized into folders, shared with team members, and exported in various formats.
+
+### Chat Features
+
+Special capabilities available during chat sessions that enhance interaction with assistants. Users can attach documents and images for analysis, dynamically attach or detach skills to modify assistant behavior, switch between different AI models on the fly, and enable or disable specific tools as needed. These features provide flexibility to customize the assistant's capabilities within individual conversations without modifying the assistant's base configuration.
 
 ### Chat History
 
@@ -177,6 +185,10 @@ An extensible component that adds functionality to the CodeMie platform. Plugins
 ---
 
 ## S
+
+### Skills
+
+Reusable sets of instructions designed to make AI assistants smarter and more efficient. Skills enable users to create focused, task-specific guidance that can be applied across multiple assistants, share best practices and standardized procedures, and eliminate redundancy by avoiding duplicated instructions. Skills are loaded automatically based on relevance to user requests and can inherit required tools to assistants. [Learn more about Skills](../skills/skills-overview).
 
 ### System Instructions (System Prompt)
 

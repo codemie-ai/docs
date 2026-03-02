@@ -102,7 +102,7 @@ Click the **Workflow Config** button to access configuration options:
 Configure essential workflow settings:
 
 - **Project name**: Select the project where you want to add the workflow
-- **Shared with Project Team**: Enable to make your workflow visible to your project team
+- **Shared with Project**: Enable to make your workflow visible to your project team
 - **Name\*** (Required): Unique identifier for your workflow
 - **Description**: Brief explanation of the workflow's purpose and features
 - **Icon URL**: Link to an image (.png or .svg) for the workflow avatar

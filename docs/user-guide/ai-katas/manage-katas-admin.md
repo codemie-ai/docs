@@ -12,7 +12,7 @@ sidebar_position: 6
 Create, edit, publish, clone, and archive AI Katas.
 
 :::warning Access Required
-This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create, edit, publish, and manage all Kata content.
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role. Platform Administrators have full access to create, edit, publish, and manage all Kata content.
 :::
 
 ## Creating a Kata

@@ -21,7 +21,7 @@ Share an assistant with your project team using the built-in toggle:
 
    ![Edit assistant option](../images/image58.png)
 
-3. Enable the **Shared with Project Team** option:
+3. Enable the **Shared with Project** option:
 
    ![Share with team toggle](../images/image39.png)
 

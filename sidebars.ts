@@ -71,6 +71,23 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Skills',
+          link: {
+            type: 'doc',
+            id: 'user-guide/skills/skills-index',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/skills/skills-overview',
+            'user-guide/skills/create-skill',
+            'user-guide/skills/attach-skills-to-assistants',
+            'user-guide/skills/manage-skills',
+            'user-guide/skills/marketplace-skills',
+            'user-guide/skills/skills-in-chat',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Workflows',
           link: {
             type: 'doc',

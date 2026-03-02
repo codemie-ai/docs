@@ -72,7 +72,7 @@ Be aware about the following naming restrictions:
 
 Specify brief description that underlines data source features.
 
-#### Shared with Project Team
+#### Shared with Project
 
 Decide whether you want your project team members to use the data source or not.
 
@@ -101,10 +101,10 @@ As you work with CodeMie, the number of data sources will increase. To simplify 
 
 ## Data Source Visibility
 
-Indexed repositories within the project space are visible to all members of the assigned project but not to the users assigned to other projects. The **Shared with Project Team** option determines whether this data source will be available to all project participants or will be private – visible only to the user who created it. By default, the data source will be available to all project participants.
+Indexed repositories within the project space are visible to all members of the assigned project but not to the users assigned to other projects. The **Shared with Project** option determines whether this data source will be available to all project participants or will be private – visible only to the user who created it. By default, the data source will be available to all project participants.
 
 :::warning Privacy Note
-Private data sources are only visible to their creator. Ensure you share critical data sources with your team by enabling "Shared with Project Team".
+Private data sources are only visible to their creator. Ensure you share critical data sources with your team by enabling "Shared with Project".
 :::
 
 ## Best Practices

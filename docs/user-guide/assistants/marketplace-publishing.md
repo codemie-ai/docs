@@ -91,7 +91,7 @@ Choose up to **3 relevant categories** to help users discover your assistant:
 | **Presales**                  | Client interactions, proposal generation, solution demonstrations                 |
 
 :::info Category Management
-Users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) permissions can create, edit, and delete assistant categories. Learn more in [Assistant Categories Management](./assistant-categories-management).
+Users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) permissions can create, edit, and delete categories. Learn more in [Assistant Categories Management](./assistant-categories-management).
 :::
 
 ## Integration Requirements

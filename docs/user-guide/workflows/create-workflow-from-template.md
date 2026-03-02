@@ -28,14 +28,14 @@ Creating a workflow from scratch can be complex, especially for first-time users
 
 ### Workflow Configuration
 
-| Field                        | Description                                                                              |
-| ---------------------------- | ---------------------------------------------------------------------------------------- |
-| **Project**                  | Your AI/Run CodeMie project (pre-populated by default)                                   |
-| **Shared with Project Team** | Enable to allow teammates to view and use the workflow                                   |
-| **Name**                     | Unique name for the workflow                                                             |
-| **Description**              | Brief description of the workflow's features and purpose                                 |
-| **Icon URL**                 | URL to an icon image for the workflow avatar                                             |
-| **Supervisor Prompt**        | Global context shared across all assistants; can include variables like date, time, etc. |
+| Field                   | Description                                                                              |
+| ----------------------- | ---------------------------------------------------------------------------------------- |
+| **Project name**        | Your AI/Run CodeMie project (pre-populated by default)                                   |
+| **Shared with Project** | Enable to allow teammates to view and use the workflow                                   |
+| **Name**                | Unique name for the workflow                                                             |
+| **Description**         | Brief description of the workflow's features and purpose                                 |
+| **Icon URL**            | URL to an icon image for the workflow avatar                                             |
+| **Supervisor Prompt**   | Global context shared across all assistants; can include variables like date, time, etc. |
 
 6. Click **Create** to save your workflow.
 
