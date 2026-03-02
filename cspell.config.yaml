@@ -193,6 +193,7 @@ words:
   - ANTLR
   - dozerdb
   - issuetype
+  - blocklist
   # File types
   - tsx
   - jsx

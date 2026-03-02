@@ -87,11 +87,12 @@ Call particular assistant for getting answers/tasks.
 
 ### Required Fields for Request Body
 
-| Field        | Type    | Required | Description                                                                               |
-| ------------ | ------- | -------- | ----------------------------------------------------------------------------------------- |
-| **text**     | String  | Yes      | User's ask or question                                                                    |
-| **stream**   | Boolean | No       | Whether to stream response by chunks or return entire answer                              |
-| **llmModel** | String  | No       | Can override LLM model for assistant. Default value is selected during assistant creation |
+| Field                 | Type    | Required | Description                                                                               |
+| --------------------- | ------- | -------- | ----------------------------------------------------------------------------------------- |
+| **text**              | String  | Yes      | User's ask or question                                                                    |
+| **stream**            | Boolean | No       | Whether to stream response by chunks or return entire answer                              |
+| **llmModel**          | String  | No       | Can override LLM model for assistant. Default value is selected during assistant creation |
+| **propagate_headers** | Boolean | No       | Forward custom `X-*` HTTP headers to MCP tool invocations for context propagation         |
 
 ### Example Request Body
 
@@ -102,6 +103,53 @@ Call particular assistant for getting answers/tasks.
   "stream": true
 }
 ```
+
+### Example with Header Propagation
+
+When using assistants with MCP servers, you can propagate custom HTTP headers to enable context-aware tool invocations. This is useful for multi-tenant scenarios, request tracing, or passing user-specific context.
+
+```bash
+curl -X POST "https://codemie.example.com/code-assistant-api/v1/assistants/{assistant_id}/chat" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-access-token>" \
+  -H "X-Tenant-ID: acme-corp" \
+  -H "X-Correlation-ID: trace-123" \
+  -H "X-User-Context: engineering-team" \
+  -d '{
+    "text": "List all deployments in production environment",
+    "propagate_headers": true
+  }'
+```
+
+**How it works:**
+
+1. Custom `X-*` headers (`X-Tenant-ID`, `X-Correlation-ID`, `X-User-Context`) are included in the HTTP request
+2. `propagate_headers: true` enables header forwarding to MCP servers
+3. When the assistant calls MCP server tools, these headers are automatically passed along
+4. The MCP server can use these headers for tenant isolation, tracing, or authorization
+
+**Common use cases:**
+
+- **Multi-tenancy**: Pass `X-Tenant-ID` to scope MCP tool responses to a specific tenant
+- **Request tracing**: Use `X-Correlation-ID` to track requests across services
+- **User context**: Forward `X-End-User-ID` or `X-User-Role` for access control
+
+:::tip
+For workflow executions, you can also enable header propagation:
+
+```bash
+POST /v1/workflows/{workflow_id}/executions
+X-Tenant-ID: my-tenant
+
+{
+  "user_input": "Run deployment check",
+  "propagate_headers": true
+}
+```
+
+:::
+
+[Learn more about MCP Header Propagation →](../tools_integrations/tools/adding-an-mcp-server#propagating-client-headers-to-mcp-servers)
 
 ---
 

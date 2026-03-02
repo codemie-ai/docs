@@ -802,4 +802,377 @@ assistants:
 
 For detailed MCP server configuration including HTTP servers, transport types, and all available options, refer to **Section 3.6: MCP Server Configuration**.
 
+### 9.4 MCP Header Propagation in Workflows
+
+Pass request-scoped context (tenant IDs, correlation IDs, user identity) from workflow execution requests directly to MCP server tools. This enables multi-tenant workflows, distributed tracing, and context-aware tool invocations.
+
+#### How It Works in Workflows
+
+When `propagate_headers: true` is set on workflow execution:
+
+1. Custom `X-*` HTTP headers from the workflow execution request are extracted
+2. Headers are filtered through a security blocklist to remove sensitive credentials
+3. Safe headers are attached to all MCP tool invocations during workflow execution
+4. MCP servers receive headers and can use them for tenant routing, tracing, or authorization
+
+```
+Workflow Execution Request  ──►  Workflow Engine  ──►  Assistant  ──►  MCP Tool
+  X-Tenant-ID: acme              extract headers        uses tool      receives headers
+  propagate_headers: true        filter blocked         invokes MCP    X-Tenant-ID: acme
+```
+
+#### Workflow YAML Configuration
+
+Configure MCP servers in workflow assistants. Headers are automatically propagated when enabled in the execution request.
+
+**Example: Multi-Tenant Operations Workflow**
+
+```yaml
+enable_summarization_node: false
+recursion_limit: 30
+
+assistants:
+  - id: ops-agent
+    model: gpt-4.1
+    system_prompt: |
+      You are an operations assistant managing infrastructure across tenants.
+      The tenant context is provided automatically via request headers.
+      Always scope operations to the current tenant.
+    mcp_servers:
+      - name: ops-api-server
+        description: Operations API via MCP
+        config:
+          url: https://ops-api.internal/mcp
+          type: streamable-http
+          headers:
+            # Static service-to-service auth header
+            X-Service-Token: "{{OPS_SERVICE_TOKEN}}"
+          env:
+            OPS_SERVICE_TOKEN: "{{ops_service_token}}"
+        integration_alias: ops-api-integration
+
+states:
+  - id: check-service-health
+    assistant_id: ops-agent
+    task: |
+      Check the health status of all services in the current tenant's environment.
+      Report any services that are degraded or down.
+    next:
+      state_id: end
+```
+
+**Client Request with Header Propagation:**
+
+```http
+POST /v1/workflows/{workflow_id}/executions
+Content-Type: application/json
+X-Tenant-ID: acme-corp
+X-Environment: production
+X-Correlation-ID: trace-abc-123
+
+{
+  "user_input": "Check service health",
+  "propagate_headers": true
+}
+```
+
+**What the MCP Server Receives:**
+
+The MCP server receives **both**:
+
+- **Static headers** from workflow config: `X-Service-Token` (from `integration_alias` credentials)
+- **Client-propagated headers**: `X-Tenant-ID: acme-corp`, `X-Environment: production`, `X-Correlation-ID: trace-abc-123`
+
+The MCP server can then:
+
+- Route the request to the `acme-corp` tenant's infrastructure
+- Filter results to the `production` environment
+- Include `trace-abc-123` in distributed traces
+
+#### Common Workflow Use Cases
+
+**Use Case 1: Multi-Tenant Deployment Workflows**
+
+Enable different tenants to trigger the same deployment workflow, with operations automatically scoped to their resources.
+
+```http
+POST /v1/workflows/deployment-workflow/executions
+X-Tenant-ID: tenant-a
+X-Environment: staging
+
+{
+  "user_input": "Deploy version 2.5.0",
+  "propagate_headers": true
+}
+```
+
+```http
+POST /v1/workflows/deployment-workflow/executions
+X-Tenant-ID: tenant-b
+X-Environment: production
+
+{
+  "user_input": "Deploy version 2.5.0",
+  "propagate_headers": true
+}
+```
+
+Same workflow, different tenants. MCP tools receive `X-Tenant-ID` and scope operations accordingly.
+
+**Use Case 2: Request Tracing Across Workflows**
+
+Track workflow executions through distributed systems using correlation IDs.
+
+```http
+POST /v1/workflows/integration-test-workflow/executions
+X-Correlation-ID: test-run-7f3a9b21
+X-Request-Source: ci-pipeline
+X-Build-ID: build-12345
+
+{
+  "user_input": "Run integration tests for PR #456",
+  "propagate_headers": true
+}
+```
+
+All MCP tool calls inherit these headers, enabling:
+
+- Distributed tracing across workflow → MCP servers → external systems
+- Log correlation using `X-Correlation-ID`
+- Build tracking using `X-Build-ID`
+
+**Use Case 3: User-Scoped Workflow Execution**
+
+Pass user context to enable MCP servers to perform access control or audit logging.
+
+```http
+POST /v1/workflows/approval-workflow/executions
+X-End-User-ID: user-4892
+X-End-User-Role: developer
+X-User-Department: engineering
+
+{
+  "user_input": "Request approval for infrastructure change",
+  "propagate_headers": true
+}
+```
+
+MCP servers receive user identity and can:
+
+- Check if user has permission for the requested action
+- Log audit trail with user information
+- Apply role-based access control
+
+**Use Case 4: Environment-Aware Workflows**
+
+Route workflow operations to different environments based on headers.
+
+```yaml
+assistants:
+  - id: deployment-agent
+    model: gpt-4.1
+    system_prompt: |
+      Deploy applications to the environment specified in request headers.
+      Validate deployments and report status.
+    mcp_servers:
+      - name: deployment-service
+        config:
+          url: https://deploy.internal/mcp
+          type: streamable-http
+          headers:
+            X-Service-Key: "{{DEPLOY_KEY}}"
+        integration_alias: deployment-credentials
+
+states:
+  - id: validate-environment
+    assistant_id: deployment-agent
+    task: |
+      Verify the target environment is ready for deployment.
+      Environment is provided in X-Environment header.
+      Check:
+      - Environment exists
+      - Required services are running
+      - No ongoing deployments
+    next:
+      state_id: deploy
+
+  - id: deploy
+    assistant_id: deployment-agent
+    task: |
+      Deploy application {{app_name}} version {{version}}.
+      Use environment from request headers.
+    next:
+      state_id: end
+```
+
+```http
+# Deploy to staging
+POST /v1/workflows/app-deployment/executions
+X-Environment: staging
+X-Region: us-west-2
+
+{
+  "user_input": "Deploy app-a version 1.2.0",
+  "propagate_headers": true
+}
+```
+
+```http
+# Deploy to production
+POST /v1/workflows/app-deployment/executions
+X-Environment: production
+X-Region: eu-central-1
+
+{
+  "user_input": "Deploy app-a version 1.2.0",
+  "propagate_headers": true
+}
+```
+
+#### Workflow Resume with Header Propagation
+
+When resuming interrupted workflows, enable header propagation via query parameter:
+
+```http
+PUT /v1/workflows/{workflow_id}/executions/{execution_id}/resume?propagate_headers=true
+Content-Type: application/json
+X-Tenant-ID: acme-corp
+X-Resume-Context: manual-intervention
+```
+
+Headers are propagated to any remaining workflow states and MCP tool calls.
+
+#### Security Considerations
+
+**Blocked Headers:**
+
+The following headers are **automatically blocked** and never forwarded to MCP servers:
+
+- `Authorization` (Bearer tokens, Basic auth)
+- `Cookie`, `Set-Cookie` (Session cookies)
+- `X-Api-Key`, `X-Auth-Token` (API credentials)
+- `X-Internal-Secret`, `X-Internal-Token` (Internal secrets)
+
+Administrators can customize the blocklist via `MCP_BLOCKED_HEADERS` environment variable. See [API Configuration](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation) for details.
+
+**Best Practices:**
+
+- ✅ **Do** propagate tenant identifiers: `X-Tenant-ID`, `X-Organization-ID`
+- ✅ **Do** propagate tracing IDs: `X-Correlation-ID`, `X-Request-ID`
+- ✅ **Do** propagate user context: `X-End-User-ID`, `X-User-Role`
+- ❌ **Don't** pass authentication tokens via headers (use `integration_alias` instead)
+- ❌ **Don't** rely on header propagation for critical security (validate on MCP server)
+
+#### Example: Complete Multi-Tenant Workflow
+
+```yaml
+enable_summarization_node: false
+recursion_limit: 30
+
+assistants:
+  - id: tenant-ops-agent
+    model: gpt-4.1
+    system_prompt: |
+      You manage infrastructure operations for multiple tenants.
+      The current tenant is identified by X-Tenant-ID header.
+      Always confirm tenant context before executing operations.
+    mcp_servers:
+      - name: infrastructure-api
+        description: Multi-tenant infrastructure management
+        config:
+          url: https://infra-api.internal/mcp
+          type: streamable-http
+          headers:
+            X-Service-Auth: "{{INFRA_SERVICE_TOKEN}}"
+        integration_alias: infrastructure-credentials
+
+      - name: monitoring-api
+        description: Tenant-scoped monitoring and metrics
+        config:
+          url: https://monitoring.internal/mcp
+          type: streamable-http
+          headers:
+            X-Service-Auth: "{{MONITORING_SERVICE_TOKEN}}"
+        integration_alias: monitoring-credentials
+
+states:
+  - id: verify-tenant-access
+    assistant_id: tenant-ops-agent
+    task: |
+      Verify the tenant {{tenant_id}} exists and user has access.
+      Use infrastructure-api to check tenant status.
+    output_schema: |
+      {
+        "type": "object",
+        "properties": {
+          "tenant_exists": {"type": "boolean"},
+          "access_granted": {"type": "boolean"}
+        }
+      }
+    next:
+      condition:
+        expression: "tenant_exists && access_granted"
+        then: gather-metrics
+        otherwise: end
+
+  - id: gather-metrics
+    assistant_id: tenant-ops-agent
+    task: |
+      Gather infrastructure metrics for tenant {{tenant_id}}:
+      - Active services count
+      - Resource utilization
+      - Recent incidents
+      - Performance metrics
+
+      Use both infrastructure-api and monitoring-api.
+      Tenant context is provided in X-Tenant-ID header.
+    next:
+      state_id: generate-report
+
+  - id: generate-report
+    assistant_id: tenant-ops-agent
+    task: |
+      Generate tenant health report based on gathered metrics: {{task}}
+
+      Include:
+      - Overall tenant health score
+      - Service status summary
+      - Resource usage trends
+      - Recommendations for optimization
+    next:
+      state_id: end
+```
+
+**Client Request:**
+
+```http
+POST /v1/workflows/tenant-health-check/executions
+Content-Type: application/json
+Authorization: Bearer <user-token>
+X-Tenant-ID: acme-corp
+X-Correlation-ID: health-check-2024-03-02
+X-End-User-ID: user-456
+X-End-User-Role: admin
+
+{
+  "user_input": "Generate health report for our tenant",
+  "propagate_headers": true
+}
+```
+
+**Result:**
+
+- All MCP tool calls to `infrastructure-api` and `monitoring-api` receive:
+  - `X-Tenant-ID: acme-corp` (tenant scoping)
+  - `X-Correlation-ID: health-check-2024-03-02` (distributed tracing)
+  - `X-End-User-ID: user-456` (audit logging)
+  - `X-End-User-Role: admin` (access control)
+- MCP servers can scope responses to `acme-corp` tenant
+- Distributed traces link workflow execution → MCP calls → external systems
+- Audit logs capture which user triggered the workflow
+
+[Learn more about MCP Header Propagation →](../../tools_integrations/tools/adding-an-mcp-server#propagating-client-headers-to-mcp-servers)
+
+[Security Configuration →](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation)
+
 ---

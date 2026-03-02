@@ -172,3 +172,172 @@ To ensure your MCP server is correctly configured and accessible, CodeMie provid
 5. The system will perform the verification and display results immediately
 
 This feature helps you quickly confirm that your MCP server connection is working properly without having to test it through actual assistant conversations.
+
+## Propagating Client Headers to MCP Servers
+
+CodeMie supports forwarding custom HTTP headers from client SDK requests to MCP server invocations. This allows you to pass request-scoped context — such as tenant identifiers, correlation IDs, or custom authorization tokens — directly through to the tools your assistant calls on an MCP server.
+
+### Overview
+
+Header propagation is **opt-in** and **disabled by default**. Clients must explicitly enable it per request by setting `propagate_headers: true` in the request body.
+
+### How It Works
+
+When header propagation is enabled:
+
+1. A client sends a request to CodeMie with `propagate_headers: true` and includes one or more `X-*` HTTP headers
+2. CodeMie extracts all `X-*` headers from the incoming request, filtering out a configurable blocklist of sensitive headers
+3. The extracted headers are attached to the MCP execution context and sent to the MCP-Connect bridge in the body of every tool invocation (`tools/list` and `tools/call`)
+4. The MCP-Connect bridge receives the headers and forwards them to the target MCP server
+
+```
+SDK Request  ──►  CodeMie API  ──►  MCPToolkitService  ──►  MCPConnectClient
+  X-Tenant-ID: abc          extract_custom_headers()         request_headers in body
+  propagate_headers: true   (filters blocked headers)        ──►  MCP-Connect  ──►  MCP Server
+```
+
+### Using Header Propagation
+
+#### With Assistant Chat
+
+Set `propagate_headers: true` in the request body when calling the assistant chat endpoint. Any `X-*` headers you include in the HTTP request are forwarded to MCP tool invocations.
+
+```http
+POST /v1/assistants/{assistant_id}/chat
+Content-Type: application/json
+X-Tenant-ID: my-tenant
+X-Correlation-ID: req-abc-123
+X-User-Context: engineering-team
+
+{
+  "text": "List all open pull requests",
+  "propagate_headers": true
+}
+```
+
+#### With Workflow Execution
+
+Set `propagate_headers: true` in the request body when creating a workflow execution.
+
+```http
+POST /v1/workflows/{workflow_id}/executions
+Content-Type: application/json
+X-Tenant-ID: my-tenant
+X-Correlation-ID: req-abc-123
+
+{
+  "user_input": "Run the code review pipeline",
+  "propagate_headers": true
+}
+```
+
+#### With Workflow Resume
+
+Pass `propagate_headers` as a query parameter when resuming an interrupted workflow execution.
+
+```http
+PUT /v1/workflows/{workflow_id}/executions/{execution_id}/resume?propagate_headers=true
+Content-Type: application/json
+X-Tenant-ID: my-tenant
+```
+
+### Security: Header Filtering
+
+Not all `X-*` headers are forwarded. CodeMie applies a blocklist to prevent propagation of sensitive credentials and internal tokens.
+
+**Default Blocked Headers** (case-insensitive):
+
+| Header              | Reason                    |
+| ------------------- | ------------------------- |
+| `Authorization`     | Bearer tokens, Basic auth |
+| `Cookie`            | Session cookies           |
+| `Set-Cookie`        | Session cookies           |
+| `X-Api-Key`         | API key credentials       |
+| `X-Auth-Token`      | Authentication tokens     |
+| `X-Internal-Secret` | Internal service secrets  |
+| `X-Internal-Token`  | Internal service tokens   |
+
+:::warning Important
+Administrators can customize the blocklist via the `MCP_BLOCKED_HEADERS` environment variable. See the [API Configuration Guide](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation) for details.
+:::
+
+### Configuring MCP Servers to Receive Propagated Headers
+
+To make use of propagated headers, your MCP server must be prepared to read them from the tool invocation context it receives from MCP-Connect.
+
+#### HTTP MCP Servers
+
+For HTTP-transport MCP servers, the propagated headers are delivered to the MCP-Connect bridge as part of the invocation request body under the `request_headers` field. MCP-Connect can be configured to forward them as HTTP headers to the upstream MCP server.
+
+**Example Configuration:**
+
+```json
+{
+  "name": "my-api-server",
+  "description": "Internal API MCP server",
+  "type": "streamable-http",
+  "url": "https://my-api-server.internal/mcp",
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Service-Name": "codemie"
+  }
+}
+```
+
+When `propagate_headers: true` is set on the request, the client-supplied headers (e.g., `X-Tenant-ID`, `X-Correlation-ID`) are passed alongside the static headers defined in the server config.
+
+#### stdio MCP Servers
+
+For command-based (stdio) MCP servers, the propagated headers are included in the invocation request body sent to MCP-Connect. How MCP-Connect delivers them to the stdio process depends on your MCP-Connect configuration (for example, via environment variables or standard input). Consult your MCP-Connect deployment documentation for details.
+
+### Common Use Cases
+
+#### Multi-Tenant Context
+
+Pass a tenant identifier so the MCP server can scope its responses to the correct tenant.
+
+```http
+POST /v1/assistants/{assistant_id}/chat
+X-Tenant-ID: acme-corp
+
+{
+  "text": "Show me this week's deployment status",
+  "propagate_headers": true
+}
+```
+
+The MCP server receives `X-Tenant-ID: acme-corp` and uses it to filter data for the acme-corp tenant.
+
+#### Request Tracing
+
+Propagate a correlation ID so that traces span from the SDK call all the way to the MCP server and back.
+
+```http
+POST /v1/workflows/{workflow_id}/executions
+X-Correlation-ID: trace-7f3a9b21
+X-Request-Source: ci-pipeline
+
+{
+  "user_input": "Run integration tests",
+  "propagate_headers": true
+}
+```
+
+#### Forwarding User Identity
+
+Pass end-user identity metadata when the MCP server needs to perform access control or audit logging on its side.
+
+```http
+POST /v1/assistants/{assistant_id}/chat
+X-End-User-ID: u-4892
+X-End-User-Role: developer
+
+{
+  "text": "Deploy to staging",
+  "propagate_headers": true
+}
+```
+
+:::note
+Do not pass raw auth tokens (e.g., `X-Auth-Token`) via header propagation — these are blocked by default. If the MCP server needs user authentication, configure it through the MCP server's `integration_alias` or `env` credentials instead.
+:::
