@@ -66,21 +66,21 @@ cd codemie-helm-charts
 
 ### Step 2: Configure Domain Name
 
-Update the domain name in values files. Replace `codemie.example.com` with your actual domain, or leave it if using the default one:
+Update the DNS zone name in values files. Replace `codemie.private.lab.com` with your actual DNS zone name, or leave it if using the default one:
 
 ```bash
-# Use your domain from deployment_outputs.env
-YOUR_DOMAIN="codemie.example.com"
+# Use your DNS zone name from deployment_outputs.env
+CODEMIE_DOMAIN_NAME="$CODEMIE_DOMAIN_NAME"
 
 # Update all values-azure.yaml files
-find . -name "values-azure.yaml" -exec sed -i "s/codemie.example.com/$YOUR_DOMAIN/g" {} \;
+find . -name "values-azure.yaml" -exec sed -i "s/private.lab.com/$CODEMIE_DOMAIN_NAME/g" {} \;
 
 # Update domain placeholder in CodeMie API values
-sed -i "s/%%DOMAIN%%/example.com/g" codemie-api/values-azure.yaml
+sed -i "s/private.lab.com/$CODEMIE_DOMAIN_NAME/g" codemie-api/values-azure.yaml
 ```
 
 :::tip Domain Configuration
-Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
+Your DNS zone name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
 :::
 
 ### Step 3: Authenticate to Container Registry
@@ -154,14 +154,13 @@ The deployment script accepts three required parameters:
 
 The following files require domain name configuration (automated by Step 2 in Quick Start):
 
-| Component        | File                              | Placeholder            | Example Value                     |
-| ---------------- | --------------------------------- | ---------------------- | --------------------------------- |
-| **Kibana**       | `kibana/values-azure.yaml`        | `codemie.example.com`  | `codemie.example.com`             |
-| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `codemie.example.com`. | `codemie.example.com`             |
-| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `codemie.example.com`  | `codemie.example.com`             |
-| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.example.com`  | `codemie.example.com`             |
-| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `codemie.example.com`  | `codemie.example.com`             |
-| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `%%DOMAIN%%`           | `example.com` (without subdomain) |
+| Component        | File                              | Placeholder               | Example Value         |
+| ---------------- | --------------------------------- | ------------------------- | --------------------- |
+| **Kibana**       | `kibana/values-azure.yaml`        | `*.private.lab.com`       | `*.example.com`       |
+| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `*.private.lab.com`       | `*.example.com`       |
+| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `*.private.lab.com`       | `*.example.com`       |
+| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.private.lab.com` | `codemie.example.com` |
+| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `*.private.lab.com`       | `*.example.com`       |
 
 ## Next Steps
 

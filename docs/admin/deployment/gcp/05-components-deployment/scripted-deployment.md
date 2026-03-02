@@ -73,7 +73,7 @@ Update the required placeholders in the values files. Replace these values with 
 
 | Placeholder                 | Description             | Example Value    | Files to Edit                            |
 | --------------------------- | ----------------------- | ---------------- | ---------------------------------------- |
-| `%%DOMAIN%%`                | Your domain name        | `example.com`    | All `values-gcp.yaml` files listed below |
+| `%%DOMAIN%%`                | Your DNS zone name      | `example.com`    | All `values-gcp.yaml` files listed below |
 | `%%GOOGLE_PROJECT_ID%%`     | GCP project ID          | `my-project-123` | `codemie-api/values-gcp.yaml`            |
 | `%%GOOGLE_REGION%%`         | GCP region              | `europe-west3`   | `codemie-api/values-gcp.yaml`            |
 | `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID with KMS | `my-project-123` | `codemie-api/values-gcp.yaml`            |
@@ -99,7 +99,7 @@ DOMAIN="example.com"
 PROJECT_ID="my-gcp-project"
 REGION="europe-west3"
 
-# Replace domain in all files
+# Replace DNS zone name in all files
 find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
 
 # Replace GCP parameters in CodeMie API
