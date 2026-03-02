@@ -169,18 +169,18 @@ sed -i "s/%%AWS_S3_REGION%%/${AWS_S3_REGION}/g" codemie-api/values-aws.yaml
 
 ### Step 3: Configure Domain Name
 
-Update the domain name in values files. Replace `codemie.example.com` with your actual domain:
+Update the DNS zone name in values files. Replace `%%DOMAIN%%` with your actual DNS zone name:
 
 ```bash
-# Use your domain from deployment_outputs.env
-YOUR_DOMAIN="${CODEMIE_DOMAIN_NAME}"
+# Use your DNS zone name from deployment_outputs.env
+CODEMIE_DOMAIN_NAME="airun.example.com"
 
 # Update all values-aws.yaml files
-find . -name "values-aws.yaml" -exec sed -i "s/codemie.example.com/$YOUR_DOMAIN/g" {} \;
+find . -name "values-aws.yaml" -exec sed -i "s/%%DOMAIN%%/$CODEMIE_DOMAIN_NAME/g" {} \;
 ```
 
 :::tip Domain Configuration
-Your domain name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
+Your DNS zone name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
 :::
 
 ### Step 4: Authenticate to Container Registry

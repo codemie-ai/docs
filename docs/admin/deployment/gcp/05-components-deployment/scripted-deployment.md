@@ -71,13 +71,13 @@ cd codemie-helm-charts
 
 Update the required placeholders in the values files. Replace these values with your GCP-specific configuration:
 
-| Placeholder                 | Description             | Example Value    | Files to Edit                            |
-| --------------------------- | ----------------------- | ---------------- | ---------------------------------------- |
-| `%%DOMAIN%%`                | Your DNS zone name      | `example.com`    | All `values-gcp.yaml` files listed below |
-| `%%GOOGLE_PROJECT_ID%%`     | GCP project ID          | `my-project-123` | `codemie-api/values-gcp.yaml`            |
-| `%%GOOGLE_REGION%%`         | GCP region              | `europe-west3`   | `codemie-api/values-gcp.yaml`            |
-| `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID with KMS | `my-project-123` | `codemie-api/values-gcp.yaml`            |
-| `%%GOOGLE_KMS_REGION%%`     | GCP region with KMS     | `europe-west3`   | `codemie-api/values-gcp.yaml`            |
+| Placeholder                 | Description             | Example Value       | Files to Edit                            |
+| --------------------------- | ----------------------- | ------------------- | ---------------------------------------- |
+| `%%DOMAIN%%`                | Your DNS zone name      | `airun.example.com` | All `values-gcp.yaml` files listed below |
+| `%%GOOGLE_PROJECT_ID%%`     | GCP project ID          | `my-project-123`    | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_REGION%%`         | GCP region              | `europe-west3`      | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID with KMS | `my-project-123`    | `codemie-api/values-gcp.yaml`            |
+| `%%GOOGLE_KMS_REGION%%`     | GCP region with KMS     | `europe-west3`      | `codemie-api/values-gcp.yaml`            |
 
 **Files requiring domain configuration:**
 
@@ -95,7 +95,7 @@ Your domain name and GCP configuration were set during infrastructure deployment
 
 ```bash
 # Set your values
-DOMAIN="example.com"
+DOMAIN="airun.example.com"
 PROJECT_ID="my-gcp-project"
 REGION="europe-west3"
 
@@ -231,7 +231,7 @@ Example configuration:
 tls:
   - secretName: custom-tls
     hosts:
-      - example.com          # Replace with your domain
+      - cademie.airun.example.com          # Replace with your domain
 ```
 
 :::info Certificate Management
@@ -355,8 +355,8 @@ kubectl get service codemie-nats -n codemie \
 **Example DNS Configuration:**
 
 ```
-*.example.com           A   x.x.x.x
-nats-codemie.example.com A   x.x.x.x
+*.airun.example.com           A   x.x.x.x
+nats-codemie.airun.example.com A   x.x.x.x
 ```
 
 ## Next Steps

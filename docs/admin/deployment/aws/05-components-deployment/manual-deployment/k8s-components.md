@@ -40,7 +40,7 @@ If using **Route 53**:
 ```bash
 # Get your hosted zone ID
 HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name \
-  --dns-name example.com \
+  --dns-name airun.example.com \
   --query 'HostedZones[0].Id' \
   --output text | cut -d'/' -f3)
 
@@ -51,7 +51,7 @@ aws route53 change-resource-record-sets \
     "Changes": [{
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "codemie.example.com",
+        "Name": "codemie.airun.example.com",
         "Type": "CNAME",
         "TTL": 300,
         "ResourceRecords": [{"Value": "'${INGRESS_HOST}'"}]
@@ -62,8 +62,8 @@ aws route53 change-resource-record-sets \
 
 **Parameters to Adjust**:
 
-- `example.com` - Replace with your domain name
-- `codemie.example.com` - Replace with your desired hostname
+- `airun.example.com` - Replace with your DNS zone name
+- `codemie.airun.example.com` - Replace with your desired hostname
 
 :::tip DNS Configuration
 These values should match what you configured during infrastructure deployment. Check your `deployment_outputs.env` file for the correct domain name.
@@ -77,10 +77,10 @@ Confirm the DNS record was created:
 # List DNS records in Route 53
 aws route53 list-resource-record-sets \
   --hosted-zone-id ${HOSTED_ZONE_ID} \
-  --query "ResourceRecordSets[?Name=='codemie.example.com.']"
+  --query "ResourceRecordSets[?Name=='codemie.airun.example.com.']"
 
 # Test DNS resolution
-nslookup codemie.example.com
+nslookup codemie.airun.example.com
 ```
 
 <StorageClassInstallation

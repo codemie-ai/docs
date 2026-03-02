@@ -66,11 +66,11 @@ cd codemie-helm-charts
 
 ### Step 2: Configure Domain Name
 
-Update the DNS zone name in values files. Replace `codemie.private.lab.com` with your actual DNS zone name, or leave it if using the default one:
+Update the DNS zone name in values files. Replace `private.lab.com` with your actual DNS zone name, or leave it if using the default one:
 
 ```bash
 # Use your DNS zone name from deployment_outputs.env
-CODEMIE_DOMAIN_NAME="$CODEMIE_DOMAIN_NAME"
+CODEMIE_DOMAIN_NAME="airun.example.com"
 
 # Update all values-azure.yaml files
 find . -name "values-azure.yaml" -exec sed -i "s/private.lab.com/$CODEMIE_DOMAIN_NAME/g" {} \;
@@ -154,13 +154,13 @@ The deployment script accepts three required parameters:
 
 The following files require domain name configuration (automated by Step 2 in Quick Start):
 
-| Component        | File                              | Placeholder               | Example Value         |
-| ---------------- | --------------------------------- | ------------------------- | --------------------- |
-| **Kibana**       | `kibana/values-azure.yaml`        | `*.private.lab.com`       | `*.example.com`       |
-| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `*.private.lab.com`       | `*.example.com`       |
-| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `*.private.lab.com`       | `*.example.com`       |
-| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.private.lab.com` | `codemie.example.com` |
-| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `*.private.lab.com`       | `*.example.com`       |
+| Component        | File                              | Placeholder               | Example Value               |
+| ---------------- | --------------------------------- | ------------------------- | --------------------------- |
+| **Kibana**       | `kibana/values-azure.yaml`        | `*.private.lab.com`       | `*.airun.example.com`       |
+| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `*.private.lab.com`       | `*.airun.example.com`       |
+| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `*.private.lab.com`       | `*.airun.example.com`       |
+| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.private.lab.com` | `codemie.airun.example.com` |
+| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `*.private.lab.com`       | `*.airun.example.com`       |
 
 ## Next Steps
 

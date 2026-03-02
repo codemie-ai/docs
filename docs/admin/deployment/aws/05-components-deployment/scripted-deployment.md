@@ -86,8 +86,8 @@ sed -i "s/%%AWS_S3_REGION%%/${AWS_S3_REGION}/g" codemie-api/values-aws.yaml
 Update the DNS zone name in the remaining values files:
 
 ```bash
-# Use your domain from deployment_outputs.env
-CODEMIE_DOMAIN_NAME="${CODEMIE_DOMAIN_NAME}"
+# Use your domain zone name from deployment_outputs.env
+CODEMIE_DOMAIN_NAME="airun.example.com"
 
 # Update all values-aws.yaml files
 find . -name "values-aws.yaml" -exec sed -i "s/%%DOMAIN%%/${CODEMIE_DOMAIN_NAME}/g" {} \;
@@ -170,7 +170,7 @@ The following AWS-specific values must be configured in `codemie-api/values-aws.
 
 | Placeholder              | Description                   | Example Value                                    | Source File              |
 | ------------------------ | ----------------------------- | ------------------------------------------------ | ------------------------ |
-| `%%DOMAIN%%`             | Your base domain name         | `example.com`                                    | `deployment_outputs.env` |
+| `%%DOMAIN%%`             | Your base domain name         | `airun.example.com`                              | `deployment_outputs.env` |
 | `%%AWS_DEFAULT_REGION%%` | AWS region                    | `us-west-2`                                      | `deployment_outputs.env` |
 | `%%EKS_AWS_ROLE_ARN%%`   | IAM role for EKS IRSA         | `arn:aws:iam::0123456789012:role/AWSIRSA_AI_RUN` | `deployment_outputs.env` |
 | `%%AWS_KMS_KEY_ID%%`     | AWS KMS key ID for encryption | `50f3f093-dc86-48de-8f2d-7a76e480348c`           | `deployment_outputs.env` |
@@ -181,13 +181,13 @@ The following AWS-specific values must be configured in `codemie-api/values-aws.
 
 The following files require domain name configuration (automated by Step 3 in Quick Start):
 
-| Component        | File                            | Placeholder           | Example Value          |
-| ---------------- | ------------------------------- | --------------------- | ---------------------- |
-| **Kibana**       | `kibana/values-aws.yaml`        | `kibana.%%DOMAIN%%`   | `kibana.example.com`   |
-| **Keycloak**     | `keycloak-helm/values-aws.yaml` | `keycloak.%%DOMAIN%%` | `keycloak.example.com` |
-| **OAuth2 Proxy** | `oauth2-proxy/values-aws.yaml`  | `*.%%DOMAIN%%`        | `*.example.com`        |
-| **CodeMie UI**   | `codemie-ui/values-aws.yaml`    | `codemie.%%DOMAIN%%`  | `codemie.example.com`  |
-| **CodeMie API**  | `codemie-api/values-aws.yaml`   | `*.%%DOMAIN%%`        | `*.example.com`        |
+| Component        | File                            | Placeholder           | Example Value                |
+| ---------------- | ------------------------------- | --------------------- | ---------------------------- |
+| **Kibana**       | `kibana/values-aws.yaml`        | `kibana.%%DOMAIN%%`   | `kibana.airun.example.com`   |
+| **Keycloak**     | `keycloak-helm/values-aws.yaml` | `keycloak.%%DOMAIN%%` | `keycloak.airun.example.com` |
+| **OAuth2 Proxy** | `oauth2-proxy/values-aws.yaml`  | `*.%%DOMAIN%%`        | `*.airun.example.com`        |
+| **CodeMie UI**   | `codemie-ui/values-aws.yaml`    | `codemie.%%DOMAIN%%`  | `codemie.airun.example.com`  |
+| **CodeMie API**  | `codemie-api/values-aws.yaml`   | `*.%%DOMAIN%%`        | `*.airun.example.com`        |
 
 ## Next Steps
 

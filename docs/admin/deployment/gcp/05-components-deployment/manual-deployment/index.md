@@ -157,7 +157,7 @@ DOMAIN="example.com"
 PROJECT_ID="my-gcp-project"
 REGION="europe-west3"
 
-# Replace domain in all files
+# Replace DNS zone name in all files
 find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
 
 # Replace GCP parameters in CodeMie API
@@ -168,7 +168,7 @@ sed -i "s/%%GOOGLE_KMS_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
 ```
 
 :::tip Find Your Values
-Your domain name and GCP configuration were set during infrastructure deployment. Check Terraform outputs for `dns_name`, `project_id`, and `region`.
+Your DNS zone name and GCP configuration were set during infrastructure deployment. Check Terraform outputs for `dns_name`, `project_id`, and `region`.
 :::
 
 ### Step 3: Authenticate to Container Registry
