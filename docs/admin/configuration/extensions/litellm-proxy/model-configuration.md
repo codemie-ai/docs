@@ -296,6 +296,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-2.5-pro`](#gemini-25-pro)                | Gemini 2.5 Pro    |
 | [`gemini-3-flash`](#gemini-3-flash)               | Gemini 3 Flash    |
 | [`gemini-3-pro`](#gemini-3-pro)                   | Gemini 3 Pro      |
+| [`gemini-3.1-pro`](#gemini-31-pro)                | Gemini 3.1 Pro    |
 | [`text-embedding-005`](#embeddings-for-text)      | Text Embedding    |
 
 ## AWS Bedrock Provider Examples
@@ -1029,6 +1030,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3-pro-preview-global
     base_model: gemini-3-pro-preview
     label: "Gemini 3 Pro"
+```
+
+</details>
+
+#### Gemini 3.1 Pro
+
+<details>
+<summary><strong>Gemini 3.1 Pro</strong></summary>
+
+```yaml
+- model_name: gemini-3.1-pro
+  litellm_params:
+    model: vertex_ai/gemini-3.1-pro-preview
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.1-pro-preview-global
+    base_model: gemini-3.1-pro-preview
+    label: "Gemini 3.1 Pro"
 ```
 
 </details>
