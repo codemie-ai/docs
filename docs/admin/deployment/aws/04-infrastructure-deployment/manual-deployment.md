@@ -271,7 +271,7 @@ Create a `terraform.tfvars` file with your configuration:
 # Required: AWS Configuration
 region               = "us-east-1"
 role_arn             = "arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role created in Phase 1
-platform_domain_name = "codemie.example.com"
+platform_domain_name = "codemie.airun.example.com"
 
 # Required: Platform Configuration
 platform_name = "codemie"

@@ -49,6 +49,7 @@ Before starting manual deployment, ensure you have completed all requirements:
 - [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
 - [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
 - [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
+- [ ] **Deployment Outputs File**: Have `deployment_outputs.env` from infrastructure deployment
 
 :::warning Container Registry Access Required
 You must complete the Container Registry Access setup from the [Components Deployment Overview](../#repository-and-access) before proceeding. Each component requires the `gcp-artifact-registry` pull secret to exist.

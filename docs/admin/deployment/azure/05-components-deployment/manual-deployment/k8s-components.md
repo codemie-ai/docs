@@ -33,9 +33,9 @@ ingressip=$(kubectl get service ingress-nginx-controller -n ingress-nginx -o jso
 echo "Ingress IP: ${ingressip}"
 
 # Create A record (adjust parameters to match your environment)
-az network private-dns record-set a add-record \
+az network private-dns record-set a add-record \s
   -g CodeMieRG \
-  -z example.com \
+  -z airun.example.com \
   -n codemie \
   -a ${ingressip}
 ```
@@ -43,7 +43,7 @@ az network private-dns record-set a add-record \
 **Parameters to Adjust**:
 
 - `-g CodeMieRG` - Replace with your resource group name
-- `-z example.com` - Replace with your Private DNS zone name
+- `-z airun.example.com` - Replace with your Private DNS zone name
 - `-n codemie` - Replace with your desired hostname (subdomain)
 
 :::tip DNS Configuration
@@ -58,11 +58,11 @@ Confirm the DNS record was created:
 # List DNS records
 az network private-dns record-set a list \
   -g CodeMieRG \
-  -z example.com \
+  -z airun.example.com \
   -o table
 
 # Test DNS resolution (from within VNet or via VPN)
-nslookup codemie.example.com
+nslookup codemie.airun.example.com
 ```
 
 <StorageClassInstallation

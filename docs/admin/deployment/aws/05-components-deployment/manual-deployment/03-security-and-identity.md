@@ -20,7 +20,7 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakInstall
   cloudProvider="AWS"
   valuesFileName="values-aws.yaml"
-  keycloakUrl="https://keycloak.codemie.example.com/auth/admin"
+  keycloakUrl="https://keycloak.airun.example.com/auth/admin"
 />
 
 <SecurityOauth2Proxy

@@ -44,7 +44,7 @@ Follow these steps to install the Angular Upgrade Assistant:
 
 ### Step 1: Configure Values File
 
-Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/angular-upgrade-assistant` by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`.
+Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/angular-upgrade-assistant` by replacing `%%DOMAIN%%` with your domain name, e.g., `airun.example.com`.
 
 ### Step 2: Install Helm Chart
 
@@ -63,7 +63,7 @@ helm upgrade --install angular-upgrade-assistant oci://europe-west3-docker.pkg.d
 AI/Run CodeMie UI can be accessed by the following URL:
 
 - URL Pattern: `https://codemie.%%DOMAIN%%/apps/angular-upgrade-assistant/`
-- Example: `https://codemie.example.com/apps/angular-upgrade-assistant/`
+- Example: `https://codemie.airun.example.com/apps/angular-upgrade-assistant/`
 
 ## Next Steps
 

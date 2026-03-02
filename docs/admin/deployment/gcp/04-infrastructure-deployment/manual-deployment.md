@@ -170,13 +170,13 @@ platform_name = "codemie"                     # Platform identifier
 
 # Network Access Control
 bastion_members = [
-  "group:devops@example.com",                 # Grant Bastion access to specific users/groups
-  "user:admin@example.com"
+  "group:devops@airun.example.com",                 # Grant Bastion access to specific users/groups
+  "user:admin@airun.example.com"
 ]
 
 # DNS Configuration
 dns_name = "codemie-example-com"              # DNS zone name (hyphens, no dots)
-dns_domain = "codemie.example.com."           # Full domain with trailing dot
+dns_domain = "codemie.airun.example.com."           # Full domain with trailing dot
 
 # GKE API Access (optional)
 extra_authorized_networks = [

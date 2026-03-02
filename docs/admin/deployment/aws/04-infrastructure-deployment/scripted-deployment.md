@@ -114,7 +114,7 @@ AWS_PROFILE="My_Profile"
 # Required: Basic Configuration
 TF_VAR_region="us-east-1"                                           # AWS region for deployment
 TF_VAR_role_arn="arn:aws:iam::123456789012:role/AIRunDeployerRole"  # IAM role created in Phase 1
-TF_VAR_platform_domain_name="codemie.example.com"                   # Domain name for the platform
+TF_VAR_platform_domain_name="airun.example.com"                     # DNS zone name for the platform
 
 # Required: EKS Configuration
 TF_VAR_cluster_version="1.35"
@@ -170,7 +170,7 @@ AWS_DEFAULT_REGION=us-east-1
 EKS_AWS_ROLE_ARN=arn:aws:iam::123456789012:role/codemie-eks-role
 AWS_KMS_KEY_ID=12345678-90ab-cdef-1234-567890abcdef
 AWS_S3_BUCKET_NAME=codemie-platform-bucket
-CODEMIE_DOMAIN_NAME=codemie.example.com
+CODEMIE_DOMAIN_NAME=airun.example.com
 
 # Database Outputs
 CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.us-east-1.rds.amazonaws.com

@@ -153,12 +153,12 @@ Update the required placeholders in the values files. Replace these values with 
 
 ```bash
 # Set your values
-DOMAIN="example.com"
+CODEMIE_DOMAIN_NAME="airun.example.com"
 PROJECT_ID="my-gcp-project"
 REGION="europe-west3"
 
 # Replace DNS zone name in all files
-find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
+find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$CODEMIE_DOMAIN_NAME/g" {} \;
 
 # Replace GCP parameters in CodeMie API
 sed -i "s/%%GOOGLE_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml

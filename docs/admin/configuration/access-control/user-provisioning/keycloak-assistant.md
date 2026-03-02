@@ -162,7 +162,7 @@ kubectl rollout restart deployment/oauth2-proxy -n oauth2-proxy
 
 - **Alias:** `keycloak-assistant`
 
-- **URL:** `https://keycloak.example.com`
+- **URL:** `https://keycloak.airun.example.com`
 
 :::note
 Pay attention that newer Keycloak versions might not include the `/auth` path in their endpoint URL.
@@ -201,7 +201,7 @@ First, verify the connection with a simple prompt like `Show number of users in 
 
 Next, use a clear, structured prompt to create users in bulk. You can specify the project, user emails, and roles all in one command. The assistant will create the users but will **not** set their passwords.
 
-> `Create and add the following people to the "project_name" project – first_lastname1@example.com, first_lastname2@example.com. Assign to each of them the developer role. Output the results in a table format.`
+> `Create and add the following people to the "project_name" project – first_lastname1@airun.example.com, first_lastname2@airun.example.com. Assign to each of them the developer role. Output the results in a table format.`
 
 ![User Creation Process](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_13-49-58.png)
 ![Creation in Progress](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_13-50-15.png)

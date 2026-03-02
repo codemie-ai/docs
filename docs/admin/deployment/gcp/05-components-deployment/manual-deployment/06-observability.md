@@ -19,13 +19,13 @@ import ObservabilityValidation from '../../../common/deployment/05-components-de
 
 <ObservabilityKibana
   valuesFileName="values-gcp.yaml"
-  kibanaUrl="https://kibana.example.com"
+  kibanaUrl="https://kibana.airun.example.com"
 />
 
 <ObservabilityDashboards
-  kibanaUrl="https://kibana.example.com"
+  kibanaUrl="https://kibana.airun.example.com"
 />
 
 <ObservabilityValidation
-  kibanaUrl="https://kibana.example.com"
+  kibanaUrl="https://kibana.airun.example.com"
 />

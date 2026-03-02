@@ -26,7 +26,7 @@ Click **Create new user** (or **Add user** if users already exist).
 Enter the required information:
 
 - **Username:** Unique identifier for the user (e.g., `john_doe`)
-- **Email:** User's email address (e.g., `john_doe@example.com`)
+- **Email:** User's email address (e.g., `john_doe@airun.example.com`)
 - **First name:** User's first name (e.g., `John`)
 - **Last name:** User's last name (e.g., `Doe`)
 

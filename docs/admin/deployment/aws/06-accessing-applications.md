@@ -10,6 +10,6 @@ pagination_next: admin/configuration/index
 import AccessingApplicationsContent from '../common/deployment/06-accessing-codemie/\_accessing-codemie-applications.mdx';
 
 <AccessingApplicationsContent
-  keycloakUrl="http(s)://keycloak.example.com/auth/admin"
-  kibanaUrl="http(s)://kibana.example.com"
+  keycloakUrl="http(s)://keycloak.airun.example.com/auth/admin"
+  kibanaUrl="http(s)://kibana.airun.example.com"
 />

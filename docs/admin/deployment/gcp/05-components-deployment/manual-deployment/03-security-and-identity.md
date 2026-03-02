@@ -18,7 +18,7 @@ import SecurityValidation from '../../../common/deployment/05-components-deploym
 <SecurityKeycloakInstall
 cloudProvider="GCP"
 valuesFileName="values-gcp.yaml"
-keycloakUrl="https://keycloak.example.com/auth/admin"
+keycloakUrl="https://keycloak.airun.example.com/auth/admin"
 />
 
 <SecurityOauth2Proxy

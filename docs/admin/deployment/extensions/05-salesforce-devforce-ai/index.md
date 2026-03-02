@@ -34,7 +34,7 @@ Follow these steps to install the Salesforce DevForce AI extension:
 
 ### Step 1: Configure Values File
 
-Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/salesforce-accelerator` by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`.
+Fill in missing values in `values.yaml` file in `codemie-helm-charts/codemie-extensions/salesforce-accelerator` by replacing `%%DOMAIN%%` with your domain name, e.g., `airun.example.com`.
 
 ### Step 2: Install Helm Chart
 
@@ -53,7 +53,7 @@ helm upgrade --install salesforce-accelerator oci://europe-west3-docker.pkg.dev/
 AI/Run CodeMie UI can be accessed by the following URL:
 
 - URL Pattern: `https://codemie.%%DOMAIN%%/salesforce-accelerator-api/`
-- Example: `https://codemie.example.com/salesforce-accelerator-api/`
+- Example: `https://codemie.airun.example.com/salesforce-accelerator-api/`
 
 ## Next Steps
 
