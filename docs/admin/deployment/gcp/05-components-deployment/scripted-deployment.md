@@ -231,7 +231,7 @@ Example configuration:
 tls:
   - secretName: custom-tls
     hosts:
-      - cademie.airun.example.com          # Replace with your domain
+      - codemie.airun.example.com          # Replace with your domain
 ```
 
 :::info Certificate Management
