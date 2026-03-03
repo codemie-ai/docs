@@ -108,6 +108,21 @@ If indexing is interrupted or paused, you can resume the process by clicking the
 
 ![Resume Indexing](./indexing-data-sources/resume-indexing.png)
 
+## Scheduler Reindex Behavior
+
+When automatic reindexing is triggered by the scheduler, different data sources use different indexing methods:
+
+| Data Source             | Reindex Method          | Type        | Description                                           |
+| ----------------------- | ----------------------- | ----------- | ----------------------------------------------------- |
+| Git Repositories        | `reprocess()`           | Full        | Deletes entire index and re-indexes from scratch      |
+| Confluence              | `reprocess()`           | Full        | Complete reindexing of all pages                      |
+| Google Docs             | `reprocess()`           | Full        | Complete reindexing of all documents                  |
+| Azure DevOps Wiki       | `reprocess()`           | Full        | Complete reindexing of wiki pages                     |
+| Azure DevOps Work Items | `reprocess()`           | Full        | Complete reindexing of work items                     |
+| Jira                    | `incremental_reindex()` | Incremental | Only fetches issues updated since `last_reindex_date` |
+| X-ray                   | `reprocess()`           | Full        | Complete reindexing of test data                      |
+| AWS Knowledge Bases     | `reprocess()`           | Full        | Complete reindexing of knowledge base content         |
+
 ## Indexing Best Practices
 
 ### Data Sources with Scheduler Support
