@@ -85,7 +85,7 @@ Make sure to replace the example URLs with your actual CodeMie domain URLs in a 
 1. After saving the client, click on the client `api-demo-project`
 2. Navigate to the **Client Scopes** tab in the client settings
 3. Click on **Add client scopes**
-4. Select the `codemie` scope from the dropdown and set the assignment type to **Default**
+4. Select the `codemie` and `profile` scopes from the dropdown and set the assignment type to **Default**
 
 ## Step 7: Configure Service Accounts Roles
 
