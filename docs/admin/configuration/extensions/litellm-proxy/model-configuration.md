@@ -801,8 +801,8 @@ model_list:
 # US Region
 - model_name: gpt-5.3-codex-2026-02-24
   litellm_params:
-    model: azure/codemie-gpt-5.3-codex-2026-02-24
-    api_base: https://codemie-eastus2-0.openai.azure.com/
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
     id: gpt-5-3-codex-2026-02-24-eastus2-0
@@ -813,8 +813,8 @@ model_list:
 # EU Region
 - model_name: gpt-5.3-codex-2026-02-24
   litellm_params:
-    model: azure/codemie-gpt-5.3-codex-2026-02-24
-    api_base: https://codemie-swedencentral-0.openai.azure.com/
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
     id: gpt-5-3-codex-2026-02-24-swedencentral-0
