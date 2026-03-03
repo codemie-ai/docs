@@ -33,7 +33,7 @@ ingressip=$(kubectl get service ingress-nginx-controller -n ingress-nginx -o jso
 echo "Ingress IP: ${ingressip}"
 
 # Create A record (adjust parameters to match your environment)
-az network private-dns record-set a add-record \s
+az network private-dns record-set a add-record \
   -g CodeMieRG \
   -z airun.example.com \
   -n codemie \
