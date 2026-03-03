@@ -170,7 +170,7 @@ The following AWS-specific values must be configured in `codemie-api/values-aws.
 
 | Placeholder              | Description                   | Example Value                                    | Source File              |
 | ------------------------ | ----------------------------- | ------------------------------------------------ | ------------------------ |
-| `%%DOMAIN%%`             | Your DNS Zone name         | `airun.example.com`                              | `deployment_outputs.env` |
+| `%%DOMAIN%%`             | Your DNS Zone name            | `airun.example.com`                              | `deployment_outputs.env` |
 | `%%AWS_DEFAULT_REGION%%` | AWS region                    | `us-west-2`                                      | `deployment_outputs.env` |
 | `%%EKS_AWS_ROLE_ARN%%`   | IAM role for EKS IRSA         | `arn:aws:iam::0123456789012:role/AWSIRSA_AI_RUN` | `deployment_outputs.env` |
 | `%%AWS_KMS_KEY_ID%%`     | AWS KMS key ID for encryption | `50f3f093-dc86-48de-8f2d-7a76e480348c`           | `deployment_outputs.env` |
