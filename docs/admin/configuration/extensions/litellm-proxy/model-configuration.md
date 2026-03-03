@@ -280,6 +280,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5-nano-2025-08-07`](#gpt-5-nano)                      | GPT-5 nano             |
 | [`gpt-5-1-codex-2025-11-13`](#gpt-51-codex)                 | GPT-5.1 Codex          |
 | [`gpt-5-2-2025-12-11`](#gpt-52)                             | GPT-5.2                |
+| [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -788,6 +789,39 @@ model_list:
     id: gpt-5-2-2025-12-11-swedencentral-0
     base_model: azure/gpt-5.2-2025-12-11
     label: "GPT-5.2 2025-12-11"
+```
+
+</details>
+
+#### GPT-5.3 Codex
+
+<details>
+<summary><strong>GPT-5.3 Codex</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+
+# EU Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-swedencentral-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
 ```
 
 </details>
