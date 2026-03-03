@@ -280,6 +280,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5-nano-2025-08-07`](#gpt-5-nano)                      | GPT-5 nano             |
 | [`gpt-5-1-codex-2025-11-13`](#gpt-51-codex)                 | GPT-5.1 Codex          |
 | [`gpt-5-2-2025-12-11`](#gpt-52)                             | GPT-5.2                |
+| [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -296,6 +297,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-2.5-pro`](#gemini-25-pro)                | Gemini 2.5 Pro    |
 | [`gemini-3-flash`](#gemini-3-flash)               | Gemini 3 Flash    |
 | [`gemini-3-pro`](#gemini-3-pro)                   | Gemini 3 Pro      |
+| [`gemini-3.1-pro`](#gemini-31-pro)                | Gemini 3.1 Pro    |
 | [`text-embedding-005`](#embeddings-for-text)      | Text Embedding    |
 
 ## AWS Bedrock Provider Examples
@@ -791,6 +793,39 @@ model_list:
 
 </details>
 
+#### GPT-5.3 Codex
+
+<details>
+<summary><strong>GPT-5.3 Codex</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+
+# EU Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-swedencentral-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+```
+
+</details>
+
 ### o1
 
 <details>
@@ -1029,6 +1064,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3-pro-preview-global
     base_model: gemini-3-pro-preview
     label: "Gemini 3 Pro"
+```
+
+</details>
+
+#### Gemini 3.1 Pro
+
+<details>
+<summary><strong>Gemini 3.1 Pro</strong></summary>
+
+```yaml
+- model_name: gemini-3.1-pro
+  litellm_params:
+    model: vertex_ai/gemini-3.1-pro-preview
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.1-pro-preview-global
+    base_model: gemini-3.1-pro-preview
+    label: "Gemini 3.1 Pro"
 ```
 
 </details>
