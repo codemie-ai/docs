@@ -1107,7 +1107,7 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
 
 </details>
 
-### Claude Sonnet 4.5
+### Claude Sonnet
 
 :::info Claude on Vertex AI: Required Parameters
 Claude models on Vertex AI **require** two parameters specified per model entry:
@@ -1116,6 +1116,8 @@ Claude models on Vertex AI **require** two parameters specified per model entry:
 - `vertex_ai_location` – the region where the model is deployed (e.g. `"europe-west1"`, `"us-east5"`)
 
 :::
+
+#### Claude Sonnet 4.5
 
 <details>
 <summary><strong>Claude Sonnet 4.5</strong></summary>
