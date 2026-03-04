@@ -19,7 +19,7 @@ By default, AI/Run CodeMie automatically indexes new data sources as soon as the
 ![Automatic Indexing](./indexing-data-sources/auto-indexing.png)
 
 :::info
-You don't have to wait till a data source is fully indexed. You can already add this data source into your assistants.
+You do not have to wait until a data source is fully indexed. You can already add this data source to your assistants.
 :::
 
 :::warning Partial Data Access
@@ -47,7 +47,7 @@ A complete reindexing of the data source. This involves scanning and updating al
 
 #### Incremental Index
 
-This option is currently only supported for Jira data sources. With this option only new or changed data from the source will be updated. It only reindexes the data that has been modified since the last reindex.
+This option is currently only supported for Jira data sources. With this option, only new or changed data from the source will be updated. It only reindexes the data that has been modified since the last reindex.
 
 **When to use Incremental Index:**
 
@@ -61,7 +61,7 @@ Incremental indexing is currently only available for Jira. Other data sources re
 :::
 
 :::note Alternative Access
-Full reindex is also available on **Data Source Details** page: Data Source tab → Selected data source → 3 dots → View → scroll the page to the bottom
+Full reindex is also available on the **Data Source Details** page: Data Source tab → Selected data source → 3 dots → View → scroll the page to the bottom.
 :::
 
 ## Automatic Reindexing with Scheduler

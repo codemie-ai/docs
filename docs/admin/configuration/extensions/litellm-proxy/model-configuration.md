@@ -72,7 +72,7 @@ Each model entry in the `model_list` array consists of three main sections:
 
 **`model_name`**
 
-- The model name users specify when making API calls to LiteLLM
+- The model name that users specify when making API calls to LiteLLM
 
   <details>
   <summary><strong>Example: Basic Configuration</strong></summary>

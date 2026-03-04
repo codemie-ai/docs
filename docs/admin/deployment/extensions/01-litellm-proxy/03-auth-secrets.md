@@ -34,7 +34,7 @@ The required IAM Role ARN is automatically generated during the Terraform deploy
 
 :::
 
-To enable IRSA, replace `%%EKS_AWS_ROLE_ARN%%` with `EKS_AWS_ROLE_ARN` value in your `litellm/values-aws.yaml` file:
+To enable IRSA, replace `%%EKS_AWS_ROLE_ARN%%` with the `EKS_AWS_ROLE_ARN` value in your `litellm/values-aws.yaml` file:
 
 ```yaml
 litellm-helm:
@@ -46,7 +46,7 @@ litellm-helm:
 
 ### Option 2: AWS User Credentials
 
-This method is used if you are not running on EKS or prefer to use static credentials.
+Use this method if you are not running on EKS or prefer to use static credentials.
 
 :::info
 
