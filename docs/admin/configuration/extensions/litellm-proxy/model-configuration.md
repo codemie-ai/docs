@@ -589,7 +589,7 @@ model_list:
 
 :::
 
-### GPT-4.1
+### GPT-4.1 series
 
 #### GPT-4.1
 
@@ -641,7 +641,7 @@ model_list:
 
 </details>
 
-### GPT-5
+### GPT-5 series
 
 #### GPT-5
 
@@ -742,6 +742,8 @@ model_list:
 
 </details>
 
+### GPT-5.1 series
+
 #### GPT-5.1 Codex
 
 <details>
@@ -775,6 +777,8 @@ model_list:
 
 </details>
 
+### GPT-5.2 series
+
 #### GPT-5.2
 
 <details>
@@ -805,6 +809,8 @@ model_list:
 ```
 
 </details>
+
+### GPT-5.3 series
 
 #### GPT-5.3 Codex
 
@@ -839,7 +845,9 @@ model_list:
 
 </details>
 
-### o1
+### o-series
+
+#### o1
 
 <details>
 <summary><strong>o1</strong></summary>
@@ -860,7 +868,7 @@ model_list:
 
 </details>
 
-### o3
+#### o3
 
 <details>
 <summary><strong>o3</strong></summary>
@@ -881,7 +889,7 @@ model_list:
 
 </details>
 
-### o3-Mini
+#### o3-Mini
 
 <details>
 <summary><strong>o3-Mini</strong></summary>
@@ -902,7 +910,7 @@ model_list:
 
 </details>
 
-### o4-Mini
+#### o4-Mini
 
 <details>
 <summary><strong>o4-Mini</strong></summary>
@@ -1161,7 +1169,7 @@ Claude models on Vertex AI **require** two parameters specified per model entry:
 GitHub Copilot requires an OAuth access token mounted as a file. See [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets) for setup instructions.
 :::
 
-### GPT-5
+### GPT-5 series
 
 #### GitHub Copilot GPT-5
 
@@ -1203,6 +1211,8 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
+### GPT-5.1 series
+
 #### GitHub Copilot GPT-5.1
 
 <details>
@@ -1243,6 +1253,8 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
+### GPT-5.2 series
+
 #### GitHub Copilot GPT-5.2
 
 <details>
@@ -1263,7 +1275,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### Claude
+### Claude Haiku
 
 #### GitHub Copilot Claude Haiku
 
@@ -1285,6 +1297,8 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
+### Claude Sonnet
+
 #### GitHub Copilot Claude Sonnet
 
 <details>
@@ -1304,6 +1318,8 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 ```
 
 </details>
+
+### Claude Opus
 
 #### GitHub Copilot Claude Opus
 
