@@ -61,7 +61,7 @@ Incremental indexing is currently only available for Jira. Other data sources re
 :::
 
 :::note Alternative Access
-Full reindex is also available on the **Data Source Details** page: Data Source tab → Selected data source → 3 dots → View → scroll the page to the bottom.
+**Full Reindex** is also available on the **Data Source Details** page: Data Source tab → Selected data source → 3 dots → View → scroll the page to the bottom.
 :::
 
 ## Automatic Reindexing with Scheduler
