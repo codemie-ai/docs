@@ -1161,7 +1161,9 @@ Claude models on Vertex AI **require** two parameters specified per model entry:
 GitHub Copilot requires an OAuth access token mounted as a file. See [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets) for setup instructions.
 :::
 
-### GitHub Copilot GPT-5
+### GPT-5
+
+#### GitHub Copilot GPT-5
 
 <details>
 <summary><strong>GitHub Copilot GPT-5</strong></summary>
@@ -1181,7 +1183,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot GPT-5 Mini
+#### GitHub Copilot GPT-5 Mini
 
 <details>
 <summary><strong>GitHub Copilot GPT-5 Mini</strong></summary>
@@ -1201,7 +1203,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot GPT-5.1
+#### GitHub Copilot GPT-5.1
 
 <details>
 <summary><strong>GitHub Copilot GPT-5.1</strong></summary>
@@ -1221,7 +1223,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot GPT-5.1 Codex Max
+#### GitHub Copilot GPT-5.1 Codex Max
 
 <details>
 <summary><strong>GitHub Copilot GPT-5.1 Codex Max</strong></summary>
@@ -1241,7 +1243,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot GPT-5.2
+#### GitHub Copilot GPT-5.2
 
 <details>
 <summary><strong>GitHub Copilot GPT-5.2</strong></summary>
@@ -1261,7 +1263,9 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot Claude Haiku
+### Claude
+
+#### GitHub Copilot Claude Haiku
 
 <details>
 <summary><strong>GitHub Copilot Claude Haiku 4.5</strong></summary>
@@ -1281,7 +1285,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot Claude Sonnet
+#### GitHub Copilot Claude Sonnet
 
 <details>
 <summary><strong>GitHub Copilot Claude Sonnet 4.5</strong></summary>
@@ -1301,7 +1305,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 </details>
 
-### GitHub Copilot Claude Opus
+#### GitHub Copilot Claude Opus
 
 <details>
 <summary><strong>GitHub Copilot Claude Opus 4.5</strong></summary>
