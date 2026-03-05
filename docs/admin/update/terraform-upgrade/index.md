@@ -210,9 +210,19 @@ The default version changed to **1.34.3**, but you can keep the current version 
 :::
 
 :::warning Bastion host will be recreated
-Only applies when `private_cluster = true`. **Back up any files stored on the bastion VM before applying.**
+Only applies when `private_cluster = true`.
 
 bastion-host v9.0.0 adds `resource_manager_tags` support to the bastion compute instance ([#227](https://github.com/terraform-google-modules/terraform-google-bastion-host/pull/227)). This introduces a `params` block on `google_compute_instance_from_template`, which is marked as `ForceNew` in the Google provider — Terraform must destroy and recreate the VM.
+
+**To preserve files on the bastion disk**, disable auto-delete on the boot disk before applying:
+
+```bash
+gcloud compute instances set-disk-auto-delete <BASTION_NAME> \
+  --no-auto-delete \
+  --disk=<BASTION_NAME> \
+  --zone=<ZONE> \
+  --project=<PROJECT_ID>
+```
 
 For full details see the changelogs: [bastion-host v9.0.0](https://github.com/terraform-google-modules/terraform-google-bastion-host/blob/main/CHANGELOG.md#900-2025-09-23), [terraform-google-vm v13.0.0](https://github.com/terraform-google-modules/terraform-google-vm/blob/main/CHANGELOG.md#1300-2024-12-17).
 :::
