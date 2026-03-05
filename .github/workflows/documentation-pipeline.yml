@@ -40,7 +40,7 @@ jobs:
         if: success()
         run: |
           echo "Conventional commits validation passed!"
-          echo "- Last commit message: PASSED"
+          echo "- Commit message: PASSED"
           echo "- PR title: PASSED"
 
   secrets-detection:
