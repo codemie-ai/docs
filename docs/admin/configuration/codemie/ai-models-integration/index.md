@@ -16,18 +16,57 @@ AI/Run CodeMie provides flexible integration options for connecting to Large Lan
 
 Before configuring AI models, complete the following:
 
-1. **Enable Models in Cloud Provider**
-   - [Azure OpenAI](./azure-openai): Create Azure OpenAI service and deploy models
-   - [AWS Bedrock](./aws-bedrock): Request access to foundation models in AWS
-   - [Google Vertex AI](./google-vertex-ai): Enable Vertex AI API and configure partner models
-
-2. **Obtain Cloud Credentials**
+1. **Obtain Cloud Credentials**
    - API keys, endpoints, or authentication credentials for your chosen provider
    - Required IAM permissions for model access
 
-3. **Access Helm Chart Configuration**
+2. **Access Helm Chart Configuration**
    - Clone [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
    - Locate `codemie-api/values.yaml` file
+
+## Providers
+
+### Azure OpenAI
+
+Create Azure OpenAI service and deploy models – [Enable Azure OpenAI models](./azure-openai)
+
+**Choose integration path:**
+
+- Native Provider Integration: [Native LLM Config](./codemie-native-llm-config)
+- LiteLLM Proxy: [Authentication](../../../deployment/extensions/litellm-proxy/auth-secrets)
+  → [LiteLLM Model Setup](../../../deployment/extensions/litellm-proxy/model-config)
+  → [Model Configuration](../../extensions/litellm-proxy/model-configuration)
+
+### AWS Bedrock
+
+Request access to foundation models in AWS – [Enable AWS Bedrock models](./aws-bedrock)
+
+**Choose integration path:**
+
+- Native Provider Integration: [Native LLM Config](./codemie-native-llm-config)
+- LiteLLM Proxy: [Authentication](../../../deployment/extensions/litellm-proxy/auth-secrets)
+  → [LiteLLM Model Setup](../../../deployment/extensions/litellm-proxy/model-config)
+  → [Model Configuration](../../extensions/litellm-proxy/model-configuration)
+
+### Google Vertex AI
+
+Enable Vertex AI API and configure partner models – [Enable Vertex AI models](./google-vertex-ai)
+
+**Choose integration path:**
+
+- Native Provider Integration: [Native LLM Config](./codemie-native-llm-config)
+- LiteLLM Proxy: [Authentication](../../../deployment/extensions/litellm-proxy/auth-secrets)
+  → [LiteLLM Model Setup](../../../deployment/extensions/litellm-proxy/model-config)
+  → [Model Configuration](../../extensions/litellm-proxy/model-configuration)
+
+### GitHub Copilot
+
+:::info LiteLLM Proxy only
+GitHub Copilot is supported only through LiteLLM Proxy.
+:::
+
+- LiteLLM Proxy: [Authentication](../../../deployment/extensions/litellm-proxy/auth-secrets#github-copilot-authentication)
+  → [Model Configuration](../../extensions/litellm-proxy/model-configuration#github-copilot-provider-examples)
 
 ## Integration Options
 
