@@ -284,20 +284,17 @@ gcloud compute ssh bastion-vm --project=your-project --zone=europe-west3-a
 Ensure your user account is listed in `bastion_members` variable from Phase 2 configuration. Only authorized users can SSH into the Bastion Host.
 :::
 
-#### Step 2: Set Root Password (Required for RDP)
+#### Step 2: Set user password (Required for RDP)
 
-After connecting via SSH, set a root password for later RDP access:
+After connecting via SSH, set a password for the `ubuntu` user for later RDP access:
 
 ```bash
-# Switch to root user
-sudo -s
-
-# Set root password (you'll be prompted to enter it twice)
-passwd
+# Set password for the ubuntu user (you'll be prompted to enter it twice)
+sudo passwd ubuntu
 ```
 
 :::info Save Your Password
-The root password you set here will be used to login via RDP. Make sure to remember it or store it securely.
+The `ubuntu` user password you set here will be used to login via RDP. Make sure to remember it or store it securely.
 :::
 
 #### Step 3: Configure Kubectl Access
@@ -364,7 +361,7 @@ Open your Remote Desktop client and connect:
 | Setting      | Value                      |
 | ------------ | -------------------------- |
 | **Computer** | `localhost:3389`           |
-| **Username** | `root`                     |
+| **Username** | `ubuntu`                   |
 | **Password** | Password set in SSH Step 2 |
 
 ### Tips for Using the Bastion Host
