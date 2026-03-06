@@ -132,6 +132,7 @@ const sidebars: SidebarsConfig = {
               },
               collapsed: true,
               items: [
+                'user-guide/tools_integrations/tools/a2a',
                 'user-guide/tools_integrations/tools/keycloak',
                 'user-guide/tools_integrations/tools/sonarqube',
                 'user-guide/tools_integrations/tools/sql',

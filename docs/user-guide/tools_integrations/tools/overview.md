@@ -17,6 +17,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 
 | Tool                                                                      | Description                                                                                                       |
 | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **[A2A Protocol](./a2a)**                                                 | Agent-to-Agent protocol integration for connecting external AI agents and enabling cross-framework collaboration  |
 | **[Keycloak](./keycloak)**                                                | Access management and authentication tool that allows users to leverage AI/Run CodeMie for project access control |
 | **[SonarQube](./sonarqube)**                                              | Code quality analysis and static code review tool for comprehensive codebase analysis                             |
 | **[SQL](./sql)**                                                          | Database operations tool for querying and managing SQL databases                                                  |

@@ -24,6 +24,7 @@ Learn how to set up and manage integrations with external systems to enable tool
 
 Configure and use various tools to extend assistant capabilities:
 
+- **Agent Collaboration**: A2A Protocol for connecting external AI agents and cross-framework interoperability
 - **Authentication & Security**: Keycloak integration for user authentication
 - **Code Quality**: SonarQube for code analysis and quality metrics
 - **Database**: SQL tools for database operations
