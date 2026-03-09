@@ -135,10 +135,10 @@ Each model entry in the `model_list` array consists of three main sections:
         model: azure/gpt-5-2025-08-07
       # ... additional configuration fields
 
-    - model_name: gemini-3-pro
+    - model_name: gemini-3.1-pro
       litellm_params:
         // highlight-next-line
-        model: vertex_ai/gemini-3-pro-preview
+        model: vertex_ai/gemini-3.1-pro-preview
       # ... additional configuration fields
   ```
 
@@ -258,16 +258,14 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### AWS Bedrock Models
 
-| Model Name                                      | Description                  |
-| ----------------------------------------------- | ---------------------------- |
-| [`claude-4-sonnet`](#claude-sonnet-4)           | Claude 4 Sonnet              |
-| [`claude-4-sonnet-1m`](#claude-sonnet-4)        | Claude 4 Sonnet (1M context) |
-| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet            |
-| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6            |
-| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5              |
-| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6              |
-| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5             |
-| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings      |
+| Model Name                                      | Description             |
+| ----------------------------------------------- | ----------------------- |
+| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet       |
+| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
+| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
+| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
+| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
+| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
 
 ### Azure OpenAI Models
 
@@ -292,11 +290,7 @@ Configuration examples for these models can be found in the provider-specific se
 | Model Name                                        | Description       |
 | ------------------------------------------------- | ----------------- |
 | [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1) | Claude 4.5 Sonnet |
-| [`gemini-2.0-flash`](#gemini-20-flash)            | Gemini 2.0 Flash  |
-| [`gemini-2.5-flash`](#gemini-25-flash)            | Gemini 2.5 Flash  |
-| [`gemini-2.5-pro`](#gemini-25-pro)                | Gemini 2.5 Pro    |
 | [`gemini-3-flash`](#gemini-3-flash)               | Gemini 3 Flash    |
-| [`gemini-3-pro`](#gemini-3-pro)                   | Gemini 3 Pro      |
 | [`gemini-3.1-pro`](#gemini-31-pro)                | Gemini 3.1 Pro    |
 | [`text-embedding-005`](#embeddings-for-text)      | Text Embedding    |
 
@@ -329,58 +323,6 @@ model_list:
 :::
 
 ### Claude Sonnet
-
-#### Claude Sonnet 4
-
-<details>
-<summary><strong>Claude Sonnet 4</strong></summary>
-
-```yaml
-# US Region
-- model_name: claude-4-sonnet
-  litellm_params:
-    model: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0
-    litellm_credential_name: default_aws_bedrock_credential
-    aws_region_name: us-west-2
-  model_info:
-    id: claude-4-sonnet-us-west-2
-    base_model: us.anthropic.claude-sonnet-4-20250514-v1:0
-    label: "Bedrock Claude 4 Sonnet"
-
-# EU Region
-- model_name: claude-4-sonnet
-  litellm_params:
-    model: bedrock/eu.anthropic.claude-sonnet-4-20250514-v1:0
-    litellm_credential_name: default_aws_bedrock_credential
-    aws_region_name: eu-central-1
-  model_info:
-    id: claude-4-sonnet-eu-central-1
-    base_model: eu.anthropic.claude-sonnet-4-20250514-v1:0
-    label: "Bedrock Claude 4 Sonnet"
-```
-
-</details>
-
-<details>
-<summary><strong>Claude Sonnet 4 with 1M context window</strong></summary>
-
-```yaml
-- model_name: claude-4-sonnet-1m
-  litellm_params:
-    model: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0
-    litellm_credential_name: default_aws_bedrock_credential
-    aws_region_name: us-west-2
-    // highlight-start
-    extra_headers:
-      anthropic-beta: "context-1m-2025-08-07"
-    // highlight-end
-  model_info:
-    id: claude-4-sonnet-1m-us-west-2
-    base_model: us.anthropic.claude-sonnet-4-20250514-v1:0
-    label: "Bedrock Claude 4 Sonnet 1M"
-```
-
-</details>
 
 #### Claude Sonnet 4.5
 
@@ -991,40 +933,6 @@ For Gemini models, `vertex_project` and `vertex_location` can be set in two ways
 The `litellm_settings` approach is recommended when all Gemini models share the same project and region.
 :::
 
-#### Gemini 2.0 Flash
-
-<details>
-<summary><strong>Gemini 2.0 Flash</strong></summary>
-
-```yaml
-- model_name: gemini-2.0-flash
-  litellm_params:
-    model: vertex_ai/gemini-2.0-flash-001
-  model_info:
-    id: gemini-2.0-flash-us-central1
-    base_model: gemini-2.0-flash-001
-    label: "Gemini 2.0 Flash"
-```
-
-</details>
-
-#### Gemini 2.5 Flash
-
-<details>
-<summary><strong>Gemini 2.5 Flash</strong></summary>
-
-```yaml
-- model_name: gemini-2.5-flash
-  litellm_params:
-    model: vertex_ai/gemini-2.5-flash
-  model_info:
-    id: gemini-2.5-flash-us-central1
-    base_model: gemini-2.5-flash
-    label: "Gemini 2.5 Flash"
-```
-
-</details>
-
 #### Gemini 3 Flash
 
 <details>
@@ -1039,52 +947,6 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3-flash-preview-global
     base_model: gemini-3-flash-preview
     label: "Gemini 3 Flash"
-```
-
-</details>
-
-#### Gemini 2.5 Pro
-
-<details>
-<summary><strong>Gemini 2.5 Pro</strong></summary>
-
-```yaml
-# US Region
-- model_name: gemini-2.5-pro
-  litellm_params:
-    model: vertex_ai/gemini-2.5-pro
-  model_info:
-    id: gemini-2.5-pro-us-central1
-    base_model: gemini-2.5-pro
-    label: "Gemini 2.5 Pro"
-
-# EU Region
-- model_name: gemini-2.5-pro
-  litellm_params:
-    model: vertex_ai/gemini-2.5-pro
-    vertex_location: "europe-west1"
-  model_info:
-    id: gemini-2.5-pro-europe-west1
-    base_model: gemini-2.5-pro
-    label: "Gemini 2.5 Pro"
-```
-
-</details>
-
-#### Gemini 3 Pro
-
-<details>
-<summary><strong>Gemini 3 Pro</strong></summary>
-
-```yaml
-- model_name: gemini-3-pro
-  litellm_params:
-    model: vertex_ai/gemini-3-pro-preview
-    vertex_location: "global"
-  model_info:
-    id: gemini-3-pro-preview-global
-    base_model: gemini-3-pro-preview
-    label: "Gemini 3 Pro"
 ```
 
 </details>
