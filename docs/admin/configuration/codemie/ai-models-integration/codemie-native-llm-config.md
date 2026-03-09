@@ -30,69 +30,6 @@ For detailed parameter descriptions, see the [LLM Model Configuration Reference]
 ```yaml
 # Configuration file for managing multiple LLM and embedding models
 llm_models:
-  - base_name: "claude-3-5-sonnet"
-    deployment_name: "anthropic.claude-3-5-sonnet-20240620-v1:0"
-    label: "Bedrock Claude 3.5 Sonnet"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 4096
-    cost:
-      input: 0.000003
-      output: 0.000015
-
-  - base_name: "claude-3-5-sonnet-v2"
-    deployment_name: "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
-    label: "Bedrock Claude 3.5 Sonnet v2 20241022"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 8192
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
-
-  - base_name: "claude-3-7"
-    deployment_name: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
-    label: "Bedrock Claude 3.7 Sonnet v1"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 8192
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
-
-  - base_name: "claude-4-sonnet"
-    deployment_name: "us.anthropic.claude-sonnet-4-20250514-v1:0"
-    label: "Bedrock Claude 4 Sonnet"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 32000
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
-
-  - base_name: "claude-4-sonnet-1m"
-    deployment_name: "us.anthropic.claude-sonnet-4-20250514-v1:0"
-    label: "Bedrock Claude 4 Sonnet Long Context"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 32000
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
-    configuration:
-      client_headers:
-        anthropic_beta:
-          - context-1m-2025-08-07
-
   - base_name: "claude-4-5-haiku"
     deployment_name: "us.anthropic.claude-haiku-4-5-20251001-v1:0"
     label: "Bedrock Claude 4.5 Haiku"
@@ -101,22 +38,37 @@ llm_models:
     provider: "aws_bedrock"
     max_output_tokens: 64000
     cost:
-      input: 0.000001
-      output: 0.000005
-      cache_read_input_token_cost: 0.0000003
+      input: 0.0000011
+      output: 0.0000055
+      cache_read_input_token_cost: 0.00000011
+      cache_creation_input_token_cost: 0.000001375
 
   - base_name: "claude-4-5-sonnet"
     deployment_name: "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
     label: "Bedrock Claude 4.5 Sonnet"
     multimodal: true
     enabled: true
+    provider: "aws_bedrock"
+    max_output_tokens: 64000
+    cost:
+      input: 0.0000033
+      output: 0.0000165
+      cache_read_input_token_cost: 0.00000033
+      cache_creation_input_token_cost: 0.000004125
+
+  - base_name: "claude-sonnet-4-6"
+    deployment_name: "us.anthropic.claude-sonnet-4-6"
+    label: "Bedrock Claude Sonnet 4.6"
+    multimodal: true
+    enabled: true
     default_for_categories: [global]
     provider: "aws_bedrock"
     max_output_tokens: 64000
     cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
+      input: 0.0000033
+      output: 0.0000165
+      cache_read_input_token_cost: 0.00000033
+      cache_creation_input_token_cost: 0.000004125
 
   - base_name: "us.meta.llama4-maverick-17b-instruct-v1:0"
     deployment_name: "us.meta.llama4-maverick-17b-instruct-v1:0"
@@ -134,30 +86,6 @@ llm_models:
       output: 0.00000097
       cache_read_input_token_cost: 0.00000024
 
-  - base_name: "claude-4-opus"
-    deployment_name: "us.anthropic.claude-opus-4-20250514-v1:0"
-    label: "Bedrock Claude 4 Opus"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 32000
-    cost:
-      input: 0.000015
-      output: 0.000075
-      cache_read_input_token_cost: 0.0000015
-
-  - base_name: "claude-4-1-opus"
-    deployment_name: "us.anthropic.claude-opus-4-1-20250805-v1:0"
-    label: "Bedrock Claude 4.1 Opus v1"
-    multimodal: true
-    enabled: true
-    provider: "aws_bedrock"
-    max_output_tokens: 32000
-    cost:
-      input: 0.000015
-      output: 0.000075
-      cache_read_input_token_cost: 0.0000015
-
   - base_name: "claude-opus-4-5-20251101"
     deployment_name: "us.anthropic.claude-opus-4-5-20251101-v1:0"
     label: "Bedrock Claude Opus 4.5"
@@ -166,9 +94,23 @@ llm_models:
     provider: "aws_bedrock"
     max_output_tokens: 64000
     cost:
-      input: 0.000005
-      output: 0.000025
-      cache_read_input_token_cost: 0.0000005
+      input: 0.0000055
+      output: 0.0000275
+      cache_read_input_token_cost: 0.00000055
+      cache_creation_input_token_cost: 0.000006875
+
+  - base_name: "claude-opus-4-6-20260205"
+    deployment_name: "us.anthropic.claude-opus-4-6-v1"
+    label: "Bedrock Claude Opus 4.6"
+    multimodal: true
+    enabled: true
+    provider: "aws_bedrock"
+    max_output_tokens: 128000
+    cost:
+      input: 0.0000055
+      output: 0.0000275
+      cache_read_input_token_cost: 0.00000055
+      cache_creation_input_token_cost: 0.000006875
 
 embeddings_models:
   - base_name: "titan"
@@ -192,44 +134,6 @@ embeddings_models:
 # Keep it up to date as some models can be deprecated
 # https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/model-retirements
 llm_models:
-
-  - base_name: "gpt-4o-2024-08-06"
-    deployment_name: "gpt-4o-2024-08-06"
-    label: "GPT-4o 2024-08-06"
-    multimodal: true
-    enabled: true
-    provider: "azure_openai"
-    max_output_tokens: 16383
-    cost:
-      input: 0.0000025
-      output: 0.00001
-      cache_read_input_token_cost: 0.00000125
-
-  - base_name: "gpt-4o-2024-11-20"
-    deployment_name: "gpt-4o-2024-11-20"
-    label: "GPT-4o 2024-11-20"
-    multimodal: true
-    default_for_categories: [global]
-    enabled: true
-    provider: "azure_openai"
-    max_output_tokens: 16383
-    cost:
-      input: 0.0000025
-      output: 0.00001
-      cache_read_input_token_cost: 0.00000125
-
-  - base_name: "gpt-4o-mini"
-    deployment_name: "gpt-4o-mini-2024-07-18"
-    label: "GPT-4o-mini-2024-07-18"
-    multimodal: true
-    enabled: true
-    provider: "azure_openai"
-    max_output_tokens: 16383
-    cost:
-      input: 0.000000165
-      output: 0.00000066
-      cache_read_input_token_cost: 0.000000075
-
   - base_name: "gpt-4.1"
     deployment_name: "gpt-4.1-2025-04-14"
     label: "GPT-4.1 2025-04-14"
@@ -265,6 +169,7 @@ llm_models:
   - base_name: "gpt-5-2025-08-07"
     deployment_name: "gpt-5-2025-08-07"
     label: "GPT-5 2025-08-07"
+    default_for_categories: [global]
     multimodal: true
     enabled: true
     provider: "azure_openai"
@@ -323,7 +228,7 @@ llm_models:
     react_agent: false
     enabled: true
     provider: "azure_openai"
-    max_output_tokens: 16383
+    max_output_tokens: 100000
     features:
       streaming: false
       tools: true
@@ -343,7 +248,7 @@ llm_models:
     react_agent: false
     enabled: true
     provider: "azure_openai"
-    max_output_tokens: 16383
+    max_output_tokens: 100000
     features:
       streaming: false
       tools: true
@@ -373,9 +278,9 @@ llm_models:
       max_tokens: false
       reasoning: true
     cost:
-      input: 0.00001
-      output: 0.00004
-      cache_read_input_token_cost: 0.0000025
+      input: 0.000002
+      output: 0.000008
+      cache_read_input_token_cost: 0.0000005
 
   - base_name: "o4-mini-2025-04-16"
     deployment_name: "o4-mini-2025-04-16"
@@ -418,72 +323,34 @@ embeddings_models:
 ```yaml
 # Configuration file for managing multiple LLM and embedding models
 llm_models:
-# Ref. https://cloud.google.com/vertex-ai/generative-ai/pricing#token-based-pricing
-  - base_name: "gemini-2.0-flash"
-    deployment_name: "gemini-2.0-flash-001"
-    label: "Gemini 2.0 Flash"
-    multimodal: true
-    enabled: true
-    provider: "google_vertexai"
-    max_output_tokens: 8192
-    cost:
-      input: 0.00000015
-      output: 0.0000006
-      cache_read_input_token_cost: 0.0000000375
-
-  - base_name: "gemini-2.5-flash"
-    deployment_name: "gemini-2.5-flash"
-    label: "Gemini 2.5 Flash"
+  - base_name: "gemini-3-flash"
+    deployment_name: "gemini-3-flash-preview"
+    label: "Gemini 3 Flash"
     multimodal: true
     enabled: true
     provider: "google_vertexai"
     max_output_tokens: 65535
     cost:
-      input: 0.00000030
-      output: 0.0000025
-      cache_read_input_token_cost: 0.000000075
+      input: 0.0000005
+      output: 0.000003
+      cache_read_input_token_cost: 0.00000005
 
-  - base_name: "gemini-2.5-pro"
-    deployment_name: "gemini-2.5-pro"
-    label: "Gemini 2.5 Pro"
+  - base_name: "gemini-3.1-pro"
+    deployment_name: "gemini-3.1-pro-preview"
+    label: "Gemini 3.1 Pro"
     multimodal: true
     enabled: true
     default_for_categories: [global]
     provider: "google_vertexai"
-    max_output_tokens: 65535
+    max_output_tokens: 65536
     cost:
-      input: 0.00000125
-      output: 0.00001
-      cache_read_input_token_cost: 0.000000313
-
-  - base_name: "claude-sonnet-v2-vertex"
-    deployment_name: "claude-3-5-sonnet-v2"
-    label: "VertexAI Claude Sonnet 3.5 v2"
-    multimodal: false
-    enabled: true
-    default: false
-    provider: "google_vertexai"
-    max_output_tokens: 8192
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
-
-  - base_name: "claude-sonnet-3-7-vertex"
-    deployment_name: "claude-3-7-sonnet"
-    label: "VertexAI Claude Sonnet 3.7"
-    multimodal: false
-    enabled: true
-    default: false
-    provider: "google_vertexai"
-    max_output_tokens: 8192
-    cost:
-      input: 0.000003
-      output: 0.000015
-      cache_read_input_token_cost: 0.0000003
+      input: 0.000002
+      output: 0.000012
+      cache_read_input_token_cost: 0.0000002
+      input_cost_per_token_batches: 0.000001
+      output_cost_per_token_batches: 0.000006
 
 embeddings_models:
-
   - base_name: "gecko"
     deployment_name: "text-embedding-005"
     label: "Text Embedding Gecko"
@@ -505,40 +372,51 @@ Create a custom model configuration YAML file with your LLM and embedding models
 
 ```yaml
 llm_models:
-  - base_name: "gpt-4o-2024-11-20"
-    deployment_name: "gpt-4o-2024-11-20"
-    label: "GPT-4o (Nov 2024)"
+  - base_name: "gpt-4.1"
+    deployment_name: "gpt-4.1-2025-04-14"
+    label: "GPT-4.1 (Apr 2025)"
     multimodal: true
     enabled: true
-    provider: "azure_openai"
     default_for_categories: [global]
-    max_output_tokens: 16383
+    provider: "azure_openai"
+    max_output_tokens: 32768
+    features:
+      max_tokens: false
     cost:
-      input: 0.0000025
-      output: 0.00001
-      cache_read_input_token_cost: 0.00000125
+      input: 0.000002
+      output: 0.000008
+      input_cost_per_token_batches: 0.000001
+      output_cost_per_token_batches: 0.000004
+      cache_read_input_token_cost: 0.0000005
 
-  - base_name: "gpt-4o-mini"
-    deployment_name: "gpt-4o-mini-2024-07-18"
-    label: "GPT-4o Mini (Jul 2024)"
+  - base_name: "gpt-4.1-mini"
+    deployment_name: "gpt-4.1-mini-2025-04-14"
+    label: "GPT-4.1 Mini (Apr 2025)"
     multimodal: true
     enabled: true
     provider: "azure_openai"
-    max_output_tokens: 16383
+    max_output_tokens: 32768
+    features:
+      max_tokens: false
     cost:
-      input: 0.000000165
-      output: 0.00000066
-      cache_read_input_token_cost: 0.000000075
+      input: 0.0000004
+      output: 0.0000016
+      input_cost_per_token_batches: 0.0000002
+      output_cost_per_token_batches: 0.0000008
+      cache_read_input_token_cost: 0.0000001
 
-  - base_name: "claude-4-sonnet"
-    deployment_name: "anthropic.claude-4-sonnet-v1"
-    label: "Claude 4 Sonnet"
-    multimodal: false
+  - base_name: "claude-sonnet-4-6"
+    deployment_name: "us.anthropic.claude-sonnet-4-6"
+    label: "Bedrock Claude Sonnet 4.6"
+    multimodal: true
     enabled: true
     provider: "aws_bedrock"
+    max_output_tokens: 64000
     cost:
-      input: 0.000003
-      output: 0.000015
+      input: 0.0000033
+      output: 0.0000165
+      cache_read_input_token_cost: 0.00000033
+      cache_creation_input_token_cost: 0.000004125
 
 embeddings_models:
   - base_name: "ada-002"
@@ -590,7 +468,7 @@ extraObjects:
       llm-production-config.yaml: |   # Key name (referenced in subPath)
         # Paste your model configuration here
         llm_models:
-          - base_name: "gpt-4o-2024-11-20"
+          - base_name: "gpt-4.1"
             # ... (model config from Step 1)
 ```
 
