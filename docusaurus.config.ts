@@ -15,6 +15,8 @@ const config: Config = {
   projectName: 'docs',
 
   onBrokenLinks: 'throw',
+  onBrokenAnchors: 'throw',
+  onDuplicateRoutes: 'throw',
 
   markdown: {
     mermaid: true,
