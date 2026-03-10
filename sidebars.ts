@@ -483,6 +483,7 @@ const sidebars: SidebarsConfig = {
                   },
                   collapsed: true,
                   items: [
+                    'admin/deployment/gcp/infrastructure-deployment/infrastructure-scripted-deployment',
                     'admin/deployment/gcp/infrastructure-deployment/infrastructure-manual-deployment',
                   ],
                 },
