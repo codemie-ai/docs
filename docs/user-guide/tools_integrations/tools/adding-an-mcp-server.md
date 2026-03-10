@@ -96,10 +96,15 @@ For Streamable HTTP MCP servers, you can configure custom headers with dynamic p
 
 - `{{user.name}}` - Resolves to the authenticated user's full name (e.g., "John Doe")
 - `{{user.username}}` - Resolves to the authenticated user's username/email (e.g., "John.Doe@epam.com")
+- `{{user.token}}` - Resolves to the authenticated user's JWT token for per-user authentication
 
 **Environment Variable Placeholders:**
 
 - `{{VARIABLE_NAME}}` - Resolves to values from configured environment variables
+
+:::tip How User Context Placeholders Work
+User context placeholders like `{{user.token}}`, `{{user.name}}`, and `{{user.username}}` are **automatically resolved from the authenticated user's session** at request time. You don't need to configure them in environment variables or integrations - each user automatically gets their own token/name/username injected. This differs from environment variable placeholders like `{{API_KEY}}`, which use static values configured in the `env` section and are the same for all users.
+:::
 
 ### Example Configuration
 
@@ -114,12 +119,11 @@ For Streamable HTTP MCP servers, you can configure custom headers with dynamic p
     "X-Username": "{{user.username}}",
     "X-Project": "{{PROJECT_NAME}}",
     "X-API-KEY": "{{API_KEY}}",
-    "Authorization": "Bearer {{ACCESS_TOKEN}}"
+    "Authorization": "Bearer {{user.token}}"
   },
   "env": {
     "PROJECT_NAME": "my-project",
-    "API_KEY": "my-api-key",
-    "ACCESS_TOKEN": "secret-access-token"
+    "API_KEY": "my-api-key"
   }
 }
 ```
@@ -132,21 +136,26 @@ X-User-Name: John Doe
 X-Username: John.Doe@epam.com
 X-Project: my-project
 X-API-KEY: my-api-key
-Authorization: Bearer secret-access-token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ### Use Cases
 
 User context placeholders are beneficial for:
 
+- **User authentication**: Pass authenticated user JWT to MCP servers requiring per-user authentication (`{{user.token}}`)
 - **User-specific routing**: Route requests to different backends based on user identity
 - **Audit logging**: Track which user triggered specific MCP server operations
 - **Authorization**: Pass user information to downstream services for access control
 - **Context propagation**: Maintain user context across microservices architecture
 
-:::note
-User placeholders are resolved securely at request time and are isolated between concurrent requests to ensure thread safety.
-:::
+:::note Security and Concurrency
+
+- User placeholders (including `{{user.token}}`) are resolved securely at request time from the authenticated user context
+- Token resolution is thread/async-safe: each concurrent request receives its own user JWT with no cross-request leakage
+- JWT token values are never logged to prevent security exposure
+- If no authenticated user context exists, the system fails safely without injecting a token
+  :::
 
 ## Testing MCP Server Integration
 
