@@ -88,6 +88,10 @@ A collection of information (documents, articles, code, etc.) integrated into Co
 
 ## E
 
+### External User (`availableForExternal`)
+
+A configuration parameter that controls component visibility based on the Keycloak `user_type` attribute. When set to `false`, the component is hidden from users who have `user_type: external` in their Keycloak profile (contractors, partners, or other external users). When set to `true` (the default), the component is visible to all users regardless of their type.
+
 ### External Tools
 
 Integration with external services and systems that extend assistant capabilities beyond built-in functionality. External tools enable assistants to interact with third-party services like Jira, GitHub, Confluence, and many others. There are two main approaches for integrating external tools:
@@ -130,6 +134,7 @@ Required Claim parameters in JWT tokens assigned in Keycloak to control project 
 - **applications**: Grants Standard User access to specified projects (comma-separated list of project names). Users can create, edit, delete, share, and publish their own assistants within these projects.
 - **applications_admin**: Grants Project Administrator privileges for specified projects (comma-separated list). Users can manage all assistants and project integrations within these projects.
 - **isAdmin**: Platform Administrator role (boolean value `true` or `false`). The highest privilege level in the platform that grants access to create projects, create katas, and manage all administrative features across the entire CodeMie platform. Users with this role have unrestricted access to all platform functionality.
+- **user_type**: Controls user visibility for certain UI components. When set to `external`, components configured with `availableForExternal: false` are hidden from that user. Intended for contractors, partners, and other external users who should have a restricted view of the platform.
 
 JWT attributes are only applicable to users with the `developer` role and determine which projects users can access and their permission level within those projects. The `isAdmin` attribute provides platform-wide administrative access beyond project-specific permissions.
 
@@ -185,6 +190,10 @@ An extensible component that adds functionality to the CodeMie platform. Plugins
 ---
 
 ## S
+
+### Slug
+
+A human-readable unique identifier assigned to an assistant. Unlike the internal UUID, a slug is a short, URL-safe string (e.g., `ai-run-chatbot`, `my-custom-assistant`) that is stable and used to reference assistants in URLs, API calls, and configuration files. Slugs are auto-generated from the assistant name when the assistant is created but can be customized on the assistant's configuration page.
 
 ### Skills
 

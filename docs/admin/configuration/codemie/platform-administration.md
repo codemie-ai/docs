@@ -25,6 +25,10 @@ Click on your **Profile** icon in the bottom left corner and select **Settings**
 
 In the Settings panel, click on the **Administration** tab.
 
+:::info
+The Administration menu and its items are controlled by the `adminActions` component. See [Customer Feature Configuration](./customer-feature-configuration) to configure which menu items are visible to users.
+:::
+
 ![Administration Tab](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_8-59-14.png)
 
 ### 3. Create a New Project
