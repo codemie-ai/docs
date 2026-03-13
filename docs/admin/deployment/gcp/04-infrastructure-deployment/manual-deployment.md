@@ -38,7 +38,7 @@ Before starting the deployment, ensure you have completed all requirements from 
 - [ ] **Domain & Certificate**: DNS zone and TLS certificate ready (for public access) or will use private DNS
 
 :::warning Authentication Required
-You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and `gcloud auth application-default login`.
+You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and `gcloud auth application-default login`. Verify the active project with `gcloud config get-value project`.
 :::
 
 ## Deployment Phases
@@ -54,15 +54,6 @@ Manual deployment involves two sequential phases, both within the same repositor
 Bastion Host is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
 :::
 
-## Step 1: Clone the Repository
-
-Clone the platform repository to your local machine:
-
-```bash
-git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
-cd codemie-terraform-gcp-platform
-```
-
 ## Phase 1: Deploy Terraform State Backend
 
 The first step is to create a Google Cloud Storage bucket for storing Terraform state files. This bucket will be used by all subsequent infrastructure deployments to maintain state consistency and enable team collaboration.
@@ -71,15 +62,18 @@ The first step is to create a Google Cloud Storage bucket for storing Terraform 
 The state backend ensures that your infrastructure state is stored securely and can be shared across your team. Without this, Terraform state would only exist locally on your machine.
 :::
 
-### Step 1: Navigate and Configure
+1. Clone the platform repository to your local machine:
 
-Navigate to the `remote-backend/` directory:
+```bash
+git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
+cd codemie-terraform-gcp-platform
+```
+
+2. Navigate to the `remote-backend/` directory and configure variables. There are two ways to provide Terraform variables:
 
 ```bash
 cd remote-backend
 ```
-
-There are two ways to provide Terraform variables:
 
 <Tabs groupId="config-method">
   <TabItem value="deployment-conf" label="Using deployment.conf" default>
@@ -127,9 +121,7 @@ terraform apply tfplan
   </TabItem>
 </Tabs>
 
-### Step 2: Save Bucket Name
-
-After successful deployment, note the bucket name from Terraform outputs:
+3. After successful deployment, note the bucket name from Terraform outputs:
 
 ```bash
 export BACKEND_BUCKET=$(terraform output -raw terraform_states_storage_bucket_name)
@@ -144,15 +136,13 @@ The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform 
 
 This phase deploys all core GCP resources required to run AI/Run CodeMie. This includes the GKE cluster, networking components, databases, and security infrastructure.
 
-### Step 1: Navigate to Platform Directory
+1. Navigate to the `platform/` directory:
 
 ```bash
 cd ../platform
 ```
 
-### Step 2: Configure and Deploy
-
-There are two ways to provide Terraform variables:
+2. Configure and deploy. There are two ways to provide Terraform variables:
 
 <Tabs groupId="config-method">
   <TabItem value="deployment-conf" label="Using deployment.conf" default>
@@ -232,9 +222,7 @@ terraform apply tfplan
   </TabItem>
 </Tabs>
 
-### Step 3: Verify Deployment
-
-After successful deployment, verify all resources were created correctly:
+3. After successful deployment, verify all resources were created correctly:
 
 ```bash
 # View Terraform outputs
@@ -276,9 +264,7 @@ The Bastion Host is a secure jump server that provides access to your private GK
 
 Use SSH to connect to the Bastion Host for deploying and managing Kubernetes resources.
 
-#### Step 1: Connect to Bastion Host
-
-Retrieve the SSH command from Terraform outputs and connect:
+1. Retrieve the SSH command from Terraform outputs and connect:
 
 ```bash
 # Get the SSH connection command
@@ -308,9 +294,7 @@ sudo passwd ubuntu
 The `ubuntu` user password you set here will be used to login via RDP. Make sure to remember it or store it securely.
 :::
 
-#### Step 3: Configure Kubectl Access
-
-Fetch GKE cluster credentials to enable kubectl commands:
+3. Fetch GKE cluster credentials to enable kubectl commands:
 
 ```bash
 # Get the kubectl configuration command
@@ -323,12 +307,9 @@ terraform output get_kubectl_credentials_for_private_cluster
 gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
 ```
 
-#### Step 4: Clone Deployment Repository
-
-Clone the Helm charts repository needed for component deployment:
+4. Clone the Helm charts repository needed for component deployment:
 
 ```bash
-# Clone the repository
 git clone https://gitbud.epam.com/epm-cdme/codemie-helm-charts.git
 cd codemie-helm-charts
 ```
@@ -343,9 +324,7 @@ Use RDP to access application web interfaces that are only available via private
 RDP is useful when you need to access web-based administrative interfaces that aren't exposed publicly. For kubectl/Helm operations, SSH access is sufficient.
 :::
 
-#### Step 1: Set Up RDP Port Forwarding
-
-Retrieve the RDP forwarding command from Terraform outputs:
+1. Retrieve the RDP forwarding command from Terraform outputs and start the IAP tunnel:
 
 ```bash
 # Get the RDP forwarding command
@@ -355,19 +334,16 @@ terraform output bastion_rdp_command
 # gcloud compute start-iap-tunnel bastion-vm 3389 --local-host-port=localhost:3389 --zone=europe-west3-a --project=your-project
 ```
 
-Run the command to create an IAP tunnel that forwards RDP traffic:
+Run the command to create an IAP tunnel that forwards RDP traffic (keep this terminal open):
 
 ```bash
-# Start the IAP tunnel (keep this terminal open)
 gcloud compute start-iap-tunnel bastion-vm 3389 \
   --local-host-port=localhost:3389 \
   --zone=europe-west3-a \
   --project=your-project
 ```
 
-#### Step 2: Connect with Remote Desktop Client
-
-Open your Remote Desktop client and connect:
+2. Open your Remote Desktop client and connect:
 
 | Setting      | Value                      |
 | ------------ | -------------------------- |

@@ -29,7 +29,7 @@ Before starting the deployment, ensure you have completed all requirements from 
 - [ ] **Network Planning**: Prepared list of authorized networks (if accessing GKE API from workstation)
 
 :::warning Authentication Required
-You must be authenticated to GCP before running the deployment script. Run `gcloud auth login` and `gcloud auth application-default login`.
+You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and `gcloud auth application-default login`. Verify the active project with `gcloud config get-value project`.
 :::
 
 ## Deployment Phases

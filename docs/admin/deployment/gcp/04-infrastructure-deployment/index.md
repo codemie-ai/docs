@@ -53,14 +53,14 @@ The core platform infrastructure provisions all GCP resources needed to run AI/R
 
 ### Networking
 
-| Resource           | Purpose                                                                 |
-| ------------------ | ----------------------------------------------------------------------- |
-| **VPC Network**    | Virtual Private Cloud for isolated network environment                  |
-| **Subnets**        | Network segmentation for GKE nodes and pods                             |
-| **Cloud NAT**      | Provides consistent outbound public IP for internet connectivity        |
-| **Cloud Router**   | Enables dynamic routing for VPC                                         |
-| **DNS Zones**      | Name resolution for CodeMie components (optional, for private clusters) |
-| **Firewall Rules** | Network access control and traffic filtering                            |
+| Resource           | Purpose                                                          |
+| ------------------ | ---------------------------------------------------------------- |
+| **VPC Network**    | Virtual Private Cloud for isolated network environment           |
+| **Subnets**        | Network segmentation for GKE nodes and pods                      |
+| **Cloud NAT**      | Provides consistent outbound public IP for internet connectivity |
+| **Cloud Router**   | Enables dynamic routing for VPC                                  |
+| **DNS Zones**      | Name resolution for CodeMie components                           |
+| **Firewall Rules** | Network access control and traffic filtering                     |
 
 ### Data & Storage
 
