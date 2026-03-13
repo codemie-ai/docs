@@ -6,7 +6,50 @@ Official documentation for AI/Run CodeMie - an AI-powered development platform.
 
 ## Quick Start for Contributors
 
-**Prerequisites**: Node.js 24.0+
+**Prerequisites**:
+
+- Node.js 24.0+
+- GitLeaks (for pre-commit secret scanning)
+
+### Installing GitLeaks
+
+GitLeaks is required for local pre-commit hooks to scan for secrets before committing.
+
+**macOS (Homebrew)**:
+
+```bash
+brew install gitleaks
+```
+
+**Windows (Scoop)**:
+
+```bash
+scoop install gitleaks
+```
+
+**Windows (Chocolatey)**:
+
+```bash
+choco install gitleaks
+```
+
+**Linux (Download Binary)**:
+
+```bash
+# Download latest release from https://github.com/gitleaks/gitleaks/releases
+# Example for Linux x64:
+wget https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz
+tar -xzf gitleaks_8.30.0_linux_x64.tar.gz
+sudo mv gitleaks /usr/local/bin/
+```
+
+**Verify Installation**:
+
+```bash
+gitleaks version
+```
+
+### Setup
 
 ```bash
 # Install and activate the predefined Node.js version. (Optional)
@@ -53,6 +96,7 @@ npm run commitlint:test      # Test a commit message (via stdin)
 # Security
 npm run secrets:check        # Scan for secrets (current files only)
 npm run secrets:check-git    # Scan for secrets (includes Git history)
+npm run secrets:check-staged # Scan staged files (runs automatically in pre-commit hook)
 ```
 
 ### Testing Commit Messages

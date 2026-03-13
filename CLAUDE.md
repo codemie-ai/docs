@@ -49,9 +49,12 @@ npm run commitlint:test      # Test message: echo "docs(aws): add section" | npm
 ### Security
 
 ```bash
-npm run secrets:check        # Scan current files (requires Docker)
-npm run secrets:check-git    # Scan Git history (requires Docker)
+npm run secrets:check        # Scan current files (requires GitLeaks installed)
+npm run secrets:check-git    # Scan Git history (requires GitLeaks installed)
+npm run secrets:check-staged # Scan staged files (runs automatically in pre-commit hook)
 ```
+
+**Note**: GitLeaks must be installed locally. See README.md for installation instructions for your platform (Homebrew/Scoop/Chocolatey/binary).
 
 ## Commit Message Format
 
@@ -791,11 +794,13 @@ Merges to `main` trigger automatic deployment to GitHub Pages.
 
 ## Husky Git Hooks
 
-**Pre-commit**: Runs `npm run typecheck` and `npm run lint`
+**Pre-commit**: Runs `npm run typecheck`, `npm run lint`, and `npm run secrets:check-staged` (GitLeaks scan)
 
 **Commit-msg**: Validates Conventional Commits format
 
 If hooks fail, commit is blocked. Use `npm run check` before committing.
+
+**Note**: GitLeaks must be installed locally for pre-commit hooks to work. The hook scans staged files for secrets before allowing the commit.
 
 ## Testing Checklist
 
