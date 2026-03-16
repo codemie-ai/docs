@@ -1,19 +1,19 @@
 ---
 id: elasticsearch-kibana-upgrade
 sidebar_position: 8
-title: Elasticsearch and Kibana Upgrade (8.14.2 → 8.18.4)
-description: Upgrade Elasticsearch and Kibana from 8.14.2 to 8.18.4
+title: Elasticsearch and Kibana Upgrade (8.18.4 → 8.19.12)
+description: Upgrade Elasticsearch and Kibana from 8.18.4 to 8.19.12
 pagination_next: null
 pagination_prev: admin/update/update-overview
 ---
 
-# Elasticsearch and Kibana Upgrade Guide (8.14.2 → 8.18.4)
+# Elasticsearch and Kibana Upgrade Guide (8.18.4 → 8.19.12)
 
 :::warning IMPORTANT
 Create a backup before starting the upgrade process!
 :::
 
-This page will guide your journey from 8.14.2 Elasticsearch/Kibana to 8.18.4
+This page will guide your journey from 8.18.4 Elasticsearch/Kibana to 8.19.12
 
 ## Pre-Upgrade Requirements
 
@@ -23,7 +23,7 @@ This page will guide your journey from 8.14.2 Elasticsearch/Kibana to 8.18.4
 - Planned for potential downtime
 - Tested the upgrade process in a non-production environment
 
-## Elasticsearch Upgrade (8.14.2 → 8.18.4)
+## Elasticsearch Upgrade (8.18.4 → 8.19.12)
 
 Steps to Upgrade Elasticsearch:
 
@@ -43,7 +43,7 @@ Steps to Upgrade Elasticsearch:
    helm upgrade --install elastic elasticsearch/. -n elastic --values elasticsearch/values-<cloud_name>.yaml --wait --timeout 900s --dependency-update
    ```
 
-## Kibana Upgrade (8.14.2 → 8.18.4)
+## Kibana Upgrade (8.18.4 → 8.19.12)
 
 Steps to Upgrade Kibana:
 
