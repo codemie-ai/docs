@@ -31,10 +31,6 @@ For detailed information about changes, improvements, and bug fixes, see the [Fl
 
 To upgrade Fluent Bit to version 3.2.2, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade).
 
-:::tip Upgrade Recommendation
-Test the Fluent Bit upgrade in a non-production environment before applying to production to ensure compatibility with your existing configuration and log parsing rules.
-:::
-
 ### Configuration Changes
 
 No breaking configuration changes were introduced in this release. All existing Fluent Bit configurations remain compatible.
