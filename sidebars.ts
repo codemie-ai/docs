@@ -709,6 +709,7 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'admin/update/release-notes',
             'admin/update/codemie/update-version',
             {
               type: 'category',
