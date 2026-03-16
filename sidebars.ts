@@ -740,6 +740,7 @@ const sidebars: SidebarsConfig = {
             'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
             'admin/update/fluent-bit-upgrade',
+            'admin/update/nats-upgrade',
           ],
         },
         {
