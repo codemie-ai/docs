@@ -19,17 +19,17 @@ This page provides information about updated third-party components and configur
 
 ### Third-Party Component Updates
 
-#### Fluent Bit 3.2.2
+#### Fluent Bit 4.2.3.1
 
-CodeMie 2.15.0 includes Fluent Bit version 3.2.2, providing improved log collection and processing capabilities.
+CodeMie 2.15.0 includes Fluent Bit version 4.2.3.1, providing improved log collection and processing capabilities.
 
 **What's new:**
 
-For detailed information about changes, improvements, and bug fixes, see the [Fluent Bit 3.2.2 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v3.2.2).
+For detailed information about changes, improvements, and bug fixes, see the [Fluent Bit 4.2.3.1 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v4.2.3.1).
 
 **Upgrade instructions:**
 
-To upgrade Fluent Bit to version 3.2.2, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade).
+To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade).
 
 ### Configuration Changes
 
