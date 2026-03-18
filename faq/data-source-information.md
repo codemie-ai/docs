@@ -3,18 +3,18 @@
 The CodeMie allowed to download Data Source information:
 
 1. Open Data Source tab.
-2. Click three dots button напротив нужного Data Source.
+2. Click the three dots button next to the desired Data Source.
 3. Click the export button.
 
 Information structure example:
 
 ## Data Source Information
 
-## Name: perfile123asd
+## Name: my-repo-summary
 
 ## Source Type: summary
 
-## Description: asdasd
+## Description: Main repository code index
 
 ## Documents Count: 149
 

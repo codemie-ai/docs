@@ -13,7 +13,7 @@ Using uvx (Recommended for isolated environment):
 Install  
 uvx pip install codemie-plugins
 
-Runuvx codemie-plugins  
+Run uvx codemie-plugins
 Basic Usage  
 After installation, you can run commands like:
 

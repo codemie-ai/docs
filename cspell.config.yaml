@@ -237,31 +237,23 @@ words:
   - kata
   - katas
   - codemieai
-  # FAQ-specific terms
-  - spendings
-  - helpdesk
-  - Gitbud
-  - upskill
-  - Gantt
-  - sandboxing
-  - xraytest
-  - rescan
-  - organisation
+  # Other
+  - AITM
+  - codereview
   - databasename
+  - Gantt
+  - gmock
+  - helpdesk
+  - Jacoco
   - Mixtral
   - onboarder
-  - AITM
-  - Jacoco
-  - codereview
-  - gmock
+  - organisation
+  - rescan
+  - sandboxing
+  - spendings
   - summ
-  - perfile
-  - asdasd
-  - Runuvx
-  - Mmodel
-  - pligins
-  - Maaa
-  # Other
+  - upskill
+  - xraytest
   - readonly
   - stateful
   - stateless

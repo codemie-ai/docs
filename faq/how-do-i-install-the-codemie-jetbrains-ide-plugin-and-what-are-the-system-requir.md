@@ -62,7 +62,7 @@ Access plugin settings to:
 - \***\*Reset Cache\*\***: Clear cached data and login information
 - \***\*Manage Connections\*\***: Update authentication and connection settings
 
-### **1.3.23. Where can I find the name of the LLM model? LLMmodel name for workflow? List of names of LLM models?**
+### **1.3.23. Where can I find the name of the LLM model? LLM model name for workflow? List of names of LLM models?**
 
 1. **Open the Codemie web page:**  
    Go to [https://epa.ms/codemie](https://epa.ms/codemie)

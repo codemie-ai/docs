@@ -32,13 +32,13 @@ To create a webhook integrations (Project Admins only)application-admins to requ
 
 6. Copy the Webhook URL for use in your external tool.
 
-7. Configure your external tool (e.g., Gitbud, Jira) with the Webhook URL and select trigger events as needed.
+7. Configure your external tool (e.g., GitLab, Jira) with the Webhook URL and select trigger events as needed.
 
 In the URL field, paste the Webhook URL you copied while creating the webhook integrations in CodeMie. Specify the trigger events and save the changes. In our case, we set the comment event trigger only.
 
 You can also enable additional settings, such as SSL Verification. But note that they require additional efforts to set up.
 
-In Gitbud, you can verify that webhook works properly by clicking the test button
+In GitLab, you can verify that webhook works properly by clicking the test button
 
 8. To test that webhook, we will create a merge request and put a comment into it.
 
