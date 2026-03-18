@@ -18,12 +18,16 @@ Integrating Version Control Systems allows assistants to navigate to the code re
 
 To integrate Version Control System tool in AI/Run CodeMie, follow the steps below:
 
-## 1. Generate Access Token
-
-Generate access token for your Git platform account with the following rights:
+## 1. Prepare Credentials
 
 <Tabs>
 <TabItem value="github" label="GitHub" default>
+
+GitHub supports two authentication methods. Choose the one that best fits your organization's security requirements.
+
+### Option A: Personal Access Token (PAT)
+
+Generate a Personal Access Token in your GitHub account with the following scopes:
 
 - `repo`
 - `repo:status`
@@ -34,16 +38,53 @@ Generate access token for your Git platform account with the following rights:
 - `project`
 - `read:project`
 
+:::note
+Save the token value in a secure location. GitHub shows the token value only once after generation.
+:::
+
+### Option B: GitHub Application
+
+GitHub Apps provide stronger security and finer-grained permissions compared to PATs. They authenticate as an installation rather than as a user, which is preferred for organizational use.
+
+To use GitHub App authentication, you need:
+
+1. **Create a GitHub App** in your GitHub organization or account:
+   - Go to **Settings → Developer settings → GitHub Apps → New GitHub App**
+   - Set the required repository permissions (Contents: Read & Write, Pull requests: Read & Write, Metadata: Read)
+   - After creating the app, note the **App ID** shown on the app's settings page
+
+2. **Generate a private key**:
+   - On the GitHub App settings page, scroll to **Private keys**
+   - Click **Generate a private key** — a `.pem` file will be downloaded
+   - Open the file and copy its full contents (including the `-----BEGIN RSA PRIVATE KEY-----` header and footer)
+
+3. **Install the GitHub App** on your organization or repository:
+   - Go to **Settings → Developer settings → GitHub Apps → Edit → Install App**
+   - Install it on the organization or specific repositories that CodeMie needs access to
+   - After installation, note the **Installation ID** from the installation URL (e.g., `https://github.com/settings/installations/12345678`)
+
+:::tip
+The Installation ID is optional — if you leave it blank, CodeMie will auto-detect the first available installation for your App.
+:::
+
 </TabItem>
 <TabItem value="gitlab" label="GitLab">
+
+Generate a Personal Access Token in your GitLab account with the following scopes:
 
 - `api`
 - `read_api`
 - `read_repository`
 - `write_repository`
 
+:::note
+Save the token value in a secure location. GitLab shows the token value only once after generation.
+:::
+
 </TabItem>
 <TabItem value="bitbucket" label="Bitbucket">
+
+Generate an App Password in your Bitbucket account with the following permissions:
 
 - `repository:read`
 - `repository:write`
@@ -55,10 +96,6 @@ Generate access token for your Git platform account with the following rights:
 </TabItem>
 </Tabs>
 
-:::note
-Saving the token value in your secure notes place is preferable. GitHub/GitLab shows you the token value just once after generating.
-:::
-
 ## 2. Configure Integration in CodeMie
 
 - In the AI/Run CodeMie main menu, click the **Integrations** button
@@ -69,12 +106,46 @@ Saving the token value in your secure notes place is preferable. GitHub/GitLab s
 
 ![Create integration](./images/git-create-integration.png)
 
-- Select the tool, specify the credentials and click **Create**
+- Set **Credential Type** to **Git**, enter an **Alias**, and set the **URL** to your Git host (e.g., `https://github.com`)
 
-![Integration credentials](./images/git-credentials-form.png)
+- Select your **Authentication Type**:
+
+<Tabs>
+<TabItem value="pat" label="Personal Access Token" default>
+
+Select **Personal Access Token** from the **Authentication Type** dropdown and fill in:
+
+| Field          | Description                                                                                           |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| **Token Name** | The username or token label (e.g., `oauth2` for GitHub/GitLab, your Bitbucket username for Bitbucket) |
+| **Token**      | The token value you generated in step 1                                                               |
+
+![Integration credentials PAT](./images/git-credentials-form.png)
+
+</TabItem>
+<TabItem value="github-app" label="GitHub Application">
+
+Select **GitHub Application** from the **Authentication Type** dropdown and fill in:
+
+| Field                          | Description                                                                                       |
+| ------------------------------ | ------------------------------------------------------------------------------------------------- |
+| **GitHub App ID**              | The numeric App ID from your GitHub App settings page                                             |
+| **GitHub App Private Key**     | The full contents of the `.pem` private key file, including the `-----BEGIN` and `-----END` lines |
+| **GitHub App Installation ID** | The numeric installation ID (optional — auto-detected if left blank)                              |
+
+![Integration credentials GitHub App](./images/git-github-app-credentials-form.png)
 
 :::note
-Specify this token's correct project and URL (URL ex: `https://github.com`). The project name for setting must be the same as for the indexed repository.
+The private key is stored encrypted and displayed in masked format for security.
+:::
+
+</TabItem>
+</Tabs>
+
+- Click **Save** to create the integration
+
+:::note
+The project name for the integration must match the project of the indexed repository.
 :::
 
 That's it. Now you can add code repositories to your AI/Run CodeMie account.

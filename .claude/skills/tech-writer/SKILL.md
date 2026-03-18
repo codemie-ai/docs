@@ -125,6 +125,31 @@ Summarize findings: related pages with paths, gaps, most appropriate section.
 
 ---
 
+## Phase 2.5: Screenshot Analysis
+
+After analyzing existing documentation and before proposing an approach, check for screenshots:
+
+```bash
+ls screenshots/
+```
+
+If only `dummy.txt` is present (or the folder is empty), skip this phase.
+
+If screenshot files are found:
+
+1. **Read each image file** using the Read tool — it supports PNG, JPG, and other image formats.
+2. **For each screenshot, note**:
+   - What UI element, feature, or step it shows
+   - Which section of the platform it relates to
+   - Whether it matches the feature/topic being documented
+3. **Build a "pending screenshots" list** — original filename + inferred content description.
+
+This context feeds directly into your approach proposal: you'll know which steps or features have visual coverage, and can plan where each screenshot will appear in the documentation.
+
+Do **not** move or rename files yet — that happens in Phase 6.
+
+---
+
 ## Phase 3: Propose Documentation Approach
 
 Present your analysis to the user:
@@ -355,8 +380,50 @@ pagination_next: null
 4. **Code examples**: Complete, runnable examples with expected output. Always specify
    language. Explain what the code does, not just how.
 
+### Screenshot Processing
+
+If screenshots were detected in Phase 2.5, place them now — while writing the documentation, so you know exactly which page and step each image belongs to.
+
+For each pending screenshot:
+
+1. **Determine the target `images/` folder** — same directory as the documentation file being written:
+   - `docs/user-guide/[section]/images/` for user-facing docs
+   - `docs/admin/[section]/images/` for admin docs
+
+2. **Create the folder** if it does not exist:
+
+   ```bash
+   mkdir -p docs/[section]/images/
+   ```
+
+3. **Choose a descriptive kebab-case filename** that reflects what the screenshot shows:
+   - Good: `mcp-server-settings.png`, `assistant-creation-form.png`, `webhook-trigger-step-1.png`
+   - Bad: `screenshot1.png`, `image.png`, `IMG_001.png`
+   - Keep it 3–5 words, no numbers unless it's a step in a sequence
+
+4. **Move the file** from `screenshots/` to the target location:
+
+   ```bash
+   mv screenshots/[original-name] docs/[section]/images/[new-name]
+   ```
+
+5. **Reference in documentation** with a relative path and meaningful alt text:
+
+   ```markdown
+   ![MCP Server Configuration](./images/mcp-server-settings.png)
+   ```
+
+6. After all screenshots are moved, **verify the folder is clear**:
+   ```bash
+   ls screenshots/
+   ```
+   Only `dummy.txt` should remain. If any file is left over, process it or flag it to the user.
+
+---
+
 ### QA Checklist (Complete Before Proceeding to Phase 7)
 
+- [ ] All screenshots moved from `screenshots/` to the correct `images/` folder and referenced in docs
 - [ ] All front matter fields present and correct
 - [ ] Document ID is clean (no numbers), matches sidebars.ts reference
 - [ ] Images stored locally in `images/` with relative paths
