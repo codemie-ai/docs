@@ -186,6 +186,20 @@ const sidebars: SidebarsConfig = {
                     'user-guide/tools_integrations/tools/git-azuredevops',
                   ],
                 },
+                {
+                  type: 'category',
+                  label: 'Azure DevOps',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/tools_integrations/tools/azure-devops/azure-devops',
+                  },
+                  collapsed: true,
+                  items: [
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-work-items',
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-wiki',
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-test-plans',
+                  ],
+                },
                 'user-guide/tools_integrations/tools/adding-an-mcp-server',
                 'user-guide/tools_integrations/tools/using-mcp-tools-in-assistants',
               ],

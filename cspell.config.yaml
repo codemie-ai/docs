@@ -185,6 +185,7 @@ words:
   - IP
   - CIDR
   - SOQL
+  - WIQL
   - jumpbox
   - dbadmin
   - masterkey
