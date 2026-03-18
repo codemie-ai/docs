@@ -1,0 +1,7 @@
+# How to Create Project Credentials for Your Team and Set Up Access via an Auto-User? How to Share Credentials with the Entire Project Team? Share credentials for project team members?
+
+If you'd like to make certain members of your team administrators(applications-admin), you need to submit a request for assistance. You can do this through the following [link](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D): [https://support.epam.com/ess?id=sc_cat_item\&sys_id=a914679897ffd910386e3a871153afca\&name=RequestHelpOrConsultation\&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D) . Request the team to assist with any questions by providing the email of the employee to whom you wish to grant these rights. With these rights, you will be able to create integrations that your entire team can use.
+
+## Sources
+
+- [Sharing Assistants](https://docs.codemie.ai/user-guide/assistants/sharing-assistants)

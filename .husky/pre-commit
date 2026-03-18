@@ -1,1 +1,21 @@
 npm run check:pre-commit
+
+# Check for secrets (only if Docker daemon is running)
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+  echo "Checking for secrets with Gitleaks..."
+  npm run secrets:check || {
+    echo "Secrets detected! Please remove sensitive data before committing."
+    exit 1
+  }
+else
+  if command -v colima >/dev/null 2>&1; then
+    echo "Docker daemon not running - Colima is installed"
+    echo "Run 'colima start' to enable secrets detection locally"
+  elif command -v podman >/dev/null 2>&1; then
+    echo "Docker daemon not running - Podman is installed"
+    echo "Run 'podman machine start' to enable secrets detection locally"
+  else
+    echo "Docker not available - skipping secrets detection"
+    echo "Install Docker to enable local secrets scanning"
+  fi
+fi

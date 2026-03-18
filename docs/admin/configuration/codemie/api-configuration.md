@@ -544,12 +544,14 @@ Tag LLM requests for cost tracking and usage analytics.
 
 Set spending limits per user or team to control LLM usage costs.
 
-| Parameter                   | Type   | Default     | Description                                                    |
-| --------------------------- | ------ | ----------- | -------------------------------------------------------------- |
-| `DEFAULT_SOFT_BUDGET_LIMIT` | float  | `200`       | Soft limit in USD triggering warnings before hard cutoff       |
-| `DEFAULT_HARD_BUDGET_LIMIT` | float  | `500`       | Hard limit in USD completely blocking requests when exceeded   |
-| `DEFAULT_BUDGET_DURATION`   | string | `"30d"`     | Budget reset period (e.g., `30d` for monthly, `7d` for weekly) |
-| `DEFAULT_BUDGET_ID`         | string | `"default"` | Identifier for default budget configuration                    |
+| Parameter                            | Type   | Default     | Description                                                                                                                                                                                                 |
+| ------------------------------------ | ------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DEFAULT_SOFT_BUDGET_LIMIT`          | float  | `200`       | Soft limit in USD triggering warnings before hard cutoff                                                                                                                                                    |
+| `DEFAULT_HARD_BUDGET_LIMIT`          | float  | `500`       | Hard limit in USD completely blocking requests when exceeded                                                                                                                                                |
+| `DEFAULT_BUDGET_DURATION`            | string | `"30d"`     | Budget reset period (e.g., `30d` for monthly, `7d` for weekly)                                                                                                                                              |
+| `DEFAULT_BUDGET_ID`                  | string | `"default"` | Identifier for the default end-user budget in LiteLLM                                                                                                                                                       |
+| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | Budget name for premium model spend tracking. When set, enables separate budget attribution for costly models (e.g., `premium_models`). Leave empty to disable.                                             |
+| `LITELLM_PREMIUM_MODELS_ALIASES`     | string | `""`        | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when `LITELLM_PREMIUM_MODELS_BUDGET_NAME` is set. |
 
 ### LiteLLM Cache & Optimization
 

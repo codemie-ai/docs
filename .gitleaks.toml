@@ -1,0 +1,11 @@
+# Gitleaks configuration
+# https://github.com/gitleaks/gitleaks
+
+title = "Gitleaks Configuration"
+
+[allowlist]
+description = "Allowlist for known false positives"
+paths = [
+  # Generated build artifacts
+  '''build/''',
+]

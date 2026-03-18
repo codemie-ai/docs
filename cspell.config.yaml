@@ -237,6 +237,30 @@ words:
   - kata
   - katas
   - codemieai
+  # FAQ-specific terms
+  - spendings
+  - helpdesk
+  - Gitbud
+  - upskill
+  - Gantt
+  - sandboxing
+  - xraytest
+  - rescan
+  - organisation
+  - databasename
+  - Mixtral
+  - onboarder
+  - AITM
+  - Jacoco
+  - codereview
+  - gmock
+  - summ
+  - perfile
+  - asdasd
+  - Runuvx
+  - Mmodel
+  - pligins
+  - Maaa
   # Other
   - readonly
   - stateful
@@ -284,6 +308,8 @@ words:
   - unpublishing
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
+  # Ignore Cyrillic characters (non-English content in FAQ files)
+  - '/[\u0400-\u04FF]+/g'
   # Ignore hex colors
   - '/#[0-9a-fA-F]{3,8}/g'
   # Ignore version numbers
