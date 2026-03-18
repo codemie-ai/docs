@@ -41,6 +41,10 @@ states:
 - **interrupt_before**: Pause workflow for user confirmation
 - **retry_policy**: Custom retry configuration
 
+:::note
+`interrupt_before` was previously named `wait_for_user_confirmation`. If you encounter this legacy term in older workflow configurations or documentation, it refers to the same feature.
+:::
+
 #### Agent State Advanced Examples:
 
 **Example 1: Using `output_schema` for Structured Output**

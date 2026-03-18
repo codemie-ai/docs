@@ -54,7 +54,7 @@ To create a workflow configuration with two assistants and two states, copy and 
   - backoff_factor: float (Required) Backoff factor for retries.
   - max_interval: float (Required) Maximum interval for retries.
   - max_attempts: integer (Required) Maximum number of retry attempts.
-- wait_for_user_confirmation: boolean (Optional) Indicates whether the state requires user confirmation to proceed. The default is false.
+- interrupt_before: boolean (Optional) Pause the workflow before this state executes, requiring user confirmation to proceed. The default is false. Previously named `wait_for_user_confirmation`.
 
 ## 3. Tools section:
 

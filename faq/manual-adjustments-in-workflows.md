@@ -6,7 +6,7 @@ During a workflow step that generates an output draft, users can manually edit t
 
 ## How to Edit Workflow Outputs
 
-When a workflow reaches a step with `wait_for_user_confirmation: true`, you'll see three action buttons:
+When a workflow reaches a step with `interrupt_before: true`, you'll see three action buttons:
 
 1. **Edit** - Opens the editing interface
 2. **Cancel** - Cancels the current workflow state
@@ -71,7 +71,7 @@ states:
    {  
    "final_content": "String. The manually adjusted content."  
    }  
-  wait_for_user_confirmation: true  
+  interrupt_before: true
   next:  
    state_id: finalize
 
