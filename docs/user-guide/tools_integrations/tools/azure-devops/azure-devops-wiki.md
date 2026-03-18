@@ -21,7 +21,7 @@ Before adding the Wiki tool to an assistant, set up an AzureDevOps integration i
 2. Fill in the assistant details: project, name, description, and system instructions.
 3. In the **Tools & Integrations** section, expand **Azure DevOps Wiki**.
 4. Select the tools you want to enable (or check **Select all**).
-5. In the **Connected to** dropdown, select your AzureDevOps integration alias.
+5. In the dropdown, select your AzureDevOps integration alias.
 6. Click **Create** or **Save**.
 
 ![Azure DevOps Wiki Tool Selection](./images/azure-devops-wiki-tools.png)

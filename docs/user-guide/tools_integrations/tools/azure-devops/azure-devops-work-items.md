@@ -21,22 +21,22 @@ Before adding the Work Items tool to an assistant, set up an AzureDevOps integra
 2. Fill in the assistant details: project, name, description, and system instructions.
 3. In the **Tools & Integrations** section, expand **Azure DevOps Work Item**.
 4. Select the tools you want to enable (or check **Select all**).
-5. In the **Connected to** dropdown, select your AzureDevOps integration alias.
+5. In the dropdown, select your AzureDevOps integration alias.
 6. Click **Create** or **Save**.
 
 ![Azure DevOps Work Items Tool Selection](./images/azure-devops-work-items-tools.png)
 
 ## Available Operations
 
-| Operation                          | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| **Create Work Item**               | Create a new work item of type Task, Bug, Issue, or Epic                   |
-| **Update Work Item**               | Update fields on an existing work item by ID                               |
-| **Get Work Item**                  | Retrieve a work item by ID, optionally including relations and attachments |
-| **Select all (Search Work Items)** | Search work items using a WIQL query                                       |
-| **Link Work Items**                | Create a relationship link between two work items                          |
-| **Get Relation Types**             | List all available relation type names and reference names                 |
-| **Get Comments**                   | Retrieve comments for a specific work item                                 |
+| Operation              | Description                                                                |
+| ---------------------- | -------------------------------------------------------------------------- |
+| **Create Work Item**   | Create a new work item of type Task, Bug, Issue, or Epic                   |
+| **Update Work Item**   | Update fields on an existing work item by ID                               |
+| **Get Work Item**      | Retrieve a work item by ID, optionally including relations and attachments |
+| **Search Work Items**  | Search work items using a WIQL query                                       |
+| **Link Work Items**    | Create a relationship link between two work items                          |
+| **Get Relation Types** | List all available relation type names and reference names                 |
+| **Get Comments**       | Retrieve comments for a specific work item                                 |
 
 ## Usage Examples
 
