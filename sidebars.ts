@@ -597,7 +597,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: [
                 'admin/configuration/codemie/datasources-configuration',
-                'admin/configuration/codemie/ui-customization',
+                'admin/configuration/codemie/customer-feature-configuration',
                 {
                   type: 'category',
                   label: 'AI Models Integration',

@@ -800,35 +800,7 @@ Models can be designated as defaults for specific use cases:
 
 ## Customer Configuration
 
-Customer-specific settings are loaded from `CUSTOMER_CONFIG_DIR/customer-config.yaml` for specific clients configuration.
-
-### Components Configuration
-
-Enable/disable features and integrations per deployment:
-
-```yaml
-components:
-  - id: component-id
-    settings:
-      enabled: true # Component active
-      availableForExternal: true # External users can access
-      name: Component Name # Display name
-      url: https://component.url # Deep link or service URL
-      icon_url: https://icon.url # UI icon
-```
-
-### Preconfigured Assistants
-
-Define assistants automatically created on deployment:
-
-```yaml
-preconfigured_assistants:
-  - id: assistant-slug # Unique assistant identifier
-    settings:
-      enabled: true # Assistant active
-      index_name: custom_index # Override default search index
-    project: project-name # Restrict to specific project
-```
+Customer-specific settings are loaded from `CUSTOMER_CONFIG_DIR/customer-config.yaml`. See [CodeMie Customer Feature Configuration](./customer-feature-configuration) for the full reference.
 
 ---
 
