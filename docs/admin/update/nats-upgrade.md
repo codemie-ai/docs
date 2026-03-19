@@ -11,6 +11,10 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 # NATS Upgrade
 
+## Enterprise Edition
+
+<EnterpriseFeature />
+
 ## Pre-Upgrade Requirements
 
 **Before proceeding with any upgrade, ensure you have:**
@@ -18,20 +22,30 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 - Planned for potential downtime
 - Tested the upgrade process in a non-production environment
 
-## Upgrade Procedure
+**Before starting the upgrade**
 
-**Objective: Update the NATS Reloader image to a version without critical vulnerabilities.**
+- Check the list of available chart versions:
 
-- Add the following reloader image tag to `codemie-nats/values-<CLOUD_NAME>.yaml`
+```bash
+  helm search repo nats/nats --versions
+```
+
+- Once you identify the target version, you can inspect which container image tags are used by that release:
+
+```bash
+  helm show values nats/nats --version <TARGET_CHART_VERSION> | grep -A 3 image:
+```
+
+> This helps verify the underlying images before proceeding with the upgrade.
+
+- If you want to use a custom NATS-Reloader image tag, add the following to `codemie-nats/values-<CLOUD_NAME>.yaml`:
 
 ```yaml
   reloader:
     tag: 0.22.3
 ```
 
-## Enterprise Edition
-
-<EnterpriseFeature />
+## Upgrade Procedure
 
 - Change the NATS version in `helm-charts.sh`
 
@@ -55,11 +69,10 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 > Replace `<TARGET_CHART_VERSION>` with the desired NATS chart version.
 
-## Troubleshooting
+## Post-upgrade verification
 
-If you encounter issues during the upgrade:
+After the upgrade completes, verify the deployment:
 
 1. Check pod logs for error messages
-2. Verify resource availability (CPU, memory, storage)
-3. Ensure network connectivity between components
-4. Run the [codemie-plugins](https://pypi.org/project/codemie-plugins/) to ensure that you can successfully connect without any issues
+2. Ensure network connectivity between components
+3. Run the [codemie-plugins](https://pypi.org/project/codemie-plugins/) to ensure that you can successfully connect without any issues
