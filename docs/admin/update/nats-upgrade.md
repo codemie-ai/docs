@@ -31,16 +31,16 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 ```
 
 :::info
+
 > The Helm chart version and the application version may differ.
 > All the component's versions (eg. nats-server-config-reloader) included in the helm chart might be different from **APP VERSION**.
 > Always rely on the **Chart version** when determining compatibility and deployment behavior.
-:::
+> :::
 
-| NAME         | CHART VERSION  | APP VERSION | DESCRIPTION                                      |
-| -------------| ---------------|-------------|--------------------------------------------------|
-| `nats/nats`  | `2.12.5`       | `2.12.5`    |A Helm chart for the NATS.io High Speed Cloud N...|
-| `nats/nats`  | `1.3.16`       | `2.11.10`    |A Helm chart for the NATS.io High Speed Cloud N...|
-
+| NAME        | CHART VERSION | APP VERSION | DESCRIPTION                                        |
+| ----------- | ------------- | ----------- | -------------------------------------------------- |
+| `nats/nats` | `2.12.5`      | `2.12.5`    | A Helm chart for the NATS.io High Speed Cloud N... |
+| `nats/nats` | `1.3.16`      | `2.11.10`   | A Helm chart for the NATS.io High Speed Cloud N... |
 
 - Once you identify the target chart version, you can inspect the container image tags (nats, nats-server-config-reloader, etc.) used in that release:
 
@@ -69,7 +69,7 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
     --wait --timeout 900s > /dev/null
 ```
 
-- Now you have to execute `helm-charts.sh` script or manually run the command above with namespace (```$namespace```) in which CodeMie is deployed
+- Now you have to execute `helm-charts.sh` script or manually run the command above with namespace (`$namespace`) in which CodeMie is deployed
 
 > Replace `<TARGET_CHART_VERSION>` with the desired NATS chart version.
 
