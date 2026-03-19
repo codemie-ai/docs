@@ -137,6 +137,10 @@ TF_VAR_enable_private_connections=true
 TF_VAR_lb_prefix_list_ids='[]'
 TF_VAR_lb_specific_ips='[]'
 TF_VAR_security_group_ids='[]'
+
+# Optional: Keycloak Database
+# Set to true to share the existing CodeMie RDS instance instead of creating a dedicated one
+TF_VAR_keycloak_shared_database_instance=false
 ...
 ```
 
@@ -172,12 +176,19 @@ AWS_KMS_KEY_ID=12345678-90ab-cdef-1234-567890abcdef
 AWS_S3_BUCKET_NAME=codemie-platform-bucket
 CODEMIE_DOMAIN_NAME=airun.example.com
 
-# Database Outputs
+# RDS Database Outputs
 CODEMIE_POSTGRES_DATABASE_HOST=codemie-rds.123456789012.us-east-1.rds.amazonaws.com
 CODEMIE_POSTGRES_DATABASE_PORT=5432
 CODEMIE_POSTGRES_DATABASE_NAME=codemie
 CODEMIE_POSTGRES_DATABASE_USER=dbadmin
 CODEMIE_POSTGRES_DATABASE_PASSWORD="generated-password"
+
+# Keycloak Database Outputs (present when TF_VAR_keycloak_shared_database_instance=false)
+KEYCLOAK_POSTGRES_DATABASE_HOST=codemie-keycloak-rds.123456789012.us-east-1.rds.amazonaws.com
+KEYCLOAK_POSTGRES_DATABASE_PORT=5432
+KEYCLOAK_POSTGRES_DATABASE_NAME=keycloak
+KEYCLOAK_POSTGRES_DATABASE_USER=keycloak_admin
+KEYCLOAK_POSTGRES_DATABASE_PASSWORD="generated-password"
 ```
 
 :::tip Save These Outputs

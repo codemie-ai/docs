@@ -7,9 +7,6 @@ After completing all data layer installations, verify the following:
 kubectl get pods -n elastic | grep Running
 kubectl get statefulset -n elastic
 
-# PostgreSQL Operator is running
-kubectl get pods -n postgres-operator | grep Running
-
 # PostgreSQL secret exists
 kubectl get secret codemie-postgresql -n codemie
 

@@ -9,17 +9,12 @@ pagination_next: admin/deployment/aws/components-deployment/manual-deployment/se
 
 import DataLayerOverview from '../../../common/deployment/05-components-deployment/manual-deployment/data-layer/\_data-layer-overview.mdx';
 import DataLayerElasticsearch from '../../../common/deployment/05-components-deployment/manual-deployment/data-layer/\_data-layer-elasticsearch.mdx';
-import DataLayerPostgresOperator from '../../../common/deployment/05-components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-operator.mdx';
 import DataLayerPostgresConfig from '../../../common/deployment/05-components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-config.mdx';
 import DataLayerValidation from '../../../common/deployment/05-components-deployment/manual-deployment/data-layer/\_data-layer-validation.mdx';
 
 <DataLayerOverview />
 
 <DataLayerElasticsearch cloudProvider="AWS" valuesFileName="values-aws.yaml" />
-
-<DataLayerPostgresOperator
-  postgresServiceName="AWS RDS PostgreSQL"
-/>
 
 <DataLayerPostgresConfig
   postgresServiceName="AWS RDS PostgreSQL"

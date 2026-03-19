@@ -95,12 +95,13 @@ The core platform infrastructure provisions all AWS resources needed to run AI/R
 
 ### Data & Storage
 
-| Resource             | Purpose                                                       |
-| -------------------- | ------------------------------------------------------------- |
-| **RDS PostgreSQL**   | Managed database service for CodeMie application data         |
-| **RDS Subnet Group** | Database subnet group for multi-AZ deployment                 |
-| **S3 Bucket**        | Persistent storage for CodeMie application data and artifacts |
-| **EBS Volumes**      | Block storage for Kubernetes persistent volumes               |
+| Resource                      | Purpose                                                       |
+| ----------------------------- | ------------------------------------------------------------- |
+| **RDS PostgreSQL**            | Managed database service for CodeMie application data         |
+| **RDS PostgreSQL (Keycloak)** | Dedicated database instance for Keycloak (optional)           |
+| **RDS Subnet Group**          | Database subnet group for multi-AZ deployment                 |
+| **S3 Bucket**                 | Persistent storage for CodeMie application data and artifacts |
+| **EBS Volumes**               | Block storage for Kubernetes persistent volumes               |
 
 ### Security & Identity
 

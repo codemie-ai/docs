@@ -20,7 +20,7 @@ Scripted deployment is recommended for standard installations as it automates co
 The deployment script automates the installation of:
 
 - **Infrastructure services** (Nginx Ingress, Storage Class)
-- **Data layer** (Elasticsearch, PostgreSQL Operator)
+- **Data layer** (Elasticsearch)
 - **Security components** (Keycloak, OAuth2 Proxy)
 - **Messaging system** (NATS)
 - **Core CodeMie services** (API, UI, MCP Connect)
