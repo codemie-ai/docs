@@ -11,8 +11,6 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 # NATS Upgrade
 
-## Enterprise Edition
-
 <EnterpriseFeature />
 
 ## Pre-Upgrade Requirements
@@ -35,7 +33,8 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 > The Helm chart version and the application version may differ.
 > All the component's versions (eg. nats-server-config-reloader) included in the helm chart might be different from **APP VERSION**.
 > Always rely on the **Chart version** when determining compatibility and deployment behavior.
-> :::
+
+:::
 
 | NAME        | CHART VERSION | APP VERSION | DESCRIPTION                                        |
 | ----------- | ------------- | ----------- | -------------------------------------------------- |
