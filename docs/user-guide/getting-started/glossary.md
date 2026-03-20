@@ -84,6 +84,20 @@ The process of converting data from a data source into a searchable format, incl
 
 A collection of information (documents, articles, code, etc.) integrated into CodeMie to provide assistants with relevant context and knowledge. Data sources are converted into vector embeddings for semantic search and must be indexed before assistants can access them. Supported types include Git repositories, Confluence, Jira, Files, and Google Docs. Data sources have lifecycle statuses: Indexing, Active/Ready, Failed, and Pending.
 
+### Default Integration
+
+When a tool requires an integration and none is explicitly selected, CodeMie picks one automatically using the following priority order:
+
+| Priority | Type                        | Visible to                       |
+| -------- | --------------------------- | -------------------------------- |
+| 1        | **User Integration**        | You only, in the current project |
+| 2        | **User Global Integration** | You only, across all projects    |
+| 3        | **Project Integration**     | All project members              |
+
+If no matching integration is found at any level, the action requiring it will fail.
+
+See [How the Default Integration Is Selected](../tools_integrations/integrations/#how-the-default-integration-is-selected).
+
 ---
 
 ## E
@@ -117,11 +131,13 @@ Native IDE extensions and plugins that bring CodeMie capabilities directly into 
 
 ### Integration
 
-A configured connection between the CodeMie platform and an external service or system. Integrations provide the credentials and settings needed for assistants to use tools. There are three types:
+A configured connection between the CodeMie platform and an external service or system. Integrations store the credentials needed for assistants and tools to access third-party services. There are three types:
 
-- **User Integration**: Personal configuration available only to the individual user
-- **User Global Integration**: Personal integration marked as global, available across all projects for the user
-- **Project Integration**: Configuration available to all team members within a specific project (Admin-only)
+- **User Integration**: Personal configuration scoped to a specific project. Available only to the user who created it.
+- **User Global Integration**: Personal integration with the **Global** toggle enabled. Available to the same user across all projects where they are onboarded.
+- **Project Integration**: Shared configuration available to all project members. Can only be created by users with the `isAdmin` or `applications_admin` role.
+
+See [Default Integration](#default-integration) for how CodeMie selects one automatically when none is explicitly chosen.
 
 ---
 

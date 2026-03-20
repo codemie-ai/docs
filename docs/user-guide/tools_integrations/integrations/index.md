@@ -8,17 +8,39 @@ pagination_next: null
 
 # Integrations
 
-There are two general types of integrations: User, User Global Integration and Project. They are distinguished by the availability level. If the user does not explicitly select an integration, the system will automatically choose a default integration based on the following priority:
+There are three types of integrations, distinguished by scope and who can create them. If you don't explicitly select an integration, CodeMie picks one automatically — see [How the Default Integration Is Selected](#how-the-default-integration-is-selected) below.
 
-- **User**: Personalized configurations that are applied only to the current user. These integrations allow individual users to customize their own experience and interaction with the software or platform according to their personal preferences and requirements.
-
-- **User Global Integration**: A personal integration marked as global (i.e., available across all projects for the user). This type allows users to reuse the same integration in multiple contexts.
-
-- **Project**: Any changes or adjustments made to the Project will affect all members who are part of the project. The purpose of Project is to ensure a consistent environment or set of rules for everyone involved.
+- **User Integration**: Personal configuration scoped to the current project. Available only to you.
+- **User Global Integration**: Personal integration with the **Global** toggle enabled. Available to you across all projects where you are onboarded.
+- **Project Integration**: Shared configuration available to all project members. Requires the `isAdmin` or `applications_admin` role.
 
 :::note
-This function is available for Admins roles only (Admin or Application Admin). Applications-admin can be requested by Support ticket.
+To create a **Project Integration**, you need the `isAdmin` or `applications_admin` role. To request `applications_admin` access, submit a Support ticket.
 :::
+
+## How the Default Integration Is Selected
+
+When a tool requires an integration and you haven't explicitly chosen one, CodeMie picks it automatically. **User Integration always takes priority over Project Integration.**
+
+| Priority | Type                        | Created in                                               | Visible to                                        |
+| -------- | --------------------------- | -------------------------------------------------------- | ------------------------------------------------- |
+| 1        | **User Integration**        | **User** tab, current project                            | You only, in this project                         |
+| 2        | **User Global Integration** | **User** tab, **Global** toggle enabled                  | You only, in all projects where you are onboarded |
+| 3        | **Project Integration**     | **Project** tab (`isAdmin` or `applications_admin` only) | All project members                               |
+
+If no matching integration is found at any level, the action requiring it will fail.
+
+### When does this matter?
+
+**One integration of a type** — it's always used automatically. Nothing to configure.
+
+**Multiple integrations of the same type** — select the one you need when creating or editing an assistant. If you don't, the priority above applies.
+
+### Tips
+
+- Use **User Global Integration** if you use the same credentials across multiple projects — configure once, use everywhere.
+- **Project Integration** acts as a shared fallback for team members who haven't set up their own.
+- If a tool is using unexpected credentials, go to **Integrations → User** and check whether a User Integration is overriding the project-level one.
 
 ## Setting Up Integrations
 
