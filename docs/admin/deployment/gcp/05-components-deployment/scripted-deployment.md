@@ -20,7 +20,7 @@ Scripted deployment is recommended for standard installations as it automates co
 The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository automates the installation of:
 
 - **Infrastructure services** (Nginx Ingress, GCP Storage Class)
-- **Data layer** (Elasticsearch, PostgreSQL Operator)
+- **Data layer** (Elasticsearch)
 - **Security components** (Keycloak Operator, Keycloak, OAuth2 Proxy)
 - **Messaging system** (NATS, NATS Auth Callout)
 - **Core CodeMie services** (API, UI, MCP Connect, Mermaid Server)

@@ -64,10 +64,11 @@ The core platform infrastructure provisions all GCP resources needed to run AI/R
 
 ### Data & Storage
 
-| Resource                   | Purpose                                                                                    |
-| -------------------------- | ------------------------------------------------------------------------------------------ |
-| **Cloud SQL (PostgreSQL)** | Managed PostgreSQL database service for CodeMie application data with private connectivity |
-| **Cloud Storage Buckets**  | Optional persistent storage for CodeMie application data and artifacts                     |
+| Resource                            | Purpose                                                                                    |
+| ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Cloud SQL (PostgreSQL)**          | Managed PostgreSQL database service for CodeMie application data with private connectivity |
+| **Cloud SQL PostgreSQL (Keycloak)** | Dedicated Cloud SQL instance for Keycloak (optional)                                       |
+| **Cloud Storage Buckets**           | Optional persistent storage for CodeMie application data and artifacts                     |
 
 :::info Optional Components
 Some components like Cloud Storage buckets or public DNS zones may be optional depending on your deployment configuration and requirements.

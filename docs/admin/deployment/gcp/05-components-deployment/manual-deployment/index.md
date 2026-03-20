@@ -84,7 +84,6 @@ Components must be installed in the following order to satisfy dependencies:
 
 - Elasticsearch (document storage and search engine)
 - Kibana (visualization and exploration tool)
-- PostgreSQL Operator (database lifecycle management)
 
 **Dependencies**: Requires storage class from Step 1
 
@@ -98,7 +97,7 @@ Components must be installed in the following order to satisfy dependencies:
 - Keycloak (identity and access management)
 - OAuth2 Proxy (authentication proxy)
 
-**Dependencies**: None (standalone identity layer)
+**Dependencies**: Requires PostgreSQL from infrastructure deployment
 
 ### 4. [Plugin Engine](./plugin-engine)
 
