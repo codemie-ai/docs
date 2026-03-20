@@ -72,11 +72,12 @@ The core platform infrastructure provisions all Azure resources needed to run AI
 
 ### Data & Storage
 
-| Resource                       | Purpose                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------- |
-| **PostgreSQL Flexible Server** | Managed database service for CodeMie application data with private connectivity |
-| **Storage Account**            | Persistent storage for CodeMie application data and artifacts                   |
-| **Container Registry (ACR)**   | Private Docker image repository for CodeMie container images                    |
+| Resource                                  | Purpose                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------- |
+| **PostgreSQL Flexible Server**            | Managed database service for CodeMie application data with private connectivity |
+| **PostgreSQL Flexible Server (Keycloak)** | Dedicated database instance for Keycloak (optional)                             |
+| **Storage Account**                       | Persistent storage for CodeMie application data and artifacts                   |
+| **Container Registry (ACR)**              | Private Docker image repository for CodeMie container images                    |
 
 :::info Optional: Azure Container Registry
 ACR deployment is optional. If you plan to use an external container registry (e.g., Google Container Registry, Docker Hub, or a corporate registry), ACR can be omitted from the deployment.

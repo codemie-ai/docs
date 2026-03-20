@@ -14,7 +14,7 @@ pagination_next: admin/deployment/azure/components-deployment/components-scripte
 This section guides you through deploying the AI/Run CodeMie application stack on your AKS cluster. After completing infrastructure deployment, this phase installs all necessary Kubernetes components including:
 
 - **Core AI/Run CodeMie services** (API, UI, MCP Connect, NATS Auth)
-- **Data layer** (Elasticsearch, PostgreSQL via operators)
+- **Data layer** (Elasticsearch)
 - **Security & Identity** (Keycloak, OAuth2 Proxy)
 - **Infrastructure services** (Ingress controller, storage)
 - **Observability** (Kibana, Fluent Bit)
@@ -63,11 +63,10 @@ bash get-codemie-latest-release-version.sh -c /path/to/key.json
 
 Database and search components for data persistence:
 
-| Component               | Container Registry                                                | Description                                                                        |
-| ----------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **Elasticsearch**       | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z`             | Primary data store for AI/Run CodeMie (datasources, projects, conversations, etc.) |
-| **Kibana**              | `docker.elastic.co/kibana/kibana:x.y.z`                           | Analytics and visualization interface for Elasticsearch data                       |
-| **PostgreSQL Operator** | `registry.developers.crunchydata.com/.../postgres-operator:x.y.z` | Manages PostgreSQL instances for Keycloak                                          |
+| Component         | Container Registry                                    | Description                                                                        |
+| ----------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Elasticsearch** | `docker.elastic.co/elasticsearch/elasticsearch:x.y.z` | Primary data store for AI/Run CodeMie (datasources, projects, conversations, etc.) |
+| **Kibana**        | `docker.elastic.co/kibana/kibana:x.y.z`               | Analytics and visualization interface for Elasticsearch data                       |
 
 #### Security & Identity Management
 
@@ -117,9 +116,9 @@ Components that can be omitted based on configuration:
 Components must be deployed in the following order due to dependencies:
 
 1. **Infrastructure** → Ingress Controller, Storage Class
-2. **Operators** → PostgreSQL Operator, Keycloak Operator
-3. **Data Layer** → Elasticsearch, PostgreSQL instances
-4. **Security** → Keycloak, OAuth2 Proxy
+2. **Operators** → Keycloak Operator
+3. **Data Layer** → Elasticsearch
+4. **Security** → Keycloak (with database credentials), OAuth2 Proxy
 5. **Messaging** → NATS
 6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
 7. **Observability** → Fluent Bit, Kibana

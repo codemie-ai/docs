@@ -56,7 +56,7 @@ kubectl get secret keycloak-admin -n security -o yaml | \
 
 ### Step 4: Configure Domain Name
 
-Fill in missing values in `oauth2-proxy/values-gcp.yaml` file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
+Fill in missing values in <code>oauth2-proxy/{props.valuesFileName}</code> file by replacing `%%DOMAIN%%` with your domain name, e.g., `example.com`
 
 :::tip Domain Configuration
 If you followed the Getting Started steps in the [overview](./), this should already be configured.
