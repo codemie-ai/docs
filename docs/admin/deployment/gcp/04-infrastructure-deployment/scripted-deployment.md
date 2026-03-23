@@ -121,7 +121,7 @@ GKE_SUBNET=codemie-cluster-subnet
 KUBECTL_COMMAND=gcloud container clusters get-credentials --project my-gcp-project --zone europe-west3 codemie-gke
 
 # PostgreSQL
-CODEMIE_POSTGRES_DATABASE_HOST=10.60.0.11
+CODEMIE_POSTGRES_DATABASE_HOST=<postgres-private-ip>
 CODEMIE_POSTGRES_DATABASE_PORT=5432
 CODEMIE_POSTGRES_DATABASE_NAME=codemie
 CODEMIE_POSTGRES_DATABASE_USER=admin
