@@ -65,6 +65,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/share-assistant-chat-with-other-users',
                 'user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats',
                 'user-guide/assistants/html-preview',
+                'user-guide/assistants/chat-input-settings',
               ],
             },
           ],
