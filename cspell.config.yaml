@@ -300,6 +300,9 @@ words:
   - toastify
   - Toastify
   - unpublishing
+  - pguser
+  - dbname
+  - jdbc
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
   # Ignore Cyrillic characters (non-English content in FAQ files)

@@ -738,6 +738,7 @@ const sidebars: SidebarsConfig = {
               items: ['admin/update/keycloak-upgrade/keycloak-24-to-26'],
             },
             'admin/update/keycloak-operator-upgrade',
+            'admin/update/keycloak-database-migration/keycloak-database-migration',
             'admin/update/terraform-upgrade/terraform-upgrade',
             'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
