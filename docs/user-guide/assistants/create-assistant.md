@@ -173,7 +173,10 @@ Each tool requires additional computing power, which may increase response time.
 :::
 
 :::info Integration Required
-Most tools require prior integration setup in User Settings before they can be used by assistants.
+Most tools require prior integration setup before they can be used. When you save the
+assistant, the platform automatically validates that all required integrations are
+configured. If any are missing, a **Missing Integrations** modal appears with options to
+add them or skip validation. See [Integration Validation During Assistant Save](../tools_integrations/integrations/#integration-validation-during-assistant-save).
 :::
 
 ## Managing Your Assistant

@@ -60,6 +60,35 @@ If no matching integration is found at any level, the action requiring it will f
 Most of the tools require you to specify the URL, token, and alias. Alias is the name of the setting that will be displayed in the integrations list.
 :::
 
+## Integration Validation During Assistant Save
+
+When you save or publish an assistant, the platform automatically checks whether all
+selected tools have the required integrations configured. If any are missing, a
+**Missing Integrations** modal appears before saving.
+
+![Missing Integrations modal](./images/missing-integrations-modal.png)
+
+The modal lists every integration type that needs to be set up, grouped by type, and shows
+which tools depend on each one. For each missing integration you have two options:
+
+- Click **Add Integration** — opens the Create User Integration page for that type. After
+  saving the integration, return to the assistant and save again.
+- Leave it as-is and click **Skip Validation & Save** — saves the assistant without the
+  missing integrations. Tools without integrations will not work until you set them up.
+
+**Modal action buttons:**
+
+| Button                     | Behavior                                                                 |
+| -------------------------- | ------------------------------------------------------------------------ |
+| **Validate & Save**        | Re-checks integrations and saves if all required ones are now configured |
+| **Skip Validation & Save** | Saves immediately, bypassing the validation check                        |
+| **Cancel**                 | Closes the modal and returns to the assistant form without saving        |
+
+:::warning
+An assistant saved with missing integrations will fail at runtime for any tool that
+requires those integrations. Configure all required integrations before publishing.
+:::
+
 ## Alternative Ways to Create Integrations
 
 As an alternative way of getting to the Integrations page, you can click the **Add User Integration** button in front of the desired tool when creating/editing your assistant:
