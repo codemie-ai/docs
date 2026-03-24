@@ -15,7 +15,7 @@ import TabItem from '@theme/TabItem';
 This guide covers migrating Keycloak's database from the in-cluster PostgreSQL (Crunchy PGO) to a cloud-managed PostgreSQL instance. Two target options are supported:
 
 - **Shared database** — Keycloak reuses the existing CodeMie PostgreSQL instance. No infrastructure changes required.
-- **Dedicated database** — Keycloak gets its own PostgreSQL instance. Update the Terraform repository and apply with `TF_VAR_keycloak_shared_database_instance=false`.
+- **Dedicated database** — Keycloak gets its own PostgreSQL instance provisioned by Terraform.
 
 :::warning Plan Downtime
 Keycloak will be unavailable during the migration.
