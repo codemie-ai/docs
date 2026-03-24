@@ -38,7 +38,12 @@ Keycloak will be unavailable during the migration.
 - Updated `codemie-helm-charts` repository with the new Keycloak configuration
 - `deployment_outputs.env` with target database connection details
 
-**Dedicated database only**: Update the Terraform repository, set `TF_VAR_keycloak_shared_database_instance=false` in `deployment.conf`, and apply Terraform to provision a dedicated PostgreSQL instance. After apply, copy `deployment_outputs.env`.
+:::info Dedicated database only
+
+1. Update the Terraform repository and set `TF_VAR_keycloak_shared_database_instance=false` in `deployment.conf`.
+2. Apply Terraform to provision a dedicated PostgreSQL instance.
+3. Copy `deployment_outputs.env` to `codemie-helm-charts`.
+   :::
 
 ## Step 1: Stop Keycloak
 
