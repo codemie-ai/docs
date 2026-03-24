@@ -86,8 +86,8 @@ TF_VAR_tags='{"createdWith":"Terraform","environment":"production"}'
 DEPLOY_AI_MODELS="true"                    # Set to "false" to skip Azure OpenAI deployment
 
 # Optional: Keycloak Database
-# Set to true to share the existing CodeMie PostgreSQL instance instead of creating a dedicated one
-TF_VAR_keycloak_shared_database_instance=false
+# Set to false to share the existing CodeMie PostgreSQL instance instead of creating a dedicated one
+TF_VAR_keycloak_dedicated_database_instance=true
 ```
 
 :::tip Required vs Optional Variables
@@ -379,7 +379,7 @@ CODEMIE_POSTGRES_DATABASE_NAME="codemie"
 CODEMIE_POSTGRES_DATABASE_USER="pgadmin"
 CODEMIE_POSTGRES_DATABASE_PASSWORD="password"
 
-# Keycloak PostgreSQL (present when TF_VAR_keycloak_shared_database_instance=false)
+# Keycloak PostgreSQL (present when TF_VAR_keycloak_dedicated_database_instance=true)
 KEYCLOAK_POSTGRES_DATABASE_HOST="keycloak-psql-abc123.postgres.database.azure.com"
 KEYCLOAK_POSTGRES_DATABASE_PORT="5432"
 KEYCLOAK_POSTGRES_DATABASE_NAME="keycloak"

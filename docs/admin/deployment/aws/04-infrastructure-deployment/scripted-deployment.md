@@ -139,8 +139,8 @@ TF_VAR_lb_specific_ips='[]'
 TF_VAR_security_group_ids='[]'
 
 # Optional: Keycloak Database
-# Set to true to share the existing CodeMie RDS instance instead of creating a dedicated one
-TF_VAR_keycloak_shared_database_instance=false
+# Set to false to share the existing CodeMie RDS instance instead of creating a dedicated one
+TF_VAR_keycloak_dedicated_database_instance=true
 ...
 ```
 
@@ -183,7 +183,7 @@ CODEMIE_POSTGRES_DATABASE_NAME=codemie
 CODEMIE_POSTGRES_DATABASE_USER=dbadmin
 CODEMIE_POSTGRES_DATABASE_PASSWORD="generated-password"
 
-# Keycloak Database Outputs (present when TF_VAR_keycloak_shared_database_instance=false)
+# Keycloak Database Outputs (present when TF_VAR_keycloak_dedicated_database_instance=true)
 KEYCLOAK_POSTGRES_DATABASE_HOST=codemie-keycloak-rds.123456789012.us-east-1.rds.amazonaws.com
 KEYCLOAK_POSTGRES_DATABASE_PORT=5432
 KEYCLOAK_POSTGRES_DATABASE_NAME=keycloak

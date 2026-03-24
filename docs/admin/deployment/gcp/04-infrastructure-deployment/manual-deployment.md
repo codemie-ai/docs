@@ -197,8 +197,8 @@ private_cluster = false                       # Set to true for completely priva
 create_private_dns_zone = false               # Set to true if using private DNS
 
 # Optional: Keycloak Database
-# Set to true to share the existing CodeMie Cloud SQL instance instead of creating a dedicated one
-keycloak_shared_database_instance = false
+# Set to false to share the existing CodeMie Cloud SQL instance instead of creating a dedicated one
+keycloak_dedicated_database_instance = true
 ```
 
 :::info Configuration References
@@ -244,7 +244,7 @@ gcloud sql instances list --project=<your-project-id>
 - GKE cluster connection commands
 - Bastion Host SSH/RDP commands
 - Cloud SQL connection details (`pg_host`, `pg_port`, `pg_database`, `pg_user`, `pg_secret_name`)
-- Keycloak Cloud SQL details (`keycloak_pg_host`, `keycloak_pg_database`, `keycloak_pg_user`, `keycloak_pg_secret_name`) — present when `keycloak_shared_database_instance = false`
+- Keycloak Cloud SQL details (`keycloak_pg_host`, `keycloak_pg_database`, `keycloak_pg_user`, `keycloak_pg_secret_name`) — present when `keycloak_dedicated_database_instance = true`
 - Service account information
 
 :::tip Infrastructure Ready
