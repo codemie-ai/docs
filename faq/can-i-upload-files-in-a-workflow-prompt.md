@@ -1,29 +1,42 @@
 # Can I upload files in a workflow prompt? How to use file as prompt?
 
-## Supported File Types and Limitations
+Yes. File upload is supported when running a workflow in **chat mode** (via the **Start Chat** button).
+You can attach up to **10 files** per execution.
 
-The following file formats are supported for workflow uploads:
+## Supported File Types and Limits
 
-- Images: jpeg, png, jpg, gif
-- Documents: pdf, pptx
-- Data: csv
-- Maximum file size: 50MB
+| Parameter     | Value                               |
+| ------------- | ----------------------------------- |
+| Max files     | 10 per execution                    |
+| Max file size | 100 MB per file                     |
+| File formats  | CSV, PDF, JPEG, JPG, PNG, GIF, PPTX |
 
-## How to Configure File Uploads in Workflows
+## How to Attach Files to a Workflow in Chat Mode
 
-1. Create a workflow with a user prompt step that requires file input
-2. Configure the state with `interrupt_before: true`
-3. In the task description, specify that file upload is expected
-4. Add appropriate handling for the uploaded file in subsequent states
+1. Open the workflow and click **Start Chat**.
+2. In the chat input area, click the **paperclip** icon to open a file picker, or drag and drop files into the window.
+3. Each file appears as a chip — you can preview, download, or remove it before sending.
+4. Send your message to start the workflow execution.
 
-How to use file as prompt
+All attached files are included in the context of every workflow step.
 
-1. Open Workflow
-2. Click 'Execute' button
-3. Click 'Attach File' button
-4. Choose file
-5. Execute
+## How to Configure File Input in YAML
+
+To design a workflow that explicitly waits for file input from the user, configure a state with
+`interrupt_before: true`. This pauses execution before the state runs, allowing the user to
+provide files and additional input:
+
+```yaml
+states:
+  - id: await-files
+    assistant_id: file-processor
+    interrupt_before: true
+    task: |
+      Process the attached files.
+      Files: {{file_names}}
+```
 
 ## Sources
 
-- [Workflow Advanced Features](https://docs.codemie.ai/user-guide/workflows/configuration/advanced-features)
+- [Workflows Overview — Attaching Files in Chat Mode](https://docs.codemie.ai/user-guide/workflows/workflows-overview#attaching-files-in-chat-mode)
+- [Advanced Features — Workflow Interruption](https://docs.codemie.ai/user-guide/workflows/configuration/advanced-features)

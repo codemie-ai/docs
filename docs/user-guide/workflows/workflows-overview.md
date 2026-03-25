@@ -127,6 +127,45 @@ Launch workflows within a chat interface, preserving conversational context and 
 [Workflow Interruption](./configuration/advanced-features#74-workflow-interruption) is currently not available in chat mode. This feature is only supported when running workflows in execution mode.
 :::
 
+### Attaching Files in Chat Mode
+
+When running a workflow in chat mode, you can attach up to **10 files** to your message.
+**To attach files:**
+
+1. In the chat input area, attach files using any of these methods:
+   - Click the **paperclip** icon in the input toolbar to open a file picker
+   - Drag and drop files directly into the chat window
+2. Each uploaded file appears as a chip with options to preview, download, or remove it.
+3. Send your message to start the workflow execution.
+
+![Chat input with multiple files attached before sending](./images/workflows-overview/workflow-chat-file-attachment.png)
+
+After execution completes, you can view the results in the **Workflow Execution History**:
+
+![Workflow execution results showing analysis of multiple attached files](./images/workflows-overview/workflow-execution-multi-file-result.png)
+
+**Supported file types and limits:**
+
+| Parameter     | Value                               |
+| ------------- | ----------------------------------- |
+| Max files     | 10 per execution                    |
+| Max file size | 100 MB per file                     |
+| File formats  | CSV, PDF, JPEG, JPG, PNG, GIF, PPTX |
+
+**How files are available in workflow steps:**
+
+Each attached file is appended to the task description of every state:
+
+```
+File attached: filename.ext
+```
+
+The full list of file names is also accessible via the `{{file_names}}` context variable in YAML task templates or tool arguments.
+
+:::tip Referencing a specific file
+Mention a file by name (e.g., `@report.pdf`) to direct a step to focus on that specific file rather than processing all attached files.
+:::
+
 ### Chat History
 
 Workflow chat history works the same way as with regular assistants. You can always review your workflow conversations in the Chats tab that started in a chat mode, where you'll find:

@@ -1,14 +1,13 @@
 # Can I use different types of files in the same workflow execution?
 
-Currently, only one file can be attached as input while executing a workflow. Ensure the file is appropriate for the workflow's context to provide accurate and relevant results.
+Yes. When running a workflow in **chat mode** (via the **Start Chat** button), you can attach up to
+**10 files** of different types in a single execution. Supported formats are CSV, PDF, JPEG, JPG,
+PNG, GIF, and PPTX, with a maximum size of 100 MB per file.
 
-### 1.3.12. Is it possible to delete a CodeMie project using the UI console for the admin user? Is it possible to delete a CodeMie project via API?
-
-No, it is not possible for the current release to delete a project via the UI console and api even for admin users.
-
-###
+All attached files are included in the context of every workflow step, so you can, for example,
+attach a CSV with data alongside a PDF report and have the workflow process both.
 
 ## Sources
 
-- [Supported File Formats And Csv Handling In Chat Assistant](https://docs.codemie.ai/user-guide/assistants/supported-file-formats-and-csv-handling-in-chat-assistant)
+- [Workflows Overview — Attaching Files in Chat Mode](https://docs.codemie.ai/user-guide/workflows/workflows-overview#attaching-files-in-chat-mode)
 - [Advanced Features](https://docs.codemie.ai/user-guide/workflows/configuration/advanced-features)
