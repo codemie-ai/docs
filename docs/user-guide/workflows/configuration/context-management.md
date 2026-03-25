@@ -233,6 +233,7 @@ task: |
 - ⚠️ **Simple lists**: Not added to context as variables (use output_key or wrap in dict)
 - ⚠️ **Plain strings**: Not added to context as variables (use output_key or output as JSON)
 - 💡 **Best practice**: Always output structured JSON from assistants for maximum flexibility
+- 💡 **Parallel iterations**: Use `append_to_context: true` with `output_key` to collect all iteration results into a list — without it, only the last iteration's value is retained
 
 #### Accessing Context in Templates
 
@@ -335,6 +336,40 @@ states:
       state_id: process-users
       store_in_context: true       # Store IDs for iteration
       include_in_llm_history: false  # Don't show raw IDs to LLM
+```
+
+**append_to_context** (boolean, default: `false`)
+
+Controls whether the current state's output is appended to an existing list in the context store rather than overwriting it.
+
+- `true`: Output is accumulated — the value under `output_key` in the context store grows into a list across multiple executions (most useful with `iter_key` iterations)
+- `false` (default): Output overwrites the previous value under the same key
+
+**When to use `true`:**
+
+- Collecting results from all parallel `iter_key` iterations into a single list
+- Any scenario where multiple states write to the same key and all values must be preserved
+
+**Requirements and constraints:**
+
+- Use together with `output_key` to specify which context key accumulates the results
+- When `append_to_context: true`, the top-level state key (set by `output_key`) is **not** written — read the accumulated list from the context store only via `{{output_key}}`
+- Has no effect when `store_in_context: false`
+
+```yaml
+states:
+  - id: process-item
+    assistant_id: processor
+    task: "Analyze {{task}} and return a result object"
+    next:
+      state_id: aggregate
+      output_key: results
+      append_to_context: true  # Each parallel branch appends; context_store["results"] = [r1, r2, r3]
+
+  - id: aggregate
+    assistant_id: aggregator
+    task: "Summarize all results: {{results}}"
+    # {{results}} contains the full list from every iteration
 ```
 
 **clear_prior_messages** (boolean, default: `false`)
@@ -542,6 +577,18 @@ next:
 ```
 
 Use case: When iterating over items, prevent context from accumulating across iterations. Each iteration gets only the current item, not data from previous iterations.
+
+**Pattern 7: Accumulate All Iteration Results Into a List**
+
+```yaml
+next:
+  state_id: aggregate
+  iter_key: items
+  output_key: all_results
+  append_to_context: true
+```
+
+Use case: When iterating in parallel and you need to collect every branch's output into a single list. Without `append_to_context: true`, only the last branch's value is kept (last-value-wins). With it, `context_store["all_results"]` contains a list with one entry per iteration.
 
 ### 6.3 Dynamic Value Resolution
 

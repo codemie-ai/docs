@@ -361,6 +361,21 @@ The previous state can output various formats, and `iter_key` adapts accordingly
 - Two formats: dictionary key (`"items"`) or JSON Pointer (`"/data/items"`)
 - The extracted value must be a list or will be wrapped as single-item list
 
+**append_to_context** (boolean, default: `false`):
+
+- When `true`, each iteration's output is **appended** to a list in the context store instead of overwriting the previous value
+- When `false` (default), standard overwrite semantics apply — the last iteration's value wins on duplicate keys
+- Use together with `output_key` to control which context key accumulates the collected results
+- When `append_to_context: true` is combined with `output_key`, the top-level state key is **not** set — values are only available via the accumulated list in the context store
+
+```yaml
+next:
+  state_id: collect-results
+  iter_key: items
+  output_key: processed_items
+  append_to_context: true  # Each iteration appends its output; context_store["processed_items"] becomes a list
+```
+
 #### Multi-Stage Iteration:
 
 For multi-stage iteration (when you have multiple sequential states processing each item), the **same `iter_key` must be present in every state** included in the iteration chain.
@@ -550,6 +565,57 @@ states:
 4. After all branches complete, contexts and message histories are merged
 5. Merged results flow to `merge-results`
 
+**Example 7: Accumulating Results Across Iterations**
+
+When all iteration results must be preserved, use `append_to_context: true` so each parallel branch contributes to a shared list rather than overwriting it.
+
+```yaml
+states:
+  - id: get-tickets
+    tool_id: jira-api
+    tool_args:
+      jql: "project = PROJ AND status = 'Open'"
+    # Outputs: [{"id": "PROJ-1", "title": "Bug A"}, {"id": "PROJ-2", "title": "Bug B"}, {"id": "PROJ-3", "title": "Bug C"}]
+    next:
+      state_id: analyze-ticket
+      iter_key: .  # Iterate over the entire list
+
+  - id: analyze-ticket
+    assistant_id: analyzer
+    task: |
+      Analyze ticket {{id}}: {{title}}
+      Return a JSON object: {"ticket_id": "...", "severity": "low|medium|high", "summary": "..."}
+    # Iteration 1 returns: {"ticket_id": "PROJ-1", "severity": "high", "summary": "..."}
+    # Iteration 2 returns: {"ticket_id": "PROJ-2", "severity": "low", "summary": "..."}
+    # Iteration 3 returns: {"ticket_id": "PROJ-3", "severity": "medium", "summary": "..."}
+    next:
+      state_id: create-report
+      output_key: analyses
+      append_to_context: true  # Accumulate all results; context_store["analyses"] = [{...}, {...}, {...}]
+
+  - id: create-report
+    assistant_id: reporter
+    task: |
+      Create a severity report based on all ticket analyses.
+      Analyses: {{analyses}}
+    # Receives the full list of all three analyses in {{analyses}}
+    next:
+      state_id: end
+```
+
+**How it works:**
+
+1. Three parallel branches process one ticket each
+2. Each branch writes its output with the `analyses` key via `append_to_context: true`
+3. The reducer appends each result to the list — no overwriting occurs
+4. `create-report` receives `analyses = [result_1, result_2, result_3]` in its context
+
+:::tip
+`append_to_context: true` is the recommended way to collect results from all parallel iterations into a single list. It replaces the workaround of using unique per-iteration keys (`result_1`, `result_2`, ...).
+:::
+
+---
+
 #### Context Isolation and Merging:
 
 Iterations have important context management characteristics that ensure proper isolation and aggregation:
@@ -571,8 +637,16 @@ Iterations have important context management characteristics that ensure proper 
 
 - When all parallel iterations complete (fan-in), their context stores are **merged**
 - The merge uses `add_or_replace_context_store` reducer
-- For duplicate keys across iterations, the **last value wins** (last iteration overwrites previous)
+- **Default (overwrite)**: for duplicate keys across iterations, the **last value wins** (last iteration overwrites previous)
+- **Accumulation mode**: when `append_to_context: true` is set on the iterating state, each iteration's output is **appended** to a list under the specified key — no values are lost
 - The merged context is then passed to the next state after iteration
+
+**Choosing between overwrite and accumulation:**
+
+| Mode                | Config                     | Result for key `output` after 3 iterations      |
+| ------------------- | -------------------------- | ----------------------------------------------- |
+| Overwrite (default) | `append_to_context: false` | `output = "result_3"` (only last)               |
+| Accumulation        | `append_to_context: true`  | `output = ["result_1", "result_2", "result_3"]` |
 
 **Message History Merging:**
 
@@ -611,9 +685,9 @@ states:
 **Important Context Merging Notes:**
 
 - Iterations are isolated during execution but merged after completion
-- Context keys set by multiple iterations will have only one final value (last wins)
-- To preserve all iteration results, use unique keys (e.g., `result_1`, `result_2`) or aggregate into lists
-- Message histories are fully preserved from all iterations
+- By default, context keys set by multiple iterations will have only one final value (last wins)
+- To preserve all iteration results, set `append_to_context: true` combined with `output_key` — the context key will accumulate all values as a list
+- Message histories are fully preserved from all iterations regardless of the merge mode
 
 #### Important Notes:
 
@@ -626,5 +700,7 @@ states:
 - Cannot combine `iter_key` with `state_ids` (parallel transitions) or `condition`/`switch`
 - Each iteration branch has isolated context and message history during execution
 - After all iterations complete, contexts and message histories are merged using LangGraph reducers
+- Use `append_to_context: true` to accumulate all iteration outputs into a list; without it, only the last iteration's value is retained for duplicate keys
+- `append_to_context: true` has no effect when `store_in_context: false`
 
 ---
