@@ -144,6 +144,60 @@ Each model entry in the `model_list` array consists of three main sections:
 
   </details>
 
+- **`api_base`**: Backend provider API base URL. Required for Azure OpenAI.
+
+  <details>
+  <summary><strong>Example: API Base URL</strong></summary>
+
+  ```yaml
+  model_list:
+    - model_name: claude-sonnet-4-5-20250929
+      litellm_params:
+        model: bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0
+      # ... additional configuration fields
+
+    - model_name: gpt-5-2025-08-07
+      litellm_params:
+        model: azure/gpt-5-2025-08-07
+        // highlight-next-line
+        api_base: https://your-resource.openai.azure.com/
+      # ... additional configuration fields
+
+    - model_name: gemini-3.1-pro
+      litellm_params:
+        model: vertex_ai/gemini-3.1-pro-preview
+      # ... additional configuration fields
+  ```
+
+  </details>
+
+- **`api_version`**: Backend provider API version. Applicable for Azure OpenAI.
+
+  <details>
+  <summary><strong>Example: API Version</strong></summary>
+
+  ```yaml
+  model_list:
+    - model_name: claude-sonnet-4-5-20250929
+      litellm_params:
+        model: bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0
+      # ... additional configuration fields
+
+    - model_name: gpt-5-2025-08-07
+      litellm_params:
+        model: azure/gpt-5-2025-08-07
+        // highlight-next-line
+        api_version: "2025-04-01-preview"
+      # ... additional configuration fields
+
+    - model_name: gemini-3.1-pro
+      litellm_params:
+        model: vertex_ai/gemini-3.1-pro-preview
+      # ... additional configuration fields
+  ```
+
+  </details>
+
 - **`litellm_credential_name`**: Reference to authentication credentials configured in secrets
 
   <details>
@@ -285,6 +339,8 @@ Configuration examples for these models can be found in the provider-specific se
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
 | [`o4-mini-2025-04-16`](#o4-mini)                            | o4 mini                |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
+| [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
+| [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
 
 ### Vertex AI Models
 
@@ -518,7 +574,11 @@ model_list:
 ## Azure OpenAI Provider Examples
 
 :::info Azure OpenAI Region Configuration
-For Azure, the region is determined by the endpoint URL in the `api_base` parameter.
+The region for model deployment is configured at OpenAI/Foundry account level which provides endpoint URL to be configured as `api_base` parameter.
+
+Azure process inference data differently depending on Deployment type of a particular model.
+Combining Account's region with model Deployment type gives possibility to restrict data processing within required region.
+Consult with [Microsoft documentation](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types#choose-the-right-deployment-type) to select correct deployment type for your models.
 
 ```yaml
 model_list:
@@ -527,6 +587,26 @@ model_list:
       model: azure/gpt-5.2-2025-12-11
       // highlight-next-line
       api_base: https://your-resource.openai.azure.com/
+      litellm_credential_name: default_azure_openai_credential
+```
+
+:::
+
+:::info Azure OpenAI API version configuration
+The very new models may require a particular version of Azure API. For example, gpt-5.3-codex models require API version `2025-03-01-preview` or newer.
+Therefore, if your CLI client doesn't add compatible `api-version` to the request or CodeMie instance is configured to use older API version, the model may not work.
+To fix the issue, set `api_version` parameter to the `litellm_params` as shown [below](#gpt-53-codex-with-chat-compatibility-mode).
+
+Otherwise, if client explicitly set `api-version` in request LiteLLM uses it instead of configured value.
+
+```yaml
+model_list:
+  - model_name: gpt-5.3-codex
+    litellm_params:
+      model: azure/gpt-5.3-codex
+      api_base: https://your-resource.openai.azure.com/
+      // highlight-next-line
+      api_version: 2025-03-01-preview
       litellm_credential_name: default_azure_openai_credential
 ```
 
@@ -755,35 +835,31 @@ model_list:
 
 ### GPT-5.3 series
 
-#### GPT-5.3 Codex
-
 <details>
-<summary><strong>GPT-5.3 Codex</strong></summary>
+<summary><strong>GPT-5.3-Chat</strong></summary>
 
 ```yaml
 # US Region
-- model_name: gpt-5.3-codex-2026-02-24
+- model_name: gpt-5.3-chat-2026-03-03
   litellm_params:
-    model: azure/gpt-5.3-codex-2026-02-24
+    model: azure/gpt-5.3-chat-2026-03-03
     api_base: https://api-base-eastus2-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
-    id: gpt-5-3-codex-2026-02-24-eastus2-0
-    base_model: azure/gpt-5.3-codex
-    label: "GPT-5.3 Codex 2026-02-24"
-    forbidden_for_web: true
+    id: gpt-5.3-chat-2026-03-03-eastus2-0
+    base_model: azure/gpt-5.3-chat
+    label: "GPT-5.3 Chat 2026-03-03"
 
 # EU Region
-- model_name: gpt-5.3-codex-2026-02-24
+- model_name: gpt-5.3-chat-2026-03-03
   litellm_params:
-    model: azure/gpt-5.3-codex-2026-02-24
+    model: azure/gpt-5.3-chat-2026-03-03
     api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
-    id: gpt-5-3-codex-2026-02-24-swedencentral-0
-    base_model: azure/gpt-5.3-codex
-    label: "GPT-5.3 Codex 2026-02-24"
-    forbidden_for_web: true
+    id: gpt-5.3-chat-2026-03-03-swedencentral-0
+    base_model: azure/gpt-5.3-chat
+    label: "GPT-5.3 Chat 2026-03-03"
 ```
 
 </details>
@@ -817,6 +893,64 @@ model_list:
     id: gpt-5-4-2026-03-05-swedencentral-0
     base_model: azure/gpt-5.4-2026-03-05
     label: "GPT-5.4"
+```
+
+</details>
+
+### GPT-5-codex
+
+#### GPT-5.3-codex
+
+<details>
+<summary><strong>GPT-5.3 Codex</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+
+# EU Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-swedencentral-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+```
+
+</details>
+
+#### GPT-5.3 Codex with Chat Compatibility Mode
+
+<details>
+<summary><strong>GPT-5.3 Codex with chat compatibility</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    // highlight-next-line
+    model: azure/responses/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    // highlight-next-line
+    api_version: "2025-04-01-preview"
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
 ```
 
 </details>
@@ -907,10 +1041,12 @@ model_list:
 
 </details>
 
-### Text-embedding-ada-002
+### Text-embedding series
+
+#### text-embedding-ada-002
 
 <details>
-<summary><strong>Text-embedding-ada-002</strong></summary>
+<summary><strong>text-embedding-ada-002</strong></summary>
 
 ```yaml
 # US Region
@@ -935,6 +1071,72 @@ model_list:
     id: ada-002-swedencentral-0
     base_model: azure/text-embedding-ada-002
     label: "Text Embedding Ada"
+    mode: embedding
+```
+
+</details>
+
+#### text-embedding-3-small
+
+<details>
+<summary><strong>text-embedding-3-small</strong></summary>
+
+```yaml
+# US Region
+- model_name: codemie-text-embedding-3-small
+  litellm_params:
+    model: azure/text-embedding-3-small
+    api_base: https://api-base-eastus-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: text-embedding-3-small-eastus-0
+    base_model: azure/text-embedding-3-small
+    label: "Text Embedding 3 Small"
+    mode: embedding
+
+# EU Region
+- model_name: codemie-text-embedding-3-small
+  litellm_params:
+    model: azure/text-embedding-3-small
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: test-embedding-3-small-swedencentral-0
+    base_model: azure/text-embedding-3-small
+    label: "Text Embedding 3 Small"
+    mode: embedding
+```
+
+</details>
+
+#### text-embedding-3-large
+
+<details>
+<summary><strong>text-embedding-3-large</strong></summary>
+
+```yaml
+# US Region
+- model_name: codemie-text-embedding-3-large
+  litellm_params:
+    model: azure/text-embedding-3-large
+    api_base: https://api-base-eastus-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: text-embedding-3-large-eastus-0
+    base_model: azure/text-embedding-3-large
+    label: "Text Embedding 3 Large"
+    mode: embedding
+
+# EU Region
+- model_name: codemie-text-embedding-3-large
+  litellm_params:
+    model: azure/text-embedding-3-large
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: text-embedding-3-large-swedencentral-0
+    base_model: azure/text-embedding-3-large
+    label: "Text Embedding 3 Large"
     mode: embedding
 ```
 
