@@ -351,18 +351,40 @@ For directories with multiple files, use nested categories:
 
 #### Pagination Strategy
 
+**CRITICAL: Sub-topic pagination rule**
+
+Sub-topic pages (children of a category) must link **only back to their direct parent
+overview** — never to sibling sub-topics in a chain, and never to a grandparent.
+
 ```yaml
-# Linear workflow (step-by-step guides)
+# ✅ Correct — sub-topic links only to its direct parent
+# File: docs/user-guide/tools/azure-devops/work-items.md
+pagination_prev: user-guide/tools/azure-devops/azure-devops   # ← direct parent
+pagination_next: null                                          # ← never chain to sibling
+
+# ✅ Correct — category overview links to its parent section
+# File: docs/user-guide/tools/azure-devops/index.md
+pagination_prev: user-guide/tools/overview                    # ← parent section
+pagination_next: null
+
+# ❌ Wrong — sub-topic chains to sibling
+pagination_prev: user-guide/tools/azure-devops/work-items     # ← sibling, not parent
+pagination_next: user-guide/tools/azure-devops/test-plans     # ← sibling, not null
+
+# ❌ Wrong — sub-topic skips to grandparent
+pagination_prev: user-guide/tools/overview                    # ← grandparent
+```
+
+**When to use linear (prev → next) pagination:**
+
+Only for true sequential step-by-step workflows where the user _must_ complete each page
+before the next (e.g., multi-step deployment guides). Do not use it for reference pages,
+individual tool guides, or any set of topics that can be read independently.
+
+```yaml
+# Linear workflow only — multi-step sequential guides
 pagination_prev: section/prerequisites
 pagination_next: section/next-step
-
-# Section overview
-pagination_prev: parent/overview
-pagination_next: section/first-topic
-
-# Terminal/standalone page
-pagination_prev: section/overview
-pagination_next: null
 ```
 
 ### Content Quality Standards

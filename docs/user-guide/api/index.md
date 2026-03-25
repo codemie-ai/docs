@@ -153,6 +153,69 @@ X-Tenant-ID: my-tenant
 
 ---
 
+## Execute Workflow
+
+Start a workflow execution programmatically via the API or SDK.
+
+### Endpoint
+
+**POST** `/v1/workflows/{workflow_id}/executions`
+
+### Request Body
+
+| Field                 | Type      | Required | Description                                                                                                   |
+| --------------------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| **user_input**        | String    | No       | Input text or data passed to the workflow                                                                     |
+| **tags**              | String\[] | No       | Tags attached to the Langfuse execution trace for filtering and analytics. Does not affect execution behavior |
+| **session_id**        | String    | No       | Session identifier for Langfuse tracing. Defaults to `execution_id` if not provided                           |
+| **propagate_headers** | Boolean   | No       | Forward custom `X-*` HTTP headers to MCP tool invocations                                                     |
+| **file_name**         | String    | No       | File name associated with the workflow execution                                                              |
+
+### API Example
+
+```http
+POST /v1/workflows/{workflow_id}/executions
+Content-Type: application/json
+Authorization: Bearer <your-access-token>
+
+{
+  "user_input": "Run deployment check",
+  "tags": ["experiment", "customer_X"]
+}
+```
+
+### Python SDK Example
+
+```python
+result = client.workflows.run(
+    workflow_id="<workflow-id>",
+    user_input="Run deployment check",
+    tags=["experiment", "customer_X"],
+)
+```
+
+### Node.js SDK Example
+
+`tags` is the 7th positional argument in `run()`. Pass `undefined` to skip optional arguments before it:
+
+```typescript
+const result = await client.workflows.run(
+  "<workflow-id>",
+  "Run deployment check", // userInput
+  undefined,              // fileName
+  undefined,              // sessionId
+  undefined,              // propagateHeaders
+  undefined,              // headers
+  ["experiment", "customer_X"], // tags
+);
+```
+
+:::info
+Tags appear in the Langfuse **Traces** view and can be used to filter and group executions by any label you choose, for example `"prod"`, `"nightly"`, or `"customer_X"`.
+:::
+
+---
+
 ## Success Response
 
 **Status code:** `200`

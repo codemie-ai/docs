@@ -65,6 +65,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/share-assistant-chat-with-other-users',
                 'user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats',
                 'user-guide/assistants/html-preview',
+                'user-guide/assistants/chat-input-settings',
               ],
             },
           ],
@@ -184,6 +185,20 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'user-guide/tools_integrations/tools/git-github-gitlab-bitbucket',
                     'user-guide/tools_integrations/tools/git-azuredevops',
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: 'Azure DevOps',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/tools_integrations/tools/azure-devops/azure-devops',
+                  },
+                  collapsed: true,
+                  items: [
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-work-items',
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-wiki',
+                    'user-guide/tools_integrations/tools/azure-devops/azure-devops-test-plans',
                   ],
                 },
                 'user-guide/tools_integrations/tools/adding-an-mcp-server',
@@ -469,6 +484,7 @@ const sidebars: SidebarsConfig = {
                   },
                   collapsed: true,
                   items: [
+                    'admin/deployment/gcp/infrastructure-deployment/infrastructure-scripted-deployment',
                     'admin/deployment/gcp/infrastructure-deployment/infrastructure-manual-deployment',
                   ],
                 },
@@ -726,6 +742,7 @@ const sidebars: SidebarsConfig = {
             'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
             'admin/update/fluent-bit-upgrade',
+            'admin/update/nats-upgrade',
           ],
         },
         {

@@ -11,15 +11,56 @@ pagination_next: null
 
 The Analytics Dashboard provides comprehensive monitoring and management of LLM usage, costs, and activity metrics across the CodeMie platform. Access real-time insights into token consumption, spending patterns, and system utilization with flexible filtering and dual visualization modes.
 
+## Personal Spending Widget
+
+The Personal Spending widget gives you a real-time view of your LLM budget consumption
+without leaving the platform. It is located at the top of the **Settings → Profile** page.
+
+![Personal Spending widget](./images/personal-spending-widget.png)
+
+The widget displays:
+
+| Field                 | Description                                                     |
+| --------------------- | --------------------------------------------------------------- |
+| **Current Spending**  | Your total LLM spend to date in the current budget period (USD) |
+| **Budget Reset Date** | The exact date and time when your budget counter resets         |
+| **Time Until Reset**  | Days, hours, and minutes remaining until the next budget reset  |
+
+A circular progress chart visualizes how much of your total budget has been consumed.
+The chart fills as spending increases toward the configured limit.
+
+:::tip
+If the widget shows no data, your administrator has not configured a budget limit for your
+account via LiteLLM. Contact your administrator to set up budget tracking.
+:::
+
+### Accessing the Widget
+
+1. Click your **profile icon** or **Settings** in the bottom-left navigation.
+2. Select **Profile** from the settings menu.
+3. The **Your personal spending** section appears at the top of the page.
+
 ## Accessing the Analytics Dashboard
 
 To access the Analytics Dashboard:
 
-1. Click on the **Analytics** icon in the left sidebar navigation
+1. Click on the **Analytics** icon in the left sidebar navigation.
 
 ![Analytics Dashboard Overview](./images/analytics-dashboard-overview.png)
 
-The Analytics Dashboard will open, displaying comprehensive monitoring and management tools for LLM usage, costs, and activity metrics.
+The dashboard opens on the **Insights** tab and displays:
+
+- **Summary Metrics** — key cost and usage figures: total money spent, platform LLM cost,
+  ELI cost, re-ranking cost, token counts (input, cached input, output, re-ranking), unique
+  active users, unique assistants invoked, and unique workflows invoked.
+- **Assistants & Workflows** — top assistants by total messages and workflows performance
+  table with execution metrics and success rates.
+
+:::tip
+To view your personal spending against your budget limit, go to
+[**Settings → Profile**](#personal-spending-widget).
+A shortcut link is also available at the top of the Analytics Dashboard.
+:::
 
 ## Access Permissions and Data Visibility
 

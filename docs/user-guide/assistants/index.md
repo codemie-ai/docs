@@ -56,3 +56,4 @@ Manage conversations and organize your workspace:
 - [Share Chat Conversations](./share-assistant-chat-with-other-users) - Share conversations with team members
 - [Export Assistant Chat Messages](./export-assistant-chat-messages-to-word-and-pdf-formats) - Export chats to various formats
 - [HTML Preview](./html-preview) - Preview and interact with HTML content in chat
+- [Chat Input Settings](./chat-input-settings) - Control Web Search, Code Interpreter, and LLM model per conversation from the chat toolbar

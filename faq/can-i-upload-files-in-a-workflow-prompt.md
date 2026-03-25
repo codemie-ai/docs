@@ -12,7 +12,7 @@ The following file formats are supported for workflow uploads:
 ## How to Configure File Uploads in Workflows
 
 1. Create a workflow with a user prompt step that requires file input
-2. Configure the state with `wait_for_user_confirmation: true`
+2. Configure the state with `interrupt_before: true`
 3. In the task description, specify that file upload is expected
 4. Add appropriate handling for the uploaded file in subsequent states
 

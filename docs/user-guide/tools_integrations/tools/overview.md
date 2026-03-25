@@ -42,6 +42,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Plugin](./plugin)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
 | **[FileSystem](./filesystem)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
 | **[Git](./git-overview)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
+| **[Azure DevOps](./azure-devops/azure-devops.md)**                        | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
 | **[Adding MCP Server](./adding-an-mcp-server)**                           | Add and configure Model Context Protocol (MCP) servers                                                            |
 | **[Using MCP Tools](./using-mcp-tools-in-assistants)**                    | Use MCP tools in assistants for extended capabilities                                                             |
 

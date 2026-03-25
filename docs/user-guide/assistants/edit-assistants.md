@@ -39,6 +39,15 @@ Assistants can be edited at any time to improve performance or adapt to new requ
 Editing from within a chat is the fastest way to make quick adjustments while testing your assistant's responses.
 :::
 
+## Integration Validation on Save
+
+When you save an edited assistant, the platform checks whether all selected tools have the
+required integrations configured. If any are missing, the **Missing Integrations** modal
+appears before the save completes.
+
+See [Integration Validation During Assistant Save](../tools_integrations/integrations/#integration-validation-during-assistant-save)
+for details on how to resolve missing integrations from the modal.
+
 ## Refine with AI
 
 Use AI-powered refinement to improve your assistant's configuration automatically.

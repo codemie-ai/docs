@@ -102,7 +102,6 @@ For GCP deployments, gcloud CLI serves dual purposes: GCP resource management an
 
 You will need access to the following repositories to complete the deployment:
 
-- **Terraform Remote Backend:** [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend)
 - **Terraform Platform Modules:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
 - **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
 

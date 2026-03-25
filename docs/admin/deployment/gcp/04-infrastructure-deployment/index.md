@@ -4,7 +4,7 @@ title: GCP Infrastructure Deployment
 sidebar_label: Infrastructure Deployment
 sidebar_position: 4
 pagination_prev: admin/deployment/gcp/architecture
-pagination_next: admin/deployment/gcp/infrastructure-deployment/infrastructure-manual-deployment
+pagination_next: admin/deployment/gcp/infrastructure-deployment/infrastructure-scripted-deployment
 ---
 
 # GCP Infrastructure Deployment
@@ -59,7 +59,7 @@ The core platform infrastructure provisions all GCP resources needed to run AI/R
 | **Subnets**        | Network segmentation for GKE nodes and pods                      |
 | **Cloud NAT**      | Provides consistent outbound public IP for internet connectivity |
 | **Cloud Router**   | Enables dynamic routing for VPC                                  |
-| **DNS Zones**      | Name resolution for CodeMie components (public or private)       |
+| **DNS Zones**      | Name resolution for CodeMie components                           |
 | **Firewall Rules** | Network access control and traffic filtering                     |
 
 ### Data & Storage
@@ -100,4 +100,13 @@ The core platform infrastructure leverages proven Terraform modules from the com
 
 With the infrastructure resources defined, you are now ready to proceed with the deployment of the GCP infrastructure.
 
-Continue to the [Infrastructure Deployment Guide](./infrastructure-manual-deployment) to execute the deployment process and provision all required GCP resources for AI/Run CodeMie.
+Proceed to the next step to deploy the infrastructure:
+
+- [**Scripted Deployment** →](./infrastructure-scripted-deployment) - Recommended automated deployment using the `gcp-terraform.sh` script
+- [**Manual Deployment** →](./infrastructure-manual-deployment) - Advanced option for custom scenarios with manual Terraform control
+
+:::note Deployment Method Selection
+
+- **Scripted Deployment**: Handles prerequisites, validation, and orchestration automatically (recommended for most users)
+- **Manual Deployment**: Provides full control over Terraform operations for advanced customization
+  :::

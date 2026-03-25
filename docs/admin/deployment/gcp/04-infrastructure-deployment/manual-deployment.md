@@ -2,10 +2,13 @@
 id: infrastructure-manual-deployment
 title: Manual Infrastructure Deployment
 sidebar_label: Manual Deployment
-sidebar_position: 1
+sidebar_position: 2
 pagination_prev: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
 pagination_next: admin/deployment/gcp/components-deployment/components-deployment-overview
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Manual Infrastructure Deployment
 
@@ -28,24 +31,24 @@ Before starting the deployment, ensure you have completed all requirements from 
 
 - [ ] **GCP Access**: Project Owner or Editor role with IAM permissions
 - [ ] **Required APIs Enabled**: Cloud IAP, Service Networking, Secret Manager, Vertex AI APIs
-- [ ] **Tools Installed**: Terraform 1.5.7, gcloud CLI, kubectl, Helm, Docker
-- [ ] **GCP Authentication**: Logged in with gcloud CLI and project set
+- [ ] **Tools Installed**: Terraform 1.13.5, gcloud CLI, kubectl, Helm, Docker
+- [ ] **GCP Authentication**: Logged in with gcloud CLI and application default credentials configured
 - [ ] **Repository Access**: Have access to Terraform and Helm repositories
 - [ ] **Network Planning**: Prepared list of authorized networks (if accessing GKE API from workstation)
 - [ ] **Domain & Certificate**: DNS zone and TLS certificate ready (for public access) or will use private DNS
 
 :::warning Authentication Required
-You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and verify with `gcloud config get-value project`.
+You must be authenticated to GCP CLI before running Terraform. Run `gcloud auth login` and `gcloud auth application-default login`. Verify the active project with `gcloud config get-value project`.
 :::
 
 ## Deployment Phases
 
-Manual deployment involves two sequential phases:
+Manual deployment involves two sequential phases, both within the same repository:
 
-| Phase                                | Description                                                                        | Repository                                                                                                    |
-| ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Phase 1: State Backend**           | Creates GCS bucket for Terraform state files                                       | [codemie-terraform-gcp-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-remote-backend) |
-| **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components, and Bastion Host | [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)             |
+| Phase                                | Description                                                                        | Directory         |
+| ------------------------------------ | ---------------------------------------------------------------------------------- | ----------------- |
+| **Phase 1: State Backend**           | Creates GCS bucket for Terraform state files                                       | `remote-backend/` |
+| **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components, and Bastion Host | `platform/`       |
 
 :::info Bastion Host
 Bastion Host is optional and only required for completely private GKE clusters with private DNS. For public clusters or clusters with authorized networks, you can access GKE API directly.
@@ -59,62 +62,71 @@ The first step is to create a Google Cloud Storage bucket for storing Terraform 
 The state backend ensures that your infrastructure state is stored securely and can be shared across your team. Without this, Terraform state would only exist locally on your machine.
 :::
 
-### Step 1: Clone the Repository
-
-Clone the Terraform state backend repository to your local machine:
+1. Clone the platform repository to your local machine:
 
 ```bash
-git clone git@gitbud.epam.com:epm-cdme/codemie-terraform-gcp-remote-backend.git
-cd codemie-terraform-gcp-remote-backend
+git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
+cd codemie-terraform-gcp-platform
 ```
 
-### Step 2: Review Configuration Variables
-
-Open and review the `variables.tf` file to understand available configuration options:
+2. Navigate to the `remote-backend/` directory and configure variables. There are two ways to provide Terraform variables:
 
 ```bash
-# View all available variables
-cat variables.tf
+cd remote-backend
 ```
 
-Key variables to consider:
+<Tabs groupId="config-method">
+  <TabItem value="deployment-conf" label="Using deployment.conf" default>
 
-- **project_id**: Your GCP project ID
-- **storage_bucket_name**: Prefix for storage bucket name
-- **region**: GCP region for the bucket (e.g., `europe-west3`)
+Load variables from `deployment.conf` (`set -a` enables auto-export of all variables):
 
-If you need to customize any values, create a `terraform.tfvars` file with your overrides.
-
-### Step 3: Deploy the State Backend
+```bash
+set -a && source ../deployment.conf && set +a
+```
 
 Initialize Terraform and deploy the storage bucket:
 
 ```bash
-# Initialize Terraform providers
 terraform init
-
-# Preview the resources that will be created
-terraform plan
-
-# Create the GCS bucket
-terraform apply
+terraform plan -out=tfplan
+terraform apply tfplan
 ```
 
-When prompted, type `yes` to confirm the deployment.
+  </TabItem>
+  <TabItem value="tfvars" label="Using terraform.tfvars">
 
-### Step 4: Verify Deployment
+Create a `terraform.tfvars` file in the `remote-backend/` directory:
 
-After successful deployment, verify the bucket was created:
+```hcl
+project_id           = "your-gcp-project-id"
+region               = "europe-west3"
+storage_bucket_name  = "codemie-terraform-states"
+
+# Optional: Custom labels
+labels = {
+  "sys_name"    = "ai_run"
+  "environment" = "development"
+  "project"     = "ai_run"
+}
+```
+
+Initialize Terraform and deploy the storage bucket:
 
 ```bash
-# Check Terraform outputs
-terraform output
-
-# Or verify via gcloud CLI
-gcloud storage buckets list | grep terraform
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
 ```
 
-**Save the bucket name** - you'll need it for Phase 2 configuration.
+  </TabItem>
+</Tabs>
+
+3. After successful deployment, note the bucket name from Terraform outputs:
+
+```bash
+export BACKEND_BUCKET=$(terraform output -raw terraform_states_storage_bucket_name)
+echo "Backend bucket: $BACKEND_BUCKET"
+```
 
 :::tip Next Phase
 The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform infrastructure.
@@ -124,123 +136,110 @@ The storage bucket is now ready. Proceed to Phase 2 to deploy the main platform 
 
 This phase deploys all core GCP resources required to run AI/Run CodeMie. This includes the GKE cluster, networking components, databases, and security infrastructure.
 
-### Step 1: Clone the Repository
-
-Clone the platform infrastructure Terraform repository:
+1. Navigate to the `platform/` directory:
 
 ```bash
-git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
-cd codemie-terraform-gcp-platform
+cd ../platform
 ```
 
-### Step 2: Configure Remote State Backend
+2. Configure and deploy. There are two ways to provide Terraform variables:
 
-Configure Terraform to use the GCS bucket created in Phase 1 for storing infrastructure state.
+<Tabs groupId="config-method">
+  <TabItem value="deployment-conf" label="Using deployment.conf" default>
 
-Edit the `versions.tf` file and update the backend configuration:
-
-```hcl
-backend "gcs" {
-    bucket = "your-bucket-name-from-phase1"  # Replace with actual bucket name
-    prefix = "terraform/platform/state"       # Path prefix for state files
-}
-```
-
-### Step 3: Review and Configure Variables
-
-The `variables.tf` file contains all configurable parameters for your infrastructure deployment. Review these variables and create a `terraform.tfvars` file to customize values for your environment.
-
-#### Create Configuration File
-
-Create a `terraform.tfvars` file in the repository root:
+Load variables from `deployment.conf`:
 
 ```bash
-# Create and edit configuration file
-nano terraform.tfvars
+set -a && source ../deployment.conf && set +a
 ```
 
-#### Essential Variables
+Initialize Terraform with backend configuration and deploy:
 
-Configure these required variables in `terraform.tfvars`:
+```bash
+terraform init \
+  -backend-config="bucket=${BACKEND_BUCKET}" \
+  -backend-config="prefix=${TF_VAR_region}/codemie/platform_terraform.tfstate"
+
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+
+  </TabItem>
+  <TabItem value="tfvars" label="Using terraform.tfvars">
+
+Create a `terraform.tfvars` file with your configuration:
 
 ```hcl
 # GCP Project Configuration
-project_id = "your-gcp-project-id"           # Your GCP project ID
-platform_name = "codemie"                     # Platform identifier
+project_id    = "your-gcp-project-id"
+platform_name = "codemie"
 
-# Network Access Control
+# Network Access Control (only used when private_cluster = true)
 bastion_members = [
-  "group:devops@airun.example.com",                 # Grant Bastion access to specific users/groups
+  "group:devops@airun.example.com",
   "user:admin@airun.example.com"
 ]
 
-# DNS Configuration
-dns_name = "codemie-example-com"              # DNS zone name (hyphens, no dots)
-dns_domain = "codemie.airun.example.com."           # Full domain with trailing dot
+# DNS Configuration (only used when create_private_dns_zone = true)
+dns_name   = "codemie-example-com"
+dns_domain = "codemie.airun.example.com."
 
 # GKE API Access (optional)
 extra_authorized_networks = [
   {
-    cidr_block   = "x.x.x.x/24"               # Your office/VPN CIDR
+    cidr_block   = "x.x.x.x/24"
     display_name = "Office Network"
-  },
-  {
-    cidr_block   = "x.x.x.x/24"               # Additional network if needed
-    display_name = "VPN Network"
   }
 ]
 
 # Cluster Configuration
-private_cluster = false                       # Set to true for completely private GKE cluster
-create_private_dns_zone = false               # Set to true if using private DNS
+private_cluster         = false
+create_private_dns_zone = false
 ```
 
 :::info Configuration References
-For all available variables and their descriptions, see:
+For all available variables and their descriptions, see `variables.tf` in the `platform/` directory.
+:::
 
-- **Example configuration**: [terraform.tfvars.example](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/terraform.tfvars.example?ref_type=heads)
-- **Variable definitions**: [variables.tf](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform/-/blob/main/variables.tf?ref_type=heads)
-  :::
-
-### Step 4: Deploy Platform Infrastructure
-
-Initialize Terraform and deploy the complete platform infrastructure:
+Set the backend bucket and region:
 
 ```bash
-# Initialize Terraform and download providers/modules
-terraform init
-
-# Review the execution plan
-terraform plan
-
-# Deploy all infrastructure resources
-terraform apply
+export BACKEND_BUCKET="your-bucket-name-from-phase1"
+export REGION="europe-west3"
 ```
 
-### Step 5: Verify Deployment
-
-After successful deployment, verify all resources were created correctly:
+Initialize Terraform with backend configuration and deploy:
 
 ```bash
-# View Terraform outputs (includes important connection information)
+terraform init \
+  -backend-config="bucket=${BACKEND_BUCKET}" \
+  -backend-config="prefix=${REGION}/codemie/platform_terraform.tfstate"
+
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+
+  </TabItem>
+</Tabs>
+
+3. After successful deployment, verify all resources were created correctly:
+
+```bash
+# View Terraform outputs
 terraform output
 
 # Verify GKE cluster exists
-gcloud container clusters list --project=your-project-id
+gcloud container clusters list --project=<your-project-id>
 
 # Check Cloud SQL instance
-gcloud sql instances list --project=your-project-id
-
-# List created VPC networks
-gcloud compute networks list --project=your-project-id
+gcloud sql instances list --project=<your-project-id>
 ```
 
-**Save the Terraform outputs** - they contain critical information needed for subsequent steps, including:
+**Save the Terraform outputs** — they contain critical information needed for subsequent steps, including:
 
 - GKE cluster connection commands
 - Bastion Host SSH/RDP commands
 - Cloud SQL connection details
-- Service account information
 
 :::tip Infrastructure Ready
 The GCP infrastructure deployment is now complete. You can proceed to configure cluster access or continue with components deployment.
@@ -265,9 +264,7 @@ The Bastion Host is a secure jump server that provides access to your private GK
 
 Use SSH to connect to the Bastion Host for deploying and managing Kubernetes resources.
 
-#### Step 1: Connect to Bastion Host
-
-Retrieve the SSH command from Terraform outputs and connect:
+1. Retrieve the SSH command from Terraform outputs and connect:
 
 ```bash
 # Get the SSH connection command
@@ -297,9 +294,7 @@ sudo passwd ubuntu
 The `ubuntu` user password you set here will be used to login via RDP. Make sure to remember it or store it securely.
 :::
 
-#### Step 3: Configure Kubectl Access
-
-Fetch GKE cluster credentials to enable kubectl commands:
+3. Fetch GKE cluster credentials to enable kubectl commands:
 
 ```bash
 # Get the kubectl configuration command
@@ -312,12 +307,9 @@ terraform output get_kubectl_credentials_for_private_cluster
 gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
 ```
 
-#### Step 4: Clone Deployment Repository
-
-Clone the Helm charts repository needed for component deployment:
+4. Clone the Helm charts repository needed for component deployment:
 
 ```bash
-# Clone the repository
 git clone https://gitbud.epam.com/epm-cdme/codemie-helm-charts.git
 cd codemie-helm-charts
 ```
@@ -332,9 +324,7 @@ Use RDP to access application web interfaces that are only available via private
 RDP is useful when you need to access web-based administrative interfaces that aren't exposed publicly. For kubectl/Helm operations, SSH access is sufficient.
 :::
 
-#### Step 1: Set Up RDP Port Forwarding
-
-Retrieve the RDP forwarding command from Terraform outputs:
+1. Retrieve the RDP forwarding command from Terraform outputs and start the IAP tunnel:
 
 ```bash
 # Get the RDP forwarding command
@@ -344,19 +334,16 @@ terraform output bastion_rdp_command
 # gcloud compute start-iap-tunnel bastion-vm 3389 --local-host-port=localhost:3389 --zone=europe-west3-a --project=your-project
 ```
 
-Run the command to create an IAP tunnel that forwards RDP traffic:
+Run the command to create an IAP tunnel that forwards RDP traffic (keep this terminal open):
 
 ```bash
-# Start the IAP tunnel (keep this terminal open)
 gcloud compute start-iap-tunnel bastion-vm 3389 \
   --local-host-port=localhost:3389 \
   --zone=europe-west3-a \
   --project=your-project
 ```
 
-#### Step 2: Connect with Remote Desktop Client
-
-Open your Remote Desktop client and connect:
+2. Open your Remote Desktop client and connect:
 
 | Setting      | Value                      |
 | ------------ | -------------------------- |

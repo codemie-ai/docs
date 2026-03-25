@@ -49,7 +49,7 @@ curl -X 'POST' \
   'http://localhost:8080/v1/assistants/{assistant_id}/model' \
   -H 'accept: application/json' \
   -H 'user-id: example-user' \
-  -H 'Authorization: Bearer example-token' \
+  -H 'Authorization: Bearer <example-token>' \
   -H 'Content-Type: application/json' \
   -d '{
     "text": "Show my current Jira tickets",
