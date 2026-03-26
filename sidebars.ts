@@ -729,16 +729,23 @@ const sidebars: SidebarsConfig = {
             'admin/update/codemie/update-version',
             {
               type: 'category',
-              label: 'Keycloak Upgrade',
-              link: {
-                type: 'doc',
-                id: 'admin/update/keycloak-upgrade/keycloak-upgrade',
-              },
+              label: 'Keycloak',
               collapsed: true,
-              items: ['admin/update/keycloak-upgrade/keycloak-24-to-26'],
+              items: [
+                {
+                  type: 'category',
+                  label: 'Keycloak Upgrade',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/update/keycloak/keycloak-upgrade/keycloak-upgrade',
+                  },
+                  collapsed: true,
+                  items: ['admin/update/keycloak/keycloak-upgrade/keycloak-24-to-26'],
+                },
+                'admin/update/keycloak/keycloak-operator-upgrade',
+                'admin/update/keycloak/keycloak-database-migration',
+              ],
             },
-            'admin/update/keycloak-operator-upgrade',
-            'admin/update/keycloak-database-migration/keycloak-database-migration',
             'admin/update/terraform-upgrade/terraform-upgrade',
             'admin/update/oauth2-proxy-upgrade',
             'admin/update/elasticsearch-kibana-upgrade',
