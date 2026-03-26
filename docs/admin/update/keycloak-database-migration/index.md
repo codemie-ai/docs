@@ -150,6 +150,7 @@ Edit `keycloak-helm/values-<cloud_name>.yaml`:
 # ...
 sharedDatabaseInstance:
   enabled: false
+  initImage: alpine/psql:18.3
 ```
 
   </TabItem>
@@ -163,6 +164,7 @@ Edit `keycloak-helm/values-<cloud_name>.yaml` with the CodeMie database hostname
 # ...
 sharedDatabaseInstance:
   enabled: true
+  initImage: alpine/psql:18.3
 ```
 
 Deploy the Keycloak chart with `replicas=0` to trigger the init Job that creates the `keycloak` database and `keycloak_admin` user:
