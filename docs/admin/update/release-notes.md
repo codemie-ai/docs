@@ -15,7 +15,7 @@ This page provides information about updated third-party components and configur
 
 ## CodeMie 2.19.0
 
-**Release Date:** TBD
+**Release Date:** March 27, 2026
 
 ### Third-Party Component Updates
 
