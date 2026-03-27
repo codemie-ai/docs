@@ -107,6 +107,29 @@ Indexed repositories within the project space are visible to all members of the 
 Private data sources are only visible to their creator. Ensure you share critical data sources with your team by enabling "Shared with Project".
 :::
 
+## Moving Data Sources Between Projects
+
+You can move a data source from one project to another by changing its project assignment during editing:
+
+1. Navigate to the **Data Sources** section.
+2. Click the **Actions** button (⋮) next to the data source and select **Edit**.
+3. Change the **Project** field to the desired target project.
+4. Click **Save**.
+
+The data source moves to the new project along with all its indexed content. The data source name must be unique within the target project.
+
+:::warning Assistant Configuration
+After moving a data source, any assistants in the original project that referenced it will lose access. You may need to update assistant configurations in the original project or move the related assistants to the same target project.
+:::
+
+:::warning Integrations
+Integrations are not transferred between projects regardless of their level (project or user). If the data source relied on integrations (e.g., Git, Confluence, Jira connections), you will need to recreate them in the target project.
+:::
+
+:::info
+You can only move a data source to a project you have access to.
+:::
+
 ## Best Practices
 
 ### Data Source Naming

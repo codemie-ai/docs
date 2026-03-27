@@ -31,6 +31,25 @@ Manage and share your workflow executions:
 - [Exporting Workflow Execution](./exporting-workflow-execution) - Export execution data
 - [LLM Model Name in Workflow](./llm-model-name-in-workflow) - Configure AI models for workflows
 
+## Moving Workflows Between Projects
+
+You can move a workflow from one project to another by changing its project assignment:
+
+1. Open the workflow for editing (click **Edit** from the workflow card actions menu).
+2. Open **Workflow Config** → **Basic** tab.
+3. Change the **Project name** dropdown to the desired target project.
+4. Click **Save**.
+
+The workflow moves to the new project immediately. All configuration (states, transitions, and settings) is preserved.
+
+:::warning Integrations
+Integrations are not transferred between projects regardless of their level (project or user). If the workflow used integrations (e.g., Jira, Confluence, Git), you will need to recreate them in the target project.
+:::
+
+:::info
+You can only move a workflow to a project you have access to.
+:::
+
 ---
 
 ## Workflow Configuration
