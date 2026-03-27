@@ -2,7 +2,7 @@
 id: add-provider-datasource
 title: Add and Index Provider Data Source
 sidebar_label: Add and Index Provider Data Source
-pagination_prev: user-guide/data-source/datasources-types/add-aws-knowledge-bases
+pagination_prev: user-guide/data-source/datasources-types/add-azure-devops-wiki-data-source
 pagination_next: null
 ---
 
