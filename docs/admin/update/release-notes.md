@@ -13,6 +13,31 @@ This page provides information about updated third-party components and configur
 
 ---
 
+## CodeMie 2.19.0
+
+**Release Date:** TBD
+
+### Third-Party Component Updates
+
+#### Postgres Operator Removed
+
+CodeMie 2.19.0 removes the `postgres-operator` Helm chart (PGO 5.4.3) used for Keycloak's in-cluster PostgreSQL. It is replaced by two new database options:
+
+- **Dedicated database instance** — a separate, Terraform-provisioned database instance for Keycloak (default for Terraform deployments)
+- **Shared CodeMie database** — Keycloak reuses the existing CodeMie database instance; a Helm hook Job automatically creates the required database and user on first install
+
+See the [Keycloak Database Migration Guide](./keycloak/keycloak-database-migration) for upgrade instructions.
+
+:::note
+Migration to an external database is optional. If you prefer to continue using the in-cluster PostgreSQL, no migration is required when upgrading to 2.19.0.
+:::
+
+### Configuration Changes
+
+No breaking configuration changes were introduced in this release.
+
+---
+
 ## CodeMie 2.15.0
 
 **Release Date:** March 16, 2026
