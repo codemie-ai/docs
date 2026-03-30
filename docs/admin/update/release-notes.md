@@ -14,7 +14,7 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
-<summary><strong>CodeMie 2.19.0</strong> — March 27, 2026</summary>
+<summary><strong>CodeMie 2.19.0</strong></summary>
 
 **Release Date:** March 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.19.0)
 
@@ -39,10 +39,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
----
-
 <details>
-<summary><strong>CodeMie 2.18.0</strong> — March 24, 2026</summary>
+<summary><strong>CodeMie 2.18.0</strong></summary>
 
 **Release Date:** March 24, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.18.0)
 
@@ -56,10 +54,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
----
-
 <details>
-<summary><strong>CodeMie 2.17.0</strong> — March 20, 2026</summary>
+<summary><strong>CodeMie 2.17.0</strong></summary>
 
 **Release Date:** March 20, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.17.0)
 
@@ -73,10 +69,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
----
-
 <details>
-<summary><strong>CodeMie 2.16.0</strong> — March 18, 2026</summary>
+<summary><strong>CodeMie 2.16.0</strong></summary>
 
 **Release Date:** March 18, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.16.0)
 
@@ -90,10 +84,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
----
-
 <details>
-<summary><strong>CodeMie 2.15.0</strong> — March 16, 2026</summary>
+<summary><strong>CodeMie 2.15.0</strong></summary>
 
 **Release Date:** March 16, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.15.0)
 
