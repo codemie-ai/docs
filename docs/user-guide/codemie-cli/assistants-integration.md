@@ -1,7 +1,7 @@
 ---
 id: assistants-integration
 title: Access CodeMie Assistants from CLI
-sidebar_label: Access from CodeMie CLI
+sidebar_label: Assistants
 sidebar_position: 2
 pagination_prev: user-guide/codemie-cli/codemie-cli
 pagination_next: null
