@@ -740,7 +740,10 @@ const sidebars: SidebarsConfig = {
                     id: 'admin/update/keycloak/keycloak-upgrade/keycloak-upgrade',
                   },
                   collapsed: true,
-                  items: ['admin/update/keycloak/keycloak-upgrade/keycloak-24-to-26'],
+                  items: [
+                    'admin/update/keycloak/keycloak-upgrade/keycloak-24-to-26',
+                    'admin/update/keycloak/keycloak-upgrade/keycloak-26-to-26',
+                  ],
                 },
                 'admin/update/keycloak/keycloak-operator-upgrade',
                 'admin/update/keycloak/keycloak-database-migration',
