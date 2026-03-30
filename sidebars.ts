@@ -272,7 +272,16 @@ const sidebars: SidebarsConfig = {
             'user-guide/ai-katas/manage-katas-admin',
           ],
         },
-        'user-guide/codemie-cli/codemie-cli',
+        {
+          type: 'category',
+          label: '✨ CodeMie CLI',
+          link: {
+            type: 'doc',
+            id: 'user-guide/codemie-cli/codemie-cli',
+          },
+          collapsed: true,
+          items: ['user-guide/codemie-cli/assistants-integration'],
+        },
         {
           type: 'category',
           label: 'IDE Extensions',
