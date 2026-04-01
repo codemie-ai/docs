@@ -31,17 +31,7 @@ Executor pods run in the same Kubernetes cluster as CodeMie API.
 
 Executor pods are deployed in the same namespace as CodeMie API (e.g. `codemie`).
 
-**1. Deploy codemie-runtime:**
-
-```bash
-helm upgrade --install codemie-runtime \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
-  --version <version> \
-  -f codemie-runtime/values.yaml \
-  --namespace codemie
-```
-
-**2. Set in CodeMie API values:**
+**Set in CodeMie API values:**
 
 ```yaml
 features:
@@ -61,18 +51,7 @@ extraEnv:
 
 Executor pods are deployed in a separate namespace (e.g. `codemie-runtime`).
 
-**1. Deploy codemie-runtime:**
-
-```bash
-helm upgrade --install codemie-runtime \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
-  --version <version> \
-  -f codemie-runtime/values.yaml \
-  --namespace codemie-runtime \
-  --create-namespace
-```
-
-**2. Set in CodeMie API values:**
+**Set in CodeMie API values:**
 
 ```yaml
 features:
@@ -92,18 +71,7 @@ extraEnv:
 
 ### Dedicated Cluster
 
-**1. Deploy codemie-runtime into the dedicated cluster:**
-
-```bash
-helm upgrade --install codemie-runtime \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
-  --version <version> \
-  -f codemie-runtime/values.yaml \
-  --namespace codemie-runtime \
-  --create-namespace
-```
-
-**2. Create a kubeconfig secret in the CodeMie API namespace:**
+**1. Create a kubeconfig secret in the CodeMie API namespace:**
 
 ```bash
 kubectl create secret generic codemie-executor-kubeconfig \
@@ -111,7 +79,7 @@ kubectl create secret generic codemie-executor-kubeconfig \
   --namespace codemie
 ```
 
-**3. Set in CodeMie API values:**
+**2. Set in CodeMie API values:**
 
 ```yaml
 extraVolumeMounts: |
@@ -141,7 +109,7 @@ extraEnv:
   - name: CODE_EXECUTOR_EXECUTION_MODE
     value: "sandbox"
   - name: CODE_EXECUTOR_MAX_POD_POOL_SIZE
-    value: "2"
+    value: "5"
   - name: CODE_EXECUTOR_DOCKER_IMAGE
     value: "codemie/codemie-python:<version>"
 ```
@@ -152,6 +120,20 @@ helm upgrade codemie-api \
   --version <version> \
   -f codemie-api/values-<cloud>.yaml \
   --namespace codemie
+```
+
+## Pre-warming the Pod Pool (Optional)
+
+By default, CodeMie API creates executor pods on demand.
+The first execution request waits for a pod to start.
+To avoid this, deploy the `codemie-runtime` chart to keep pods running and ready:
+
+```bash
+helm upgrade --install codemie-runtime \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
+  --version <version> \
+  -f codemie-runtime/values.yaml \
+  --namespace <executor-namespace>
 ```
 
 ## Environment Variables Reference
