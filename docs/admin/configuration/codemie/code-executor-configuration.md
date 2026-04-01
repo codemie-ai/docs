@@ -10,7 +10,9 @@ import TabItem from '@theme/TabItem';
 
 # Code Executor Configuration
 
-The Code Executor runs Python code in isolated Kubernetes pods with enforced resource limits and security policies. It supports three deployment modes: local execution inside the API pod, sandbox pods in the same cluster, or sandbox pods in a dedicated cluster.
+The Code Executor runs Python code in isolated Kubernetes pods with enforced resource limits and security policies.
+
+It supports three deployment modes: local execution inside the API pod, sandbox pods in the same cluster, or sandbox pods in a dedicated cluster.
 
 ## Deployment Options
 
