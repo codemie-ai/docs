@@ -19,7 +19,7 @@ Navigate to your Keycloak admin console URL (typically `https://keycloak.<your-d
 
 ### 2. Select the Correct Realm
 
-Choose the `codemie-prod` realm from the dropdown at the top left corner of the interface.
+Click on the `Manage realms` at the top left corner of the interface. And select `codemie-prod` realm.
 
 ![Select Realm](@site/docs/admin/configuration/images/user-configuration/image-2025-9-16_16-20-31.png)
 

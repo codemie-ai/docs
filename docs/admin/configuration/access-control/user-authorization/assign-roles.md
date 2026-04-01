@@ -32,7 +32,7 @@ In the `User details` page, navigate to the `Role mappings` tab.
 
 ### 3. Assign Role
 
-Click the `Assign role` button to open the role selection dialog.
+Click `Assign role` and select `Realm roles` from the dropdown menu.
 
 ![Assign Role Button](@site/docs/admin/configuration/images/user-configuration/image-2025-9-15_1-7-52.png)
 
