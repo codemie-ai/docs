@@ -42,10 +42,12 @@ helm upgrade --install codemie-runtime \
 **2. Set in CodeMie API values:**
 
 ```yaml
-codeExecutor:
-  rbac:
-    enabled: true
-    namespace: "codemie"
+features:
+  tools:
+    code_executor:
+      rbac:
+        enabled: true
+        namespace: ""  # defaults to the CodeMie release namespace
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
@@ -71,10 +73,12 @@ helm upgrade --install codemie-runtime \
 **2. Set in CodeMie API values:**
 
 ```yaml
-codeExecutor:
-  rbac:
-    enabled: true
-    namespace: "codemie-runtime"
+features:
+  tools:
+    code_executor:
+      rbac:
+        enabled: true
+        namespace: "codemie-runtime"
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
