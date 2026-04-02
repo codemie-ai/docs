@@ -14,6 +14,15 @@ The Code Executor runs Python code in isolated Kubernetes pods with enforced res
 
 It supports three deployment modes: local execution inside the API pod, sandbox pods in the same cluster, or sandbox pods in a dedicated cluster.
 
+## Choosing a Deployment Mode
+
+| Mode                                  | When to use                           | Isolation                        | RBAC required         |
+| ------------------------------------- | ------------------------------------- | -------------------------------- | --------------------- |
+| **Local**                             | No Kubernetes, quick prototyping      | None — runs inside the API pod   | No                    |
+| **Same cluster, shared namespace**    | Standard production setup             | Separate pod                     | Yes                   |
+| **Same cluster, dedicated namespace** | Namespace-level workload isolation    | Separate pod, separate namespace | Yes (cross-namespace) |
+| **Dedicated cluster**                 | Compliance, multi-tenant environments | Full cluster isolation           | No (kubeconfig)       |
+
 ## Deployment Options
 
 ### Local Mode
