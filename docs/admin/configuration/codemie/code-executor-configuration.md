@@ -69,6 +69,10 @@ extraEnv:
 </TabItem>
 </Tabs>
 
+:::info
+If you cannot manage the existing service account, or need to use a separate one instead of the CodeMie API service account, consider configuring `kubeconfig` credentials as described in the [Dedicated Cluster](#dedicated-cluster) section.
+:::
+
 ### Dedicated Cluster
 
 **1. Create a kubeconfig secret in the CodeMie API namespace:**
