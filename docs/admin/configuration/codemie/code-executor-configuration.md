@@ -84,7 +84,13 @@ If you cannot manage the existing service account, or need to use a separate one
 
 ### Dedicated Cluster
 
-**1. Create a kubeconfig secret in the CodeMie API namespace:**
+**1. Create the executor namespace in the dedicated cluster:**
+
+```bash
+kubectl create namespace codemie-runtime
+```
+
+**2. Create a kubeconfig secret in the CodeMie API namespace:**
 
 ```bash
 kubectl create secret generic codemie-executor-kubeconfig \
@@ -92,7 +98,7 @@ kubectl create secret generic codemie-executor-kubeconfig \
   --namespace codemie
 ```
 
-**2. Set in CodeMie API values:**
+**3. Set in CodeMie API values:**
 
 ```yaml
 extraVolumeMounts: |
