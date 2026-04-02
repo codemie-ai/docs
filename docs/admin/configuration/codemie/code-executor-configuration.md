@@ -38,7 +38,7 @@ features:
   tools:
     code_executor:
       rbac:
-        enabled: true
+        enabled: true  # Creates role and assign it to the service account configured for codemie-api
         namespace: ""  # defaults to the CodeMie release namespace
 
 extraEnv:
