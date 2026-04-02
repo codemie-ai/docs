@@ -140,6 +140,12 @@ helm upgrade --install codemie-runtime \
   --namespace <executor-namespace>
 ```
 
+To control how many pods are kept ready, set `replicaCount` in your `codemie-runtime/values.yaml`:
+
+```yaml
+replicaCount: 5
+```
+
 ## Environment Variables Reference
 
 For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration#code-executor--python-sandbox).
