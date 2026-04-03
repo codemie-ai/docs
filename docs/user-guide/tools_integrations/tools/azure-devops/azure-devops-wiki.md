@@ -45,6 +45,8 @@ Before adding the Wiki tool to an assistant, set up an AzureDevOps integration i
 | **Get Wiki Page Comments By ID**   | Retrieve comments for a page by its numeric ID                      |
 | **Get Wiki Page Comments By Path** | Retrieve comments for a page by its path                            |
 | **Add Attachment to Wiki Page**    | Upload a file attachment to a wiki page (max 19 MB)                 |
+| **Add Wiki Comment By ID**         | Add a comment to a wiki page identified by its numeric ID           |
+| **Add Wiki Comment By Path**       | Add a comment to a wiki page identified by its path                 |
 | **Get Wiki Page Stats By ID**      | Get view statistics for a page by ID (up to 30 days)                |
 | **Get Wiki Page Stats By Path**    | Get view statistics for a page by path (up to 30 days)              |
 

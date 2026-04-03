@@ -92,6 +92,10 @@ Click on a variable to insert it into your System Instructions.
 
 Use the **Manage Prompt Vars** button to create custom dynamic variables for your specific use case.
 
+:::note
+When you share an assistant with your project, all team members can set their own values for prompt variables without affecting each other or the assistant's defaults. See [Personalizing Prompt Variables](./sharing-assistants#personalizing-prompt-variables).
+:::
+
 **Managing Sensitive Prompt Variables**
 
 Sensitive prompt variables allow you to securely store credentials, API keys, passwords, and other confidential information that your assistant needs. These variables are encrypted and masked in the UI to protect sensitive data.
