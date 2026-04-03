@@ -14,6 +14,49 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.20.0</strong></summary>
+
+**Release Date:** April 2, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.20.0)
+
+<h3>Third-Party Component Updates</h3>
+
+---
+
+<h4>ElasticSearch / Kibana 8.19.12</h4>
+
+Updated from 8.18.4. For details, see the [Elastic 8.19.12 Release Notes ↗](https://www.elastic.co/guide/en/security/8.19/release-notes-header-8.19.0.html#release-notes-8.19.12).
+
+**Upgrade instructions:** [ElasticSearch and Kibana Upgrade Guide](./elasticsearch-kibana-upgrade)
+
+---
+
+<h4>NATS Chart 1.3.0 (NATS 2.11.0, Reloader 0.22.3)</h4>
+
+Updated NATS Helm chart from 1.2.6 to 1.3.0, which includes NATS server 2.11.0 (up from 2.10.22) and NATS Reloader 0.22.3 (up from 0.16.0).
+
+**Upgrade instructions:** [NATS Upgrade Guide](./nats-upgrade)
+
+---
+
+<h4>Keycloak 26.5.6 (keycloakx 7.1.9)</h4>
+
+Updated Keycloak to 26.5.6 (up from 26.4.5) and keycloakx chart to 7.1.9 (up from 7.1.5). For details, see the [Keycloak 26.5 Release Notes ↗](https://www.keycloak.org/docs/latest/release_notes/).
+
+**Upgrade instructions:** [Keycloak Upgrade Guide](./keycloak/keycloak-upgrade/)
+
+---
+
+<h4>Nginx 1.15.1</h4>
+
+Updated nginx ingress controller to version 1.15.1 (up from 1.14.3).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.19.0</strong></summary>
 
 **Release Date:** March 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.19.0)
