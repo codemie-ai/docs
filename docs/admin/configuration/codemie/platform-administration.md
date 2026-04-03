@@ -9,6 +9,11 @@ pagination_next: null
 
 This guide is for users who have been assigned the global `admin` role. It explains how to create new projects and access existing ones within the AI/Run CodeMie platform.
 
+:::tip
+For a full guide to creating projects, managing project members, and the Users Management panel,
+see [Project & User Management](../../../user-guide/project-user-management/projects).
+:::
+
 ## Creating a New Project
 
 Follow these steps to create a new project:
@@ -44,8 +49,11 @@ Fill in a unique **Project Name** (e.g., `sample_project`) and click **Add**.
 ![Project Creation Form](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_9-4-43.png)
 
 :::note Next Step
-After creating the project, you can now assign it to users by following the instructions in [Step 2.2: Assign Attributes](../access-control/user-authorization/assign-attributes).
-:::
+After creating the project, assign users to it:
+
+- **Keycloak-managed mode** — follow [Step 2.2: Assign Attributes](../access-control/user-authorization/assign-attributes) to add the project name to the user's `applications` attribute in Keycloak.
+- **Platform-managed mode** — open the project in Settings → Administration → Projects management and add users directly from the [Projects Management](../../../user-guide/project-user-management/projects) UI.
+  :::
 
 ## Accessing Existing Projects
 
@@ -61,4 +69,4 @@ _Example: The project dropdown is initially empty, but projects appear after typ
 
 ---
 
-**Optional Convenience Tip:** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Assign Attributes](../access-control/user-authorization/assign-attributes).
+**Optional Convenience Tip (Keycloak-managed mode only):** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user in Keycloak. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Assign Attributes](../access-control/user-authorization/assign-attributes).

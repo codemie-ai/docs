@@ -6,7 +6,22 @@ description: Complete workflow for configuring user authentication and authoriza
 pagination_prev: admin/configuration/index
 ---
 
-This guide provides a complete workflow for configuring user authentication and authorization for the AI/Run CodeMie platform. The process is divided into three main parts that must be completed in sequence.
+This guide provides a complete workflow for configuring user authentication and authorization for the AI/Run CodeMie platform.
+
+## Deployment Modes
+
+The platform supports two user management modes. The active mode is controlled by the
+`ENABLE_USER_MANAGEMENT` environment variable in your deployment configuration.
+
+|                                 | **Keycloak-managed mode** (`ENABLE_USER_MANAGEMENT=False`) | **Platform-managed mode** (`ENABLE_USER_MANAGEMENT=True`)            |
+| ------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Roles & project access**      | Read from Keycloak JWT claims on every request             | Stored in the platform database; synced from IDP once on first login |
+| **Assigning projects to users** | Keycloak `applications` / `applications_admin` attributes  | In-app UI: Settings → Administration → Projects management           |
+| **Managing users**              | Keycloak admin interface                                   | In-app UI: Settings → Administration → Users management              |
+| **Local authentication**        | Not available                                              | Supported (`IDP_PROVIDER=local`)                                     |
+
+The workflow below applies to both modes. Steps that differ between modes are marked
+accordingly.
 
 ## Prerequisites
 
@@ -55,8 +70,14 @@ After a user is created via any method from Part 1, they **cannot sign in** unti
 
 Assigning permissions to users. The configuration path depends on the role:
 
-- **[Step 2.1: Assign a Role](./user-authorization/assign-roles)** - Grants platform-level capabilities and enables sign-in
-- **[Step 2.2: Assign Attributes](./user-authorization/assign-attributes)** - Required for `developer` users to access projects and create assistants
+- **[Step 2.1: Assign a Role](./user-authorization/assign-roles)** — Grants platform-level capabilities and enables sign-in. Required in both modes.
+- **[Step 2.2: Assign Attributes](./user-authorization/assign-attributes)** — _(Keycloak-managed mode only)_ Required for `developer` users to access projects via Keycloak JWT attributes.
+
+:::info Platform-managed mode — Step 2.2 not required
+If `ENABLE_USER_MANAGEMENT=True`, skip Step 2.2. Project and role assignments are managed
+through the in-app UI after the user signs in for the first time.
+See [Project & User Management](../../../user-guide/project-user-management/projects).
+:::
 
 Additionally, this section includes:
 

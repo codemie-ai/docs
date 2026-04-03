@@ -5,7 +5,16 @@ title: Assign Attributes
 description: Configure user access to projects and features
 ---
 
-Attributes define which projects a user with the `developer` role can access and what permissions they have within those projects. This step is **required** for all users with the `developer` role.
+:::warning Keycloak-managed mode only
+This step applies **only** to deployments with `ENABLE_USER_MANAGEMENT=False` (Keycloak-managed mode),
+where user roles and project access are controlled entirely by Keycloak JWT claims.
+
+If your deployment has `ENABLE_USER_MANAGEMENT=True` (Platform-managed mode), **skip this page**.
+Project and role assignments are managed through the in-app UI instead.
+See [Project & User Management](../../../../user-guide/project-user-management/projects).
+:::
+
+Attributes define which projects a user with the `developer` role can access and what permissions they have within those projects. This step is **required** for all users with the `developer` role in Keycloak-managed mode.
 
 ## Understanding Attributes
 

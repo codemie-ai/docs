@@ -62,6 +62,10 @@ Click on the **Credentials** tab in the user details page.
 
 4. Click **Save** to confirm the password
 
-:::note Next Step:
-After creating a user, proceed to [Part 2: User Authorization](../user-authorization/assign-roles) to assign the necessary permissions.
-:::
+:::note Next Step
+After creating a user, proceed to [Part 2: User Authorization](../user-authorization/assign-roles)
+to assign the necessary role.
+
+- **Keycloak-managed mode:** After assigning a role, also complete [Step 2.2: Assign Attributes](../user-authorization/assign-attributes) to grant project access.
+- **Platform-managed mode:** After assigning the role, project access is configured in the in-app UI. See [Project & User Management](../../../../user-guide/project-user-management/projects).
+  :::

@@ -49,7 +49,18 @@ After assignment, the role should appear in the user's role mappings list. The u
 
 ## Next Steps
 
-After assigning a role, the configuration path depends on which role you assigned:
+After assigning a role, the configuration path depends on the role assigned **and the
+deployment mode**:
 
-- **For admin role users:** Configuration is complete. The user can now sign in with full platform access.
-- **For developer role users:** You must continue to [Assign Attributes](./assign-attributes) to grant project access. Without attributes, users with the `developer` role cannot access any projects.
+**For `admin` role users:** Configuration is complete in both modes. The user can sign in
+with full platform access.
+
+**For `developer` role users:**
+
+- **Keycloak-managed mode** (`ENABLE_USER_MANAGEMENT=False`) — continue to
+  [Assign Attributes](./assign-attributes) to grant project access via Keycloak attributes.
+  Without attributes, `developer` users cannot access any projects.
+- **Platform-managed mode** (`ENABLE_USER_MANAGEMENT=True`) — no further Keycloak configuration
+  needed. The user can sign in immediately. A Platform Admin then assigns them to projects
+  through the in-app UI: see
+  [Project & User Management](../../../../user-guide/project-user-management/projects).

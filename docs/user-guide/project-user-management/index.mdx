@@ -1,0 +1,51 @@
+---
+id: index
+title: Project & User Management
+sidebar_label: Project & User Management
+sidebar_position: 1
+pagination_prev: null
+pagination_next: null
+description: Manage projects and users in AI/Run CodeMie. Create and configure projects, manage project members and roles, and administer users across the platform.
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Project & User Management
+
+Manage your projects and team members directly from the AI/Run CodeMie interface. Create and
+configure projects, invite teammates, assign roles, and — for Platform Admins — oversee all
+users and their project memberships across the entire platform.
+
+The **Project & User Management** section is accessible via the **Profile** icon in the bottom-left corner → **Settings → Administration**.
+
+## Sections
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/configuration.svg"
+    iconType="image"
+    title="Projects"
+    description="Create and configure projects, manage project members, assign roles, and import users in bulk via CSV."
+    link="/user-guide/project-user-management/projects"
+  />
+  <FeatureCard
+    icon="/img/icons/user.svg"
+    iconType="image"
+    title="Users"
+    description="View all platform users, inspect individual user details, manage project assignments, and update user names. Available to Platform Admins."
+    link="/user-guide/project-user-management/users"
+  />
+</FeatureGrid>
+
+## Access by Role
+
+| Feature                       | Regular User (Project Admin) | Platform Admin |
+| ----------------------------- | ---------------------------- | -------------- |
+| Create a project              | ✅                           | ✅             |
+| View own projects             | ✅                           | ✅             |
+| Edit own project              | ✅                           | ✅             |
+| Delete own empty project      | ✅                           | ✅             |
+| Manage members in own project | ✅                           | ✅             |
+| View and manage all projects  | ❌                           | ✅             |
+| Access Users Management       | ❌                           | ✅             |

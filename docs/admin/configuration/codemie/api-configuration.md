@@ -367,6 +367,33 @@ Configure authentication providers and access control for users and administrato
 | `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                              |
 | `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                      |
 
+### User Management Mode
+
+Controls whether user roles and project access are read from JWT claims (Keycloak-managed mode)
+or stored in the platform database (Platform-managed mode). See
+[Access Control Overview](../access-control/) for a full comparison.
+
+| Parameter                | Type | Default | Description                                                                                                                                                                                                                          |
+| ------------------------ | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ENABLE_USER_MANAGEMENT` | bool | `false` | Master switch. `true` enables Platform-managed mode: roles and project membership are stored in the platform DB and managed through the in-app UI. `false` uses Keycloak-managed mode where JWT claims are the authoritative source. |
+| `USER_PROJECT_LIMIT`     | int  | `3`     | Maximum number of shared projects a regular user can be assigned to. Enforced only when `ENABLE_USER_MANAGEMENT=true`. Super Admins always have unlimited access.                                                                    |
+
+#### Keycloak User Migration
+
+Required only when `ENABLE_USER_MANAGEMENT=true` and `IDP_PROVIDER=keycloak`. Enables a
+one-time import of existing Keycloak users and their project attributes into the platform
+database on startup.
+
+| Parameter                      | Type   | Default | Description                                                                                                                                      |
+| ------------------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KEYCLOAK_MIGRATION_ENABLED`   | bool   | `false` | Enables the one-time import of Keycloak users into the platform database. Run once during initial migration; disable after the import completes. |
+| `KEYCLOAK_ADMIN_URL`           | string | `""`    | Keycloak base URL for admin API access (e.g., `https://keycloak.example.com`).                                                                   |
+| `KEYCLOAK_ADMIN_REALM`         | string | `""`    | Keycloak realm to migrate (e.g., `codemie-prod`).                                                                                                |
+| `KEYCLOAK_ADMIN_CLIENT_ID`     | string | `""`    | Service account client ID with Keycloak admin permissions.                                                                                       |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret. Store in a Kubernetes secret and reference via `valueFrom.secretKeyRef`.                                          |
+
+---
+
 ### External User Configuration
 
 Control access for external users (e.g., contractors, partners) with limited permissions.

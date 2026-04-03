@@ -104,7 +104,7 @@ See [How the Default Integration Is Selected](../tools_integrations/integrations
 
 ### External User (`availableForExternal`)
 
-A configuration parameter that controls component visibility based on the Keycloak `user_type` attribute. When set to `false`, the component is hidden from users who have `user_type: external` in their Keycloak profile (contractors, partners, or other external users). When set to `true` (the default), the component is visible to all users regardless of their type.
+A configuration parameter that controls component visibility based on the user's `user_type` value. When set to `false`, the component is hidden from users whose `user_type` is `external` (contractors, partners, or other external users). When set to `true` (the default), the component is visible to all users regardless of their type. In Keycloak-managed mode this value comes from a Keycloak attribute; in Platform-managed mode it is stored in the platform database.
 
 ### External Tools
 
@@ -135,7 +135,7 @@ A configured connection between the CodeMie platform and an external service or 
 
 - **User Integration**: Personal configuration scoped to a specific project. Available only to the user who created it.
 - **User Global Integration**: Personal integration with the **Global** toggle enabled. Available to the same user across all projects where they are onboarded.
-- **Project Integration**: Shared configuration available to all project members. Can only be created by users with the `isAdmin` or `applications_admin` role.
+- **Project Integration**: Shared configuration available to all project members. Can only be created by Platform Admins or Project Admins.
 
 See [Default Integration](#default-integration) for how CodeMie selects one automatically when none is explicitly chosen.
 
@@ -145,14 +145,24 @@ See [Default Integration](#default-integration) for how CodeMie selects one auto
 
 ### JWT attributes
 
-Required Claim parameters in JWT tokens assigned in Keycloak to control project access and permissions. There are three main attribute types:
+:::info Keycloak-managed mode only
+JWT attributes apply to deployments with `ENABLE_USER_MANAGEMENT=False`, where Keycloak JWT
+claims are the authoritative source for user roles and project access. In Platform-managed mode
+(`ENABLE_USER_MANAGEMENT=True`), these values are stored in the platform database and managed
+through the in-app UI — Keycloak attribute configuration is not required.
+:::
+
+Claim parameters in Keycloak JWT tokens that control project access and permissions in
+**Keycloak-managed mode**. There are four attribute types:
 
 - **applications**: Grants Standard User access to specified projects (comma-separated list of project names). Users can create, edit, delete, share, and publish their own assistants within these projects.
 - **applications_admin**: Grants Project Administrator privileges for specified projects (comma-separated list). Users can manage all assistants and project integrations within these projects.
-- **isAdmin**: Platform Administrator role (boolean value `true` or `false`). The highest privilege level in the platform that grants access to create projects, create katas, and manage all administrative features across the entire CodeMie platform. Users with this role have unrestricted access to all platform functionality.
-- **user_type**: Controls user visibility for certain UI components. When set to `external`, components configured with `availableForExternal: false` are hidden from that user. Intended for contractors, partners, and other external users who should have a restricted view of the platform.
+- **isAdmin**: Platform Administrator flag (boolean `true` or `false`). Grants access to create projects, create katas, and manage all administrative features across the entire platform.
+- **user_type**: Controls UI component visibility. When set to `external`, components configured with `availableForExternal: false` are hidden. Intended for contractors, partners, and other external users who should have a restricted view.
 
-JWT attributes are only applicable to users with the `developer` role and determine which projects users can access and their permission level within those projects. The `isAdmin` attribute provides platform-wide administrative access beyond project-specific permissions.
+In Keycloak-managed mode, `applications` and `applications_admin` attributes apply only to users with
+the `developer` role and determine which projects they can access. The `isAdmin` flag provides
+platform-wide access independent of project membership.
 
 ---
 

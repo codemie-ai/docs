@@ -8,6 +8,12 @@ pagination_prev: admin/configuration/access-control/access-control-overview
 
 This section covers the first step of user configuration where you choose a method to create user entities in the system. After creating users through any of these methods, you must proceed to [User Authorization](../user-authorization/assign-roles) to grant them the necessary permissions.
 
+:::note Platform-managed mode
+If your deployment has `ENABLE_USER_MANAGEMENT=True`, user provisioning through Keycloak is
+still required so that users can authenticate. However, project assignment is handled in the
+in-app UI after first login — Keycloak attribute configuration (Step 2.2) is not needed.
+:::
+
 ## Available Options
 
 ### Option A: Manual User Creation

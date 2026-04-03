@@ -214,6 +214,10 @@ After the assistant confirms the users have been created, you must manually set 
 2. For each new user, follow the instructions in the [Set User Credentials](./manual-creation#4-set-user-credentials) section (under Option A) to set their temporary password.
 3. Securely share the login information and temporary passwords with the new users.
 
-:::note Next Step:
-After creating a user, proceed to [Part 2: User Authorization](../user-authorization/assign-roles) to assign the necessary permissions.
-:::
+:::note Next Step
+After creating users, proceed to [Part 2: User Authorization](../user-authorization/assign-roles)
+to assign the necessary role.
+
+- **Keycloak-managed mode:** After assigning a role, also complete [Step 2.2: Assign Attributes](../user-authorization/assign-attributes) to grant project access.
+- **Platform-managed mode:** After assigning the role, project access is configured in the in-app UI. See [Project & User Management](../../../../user-guide/project-user-management/projects).
+  :::

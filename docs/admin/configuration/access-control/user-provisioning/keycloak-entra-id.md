@@ -125,10 +125,16 @@ This step creates the secure link between Keycloak and your Azure app.
 ### 4. Automate Permissions with Mappers
 
 :::warning Critical: Mappers are Required for a Functional Setup
-This step is mandatory. Without these mappers, new users who sign in via SSO will be created in Keycloak but **will not be able to access the platform** because they won't have the necessary role and project attributes assigned automatically.
+This step is mandatory. Without these mappers, new users who sign in via SSO will be created in Keycloak but **will not be able to access the platform** because they won't have the necessary role assigned automatically.
 :::
 
-Mappers automate the permission assignment process described in ASK Part 2 by granting default permissions to every new user during their first sign-in.
+Mappers automate the permission assignment process by granting default permissions to every new user during their first sign-in.
+
+:::info Platform-managed mode — Mapper 2 not required
+If your deployment has `ENABLE_USER_MANAGEMENT=True`, **Mapper 2 (Assign Default Project) is
+not needed**. Project access is managed in the in-app UI after first login.
+Configure only Mapper 1 (role) and optionally Mapper 3 (picture).
+:::
 
 ---
 
@@ -155,9 +161,16 @@ Configure and save the mapper: Fill in the fields with the following values and 
 
 ---
 
-**Mapper 2: Assign Default Project (Required)**
+**Mapper 2: Assign Default Project (Keycloak-managed mode only)**
 
-This mapper automatically creates a personal project for each new user. For more details, see [Step 2.2: Assign Attributes](../user-authorization/assign-attributes).
+This mapper automatically creates a personal project for each new SSO user by mapping their
+email to the `applications` Keycloak attribute. For more details, see
+[Step 2.2: Assign Attributes](../user-authorization/assign-attributes).
+
+:::info
+If `ENABLE_USER_MANAGEMENT=True`, skip this mapper. Personal projects are created
+automatically by the platform on first login without Keycloak attributes.
+:::
 
 Navigate back to the **Mappers** tab and click **Add mapper** again.
 
@@ -216,5 +229,12 @@ This final step confirms that everything is working correctly. To complete it, y
 **Confirm Successful Login:** After accepting, you should be successfully logged in, confirming that the SSO integration and mappers are working correctly.
 
 :::note Next Step: Fine-Grained Permissions
-All new users who sign in via SSO will now be automatically created and granted the default `developer` role and a personal project. To grant them additional permissions (like Project Administrator access or access to other shared projects), you can now find them in the Keycloak user list and proceed to [Part 2: User Authorization](../user-authorization/assign-attributes) to manage their attributes manually.
-:::
+All new users who sign in via SSO will now be automatically created and granted the default
+`developer` role. To grant additional permissions (Project Administrator access or access to
+shared projects):
+
+- **Keycloak-managed mode** — find the user in the Keycloak user list and manage their attributes
+  via [Step 2.2: Assign Attributes](../user-authorization/assign-attributes).
+- **Platform-managed mode** — assign the user to projects through the in-app UI.
+  See [Project & User Management](../../../../user-guide/project-user-management/projects).
+  :::

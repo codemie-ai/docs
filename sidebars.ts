@@ -311,6 +311,19 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: ['user-guide/api/client-secret-access', 'user-guide/api/user-password-access'],
         },
+        {
+          type: 'category',
+          label: 'Project & User Management',
+          link: {
+            type: 'doc',
+            id: 'user-guide/project-user-management/index',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/project-user-management/projects',
+            'user-guide/project-user-management/users',
+          ],
+        },
       ],
     },
     {

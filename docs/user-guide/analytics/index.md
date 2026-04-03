@@ -64,7 +64,7 @@ A shortcut link is also available at the top of the Analytics Dashboard.
 
 ## Access Permissions and Data Visibility
 
-The Analytics Dashboard data visibility depends on your user role and permissions defined in [JWT attributes](../getting-started/glossary#jwt-attributes):
+The Analytics Dashboard data visibility depends on your user role:
 
 ### Regular Users
 
@@ -74,18 +74,18 @@ Regular users without admin privileges:
 - Access data related to your individual activity
 - Monitor your own assistants, workflows, and tool usage
 
-### Admin Role (isAdmin)
+### Platform Admin
 
-Users with the `isAdmin` role have full access to analytics data across the entire CodeMie platform:
+Platform Admins (`is_admin = true`) have full access to analytics data across the entire CodeMie platform:
 
 - View statistics for **all projects** in the organization
 - View statistics for **all users** using CodeMie
 - Access complete platform-wide usage and cost metrics
 - Monitor all assistants, workflows, tools, and integrations
 
-### Project Admin Role (applications_admin)
+### Project Admin
 
-Users with `applications_admin` permissions have limited access to analytics data:
+Project Admins have limited access to analytics data scoped to their managed projects:
 
 - View statistics only for **projects where you are a Project Admin**
 - View data for **all users** within your managed projects
@@ -93,7 +93,8 @@ Users with `applications_admin` permissions have limited access to analytics dat
 - Access project-level metrics for assistants and workflows
 
 :::info
-To view analytics for projects or other users, you need either the `isAdmin` role or `applications_admin` permissions for specific projects. Contact your administrator if you need broader access to analytics data.
+To view analytics for projects or other users, you need either Platform Admin or Project Admin
+access. Contact your administrator if you need broader access to analytics data.
 :::
 
 ## Global Filtering System
