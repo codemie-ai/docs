@@ -344,12 +344,13 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### Vertex AI Models
 
-| Model Name                                        | Description       |
-| ------------------------------------------------- | ----------------- |
-| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1) | Claude 4.5 Sonnet |
-| [`gemini-3-flash`](#gemini-3-flash)               | Gemini 3 Flash    |
-| [`gemini-3.1-pro`](#gemini-31-pro)                | Gemini 3.1 Pro    |
-| [`text-embedding-005`](#embeddings-for-text)      | Text Embedding    |
+| Model Name                                                         | Description                    |
+| ------------------------------------------------------------------ | ------------------------------ |
+| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1)                  | Claude 4.5 Sonnet              |
+| [`gemini-3-flash`](#gemini-3-flash)                                | Gemini 3 Flash                 |
+| [`gemini-3.1-pro`](#gemini-31-pro)                                 | Gemini 3.1 Pro                 |
+| [`gemini-3.1-flash-image-preview`](#gemini-31-flash-image-preview) | Gemini 3.1 Flash Image Preview |
+| [`text-embedding-005`](#embeddings-for-text)                       | Text Embedding                 |
 
 ### GitHub Copilot Models
 
@@ -1201,6 +1202,25 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.1-pro-preview-global
     base_model: gemini-3.1-pro-preview
     label: "Gemini 3.1 Pro"
+```
+
+</details>
+
+#### Gemini 3.1 Flash Image Preview
+
+<details>
+<summary><strong>Gemini 3.1 Flash Image Preview</strong></summary>
+
+```yaml
+- model_name: gemini-3.1-flash-image-preview
+  litellm_params:
+    model: vertex_ai/gemini-3.1-flash-image-preview
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.1-flash-image-preview-global
+    base_model: gemini-3.1-flash-image-preview
+    label: "Gemini 3.1 Flash Image Preview"
+    forbidden_for_web: true
 ```
 
 </details>

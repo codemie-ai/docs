@@ -165,14 +165,13 @@ For Gemini, and Claude via Google Cloud's Vertex AI platform.
 
 Additional AI services for multimodal capabilities beyond text generation.
 
-### DALL-E Image Generation
+### Image Generation
 
 Enables AI-generated images for visual content creation within assistants.
 
-| Parameter       | Type   | Default | Description                                  |
-| --------------- | ------ | ------- | -------------------------------------------- |
-| `DALLE_API_URL` | string | `""`    | Endpoint URL for DALL-E image generation API |
-| `DALLE_API_KEY` | string | `""`    | Authentication key for DALL-E service access |
+| Parameter                | Type   | Default                          | Description                        |
+| ------------------------ | ------ | -------------------------------- | ---------------------------------- |
+| `IMAGE_GENERATION_MODEL` | string | `gemini-3.1-flash-image-preview` | Model used for AI image generation |
 
 ### Speech-to-Text (STT)
 
