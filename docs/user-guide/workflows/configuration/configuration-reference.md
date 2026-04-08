@@ -47,7 +47,13 @@ assistants:
 - **system_prompt**: Custom instructions and context
 - **tools**: List of tools the assistant can use
 - **datasource_ids**: Data sources for knowledge base integration
-- **limit_tool_output_tokens**: Maximum tokens from tool outputs (default: 10000)
+- **limit_tool_output_tokens**: Caps the number of tokens any single tool response can contribute
+  to the assistant's context (default: 10000). When a tool returns a response that exceeds this
+  limit, the output is truncated and an error is logged. This setting applies to all tools used
+  by the assistant, including GitHub, web scraping, filesystem, and other integrations. Increase
+  this value if your workflow regularly processes large tool outputs. See
+  [Troubleshooting](./troubleshooting#tool-output-token-limit-exceeded) for diagnosis and
+  mitigation strategies.
 - **exclude_extra_context_tools**: Disable automatic context tools
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
 
@@ -81,6 +87,29 @@ assistants:
 # With limit_tool_output_tokens: 5000: Tool output is truncated to 5000 tokens max
 # Use case: When processing large files where full content isn't needed
 ```
+
+:::info Choosing the right value
+
+The default of 10000 is a conservative baseline suitable for most use cases. If you work with
+tools that return large datasets — for example, listing many GitHub issues, reading large files,
+or querying APIs with extensive results — consider raising the limit for that specific assistant:
+
+| Tool type                          | Suggested `limit_tool_output_tokens` |
+| ---------------------------------- | ------------------------------------ |
+| Simple lookups, status checks      | 3000–5000                            |
+| General purpose (default)          | 10000                                |
+| GitHub / GitLab large repositories | 15000–30000                          |
+| Filesystem reads, large APIs       | 20000–50000                          |
+
+Setting this value too high may cause the assistant to hit the LLM context window limit.
+Setting it too low triggers truncation — the tool output is cut off and a warning is logged.
+:::
+
+:::warning No global override
+
+There is no platform-level environment variable to change the default of 10000. Each assistant
+in the workflow YAML must set `limit_tool_output_tokens` explicitly if you need a different value.
+:::
 
 **Example 2: Using `exclude_extra_context_tools`**
 
