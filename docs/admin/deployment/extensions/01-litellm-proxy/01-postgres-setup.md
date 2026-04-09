@@ -95,7 +95,7 @@ GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
 \c postgres_litellm
 ```
 
-Or reconnect to the `postgres_litellm` database **using PG admin credentials**.
+or reconnect to the `postgres_litellm` database **using PG admin credentials**.
 
 2. Grant all privileges on the `public` schema to the `litellm` user:
 
