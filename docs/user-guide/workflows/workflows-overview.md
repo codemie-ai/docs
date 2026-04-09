@@ -123,9 +123,9 @@ Launch workflows within a chat interface, preserving conversational context and 
 
 4. Monitor progress and view results in the chat
 
-:::note Workflow Interruption Limitation
-[Workflow Interruption](./configuration/advanced-features#74-workflow-interruption) is currently not available in chat mode. This feature is only supported when running workflows in execution mode.
-:::
+### Opening the Execution Page from Chat
+
+Each workflow response message in chat mode includes an **Open execution page** icon in the message action bar. Click it to open the full workflow execution page for that specific message in a new tab — where you can review execution steps, states, and detailed output.
 
 ### Attaching Files in Chat Mode
 
