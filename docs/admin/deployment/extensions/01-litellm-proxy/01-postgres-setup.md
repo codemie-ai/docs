@@ -97,7 +97,7 @@ GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
 
 Or reconnect to the `postgres_litellm` database **using PG admin credentials**.
 
-1. Grant all privileges on the `public` schema to the `litellm` user:
+2. Grant all privileges on the `public` schema to the `litellm` user:
 
 ```sql
 GRANT ALL ON SCHEMA public TO litellm;
