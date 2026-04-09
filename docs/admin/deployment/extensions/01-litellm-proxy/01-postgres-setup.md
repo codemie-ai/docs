@@ -89,9 +89,15 @@ GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
 
 ## Configure Schema Permissions
 
-1. Switch your connection to the newly created `postgres_litellm` database.
+1. Switch your connection to the newly created `postgres_litellm` database:
 
-2. Grant all privileges on the `public` schema to the new user:
+```sql
+\c postgres_litellm
+```
+
+Or reconnect to the `postgres_litellm` database **using PG admin credentials**.
+
+1. Grant all privileges on the `public` schema to the `litellm` user:
 
 ```sql
 GRANT ALL ON SCHEMA public TO litellm;
