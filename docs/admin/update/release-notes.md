@@ -14,6 +14,25 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.21.0</strong></summary>
+
+**Release Date:** April 8, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.21.0)
+
+<h3>Third-Party Component Updates</h3>
+
+---
+
+<h4>oauth2-proxy 7.15.1 (Chart 10.4.2)</h4>
+
+Updated oauth2-proxy from 7.14.2 to 7.15.1 (Helm chart 10.1.0 to 10.4.2). For details, see the [oauth2-proxy 7.15.1 Release Notes ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.1).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.20.0</strong></summary>
 
 **Release Date:** April 2, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.20.0)
