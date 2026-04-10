@@ -31,10 +31,15 @@ fi
 
 echo "Checking for secrets with Gitleaks..."
 
+CONFIG_FLAG=""
+if [[ -f ".gitleaks.toml" ]]; then
+  CONFIG_FLAG="--config /path/.gitleaks.toml"
+fi
+
 if [[ "$1" == "--git" ]]; then
-  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" git --no-banner --verbose /path
+  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" git --no-banner --verbose $CONFIG_FLAG /path
 else
-  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" dir --no-banner --verbose /path
+  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" dir --no-banner --verbose $CONFIG_FLAG /path
 fi
 
 if [[ $? -ne 0 ]]; then
