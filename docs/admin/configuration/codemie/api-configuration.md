@@ -579,6 +579,16 @@ Set spending limits per user or team to control LLM usage costs.
 | `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | Budget name for premium model spend tracking. When set, enables separate budget attribution for costly models (e.g., `premium_models`). Leave empty to disable.                                             |
 | `LITELLM_PREMIUM_MODELS_ALIASES`     | string | `""`        | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when `LITELLM_PREMIUM_MODELS_BUDGET_NAME` is set. |
 
+### LiteLLM Spend Tracking
+
+Configure the background scheduler that collects project-level spending snapshots from LiteLLM
+and stores them in the `project_spend_tracking` table. The collector runs automatically for all
+projects — no per-project filtering configuration is required.
+
+| Parameter                          | Type   | Default        | Description                                                                               |
+| ---------------------------------- | ------ | -------------- | ----------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`). |
+
 ### LiteLLM Cache & Optimization
 
 Reduce latency and API costs by caching metadata and responses.
