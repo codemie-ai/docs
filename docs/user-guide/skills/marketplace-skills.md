@@ -78,9 +78,28 @@ Click **× Clear filters** to reset all filters and view the complete marketplac
 
 ### Add Marketplace Skill to Assistant
 
-1. Edit your assistant
-2. In Skills section select from the dropdown menu Marketplace skill
-3. Attach to assistant
+1. Navigate to **Assistants** and open the assistant you want to update
+2. Click **Edit**
+3. Scroll to the **Skills** section
+4. Open the dropdown and select a skill from the **Marketplace** group
+5. Click **Save**
+
+The skill is now attached to the assistant and will load automatically when relevant to the user's request.
+
+### Use a Marketplace Skill in Chat
+
+You can also attach marketplace skills directly in a chat session without modifying the assistant:
+
+1. Open a chat with any assistant
+2. Click the **Skills** button in the chat input toolbar
+3. In the **Attach Skills** modal, switch to the **Marketplace Skills** tab
+4. Select the skill and click **Confirm**
+
+The skill is active for the current conversation only. Other chats with the same assistant are not affected.
+
+:::tip
+Use chat-level attachment to try a marketplace skill before permanently adding it to an assistant.
+:::
 
 ## Publishing Skills to Marketplace
 
@@ -118,6 +137,10 @@ In the **Publish to Marketplace** dialog, select at least one category:
 2. The skill is published to the marketplace
 
 ![Skill Publish Confirmation](./images/skill-publish-confirmation.png)
+
+A confirmation notification appears when the skill is successfully published:
+
+![Publish Success Notification](./images/publish-success-notification.png)
 
 The skill now appears in the Marketplace and is available for other users to discover and use.
 

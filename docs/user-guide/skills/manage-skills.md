@@ -227,6 +227,10 @@ Control who can see and use your skill:
 | **Project**     | All members of the project | Enable Project sharing toggle |
 | **Marketplace** | Public - all CodeMie users | Publish skill to Marketplace  |
 
+The current sharing status is shown as a badge on each skill card — either **Not Shared** (private) or **Shared with Project**:
+
+![Skill Card with Sharing Status](./images/skill-published-status.png)
+
 To share with your project:
 
 1. Edit the skill
