@@ -85,6 +85,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/skills/manage-skills',
             'user-guide/skills/marketplace-skills',
             'user-guide/skills/skills-in-chat',
+            'user-guide/skills/skills-in-workflow',
           ],
         },
         {

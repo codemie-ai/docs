@@ -28,6 +28,9 @@ assistants:
     datasource_ids:
       - datasource-id-1
       - datasource-id-2
+    skill_ids:
+      - skill-id-1
+      - skill-id-2
     mcp_servers:
       - {...}  # See Section 3.6 for MCP Server configuration
 ```
@@ -55,6 +58,7 @@ assistants:
   [Troubleshooting](./troubleshooting#tool-output-token-limit-exceeded) for diagnosis and
   mitigation strategies.
 - **exclude_extra_context_tools**: Disable automatic context tools
+- **skills**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
 
 #### Tool Configuration:

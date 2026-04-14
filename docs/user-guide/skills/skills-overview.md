@@ -47,7 +47,18 @@ User adds "Find Duplicate Tickets" skill to current chat
 → Other chats with same assistant remain unaffected
 ```
 
-**3. Marketplace Discovery**
+**3. Workflow Assistant Configuration (YAML-level)**
+
+Skills can be embedded directly into virtual assistants defined in workflow YAML.
+
+```
+Workflow YAML defines an assistant with a skills list
+→ Assistant loads configured skills during workflow execution
+→ Skill usage is logged in execution history
+→ Other assistants and workflows are unaffected
+```
+
+**4. Marketplace Discovery**
 
 Public skills can be discovered and attached from the Skills Marketplace.
 

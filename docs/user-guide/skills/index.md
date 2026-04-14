@@ -28,6 +28,7 @@ Attach and use skills with assistants:
 
 - [Attach to Assistants](./attach-skills-to-assistants) - Assign skills to assistants
 - [Skills in Chat](./skills-in-chat) - Dynamically attach skills during conversations
+- [Skills in Workflow](./skills-in-workflow) - Configure skills in workflow YAML
 
 ## Marketplace
 
