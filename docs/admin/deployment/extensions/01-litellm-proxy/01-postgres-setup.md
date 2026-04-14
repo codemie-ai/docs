@@ -70,7 +70,8 @@ Execute the following SQL commands to create the dedicated database and user for
 
 :::warning Important
 
-Replace `'your_strong_password_here'` with a new, secure password for the `litellm` user. You can generate one using:
+Replace `'your_strong_password_here'` with a new, secure password for the `litellm` user.
+You can generate one using:
 
 ```bash
 openssl rand -base64 16 | tr '+/' '-_' | tr -d '= ' | cut -c1-16
