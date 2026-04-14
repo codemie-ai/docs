@@ -70,7 +70,13 @@ Execute the following SQL commands to create the dedicated database and user for
 
 :::warning Important
 
-Replace `'your_strong_password_here'` with a new, secure password for the `litellm` user.
+Replace `'your_strong_password_here'` with a new, secure password for the `litellm` user. You can generate one using:
+
+```bash
+openssl rand -base64 16 | tr '+/' '-_' | tr -d '= ' | cut -c1-16
+```
+
+The command above generates a URL-safe password using only alphanumeric characters, hyphens (`-`), and underscores (`_`). This is intentional — passwords containing special characters such as `@`, `#`, `$`, `!`, `%`, `&`, `=`, `\`, spaces, etc., can cause issues when embedded in connection strings, shell scripts, or Helm values files. Using a password without such characters reduces the risk of quoting or escaping errors.
 
 :::
 
