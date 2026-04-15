@@ -54,11 +54,16 @@ langfuse:
 postgresql:
   deploy: false
   host: some-postgresql.database.example.com # Replace with your database host
+  database: postgres_langfuse
   auth:
     username: langfuse_admin
     existingSecret: langfuse-postgresql
     secretKeys:
       userPasswordKey: password
+
+# Enable automatic database and user creation
+dbInitJob:
+  enabled: true
 
 # Adjust component resources:
 clickhouse:
@@ -170,14 +175,33 @@ retention:
 
 ## Step 3: Configure PostgreSQL
 
-Configure PostgreSQL running in managed cloud.
+The `postgres_langfuse` database and user are created automatically during deployment via `db-init-job`. Enable it in `langfuse/values.yaml`:
 
-### 3.1. Connect to PostgreSQL Database
+```yaml
+dbInitJob:
+  enabled: true
+```
 
-Connect to PostgreSQL database `codemie` depending on your cloud provider. Choose one of the following options:
+The init job uses admin PostgreSQL credentials from the `codemie-postgresql` secret. This secret is created automatically by `deploy-langfuse.sh` when `dbInitJob.enabled: true` — the script will prompt for admin credentials if the secret does not exist.
 
-- Some cloud providers have built-in query tools
-- Deploy pgadmin inside the cluster to access your private Postgres instance:
+For manual deployment, create the secret before running Helm:
+
+```bash
+kubectl create secret generic codemie-postgresql \
+--namespace langfuse \
+--from-literal=PG_USER="your_admin_user" \
+--from-literal=PG_PASS="your_admin_password" \
+--type=Opaque
+```
+
+:::info
+Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`).
+:::
+
+<details>
+<summary>Manual PostgreSQL Setup (alternative to dbInitJob)</summary>
+
+Connect to your PostgreSQL instance using your cloud provider's query tools or deploy pgAdmin:
 
 ```bash
 # Create namespace and secret
@@ -200,26 +224,23 @@ kubectl -n pgadmin port-forward svc/pgadmin-pgadmin4 8080:80
 kubectl -n pgadmin get secret pgadmin4-credentials -o jsonpath='{.data.password}' | base64 -d; echo
 ```
 
-### 3.2. Create Database and User
-
-Execute the following SQL commands to create the database and user:
+Execute the following SQL commands:
 
 ```sql
 CREATE DATABASE postgres_langfuse;
-```
-
-```sql
 CREATE USER langfuse_admin WITH PASSWORD 'your_strong_password_here';
 GRANT ALL PRIVILEGES ON DATABASE postgres_langfuse TO langfuse_admin;
 ```
-
-### 3.3. Grant Schema Privileges
 
 Switch to the `postgres_langfuse` database and grant schema privileges:
 
 ```sql
 GRANT ALL ON SCHEMA public TO langfuse_admin;
 ```
+
+If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/values.yaml`.
+
+</details>
 
 ## Step 4: Configure Data Retention (Optional)
 

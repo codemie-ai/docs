@@ -62,16 +62,28 @@ The Langfuse application version is configured in `langfuse/values.yaml` using `
 ./langfuse/deploy-langfuse.sh -n production --values-file prod-values.yaml
 ```
 
-### Provide PostgreSQL Password when Asked
+### Provide PostgreSQL Passwords when Asked
 
-The script will prompt for the PostgreSQL password if the required secret is not found.
+The script will prompt for passwords if the required secrets are not found:
+
+**1. Langfuse PostgreSQL user password** — used to create the Langfuse PostgreSQL user and for the app to connect:
 
 ```
-[INFO] PostgreSQL secret not found in namespace 'langfuse'
-This secret is required to connect to your managed PostgreSQL database.
-Please enter the password for your PostgreSQL user (input hidden)
+[INFO] PostgreSQL secret 'langfuse-postgresql' not found in namespace 'langfuse'
+Please enter the password for the Langfuse PostgreSQL user
 PostgreSQL password:
 ```
+
+**2. PostgreSQL admin credentials** — prompted only if `dbInitJob.enabled: true` in `langfuse/values.yaml`. Used by the init job to create the `postgres_langfuse` database and user:
+
+```
+[INFO] PostgreSQL admin secret 'codemie-postgresql' not found in namespace 'langfuse'
+This secret is used by the db-init-job to create the Langfuse database and user.
+PostgreSQL admin username:
+PostgreSQL admin password (input hidden):
+```
+
+Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`).
 
 ### Help
 
@@ -101,7 +113,7 @@ PostgreSQL password:
 1. **Validation**: Checks for required tools and cluster connectivity
 2. **Namespace Creation**: Creates the specified namespace if it doesn't exist
 3. **Helm Repository**: Adds and updates Langfuse Helm repository
-4. **PostgreSQL Password creation**: Asks for the database password
+4. **PostgreSQL Secrets**: Prompts for the Langfuse PostgreSQL user password. If `dbInitJob.enabled: true`, also prompts for PostgreSQL admin credentials to create `codemie-postgresql` secret
 5. **Secret Creation**: Creates all required Kubernetes secrets
 6. **Helm Dependencies**: Updates Helm chart dependencies from Chart.yaml
 7. **Langfuse Deployment**: Deploys Langfuse using local Helm chart with custom templates (including retention TTL job)

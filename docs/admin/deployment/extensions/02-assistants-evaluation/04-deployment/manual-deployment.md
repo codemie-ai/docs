@@ -86,11 +86,24 @@ kubectl create secret generic langfuse-encryption-key \
 --type=Opaque
 
 # PostgreSQL Secret
+# This password will be used to create the Langfuse PostgreSQL user and for the Langfuse app to connect
 kubectl create secret generic langfuse-postgresql \
 --namespace langfuse \
---from-literal=password="your_strong_password_here" \ # use same password for langfuse_admin user
+--from-literal=password="your_strong_password_here" \
+--type=Opaque
+
+# PostgreSQL Admin Secret (required if dbInitJob.enabled: true)
+# Provides admin credentials for the init job to create the postgres_langfuse database and user
+kubectl create secret generic codemie-postgresql \
+--namespace langfuse \
+--from-literal=PG_USER="your_admin_user" \
+--from-literal=PG_PASS="your_admin_password" \
 --type=Opaque
 ```
+
+:::info
+Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`).
+:::
 
 ## Step 4: Update Helm Dependencies
 
