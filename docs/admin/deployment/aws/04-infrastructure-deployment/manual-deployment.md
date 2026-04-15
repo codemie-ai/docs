@@ -298,6 +298,13 @@ enable_private_connections = true
 lb_prefix_list_ids         = []
 lb_specific_ips            = []
 security_group_ids         = []
+
+# Optional: Dedicated RDS Instances Configuration
+# Set enabled = true to provision a dedicated RDS instance for the service.
+# All other fields are optional and fall back to defaults.
+keycloak_db_config = { enabled = true }
+langfuse_db_config = { enabled = false }
+litellm_db_config  = { enabled = false }
 ```
 
 :::tip Review All Variables

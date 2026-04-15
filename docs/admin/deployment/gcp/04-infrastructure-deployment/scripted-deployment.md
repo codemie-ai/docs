@@ -84,6 +84,13 @@ TF_VAR_node_pool_max_count=3
 
 # Additional networks authorized to access the GKE cluster API server
 TF_VAR_extra_authorized_networks='[]'
+
+# Optional: Dedicated Cloud SQL Instances Configuration
+# Set enabled=true to provision a dedicated Cloud SQL instance for the service.
+# Omitted fields fall back to defaults (tier, db_name, username, etc.).
+TF_VAR_keycloak_db_config='{"enabled":true}'
+TF_VAR_langfuse_db_config='{"enabled":false}'
+TF_VAR_litellm_db_config='{"enabled":false}'
 ```
 
 :::info Complete Variable List
@@ -131,6 +138,33 @@ CODEMIE_POSTGRES_DATABASE_PASSWORD=generated-password
 
 # GCP
 VERTEX_PROJECT=my-gcp-project
+
+# Keycloak PostgreSQL (present when keycloak_db_config.enabled=true)
+KEYCLOAK_POSTGRES_DATABASE_HOST=<keycloak-postgres-private-ip>
+KEYCLOAK_POSTGRES_DATABASE_PORT=5432
+KEYCLOAK_POSTGRES_DATABASE_NAME=keycloak
+KEYCLOAK_POSTGRES_DATABASE_USER=keycloak_admin
+KEYCLOAK_POSTGRES_DATABASE_INSTANCE=codemie-keycloak-postgresql
+KEYCLOAK_POSTGRES_DATABASE_SECRET=codemieKeycloakPGDB
+KEYCLOAK_POSTGRES_DATABASE_PASSWORD=generated-password
+
+# LiteLLM PostgreSQL (present when litellm_db_config.enabled=true)
+LITELLM_POSTGRES_DATABASE_HOST=<litellm-postgres-private-ip>
+LITELLM_POSTGRES_DATABASE_PORT=5432
+LITELLM_POSTGRES_DATABASE_NAME=litellm
+LITELLM_POSTGRES_DATABASE_USER=litellm_admin
+LITELLM_POSTGRES_DATABASE_INSTANCE=codemie-litellm-postgresql
+LITELLM_POSTGRES_DATABASE_SECRET=codemieLitellmPGDB
+LITELLM_POSTGRES_DATABASE_PASSWORD=generated-password
+
+# Langfuse PostgreSQL (present when langfuse_db_config.enabled=true)
+LANGFUSE_POSTGRES_DATABASE_HOST=<langfuse-postgres-private-ip>
+LANGFUSE_POSTGRES_DATABASE_PORT=5432
+LANGFUSE_POSTGRES_DATABASE_NAME=langfuse
+LANGFUSE_POSTGRES_DATABASE_USER=langfuse_admin
+LANGFUSE_POSTGRES_DATABASE_INSTANCE=codemie-langfuse-postgresql
+LANGFUSE_POSTGRES_DATABASE_SECRET=codemieLangfusePGDB
+LANGFUSE_POSTGRES_DATABASE_PASSWORD=generated-password
 ```
 
 :::tip Save These Outputs

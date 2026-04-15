@@ -196,9 +196,12 @@ extra_authorized_networks = [
 private_cluster = false                       # Set to true for completely private GKE cluster
 create_private_dns_zone = false               # Set to true if using private DNS
 
-# Optional: Keycloak Database
-# Set to false to share the existing CodeMie Cloud SQL instance instead of creating a dedicated one
-keycloak_dedicated_database_instance = true
+# Optional: Dedicated Cloud SQL Instances Configuration
+# Set enabled = true to provision a dedicated Cloud SQL instance for the service.
+# All other fields are optional and fall back to defaults.
+keycloak_db_config = { enabled = true }
+langfuse_db_config = { enabled = false }
+litellm_db_config  = { enabled = false }
 ```
 
 :::info Configuration References
@@ -244,7 +247,9 @@ gcloud sql instances list --project=<your-project-id>
 - GKE cluster connection commands
 - Bastion Host SSH/RDP commands
 - Cloud SQL connection details (`pg_host`, `pg_port`, `pg_database`, `pg_user`, `pg_secret_name`)
-- Keycloak Cloud SQL details (`keycloak_pg_host`, `keycloak_pg_database`, `keycloak_pg_user`, `keycloak_pg_secret_name`) — present when `keycloak_dedicated_database_instance = true`
+- Keycloak Cloud SQL details (`keycloak_pg_host`, `keycloak_pg_database`, `keycloak_pg_user`, `keycloak_pg_secret_name`) — present when `keycloak_db_config.enabled = true`
+- LiteLLM Cloud SQL details (`litellm_pg_host`, `litellm_pg_database`, `litellm_pg_user`, `litellm_pg_secret_name`) — present when `litellm_db_config.enabled = true`
+- Langfuse Cloud SQL details (`langfuse_pg_host`, `langfuse_pg_database`, `langfuse_pg_user`, `langfuse_pg_secret_name`) — present when `langfuse_db_config.enabled = true`
 - Service account information
 
 :::tip Infrastructure Ready

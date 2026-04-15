@@ -138,9 +138,12 @@ TF_VAR_lb_prefix_list_ids='[]'
 TF_VAR_lb_specific_ips='[]'
 TF_VAR_security_group_ids='[]'
 
-# Optional: Keycloak Database
-# Set to false to share the existing CodeMie RDS instance instead of creating a dedicated one
-TF_VAR_keycloak_dedicated_database_instance=true
+# Optional: Dedicated RDS Instances Configuration
+# Set enabled=true to provision a dedicated RDS instance for the service.
+# Omitted fields fall back to defaults (instance_class, db_name, username, etc.).
+TF_VAR_keycloak_db_config='{"enabled":true}'
+TF_VAR_langfuse_db_config='{"enabled":false}'
+TF_VAR_litellm_db_config='{"enabled":false}'
 ...
 ```
 
@@ -183,12 +186,26 @@ CODEMIE_POSTGRES_DATABASE_NAME=codemie
 CODEMIE_POSTGRES_DATABASE_USER=dbadmin
 CODEMIE_POSTGRES_DATABASE_PASSWORD="generated-password"
 
-# Keycloak Database Outputs (present when TF_VAR_keycloak_dedicated_database_instance=true)
+# Keycloak Database Outputs (present when keycloak_db_config.enabled=true)
 KEYCLOAK_POSTGRES_DATABASE_HOST=codemie-keycloak-rds.123456789012.us-east-1.rds.amazonaws.com
 KEYCLOAK_POSTGRES_DATABASE_PORT=5432
 KEYCLOAK_POSTGRES_DATABASE_NAME=keycloak
 KEYCLOAK_POSTGRES_DATABASE_USER=keycloak_admin
 KEYCLOAK_POSTGRES_DATABASE_PASSWORD="generated-password"
+
+# LiteLLM Database Outputs (present when litellm_db_config.enabled=true)
+LITELLM_POSTGRES_DATABASE_HOST=codemie-litellm-rds.123456789012.us-east-1.rds.amazonaws.com
+LITELLM_POSTGRES_DATABASE_PORT=5432
+LITELLM_POSTGRES_DATABASE_NAME=litellm
+LITELLM_POSTGRES_DATABASE_USER=litellm_admin
+LITELLM_POSTGRES_DATABASE_PASSWORD="generated-password"
+
+# Langfuse Database Outputs (present when langfuse_db_config.enabled=true)
+LANGFUSE_POSTGRES_DATABASE_HOST=codemie-langfuse-rds.123456789012.us-east-1.rds.amazonaws.com
+LANGFUSE_POSTGRES_DATABASE_PORT=5432
+LANGFUSE_POSTGRES_DATABASE_NAME=langfuse
+LANGFUSE_POSTGRES_DATABASE_USER=langfuse_admin
+LANGFUSE_POSTGRES_DATABASE_PASSWORD="generated-password"
 ```
 
 :::tip Save These Outputs
