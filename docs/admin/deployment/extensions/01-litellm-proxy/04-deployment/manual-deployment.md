@@ -58,7 +58,7 @@ kubectl create secret generic litellm-redis \
 
 **3. PostgreSQL Secret**
 
-Replace `your_database_host_here` and `your_strong_password_here` with the values from your PostgreSQL setup in [PostgreSQL Setup](../postgres-setup).
+Replace `your_database_host_here` with the host from `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_HOST`) and `your_strong_password_here` with the password for the LiteLLM PostgreSQL user.
 
 ```bash
 kubectl create secret generic litellm-postgresql \
