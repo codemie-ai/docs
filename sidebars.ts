@@ -566,7 +566,6 @@ const sidebars: SidebarsConfig = {
                   },
                   collapsed: true,
                   items: [
-                    'admin/deployment/extensions/litellm-proxy/postgres-setup',
                     'admin/deployment/extensions/litellm-proxy/configure-values',
                     'admin/deployment/extensions/litellm-proxy/auth-secrets',
                     'admin/deployment/extensions/litellm-proxy/model-config',

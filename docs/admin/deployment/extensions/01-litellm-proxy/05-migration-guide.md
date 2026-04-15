@@ -1,7 +1,7 @@
 ---
 id: migration-guide
 sidebar_label: Migration from DIAL
-sidebar_position: 7
+sidebar_position: 6
 title: Appendix - Migration Guide from DIAL to LiteLLM
 description: Migrate from deprecated DIAL Proxy to LiteLLM
 pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
@@ -22,7 +22,9 @@ We will first deploy and verify a standalone LiteLLM instance. Only after confir
 
 ### 1. Prepare the PostgreSQL Database
 
-Follow the instructions in [PostgreSQL Database Setup](./postgres-setup).
+The `postgres_litellm` database and user are created automatically by `db-init-job` during deployment. Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`.
+
+For manual database setup, see [Manual PostgreSQL Setup](./deployment/manual-deployment#manual-postgresql-setup).
 
 ### 2. Deploy LiteLLM Proxy Standalone
 

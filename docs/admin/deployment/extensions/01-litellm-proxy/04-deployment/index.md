@@ -1,14 +1,14 @@
 ---
 id: deployment-overview
 sidebar_label: Deployment
-sidebar_position: 6
-title: Step 5 - Deployment
+sidebar_position: 5
+title: Step 4 - Deployment
 description: Deploy LiteLLM Proxy using automated or manual methods
 pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
 pagination_next: null
 ---
 
-# Step 5: Deployment
+# Step 4: Deployment
 
 Choose one of the following methods to deploy the LiteLLM Proxy. **Automated Deployment** is recommended for most users as it automates secret creation, Helm deployment, and integration configuration.
 

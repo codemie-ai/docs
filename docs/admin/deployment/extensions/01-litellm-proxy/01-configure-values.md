@@ -1,14 +1,14 @@
 ---
 id: configure-values
 sidebar_label: Configure Values
-sidebar_position: 3
-title: Step 2 - Configure API and Proxy Values
+sidebar_position: 2
+title: Step 1 - Configure API and Proxy Values
 description: Configure CodeMie API and LiteLLM values.yaml files
 pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
 pagination_next: null
 ---
 
-# Step 2: Configure CodeMie API and LiteLLM Values
+# Step 1: Configure CodeMie API and LiteLLM Values
 
 This step is required for both Automated and Manual setups.
 
@@ -61,6 +61,24 @@ litellm-helm:
       defaultStorageClass: 'your-storage-class' # e.g., "gp3", "standard", etc.
     enabled: false # Redis is disabled by default
 ```
+
+### Enable Database Initialization Job
+
+`dbInitJob` automatically creates the `postgres_litellm` database and user during Helm deployment. It is **disabled by default**.
+
+```yaml
+dbInitJob:
+  enabled: true
+  initImage: alpine/psql:18.3
+  pgAdminSecret:
+    name: codemie-postgresql  # Secret with PostgreSQL admin credentials
+    userKey: PG_USER
+    passwordKey: PG_PASS
+```
+
+:::info
+When enabled, the deployment script (`helm-charts.sh`) automatically creates the `codemie-postgresql` secret using `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`. For manual deployment, create this secret before running Helm — see [Manual Deployment](./deployment/manual-deployment#step-52-create-secrets-and-configmaps).
+:::
 
 ### Redis Configuration
 

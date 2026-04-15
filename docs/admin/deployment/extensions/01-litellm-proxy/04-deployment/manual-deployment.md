@@ -69,6 +69,22 @@ kubectl create secret generic litellm-postgresql \
 --type=Opaque
 ```
 
+**4. PostgreSQL Admin Secret**
+
+Required if `dbInitJob.enabled: true` in `litellm/values-<cloud>.yaml`. This secret provides admin credentials used by the init job to create the `postgres_litellm` database and user automatically during deployment.
+
+```bash
+kubectl create secret generic codemie-postgresql \
+--namespace litellm \
+--from-literal=PG_USER="your_admin_user" \
+--from-literal=PG_PASS="your_admin_password" \
+--type=Opaque
+```
+
+:::info
+Admin credentials (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`) can be found in `deployment_outputs.env`.
+:::
+
 ### Cloud-Specific Secrets (Create only what you need)
 
 Refer to [Cloud Provider Authentication](../auth-secrets) for details on obtaining these credentials.
@@ -189,6 +205,82 @@ echo "LiteLLM UI is available at: https://$LITELLM_DOMAIN"
 LITELLM_MASTER_KEY=$(kubectl get secret litellm-masterkey -n litellm -o jsonpath='{.data.masterkey}' | base64 --decode)
 echo "Use 'admin' as the username and the following key as the password: $LITELLM_MASTER_KEY"
 ```
+
+## Manual PostgreSQL Setup
+
+<details>
+<summary>Click here if you prefer to create the database and user manually instead of using dbInitJob</summary>
+
+If creating the database manually, set `dbInitJob.enabled: false` in `litellm/values-<cloud>.yaml`.
+
+### Connect to PostgreSQL
+
+Your main database connection details can be found in the **`deployment_outputs.env`** file:
+
+```bash title="Example from deployment_outputs.env"
+CODEMIE_POSTGRES_DATABASE_HOST=...
+CODEMIE_POSTGRES_DATABASE_PORT=...
+CODEMIE_POSTGRES_DATABASE_USER=...
+CODEMIE_POSTGRES_DATABASE_PASSWORD="..."
+```
+
+Connect using one of the following methods:
+
+- Use your cloud provider's built-in query tools.
+- Deploy pgAdmin inside the cluster:
+
+```bash
+# Create a dedicated namespace
+kubectl create ns pgadmin
+
+# Create credentials for pgadmin
+kubectl create secret generic pgadmin4-credentials \
+--namespace pgadmin \
+--from-literal=password="$(openssl rand -hex 16)" \
+--type=Opaque
+
+# Inside cloned codemie-helm-charts
+# Deploy pgadmin using Helm
+helm upgrade --install pgadmin pgadmin/. -n pgadmin --values pgadmin/values.yaml --wait --timeout 900s --dependency-update
+
+# Forward a local port to the service to access the UI
+kubectl -n pgadmin port-forward svc/pgadmin-pgadmin4 8080:80
+
+# You can now access the pgadmin UI at http://localhost:8080
+# Default user: "pgadmin4@example.com"
+# Retrieve the pgAdmin password from the Kubernetes secret.
+kubectl -n pgadmin get secret pgadmin4-credentials -o jsonpath='{.data.password}' | base64 -d; echo
+```
+
+### Create Database and User
+
+:::warning Password Requirements
+
+Replace `'your_strong_password_here'` with a secure password. Generate one using:
+
+```bash
+openssl rand -base64 16 | tr '+/' '-_' | tr -d '= ' | cut -c1-16
+```
+
+Avoid special characters such as `@`, `#`, `$`, `!`, `%`, `&`, `=`, `\` as they can cause issues in connection strings.
+
+:::
+
+```sql
+CREATE DATABASE postgres_litellm;
+CREATE USER litellm WITH PASSWORD 'your_strong_password_here';
+GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
+```
+
+### Configure Schema Permissions
+
+Reconnect to the `postgres_litellm` database using admin credentials, then:
+
+```sql
+GRANT ALL ON SCHEMA public TO litellm;
+```
+
+</details>
 
 ## Next Steps
 

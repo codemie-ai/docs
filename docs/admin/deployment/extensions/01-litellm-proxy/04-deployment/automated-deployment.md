@@ -27,6 +27,8 @@ Before running the script, ensure you have completed the following configuration
 
 3. **Configure LLM Models:** Review and customize your desired models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](../model-config).
 
+4. **Database Initialization:** Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script will automatically create the `codemie-postgresql` secret using `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env` to create the `postgres_litellm` database and user during deployment.
+
 :::warning
 
 Completing all configuration steps mentioned in the checklist is **mandatory** for a successful installation.

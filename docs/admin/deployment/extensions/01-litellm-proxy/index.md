@@ -83,13 +83,18 @@ The diagram below depicts the LiteLLM Proxy deployed on Kubernetes infrastructur
 
 This guide provides a complete workflow for installing and integrating the LiteLLM Proxy. The process is divided into the following parts:
 
-1. **[PostgreSQL Database Setup](./postgres-setup)** — Create a dedicated database and user for LiteLLM.
-2. **[Configure API and Proxy Values](./configure-values)** — Configure the required `values.yaml` files for CodeMie and LiteLLM.
-3. **[Cloud Provider Authentication](./auth-secrets)** — Configure credentials for AWS, Azure, and GCP.
-4. **[LiteLLM Model Configuration](./model-config)** — Configure model lists and regions.
-5. **[Deployment](./deployment)** — Install the LiteLLM Proxy using one of two methods:
+1. **[Configure API and Proxy Values](./configure-values)** — Configure the required `values.yaml` files for CodeMie and LiteLLM.
+2. **[Cloud Provider Authentication](./auth-secrets)** — Configure credentials for AWS, Azure, and GCP.
+3. **[LiteLLM Model Configuration](./model-config)** — Configure model lists and regions.
+4. **[Deployment](./deployment)** — Install the LiteLLM Proxy using one of two methods:
    - Automated Deployment (Recommended)
    - Manual Deployment
+
+:::info PostgreSQL Database Setup
+
+The `postgres_litellm` database and user are created automatically during deployment via the `db-init-job`. For manual setup instructions, see [Manual PostgreSQL Setup](./deployment/manual-deployment#manual-postgresql-setup).
+
+:::
 
 For users migrating from the deprecated DIAL Proxy, see:
 
@@ -97,4 +102,4 @@ For users migrating from the deprecated DIAL Proxy, see:
 
 ## Next Steps
 
-Follow the deployment workflow starting with [PostgreSQL Database Setup](./postgres-setup).
+Follow the deployment workflow starting with [Configure API and Proxy Values](./configure-values).

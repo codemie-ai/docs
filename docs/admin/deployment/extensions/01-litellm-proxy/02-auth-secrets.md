@@ -1,14 +1,14 @@
 ---
 id: auth-secrets
 sidebar_label: Authentication
-sidebar_position: 4
-title: Step 3 - Cloud Provider Authentication
+sidebar_position: 3
+title: Step 2 - Cloud Provider Authentication
 description: Configure authentication secrets for AWS, Azure, and GCP
 pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overview
 pagination_next: null
 ---
 
-# Step 3: Cloud Provider Authentication Secrets
+# Step 2: Cloud Provider Authentication Secrets
 
 LiteLLM Proxy requires credentials to authenticate with cloud provider services. The recommended authentication method depends on where your Kubernetes cluster is hosted and which AI services you intend to use.
 
