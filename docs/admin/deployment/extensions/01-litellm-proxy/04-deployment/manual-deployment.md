@@ -82,7 +82,7 @@ kubectl create secret generic codemie-postgresql \
 ```
 
 :::info
-Admin credentials (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`) can be found in `deployment_outputs.env`.
+Admin credentials can be found in `deployment_outputs.env` — use `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` for a shared database, or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` for a dedicated LiteLLM database.
 :::
 
 ### Cloud-Specific Secrets (Create only what you need)
@@ -217,11 +217,18 @@ If creating the database manually, set `dbInitJob.enabled: false` in `litellm/va
 
 Your main database connection details can be found in the **`deployment_outputs.env`** file:
 
-```bash title="Example from deployment_outputs.env"
+```bash title="Example from deployment_outputs.env (shared database)"
 CODEMIE_POSTGRES_DATABASE_HOST=...
 CODEMIE_POSTGRES_DATABASE_PORT=...
 CODEMIE_POSTGRES_DATABASE_USER=...
 CODEMIE_POSTGRES_DATABASE_PASSWORD="..."
+```
+
+```bash title="Example from deployment_outputs.env (dedicated LiteLLM database)"
+LITELLM_POSTGRES_DATABASE_HOST=...
+LITELLM_POSTGRES_DATABASE_PORT=...
+LITELLM_POSTGRES_DATABASE_USER=...
+LITELLM_POSTGRES_DATABASE_PASSWORD="..."
 ```
 
 Connect using one of the following methods:

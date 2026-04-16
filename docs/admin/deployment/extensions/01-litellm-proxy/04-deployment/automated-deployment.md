@@ -27,7 +27,7 @@ Before running the script, ensure you have completed the following configuration
 
 3. **Configure LLM Models:** Review and customize your desired models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](../model-config).
 
-4. **Database Initialization:** Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script will automatically create the `codemie-postgresql` secret using `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env` to create the `postgres_litellm` database and user during deployment.
+4. **Database Initialization:** Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script will automatically create the required secrets to initialize the `postgres_litellm` database and user. Admin credentials are read from `deployment_outputs.env` — either `CODEMIE_POSTGRES_DATABASE_*` (shared database) or `LITELLM_POSTGRES_DATABASE_*` (dedicated database), depending on your setup.
 
 :::warning
 
@@ -40,10 +40,18 @@ Completing all configuration steps mentioned in the checklist is **mandatory** f
 Once all configurations are in place, execute the following command from the root of the repository. Replace `<cloud_name>` with your target cloud (`aws`, `azure`, or `gcp`) and specify the desired version.
 
 ```bash
-bash helm-charts.sh --cloud <cloud_name> --version=x.y.z --mode all --optional litellm
+bash helm-charts.sh --cloud <cloud_name> --version x.y.z --mode all --optional litellm
 ```
 
 During execution, the script may prompt you to enter authentication details if you are deploying for Azure or GCP.
+
+If LiteLLM uses a **shared database** (no `LITELLM_POSTGRES_DATABASE_HOST` in `deployment_outputs.env`), the script will also prompt:
+
+```
+Enter the LITELLM_POSTGRES_DATABASE_PASSWORD:
+```
+
+This password is set for the `litellm` database user created by the db-init job.
 
 ## Next Steps
 

@@ -68,6 +68,7 @@ litellm-helm:
 
 ```yaml
 dbInitJob:
+  # highlight-next-line
   enabled: true
   initImage: alpine/psql:18.3
   pgAdminSecret:
@@ -77,7 +78,7 @@ dbInitJob:
 ```
 
 :::info
-When enabled, the deployment script (`helm-charts.sh`) automatically creates the `codemie-postgresql` secret using `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`. For manual deployment, create this secret before running Helm — see [Manual Deployment](./deployment/manual-deployment#step-52-create-secrets-and-configmaps).
+When enabled, the deployment script (`helm-charts.sh`) automatically creates the `codemie-postgresql` secret using admin credentials from `deployment_outputs.env` — either `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` (shared database) or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` (dedicated LiteLLM database). For manual deployment, create this secret before running Helm — see [Manual Deployment](./deployment/manual-deployment#step-52-create-secrets-and-configmaps).
 :::
 
 ### Redis Configuration
