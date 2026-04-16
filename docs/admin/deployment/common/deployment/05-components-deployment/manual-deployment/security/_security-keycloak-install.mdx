@@ -18,7 +18,7 @@ Create the required Kubernetes secrets in the `security` namespace before instal
 
 Keycloak can use a dedicated database instance or share the existing CodeMie database. Choose the appropriate option based on your infrastructure.
 
-**Dedicated database instance** (when `TF_VAR_keycloak_dedicated_database_instance=true`):
+**Dedicated database instance** (when `TF_VAR_keycloak_db_config='{"enabled":true}'`):
 
 ```bash
 # Source the infrastructure outputs
@@ -29,7 +29,7 @@ kubectl create secret generic keycloak-postgresql \
   --namespace security
 ```
 
-**Shared CodeMie database** (when `TF_VAR_keycloak_dedicated_database_instance=false`):
+**Shared CodeMie database** (when `TF_VAR_keycloak_db_config='{"enabled":false}'`):
 
 ```bash
 # Source the infrastructure outputs

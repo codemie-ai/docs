@@ -40,7 +40,7 @@ Keycloak will be unavailable during the migration.
 
 :::info Dedicated database only
 
-1. Update the Terraform repository and set `TF_VAR_keycloak_dedicated_database_instance=true` in `deployment.conf`.
+1. Update the Terraform repository and set `TF_VAR_keycloak_db_config='{"enabled":true}'` in `deployment.conf`.
 2. Apply Terraform to provision a dedicated PostgreSQL instance.
 3. Copy `deployment_outputs.env` to `codemie-helm-charts`.
 
