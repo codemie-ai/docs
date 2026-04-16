@@ -14,6 +14,51 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.23.0</strong></summary>
+
+**Release Date:** April 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+#### Budget Enforcement Environment Variables
+
+Three new environment variables have been introduced to control LLM budget enforcement. All default to `false` (disabled):
+
+| Variable                            | Default | Description                                                                      |
+| ----------------------------------- | ------- | -------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | `false` | Enables budget limit checking for LLM proxy requests                             |
+| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
+| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
+
+See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration) and [API Configuration](../configuration/codemie/api-configuration) for details.
+
+#### Deprecated Budget Environment Variables
+
+The following environment variables are deprecated and will be removed in a future release. Replace them with the corresponding `budgets-config.yaml` fields:
+
+| Deprecated Variable                  | Type   | Default     | Replacement in `budgets-config.yaml` |
+| ------------------------------------ | ------ | ----------- | ------------------------------------ |
+| `DEFAULT_SOFT_BUDGET_LIMIT`          | float  | `200`       | `soft_budget`                        |
+| `DEFAULT_HARD_BUDGET_LIMIT`          | float  | `500`       | `max_budget`                         |
+| `DEFAULT_BUDGET_DURATION`            | string | `"30d"`     | `budget_duration`                    |
+| `DEFAULT_BUDGET_ID`                  | string | `"default"` | `budget_id`                          |
+| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | `premium_models` category entry      |
+| `LITELLM_CLI_BUDGET_NAME`            | string | `""`        | `cli` category entry                 |
+
+See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration) for migration details.
+
+<h3>Hotfixes</h3>
+
+- **2.23.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.1) – April 15, 2026
+- **2.23.2** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.2) – April 16, 2026
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.22.0</strong></summary>
 
 **Release Date:** April 9, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.22.0)
@@ -28,7 +73,7 @@ No breaking configuration changes were introduced in this release.
 
 <h3>Hotfixes</h3>
 
-- **2.22.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.22.1) — April 9, 2026
+- **2.22.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.22.1) – April 9, 2026
 
 </details>
 

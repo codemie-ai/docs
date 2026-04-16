@@ -571,18 +571,19 @@ Tag LLM requests for cost tracking and usage analytics.
 Set spending limits per user or team to control LLM usage costs.
 
 :::warning Deprecated
-`DEFAULT_SOFT_BUDGET_LIMIT`, `DEFAULT_HARD_BUDGET_LIMIT`, `DEFAULT_BUDGET_DURATION`, `DEFAULT_BUDGET_ID`, `LITELLM_PREMIUM_MODELS_BUDGET_NAME`, and `LITELLM_CLI_BUDGET_NAME` are deprecated. Use `budgets-config.yaml` instead. See [Budget Configuration](../extensions/litellm-proxy/budget-configuration) for details.
+`DEFAULT_SOFT_BUDGET_LIMIT`, `DEFAULT_HARD_BUDGET_LIMIT`, `DEFAULT_BUDGET_DURATION`, `DEFAULT_BUDGET_ID`, `LITELLM_PREMIUM_MODELS_BUDGET_NAME`, and `LITELLM_CLI_BUDGET_NAME` are deprecated in 2.23.0.
+
+Replace them with the equivalent `budgets-config.yaml` fields.
+
+See the [Release Notes](../../update/release-notes) for the migration table and [Budget Configuration](../extensions/litellm-proxy/budget-configuration) for full details.
 :::
 
-| Parameter                            | Type   | Default     | Description                                                                                                                                                                               |
-| ------------------------------------ | ------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DEFAULT_SOFT_BUDGET_LIMIT`          | float  | `200`       | **(Deprecated)** Soft limit in USD triggering warnings. Replaced by `soft_budget` in `budgets-config.yaml`.                                                                               |
-| `DEFAULT_HARD_BUDGET_LIMIT`          | float  | `500`       | **(Deprecated)** Hard limit in USD blocking requests when exceeded. Replaced by `max_budget` in `budgets-config.yaml`.                                                                    |
-| `DEFAULT_BUDGET_DURATION`            | string | `"30d"`     | **(Deprecated)** Budget reset period. Replaced by `budget_duration` in `budgets-config.yaml`.                                                                                             |
-| `DEFAULT_BUDGET_ID`                  | string | `"default"` | **(Deprecated)** Identifier for the default end-user budget. Replaced by `budget_id` in `budgets-config.yaml`.                                                                            |
-| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | **(Deprecated)** Budget name for premium model spend tracking. Replaced by the `premium_models` category entry in `budgets-config.yaml`.                                                  |
-| `LITELLM_CLI_BUDGET_NAME`            | string | `""`        | **(Deprecated)** Budget name for CodeMie CLI spend tracking. Replaced by the `cli` category entry in `budgets-config.yaml`.                                                               |
-| `LITELLM_PREMIUM_MODELS_ALIASES`     | string | `""`        | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when premium budget is enabled. |
+| Parameter                           | Type    | Default | Description                                                                                                                                                                               |
+| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables budget limit checking for LLM proxy requests. When `true`, CodeMie enforces predefined budgets from `budgets-config.yaml`.                                                        |
+| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup. Required for budget enforcement to work.                                                                |
+| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup. Ensures existing users are assigned the correct budgets retroactively.                                                         |
+| `LITELLM_PREMIUM_MODELS_ALIASES`    | string  | `""`    | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when premium budget is enabled. |
 
 ### LiteLLM Spend Tracking
 

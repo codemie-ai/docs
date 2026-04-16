@@ -20,11 +20,11 @@ Budgets in LiteLLM help you control costs and manage API usage by setting:
 - **Budget Duration**: Reset period after which spending counters restart
 - **Budget Category**: Logical grouping that determines how the budget is applied
 
-### Budget Types
+## Budget Types
 
-LiteLLM supports two types of budgets for different use cases:
+LiteLLM supports two types of budgets for different use cases – **API Key Budget** and **Predefined Budgets**.
 
-#### 1. API Key Budget
+### API Key Budget
 
 This budget is assigned to the specific API key used to integrate CodeMie with LiteLLM.
 
@@ -34,9 +34,9 @@ This budget is assigned to the specific API key used to integrate CodeMie with L
 The API key budget should not be the primary cost control mechanism. Instead, use it as a safety net to prevent unexpected issues at the integration layer.
 :::
 
-#### 2. Predefined Budgets
+### Predefined Budgets
 
-Predefined budgets are applied automatically to end users based on their usage category (web/API, CLI, or premium models). These are defined in `budgets-config.yaml` and mounted into the CodeMie pod at startup — no manual creation in the LiteLLM UI is required.
+Predefined budgets are applied automatically to end users based on their usage category (web/API, CLI, or premium models). These are defined in `budgets-config.yaml` and mounted into the CodeMie pod at startup – no manual creation in the LiteLLM UI is required.
 
 :::info Cost Control Strategy
 By setting the API key budget to unlimited and configuring predefined budgets per category, you ensure:
@@ -89,12 +89,39 @@ The `budget_category` field controls which type of usage the budget applies to:
 | `cli`            | CodeMie CLI proxy spending          |
 | `premium_models` | Costly model spending via CLI       |
 
+## Enabling Budget Enforcement
+
+Budget enforcement is disabled by default. To activate it, set the following environment variables in the CodeMie API deployment:
+
+| Variable                            | Type    | Default | Description                                                                      |
+| ----------------------------------- | ------- | ------- | -------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables budget limit checking for LLM proxy requests                             |
+| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
+| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
+
+**In Helm Values** (`values.yaml`):
+
+```yaml
+api:
+  env:
+    - name: LLM_PROXY_BUDGET_CHECK_ENABLED
+      value: "true"
+    - name: LLM_PROXY_BUDGET_SYNC_ENABLED
+      value: "true"
+    - name: LLM_PROXY_BUDGET_BACKFILL_ENABLED
+      value: "true"
+```
+
+:::warning
+`LLM_PROXY_BUDGET_SYNC_ENABLED` must be `true` for predefined budgets from `budgets-config.yaml` to be loaded into the database. Without it, budget definitions in the config file have no effect.
+:::
+
 ## Customizing Budgets via Helm
 
 To override the default budget or add category-specific budgets, mount a custom `budgets-config.yaml` using the Helm chart's `extraVolumeMounts`, `extraVolumes`, and `extraObjects` values.
 
 :::tip
-The custom `budgets-config.yaml` fully replaces the built-in default. Include all budgets you need — including the `default` platform budget — when providing a custom file.
+The custom `budgets-config.yaml` fully replaces the built-in default. Include all budgets you need – including the `default` platform budget – when providing a custom file.
 :::
 
 Add the following to your Helm values:
@@ -143,7 +170,7 @@ extraObjects:
 
 After applying the Helm values, the ConfigMap is mounted at `/app/config/budgets/budgets-config.yaml` inside the pod and picked up automatically.
 
-## Accessing the LiteLLM UI
+## Accessing the Budgets Page in LiteLLM UI
 
 1. Navigate to your LiteLLM Proxy UI endpoint
 2. Log in with your administrative credentials
@@ -151,7 +178,7 @@ After applying the Helm values, the ConfigMap is mounted at `/app/config/budgets
 
 ![LiteLLM Budgets Page](./images/litellm-budgets.png)
 
-## Creating a Budget
+## Creating a Budget in LiteLLM UI
 
 Predefined budgets are managed via `budgets-config.yaml` (see [Customizing Budgets via Helm](#customizing-budgets-via-helm)). You can also create ad-hoc budgets directly in the LiteLLM UI for teams or projects not covered by predefined categories.
 
@@ -236,21 +263,6 @@ When a user calls the LiteLLM proxy with a model whose name contains any of the 
 3. Standard budget checks continue to run against the base user identity as usual
 
 The `/spending` endpoint returns an additional `premium_current_spending` field when this feature is enabled, so you can monitor premium model costs separately.
-
-## Deprecated Configuration
-
-:::warning Deprecated
-The following environment variables have been deprecated and replaced by `budgets-config.yaml`. They may be removed in a future release. Migrate to the Helm-based configuration described in [Customizing Budgets via Helm](#customizing-budgets-via-helm).
-:::
-
-| Variable                             | Replaced by                                                                 |
-| ------------------------------------ | --------------------------------------------------------------------------- |
-| `DEFAULT_SOFT_BUDGET_LIMIT`          | `soft_budget` field in `budgets-config.yaml`                                |
-| `DEFAULT_HARD_BUDGET_LIMIT`          | `max_budget` field in `budgets-config.yaml`                                 |
-| `DEFAULT_BUDGET_DURATION`            | `budget_duration` field in `budgets-config.yaml`                            |
-| `DEFAULT_BUDGET_ID`                  | `budget_id` field in `budgets-config.yaml`                                  |
-| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | `budget_id` of the `premium_models` category entry in `budgets-config.yaml` |
-| `LITELLM_CLI_BUDGET_NAME`            | `budget_id` of the `cli` category entry in `budgets-config.yaml`            |
 
 ## See Also
 
