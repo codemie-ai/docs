@@ -9,15 +9,16 @@ pagination_next: null
 
 # LiteLLM Budget Configuration
 
-LiteLLM allows you to set spending limits and rate limits through budgets. This guide explains how to create and configure budgets in the LiteLLM UI for CodeMie.
+LiteLLM allows you to set spending limits and rate limits through budgets. This guide explains how predefined budgets work in CodeMie and how to customize them via Helm.
 
 ## Overview
 
 Budgets in LiteLLM help you control costs and manage API usage by setting:
 
-- **Max Budget**: Maximum spending limit in dollars
-- **Max Tokens per Minute (TPM)**: Token rate limiting
-- **Max Requests per Minute (RPM)**: Request rate limiting
+- **Soft Budget**: Spending threshold in USD that triggers warnings
+- **Max Budget**: Hard spending limit in USD that blocks requests when exceeded
+- **Budget Duration**: Reset period after which spending counters restart
+- **Budget Category**: Logical grouping that determines how the budget is applied
 
 ### Budget Types
 
@@ -33,19 +34,114 @@ This budget is assigned to the specific API key used to integrate CodeMie with L
 The API key budget should not be the primary cost control mechanism. Instead, use it as a safety net to prevent unexpected issues at the integration layer.
 :::
 
-#### 2. Default Budget (End User Budget)
+#### 2. Predefined Budgets
 
-This budget is assigned to individual CodeMie end users to control their spending. The CodeMie API automatically assigns this budget to each user when they make requests through the platform.
-
-**Recommended Configuration**: Set **specific spending limits** to restrict how much each CodeMie user can spend on AI services.
+Predefined budgets are applied automatically to end users based on their usage category (web/API, CLI, or premium models). These are defined in `budgets-config.yaml` and mounted into the CodeMie pod at startup — no manual creation in the LiteLLM UI is required.
 
 :::info Cost Control Strategy
-By setting the API key budget to unlimited and restricting each end user with a default budget, you ensure:
+By setting the API key budget to unlimited and configuring predefined budgets per category, you ensure:
 
 - CodeMie service remains available (no integration-level blocking)
-- Individual users have controlled spending limits
-- Easy cost management per user or team
+- Individual users have controlled spending limits by usage type
+- Easy cost management per platform category
   :::
+
+## How Budget Configuration Works
+
+CodeMie uses a `budgets-config.yaml` file to define predefined budgets. This file is mounted into the pod and applied at startup. Budgets are matched to usage by their `budget_category` field.
+
+### Default Platform Budget
+
+By default, the following budget is pre-configured and applied to all end users:
+
+```yaml
+predefined_budgets:
+  - budget_id: default
+    name: Default Budget
+    description: Default platform budget for new LiteLLM customers.
+    soft_budget: 50.0
+    max_budget: 100.0
+    budget_duration: 30d
+    budget_category: platform
+```
+
+## Budget Fields Reference
+
+Each entry in `predefined_budgets` supports the following fields:
+
+| Field             | Type   | Required | Description                                                                                       |
+| ----------------- | ------ | -------- | ------------------------------------------------------------------------------------------------- |
+| `budget_id`       | string | Yes      | Unique identifier used to reference this budget in LiteLLM                                        |
+| `name`            | string | Yes      | Human-readable display name                                                                       |
+| `description`     | string | No       | Description of the budget's purpose                                                               |
+| `soft_budget`     | float  | Yes      | Soft limit in USD that triggers usage warnings                                                    |
+| `max_budget`      | float  | Yes      | Hard limit in USD that blocks requests when exceeded                                              |
+| `budget_duration` | string | Yes      | Reset period, e.g. `30d` for monthly or `7d` for weekly                                           |
+| `budget_category` | string | Yes      | Category that determines how this budget is applied (see [Budget Categories](#budget-categories)) |
+
+## Budget Categories
+
+The `budget_category` field controls which type of usage the budget applies to:
+
+| Category         | Description                         |
+| ---------------- | ----------------------------------- |
+| `platform`       | Default web/API usage for end users |
+| `cli`            | CodeMie CLI proxy spending          |
+| `premium_models` | Costly model spending via CLI       |
+
+## Customizing Budgets via Helm
+
+To override the default budget or add category-specific budgets, mount a custom `budgets-config.yaml` using the Helm chart's `extraVolumeMounts`, `extraVolumes`, and `extraObjects` values.
+
+:::tip
+The custom `budgets-config.yaml` fully replaces the built-in default. Include all budgets you need — including the `default` platform budget — when providing a custom file.
+:::
+
+Add the following to your Helm values:
+
+```yaml
+extraVolumeMounts: |
+  - name: codemie-budgets-config
+    mountPath: /app/config/budgets/budgets-config.yaml
+    subPath: budgets-config.yaml
+
+extraVolumes: |
+  - name: codemie-budgets-config
+    configMap:
+      name: codemie-budgets-config
+
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: codemie-budgets-config
+    data:
+      budgets-config.yaml: |
+        predefined_budgets:
+          - budget_id: default
+            name: Default
+            description: Default platform budget for new LiteLLM customers.
+            soft_budget: 80.0
+            max_budget: 120.0
+            budget_duration: 30d
+            budget_category: platform
+          - budget_id: codemie_cli
+            name: CodeMie CLI
+            description: Budget for CodeMie CLI usage.
+            soft_budget: 100.0
+            max_budget: 150.0
+            budget_duration: 30d
+            budget_category: cli
+          - budget_id: codemie_premium_models
+            name: CodeMie Premium Models
+            description: Budget for premium models usage.
+            soft_budget: 20.0
+            max_budget: 30.0
+            budget_duration: 30d
+            budget_category: premium_models
+```
+
+After applying the Helm values, the ConfigMap is mounted at `/app/config/budgets/budgets-config.yaml` inside the pod and picked up automatically.
 
 ## Accessing the LiteLLM UI
 
@@ -56,6 +152,8 @@ By setting the API key budget to unlimited and restricting each end user with a 
 ![LiteLLM Budgets Page](./images/litellm-budgets.png)
 
 ## Creating a Budget
+
+Predefined budgets are managed via `budgets-config.yaml` (see [Customizing Budgets via Helm](#customizing-budgets-via-helm)). You can also create ad-hoc budgets directly in the LiteLLM UI for teams or projects not covered by predefined categories.
 
 ### Step 1: Open Budget Creation Form
 
@@ -72,13 +170,7 @@ Fill in the required and optional fields:
 
 - **Field**: Budget ID
 - **Description**: A human-friendly name for the budget
-- **Example**: `default`, `team-budget`, `production-budget`
-
-:::info Budget Naming
-**Default Budget (End Users)**: AI/Run CodeMie uses the budget name `default` by default for end users. If you create a budget with a different name, you must configure the API to use it via environment variable.
-
-**API Key Budget**: The budget name for the API Key has no specific naming pattern. You can use any descriptive name (e.g., `codemie-api-key`, `integration-budget`, `unlimited-api`).
-:::
+- **Example**: `team-alpha`, `project-x`, `integration-budget`
 
 #### Rate Limiting (Optional)
 
@@ -95,69 +187,33 @@ Configure rate limits to control usage:
 
 ![Budget Created Successfully](./images/litellm-budgets.png)
 
-## Default Budget Configuration
-
-AI/Run CodeMie is pre-configured to use a budget named `default`. When you create this budget in LiteLLM:
-
-1. Set **Budget ID** to: `default`
-2. Configure your desired spending and rate limits
-3. Save the budget
-
-The CodeMie API will automatically use this budget for all requests.
-
-## Using a Custom Budget Name
-
-If you want to use a different budget name instead of `default`:
-
-### Step 1: Create Your Custom Budget
-
-1. Follow the budget creation steps above
-2. Use your desired budget name (e.g., `production-budget`)
-
-### Step 2: Configure CodeMie API
-
-Update the CodeMie API deployment to reference your custom budget name:
-
-**Environment Variable**:
-
-```bash
-DEFAULT_BUDGET_ID=production-budget
-```
-
-**In Helm Values** (`values.yaml`):
-
-```yaml
-api:
-  env:
-    - name: DEFAULT_BUDGET_ID
-      value: "production-budget"
-```
-
-After updating the configuration, restart the CodeMie API pods for the changes to take effect.
-
 ## Premium Models Budget
 
-For costly models such as Claude Opus or OpenAI o1, you can set up a separate budget to track and enforce spending independently from the default end-user budget. When configured, CodeMie automatically attributes premium model requests to a derived LiteLLM customer identity (`{user_email}_{budget_name}`), allowing you to apply stricter limits to expensive models without affecting the standard budget.
+For costly models such as Claude Opus or OpenAI o1, you can configure a separate budget to track and enforce spending independently from the default end-user budget. When configured, CodeMie automatically attributes premium model requests to a derived LiteLLM customer identity (`{user_email}_{budget_id}`), allowing you to apply stricter limits to expensive models without affecting the standard budget.
 
 :::info Feature Toggle
-This feature is fully opt-in. It only activates when `LITELLM_PREMIUM_MODELS_BUDGET_NAME` is set in the CodeMie API configuration. If the variable is empty or absent, all requests use the standard budget behavior unchanged.
+This feature activates when a budget with `budget_category: premium_models` is present in `budgets-config.yaml` and `LITELLM_PREMIUM_MODELS_ALIASES` is set. If neither is configured, all requests use standard budget behavior.
 :::
 
-### Step 1: Create the Premium Budget in LiteLLM
+### Step 1: Define the Premium Models Budget
 
-1. Follow the [Creating a Budget](#creating-a-budget) steps above
-2. Set **Budget ID** to: `premium_models` (or any name you prefer — must match the value you set in `LITELLM_PREMIUM_MODELS_BUDGET_NAME`)
-3. Configure tighter spending limits appropriate for costly models
-4. Click **Create Budget**
+Add a `premium_models` budget entry to your `budgets-config.yaml` (via [Helm customization](#customizing-budgets-via-helm)):
 
-### Step 2: Configure the CodeMie API
+```yaml
+- budget_id: codemie_premium_models
+  name: CodeMie Premium Models
+  description: Budget for premium models usage.
+  soft_budget: 20.0
+  max_budget: 30.0
+  budget_duration: 30d
+  budget_category: premium_models
+```
 
-Set the following environment variables to enable premium budget tracking:
+### Step 2: Configure Premium Model Aliases
+
+Set the `LITELLM_PREMIUM_MODELS_ALIASES` environment variable to specify which models are treated as premium:
 
 ```bash
-# Name of the LiteLLM budget created in Step 1
-LITELLM_PREMIUM_MODELS_BUDGET_NAME=premium_models
-
 # Comma-separated model name substrings that qualify as premium
 LITELLM_PREMIUM_MODELS_ALIASES=opus,o1
 ```
@@ -167,8 +223,6 @@ LITELLM_PREMIUM_MODELS_ALIASES=opus,o1
 ```yaml
 api:
   env:
-    - name: LITELLM_PREMIUM_MODELS_BUDGET_NAME
-      value: "premium_models"
     - name: LITELLM_PREMIUM_MODELS_ALIASES
       value: "opus,o1"
 ```
@@ -177,11 +231,26 @@ api:
 
 When a user calls the LiteLLM proxy with a model whose name contains any of the configured aliases:
 
-1. CodeMie derives a separate LiteLLM customer identity: `{user_email}_{budget_name}` (e.g., `john@company.com_premium_models`)
+1. CodeMie derives a separate LiteLLM customer identity: `{user_email}_{budget_id}` (e.g., `john@company.com_codemie_premium_models`)
 2. The request is attributed to that identity for independent budget enforcement
 3. Standard budget checks continue to run against the base user identity as usual
 
 The `/spending` endpoint returns an additional `premium_current_spending` field when this feature is enabled, so you can monitor premium model costs separately.
+
+## Deprecated Configuration
+
+:::warning Deprecated
+The following environment variables have been deprecated and replaced by `budgets-config.yaml`. They may be removed in a future release. Migrate to the Helm-based configuration described in [Customizing Budgets via Helm](#customizing-budgets-via-helm).
+:::
+
+| Variable                             | Replaced by                                                                 |
+| ------------------------------------ | --------------------------------------------------------------------------- |
+| `DEFAULT_SOFT_BUDGET_LIMIT`          | `soft_budget` field in `budgets-config.yaml`                                |
+| `DEFAULT_HARD_BUDGET_LIMIT`          | `max_budget` field in `budgets-config.yaml`                                 |
+| `DEFAULT_BUDGET_DURATION`            | `budget_duration` field in `budgets-config.yaml`                            |
+| `DEFAULT_BUDGET_ID`                  | `budget_id` field in `budgets-config.yaml`                                  |
+| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | `budget_id` of the `premium_models` category entry in `budgets-config.yaml` |
+| `LITELLM_CLI_BUDGET_NAME`            | `budget_id` of the `cli` category entry in `budgets-config.yaml`            |
 
 ## See Also
 

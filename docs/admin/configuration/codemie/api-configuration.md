@@ -570,14 +570,19 @@ Tag LLM requests for cost tracking and usage analytics.
 
 Set spending limits per user or team to control LLM usage costs.
 
-| Parameter                            | Type   | Default     | Description                                                                                                                                                                                                 |
-| ------------------------------------ | ------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DEFAULT_SOFT_BUDGET_LIMIT`          | float  | `200`       | Soft limit in USD triggering warnings before hard cutoff                                                                                                                                                    |
-| `DEFAULT_HARD_BUDGET_LIMIT`          | float  | `500`       | Hard limit in USD completely blocking requests when exceeded                                                                                                                                                |
-| `DEFAULT_BUDGET_DURATION`            | string | `"30d"`     | Budget reset period (e.g., `30d` for monthly, `7d` for weekly)                                                                                                                                              |
-| `DEFAULT_BUDGET_ID`                  | string | `"default"` | Identifier for the default end-user budget in LiteLLM                                                                                                                                                       |
-| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | Budget name for premium model spend tracking. When set, enables separate budget attribution for costly models (e.g., `premium_models`). Leave empty to disable.                                             |
-| `LITELLM_PREMIUM_MODELS_ALIASES`     | string | `""`        | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when `LITELLM_PREMIUM_MODELS_BUDGET_NAME` is set. |
+:::warning Deprecated
+`DEFAULT_SOFT_BUDGET_LIMIT`, `DEFAULT_HARD_BUDGET_LIMIT`, `DEFAULT_BUDGET_DURATION`, `DEFAULT_BUDGET_ID`, `LITELLM_PREMIUM_MODELS_BUDGET_NAME`, and `LITELLM_CLI_BUDGET_NAME` are deprecated. Use `budgets-config.yaml` instead. See [Budget Configuration](../extensions/litellm-proxy/budget-configuration) for details.
+:::
+
+| Parameter                            | Type   | Default     | Description                                                                                                                                                                               |
+| ------------------------------------ | ------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DEFAULT_SOFT_BUDGET_LIMIT`          | float  | `200`       | **(Deprecated)** Soft limit in USD triggering warnings. Replaced by `soft_budget` in `budgets-config.yaml`.                                                                               |
+| `DEFAULT_HARD_BUDGET_LIMIT`          | float  | `500`       | **(Deprecated)** Hard limit in USD blocking requests when exceeded. Replaced by `max_budget` in `budgets-config.yaml`.                                                                    |
+| `DEFAULT_BUDGET_DURATION`            | string | `"30d"`     | **(Deprecated)** Budget reset period. Replaced by `budget_duration` in `budgets-config.yaml`.                                                                                             |
+| `DEFAULT_BUDGET_ID`                  | string | `"default"` | **(Deprecated)** Identifier for the default end-user budget. Replaced by `budget_id` in `budgets-config.yaml`.                                                                            |
+| `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | **(Deprecated)** Budget name for premium model spend tracking. Replaced by the `premium_models` category entry in `budgets-config.yaml`.                                                  |
+| `LITELLM_CLI_BUDGET_NAME`            | string | `""`        | **(Deprecated)** Budget name for CodeMie CLI spend tracking. Replaced by the `cli` category entry in `budgets-config.yaml`.                                                               |
+| `LITELLM_PREMIUM_MODELS_ALIASES`     | string | `""`        | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when premium budget is enabled. |
 
 ### LiteLLM Spend Tracking
 
