@@ -318,6 +318,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
 | [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
 | [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
+| [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
 
@@ -537,6 +538,37 @@ model_list:
     id: claude-opus-4-6-20260205-eu-central-1
     base_model: eu.anthropic.claude-opus-4-6-v1
     label: "Bedrock Claude Opus 4.6"
+```
+
+</details>
+
+#### Claude Opus 4.7
+
+<details>
+<summary><strong>Claude Opus 4.7</strong></summary>
+
+```yaml
+# US Region
+- model_name: claude-opus-4-7
+  litellm_params:
+    model: bedrock/us.anthropic.claude-opus-4-7
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-opus-4-7-us-west-2
+    base_model: us.anthropic.claude-opus-4-7
+    label: "Bedrock Claude Opus 4.7"
+
+# EU Region
+- model_name: claude-opus-4-7
+  litellm_params:
+    model: bedrock/eu.anthropic.claude-opus-4-7
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-opus-4-7-eu-central-1
+    base_model: eu.anthropic.claude-opus-4-7
+    label: "Bedrock Claude Opus 4.7"
 ```
 
 </details>
