@@ -75,6 +75,46 @@ While you can integrate your existing IdP (OKTA, Entra ID, etc.) with Keycloak, 
 ## Deployment & Infrastructure
 
 <details>
+<summary><strong>What external network access is required by the platform?</strong></summary>
+
+The platform requires outbound access to the following external resources:
+
+**From the Kubernetes cluster** (container image registries):
+
+- `europe-west3-docker.pkg.dev`
+- `docker.io`
+- `docker.elastic.co`
+- `cr.fluentbit.io`
+- `ghcr.io`
+- `registry.k8s.io`
+- `quay.io`
+- `registry.developers.crunchydata.com`
+
+**From the administrator's machine** (Helm chart repositories):
+
+- `https://europe-west3-docker.pkg.dev`
+- `https://helm.elastic.co`
+- `https://fluent.github.io/helm-charts`
+- `https://kubernetes.github.io/ingress-nginx`
+- `https://codecentric.github.io/helm-charts`
+- `https://epam.github.io/edp-helm-charts/stable`
+- `https://oauth2-proxy.github.io/manifests`
+- `oci://registry.developers.crunchydata.com`
+- `oci://ghcr.io`
+- `https://helm.runix.net`
+
+More detailed information can be provided upon request.
+
+</details>
+
+<details>
+<summary><strong>Can Microsoft SQL Server be used instead of PostgreSQL?</strong></summary>
+
+No. Platform components currently only support PostgreSQL as the database backend. Microsoft SQL Server is not supported.
+
+</details>
+
+<details>
 <summary><strong>Why do we need external access to NATS via Network Load Balancer?</strong></summary>
 
 NATS is part of the AI/Run CodeMie Plugin Engine and enables tool execution in external environments beyond the CodeMie backend.
