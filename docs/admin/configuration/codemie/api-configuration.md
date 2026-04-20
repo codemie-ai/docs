@@ -271,11 +271,12 @@ Configure where and how CodeMie stores uploaded files, attachments, and generate
 
 Configuration for Amazon S3 storage backend (requires `FILES_STORAGE_TYPE=aws`).
 
-| Parameter                     | Type   | Default                    | Description                                                 |
-| ----------------------------- | ------ | -------------------------- | ----------------------------------------------------------- |
-| `AWS_S3_REGION`               | string | `""`                       | S3 bucket region (e.g., `us-east-1`) for low-latency access |
-| `AWS_S3_BUCKET_NAME`          | string | `""`                       | S3 bucket name for user files and attachments               |
-| `CODEMIE_STORAGE_BUCKET_NAME` | string | `"codemie-global-storage"` | Bucket for system-level shared assets and resources         |
+| Parameter                     | Type   | Default                    | Description                                                                                                            |
+| ----------------------------- | ------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `AWS_DEFAULT_REGION`          | string | `""`                       | Standard AWS region used as a fallback for `AWS_S3_REGION` when it is not set                                          |
+| `AWS_S3_REGION`               | string | `""`                       | S3 bucket region (e.g., `us-east-1`). Takes priority over `AWS_DEFAULT_REGION`; if unset, `AWS_DEFAULT_REGION` is used |
+| `AWS_S3_BUCKET_NAME`          | string | `""`                       | S3 bucket name for user files and attachments                                                                          |
+| `CODEMIE_STORAGE_BUCKET_NAME` | string | `"codemie-global-storage"` | Bucket for system-level shared assets and resources                                                                    |
 
 ### Cloud Storage - Azure Blob
 
