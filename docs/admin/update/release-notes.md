@@ -55,6 +55,7 @@ See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-conf
 
 - **2.23.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.1) – April 15, 2026
 - **2.23.2** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.2) – April 16, 2026
+- **2.23.4** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.4) – April 21, 2026
 
 </details>
 
