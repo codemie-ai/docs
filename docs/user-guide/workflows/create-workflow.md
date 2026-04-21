@@ -364,11 +364,11 @@ Workflows enable you to build sophisticated automation that adapts to your data,
 
 Now that you understand the Visual Workflow Editor interface and controls, explore these topics:
 
-- **[Create from Template](./create-workflow-from-template)**: Start with pre-built templates and customize them
-- **[LLM Model Configuration](./llm-model-name-in-workflow)**: Configure AI models for workflow states
-- **[Workflow Templates](./workflow-templates)**: Browse available templates for common use cases
-- **[YAML Configuration Guide](./configuration/introduction)**: Deep dive into advanced YAML features
-- **[Advanced Features](./configuration/advanced-features)**: Learn about templating, interruptions, and complex patterns
+- **[Create from Template](create-workflow-from-template)**: Start with pre-built templates and customize them
+- **[LLM Model Configuration](llm-model-name-in-workflow)**: Configure AI models for workflow states
+- **[Workflow Templates](workflow-templates)**: Browse available templates for common use cases
+- **[YAML Configuration Guide](configuration/introduction)**: Deep dive into advanced YAML features
+- **[Advanced Features](configuration/advanced-features)**: Learn about templating, interruptions, and complex patterns
 
 :::tip Practice Makes Perfect
 Try the [AI Katas workflow series](/user-guide/ai-katas/) for hands-on practice building workflows with guided challenges.
