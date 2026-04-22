@@ -356,7 +356,7 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql {8}
+```sql {6,12}
 WITH avg_bytes AS (
     SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
     FROM system.parts
