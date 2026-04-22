@@ -147,7 +147,7 @@ Choose the appropriate query based on your needs:
 
 - **[Compressed Size by Month (Fast)](#compressed-size-by-month-fast)** – Actual compressed disk usage and row counts by month
 - **[Row Count by Day (Fast)](#by-day-row-count-fast)** – Number of records by day
-- **[Uncompressed Size by Day (Heavy)](#uncompressed-size-by-day-heavy)** – Decompresses data to calculate approximate size. Not actual disk usage – use only for comparing relative data volume between days
+- **[Estimated On-Disk Size by Day](#estimated-on-disk-size-by-day)** – Estimates compressed on-disk size per day based on average row size. Use for comparing relative data volume between days
 
 :::note
 Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
@@ -302,65 +302,95 @@ ORDER BY day ASC;
   </TabItem>
 </Tabs>
 
-#### Uncompressed Size by Day (Heavy)
+#### Estimated On-Disk Size by Day
 
 <Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
+Calculates the average on-disk bytes per row from `system.parts`, then multiplies by the actual row count per day. The total always matches the real `bytes_on_disk`. Only shows data within the TTL window.
+
 ```sql
+WITH avg_bytes AS (
+    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active
+      AND database = 'default'
+      AND `table` = 'observations'
+)
 SELECT
     toDate(start_time) AS day,
     count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
+    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
 FROM default.observations
 GROUP BY day
-ORDER BY day ASC;
+ORDER BY day DESC;
 ```
 
   </TabItem>
   <TabItem value="traces" label="Traces">
 
 ```sql
+WITH avg_bytes AS (
+    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active
+      AND database = 'default'
+      AND `table` = 'traces'
+)
 SELECT
     toDate(timestamp) AS day,
     count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
+    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
 FROM default.traces
 GROUP BY day
-ORDER BY day ASC;
+ORDER BY day DESC;
 ```
 
   </TabItem>
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so uncompressed size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
 
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
-You can replace `query_log` with a table from [this list](#system-log-tables).
+System log tables are partitioned by month, so `system.parts` cannot give per-day breakdown. Use the same `avg_bytes` approach as for Langfuse tables. You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql {5}
+```sql {8}
+WITH avg_bytes AS (
+    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active
+      AND database = 'system'
+      AND `table` = 'query_log'
+)
 SELECT
     event_date AS day,
     count() AS rows,
-    formatReadableSize(sum(length(toString(query)))) AS approx_size
+    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
 FROM system.query_log
 GROUP BY day
-ORDER BY day ASC;
+ORDER BY day DESC;
 ```
 
   </TabItem>
   <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
 
 ```sql
+WITH avg_bytes AS (
+    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active
+      AND database = 'system'
+      AND `table` = 'opentelemetry_span_log'
+)
 SELECT
     finish_date AS day,
     count() AS rows,
-    formatReadableSize(sum(length(toString(attribute)))) AS approx_size
+    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
 FROM system.opentelemetry_span_log
 GROUP BY day
-ORDER BY day ASC;
+ORDER BY day DESC;
 ```
 
   </TabItem>
