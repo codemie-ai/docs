@@ -481,7 +481,7 @@ Since deletion is not instant, check the progress here:
   <TabItem value="observations" label="Observations" default>
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'observations'
 ORDER BY create_time DESC
@@ -492,7 +492,7 @@ LIMIT 5;
   <TabItem value="traces" label="Traces">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'traces'
 ORDER BY create_time DESC
@@ -503,7 +503,7 @@ LIMIT 5;
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'blob_storage_file_log'
 ORDER BY create_time DESC
@@ -516,7 +516,7 @@ LIMIT 5;
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql {3}
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'query_log'
 ORDER BY create_time DESC
@@ -527,7 +527,7 @@ LIMIT 5;
   <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'opentelemetry_span_log'
 ORDER BY create_time DESC
