@@ -19,6 +19,13 @@ AI/Run CodeMie assistants and Workflows can be triggered using webhooks. It mean
 This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create and manage Webhook integrations.
 :::
 
+:::note Multi-Worker and Multi-Pod Deployments
+If the platform runs with more than one worker (`WORKERS > 1`) or multiple pod replicas, the
+`INTERNAL_BIND_KEY` environment variable must be set to the same value across all workers and
+pods. Without it, each worker generates a random key — webhook requests routed between workers
+or pods will fail authentication.
+:::
+
 ## 1. Create Resource to Trigger
 
 1.1. Create an assistant you want to react to webhooks.
