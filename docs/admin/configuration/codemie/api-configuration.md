@@ -360,12 +360,13 @@ Configure authentication providers and access control for users and administrato
 
 ### IDP Configuration
 
-| Parameter             | Type   | Default   | Description                                                                                                             |
-| --------------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development), `oidc` (generic OIDC for specific client needs) |
-| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                 |
-| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                              |
-| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                      |
+| Parameter             | Type   | Default   | Description                                                                                                                                                                                                                                                               |
+| --------------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development), `oidc` (generic OIDC for specific client needs)                                                                                                                                                   |
+| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                                                                                                                                                                   |
+| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                                                                                                                                                                                |
+| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                                                                                                                                                                        |
+| `INTERNAL_BIND_KEY`   | string | `""`      | Shared secret used by all FastAPI workers to authenticate internal requests in local mode. If not set, each worker generates a random key — cross-worker webhook requests will fail. Must be set when running multiple workers (`WORKERS > 1`) with `IDP_PROVIDER=local`. |
 
 ### User Management Mode
 
