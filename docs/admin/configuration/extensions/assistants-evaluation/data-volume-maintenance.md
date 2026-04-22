@@ -51,6 +51,22 @@ clickhouse-client --password <password_from_above>
 
 ## 1. Disk Usage Analysis
 
+### Database Size Summary
+
+A quick overview of total disk usage and row counts across both databases.
+
+```sql
+SELECT
+    if(database = '', '=== TOTAL ===', database) AS database_name,
+    formatReadableSize(sum(bytes_on_disk)) AS total_size_on_disk,
+    sum(rows) AS total_rows
+FROM system.parts
+WHERE active AND (database IN ('default', 'system'))
+GROUP BY database
+    WITH ROLLUP
+ORDER BY total_rows ASC;
+```
+
 ### Top Tables by Disk Size
 
 This query identifies which tables are consuming the most disk space.
@@ -145,15 +161,11 @@ The following queries help you understand how data is distributed over time and 
 
 Choose the appropriate query based on your needs:
 
-- **[Compressed Size by Month](#compressed-size-by-month)** – Actual compressed disk usage and row counts by month
+- **[On-Disk Size by Month](#on-disk-size-by-month)** – Actual compressed disk usage and row counts by month
 - **[Row Count by Day](#row-count-by-day)** – Number of records by day
-- **[Estimated On-Disk Size by Day](#estimated-on-disk-size-by-day)** – Estimates compressed on-disk size per day based on average row size. Use for comparing relative data volume between days
+- **[Estimated On-Disk Size by Day](#estimated-on-disk-size-by-day)** – Estimates compressed on-disk size per day based on average row size. Shows all tables as columns for easy side-by-side comparison
 
-:::note
-Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
-:::
-
-#### Compressed Size by Month
+#### On-Disk Size by Month
 
 Shows actual compressed disk usage by month. Reads partition metadata from `system.parts`.
 
@@ -302,100 +314,6 @@ ORDER BY day ASC;
   </TabItem>
 </Tabs>
 
-#### Estimated On-Disk Size by Day
-
-Calculates the average on-disk bytes per row from `system.parts`, then multiplies by the actual row count per day. The total always matches the real `bytes_on_disk`.
-
-<Tabs groupId="table-type">
-  <TabItem value="observations" label="Observations" default>
-
-```sql
-WITH avg_bytes AS (
-    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
-    FROM system.parts
-    WHERE active
-      AND database = 'default'
-      AND `table` = 'observations'
-)
-SELECT
-    toDate(start_time) AS day,
-    count() AS rows,
-    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
-FROM default.observations
-GROUP BY day
-ORDER BY day DESC;
-```
-
-  </TabItem>
-  <TabItem value="traces" label="Traces">
-
-```sql
-WITH avg_bytes AS (
-    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
-    FROM system.parts
-    WHERE active
-      AND database = 'default'
-      AND `table` = 'traces'
-)
-SELECT
-    toDate(timestamp) AS day,
-    count() AS rows,
-    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
-FROM default.traces
-GROUP BY day
-ORDER BY day DESC;
-```
-
-  </TabItem>
-  <TabItem value="blob_storage" label="Blob Storage Logs">
-
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so size by day cannot be queried from `system.parts`. Use [Row Count by Day](#row-count-by-day) to analyze this table's data distribution.
-
-  </TabItem>
-  <TabItem value="system_logs" label="System Logs">
-
-You can replace `query_log` with a table from [this list](#system-log-tables).
-
-```sql {6,12}
-WITH avg_bytes AS (
-    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
-    FROM system.parts
-    WHERE active
-      AND database = 'system'
-      AND `table` = 'query_log'
-)
-SELECT
-    event_date AS day,
-    count() AS rows,
-    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
-FROM system.query_log
-GROUP BY day
-ORDER BY day DESC;
-```
-
-  </TabItem>
-  <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
-
-```sql
-WITH avg_bytes AS (
-    SELECT sum(bytes_on_disk) / sum(rows) AS bytes_per_row
-    FROM system.parts
-    WHERE active
-      AND database = 'system'
-      AND `table` = 'opentelemetry_span_log'
-)
-SELECT
-    finish_date AS day,
-    count() AS rows,
-    formatReadableSize(count() * (SELECT bytes_per_row FROM avg_bytes)) AS estimated_size_on_disk
-FROM system.opentelemetry_span_log
-GROUP BY day
-ORDER BY day DESC;
-```
-
-  </TabItem>
-</Tabs>
-
 :::tip Date Column Names
 Check the date column name for your table:
 
@@ -404,6 +322,132 @@ Check the date column name for your table:
 
 To verify the date column for other tables, see [Table Structure](#3-table-structure) section.
 :::
+
+#### Estimated On-Disk Size by Day
+
+Calculates the average on-disk bytes per row from `system.parts`, then multiplies by the actual row count per day. All tables shown as columns for easy side-by-side comparison.
+
+<Tabs>
+  <TabItem value="default_db" label="Langfuse (default)" default>
+
+```sql
+WITH table_avg_bytes AS (
+    SELECT
+        `table`,
+        sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active AND database = 'default' AND rows > 0
+    GROUP BY `table`
+),
+daily_rows AS (
+    SELECT 'observations'          AS tbl, toDate(start_time) AS day, count() AS rows FROM default.observations          GROUP BY day
+    UNION ALL
+    SELECT 'traces'                AS tbl, toDate(timestamp)  AS day, count() AS rows FROM default.traces                GROUP BY day
+    UNION ALL
+    SELECT 'blob_storage_file_log' AS tbl, toDate(created_at) AS day, count() AS rows FROM default.blob_storage_file_log GROUP BY day
+)
+SELECT
+    if(day = '1970-01-01', '=== TOTAL ===', toString(day)) AS day,
+    formatReadableSize(sum(d.rows * a.bytes_per_row))                                    AS total_estimated,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'observations'))          AS observations,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'traces'))                AS traces,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'blob_storage_file_log')) AS blob_log
+FROM daily_rows d
+JOIN table_avg_bytes a ON d.tbl = a.`table`
+GROUP BY d.day WITH ROLLUP
+ORDER BY d.day DESC
+LIMIT 14;
+```
+
+  </TabItem>
+  <TabItem value="system_db" label="ClickHouse (system)">
+
+```sql
+WITH table_avg_bytes AS (
+    SELECT
+        `table`,
+        sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active AND database = 'system' AND rows > 0
+      AND `table` IN (
+          'zookeeper_log', 'trace_log', 'opentelemetry_span_log',
+          'query_log', 'processors_profile_log', 'metric_log', 'part_log'
+      )
+    GROUP BY `table`
+),
+daily_rows AS (
+    SELECT 'zookeeper_log'          AS tbl, event_date  AS day, count() AS rows FROM system.zookeeper_log          GROUP BY day
+    UNION ALL
+    SELECT 'trace_log'              AS tbl, event_date  AS day, count() AS rows FROM system.trace_log              GROUP BY day
+    UNION ALL
+    SELECT 'opentelemetry_span_log' AS tbl, finish_date AS day, count() AS rows FROM system.opentelemetry_span_log GROUP BY day
+    UNION ALL
+    SELECT 'query_log'              AS tbl, event_date  AS day, count() AS rows FROM system.query_log              GROUP BY day
+    UNION ALL
+    SELECT 'processors_profile_log' AS tbl, event_date  AS day, count() AS rows FROM system.processors_profile_log GROUP BY day
+    UNION ALL
+    SELECT 'metric_log'             AS tbl, event_date  AS day, count() AS rows FROM system.metric_log             GROUP BY day
+    UNION ALL
+    SELECT 'part_log'               AS tbl, event_date  AS day, count() AS rows FROM system.part_log               GROUP BY day
+)
+SELECT
+    if(day = '1970-01-01', '=== TOTAL ===', toString(day)) AS day,
+    formatReadableSize(sum(d.rows * a.bytes_per_row))                                          AS total_estimated,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'zookeeper_log'))          AS zookeeper,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'trace_log'))              AS trace,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'opentelemetry_span_log')) AS opentelemetry,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'query_log'))              AS query,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'processors_profile_log')) AS processors,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'metric_log'))             AS metric,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.tbl = 'part_log'))               AS part
+FROM daily_rows d
+JOIN table_avg_bytes a ON d.tbl = a.`table`
+GROUP BY d.day WITH ROLLUP
+ORDER BY d.day DESC
+LIMIT 14;
+```
+
+  </TabItem>
+  <TabItem value="both_db" label="Both Databases">
+
+Shows `default` and `system` totals side by side. The `WITH ROLLUP` adds a grand total row across the full period.
+
+```sql
+WITH table_avg_bytes AS (
+    SELECT
+        database,
+        `table`,
+        sum(bytes_on_disk) / sum(rows) AS bytes_per_row
+    FROM system.parts
+    WHERE active AND rows > 0 AND database IN ('default', 'system')
+    GROUP BY database, `table`
+),
+daily_rows AS (
+    SELECT 'default' AS db, 'observations'          AS tbl, toDate(start_time) AS day, count() AS rows FROM default.observations          GROUP BY day UNION ALL
+    SELECT 'default' AS db, 'traces'                AS tbl, toDate(timestamp)  AS day, count() AS rows FROM default.traces                GROUP BY day UNION ALL
+    SELECT 'default' AS db, 'blob_storage_file_log' AS tbl, toDate(created_at) AS day, count() AS rows FROM default.blob_storage_file_log GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'zookeeper_log'          AS tbl, event_date  AS day, count() AS rows FROM system.zookeeper_log          GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'trace_log'              AS tbl, event_date  AS day, count() AS rows FROM system.trace_log              GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'opentelemetry_span_log' AS tbl, finish_date AS day, count() AS rows FROM system.opentelemetry_span_log GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'query_log'              AS tbl, event_date  AS day, count() AS rows FROM system.query_log              GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'processors_profile_log' AS tbl, event_date  AS day, count() AS rows FROM system.processors_profile_log GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'metric_log'             AS tbl, event_date  AS day, count() AS rows FROM system.metric_log             GROUP BY day UNION ALL
+    SELECT 'system'  AS db, 'part_log'               AS tbl, event_date  AS day, count() AS rows FROM system.part_log               GROUP BY day
+)
+SELECT
+    if(day = '1970-01-01', '=== TOTAL ===', toString(day)) AS day,
+    formatReadableSize(sum(d.rows * a.bytes_per_row))                     AS total_estimated_all,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.db = 'default')) AS default_db_total,
+    formatReadableSize(sumIf(d.rows * a.bytes_per_row, d.db = 'system'))  AS system_db_total
+FROM daily_rows d
+JOIN table_avg_bytes a ON d.tbl = a.`table` AND d.db = a.database
+GROUP BY d.day WITH ROLLUP
+ORDER BY d.day DESC
+LIMIT 14;
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
