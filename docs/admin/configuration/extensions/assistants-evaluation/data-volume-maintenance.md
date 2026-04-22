@@ -146,7 +146,7 @@ The following queries help you understand how data is distributed over time and 
 Choose the appropriate query based on your needs:
 
 - **[Compressed Size by Month](#compressed-size-by-month)** – Actual compressed disk usage and row counts by month
-- **[Row Count by Day](#by-day-row-count)** – Number of records by day
+- **[Row Count by Day](#row-count-by-day)** – Number of records by day
 - **[Estimated On-Disk Size by Day](#estimated-on-disk-size-by-day)** – Estimates compressed on-disk size per day based on average row size. Use for comparing relative data volume between days
 
 :::note
@@ -188,7 +188,7 @@ ORDER BY partition ASC;
   </TabItem>
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count) to analyze this table's data distribution.
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#row-count-by-day) to analyze this table's data distribution.
 
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
@@ -233,7 +233,7 @@ ORDER BY partition ASC;
   </TabItem>
 </Tabs>
 
-#### By Day: Row Count
+#### Row Count by Day
 
 Shows row count per day. Executes instantly by reading indices only.
 
@@ -349,7 +349,7 @@ ORDER BY day DESC;
   </TabItem>
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count) to analyze this table's data distribution.
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so size by day cannot be queried from `system.parts`. Use [Row Count by Day](#row-count-by-day) to analyze this table's data distribution.
 
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
