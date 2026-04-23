@@ -19,8 +19,38 @@ For new installations, the theme is configured automatically. This guide is only
 
 - `kubectl` access to the cluster
 - `helm` with access to the `codemie-helm-charts` repository
+- Keycloak 26 or above
 
-## Step 1: Upgrade the Keycloak Helm Chart
+## Step 1: Update Values File
+
+In `keycloak-helm/values-<cloud_name>.yaml`, ensure the `extraInitContainers`, `extraVolumeMounts`, and `extraVolumes` blocks are present and uncommented:
+
+```yaml
+extraInitContainers: |
+  - name: theme-provider
+    image: codemie/codemie-keycloak-theme:2.15.2
+    imagePullPolicy: IfNotPresent
+    command:
+      - sh
+    args:
+      - -c
+      - |
+        echo "Copying theme..."
+        cp -R /opt/keycloak-theme/* /keycloak-theme
+    volumeMounts:
+      - name: theme
+        mountPath: /keycloak-theme
+
+extraVolumeMounts: |
+  - name: theme
+    mountPath: /opt/keycloak/providers/
+
+extraVolumes: |
+  - name: theme
+    emptyDir: {}
+```
+
+## Step 2: Upgrade the Keycloak Helm Chart
 
 ```bash
 helm upgrade --install keycloak keycloak-helm/. \
@@ -38,7 +68,23 @@ kubectl exec -n security keycloakx-0 -- ls /opt/keycloak/providers/
 # Expected: keycloak-theme-codemie.jar
 ```
 
-## Step 2: Upgrade the OAuth2 Proxy Helm Chart
+## Step 3: Update OAuth2 Proxy KeycloakRealm Template
+
+In `oauth2-proxy/templates/keycloakrealm.yaml`, add the `themes` block to the spec:
+
+```yaml
+spec:
+  keycloakRef:
+    kind: Keycloak
+    name: keycloak
+  realmName: codemie-prod
+  # highlight-start
+  themes:
+    loginTheme: codemie
+  # highlight-end
+```
+
+## Step 4: Upgrade the OAuth2 Proxy Helm Chart
 
 ```bash
 helm upgrade --install oauth2-proxy oauth2-proxy/. \
@@ -56,10 +102,10 @@ kubectl get keycloakrealm codemie-prod -n oauth2-proxy -o jsonpath='{.spec.theme
 # Expected: {"loginTheme":"codemie"}
 ```
 
-## Step 3: Verify
+## Step 5: Verify
 
-Open the Keycloak login page in the browser. The CodeMie branding should be visible instead of the default Keycloak theme.
+Open the CodeMie at `https://codemie.<your-domain>` — it will redirect to the Keycloak login page. The CodeMie branding should be visible instead of the default Keycloak theme.
 
 :::tip
-You can also verify via Keycloak Admin Console: switch to the `codemie-prod` realm, then go to **Realm Settings → Themes → Login Theme** — it should show `codemie`.
+You can also verify via Keycloak Admin Console at `https://keycloak.<your-domain>/auth/admin/`: switch to the `codemie-prod` realm, then go to **Realm Settings → Themes → Login Theme** — it should show `codemie`.
 :::
