@@ -225,6 +225,10 @@ GRANT ALL ON SCHEMA public TO langfuse_admin;
 
 To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
 
+:::note
+To determine the optimal TTL value based on your current storage usage, see how to check your [Data distribution by time period](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#data-distribution-by-time-period).
+:::
+
 ### Langfuse Tables
 
 Set `retention.langfuse.enabled: true` in `values.yaml`. TTL is configured for the following tables:
