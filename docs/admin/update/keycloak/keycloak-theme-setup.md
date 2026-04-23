@@ -59,3 +59,7 @@ kubectl get keycloakrealm codemie-prod -n oauth2-proxy -o jsonpath='{.spec.theme
 ## Step 3: Verify
 
 Open the Keycloak login page in the browser. The CodeMie branding should be visible instead of the default Keycloak theme.
+
+:::tip
+You can also verify via Keycloak Admin Console: switch to the `codemie-prod` realm, then go to **Realm Settings → Themes → Login Theme** — it should show `codemie`.
+:::
