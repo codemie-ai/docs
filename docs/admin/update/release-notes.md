@@ -46,6 +46,12 @@ A new `[FILTER]` block must be added to `fluent-bit/values.yaml` to strip `span_
 
 This filter is included in the updated `codemie-helm-charts`. No manual action is required if you are upgrading using the provided Helm charts.
 
+#### Keycloak Login Theme
+
+The CodeMie login theme (`codemie`) is now automatically applied to the `codemie-prod` realm via the `oauth2-proxy` Helm chart.
+
+**Upgrade instructions:** [Keycloak Theme Setup](./keycloak/keycloak-theme-setup)
+
 </details>
 
 <details>
