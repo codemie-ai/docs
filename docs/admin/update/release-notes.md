@@ -50,7 +50,7 @@ No third-party component updates in this release.
 
    The CodeMie login theme (`codemie`) is now automatically applied to the `codemie-prod` realm via the `oauth2-proxy` Helm chart.
 
-   **Upgrade instructions:** [Keycloak Theme Setup](./keycloak/keycloak-theme-setup)
+   **Upgrade instructions:** [Keycloak Theme Setup](keycloak/keycloak-theme-setup)
 
 </details>
 
