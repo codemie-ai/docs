@@ -46,6 +46,31 @@ A new `[FILTER]` block must be added to `fluent-bit/values.yaml` to strip `span_
 
 This filter is included in the updated `codemie-helm-charts`. No manual action is required if you are upgrading using the provided Helm charts.
 
+#### New Environment Variable: `INTERNAL_BIND_KEY`
+
+A new `INTERNAL_BIND_KEY` environment variable has been introduced. It is a shared secret used
+by all FastAPI workers and pods to authenticate internal requests. Without it, each worker
+generates a random key — cross-worker and cross-pod webhook requests will fail when running
+multiple workers (`WORKERS > 1`) or multiple pod replicas.
+
+**If upgrading using Helm charts:**
+
+The updated Helm chart automatically creates a Kubernetes Secret with a random value for
+`INTERNAL_BIND_KEY`. No manual action is required for standard deployments.
+
+:::warning ArgoRollout deployments
+Automatic secret generation is skipped when `argoRollout` is enabled. Create the Kubernetes
+Secret manually and reference it via `security.processAuthSecret.name` and
+`security.processAuthSecret.field`.
+:::
+
+**If deploying without Helm charts:**
+
+Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
+Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
+
+See [API Configuration](../configuration/codemie/api-configuration) for full details.
+
 </details>
 
 <details>
