@@ -392,7 +392,7 @@ The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql {8}
+```sql {6,14}
 WITH table_compression AS (
     SELECT
         `table`,
