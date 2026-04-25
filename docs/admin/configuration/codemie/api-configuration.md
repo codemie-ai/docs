@@ -299,9 +299,9 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 
 ## Security & Encryption
 
-Protect sensitive data at rest using cloud key management services or HashiCorp Vault.
-
 ### Encryption Configuration
+
+Protect sensitive data at rest using cloud key management services or HashiCorp Vault.
 
 | Parameter         | Type   | Default   | Description                                                                                                                           |
 | ----------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -352,6 +352,14 @@ Encrypt data using Vault's Transit secrets engine for centralized key management
 | `VAULT_TRANSIT_KEY_NAME`    | string | `"codemie"` | Transit engine key name for encryption                    |
 | `VAULT_TRANSIT_MOUNT_POINT` | string | `"transit"` | Mount path for Transit secrets engine                     |
 
+### Inter-process Communication
+
+Authenticate inter-process requests between FastAPI workers and pods.
+
+| Parameter           | Type   | Default | Description                                                                                                                                                                                                                          |
+| ------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `INTERNAL_BIND_KEY` | string | random  | Shared secret for authenticating internal requests between workers and pods. Defaults to a random value per worker — set explicitly to the same value across all workers and pod replicas to ensure webhook triggers work correctly. |
+
 ---
 
 ## Identity & Access Management
@@ -360,13 +368,12 @@ Configure authentication providers and access control for users and administrato
 
 ### IDP Configuration
 
-| Parameter             | Type   | Default   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development), `oidc` (generic OIDC for specific client needs)                                                                                                                                                                                                                                                                                                                          |
-| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                                                                                                                                                                                                                                                                                                                                          |
-| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                                                                                                                                                                                                                                                                                                                                                       |
-| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                                                                                                                                                                                                                                                                                                                                               |
-| `INTERNAL_BIND_KEY`   | string | `""`      | Shared secret used by all FastAPI workers and pods to authenticate internal requests. If not set, each worker generates a random key — cross-worker and cross-pod webhook requests will fail. Must be set when running multiple workers (`WORKERS > 1`) or multiple pod replicas. Use a strong random value (e.g., `openssl rand -hex 32`). Treat as a secret — store in a secrets manager or Kubernetes Secret, not in plain environment files. |
+| Parameter             | Type   | Default   | Description                                                                                                             |
+| --------------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development), `oidc` (generic OIDC for specific client needs) |
+| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                 |
+| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                              |
+| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                      |
 
 ### User Management Mode
 
