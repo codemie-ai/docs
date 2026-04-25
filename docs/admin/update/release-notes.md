@@ -48,10 +48,10 @@ This filter is included in the updated `codemie-helm-charts`. No manual action i
 
 #### New Environment Variable: `INTERNAL_BIND_KEY`
 
-A new `INTERNAL_BIND_KEY` environment variable has been introduced. It is a shared secret used
-by all FastAPI workers and pods to authenticate internal requests. Without it, each worker
-generates a random key — cross-worker and cross-pod webhook requests will fail when running
-multiple workers (`WORKERS > 1`) or multiple pod replicas.
+A new `INTERNAL_BIND_KEY` environment variable has been introduced.
+It is a shared secret for inter-process communication.
+Without it, webhook trigger may fail when running multiple workers (`WORKERS > 1`) or multiple pod replicas.
+ 
 
 **If upgrading using Helm charts:**
 
@@ -69,7 +69,7 @@ Secret manually and reference it via `security.processAuthSecret.name` and
 Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
 Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
-See [API Configuration](../configuration/codemie/api-configuration) for full details.
+See [API Configuration](../configuration/codemie/api-configuration#interprocess-communication) for full details.
 
 </details>
 
