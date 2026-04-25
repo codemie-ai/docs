@@ -69,7 +69,7 @@ Secret manually and reference it via `security.processAuthSecret.name` and
 Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
 Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
-See [API Configuration](../configuration/codemie/api-configuration#interprocess-communication) for full details.
+See [API Configuration](../configuration/codemie/api-configuration#inter-process-communication) for full details.
 
 </details>
 
