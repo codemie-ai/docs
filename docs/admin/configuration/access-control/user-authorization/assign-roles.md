@@ -58,9 +58,9 @@ with full platform access.
 **For `developer` role users:**
 
 - **Keycloak-managed mode** (`ENABLE_USER_MANAGEMENT=False`) — continue to
-  [Assign Attributes](./assign-attributes) to grant project access via Keycloak attributes.
+  [Assign Attributes](./assign-attributes.md) to grant project access via Keycloak attributes.
   Without attributes, `developer` users cannot access any projects.
 - **Platform-managed mode** (`ENABLE_USER_MANAGEMENT=True`) — no further Keycloak configuration
   needed. The user can sign in immediately. A Platform Admin then assigns them to projects
   through the in-app UI: see
-  [Project & User Management](../../../../user-guide/project-user-management/projects).
+  [Project & User Management](../../../../user-guide/project-user-management/projects.md).

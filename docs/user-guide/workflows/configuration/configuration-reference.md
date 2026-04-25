@@ -55,10 +55,10 @@ assistants:
   limit, the output is truncated and an error is logged. This setting applies to all tools used
   by the assistant, including GitHub, web scraping, filesystem, and other integrations. Increase
   this value if your workflow regularly processes large tool outputs. See
-  [Troubleshooting](./troubleshooting#tool-output-token-limit-exceeded) for diagnosis and
+  [Troubleshooting](./troubleshooting.md#tool-output-token-limit-exceeded) for diagnosis and
   mitigation strategies.
 - **exclude_extra_context_tools**: Disable automatic context tools
-- **skills**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow) for usage details.
+- **skills**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
 
 #### Tool Configuration:

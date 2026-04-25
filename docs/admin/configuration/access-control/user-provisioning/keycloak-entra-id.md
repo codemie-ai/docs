@@ -140,7 +140,7 @@ Configure only Mapper 1 (role) and optionally Mapper 3 (picture).
 
 **Mapper 1: Assign Default Role (Required)**
 
-This mapper automatically assigns the `developer` role to all new SSO users. For more details, see [Step 2.1: Assign a Role](../user-authorization/assign-roles).
+This mapper automatically assigns the `developer` role to all new SSO users. For more details, see [Step 2.1: Assign a Role](../user-authorization/assign-roles.md).
 
 Navigate to the **Mappers** tab from your Identity Provider's configuration page.
 
@@ -165,7 +165,7 @@ Configure and save the mapper: Fill in the fields with the following values and 
 
 This mapper automatically creates a personal project for each new SSO user by mapping their
 email to the `applications` Keycloak attribute. For more details, see
-[Step 2.2: Assign Attributes](../user-authorization/assign-attributes).
+[Step 2.2: Assign Attributes](../user-authorization/assign-attributes.md).
 
 :::info
 If `ENABLE_USER_MANAGEMENT=True`, skip this mapper. Personal projects are created
@@ -234,7 +234,7 @@ All new users who sign in via SSO will now be automatically created and granted 
 shared projects):
 
 - **Keycloak-managed mode** — find the user in the Keycloak user list and manage their attributes
-  via [Step 2.2: Assign Attributes](../user-authorization/assign-attributes).
+  via [Step 2.2: Assign Attributes](../user-authorization/assign-attributes.md).
 - **Platform-managed mode** — assign the user to projects through the in-app UI.
-  See [Project & User Management](../../../../user-guide/project-user-management/projects).
+  See [Project & User Management](../../../../user-guide/project-user-management/projects.md).
   :::

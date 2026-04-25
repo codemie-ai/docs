@@ -1,0 +1,15 @@
+---
+id: accessing-applications
+sidebar_position: 6
+title: Accessing AI/Run CodeMie Applications
+sidebar_label: Accessing Applications
+pagination_prev: admin/deployment/gcp/components-deployment/components-deployment-overview
+pagination_next: admin/configuration/index
+---
+
+import AccessingApplicationsContent from '../common/deployment/accessing-codemie/\_accessing-codemie-applications.mdx';
+
+<AccessingApplicationsContent
+  keycloakUrl="http(s)://keycloak.<your-domain>/auth/admin"
+  kibanaUrl="http(s)://kibana.<your-domain>"
+/>

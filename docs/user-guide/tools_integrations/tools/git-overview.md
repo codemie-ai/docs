@@ -15,7 +15,7 @@ Git integration enables your assistants to interact with version control systems
 
 AI/Run CodeMie supports Git integration with multiple platforms:
 
-### [GitHub / GitLab / Bitbucket](./git-github-gitlab-bitbucket)
+### [GitHub / GitLab / Bitbucket](./git-github-gitlab-bitbucket.md)
 
 Integration with the most popular Git hosting platforms:
 
@@ -31,7 +31,7 @@ Integration with the most popular Git hosting platforms:
 - Issue tracking and project management
 - CI/CD pipeline interaction
 
-### [Azure DevOps](./git-azuredevops)
+### [Azure DevOps](./git-azuredevops.md)
 
 Comprehensive Azure DevOps integration including:
 
@@ -62,5 +62,5 @@ For detailed setup instructions, click on the specific Git platform above.
 ---
 
 :::tip Getting Started
-Start by configuring your [Git integration](../integrations/) with the appropriate credentials for your Git hosting platform.
+Start by configuring your [Git integration](../integrations/index.md) with the appropriate credentials for your Git hosting platform.
 :::

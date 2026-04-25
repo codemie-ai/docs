@@ -288,7 +288,7 @@ The Visual Editor and YAML editor are synchronized. Changes made in one view are
 :::tip When to Use YAML
 Switch to YAML editing when you need features like Jinja templating, complex conditional expressions, or when you want to copy/paste configuration blocks. For most workflow creation tasks, the Visual Editor is faster and easier.
 
-For detailed YAML configuration syntax and features, see the [Workflow YAML Configuration Guide](./configuration/introduction).
+For detailed YAML configuration syntax and features, see the [Workflow YAML Configuration Guide](./configuration/introduction.md).
 :::
 
 ## Saving and Running Workflows
@@ -364,14 +364,14 @@ Workflows enable you to build sophisticated automation that adapts to your data,
 
 Now that you understand the Visual Workflow Editor interface and controls, explore these topics:
 
-- **[Create from Template](./create-workflow-from-template)**: Start with pre-built templates and customize them
-- **[LLM Model Configuration](./llm-model-name-in-workflow)**: Configure AI models for workflow states
-- **[Workflow Templates](./workflow-templates)**: Browse available templates for common use cases
-- **[YAML Configuration Guide](./configuration/introduction)**: Deep dive into advanced YAML features
-- **[Advanced Features](./configuration/advanced-features)**: Learn about templating, interruptions, and complex patterns
+- **[Create from Template](./create-workflow-from-template.md)**: Start with pre-built templates and customize them
+- **[LLM Model Configuration](./llm-model-name-in-workflow.md)**: Configure AI models for workflow states
+- **[Workflow Templates](./workflow-templates.md)**: Browse available templates for common use cases
+- **[YAML Configuration Guide](./configuration/introduction.md)**: Deep dive into advanced YAML features
+- **[Advanced Features](./configuration/advanced-features.md)**: Learn about templating, interruptions, and complex patterns
 
 :::tip Practice Makes Perfect
-Try the [AI Katas workflow series](/user-guide/ai-katas/) for hands-on practice building workflows with guided challenges.
+Try the [AI Katas workflow series](../ai-katas/index.md) for hands-on practice building workflows with guided challenges.
 :::
 
 :::info Video Tutorial

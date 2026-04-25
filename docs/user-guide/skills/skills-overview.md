@@ -66,8 +66,8 @@ Public skills can be discovered and attached from the Skills Marketplace.
 
 Ready to create your first skill? Continue to the next guide:
 
-[Create a Skill →](./create-skill)
+[Create a Skill →](./create-skill.md)
 
 Or explore how to attach skills to assistants:
 
-[Attach Skills to Assistants →](./attach-skills-to-assistants)
+[Attach Skills to Assistants →](./attach-skills-to-assistants.md)

@@ -212,6 +212,6 @@ The created skill can now be:
 
 After creating skills:
 
-- [Manage Skills](./manage-skills) - Edit, export, or delete skills
-- [Attach to Assistants](./attach-skills-to-assistants) - Use skills with assistants
-- [Publish to Marketplace](./marketplace-skills) - Share skills with community
+- [Manage Skills](./manage-skills.md) - Edit, export, or delete skills
+- [Attach to Assistants](./attach-skills-to-assistants.md) - Use skills with assistants
+- [Publish to Marketplace](./marketplace-skills.md) - Share skills with community

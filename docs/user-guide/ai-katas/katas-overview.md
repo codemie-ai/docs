@@ -23,6 +23,6 @@ AI Katas is a learning platform offering structured exercises designed to help y
 
 ## Next Steps
 
-- Learn [how to work with Katas](./working-with-katas) - browse, filter, and complete exercises
-- Check the [Leaderboard](./leaderboard) to track your ranking
-- For admins: [Manage Katas](./manage-katas-admin)
+- Learn [how to work with Katas](./working-with-katas.md) - browse, filter, and complete exercises
+- Check the [Leaderboard](./leaderboard.md) to track your ranking
+- For admins: [Manage Katas](./manage-katas-admin.md)

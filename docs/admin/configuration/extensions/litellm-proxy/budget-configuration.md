@@ -266,6 +266,6 @@ The `/spending` endpoint returns an additional `premium_current_spending` field 
 
 ## See Also
 
-- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/)
-- [LiteLLM Model Configuration](../../../deployment/extensions/litellm-proxy/model-config)
-- [API Configuration Reference](../../codemie/api-configuration)
+- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/index.md)
+- [LiteLLM Model Configuration](../../../deployment/extensions/litellm-proxy/model-config.md)
+- [API Configuration Reference](../../codemie/api-configuration.md)

@@ -1318,7 +1318,7 @@ Claude models on Vertex AI **require** two parameters specified per model entry:
 ## GitHub Copilot Provider Examples
 
 :::info GitHub Copilot Authentication
-GitHub Copilot requires an OAuth access token mounted as a file. See [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets) for setup instructions.
+GitHub Copilot requires an OAuth access token mounted as a file. See [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets.md) for setup instructions.
 :::
 
 ### GPT-5 series
@@ -1495,7 +1495,7 @@ GitHub Copilot requires an OAuth access token mounted as a file. See [Authentica
 
 ## See Also
 
-- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/)
-- [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets)
-- [Budget Configuration](./budget-configuration)
+- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/index.md)
+- [Authentication Secrets](../../../deployment/extensions/litellm-proxy/auth-secrets.md)
+- [Budget Configuration](./budget-configuration.md)
 - [LiteLLM Official Documentation](https://docs.litellm.ai/)

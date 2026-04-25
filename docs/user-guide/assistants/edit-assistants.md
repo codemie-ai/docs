@@ -45,7 +45,7 @@ When you save an edited assistant, the platform checks whether all selected tool
 required integrations configured. If any are missing, the **Missing Integrations** modal
 appears before the save completes.
 
-See [Integration Validation During Assistant Save](../tools_integrations/integrations/#integration-validation-during-assistant-save)
+See [Integration Validation During Assistant Save](../tools_integrations/integrations/index.md#integration-validation-during-assistant-save)
 for details on how to resolve missing integrations from the modal.
 
 ## Refine with AI

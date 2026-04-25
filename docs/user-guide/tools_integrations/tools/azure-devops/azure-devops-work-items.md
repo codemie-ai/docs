@@ -13,7 +13,7 @@ The **Azure DevOps Work Item** tool lets your CodeMie assistant create, update, 
 
 ## Prerequisites
 
-Before adding the Work Items tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./azure-devops.md#configure-integration-in-codemie).
+Before adding the Work Items tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./index.md#configure-integration-in-codemie).
 
 ## Add Work Items Tool to an Assistant
 

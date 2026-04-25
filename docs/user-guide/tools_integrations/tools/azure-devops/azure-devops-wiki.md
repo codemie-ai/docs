@@ -13,7 +13,7 @@ The **Azure DevOps Wiki** tool lets your CodeMie assistant read, create, modify,
 
 ## Prerequisites
 
-Before adding the Wiki tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./azure-devops.md#configure-integration-in-codemie).
+Before adding the Wiki tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./index.md#configure-integration-in-codemie).
 
 ## Add Wiki Tool to an Assistant
 

@@ -195,5 +195,5 @@ This ensures future logs are automatically cleaned and prevents the table from g
 ## See Also
 
 - [LiteLLM Official Documentation - Spend Logs Deletion](https://docs.litellm.ai/docs/proxy/spend_logs_deletion)
-- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/)
-- [Budget Configuration](./budget-configuration)
+- [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/index.md)
+- [Budget Configuration](./budget-configuration.md)

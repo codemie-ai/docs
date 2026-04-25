@@ -379,7 +379,7 @@ Configure authentication providers and access control for users and administrato
 
 Controls whether user roles and project access are read from JWT claims (Keycloak-managed mode)
 or stored in the platform database (Platform-managed mode). See
-[Access Control Overview](../access-control/) for a full comparison.
+[Access Control Overview](../access-control/index.md) for a full comparison.
 
 | Parameter                | Type | Default | Description                                                                                                                                                                                                                          |
 | ------------------------ | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -584,7 +584,7 @@ Set spending limits per user or team to control LLM usage costs.
 
 Replace them with the equivalent `budgets-config.yaml` fields.
 
-See the [Release Notes](../../update/release-notes) for the migration table and [Budget Configuration](../extensions/litellm-proxy/budget-configuration) for full details.
+See the [Release Notes](../../update/release-notes.md) for the migration table and [Budget Configuration](../extensions/litellm-proxy/budget-configuration.md) for full details.
 :::
 
 | Parameter                           | Type    | Default | Description                                                                                                                                                                               |
@@ -851,7 +851,7 @@ Models can be designated as defaults for specific use cases:
 
 ## Customer Configuration
 
-Customer-specific settings are loaded from `CUSTOMER_CONFIG_DIR/customer-config.yaml`. See [CodeMie Customer Feature Configuration](./customer-feature-configuration) for the full reference.
+Customer-specific settings are loaded from `CUSTOMER_CONFIG_DIR/customer-config.yaml`. See [CodeMie Customer Feature Configuration](./customer-feature-configuration.md) for the full reference.
 
 ---
 
@@ -887,6 +887,6 @@ Control granular access to CodeMie resources:
 
 ## See Also
 
-- [AWS Deployment Guide](../../deployment/aws/overview) - Complete AWS deployment walkthrough
-- [Azure Deployment Guide](../../deployment/azure/overview) - Azure-specific setup instructions
-- [GCP Deployment Guide](../../deployment/gcp/overview) - Google Cloud deployment steps
+- [AWS Deployment Guide](../../deployment/aws/overview.md) - Complete AWS deployment walkthrough
+- [Azure Deployment Guide](../../deployment/azure/overview.md) - Azure-specific setup instructions
+- [GCP Deployment Guide](../../deployment/gcp/overview.md) - Google Cloud deployment steps

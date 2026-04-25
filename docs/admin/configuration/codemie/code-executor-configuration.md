@@ -163,4 +163,4 @@ replicaCount: 5
 
 ## Environment Variables Reference
 
-For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration#code-executor--python-sandbox).
+For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration.md#code-executor--python-sandbox).

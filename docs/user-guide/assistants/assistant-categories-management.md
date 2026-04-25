@@ -12,7 +12,7 @@ pagination_next: user-guide/assistants/clone-assistant-from-marketplace
 Organize marketplace and project assistants using categories for better structure and filtering.
 
 :::warning Access Required
-This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) permissions.
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary.md#jwt-attributes) permissions.
 :::
 
 ## Category Interface

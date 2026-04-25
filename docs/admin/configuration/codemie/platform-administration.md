@@ -11,7 +11,7 @@ This guide is for users who have been assigned the global `admin` role. It expla
 
 :::tip
 For a full guide to creating projects, managing project members, and the Users Management panel,
-see [Project & User Management](../../../user-guide/project-user-management/projects).
+see [Project & User Management](../../../user-guide/project-user-management/projects.md).
 :::
 
 ## Creating a New Project
@@ -31,7 +31,7 @@ Click on your **Profile** icon in the bottom left corner and select **Settings**
 In the Settings panel, click on the **Administration** tab.
 
 :::info
-The Administration menu and its items are controlled by the `adminActions` component. See [Customer Feature Configuration](./customer-feature-configuration) to configure which menu items are visible to users.
+The Administration menu and its items are controlled by the `adminActions` component. See [Customer Feature Configuration](./customer-feature-configuration.md) to configure which menu items are visible to users.
 :::
 
 ![Administration Tab](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_8-59-14.png)
@@ -51,8 +51,8 @@ Fill in a unique **Project Name** (e.g., `sample_project`) and click **Add**.
 :::note Next Step
 After creating the project, assign users to it:
 
-- **Keycloak-managed mode** — follow [Step 2.2: Assign Attributes](../access-control/user-authorization/assign-attributes) to add the project name to the user's `applications` attribute in Keycloak.
-- **Platform-managed mode** — open the project in Settings → Administration → Projects management and add users directly from the [Projects Management](../../../user-guide/project-user-management/projects) UI.
+- **Keycloak-managed mode** — follow [Step 2.2: Assign Attributes](../access-control/user-authorization/assign-attributes.md) to add the project name to the user's `applications` attribute in Keycloak.
+- **Platform-managed mode** — open the project in Settings → Administration → Projects management and add users directly from the [Projects Management](../../../user-guide/project-user-management/projects.md) UI.
   :::
 
 ## Accessing Existing Projects
@@ -69,4 +69,4 @@ _Example: The project dropdown is initially empty, but projects appear after typ
 
 ---
 
-**Optional Convenience Tip (Keycloak-managed mode only):** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user in Keycloak. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Assign Attributes](../access-control/user-authorization/assign-attributes).
+**Optional Convenience Tip (Keycloak-managed mode only):** For frequently used projects, you can optionally assign the `applications` attribute to an `admin` user in Keycloak. Any projects listed in this attribute will then appear in their dropdown by default, without needing to search. For more details, see [Assign Attributes](../access-control/user-authorization/assign-attributes.md).

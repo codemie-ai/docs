@@ -12,7 +12,8 @@ import TabItem from '@theme/TabItem';
 
 # Agent-to-Agent (A2A) Protocol
 
-CodeMie supports the **Agent-to-Agent (A2A) Protocol**, an open-standard protocol designed to enable seamless communication and collaboration between AI agents built with different frameworks and by different vendors. A2A provides a common language that breaks down silos and fosters interoperability across the AI ecosystem.
+CodeMie supports the **Agent-to-Agent (A2A) Protocol**, an open-standard protocol designed to enable seamless communication and collaboration between AI agents built with different frameworks and by different vendors.
+A2A provides a common language that breaks down silos and fosters interoperability across the AI ecosystem.
 
 With A2A integration, you can connect CodeMie to external AI agents—regardless of their framework or origin—allowing them to communicate effortlessly and work together on complex tasks.
 
@@ -71,7 +72,8 @@ To integrate an external agent with CodeMie via A2A:
 - **Network Access**: CodeMie must be able to reach the agent's URL
 
 :::info Authentication
-Most A2A agents are publicly accessible and don't require authentication. If your agent requires authorization, see [Authentication](#authentication-optional) section below.
+Most A2A agents are publicly accessible and don't require authentication.
+If your agent requires authorization, see [Authentication](#authentication-optional) section below.
 :::
 
 ## Create Remote Assistant
@@ -324,11 +326,11 @@ Administrators can configure A2A timeout settings in the platform configuration:
 - `A2A_AGENT_CARD_FETCH_TIMEOUT`: Maximum seconds to fetch agent capability cards (default: 30s)
 - `A2A_AGENT_REQUEST_TIMEOUT`: Maximum seconds to wait for agent responses (default: 30s)
 
-See [API Configuration](../../../admin/configuration/codemie/api-configuration#agent-to-agent-a2a-communication) for details.
+See [API Configuration](../../../admin/configuration/codemie/api-configuration.md#agent-to-agent-a2a-communication) for details.
 
 ## Learn More
 
 - **[A2A Protocol Documentation](https://google.github.io/A2A/#/documentation)** - Official A2A protocol specification
 - **[Demo Agents Repository](https://github.com/epam-gen-ai-run/ai-run-demo-agents)** - Example agents and implementation guides
-- **[Sub-Assistants and Orchestration](../../assistants/sub-assistants-multi-assistant-orchestrator)** - Learn about agent-to-agent communication within CodeMie
-- **[API Configuration](../../../admin/configuration/codemie/api-configuration)** - Platform-level A2A settings
+- **[Sub-Assistants and Orchestration](../../assistants/sub-assistants-multi-assistant-orchestrator.md)** - Learn about agent-to-agent communication within CodeMie
+- **[API Configuration](../../../admin/configuration/codemie/api-configuration.md)** - Platform-level A2A settings

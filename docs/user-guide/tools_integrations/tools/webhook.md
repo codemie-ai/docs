@@ -16,7 +16,7 @@ AI/Run CodeMie assistants and Workflows can be triggered using webhooks. It mean
 3. You need to trigger a customer support assistant when a new support ticket is created in your help desk system.
 
 :::warning Access Required
-This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create and manage Webhook integrations.
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary.md#jwt-attributes) role or [Project Admin](/user-guide/getting-started/glossary#project-admin) permissions. Platform Administrators and Project Admins have full access to create and manage Webhook integrations.
 :::
 
 :::note Multi-Worker and Multi-Pod Deployments

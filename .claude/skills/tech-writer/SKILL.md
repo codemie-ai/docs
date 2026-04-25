@@ -300,14 +300,36 @@ Available types: `:::note`, `:::tip`, `:::info`, `:::warning`, `:::danger`
 
 #### Internal Links (CRITICAL — Absolute Paths Break PR Previews)
 
+Two different rules apply depending on the file type:
+
+**Regular markdown/MDX files** (`.md`, `.mdx` — any file NOT prefixed with `_`):
+Use **relative paths pointing to the file**. Never use absolute paths starting with `/`.
+
 ```markdown
-✅ [Prerequisites](./prerequisites)
-✅ [AWS Guide](../deployment/aws/overview)
-❌ [Prerequisites](/docs/deployment-guide/prerequisites)
+✅ [Prerequisites](./prerequisites.md)
+✅ [AWS Guide](../deployment/aws/overview.md)
+❌ [Prerequisites](./prerequisites)              ← missing extension, use .md
+❌ [Prerequisites](/docs/deployment-guide/prerequisites)   ← absolute, breaks previews
+❌ [Prerequisites](admin/deployment/aws/overview)          ← document ID, not a file path
 ```
 
 Path calculation: count `../` levels from source to common ancestor, then path down.
 Verify with: `realpath ../../../target/path/` from the source file's directory.
+
+**MDX partial/component files** (files with `_` prefix, e.g., `_intro.mdx`, `_shared-steps.mdx`):
+Use the **Docusaurus document ID** (the `id` from front matter) — NOT a relative file path.
+Relative paths break in partials because the file is included from different parent pages, so
+the resolved path depends on where the partial is used, not where it lives.
+
+```markdown
+✅ [Prerequisites](admin/deployment/aws/prerequisites)     ← document ID path
+✅ [Overview](user-guide/assistants/overview)              ← document ID path
+❌ [Prerequisites](../../deployment/aws/prerequisites.md)  ← relative path, unreliable in partials
+❌ [Prerequisites](/docs/deployment/aws/prerequisites)     ← absolute, breaks previews
+```
+
+The document ID path is the path segment used in `sidebars.ts` — typically
+`<section>/<subsection>/<id-from-frontmatter>` without any leading slash.
 
 #### Code Blocks
 
@@ -449,7 +471,8 @@ For each pending screenshot:
 - [ ] All front matter fields present and correct
 - [ ] Document ID is clean (no numbers), matches sidebars.ts reference
 - [ ] Images stored locally in `images/` with relative paths
-- [ ] All internal links use relative paths
+- [ ] All internal links in regular `.md`/`.mdx` files use **relative paths with file extension** (e.g. `./page.md`, `../section/page.md`)
+- [ ] All internal links in `_*.mdx` partials use **Docusaurus document IDs** (e.g. `admin/deployment/aws/overview`)
 - [ ] Angle brackets wrapped in backticks
 - [ ] Code blocks specify language
 - [ ] Admonitions use Docusaurus syntax (`:::type`)

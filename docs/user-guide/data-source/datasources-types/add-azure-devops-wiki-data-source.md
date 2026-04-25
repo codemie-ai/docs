@@ -15,7 +15,7 @@ An Azure DevOps Wiki data source lets assistants search and retrieve content fro
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one Azure DevOps integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
+This data source requires you to have at least one Azure DevOps integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines.
 :::
 
 Before adding an Azure DevOps Wiki data source, ensure you have:
@@ -32,7 +32,7 @@ Before adding an Azure DevOps Wiki data source, ensure you have:
 
 Before adding a new data source, create an Azure DevOps integration on the **Integrations** tab.
 
-Refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines for detailed integration setup instructions.
+Refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines for detailed integration setup instructions.
 
 #### 2. Navigate to Data Sources
 
@@ -122,5 +122,5 @@ After creating and indexing the data source, connect it to an assistant to enabl
 Your assistant can now answer questions using indexed wiki content, comments, and attachments.
 
 :::tip
-For active interaction with wiki pages (creating, editing, searching), use the [Azure DevOps Wiki tool](../../tools_integrations/tools/azure-devops/azure-devops-wiki) in addition to the data source.
+For active interaction with wiki pages (creating, editing, searching), use the [Azure DevOps Wiki tool](../../tools_integrations/tools/azure-devops/azure-devops-wiki.md) in addition to the data source.
 :::

@@ -41,7 +41,7 @@ A central hub for:
 
 Skills in the marketplace are organized by category.
 
-Categories are managed at the platform level. Users with admin permissions can create, edit, and delete categories. [Learn more about Categories Management](../assistants/assistant-categories-management).
+Categories are managed at the platform level. Users with admin permissions can create, edit, and delete categories. [Learn more about Categories Management](../assistants/assistant-categories-management.md).
 
 ### Search and Filter
 
@@ -193,6 +193,6 @@ Click **UNPUBLISH** to confirm.
 
 ## Next Steps
 
-- [Skills in Chat](./skills-in-chat) - Learn about dynamic skill attachment
-- [Create Skill](./create-skill) - Build skills to publish
-- [Attach to Assistants](./attach-skills-to-assistants) - Use marketplace skills
+- [Skills in Chat](./skills-in-chat.md) - Learn about dynamic skill attachment
+- [Create Skill](./create-skill.md) - Build skills to publish
+- [Attach to Assistants](./attach-skills-to-assistants.md) - Use marketplace skills

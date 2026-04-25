@@ -39,5 +39,5 @@ Browse a curated catalog of community-contributed assistants, each designed for 
 4. Clone assistants to your workspace for customization.
 
 :::tip Publishing Your Assistant
-Want to share your assistant with the community? See [Publish to Marketplace](./marketplace-publishing) for publishing guidelines and credential policies.
+Want to share your assistant with the community? See [Publish to Marketplace](./marketplace-publishing.md) for publishing guidelines and credential policies.
 :::

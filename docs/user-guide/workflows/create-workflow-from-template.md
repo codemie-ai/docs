@@ -50,7 +50,7 @@ After creating a workflow from a template, you can customize it using the **Visu
 The Visual Workflow Editor provides an intuitive drag-and-drop interface for customizing your template. You can add, remove, and configure workflow states visually without writing YAML code.
 
 :::tip Learn More
-For detailed information about the Visual Workflow Editor interface and features, see the [Create Workflow](./create-workflow#building-workflows-with-the-visual-editor) guide.
+For detailed information about the Visual Workflow Editor interface and features, see the [Create Workflow](./create-workflow.md#building-workflows-with-the-visual-editor) guide.
 :::
 
 ### Editing the Template

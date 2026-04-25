@@ -93,7 +93,7 @@ Click on a variable to insert it into your System Instructions.
 Use the **Manage Prompt Vars** button to create custom dynamic variables for your specific use case.
 
 :::note
-When you share an assistant with your project, all team members can set their own values for prompt variables without affecting each other or the assistant's defaults. See [Personalizing Prompt Variables](./sharing-assistants#personalizing-prompt-variables).
+When you share an assistant with your project, all team members can set their own values for prompt variables without affecting each other or the assistant's defaults. See [Personalizing Prompt Variables](./sharing-assistants.md#personalizing-prompt-variables).
 :::
 
 **Managing Sensitive Prompt Variables**
@@ -180,7 +180,7 @@ Each tool requires additional computing power, which may increase response time.
 Most tools require prior integration setup before they can be used. When you save the
 assistant, the platform automatically validates that all required integrations are
 configured. If any are missing, a **Missing Integrations** modal appears with options to
-add them or skip validation. See [Integration Validation During Assistant Save](../tools_integrations/integrations/#integration-validation-during-assistant-save).
+add them or skip validation. See [Integration Validation During Assistant Save](../tools_integrations/integrations/index.md#integration-validation-during-assistant-save).
 :::
 
 ## Managing Your Assistant

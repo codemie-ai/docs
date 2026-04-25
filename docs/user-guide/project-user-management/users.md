@@ -12,7 +12,7 @@ description: View and manage all platform users in AI/Run CodeMie. Inspect user 
 
 :::info Platform Admin only
 The Users Management page is only accessible to **Platform Admins**. Regular users can manage
-members within their own projects from the [Projects Management](./projects) page.
+members within their own projects from the [Projects Management](./projects.md) page.
 :::
 
 The Users Management page gives Platform Admins a unified view of all users registered on the
@@ -29,15 +29,15 @@ The users list displays all platform users in a searchable, filterable table.
 
 ### Columns
 
-| Column            | Description                                                                                                   |
-| ----------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Name**          | Display name                                                                                                  |
-| **Email**         | User's email address                                                                                          |
-| **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary#external-user-availableforexternal) |
-| **Project Admin** | Whether the user holds Project Admin role in any project                                                      |
-| **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                     |
-| **Projects**      | Badge list of projects the user is assigned to                                                                |
-| **Actions**       | Row-level actions (edit, view details)                                                                        |
+| Column            | Description                                                                                                      |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Name**          | Display name                                                                                                     |
+| **Email**         | User's email address                                                                                             |
+| **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary.md#external-user-availableforexternal) |
+| **Project Admin** | Whether the user holds Project Admin role in any project                                                         |
+| **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                        |
+| **Projects**      | Badge list of projects the user is assigned to                                                                   |
+| **Actions**       | Row-level actions (edit, view details)                                                                           |
 
 ### Filtering
 

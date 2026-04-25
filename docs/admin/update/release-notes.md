@@ -50,31 +50,30 @@ No third-party component updates in this release.
 
    The CodeMie login theme (`codemie`) is now automatically applied to the `codemie-prod` realm via the `oauth2-proxy` Helm chart.
 
-   **Upgrade instructions:** [Keycloak Theme Setup](keycloak/keycloak-theme-setup)
+   **Upgrade instructions:** [Keycloak Theme Setup](./keycloak/keycloak-theme-setup.md)
 
-#### New Environment Variable: `INTERNAL_BIND_KEY`
+3. **New Environment Variable:** `INTERNAL_BIND_KEY`
 
-A new `INTERNAL_BIND_KEY` environment variable has been introduced.
-It is a shared secret for inter-process communication.
-Without it, webhook trigger may fail when running multiple workers (`WORKERS > 1`) or multiple pod replicas.
+   A new `INTERNAL_BIND_KEY` environment variable has been introduced.
+   It is a shared secret for inter-process communication.
+   Without it, webhook trigger may fail when running multiple workers (`WORKERS > 1`) or multiple pod replicas.
 
-**If upgrading using Helm charts:**
+   **If upgrading using Helm charts:**
 
-The updated Helm chart automatically creates a Kubernetes Secret with a random value for
-`INTERNAL_BIND_KEY`. No manual action is required for standard deployments.
+   The updated Helm chart automatically creates a Kubernetes Secret with a random value for `INTERNAL_BIND_KEY`.
+   No manual action is required for standard deployments.
 
-:::warning ArgoRollout deployments
-Automatic secret generation is skipped when `argoRollout` is enabled. Create the Kubernetes
-Secret manually and reference it via `security.processAuthSecret.name` and
-`security.processAuthSecret.field`.
-:::
+   :::warning ArgoRollout deployments
+   Automatic secret generation is skipped when `argoRollout` is enabled.
+   Create the Kubernetes Secret manually and reference it via `security.processAuthSecret.name` and `security.processAuthSecret.field`.
+   :::
 
-**If deploying without Helm charts:**
+   **If deploying without Helm charts:**
 
-Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
-Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
+   Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
+   Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
-See [API Configuration](../configuration/codemie/api-configuration#inter-process-communication) for full details.
+   See [API Configuration](../configuration/codemie/api-configuration.md#inter-process-communication) for full details.
 
 </details>
 
@@ -99,7 +98,7 @@ Three new environment variables have been introduced to control LLM budget enfor
 | `LLM_PROXY_BUDGET_SYNC_ENABLED`     | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
 | `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
 
-See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration) and [API Configuration](../configuration/codemie/api-configuration) for details.
+See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md) and [API Configuration](../configuration/codemie/api-configuration.md) for details.
 
 #### Deprecated Budget Environment Variables
 
@@ -114,7 +113,7 @@ The following environment variables are deprecated and will be removed in a futu
 | `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | `premium_models` category entry      |
 | `LITELLM_CLI_BUDGET_NAME`            | string | `""`        | `cli` category entry                 |
 
-See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration) for migration details.
+See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md) for migration details.
 
 <h3>Hotfixes</h3>
 
@@ -176,7 +175,7 @@ No breaking configuration changes were introduced in this release.
 
 Updated from 8.18.4. For details, see the [Elastic 8.19.12 Release Notes ↗](https://www.elastic.co/guide/en/security/8.19/release-notes-header-8.19.0.html#release-notes-8.19.12).
 
-**Upgrade instructions:** [ElasticSearch and Kibana Upgrade Guide](./elasticsearch-kibana-upgrade)
+**Upgrade instructions:** [ElasticSearch and Kibana Upgrade Guide](./elasticsearch-kibana-upgrade.md)
 
 ---
 
@@ -184,7 +183,7 @@ Updated from 8.18.4. For details, see the [Elastic 8.19.12 Release Notes ↗](ht
 
 Updated NATS Helm chart from 1.2.6 to 1.3.0, which includes NATS server 2.11.0 (up from 2.10.22) and NATS Reloader 0.22.3 (up from 0.16.0).
 
-**Upgrade instructions:** [NATS Upgrade Guide](./nats-upgrade)
+**Upgrade instructions:** [NATS Upgrade Guide](./nats-upgrade.md)
 
 ---
 
@@ -192,7 +191,7 @@ Updated NATS Helm chart from 1.2.6 to 1.3.0, which includes NATS server 2.11.0 (
 
 Updated Keycloak to 26.5.6 (up from 26.4.5) and keycloakx chart to 7.1.9 (up from 7.1.5). For details, see the [Keycloak 26.5 Release Notes ↗](https://www.keycloak.org/docs/latest/release_notes/).
 
-**Upgrade instructions:** [Keycloak Upgrade Guide](./keycloak/keycloak-upgrade/)
+**Upgrade instructions:** [Keycloak Upgrade Guide](./keycloak/keycloak-upgrade/index.md)
 
 ---
 
@@ -220,7 +219,7 @@ CodeMie 2.19.0 removes the `postgres-operator` Helm chart (PGO 5.4.3) used for K
 - **Dedicated database instance** — a separate, Terraform-provisioned database instance for Keycloak (default for Terraform deployments)
 - **Shared CodeMie database** — Keycloak reuses the existing CodeMie database instance; a Helm hook Job automatically creates the required database and user on first install
 
-See the [Keycloak Database Migration Guide](./keycloak/keycloak-database-migration) for upgrade instructions.
+See the [Keycloak Database Migration Guide](./keycloak/database-migration.md) for upgrade instructions.
 
 :::note
 Migration to an external database is optional. If you prefer to continue using the in-cluster PostgreSQL, no migration is required when upgrading to 2.19.0.
@@ -294,7 +293,7 @@ For detailed information about changes, improvements, and bug fixes, see the [Fl
 
 **Upgrade instructions:**
 
-To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade).
+To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade.md).
 
 <h3>Configuration Changes</h3>
 
