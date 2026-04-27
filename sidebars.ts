@@ -769,6 +769,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/update/keycloak/keycloak-operator-upgrade',
                 'admin/update/keycloak/keycloak-database-migration',
+                'admin/update/keycloak/keycloak-theme-setup',
               ],
             },
             'admin/update/terraform-upgrade/terraform-upgrade',

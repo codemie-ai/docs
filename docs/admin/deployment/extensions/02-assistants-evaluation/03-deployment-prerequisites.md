@@ -225,6 +225,20 @@ GRANT ALL ON SCHEMA public TO langfuse_admin;
 
 To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
 
+### Recommended TTL by Usage
+
+The table below provides recommended TTL values based on usage level, assuming the default **100 GB** ClickHouse disk size.
+
+| Usage Level  | Active Users | Est. Ingestion | Recommended TTL |
+| ------------ | ------------ | -------------- | --------------- |
+| High usage   | 3,000–4,000  | ~40 GB/day     | 2 days          |
+| Medium usage | ~1,500       | ~10 GB/day     | 9 days          |
+| Low usage    | < 500        | ~1 GB/day      | 90 days         |
+
+:::note
+If your deployment does not fit within the recommended TTL for 100 GB, either lower the TTL or increase the ClickHouse disk size. To measure your actual ingestion rate, see [Data distribution by time period](../../../configuration/extensions/assistants-evaluation/data-volume-maintenance#data-distribution-by-time-period).
+:::
+
 ### Langfuse Tables
 
 Set `retention.langfuse.enabled: true` in `values.yaml`. TTL is configured for the following tables:

@@ -51,6 +51,22 @@ clickhouse-client --password <password_from_above>
 
 ## 1. Disk Usage Analysis
 
+### Database Size Summary
+
+A quick overview of total disk usage and row counts across both databases.
+
+```sql
+SELECT
+    if(database = '', '=== TOTAL ===', database) AS database_name,
+    formatReadableSize(sum(bytes_on_disk)) AS total_size_on_disk,
+    sum(rows) AS total_rows
+FROM system.parts
+WHERE active AND (database IN ('default', 'system'))
+GROUP BY database
+    WITH ROLLUP
+ORDER BY total_rows ASC;
+```
+
 ### Top Tables by Disk Size
 
 This query identifies which tables are consuming the most disk space.
@@ -145,15 +161,15 @@ The following queries help you understand how data is distributed over time and 
 
 Choose the appropriate query based on your needs:
 
-- **[Compressed Size by Month (Fast)](#compressed-size-by-month-fast)** – Actual compressed disk usage and row counts by month
-- **[Row Count by Day (Fast)](#by-day-row-count-fast)** – Number of records by day
-- **[Uncompressed Size by Day (Heavy)](#uncompressed-size-by-day-heavy)** – Decompresses data to calculate approximate size. Not actual disk usage – use only for comparing relative data volume between days
+- **[On-Disk Size by Month (Fast)](#on-disk-size-by-month-fast)** – Actual compressed disk usage and row counts by month
+- **[Row Count by Day (Fast)](#row-count-by-day-fast)** – Number of records by day
+- **[Approximate Size by Day (Heavy)](#approximate-size-by-day-heavy)** – Decompresses data to calculate approximate size. Not actual disk usage – use only for comparing relative data volume between days
 
 :::note
-Per-day compressed size is not available because ClickHouse partitions data by month (`PARTITION BY toYYYYMM()`).
+Per-day compressed size is not available because langfuse partitions data by month (`PARTITION BY toYYYYMM()`).
 :::
 
-#### Compressed Size by Month (Fast)
+#### On-Disk Size by Month (Fast)
 
 Shows actual compressed disk usage by month. Reads partition metadata from `system.parts`.
 
@@ -188,7 +204,7 @@ ORDER BY partition ASC;
   </TabItem>
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so compressed size by month cannot be queried from `system.parts`. Use [Row Count by Day (Fast)](#row-count-by-day-fast) to analyze this table's data distribution.
 
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
@@ -233,7 +249,7 @@ ORDER BY partition ASC;
   </TabItem>
 </Tabs>
 
-#### By Day: Row Count (Fast)
+#### Row Count by Day (Fast)
 
 Shows row count per day. Executes instantly by reading indices only.
 
@@ -302,65 +318,135 @@ ORDER BY day ASC;
   </TabItem>
 </Tabs>
 
-#### Uncompressed Size by Day (Heavy)
+#### Approximate Size by Day (Heavy)
+
+Estimates approximate on-disk size per day using the table's real compression ratio from `system.parts` and the size of the main text fields. The result is slightly lower than actual disk usage because not all columns are measured.
 
 <Tabs groupId="table-type">
   <TabItem value="observations" label="Observations" default>
 
 ```sql
+WITH table_compression AS (
+    SELECT
+        `table`,
+        sum(data_uncompressed_bytes) / sum(data_compressed_bytes) AS ratio
+    FROM system.parts
+    WHERE active AND database = 'default' AND `table` = 'observations'
+    GROUP BY `table`
+),
+daily_payload AS (
+    SELECT
+        toDate(start_time) AS day,
+        count() AS rows,
+        sum(length(input) + length(output)) AS raw_text_bytes
+    FROM default.observations
+    GROUP BY day
+)
 SELECT
-    toDate(start_time) AS day,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
-FROM default.observations
-GROUP BY day
-ORDER BY day ASC;
+    d.day,
+    d.rows,
+    formatReadableSize(d.raw_text_bytes) AS raw_text_size,
+    formatReadableSize(d.raw_text_bytes / c.ratio) AS estimated_disk_usage
+FROM daily_payload AS d
+CROSS JOIN table_compression AS c
+ORDER BY d.day ASC;
 ```
 
   </TabItem>
   <TabItem value="traces" label="Traces">
 
 ```sql
+WITH table_compression AS (
+    SELECT
+        `table`,
+        sum(data_uncompressed_bytes) / sum(data_compressed_bytes) AS ratio
+    FROM system.parts
+    WHERE active AND database = 'default' AND `table` = 'traces'
+    GROUP BY `table`
+),
+daily_payload AS (
+    SELECT
+        toDate(timestamp) AS day,
+        count() AS rows,
+        sum(length(input) + length(output)) AS raw_text_bytes
+    FROM default.traces
+    GROUP BY day
+)
 SELECT
-    toDate(timestamp) AS day,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(input)) + length(toString(output)))) AS approx_size
-FROM default.traces
-GROUP BY day
-ORDER BY day ASC;
+    d.day,
+    d.rows,
+    formatReadableSize(d.raw_text_bytes) AS raw_text_size,
+    formatReadableSize(d.raw_text_bytes / c.ratio) AS estimated_disk_usage
+FROM daily_payload AS d
+CROSS JOIN table_compression AS c
+ORDER BY d.day ASC;
 ```
 
   </TabItem>
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
-The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so uncompressed size by day cannot be queried from `system.parts`. Use [Row Count by Day](#by-day-row-count-fast) to analyze this table's data distribution.
+The `blob_storage_file_log` table does not have `PARTITION BY` in its schema, so approximate size by day cannot be queried from `system.parts`. Use [Row Count by Day (Fast)](#row-count-by-day-fast) to analyze this table's data distribution.
 
   </TabItem>
   <TabItem value="system_logs" label="System Logs">
 
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
-```sql {5}
+```sql {6,14}
+WITH table_compression AS (
+    SELECT
+        `table`,
+        sum(data_uncompressed_bytes) / sum(data_compressed_bytes) AS ratio
+    FROM system.parts
+    WHERE active AND database = 'system' AND `table` = 'query_log'
+    GROUP BY `table`
+),
+daily_payload AS (
+    SELECT
+        event_date AS day,
+        count() AS rows,
+        sum(length(query)) AS raw_text_bytes
+    FROM system.query_log
+    GROUP BY day
+)
 SELECT
-    event_date AS day,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(query)))) AS approx_size
-FROM system.query_log
-GROUP BY day
-ORDER BY day ASC;
+    d.day,
+    d.rows,
+    formatReadableSize(d.raw_text_bytes) AS raw_text_size,
+    formatReadableSize(d.raw_text_bytes / c.ratio) AS estimated_disk_usage
+FROM daily_payload AS d
+CROSS JOIN table_compression AS c
+ORDER BY d.day ASC;
 ```
 
   </TabItem>
   <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
 
 ```sql
+WITH table_compression AS (
+    SELECT
+        `table`,
+        sum(data_uncompressed_bytes) / sum(data_compressed_bytes) AS ratio
+    FROM system.parts
+    WHERE active AND database = 'system' AND `table` = 'opentelemetry_span_log'
+    GROUP BY `table`
+),
+daily_payload AS (
+    SELECT
+        finish_date AS day,
+        count() AS rows,
+        sum(length(toString(attribute))) AS raw_text_bytes
+    FROM system.opentelemetry_span_log
+    GROUP BY day
+)
 SELECT
-    finish_date AS day,
-    count() AS rows,
-    formatReadableSize(sum(length(toString(attribute)))) AS approx_size
-FROM system.opentelemetry_span_log
-GROUP BY day
-ORDER BY day ASC;
+    d.day,
+    d.rows,
+    formatReadableSize(d.raw_text_bytes) AS raw_text_size,
+    formatReadableSize(d.raw_text_bytes / c.ratio) AS estimated_disk_usage
+FROM daily_payload AS d
+CROSS JOIN table_compression AS c
+ORDER BY d.day ASC;
 ```
 
   </TabItem>
@@ -451,7 +537,7 @@ Since deletion is not instant, check the progress here:
   <TabItem value="observations" label="Observations" default>
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'observations'
 ORDER BY create_time DESC
@@ -462,7 +548,7 @@ LIMIT 5;
   <TabItem value="traces" label="Traces">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'traces'
 ORDER BY create_time DESC
@@ -473,7 +559,7 @@ LIMIT 5;
   <TabItem value="blob_storage" label="Blob Storage Logs">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'blob_storage_file_log'
 ORDER BY create_time DESC
@@ -486,7 +572,7 @@ LIMIT 5;
 You can replace `query_log` with a table from [this list](#system-log-tables).
 
 ```sql {3}
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'query_log'
 ORDER BY create_time DESC
@@ -497,7 +583,7 @@ LIMIT 5;
   <TabItem value="opentelemetry" label="OpenTelemetry Span Log">
 
 ```sql
-SELECT command, is_done
+SELECT create_time, command, is_done
 FROM system.mutations
 WHERE table = 'opentelemetry_span_log'
 ORDER BY create_time DESC
