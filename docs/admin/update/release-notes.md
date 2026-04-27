@@ -57,7 +57,6 @@ No third-party component updates in this release.
 A new `INTERNAL_BIND_KEY` environment variable has been introduced.
 It is a shared secret for inter-process communication.
 Without it, webhook trigger may fail when running multiple workers (`WORKERS > 1`) or multiple pod replicas.
- 
 
 **If upgrading using Helm charts:**
 
