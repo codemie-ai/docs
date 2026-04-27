@@ -281,7 +281,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/codemie-cli/codemie-cli',
           },
           collapsed: true,
-          items: ['user-guide/codemie-cli/assistants-integration'],
+          items: [
+            'user-guide/codemie-cli/assistants-integration',
+            'user-guide/codemie-cli/skills-integration',
+          ],
         },
         {
           type: 'category',
