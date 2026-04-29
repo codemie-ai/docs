@@ -131,3 +131,15 @@ The Analytics Dashboard features a powerful filtering system that allows you to 
 - **Combined Filtering**: All active filters work together to refine data
 - **Persistent Selections**: Filter choices remain active as you navigate between dashboard sections
 - **Clear All**: Reset all filters with a single action using the "Clear all" button
+
+## AI Champions Leaderboard
+
+The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by
+their overall AI platform engagement score. Scores are calculated across six dimensions —
+from daily platform usage to CLI-based agentic engineering — and users are grouped into
+tiers from Newcomer to Pioneer.
+
+Platform admins can browse the full ranked leaderboard with filters and drill into individual
+user profiles. Regular users can view their own score and tier.
+
+See [AI Champions Leaderboard](./ai-champions-leaderboard.md) for the full overview.

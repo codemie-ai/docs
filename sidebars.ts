@@ -301,9 +301,14 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'doc',
-          id: 'user-guide/analytics/analytics-overview',
+          type: 'category',
           label: 'Analytics',
+          link: {
+            type: 'doc',
+            id: 'user-guide/analytics/analytics-overview',
+          },
+          collapsed: true,
+          items: ['user-guide/analytics/ai-champions-leaderboard'],
         },
         {
           type: 'category',
