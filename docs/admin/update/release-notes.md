@@ -20,7 +20,9 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>LiteLLM 1.83.7 (CodeMie 2.24.1)</h4>
+
+Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.83.7-stable).
 
 <h3>Configuration Changes</h3>
 
@@ -78,6 +80,8 @@ No third-party component updates in this release.
 <h3>Hotfixes</h3>
 
 - **2.24.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.24.1) – April 29, 2026
+
+  Updated LiteLLM to 1.83.7. For details, see the [LiteLLM 1.83.7 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.83.7-stable).
 
 </details>
 
