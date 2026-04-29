@@ -79,7 +79,7 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
 
 <h3>Hotfixes</h3>
 
-- **2.24.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.24.1) – April 29, 2026
+- **2.24.1** – April 29, 2026
 
   Updated LiteLLM to 1.83.7. For details, see the [LiteLLM 1.83.7 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.83.7-stable).
 
@@ -88,7 +88,7 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
 <details>
 <summary><strong>CodeMie 2.23.0</strong></summary>
 
-**Release Date:** April 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.0)
+**Release Date:** April 15, 2026
 
 <h3>Third-Party Component Updates</h3>
 
