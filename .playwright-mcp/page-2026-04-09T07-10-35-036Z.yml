@@ -1,0 +1,840 @@
+- generic [active] [ref=e1]:
+    - paragraph [ref=e3]: 'Attention: gitbud.epam.com external address from February 28 is 34.185.205.54'
+    - generic [ref=e4]:
+        - generic:
+            - link "Skip to main content" [ref=e5] [cursor=pointer]:
+                - /url: '#content-body'
+                - generic [ref=e6]: Skip to main content
+            - navigation "Primary navigation" [ref=e7]:
+                - heading "Primary navigation" [level=2] [ref=e8]
+                - generic [ref=e9]:
+                    - generic [ref=e10]:
+                        - link "Homepage" [ref=e11] [cursor=pointer]:
+                            - /url: /
+                            - generic [ref=e12]: Homepage
+                        - button "Primary navigation sidebar" [expanded] [ref=e13] [cursor=pointer]:
+                            - img [ref=e14]
+                        - button "Create new…" [ref=e17] [cursor=pointer]:
+                            - img [ref=e18]
+                            - generic [ref=e20]: Create new…
+                        - button "Stanislav Kostenko user’s menu" [ref=e24] [cursor=pointer]:
+                            - generic [ref=e25]:
+                                - generic [ref=e26]: Stanislav Kostenko user’s menu
+                                - img [ref=e27]
+                    - generic [ref=e28]:
+                        - link "Assigned issues 0" [ref=e29] [cursor=pointer]:
+                            - /url: /dashboard/issues?assignee_username=Stanislav_Kostenko
+                            - img [ref=e30]
+                        - button "Merge requests 7" [ref=e34] [cursor=pointer]:
+                            - img [ref=e35]
+                            - text: '7'
+                        - link "To-Do List 78" [ref=e37] [cursor=pointer]:
+                            - /url: /dashboard/todos
+                            - img [ref=e38]
+                            - text: '78'
+                    - button "Search or go to…" [ref=e41] [cursor=pointer]:
+                        - generic [ref=e42]:
+                            - img [ref=e43]
+                            - text: Search or go to…
+                - generic [ref=e45]:
+                    - generic [ref=e46]: Project
+                    - generic [ref=e48]:
+                        - list [ref=e49]:
+                            - listitem [ref=e50]:
+                                - link "codemie-helm-charts" [ref=e51] [cursor=pointer]:
+                                    - /url: /epm-cdme/codemie-helm-charts
+                                    - generic [ref=e54]: C
+                                    - generic [ref=e55]: codemie-helm-charts
+                        - generic [ref=e56]:
+                            - button "Pinned" [expanded] [ref=e57] [cursor=pointer]:
+                                - img [ref=e60]
+                                - generic [ref=e62]: Pinned
+                                - img [ref=e64]
+                            - list [ref=e67]:
+                                - listitem [ref=e68]:
+                                    - link "Issues" [ref=e69] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/issues
+                                        - img [ref=e72]
+                                        - generic [ref=e74]: Issues
+                                        - generic [ref=e77]: '0'
+                                    - button "Unpin Issues":
+                                        - img
+                                - listitem [ref=e78]:
+                                    - link "Merge requests" [ref=e79] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/merge_requests
+                                        - img [ref=e82]
+                                        - generic [ref=e84]: Merge requests
+                                        - generic [ref=e87]: '6'
+                                    - button "Unpin Merge requests":
+                                        - img
+                                - listitem [ref=e88]:
+                                    - link "Branches" [ref=e89] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/branches
+                                        - img [ref=e92]
+                                        - generic [ref=e94]: Branches
+                                    - button "Unpin Branches":
+                                        - img
+                        - separator [ref=e95]
+                        - list "Project" [ref=e96]:
+                            - listitem [ref=e97]:
+                                - button "Manage" [ref=e98] [cursor=pointer]:
+                                    - img [ref=e101]
+                                    - generic [ref=e103]: Manage
+                                    - img [ref=e105]
+                            - listitem [ref=e107]:
+                                - button "Plan" [ref=e108] [cursor=pointer]:
+                                    - img [ref=e111]
+                                    - generic [ref=e113]: Plan
+                                    - img [ref=e115]
+                            - listitem [ref=e117]:
+                                - button "Code" [expanded] [ref=e118] [cursor=pointer]:
+                                    - img [ref=e121]
+                                    - generic [ref=e123]: Code
+                                    - img [ref=e125]
+                                - list "Code" [ref=e128]:
+                                    - listitem [ref=e129]:
+                                        - link "Merge requests" [ref=e130] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/merge_requests
+                                            - generic [ref=e132]: Merge requests
+                                            - generic [ref=e135]: '6'
+                                        - button "Unpin Merge requests":
+                                            - img
+                                    - listitem [ref=e136]:
+                                        - link "Repository" [ref=e137] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/tree/main
+                                            - generic [ref=e139]: Repository
+                                        - button "Pin Repository":
+                                            - img
+                                    - listitem [ref=e140]:
+                                        - link "Branches" [ref=e141] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/branches
+                                            - generic [ref=e143]: Branches
+                                        - button "Unpin Branches":
+                                            - img
+                                    - listitem [ref=e144]:
+                                        - link "Commits" [ref=e145] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/commits/main?ref_type=heads
+                                            - generic [ref=e147]: Commits
+                                        - button "Pin Commits":
+                                            - img
+                                    - listitem [ref=e148]:
+                                        - link "Tags" [ref=e149] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/tags
+                                            - generic [ref=e151]: Tags
+                                        - button "Pin Tags":
+                                            - img
+                                    - listitem [ref=e152]:
+                                        - link "Repository graph" [ref=e153] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/network/main?ref_type=heads
+                                            - generic [ref=e155]: Repository graph
+                                        - button "Pin Repository graph":
+                                            - img
+                                    - listitem [ref=e156]:
+                                        - link "Compare revisions" [ref=e157] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/compare?from=main&to=main
+                                            - generic [ref=e159]: Compare revisions
+                                        - button "Pin Compare revisions":
+                                            - img
+                                    - listitem [ref=e160]:
+                                        - link "Snippets" [ref=e161] [cursor=pointer]:
+                                            - /url: /epm-cdme/codemie-helm-charts/-/snippets
+                                            - generic [ref=e163]: Snippets
+                                        - button "Pin Snippets":
+                                            - img
+                            - listitem [ref=e164]:
+                                - button "Build" [ref=e165] [cursor=pointer]:
+                                    - img [ref=e168]
+                                    - generic [ref=e170]: Build
+                                    - img [ref=e172]
+                            - listitem [ref=e174]:
+                                - button "Secure" [ref=e175] [cursor=pointer]:
+                                    - img [ref=e178]
+                                    - generic [ref=e180]: Secure
+                                    - img [ref=e182]
+                            - listitem [ref=e184]:
+                                - button "Deploy" [ref=e185] [cursor=pointer]:
+                                    - img [ref=e188]
+                                    - generic [ref=e190]: Deploy
+                                    - img [ref=e192]
+                            - listitem [ref=e194]:
+                                - button "Operate" [ref=e195] [cursor=pointer]:
+                                    - img [ref=e198]
+                                    - generic [ref=e200]: Operate
+                                    - img [ref=e202]
+                            - listitem [ref=e204]:
+                                - button "Monitor" [ref=e205] [cursor=pointer]:
+                                    - img [ref=e208]
+                                    - generic [ref=e210]: Monitor
+                                    - img [ref=e212]
+                            - listitem [ref=e214]:
+                                - button "Analyze" [ref=e215] [cursor=pointer]:
+                                    - img [ref=e218]
+                                    - generic [ref=e220]: Analyze
+                                    - img [ref=e222]
+                            - listitem [ref=e224]:
+                                - separator [ref=e225]
+                                - button "Settings" [ref=e226] [cursor=pointer]:
+                                    - img [ref=e229]
+                                    - generic [ref=e231]: Settings
+                                    - img [ref=e233]
+                    - button "Help" [ref=e238] [cursor=pointer]:
+                        - img [ref=e239]
+                        - generic [ref=e241]: Help
+        - generic [ref=e243]:
+            - navigation "Breadcrumb" [ref=e248]:
+                - list [ref=e249]:
+                    - listitem [ref=e250]:
+                        - link "EPM-CDME" [ref=e251] [cursor=pointer]:
+                            - /url: /epm-cdme
+                        - text: /
+                    - listitem [ref=e252]:
+                        - link "codemie-helm-charts" [ref=e253] [cursor=pointer]:
+                            - /url: /epm-cdme/codemie-helm-charts
+                        - text: /
+                    - listitem [ref=e254]:
+                        - link "Merge requests" [ref=e255] [cursor=pointer]:
+                            - /url: /epm-cdme/codemie-helm-charts/-/merge_requests
+                        - text: /
+                    - listitem [ref=e256]:
+                        - link "!252" [ref=e257] [cursor=pointer]:
+                            - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs
+            - main [ref=e259]:
+                - generic [ref=e260]:
+                    - generic [ref=e261]:
+                        - 'heading "EPMCDME-11603: Update oauth2 proxy" [level=1] [ref=e263]'
+                        - generic [ref=e264]:
+                            - link "Edit merge request" [ref=e265] [cursor=pointer]:
+                                - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252/edit
+                                - generic [ref=e266]: Edit
+                            - generic [ref=e267]:
+                                - button "Code" [ref=e269] [cursor=pointer]:
+                                    - generic [ref=e270]:
+                                        - text: Code
+                                        - img [ref=e271]
+                                - generic "Merge request actions" [ref=e274]:
+                                    - button "Merge request actions" [ref=e277] [cursor=pointer]:
+                                        - img [ref=e278]
+                    - generic [ref=e280]:
+                        - generic [ref=e281]:
+                            - generic "Merged" [ref=e283]:
+                                - img [ref=e284]
+                                - generic [ref=e286]: Merged
+                            - link "Stanislav Kostenko" [ref=e287] [cursor=pointer]:
+                                - /url: /Stanislav_Kostenko
+                            - text: requested to merge
+                            - link "epmcdme-11603" [ref=e288] [cursor=pointer]:
+                                - /url: /epm-cdme/codemie-helm-charts/-/tree/epmcdme-11603
+                            - button "Copy branch name" [ref=e289] [cursor=pointer]:
+                                - img [ref=e290]
+                            - text: into
+                            - link "main" [ref=e292] [cursor=pointer]:
+                                - /url: /epm-cdme/codemie-helm-charts/-/tree/main
+                            - time [ref=e293]: 2 days ago
+                        - generic [ref=e295]:
+                            - list [ref=e296]:
+                                - listitem [ref=e297]:
+                                    - link "Overview 0" [ref=e298] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252
+                                        - text: Overview
+                                        - generic [ref=e300]: '0'
+                                - listitem [ref=e301]:
+                                    - link "Commits 1" [ref=e302] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252/commits
+                                        - text: Commits
+                                        - generic [ref=e304]: '1'
+                                - listitem [ref=e305]:
+                                    - link "Pipelines 1" [ref=e306] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252/pipelines
+                                        - text: Pipelines
+                                        - generic [ref=e308]: '1'
+                                - listitem [ref=e309]:
+                                    - link "Changes 4" [ref=e310] [cursor=pointer]:
+                                        - /url: /epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs
+                                        - text: Changes
+                                        - generic [ref=e311]: '4'
+                            - button "Add a to-do item" [disabled] [ref=e315]:
+                                - status "Loading" [ref=e316]
+                                - generic [ref=e318]: Add a to-do item
+                        - generic [ref=e321]:
+                            - generic [ref=e322]:
+                                - generic [ref=e324]:
+                                    - button "Hide file browser" [ref=e325] [cursor=pointer]:
+                                        - img [ref=e327]
+                                    - text: Compare
+                                    - button "main" [ref=e330] [cursor=pointer]:
+                                        - generic [ref=e331]: main
+                                        - img [ref=e332]
+                                    - text: and
+                                    - button "latest version" [ref=e335] [cursor=pointer]:
+                                        - generic [ref=e336]: latest version
+                                        - img [ref=e337]
+                                - generic [ref=e339]:
+                                    - generic [ref=e341]:
+                                        - generic [ref=e342]:
+                                            - img [ref=e343]
+                                            - text: 4 files
+                                        - generic [ref=e345]:
+                                            - generic [ref=e346]: +
+                                            - generic [ref=e347]: '6'
+                                        - generic [ref=e348]:
+                                            - generic [ref=e349]: −
+                                            - generic [ref=e350]: '6'
+                                    - group [ref=e351]:
+                                        - button "Expand all files" [ref=e352] [cursor=pointer]:
+                                            - img [ref=e353]
+                                        - button "Collapse all files" [ref=e355] [cursor=pointer]:
+                                            - img [ref=e356]
+                                    - generic "Preferences" [ref=e359]:
+                                        - button "Inline" [ref=e360] [cursor=pointer]:
+                                            - img [ref=e361]
+                                            - generic [ref=e363]:
+                                                - generic [ref=e364]: Inline
+                                                - img [ref=e365]
+                            - generic [ref=e367]:
+                                - generic [ref=e371]:
+                                    - generic [ref=e372]:
+                                        - heading "Files" [level=5] [ref=e373]
+                                        - generic [ref=e375]: '4'
+                                        - group [ref=e376]:
+                                            - button "List view" [ref=e377] [cursor=pointer]:
+                                                - img [ref=e378]
+                                            - button "Tree view" [ref=e380] [cursor=pointer]:
+                                                - img [ref=e381]
+                                    - generic [ref=e383]: Search (e.g. *.vue) (⌘P)
+                                    - generic [ref=e384]:
+                                        - img [ref=e385]
+                                        - searchbox "Search (e.g. *.vue) (⌘P)" [ref=e387]
+                                    - generic [ref=e391]:
+                                        - button "oauth2 ‎-proxy‎" [ref=e393] [cursor=pointer]:
+                                            - generic "oauth2-proxy" [ref=e395]:
+                                                - img [ref=e397]
+                                                - generic [ref=e399]:
+                                                    - generic [ref=e400]: oauth2
+                                                    - generic [ref=e401]: ‎-proxy‎
+                                        - button "Chart ‎.yaml‎ 3 lines added 3 lines removed Modified" [ref=e403] [cursor=pointer]:
+                                            - generic [ref=e404]:
+                                                - generic "Chart.yaml" [ref=e405]:
+                                                    - img [ref=e407]
+                                                    - generic [ref=e409]:
+                                                        - generic [ref=e410]: Chart
+                                                        - generic [ref=e411]: ‎.yaml‎
+                                                - generic [ref=e412]: +3 -3
+                                                - button "Modified" [ref=e413]:
+                                                    - img [ref=e415]
+                                        - button "values- ‎aws.yaml‎ 1 line added 1 line removed Modified" [ref=e418] [cursor=pointer]:
+                                            - generic [ref=e419]:
+                                                - generic "values-aws.yaml" [ref=e420]:
+                                                    - img [ref=e422]
+                                                    - generic [ref=e424]:
+                                                        - generic [ref=e425]: values-
+                                                        - generic [ref=e426]: ‎aws.yaml‎
+                                                - generic [ref=e427]: +1 -1
+                                                - button "Modified" [ref=e428]:
+                                                    - img [ref=e430]
+                                        - button "values-a ‎zure.yaml‎ 1 line added 1 line removed Modified" [ref=e433] [cursor=pointer]:
+                                            - generic [ref=e434]:
+                                                - generic "values-azure.yaml" [ref=e435]:
+                                                    - img [ref=e437]
+                                                    - generic [ref=e439]:
+                                                        - generic [ref=e440]: values-a
+                                                        - generic [ref=e441]: ‎zure.yaml‎
+                                                - generic [ref=e442]: +1 -1
+                                                - button "Modified" [ref=e443]:
+                                                    - img [ref=e445]
+                                        - button "values- ‎gcp.yaml‎ 1 line added 1 line removed Modified" [ref=e448] [cursor=pointer]:
+                                            - generic [ref=e449]:
+                                                - generic "values-gcp.yaml" [ref=e450]:
+                                                    - img [ref=e452]
+                                                    - generic [ref=e454]:
+                                                        - generic [ref=e455]: values-
+                                                        - generic [ref=e456]: ‎gcp.yaml‎
+                                                - generic [ref=e457]: +1 -1
+                                                - button "Modified" [ref=e458]:
+                                                    - img [ref=e460]
+                                - generic [ref=e466]:
+                                    - generic [ref=e469]:
+                                        - generic [ref=e470] [cursor=pointer]:
+                                            - generic [ref=e471]:
+                                                - button "Hide file contents" [ref=e472]:
+                                                    - img [ref=e473]
+                                                - link "oauth2-proxy/Chart.yaml" [ref=e475]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#diff-content-be5ff35d26ead38c921c81e1d57bda3737f6a112
+                                                    - strong [ref=e476]: oauth2-proxy/Chart.yaml
+                                                - button "Copy file path" [ref=e477]:
+                                                    - img [ref=e478]
+                                            - generic [ref=e480]:
+                                                - generic [ref=e482]:
+                                                    - generic [ref=e483]:
+                                                        - generic [ref=e484]: +
+                                                        - generic [ref=e485]: '3'
+                                                    - generic [ref=e486]:
+                                                        - generic [ref=e487]: −
+                                                        - generic [ref=e488]: '3'
+                                                - generic [ref=e489]:
+                                                    - checkbox "Viewed" [ref=e490]
+                                                    - generic [ref=e491]: Viewed
+                                                - button "Comment on this file" [ref=e492]:
+                                                    - img [ref=e493]
+                                                - group [ref=e495]:
+                                                    - button "Options" [ref=e497]:
+                                                        - img [ref=e498]
+                                                        - generic [ref=e500]: Options
+                                        - generic [ref=e504]:
+                                            - generic [ref=e506]:
+                                                - button "Previous 20 lines" [ref=e508] [cursor=pointer]:
+                                                    - img [ref=e509]
+                                                - generic [ref=e511]: '@@ -2,10 +2,10 @@ apiVersion: v2'
+                                            - generic [ref=e513]:
+                                                - generic [ref=e514]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e515]:
+                                                        - button [ref=e516] [cursor=pointer]
+                                                    - link "2" [ref=e517] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_2_2
+                                                - link "2" [ref=e519] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_2_2
+                                                - generic [ref=e522]: 'name: oauth2-proxy'
+                                            - generic [ref=e524]:
+                                                - generic [ref=e525]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e526]:
+                                                        - button [ref=e527] [cursor=pointer]
+                                                    - link "3" [ref=e528] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_3_3
+                                                - link "3" [ref=e530] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_3_3
+                                                - generic [ref=e533]: 'description: A Helm chart for Oauth2 Stack'
+                                            - generic [ref=e535]:
+                                                - generic [ref=e536]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e537]:
+                                                        - button [ref=e538] [cursor=pointer]
+                                                    - link "4" [ref=e539] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_4_4
+                                                - link "4" [ref=e541] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_4_4
+                                            - generic [ref=e545]:
+                                                - generic [ref=e546]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e547]:
+                                                        - button [ref=e548] [cursor=pointer]
+                                                    - link "5" [ref=e549] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_5_5
+                                                - generic [ref=e552]:
+                                                    - text: '-'
+                                                    - generic [ref=e553]:
+                                                        - text: 'version:'
+                                                        - generic [ref=e554]: 10.1.0
+                                            - generic [ref=e556]:
+                                                - generic [ref=e557]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e558]:
+                                                        - button [ref=e559] [cursor=pointer]
+                                                    - link "6" [ref=e560] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_6_5
+                                                - generic [ref=e563]:
+                                                    - text: '-'
+                                                    - generic [ref=e564]:
+                                                        - text: 'appVersion:'
+                                                        - generic [ref=e565]: 7.14.2
+                                            - generic [ref=e567]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e569]:
+                                                    - button [ref=e570] [cursor=pointer]
+                                                - link "5" [ref=e572] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_7_5
+                                                - generic [ref=e574]:
+                                                    - text: +
+                                                    - generic [ref=e575]:
+                                                        - text: 'version:'
+                                                        - generic [ref=e576]: 10.4.2
+                                            - generic [ref=e578]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e580]:
+                                                    - button [ref=e581] [cursor=pointer]
+                                                - link "6" [ref=e583] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_7_6
+                                                - generic [ref=e585]:
+                                                    - text: +
+                                                    - generic [ref=e586]:
+                                                        - text: 'appVersion:'
+                                                        - generic [ref=e587]: 7.15.1
+                                            - generic [ref=e589]:
+                                                - generic [ref=e590]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e591]:
+                                                        - button [ref=e592] [cursor=pointer]
+                                                    - link "7" [ref=e593] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_7_7
+                                                - link "7" [ref=e595] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_7_7
+                                            - generic [ref=e599]:
+                                                - generic [ref=e600]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e601]:
+                                                        - button [ref=e602] [cursor=pointer]
+                                                    - link "8" [ref=e603] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_8_8
+                                                - link "8" [ref=e605] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_8_8
+                                                - generic [ref=e608]: 'dependencies:'
+                                            - generic [ref=e610]:
+                                                - generic [ref=e611]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e612]:
+                                                        - button [ref=e613] [cursor=pointer]
+                                                    - link "9" [ref=e614] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_9_9
+                                                - link "9" [ref=e616] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_9_9
+                                                - generic [ref=e619]: '- name: oauth2-proxy'
+                                            - generic [ref=e621]:
+                                                - generic [ref=e622]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e623]:
+                                                        - button [ref=e624] [cursor=pointer]
+                                                    - link "10" [ref=e625] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_10_10
+                                                - generic [ref=e628]:
+                                                    - text: '-'
+                                                    - generic [ref=e629]:
+                                                        - text: 'version:'
+                                                        - generic [ref=e630]: 10.1.0
+                                            - generic [ref=e632]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e634]:
+                                                    - button [ref=e635] [cursor=pointer]
+                                                - link "10" [ref=e637] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_11_10
+                                                - generic [ref=e639]:
+                                                    - text: +
+                                                    - generic [ref=e640]:
+                                                        - text: 'version:'
+                                                        - generic [ref=e641]: 10.4.2
+                                            - generic [ref=e643]:
+                                                - generic [ref=e644]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e645]:
+                                                        - button [ref=e646] [cursor=pointer]
+                                                    - link "11" [ref=e647] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_11_11
+                                                - link "11" [ref=e649] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=be5ff35d26ead38c921c81e1d57bda3737f6a112#be5ff35d26ead38c921c81e1d57bda3737f6a112_11_11
+                                                - generic [ref=e652]: 'repository: https://oauth2-proxy.github.io/manifests'
+                                    - generic [ref=e655]:
+                                        - generic [ref=e656] [cursor=pointer]:
+                                            - generic [ref=e657]:
+                                                - button "Hide file contents" [ref=e658]:
+                                                    - img [ref=e659]
+                                                - link "oauth2-proxy/values-aws.yaml" [ref=e661]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#diff-content-788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b
+                                                    - strong [ref=e662]: oauth2-proxy/values-aws.yaml
+                                                - button "Copy file path" [ref=e663]:
+                                                    - img [ref=e664]
+                                            - generic [ref=e666]:
+                                                - generic [ref=e668]:
+                                                    - generic [ref=e669]:
+                                                        - generic [ref=e670]: +
+                                                        - generic [ref=e671]: '1'
+                                                    - generic [ref=e672]:
+                                                        - generic [ref=e673]: −
+                                                        - generic [ref=e674]: '1'
+                                                - generic [ref=e675]:
+                                                    - checkbox "Viewed" [ref=e676]
+                                                    - generic [ref=e677]: Viewed
+                                                - button "Comment on this file" [ref=e678]:
+                                                    - img [ref=e679]
+                                                - group [ref=e681]:
+                                                    - button "Options" [ref=e683]:
+                                                        - img [ref=e684]
+                                                        - generic [ref=e686]: Options
+                                        - generic [ref=e690]:
+                                            - generic [ref=e692]:
+                                                - button "Previous 20 lines" [ref=e694] [cursor=pointer]:
+                                                    - img [ref=e695]
+                                                - generic [ref=e697]: '@@ -6,7 +6,7 @@ codemie:'
+                                            - generic [ref=e699]:
+                                                - generic [ref=e700]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e701]:
+                                                        - button [ref=e702] [cursor=pointer]
+                                                    - link "6" [ref=e703] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_6_6
+                                                - link "6" [ref=e705] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_6_6
+                                            - generic [ref=e709]:
+                                                - generic [ref=e710]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e711]:
+                                                        - button [ref=e712] [cursor=pointer]
+                                                    - link "7" [ref=e713] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_7_7
+                                                - link "7" [ref=e715] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_7_7
+                                                - generic [ref=e718]: 'oauth2-proxy:'
+                                            - generic [ref=e720]:
+                                                - generic [ref=e721]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e722]:
+                                                        - button [ref=e723] [cursor=pointer]
+                                                    - link "8" [ref=e724] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_8_8
+                                                - link "8" [ref=e726] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_8_8
+                                                - generic [ref=e729]: 'image:'
+                                            - generic [ref=e731]:
+                                                - generic [ref=e732]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e733]:
+                                                        - button [ref=e734] [cursor=pointer]
+                                                    - link "9" [ref=e735] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_9_9
+                                                - generic [ref=e738]:
+                                                    - text: '-'
+                                                    - generic [ref=e739]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e740]: v7.14.2"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e742]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e744]:
+                                                    - button [ref=e745] [cursor=pointer]
+                                                - link "9" [ref=e747] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_10_9
+                                                - generic [ref=e749]:
+                                                    - text: +
+                                                    - generic [ref=e750]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e751]: v7.15.1"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e753]:
+                                                - generic [ref=e754]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e755]:
+                                                        - button [ref=e756] [cursor=pointer]
+                                                    - link "10" [ref=e757] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_10_10
+                                                - link "10" [ref=e759] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_10_10
+                                                - generic [ref=e762]: 'config:'
+                                            - generic [ref=e764]:
+                                                - generic [ref=e765]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e766]:
+                                                        - button [ref=e767] [cursor=pointer]
+                                                    - link "11" [ref=e768] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_11_11
+                                                - link "11" [ref=e770] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_11_11
+                                                - generic [ref=e773]: 'configFile: |-'
+                                            - generic [ref=e775]:
+                                                - generic [ref=e776]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e777]:
+                                                        - button [ref=e778] [cursor=pointer]
+                                                    - link "12" [ref=e779] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_12_12
+                                                - link "12" [ref=e781] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b#788feeb9af4eb1e0ce4ea64d380a92bbf654ce7b_12_12
+                                                - generic [ref=e784]: allowed_roles = ["developer", "admin"]
+                                            - button "Next 20 lines" [ref=e788] [cursor=pointer]:
+                                                - img [ref=e789]
+                                    - generic [ref=e794]:
+                                        - generic [ref=e795] [cursor=pointer]:
+                                            - generic [ref=e796]:
+                                                - button "Hide file contents" [ref=e797]:
+                                                    - img [ref=e798]
+                                                - link "oauth2-proxy/values-azure.yaml" [ref=e800]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#diff-content-ba308b91002900376a508f1d45f15b61ce1c59c7
+                                                    - strong [ref=e801]: oauth2-proxy/values-azure.yaml
+                                                - button "Copy file path" [ref=e802]:
+                                                    - img [ref=e803]
+                                            - generic [ref=e805]:
+                                                - generic [ref=e807]:
+                                                    - generic [ref=e808]:
+                                                        - generic [ref=e809]: +
+                                                        - generic [ref=e810]: '1'
+                                                    - generic [ref=e811]:
+                                                        - generic [ref=e812]: −
+                                                        - generic [ref=e813]: '1'
+                                                - generic [ref=e814]:
+                                                    - checkbox "Viewed" [ref=e815]
+                                                    - generic [ref=e816]: Viewed
+                                                - button "Comment on this file" [ref=e817]:
+                                                    - img [ref=e818]
+                                                - group [ref=e820]:
+                                                    - button "Options" [ref=e822]:
+                                                        - img [ref=e823]
+                                                        - generic [ref=e825]: Options
+                                        - generic [ref=e829]:
+                                            - generic [ref=e831]:
+                                                - button "Previous 20 lines" [ref=e833] [cursor=pointer]:
+                                                    - img [ref=e834]
+                                                - generic [ref=e836]: '@@ -6,7 +6,7 @@ codemie:'
+                                            - generic [ref=e838]:
+                                                - generic [ref=e839]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e840]:
+                                                        - button [ref=e841] [cursor=pointer]
+                                                    - link "6" [ref=e842] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_6_6
+                                                - link "6" [ref=e844] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_6_6
+                                            - generic [ref=e848]:
+                                                - generic [ref=e849]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e850]:
+                                                        - button [ref=e851] [cursor=pointer]
+                                                    - link "7" [ref=e852] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_7_7
+                                                - link "7" [ref=e854] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_7_7
+                                                - generic [ref=e857]: 'oauth2-proxy:'
+                                            - generic [ref=e859]:
+                                                - generic [ref=e860]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e861]:
+                                                        - button [ref=e862] [cursor=pointer]
+                                                    - link "8" [ref=e863] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_8_8
+                                                - link "8" [ref=e865] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_8_8
+                                                - generic [ref=e868]: 'image:'
+                                            - generic [ref=e870]:
+                                                - generic [ref=e871]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e872]:
+                                                        - button [ref=e873] [cursor=pointer]
+                                                    - link "9" [ref=e874] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_9_9
+                                                - generic [ref=e877]:
+                                                    - text: '-'
+                                                    - generic [ref=e878]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e879]: v7.14.2"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e881]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e883]:
+                                                    - button [ref=e884] [cursor=pointer]
+                                                - link "9" [ref=e886] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_10_9
+                                                - generic [ref=e888]:
+                                                    - text: +
+                                                    - generic [ref=e889]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e890]: v7.15.1"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e892]:
+                                                - generic [ref=e893]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e894]:
+                                                        - button [ref=e895] [cursor=pointer]
+                                                    - link "10" [ref=e896] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_10_10
+                                                - link "10" [ref=e898] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_10_10
+                                                - generic [ref=e901]: 'config:'
+                                            - generic [ref=e903]:
+                                                - generic [ref=e904]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e905]:
+                                                        - button [ref=e906] [cursor=pointer]
+                                                    - link "11" [ref=e907] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_11_11
+                                                - link "11" [ref=e909] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_11_11
+                                                - generic [ref=e912]: 'configFile: |-'
+                                            - generic [ref=e914]:
+                                                - generic [ref=e915]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e916]:
+                                                        - button [ref=e917] [cursor=pointer]
+                                                    - link "12" [ref=e918] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_12_12
+                                                - link "12" [ref=e920] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=ba308b91002900376a508f1d45f15b61ce1c59c7#ba308b91002900376a508f1d45f15b61ce1c59c7_12_12
+                                                - generic [ref=e923]: allowed_roles = ["developer", "admin"]
+                                            - button "Next 20 lines" [ref=e927] [cursor=pointer]:
+                                                - img [ref=e928]
+                                    - generic [ref=e933]:
+                                        - generic [ref=e934] [cursor=pointer]:
+                                            - generic [ref=e935]:
+                                                - button "Hide file contents" [ref=e936]:
+                                                    - img [ref=e937]
+                                                - link "oauth2-proxy/values-gcp.yaml" [ref=e939]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#diff-content-3076cef1d94d5658ef14b107d0bb8ebb108cd862
+                                                    - strong [ref=e940]: oauth2-proxy/values-gcp.yaml
+                                                - button "Copy file path" [ref=e941]:
+                                                    - img [ref=e942]
+                                            - generic [ref=e944]:
+                                                - generic [ref=e946]:
+                                                    - generic [ref=e947]:
+                                                        - generic [ref=e948]: +
+                                                        - generic [ref=e949]: '1'
+                                                    - generic [ref=e950]:
+                                                        - generic [ref=e951]: −
+                                                        - generic [ref=e952]: '1'
+                                                - generic [ref=e953]:
+                                                    - checkbox "Viewed" [ref=e954]
+                                                    - generic [ref=e955]: Viewed
+                                                - button "Comment on this file" [ref=e956]:
+                                                    - img [ref=e957]
+                                                - group [ref=e959]:
+                                                    - button "Options" [ref=e961]:
+                                                        - img [ref=e962]
+                                                        - generic [ref=e964]: Options
+                                        - generic [ref=e968]:
+                                            - generic [ref=e970]:
+                                                - button "Previous 20 lines" [ref=e972] [cursor=pointer]:
+                                                    - img [ref=e973]
+                                                - generic [ref=e975]: '@@ -6,7 +6,7 @@ codemie:'
+                                            - generic [ref=e977]:
+                                                - generic [ref=e978]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e979]:
+                                                        - button [ref=e980] [cursor=pointer]
+                                                    - link "6" [ref=e981] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_6_6
+                                                - link "6" [ref=e983] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_6_6
+                                            - generic [ref=e987]:
+                                                - generic [ref=e988]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e989]:
+                                                        - button [ref=e990] [cursor=pointer]
+                                                    - link "7" [ref=e991] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_7_7
+                                                - link "7" [ref=e993] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_7_7
+                                                - generic [ref=e996]: 'oauth2-proxy:'
+                                            - generic [ref=e998]:
+                                                - generic [ref=e999]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e1000]:
+                                                        - button [ref=e1001] [cursor=pointer]
+                                                    - link "8" [ref=e1002] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_8_8
+                                                - link "8" [ref=e1004] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_8_8
+                                                - generic [ref=e1007]: 'image:'
+                                            - generic [ref=e1009]:
+                                                - generic [ref=e1010]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e1011]:
+                                                        - button [ref=e1012] [cursor=pointer]
+                                                    - link "9" [ref=e1013] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_9_9
+                                                - generic [ref=e1016]:
+                                                    - text: '-'
+                                                    - generic [ref=e1017]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e1018]: v7.14.2"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e1020]:
+                                                - generic "Add a comment to this line or drag for multiple lines" [ref=e1022]:
+                                                    - button [ref=e1023] [cursor=pointer]
+                                                - link "9" [ref=e1025] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_10_9
+                                                - generic [ref=e1027]:
+                                                    - text: +
+                                                    - generic [ref=e1028]:
+                                                        - text: 'tag: "'
+                                                        - generic [ref=e1029]: v7.15.1"
+                                                        - text: '# subject to remove on helm chart upgrades'
+                                            - generic [ref=e1031]:
+                                                - generic [ref=e1032]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e1033]:
+                                                        - button [ref=e1034] [cursor=pointer]
+                                                    - link "10" [ref=e1035] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_10_10
+                                                - link "10" [ref=e1037] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_10_10
+                                                - generic [ref=e1040]: 'config:'
+                                            - generic [ref=e1042]:
+                                                - generic [ref=e1043]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e1044]:
+                                                        - button [ref=e1045] [cursor=pointer]
+                                                    - link "11" [ref=e1046] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_11_11
+                                                - link "11" [ref=e1048] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_11_11
+                                                - generic [ref=e1051]: 'configFile: |-'
+                                            - generic [ref=e1053]:
+                                                - generic [ref=e1054]:
+                                                    - generic "Add a comment to this line or drag for multiple lines" [ref=e1055]:
+                                                        - button [ref=e1056] [cursor=pointer]
+                                                    - link "12" [ref=e1057] [cursor=pointer]:
+                                                        - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_12_12
+                                                - link "12" [ref=e1059] [cursor=pointer]:
+                                                    - /url: https://gitbud.epam.com/epm-cdme/codemie-helm-charts/-/merge_requests/252/diffs?file=3076cef1d94d5658ef14b107d0bb8ebb108cd862#3076cef1d94d5658ef14b107d0bb8ebb108cd862_12_12
+                                                - generic [ref=e1062]: allowed_roles = ["developer", "admin"]
+                                            - button "Next 20 lines" [ref=e1066] [cursor=pointer]:
+                                                - img [ref=e1067]

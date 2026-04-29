@@ -88,7 +88,7 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
 <details>
 <summary><strong>CodeMie 2.23.0</strong></summary>
 
-**Release Date:** April 15, 2026
+**Release Date:** April 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.0)
 
 <h3>Third-Party Component Updates</h3>
 

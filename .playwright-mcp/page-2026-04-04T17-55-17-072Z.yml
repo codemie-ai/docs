@@ -1,0 +1,216 @@
+- generic [ref=e2]:
+    - region "Skip to main content":
+        - link "Skip to main content" [ref=e3] [cursor=pointer]:
+            - /url: '#__docusaurus_skipToContent_fallback'
+    - navigation "Main" [ref=e4]:
+        - generic [ref=e5]:
+            - link "AI/Run CodeMie Logo" [ref=e7] [cursor=pointer]:
+                - /url: /
+                - img "AI/Run CodeMie Logo" [ref=e9]
+            - generic [ref=e10]:
+                - button "Switch between dark and light mode (currently light mode)" [ref=e12] [cursor=pointer]:
+                    - img [ref=e13]
+                - textbox "Search" [ref=e17]
+    - generic [ref=e20]:
+        - complementary [ref=e21]:
+            - generic [ref=e24]:
+                - navigation "Docs sidebar" [ref=e25]:
+                    - list [ref=e26]:
+                        - listitem [ref=e27]:
+                            - link "Home" [ref=e28] [cursor=pointer]:
+                                - /url: /
+                                - generic "Home" [ref=e29]
+                        - listitem [ref=e30]:
+                            - generic [ref=e31]:
+                                - link "Getting Started" [ref=e32] [cursor=pointer]:
+                                    - /url: /user-guide/getting-started/
+                                    - generic "Getting Started" [ref=e33]
+                                - button "Collapse sidebar category 'Getting Started'" [expanded] [ref=e34] [cursor=pointer]
+                            - list [ref=e35]:
+                                - listitem [ref=e36]:
+                                    - link "What is AI/Run CodeMie?" [ref=e37] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/what-is-codemie
+                                        - generic "What is AI/Run CodeMie?" [ref=e38]
+                                - listitem [ref=e39]:
+                                    - link "Capabilities" [ref=e40] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/codemie-capabilities
+                                        - generic "Capabilities" [ref=e41]
+                                - listitem [ref=e42]:
+                                    - link "Use Cases" [ref=e43] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/use-cases
+                                        - generic "Use Cases" [ref=e44]
+                                - listitem [ref=e45]:
+                                    - link "FAQ Assistant" [ref=e46] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/meet-faq-assistant
+                                        - generic "FAQ Assistant" [ref=e47]
+                                - listitem [ref=e48]:
+                                    - link "Help Center" [ref=e49] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/help-center
+                                        - generic "Help Center" [ref=e50]
+                                - listitem [ref=e51]:
+                                    - link "Glossary" [ref=e52] [cursor=pointer]:
+                                        - /url: /user-guide/getting-started/glossary
+                                        - generic "Glossary" [ref=e53]
+                        - listitem [ref=e54]:
+                            - generic [ref=e55]:
+                                - link "User Manuals" [ref=e56] [cursor=pointer]:
+                                    - /url: /user-guide/
+                                    - generic "User Manuals" [ref=e57]
+                                - button "Expand sidebar category 'User Manuals'" [ref=e58] [cursor=pointer]
+                        - listitem [ref=e59]:
+                            - generic [ref=e60]:
+                                - link "Administration" [ref=e61] [cursor=pointer]:
+                                    - /url: /admin/
+                                    - generic "Administration" [ref=e62]
+                                - button "Expand sidebar category 'Administration'" [ref=e63] [cursor=pointer]
+                - generic [ref=e64]:
+                    - generic:
+                        - img "background-gradient"
+                    - generic [ref=e65]: Resources
+                    - list [ref=e66]:
+                        - listitem [ref=e67]:
+                            - link "GitHub Repository" [ref=e68] [cursor=pointer]:
+                                - /url: https://github.com/codemie-ai/docs
+                                - img [ref=e69]
+                                - text: GitHub Repository
+                        - listitem [ref=e71]:
+                            - link "YouTube Channel" [ref=e72] [cursor=pointer]:
+                                - /url: https://www.youtube.com/@EPAMAIRunCodeMie
+                                - img [ref=e73]
+                                - text: YouTube Channel
+                        - listitem [ref=e75]:
+                            - link "Report an Issue" [ref=e76] [cursor=pointer]:
+                                - /url: https://github.com/codemie-ai/docs/issues
+                                - img [ref=e77]
+                                - text: Report an Issue
+        - main [ref=e79]:
+            - generic [ref=e81]:
+                - generic [ref=e83]:
+                    - article [ref=e84]:
+                        - navigation "Breadcrumbs" [ref=e85]:
+                            - list [ref=e86]:
+                                - listitem [ref=e87]:
+                                    - link "Home page" [ref=e88] [cursor=pointer]:
+                                        - /url: /
+                                        - img [ref=e89]
+                                - listitem [ref=e91]:
+                                    - generic [ref=e92]: Home
+                        - generic [ref=e93]:
+                            - heading "AI/Run CodeMie Documentation" [level=1] [ref=e95]
+                            - paragraph [ref=e96]: Welcome to the official documentation for AI/Run CodeMie - a sophisticated AI-powered platform designed to enhance software development workflows through intelligent automation, code assistance, and seamless integration with development tools.
+                            - heading "AI/Run CodeMie UsersDirect link to AI/Run CodeMie Users" [level=2] [ref=e97]:
+                                - text: AI/Run CodeMie Users
+                                - link "Direct link to AI/Run CodeMie Users" [ref=e98] [cursor=pointer]:
+                                    - /url: '#airun-codemie-users'
+                                    - text: '#'
+                            - paragraph [ref=e99]: Comprehensive guides for developers working with AI/Run CodeMie to enhance their development workflow.
+                            - generic [ref=e100]:
+                                - link "Getting Started logo Getting Started Learn the basics of AI/Run CodeMie, set up your environment, and start using the platform for your development tasks. →" [ref=e102] [cursor=pointer]:
+                                    - /url: /user-guide/getting-started/
+                                    - img "Getting Started logo" [ref=e103]
+                                    - heading "Getting Started" [level=3] [ref=e104]
+                                    - paragraph [ref=e105]: Learn the basics of AI/Run CodeMie, set up your environment, and start using the platform for your development tasks.
+                                    - generic [ref=e106]: →
+                                - link "AI Assistants logo AI Assistants Create, configure, and manage AI assistants tailored to your development needs with customizable behaviors and capabilities. →" [ref=e108] [cursor=pointer]:
+                                    - /url: /user-guide/assistants/
+                                    - img "AI Assistants logo" [ref=e109]
+                                    - heading "AI Assistants" [level=3] [ref=e110]
+                                    - paragraph [ref=e111]: Create, configure, and manage AI assistants tailored to your development needs with customizable behaviors and capabilities.
+                                    - generic [ref=e112]: →
+                                - link "Workflows logo Workflows Build and execute automated workflows to streamline repetitive tasks and enhance your development pipeline. →" [ref=e114] [cursor=pointer]:
+                                    - /url: /user-guide/workflows/
+                                    - img "Workflows logo" [ref=e115]
+                                    - heading "Workflows" [level=3] [ref=e116]
+                                    - paragraph [ref=e117]: Build and execute automated workflows to streamline repetitive tasks and enhance your development pipeline.
+                                    - generic [ref=e118]: →
+                            - heading "AI/Run CodeMie AdministratorsDirect link to AI/Run CodeMie Administrators" [level=2] [ref=e119]:
+                                - text: AI/Run CodeMie Administrators
+                                - link "Direct link to AI/Run CodeMie Administrators" [ref=e120] [cursor=pointer]:
+                                    - /url: '#airun-codemie-administrators'
+                                    - text: '#'
+                            - paragraph [ref=e121]: Technical guides for platform administrators and DevOps teams deploying and managing AI/Run CodeMie.
+                            - generic [ref=e122]:
+                                - link "AWS Deployment Guide Deploy AI/Run CodeMie on AWS with comprehensive guides covering infrastructure setup, components, and configuration. →" [ref=e124] [cursor=pointer]:
+                                    - /url: /admin/deployment/aws/overview
+                                    - img [ref=e126]
+                                    - heading "AWS Deployment Guide" [level=3] [ref=e130]
+                                    - paragraph [ref=e131]: Deploy AI/Run CodeMie on AWS with comprehensive guides covering infrastructure setup, components, and configuration.
+                                    - generic [ref=e132]: →
+                                - link "GCP Deployment Guide Deploy AI/Run CodeMie on Google Cloud Platform using Terraform and Helm with automated or manual installation options. →" [ref=e134] [cursor=pointer]:
+                                    - /url: /admin/deployment/gcp/overview
+                                    - img [ref=e136]
+                                    - heading "GCP Deployment Guide" [level=3] [ref=e142]
+                                    - paragraph [ref=e143]: Deploy AI/Run CodeMie on Google Cloud Platform using Terraform and Helm with automated or manual installation options.
+                                    - generic [ref=e144]: →
+                                - link "Azure Deployment Guide Deploy AI/Run CodeMie on Microsoft Azure with step-by-step guidance for infrastructure and application deployment. →" [ref=e146] [cursor=pointer]:
+                                    - /url: /admin/deployment/azure/overview
+                                    - img [ref=e148]
+                                    - heading "Azure Deployment Guide" [level=3] [ref=e150]
+                                    - paragraph [ref=e151]: Deploy AI/Run CodeMie on Microsoft Azure with step-by-step guidance for infrastructure and application deployment.
+                                    - generic [ref=e152]: →
+                                - link "AWS Marketplace Deploy AI/Run CodeMie directly from AWS Marketplace. →" [ref=e154] [cursor=pointer]:
+                                    - /url: https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1
+                                    - img [ref=e156]
+                                    - heading "AWS Marketplace" [level=3] [ref=e160]
+                                    - paragraph [ref=e161]: Deploy AI/Run CodeMie directly from AWS Marketplace.
+                                    - generic [ref=e162]: →
+                                - link "API Configuration logo API Configuration Configure and manage CodeMie API settings, authentication, and integration endpoints for your development environment. →" [ref=e164] [cursor=pointer]:
+                                    - /url: /admin/configuration/codemie/api-configuration
+                                    - img "API Configuration logo" [ref=e165]
+                                    - heading "API Configuration" [level=3] [ref=e166]
+                                    - paragraph [ref=e167]: Configure and manage CodeMie API settings, authentication, and integration endpoints for your development environment.
+                                    - generic [ref=e168]: →
+                                - link "Extensions logo Extensions Enhance CodeMie with optional extensions including LiteLLM Proxy, Langfuse evaluation, AICE, and specialized development assistants. →" [ref=e170] [cursor=pointer]:
+                                    - /url: /admin/deployment/extensions/
+                                    - img "Extensions logo" [ref=e171]
+                                    - heading "Extensions" [level=3] [ref=e172]
+                                    - paragraph [ref=e173]: Enhance CodeMie with optional extensions including LiteLLM Proxy, Langfuse evaluation, AICE, and specialized development assistants.
+                                    - generic [ref=e174]: →
+                            - heading "Getting HelpDirect link to Getting Help" [level=2] [ref=e175]:
+                                - text: Getting Help
+                                - link "Direct link to Getting Help" [ref=e176] [cursor=pointer]:
+                                    - /url: '#getting-help'
+                                    - text: '#'
+                            - list [ref=e177]:
+                                - listitem [ref=e178]:
+                                    - strong [ref=e179]: Browse Documentation
+                                    - text: '- Use the navigation menu to explore specific topics'
+                                - listitem [ref=e180]:
+                                    - strong [ref=e181]: Search
+                                    - text: '- Use the search functionality to quickly find what you need'
+                                - listitem [ref=e182]:
+                                    - strong [ref=e183]: Report Issues
+                                    - text: '- Found a problem?'
+                                    - link "Open an issue on GitHub" [ref=e184] [cursor=pointer]:
+                                        - /url: https://github.com/codemie-ai/docs/issues
+                                - listitem [ref=e185]:
+                                    - strong [ref=e186]: FAQ Sections
+                                    - text: '- Check FAQ pages for common questions'
+                            - heading "ContributingDirect link to Contributing" [level=2] [ref=e187]:
+                                - text: Contributing
+                                - link "Direct link to Contributing" [ref=e188] [cursor=pointer]:
+                                    - /url: '#contributing'
+                                    - text: '#'
+                            - paragraph [ref=e189]:
+                                - text: This documentation is continuously improved with help from our community. If you'd like to contribute corrections, clarifications, or new content, please visit our
+                                - link "GitHub repository" [ref=e190] [cursor=pointer]:
+                                    - /url: https://github.com/codemie-ai/docs
+                                - text: .
+                        - link "Edit this page" [ref=e194] [cursor=pointer]:
+                            - /url: https://github.com/codemie-ai/docs/tree/main/docs/index.mdx
+                            - img [ref=e195]
+                            - text: Edit this page
+                    - navigation "Docs pages"
+                - list [ref=e201]:
+                    - listitem [ref=e202]:
+                        - link "AI/Run CodeMie Users" [ref=e203] [cursor=pointer]:
+                            - /url: '#airun-codemie-users'
+                    - listitem [ref=e204]:
+                        - link "AI/Run CodeMie Administrators" [ref=e205] [cursor=pointer]:
+                            - /url: '#airun-codemie-administrators'
+                    - listitem [ref=e206]:
+                        - link "Getting Help" [ref=e207] [cursor=pointer]:
+                            - /url: '#getting-help'
+                    - listitem [ref=e208]:
+                        - link "Contributing" [ref=e209] [cursor=pointer]:
+                            - /url: '#contributing'
