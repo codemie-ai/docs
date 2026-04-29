@@ -1,7 +1,0 @@
-[    1499ms] [LOG] %cWelcome to GitLab!%c
-
-Does this page need fixes or improvements? Open an issue or contribute a merge request to help make GitLab more lovable. At GitLab, everyone can contribute!
-
-🤝 Contribute to GitLab: https://about.gitlab.com/community/contribute/
-🔎 Create a new GitLab issue: https://gitlab.com/gitlab-org/gitlab/-/issues/new
- padding-top: 0.5em; font-size: 2em; padding-bottom: 0.5em; @ https://gitbud.epam.com/assets/webpack/hello.f051a5d0.chunk.js:0
