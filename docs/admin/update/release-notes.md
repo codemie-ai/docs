@@ -75,6 +75,10 @@ No third-party component updates in this release.
 
    See [API Configuration](../configuration/codemie/api-configuration.md#inter-process-communication) for full details.
 
+<h3>Hotfixes</h3>
+
+- **2.24.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.24.1) – April 29, 2026
+
 </details>
 
 <details>
