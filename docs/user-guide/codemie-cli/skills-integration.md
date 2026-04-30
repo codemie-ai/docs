@@ -134,22 +134,8 @@ cat prompt.txt | codemie skill run "<skill-id>"
 
 | Flag | Short | Description |
 | ---- | ----- | ----------- |
-| `--conversation-id <id>` | | Continue a previous conversation. Also accepts the `CODEMIE_SESSION_ID` environment variable |
+| `--conversation-id <id>` | | Continue a previous conversation. History is stored in `~/.codemie/sessions/`. Also accepts the `CODEMIE_SESSION_ID` environment variable |
 | `--verbose` | `-v` | Enable debug output |
-
-### Maintaining Conversation Context
-
-By default each call is stateless. Pass `--conversation-id` to carry context across multiple calls:
-
-```bash
-codemie skill run "<skill-id>" "Describe the architecture" --conversation-id my-session
-codemie skill run "<skill-id>" "Now suggest improvements" --conversation-id my-session
-```
-
-:::note
-Conversation history is loaded from local session files in `~/.codemie/sessions/`. If the session
-file does not exist, the call starts a new stateless conversation.
-:::
 
 :::tip
 Not sure of the skill's ID? It is embedded in the generated `SKILL.md` file at
