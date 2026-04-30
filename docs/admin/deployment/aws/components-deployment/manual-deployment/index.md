@@ -1,0 +1,239 @@
+---
+id: manual-deployment-overview
+sidebar_position: 2
+title: Manual Deployment Overview
+description: Overview of manual component installation process
+pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
+pagination_next: admin/deployment/aws/components-deployment/manual-deployment/k8s-components
+---
+
+# Manual CodeMie Components Deployment
+
+This guide provides step-by-step instructions for manually deploying AI/Run CodeMie application components using Helm charts. Manual deployment gives you granular control over each component installation, allowing for customization and troubleshooting at each stage.
+
+:::info When to Use Manual Deployment
+Use manual deployment when you need:
+
+- Fine-grained control over individual component configuration
+- Custom installation order or selective component deployment
+- Troubleshooting capabilities at each deployment stage
+- Integration with existing infrastructure components
+
+If you prefer automated deployment, see [Scripted Deployment](../components-scripted-deployment) instead.
+:::
+
+## Overview
+
+Manual deployment involves installing components individually in a specific dependency order. Each component is deployed using Helm charts with cloud-specific values files (`values-aws.yaml`).
+
+### Deployment Scope
+
+This guide covers all components required for a fully functional AI/Run CodeMie installation:
+
+- **Infrastructure services** - Storage provisioning and ingress routing
+- **Data layer** - Document storage and relational databases
+- **Security components** - Identity management and authentication proxies
+- **Messaging system** - Inter-service communication infrastructure
+- **Core CodeMie services** - Main application components
+- **Observability stack** - Logging and monitoring dashboards
+
+## Prerequisites
+
+Before starting manual deployment, ensure you have completed all requirements:
+
+### Verification Checklist
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../infrastructure-deployment/) phase
+- [ ] **Cluster Access**: kubectl configured for EKS cluster
+- [ ] **Container Registry**: Completed [Container Registry Access Setup](../#repository-and-access) from overview page
+- [ ] **Helm Installed**: Helm 3.16.0+ installed on deployment machine
+- [ ] **Repository Cloned**: `codemie-helm-charts` repository available locally
+- [ ] **Domain Configured**: Know your CodeMie domain name from infrastructure outputs
+- [ ] **Deployment Outputs File**: Have `deployment_outputs.env` from infrastructure deployment
+
+:::warning Container Registry Access Required
+You must complete the Container Registry Access setup from the [Components Deployment Overview](../#repository-and-access) before proceeding. Each component requires the `gcp-artifact-registry` pull secret to exist.
+:::
+
+### Required Tools
+
+Ensure these tools are available on your deployment machine:
+
+- `kubectl` - Kubernetes cluster management
+- `helm` 3.16.0+ - Kubernetes package manager
+- `gcloud` CLI - For GCR authentication
+- `aws` CLI - For AWS operations
+
+## Component Installation Order
+
+Components must be installed in the following order to satisfy dependencies:
+
+### 1. [Kubernetes Components](./k8s-components)
+
+**Purpose**: Foundation infrastructure for storage provisioning and external access
+
+**Components**:
+
+- AWS gp3 Storage Class (for dynamic volume provisioning)
+- Nginx Ingress Controller (for HTTP/HTTPS routing)
+
+**When to Skip**: If your cluster already has these components configured
+
+### 2. [Data Layer](./data-layer)
+
+**Purpose**: Persistent storage for application data and user content
+
+**Components**:
+
+- Elasticsearch (document storage and search engine)
+
+**Dependencies**: Requires storage class from Step 1
+
+### 3. [Security and Identity](./security-and-identity)
+
+**Purpose**: User authentication, authorization, and access control
+
+**Components**:
+
+- Keycloak Operator (Keycloak lifecycle management)
+- Keycloak (identity and access management)
+- OAuth2 Proxy (authentication proxy)
+
+**Dependencies**: Requires RDS from infrastructure deployment
+
+### 4. [Plugin Engine](./plugin-engine)
+
+**Purpose**: Inter-service messaging and plugin communication infrastructure
+
+**Components**:
+
+- NATS (message broker)
+- NATS Auth Callout (authentication service for NATS)
+
+**Dependencies**: None (standalone messaging layer)
+
+### 5. [AI/Run CodeMie Core](./core-components)
+
+**Purpose**: Main application services providing CodeMie functionality
+
+**Components**:
+
+- CodeMie API (backend REST API)
+- CodeMie UI (frontend web application)
+- MCP Connect (Model Context Protocol connector)
+- Mermaid Server (diagram rendering service)
+
+**Dependencies**: Requires all previous components (data layer, security, messaging)
+
+### 6. [Observability](./observability.md)
+
+**Purpose**: System monitoring, logging aggregation, and operational insights
+
+**Components**:
+
+- Fluent Bit (log collection and forwarding)
+- Kibana (log visualization and analysis)
+- Kibana Dashboards (pre-configured monitoring views)
+
+**Dependencies**: Requires Elasticsearch from Step 2
+
+## Getting Started
+
+### Step 1: Clone Repository
+
+Clone the Helm charts repository on your deployment machine:
+
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
+
+### Step 2: Configure AWS-Specific Values
+
+Update AWS-specific values in the CodeMie API configuration. Use values from your `deployment_outputs.env` file:
+
+```bash
+# Source the deployment outputs
+source deployment_outputs.env
+
+# Update CodeMie API values with AWS-specific configuration
+sed -i "s/%%DOMAIN%%/${CODEMIE_DOMAIN_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_DEFAULT_REGION%%/${AWS_DEFAULT_REGION}/g" codemie-api/values-aws.yaml
+sed -i "s|%%EKS_AWS_ROLE_ARN%%|${EKS_AWS_ROLE_ARN}|g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_KMS_KEY_ID%%/${AWS_KMS_KEY_ID}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_BUCKET_NAME%%/${AWS_S3_BUCKET_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_REGION%%/${AWS_S3_REGION}/g" codemie-api/values-aws.yaml
+```
+
+### Step 3: Configure Domain Name
+
+Update the DNS zone name in values files. Replace `%%DOMAIN%%` with your actual DNS zone name:
+
+```bash
+# Use your DNS zone name from deployment_outputs.env
+CODEMIE_DOMAIN_NAME="airun.example.com"
+
+# Update all values-aws.yaml files
+find . -name "values-aws.yaml" -exec sed -i "s/%%DOMAIN%%/$CODEMIE_DOMAIN_NAME/g" {} \;
+```
+
+:::tip Domain Configuration
+Your DNS zone name was configured during infrastructure deployment. Find it in `deployment_outputs.env` as `CODEMIE_DOMAIN_NAME`.
+:::
+
+### Step 4: Authenticate to Container Registry
+
+Authenticate Helm to the Google Container Registry:
+
+```bash
+# Set credentials
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+
+# Login to registry
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
+```
+
+### Step 5: Get Latest CodeMie Version
+
+Retrieve the latest AI/Run CodeMie release version:
+
+```bash
+# Check latest version
+bash get-codemie-latest-release-version.sh -c key.json
+
+# Note the version (e.g., 1.2.3) for component installations
+```
+
+You'll use this version when installing each component's Helm chart.
+
+## Installation Process
+
+Follow the component installation guides in the order listed above. Each guide provides:
+
+- Detailed installation commands
+- Configuration options
+- Validation steps
+- Troubleshooting guidance
+
+:::warning Respect Installation Order
+Installing components out of order will cause deployment failures. Always follow the numbered sequence to ensure dependencies are satisfied.
+:::
+
+## Common Issues
+
+### Image Pull Failures
+
+**Symptom**: Pods stuck in `ImagePullBackOff` or `ErrImagePull`
+
+**Solution**:
+
+- Verify `gcp-artifact-registry` secret exists: `kubectl get secret -n codemie`
+- Re-authenticate to registry (repeat Step 4)
+- Check network connectivity to `europe-west3-docker.pkg.dev`
+
+## Next Steps
+
+Begin the installation process by following the guides in order, starting with **[Kubernetes Components](./k8s-components)**.
+
+After completing all component installations, proceed to **[Configuration](../../../../configuration/)** to configure users, AI models, and data sources.

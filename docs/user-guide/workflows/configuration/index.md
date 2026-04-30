@@ -18,13 +18,13 @@ This documentation is organized into the following sections:
 
 ### Core Documentation
 
-1. **[Introduction & Getting Started](./introduction)**
+1. **[Introduction & Getting Started](./introduction.md)**
    - What are CodeMie Workflows?
    - Core Architecture Components
    - Your First Workflow
    - YAML Configuration Basics
 
-2. **[Configuration Reference](./configuration-reference)**
+2. **[Configuration Reference](./configuration-reference.md)**
    - Assistants Configuration
    - Workflow-Level Settings
    - Tools Configuration
@@ -32,27 +32,27 @@ This documentation is organized into the following sections:
    - Custom Nodes Configuration
    - MCP Server Configuration
 
-3. **[Workflow States](./workflow-states)**
+3. **[Workflow States](./workflow-states.md)**
    - State Types
    - Agent State Configuration
    - Tool State Configuration
    - Custom Node State Configuration
 
-4. **[State Transitions](./state-transitions)**
+4. **[State Transitions](./state-transitions.md)**
    - Simple Transitions
    - Parallel Transitions
    - Conditional Transitions
    - Switch/Case Transitions
    - Iterative Transitions (Map-Reduce)
 
-5. **[Context Management](./context-management)**
+5. **[Context Management](./context-management.md)**
    - Context Store
    - Context Configuration Options
    - Dynamic Value Resolution
 
 ### Advanced Topics
 
-6. **[Advanced Features](./advanced-features)**
+6. **[Advanced Features](./advanced-features.md)**
    - Map-Reduce Patterns
    - Memory Management
    - Retry Policies
@@ -60,41 +60,41 @@ This documentation is organized into the following sections:
    - Structured Output
    - Performance Tuning
 
-7. **[Specialized Node Types](./specialized-nodes)**
+7. **[Specialized Node Types](./specialized-nodes.md)**
    - State Processor Node
    - Bedrock Flow Node
    - Document Tree Generator
 
-8. **[Integration Capabilities](./integration-capabilities)**
+8. **[Integration Capabilities](./integration-capabilities.md)**
    - Data Source Integration
    - Tool Integration
    - MCP (Model Context Protocol) Integration
 
 ### Best Practices & Troubleshooting
 
-9. **[Best Practices](./best-practices)**
+9. **[Best Practices](./best-practices.md)**
    - Workflow Design Principles
    - Context Management Best Practices
    - Performance Optimization
    - Error Handling
    - Security Considerations
 
-10. **[Complete Examples](./examples)**
+10. **[Complete Examples](./examples.md)**
     - Code Review Workflow
     - Document Processing Pipeline
     - Multi-Branch Processing
 
-11. **[Troubleshooting](./troubleshooting)**
+11. **[Troubleshooting](./troubleshooting.md)**
     - Common Issues
     - Debugging Techniques
     - Validation Process
 
 ## Quick Links
 
-- **New to workflows?** Start with [Introduction & Getting Started](./introduction)
-- **Building a workflow?** Check [Configuration Reference](./configuration-reference)
-- **Need examples?** See [Complete Examples](./examples)
-- **Having issues?** Visit [Troubleshooting](./troubleshooting)
+- **New to workflows?** Start with [Introduction & Getting Started](./introduction.md)
+- **Building a workflow?** Check [Configuration Reference](./configuration-reference.md)
+- **Need examples?** See [Complete Examples](./examples.md)
+- **Having issues?** Visit [Troubleshooting](./troubleshooting.md)
 
 ## Key Concepts
 
@@ -126,9 +126,9 @@ This documentation is organized into the following sections:
 ## Getting Help
 
 - Review the documentation sections above
-- Check [Complete Examples](./examples) for common patterns
-- Consult [Best Practices](./best-practices) for optimization tips
-- See [Troubleshooting](./troubleshooting) for common issues
+- Check [Complete Examples](./examples.md) for common patterns
+- Consult [Best Practices](./best-practices.md) for optimization tips
+- See [Troubleshooting](./troubleshooting.md) for common issues
 
 ---
 

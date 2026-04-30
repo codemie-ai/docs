@@ -20,7 +20,7 @@ Native integration uses environment-specific YAML configuration files to define 
 
 **Example**: `MODELS_ENV=production` → loads `llm-production-config.yaml`
 
-For detailed parameter descriptions, see the [LLM Model Configuration Reference](../api-configuration#llm-model-configuration).
+For detailed parameter descriptions, see the [LLM Model Configuration Reference](../api-configuration.md#llm-model-configuration).
 
 ### Reference Configurations
 
@@ -515,7 +515,7 @@ helm upgrade --install codemie-api \
 ```
 
 :::info Full Deployment Guide
-For detailed deployment instructions, troubleshooting, and additional options, see the [Update AI/Run CodeMie](../../../update/codemie/update-version) documentation.
+For detailed deployment instructions, troubleshooting, and additional options, see the [Update AI/Run CodeMie](../../../update/codemie/update-version.md) documentation.
 :::
 
 #### Step 4: Verify Models
@@ -532,7 +532,7 @@ kubectl logs -n codemie deployment/codemie-api | grep "LLMConfig initiated"
 
 ### Configuration Parameters Reference
 
-For detailed parameter descriptions, model categories, features, and embedding model configuration, see the [LLM Model Configuration Reference](../api-configuration#llm-model-configuration).
+For detailed parameter descriptions, model categories, features, and embedding model configuration, see the [LLM Model Configuration Reference](../api-configuration.md#llm-model-configuration).
 
 ## Useful Resources
 

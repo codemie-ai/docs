@@ -79,7 +79,7 @@ assistants:
 ```
 
 Choose a value based on the typical output size of the tools your assistant uses. See the
-[Configuration Reference](./configuration-reference#31-assistants-configuration) for guidance.
+[Configuration Reference](./configuration-reference.md#31-assistants-configuration) for guidance.
 
 **Strategy 2: Extract only the data you need with `tool_result_json_pointer`**
 
@@ -158,10 +158,10 @@ growing unbounded across workflow steps.
 
 ## Need More Help?
 
-- Review the [Introduction](./introduction) for basic concepts
-- Check [Configuration Reference](./configuration-reference) for detailed configuration options
-- See [Complete Examples](./examples) for working examples
-- Consult [Best Practices](./best-practices) for recommendations
+- Review the [Introduction](./introduction.md) for basic concepts
+- Check [Configuration Reference](./configuration-reference.md) for detailed configuration options
+- See [Complete Examples](./examples.md) for working examples
+- Consult [Best Practices](./best-practices.md) for recommendations
 
 ---
 

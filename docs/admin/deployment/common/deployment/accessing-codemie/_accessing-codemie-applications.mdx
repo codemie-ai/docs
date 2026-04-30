@@ -1,0 +1,58 @@
+Once deployment is complete and validated, access the AI/Run CodeMie applications:
+
+## Application URLs
+
+Instead of `airun.example.com` use domain name configured during infrastructure deployment:
+
+| Application        | URL                                                       | Description                      |
+| ------------------ | --------------------------------------------------------- | -------------------------------- |
+| **CodeMie UI**     | http(s)://codemie.airun.example.com                       | Main user interface              |
+| **CodeMie API**    | http(s)://codemie.airun.example.com/code-assistant-api/v1 | REST API endpoint                |
+| **Keycloak Admin** | <span>{props.keycloakUrl}</span>                          | Identity management console      |
+| **Kibana**         | <span>{props.kibanaUrl}</span>                            | Data visualization and analytics |
+
+:::info Protocol and Domain
+
+- **HTTP vs HTTPS**: Private clusters typically use HTTP. Public deployments should use HTTPS with valid TLS certificates.
+- **Domain Name**: Use configured during infrastructure deployment (`CODEMIE_DOMAIN_NAME` in `deployment_outputs.env`)
+- **Private DNS**: If using private DNS, ensure your client machine can resolve the domain (VPN or internal network required)
+  :::
+
+## Next Steps: Configuration
+
+After accessing the applications, complete the configuration to make AI/Run CodeMie fully operational.
+
+### Required Configuration
+
+#### User Configuration
+
+Configure initial users and authentication in Keycloak. See [Access Control](../../../../configuration/access-control/index.md) for details.
+
+#### AI LLM Models Integration
+
+Set up AI model providers to enable AI capabilities. See [AI Models Integration](../../../../configuration/codemie/ai-models-integration/index.md) for details.
+
+### Install Extensions
+
+Enhance AI/Run CodeMie with optional extensions:
+
+- **[LiteLLM Proxy](../../../extensions/litellm-proxy/index.md)** - Load balancing and high availability for LLM requests
+- **[Assistants Evaluation](../../../extensions/assistants-evaluation/index.md)** - LLM observability, tracing, and performance analytics
+- **[AI Code Explorer](../../../extensions/ai-code-explorer/index.md)** - Intelligent code analysis and exploration platform
+- **[Angular Upgrade Assistant](../../../extensions/angular-upgrade-assistant/index.md)** - AI-powered Angular version upgrade assistant
+- **[Salesforce DevForce AI](../../../extensions/salesforce-devforce-ai/index.md)** - Salesforce development workflow accelerator
+
+See [Extensions Overview](../../../extensions/index.mdx) for detailed setup guides.
+
+### Optional Configuration
+
+Additional configuration options include:
+
+- Data source connections
+- Security and access control policies
+- UI customization and branding
+- System health monitoring and alerts
+- Third-party integrations
+- Backup and recovery setup
+
+See the complete [Configuration Guide](../../../../configuration/index.mdx) for all available options.

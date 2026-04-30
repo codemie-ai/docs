@@ -25,6 +25,8 @@ const config: Config = {
     },
   },
 
+  trailingSlash: true,
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],

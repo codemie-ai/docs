@@ -42,7 +42,7 @@ A predefined configuration for creating assistants or workflows in the CodeMie p
 
 ### Categories
 
-Organizational labels used to group and filter assistants and skills in the CodeMie platform. [Learn more about Categories Management](../assistants/assistant-categories-management).
+Organizational labels used to group and filter assistants and skills in the CodeMie platform. [Learn more about Categories Management](../assistants/assistant-categories-management.md).
 
 ### Chat
 
@@ -96,7 +96,7 @@ When a tool requires an integration and none is explicitly selected, CodeMie pic
 
 If no matching integration is found at any level, the action requiring it will fail.
 
-See [How the Default Integration Is Selected](../tools_integrations/integrations/#how-the-default-integration-is-selected).
+See [How the Default Integration Is Selected](../tools_integrations/integrations/index.md#how-the-default-integration-is-selected).
 
 ---
 
@@ -223,7 +223,7 @@ A human-readable unique identifier assigned to an assistant. Unlike the internal
 
 ### Skills
 
-Reusable sets of instructions designed to make AI assistants smarter and more efficient. Skills enable users to create focused, task-specific guidance that can be applied across multiple assistants, share best practices and standardized procedures, and eliminate redundancy by avoiding duplicated instructions. Skills are loaded automatically based on relevance to user requests and can inherit required tools to assistants. [Learn more about Skills](../skills/skills-overview).
+Reusable sets of instructions designed to make AI assistants smarter and more efficient. Skills enable users to create focused, task-specific guidance that can be applied across multiple assistants, share best practices and standardized procedures, and eliminate redundancy by avoiding duplicated instructions. Skills are loaded automatically based on relevance to user requests and can inherit required tools to assistants. [Learn more about Skills](../skills/skills-overview.md).
 
 ### System Instructions (System Prompt)
 

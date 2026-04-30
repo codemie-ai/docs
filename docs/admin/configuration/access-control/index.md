@@ -50,7 +50,7 @@ kubectl get secret keycloak-admin -n security -o jsonpath='{.data.password}' | b
 
 The user configuration process consists of three main parts:
 
-### 1. [Initial Realm Setup](./initial-realm-setup) (One-time)
+### 1. [Initial Realm Setup](./initial-realm-setup.md) (One-time)
 
 A one-time prerequisite to enable custom attributes in Keycloak.
 
@@ -58,9 +58,9 @@ A one-time prerequisite to enable custom attributes in Keycloak.
 
 The first step where you choose a method to create user entities in the system. Available options:
 
-- **[Option A: Create Users Manually](./user-provisioning/manual-creation)** - Ideal for initial setup, creating your first administrator, or managing a small number of users
-- **[Option B: Create Users with Keycloak Assistant](./user-provisioning/keycloak-assistant)** - Powerful method for bulk user creation (requires pre-existing admin account)
-- **[Option C: Keycloak + Entra ID](./user-provisioning/keycloak-entra-id)** (Recommended) - Integrate Keycloak with Microsoft Entra ID for seamless single sign-on
+- **[Option A: Create Users Manually](./user-provisioning/manual-creation.md)** - Ideal for initial setup, creating your first administrator, or managing a small number of users
+- **[Option B: Create Users with Keycloak Assistant](./user-provisioning/keycloak-assistant.md)** - Powerful method for bulk user creation (requires pre-existing admin account)
+- **[Option C: Keycloak + Entra ID](./user-provisioning/keycloak-entra-id.md)** (Recommended) - Integrate Keycloak with Microsoft Entra ID for seamless single sign-on
 
 :::warning Critical Prerequisite
 After a user is created via any method from Part 1, they **cannot sign in** until you complete at least **Step 2.1: Assign a Role**.
@@ -70,18 +70,18 @@ After a user is created via any method from Part 1, they **cannot sign in** unti
 
 Assigning permissions to users. The configuration path depends on the role:
 
-- **[Step 2.1: Assign a Role](./user-authorization/assign-roles)** — Grants platform-level capabilities and enables sign-in. Required in both modes.
-- **[Step 2.2: Assign Attributes](./user-authorization/assign-attributes)** — _(Keycloak-managed mode only)_ Required for `developer` users to access projects via Keycloak JWT attributes.
+- **[Step 2.1: Assign a Role](./user-authorization/assign-roles.md)** — Grants platform-level capabilities and enables sign-in. Required in both modes.
+- **[Step 2.2: Assign Attributes](./user-authorization/assign-attributes.md)** — _(Keycloak-managed mode only)_ Required for `developer` users to access projects via Keycloak JWT attributes.
 
 :::info Platform-managed mode — Step 2.2 not required
 If `ENABLE_USER_MANAGEMENT=True`, skip Step 2.2. Project and role assignments are managed
 through the in-app UI after the user signs in for the first time.
-See [Project & User Management](../../../user-guide/project-user-management/projects).
+See [Project & User Management](../../../user-guide/project-user-management/projects.md).
 :::
 
 Additionally, this section includes:
 
-- **[Platform Administration Guide](../codemie/platform-administration)** - Explains how users with the `admin` role can create and manage projects
+- **[Platform Administration Guide](../codemie/platform-administration.md)** - Explains how users with the `admin` role can create and manage projects
 
 ## Next Steps
 

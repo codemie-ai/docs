@@ -23,7 +23,7 @@ With the Xray tool, assistants can:
 ## Prerequisites
 
 :::note Required Integration
-This tool requires you to have at least one X-ray integration configured in AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../integrations/) guidelines.
+This tool requires you to have at least one X-ray integration configured in AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../integrations/index.md) guidelines.
 :::
 
 ## Setting Up X-ray Integration

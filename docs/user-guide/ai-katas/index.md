@@ -19,7 +19,7 @@ This section covers how to use AI Katas for learning, track your progress, and m
 
 Learn the basics of AI Katas:
 
-- [Katas Overview](./katas-overview) - Introduction to AI Katas learning platform
-- [Working with Katas](./working-with-katas) - Browse, filter, complete, and provide feedback on exercises
-- [Leaderboard](./leaderboard) - Track your ranking and compete with other users
-- [Manage Katas](./manage-katas-admin) - Create, edit, publish, and archive Katas
+- [Katas Overview](./katas-overview.md) - Introduction to AI Katas learning platform
+- [Working with Katas](./working-with-katas.md) - Browse, filter, complete, and provide feedback on exercises
+- [Leaderboard](./leaderboard.md) - Track your ranking and compete with other users
+- [Manage Katas](./manage-katas-admin.md) - Create, edit, publish, and archive Katas

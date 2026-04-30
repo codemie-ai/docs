@@ -64,17 +64,17 @@ Additional fields depend on the component category and are shown before each sec
 
 ### Parameter `availableForExternal`
 
-See [External User (`availableForExternal`)](../../../user-guide/getting-started/glossary#external-user-availableforexternal) in the glossary.
+See [External User (`availableForExternal`)](../../../user-guide/getting-started/glossary.md#external-user-availableforexternal) in the glossary.
 
 ### Parameter `slug`
 
-See [Slug](../../../user-guide/getting-started/glossary#slug) in the glossary.
+See [Slug](../../../user-guide/getting-started/glossary.md#slug) in the glossary.
 
 ## Component Categories
 
 ### Help Center
 
-Controls the Help Center menu - links to learning materials and support resources shown in the global UI. See [Help Center user guide](../../../user-guide/getting-started/help-center) for details on how users access these resources.
+Controls the Help Center menu - links to learning materials and support resources shown in the global UI. See [Help Center user guide](../../../user-guide/getting-started/help-center.md) for details on how users access these resources.
 
 **Where it appears:** Help Center page (accessible via navbar → Help icon or `/help` route)
 
@@ -1330,4 +1330,4 @@ extraVolumeMounts: |
 
 ## Deployment
 
-To apply customer configuration changes, follow the [Update Guide](../../update/codemie/update-version).
+To apply customer configuration changes, follow the [Update Guide](../../update/codemie/update-version.md).

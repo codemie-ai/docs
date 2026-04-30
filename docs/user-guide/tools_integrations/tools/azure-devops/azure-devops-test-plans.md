@@ -13,7 +13,7 @@ The **Azure DevOps Test Plan** tool lets your CodeMie assistant create and manag
 
 ## Prerequisites
 
-Before adding the Test Plans tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./azure-devops.md#configure-integration-in-codemie).
+Before adding the Test Plans tool to an assistant, set up an AzureDevOps integration in CodeMie. See [Azure DevOps — Configure Integration](./index.md#configure-integration-in-codemie).
 
 ## Add Test Plans Tool to an Assistant
 

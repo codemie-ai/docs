@@ -15,7 +15,7 @@ Index external data sources through third-party providers.
 Provider data sources enable indexing external data through registered third-party provider configurations. Once indexed, assistants can use provider-specific tools to work with this data. Additionally, some provider tools can be used independently without requiring a data source.
 
 :::warning Access Required
-This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary#jwt-attributes) role.
+This functionality is only available to users with the [isAdmin](/user-guide/getting-started/glossary.md#jwt-attributes) role.
 :::
 
 ## Provider Capabilities

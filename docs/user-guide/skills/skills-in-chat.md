@@ -104,6 +104,6 @@ The chat shows loaded skills in the right panel. Simply uncheck skills to remove
 
 ## Next Steps
 
-- [Skills Overview](./skills-overview) - Learn more about Skills concepts
-- [Create Skill](./create-skill) - Build skills for dynamic use
-- [Attach to Assistants](./attach-skills-to-assistants) - Permanent skill attachment
+- [Skills Overview](./skills-overview.md) - Learn more about Skills concepts
+- [Create Skill](./create-skill.md) - Build skills for dynamic use
+- [Attach to Assistants](./attach-skills-to-assistants.md) - Permanent skill attachment

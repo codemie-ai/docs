@@ -150,7 +150,7 @@ For high availability and redundancy:
 
 1. Create Azure OpenAI resources in multiple regions
 2. Deploy same models in each region
-3. Configure load balancing using [LiteLLM Proxy](../../../deployment/extensions/litellm-proxy/)
+3. Configure load balancing using [LiteLLM Proxy](../../../deployment/extensions/litellm-proxy/index.md)
 
 ## Quota Management
 

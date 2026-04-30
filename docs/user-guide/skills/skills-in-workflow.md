@@ -67,7 +67,7 @@ Each assistant step shows the skills it loaded, including the full skill content
 
 ## Related
 
-- [Create a Skill](./create-skill) — Build a new skill from scratch
-- [Skills Marketplace](./marketplace-skills) — Discover publicly shared skills
-- [Attach Skills to Assistants](./attach-skills-to-assistants) — UI-based skill attachment for regular assistants
-- [Workflow Configuration Reference](../workflows/configuration/configuration-reference) — Full YAML reference
+- [Create a Skill](./create-skill.md) — Build a new skill from scratch
+- [Skills Marketplace](./marketplace-skills.md) — Discover publicly shared skills
+- [Attach Skills to Assistants](./attach-skills-to-assistants.md) — UI-based skill attachment for regular assistants
+- [Workflow Configuration Reference](../workflows/configuration/configuration-reference.md) — Full YAML reference

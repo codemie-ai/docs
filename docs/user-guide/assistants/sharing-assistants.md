@@ -54,4 +54,4 @@ This is useful when the assistant's prompt references personal attributes, for e
 
 ## Share Beyond Projects
 
-For sharing assistants across projects or with external collaborators, consider using the [Marketplace](./marketplace-overview) to publish your assistant configuration.
+For sharing assistants across projects or with external collaborators, consider using the [Marketplace](./marketplace-overview.md) to publish your assistant configuration.

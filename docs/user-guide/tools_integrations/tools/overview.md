@@ -15,36 +15,36 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 
 ## Available Tools
 
-| Tool                                                                      | Description                                                                                                       |
-| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **[A2A Protocol](./a2a)**                                                 | Agent-to-Agent protocol integration for connecting external AI agents and enabling cross-framework collaboration  |
-| **[Keycloak](./keycloak)**                                                | Access management and authentication tool that allows users to leverage AI/Run CodeMie for project access control |
-| **[SonarQube](./sonarqube)**                                              | Code quality analysis and static code review tool for comprehensive codebase analysis                             |
-| **[SQL](./sql)**                                                          | Database operations tool for querying and managing SQL databases                                                  |
-| **[Telegram](./telegram)**                                                | Send notifications to Telegram channels and bots                                                                  |
-| **[Azure](./azure)**                                                      | Microsoft Azure cloud platform integration for cloud resource management                                          |
-| **[GCP](./gcp)**                                                          | Google Cloud Platform integration for GCP resource operations                                                     |
-| **[AWS](./aws)**                                                          | Amazon Web Services integration for AWS cloud operations                                                          |
-| **[Kubernetes](./kubernetes)**                                            | Kubernetes cluster management tool for container orchestration                                                    |
-| **[Webhook](./webhook)**                                                  | HTTP webhook integrations for event-driven automatization                                                         |
-| **[Elasticsearch](./elastic)**                                            | Search and data analysis platform for analytical queries and data access                                          |
-| **[Codebase Tools](./codebase-tools)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                   |
-| **[Email Sender](./email-sender-tool)**                                   | Send email notifications from assistants                                                                          |
-| **[OpenAPI](./openapi-tool)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
-| **[Jira](./jira)**                                                        | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
-| **[LiteLLM](./litellm)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
-| **[Confluence](./confluence)**                                            | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                  |
-| **[ReportPortal](./reportportal)**                                        | AI-powered test execution analysis, launch data retrieval, and failure recommendations                            |
-| **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
-| **[Xray](./xray)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
-| **[ServiceNow](./servicenow)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
-| **[Scheduler](./scheduler)**                                              | Task scheduling and automation (Admin role only)                                                                  |
-| **[Plugin](./plugin)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
-| **[FileSystem](./filesystem)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
-| **[Git](./git-overview)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
-| **[Azure DevOps](./azure-devops/azure-devops.md)**                        | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
-| **[Adding MCP Server](./adding-an-mcp-server)**                           | Add and configure Model Context Protocol (MCP) servers                                                            |
-| **[Using MCP Tools](./using-mcp-tools-in-assistants)**                    | Use MCP tools in assistants for extended capabilities                                                             |
+| Tool                                                                         | Description                                                                                                       |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **[A2A Protocol](./a2a.mdx)**                                                | Agent-to-Agent protocol integration for connecting external AI agents and enabling cross-framework collaboration  |
+| **[Keycloak](./keycloak.md)**                                                | Access management and authentication tool that allows users to leverage AI/Run CodeMie for project access control |
+| **[SonarQube](./sonarqube.mdx)**                                             | Code quality analysis and static code review tool for comprehensive codebase analysis                             |
+| **[SQL](./sql.md)**                                                          | Database operations tool for querying and managing SQL databases                                                  |
+| **[Telegram](./telegram.md)**                                                | Send notifications to Telegram channels and bots                                                                  |
+| **[Azure](./azure.md)**                                                      | Microsoft Azure cloud platform integration for cloud resource management                                          |
+| **[GCP](./gcp.md)**                                                          | Google Cloud Platform integration for GCP resource operations                                                     |
+| **[AWS](./aws.md)**                                                          | Amazon Web Services integration for AWS cloud operations                                                          |
+| **[Kubernetes](./kubernetes.md)**                                            | Kubernetes cluster management tool for container orchestration                                                    |
+| **[Webhook](./webhook.md)**                                                  | HTTP webhook integrations for event-driven automatization                                                         |
+| **[Elasticsearch](./elastic.md)**                                            | Search and data analysis platform for analytical queries and data access                                          |
+| **[Codebase Tools](./codebase-tools.md)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                   |
+| **[Email Sender](./email-sender-tool.md)**                                   | Send email notifications from assistants                                                                          |
+| **[OpenAPI](./openapi-tool.md)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
+| **[Jira](./jira.mdx)**                                                       | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
+| **[LiteLLM](./litellm.md)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
+| **[Confluence](./confluence.mdx)**                                           | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                  |
+| **[ReportPortal](./reportportal.md)**                                        | AI-powered test execution analysis, launch data retrieval, and failure recommendations                            |
+| **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon.md)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
+| **[Xray](./xray.md)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
+| **[ServiceNow](./servicenow.md)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
+| **[Scheduler](./scheduler.md)**                                              | Task scheduling and automation (Admin role only)                                                                  |
+| **[Plugin](./plugin.md)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
+| **[FileSystem](./filesystem.md)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
+| **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
+| **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
+| **[Adding MCP Server](./adding-an-mcp-server.md)**                           | Add and configure Model Context Protocol (MCP) servers                                                            |
+| **[Using MCP Tools](./using-mcp-tools-in-assistants.md)**                    | Use MCP tools in assistants for extended capabilities                                                             |
 
 ---
 
@@ -166,10 +166,10 @@ The table below shows which tools require integration setup and the integration 
 
 AI/Run CodeMie supports MCP servers for extending assistant capabilities.
 
-| Topic                                                                | Description                                       |
-| -------------------------------------------------------------------- | ------------------------------------------------- |
-| **[Adding an MCP Server](./adding-an-mcp-server)**                   | Learn how to add and configure MCP servers        |
-| **[Using MCP Tools in Assistants](./using-mcp-tools-in-assistants)** | Learn how to use MCP tools within your assistants |
+| Topic                                                                   | Description                                       |
+| ----------------------------------------------------------------------- | ------------------------------------------------- |
+| **[Adding an MCP Server](./adding-an-mcp-server.md)**                   | Learn how to add and configure MCP servers        |
+| **[Using MCP Tools in Assistants](./using-mcp-tools-in-assistants.md)** | Learn how to use MCP tools within your assistants |
 
 ---
 

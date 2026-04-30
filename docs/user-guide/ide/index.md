@@ -17,9 +17,9 @@ Integrate CodeMie directly into your development environment for seamless AI-pow
 
 ### JetBrains IDEs
 
-- [JetBrains IDE Plugin](./jetbrains-plugin) - Native plugin for IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs
+- [JetBrains IDE Plugin](./jetbrains-plugin.md) - Native plugin for IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs
 
 ### Visual Studio Code
 
-- [VS Code GitHub Copilot Extension](./vscode-copilot-extension) - CodeMie integration through GitHub Copilot Chat
-- [VS Code Native Extension](./vscode-native-extension) - Dedicated sidebar interface for full CodeMie experience
+- [VS Code GitHub Copilot Extension](./vscode-copilot-extension.md) - CodeMie integration through GitHub Copilot Chat
+- [VS Code Native Extension](./vscode-native-extension.md) - Dedicated sidebar interface for full CodeMie experience

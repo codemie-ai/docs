@@ -16,11 +16,11 @@ Integration is a secure way to store credentials and necessary information for f
 
 This section covers:
 
-### [Integrations](./integrations/)
+### [Integrations](./integrations/index.md)
 
 Learn how to set up and manage integrations with external systems to enable tool functionality.
 
-### [Tools](./tools/overview)
+### [Tools](./tools/overview.md)
 
 Configure and use various tools to extend assistant capabilities:
 
@@ -42,5 +42,5 @@ Configure and use various tools to extend assistant capabilities:
 ---
 
 :::tip Getting Started
-Start with [Integrations](./integrations/) to configure connections to external systems, then explore the [Tools Overview](./tools/overview) to understand available tools.
+Start with [Integrations](./integrations/index.md) to configure connections to external systems, then explore the [Tools Overview](./tools/overview.md) to understand available tools.
 :::

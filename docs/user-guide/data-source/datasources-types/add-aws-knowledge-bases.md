@@ -15,7 +15,7 @@ AWS Knowledge Bases is a powerful data source in AI/Run CodeMie, enabling assist
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one AWS integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/) guidelines.
+This data source requires you to have at least one AWS integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines.
 :::
 
 Before adding an AWS Knowledge Bases data source, ensure you have:

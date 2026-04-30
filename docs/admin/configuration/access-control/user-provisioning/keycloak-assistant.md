@@ -13,7 +13,7 @@ The process involves a one-time setup to create a secure connection, followed by
 
 Before you begin, ensure you meet the following requirements:
 
-1. **Platform Administrator:** You must have a fully configured administrator account. If you do not have one, please complete [Option A: Create Users Manually](./manual-creation) and then all the steps in [Part 2: User Authorization](../user-authorization/assign-roles) before proceeding.
+1. **Platform Administrator:** You must have a fully configured administrator account. If you do not have one, please complete [Option A: Create Users Manually](./manual-creation.md) and then all the steps in [Part 2: User Authorization](../user-authorization/assign-roles.md) before proceeding.
 
 2. **Repository Access:** You must have access to the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository.
 
@@ -211,13 +211,13 @@ Next, use a clear, structured prompt to create users in bulk. You can specify th
 After the assistant confirms the users have been created, you must manually set their initial passwords in Keycloak.
 
 1. Verify that the new users appear in the Keycloak UI under the **Users** section.
-2. For each new user, follow the instructions in the [Set User Credentials](./manual-creation#4-set-user-credentials) section (under Option A) to set their temporary password.
+2. For each new user, follow the instructions in the [Set User Credentials](./manual-creation.md#4-set-user-credentials) section (under Option A) to set their temporary password.
 3. Securely share the login information and temporary passwords with the new users.
 
 :::note Next Step
-After creating users, proceed to [Part 2: User Authorization](../user-authorization/assign-roles)
+After creating users, proceed to [Part 2: User Authorization](../user-authorization/assign-roles.md)
 to assign the necessary role.
 
-- **Keycloak-managed mode:** After assigning a role, also complete [Step 2.2: Assign Attributes](../user-authorization/assign-attributes) to grant project access.
-- **Platform-managed mode:** After assigning the role, project access is configured in the in-app UI. See [Project & User Management](../../../../user-guide/project-user-management/projects).
+- **Keycloak-managed mode:** After assigning a role, also complete [Step 2.2: Assign Attributes](../user-authorization/assign-attributes.md) to grant project access.
+- **Platform-managed mode:** After assigning the role, project access is configured in the in-app UI. See [Project & User Management](../../../../user-guide/project-user-management/projects.md).
   :::

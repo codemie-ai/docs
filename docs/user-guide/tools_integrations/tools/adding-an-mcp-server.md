@@ -88,7 +88,8 @@ MCP servers often require environment variables for proper operation:
 
 ## Configuring Headers with User Context Placeholders
 
-For Streamable HTTP MCP servers, you can configure custom headers with dynamic placeholders that are automatically resolved at request time. This feature enables user-specific routing, audit logging, and context propagation.
+For Streamable HTTP MCP servers, you can configure custom headers with dynamic placeholders that are automatically resolved at request time.
+This feature enables user-specific routing, audit logging, and context propagation.
 
 ### Available Placeholders
 
@@ -103,7 +104,9 @@ For Streamable HTTP MCP servers, you can configure custom headers with dynamic p
 - `{{VARIABLE_NAME}}` - Resolves to values from configured environment variables
 
 :::tip How User Context Placeholders Work
-User context placeholders like `{{user.token}}`, `{{user.name}}`, and `{{user.username}}` are **automatically resolved from the authenticated user's session** at request time. You don't need to configure them in environment variables or integrations - each user automatically gets their own token/name/username injected. This differs from environment variable placeholders like `{{API_KEY}}`, which use static values configured in the `env` section and are the same for all users.
+User context placeholders like `{{user.token}}`, `{{user.name}}`, and `{{user.username}}` are **automatically resolved from the authenticated user's session** at request time.
+You don't need to configure them in environment variables or integrations - each user automatically gets their own token/name/username injected.
+This differs from environment variable placeholders like `{{API_KEY}}`, which use static values configured in the `env` section and are the same for all users.
 :::
 
 ### Example Configuration
@@ -184,11 +187,13 @@ This feature helps you quickly confirm that your MCP server connection is workin
 
 ## Propagating Client Headers to MCP Servers
 
-CodeMie supports forwarding custom HTTP headers from client SDK requests to MCP server invocations. This allows you to pass request-scoped context — such as tenant identifiers, correlation IDs, or custom authorization tokens — directly through to the tools your assistant calls on an MCP server.
+CodeMie supports forwarding custom HTTP headers from client SDK requests to MCP server invocations.
+This allows you to pass request-scoped context — such as tenant identifiers, correlation IDs, or custom authorization tokens — directly through to the tools your assistant calls on an MCP server.
 
 ### Overview
 
-Header propagation is **opt-in** and **disabled by default**. Clients must explicitly enable it per request by setting `propagate_headers: true` in the request body.
+Header propagation is **opt-in** and **disabled by default**.
+Clients must explicitly enable it per request by setting `propagate_headers: true` in the request body.
 
 ### How It Works
 
@@ -209,7 +214,8 @@ SDK Request  ──►  CodeMie API  ──►  MCPToolkitService  ──►  MC
 
 #### With Assistant Chat
 
-Set `propagate_headers: true` in the request body when calling the assistant chat endpoint. Any `X-*` headers you include in the HTTP request are forwarded to MCP tool invocations.
+Set `propagate_headers: true` in the request body when calling the assistant chat endpoint.
+Any `X-*` headers you include in the HTTP request are forwarded to MCP tool invocations.
 
 ```http
 POST /v1/assistants/{assistant_id}/chat
@@ -267,7 +273,7 @@ Not all `X-*` headers are forwarded. CodeMie applies a blocklist to prevent prop
 | `X-Internal-Token`  | Internal service tokens   |
 
 :::warning Important
-Administrators can customize the blocklist via the `MCP_BLOCKED_HEADERS` environment variable. See the [API Configuration Guide](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation) for details.
+Administrators can customize the blocklist via the `MCP_BLOCKED_HEADERS` environment variable. See the [API Configuration Guide](../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation) for details.
 :::
 
 ### Configuring MCP Servers to Receive Propagated Headers
@@ -276,7 +282,8 @@ To make use of propagated headers, your MCP server must be prepared to read them
 
 #### HTTP MCP Servers
 
-For HTTP-transport MCP servers, the propagated headers are delivered to the MCP-Connect bridge as part of the invocation request body under the `request_headers` field. MCP-Connect can be configured to forward them as HTTP headers to the upstream MCP server.
+For HTTP-transport MCP servers, the propagated headers are delivered to the MCP-Connect bridge as part of the invocation request body under the `request_headers` field.
+MCP-Connect can be configured to forward them as HTTP headers to the upstream MCP server.
 
 **Example Configuration:**
 
@@ -297,7 +304,9 @@ When `propagate_headers: true` is set on the request, the client-supplied header
 
 #### stdio MCP Servers
 
-For command-based (stdio) MCP servers, the propagated headers are included in the invocation request body sent to MCP-Connect. How MCP-Connect delivers them to the stdio process depends on your MCP-Connect configuration (for example, via environment variables or standard input). Consult your MCP-Connect deployment documentation for details.
+For command-based (stdio) MCP servers, the propagated headers are included in the invocation request body sent to MCP-Connect.
+How MCP-Connect delivers them to the stdio process depends on your MCP-Connect configuration (for example, via environment variables or standard input).
+Consult your MCP-Connect deployment documentation for details.
 
 ### Common Use Cases
 
@@ -348,5 +357,6 @@ X-End-User-Role: developer
 ```
 
 :::note
-Do not pass raw auth tokens (e.g., `X-Auth-Token`) via header propagation — these are blocked by default. If the MCP server needs user authentication, configure it through the MCP server's `integration_alias` or `env` credentials instead.
+Do not pass raw auth tokens (e.g., `X-Auth-Token`) via header propagation — these are blocked by default.
+If the MCP server needs user authentication, configure it through the MCP server's `integration_alias` or `env` credentials instead.
 :::

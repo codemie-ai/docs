@@ -67,7 +67,7 @@ If the budget configured for your Virtual Key or team has been exceeded, AI/Run 
 ![Budget exceeded notification](./images/litellm-budget-exceeded.png)
 
 :::tip
-If your organization or team has its own support channel, the contact link in the notification can be customized. Administrators can override the default support URL in the [API Configuration](../../../admin/configuration/codemie/api-configuration#support--help) settings.
+If your organization or team has its own support channel, the contact link in the notification can be customized. Administrators can override the default support URL in the [API Configuration](../../../admin/configuration/codemie/api-configuration.md#support--help) settings.
 :::
 
 ## 4. Verify Usage

@@ -11,7 +11,8 @@ sidebar_position: 20
 
 ## Overview
 
-FileSystem tools provide AI/Run CodeMie assistants with powerful capabilities for code execution, data analysis, and image generation. These tools enable assistants to process files, execute Python code, generate visualizations, and create images directly within conversations.
+FileSystem tools provide AI/Run CodeMie assistants with powerful capabilities for code execution, data analysis, and image generation.
+These tools enable assistants to process files, execute Python code, generate visualizations, and create images directly within conversations.
 
 The FileSystem toolset includes three distinct capabilities:
 
@@ -46,7 +47,8 @@ Code Interpreter provides access to a Python shell environment, allowing AI assi
 
 ## Code Executor
 
-Code Executor is an advanced tool that executes Python code to analyze data, generate visualizations, process documents, and perform calculations. It provides enhanced capabilities with file upload support and a secure sandbox environment.
+Code Executor is an advanced tool that executes Python code to analyze data, generate visualizations, process documents, and perform calculations.
+It provides enhanced capabilities with file upload support and a secure sandbox environment.
 
 **Key Capabilities:**
 
@@ -82,7 +84,9 @@ Code Executor runs in a secure sandbox environment where all files are isolated,
 
 ## Generate Image
 
-Generate Image enables AI assistants to create images based on textual descriptions. This tool utilizes the DALL-E model to generate visual content from text prompts. It does not require integration setup and is available out of the box.
+Generate Image enables AI assistants to create images based on textual descriptions.
+This tool utilizes the DALL-E model to generate visual content from text prompts.
+It does not require integration setup and is available out of the box.
 
 **Key Capabilities:**
 
@@ -233,7 +237,8 @@ Mermaid(flowchart).to_png("workflow.png")
 - Design concepts and mockups
 
 :::warning Sandbox Execution
-Both Code Interpreter and Code Executor run in isolated sandbox environments. Ensure you only upload trusted files and review generated code before execution.
+Both Code Interpreter and Code Executor run in isolated sandbox environments.
+Ensure you only upload trusted files and review generated code before execution.
 :::
 
 **Performance Tips:**
@@ -270,8 +275,8 @@ Both Code Interpreter and Code Executor run in isolated sandbox environments. En
 
 ## Related Tools
 
-- **[Plugin](./plugin)**: For custom plugin integrations and file system operations via Plugin Engine
-- **[Codebase Tools](./codebase-tools)**: For repository analysis and code operations
+- **[Plugin](./plugin.md)**: For custom plugin integrations and file system operations via Plugin Engine
+- **[Codebase Tools](./codebase-tools.md)**: For repository analysis and code operations
 
 ---
 
@@ -279,5 +284,5 @@ Both Code Interpreter and Code Executor run in isolated sandbox environments. En
 
 For additional support with FileSystem tools:
 
-- Check the [Integrations Overview](../integrations/) for integration setup guidance
-- Review the [Assistants Guide](../../assistants/) for assistant configuration
+- Check the [Integrations Overview](../integrations/index.md) for integration setup guidance
+- Review the [Assistants Guide](../../assistants/index.md) for assistant configuration

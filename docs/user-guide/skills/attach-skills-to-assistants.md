@@ -187,5 +187,5 @@ To remove a skill from an assistant:
 
 ## Next Steps
 
-- [Skills in Chat](./skills-in-chat) - Dynamic skill attachment during conversations
-- [Manage Skills](./manage-skills) - Edit and maintain your skills
+- [Skills in Chat](./skills-in-chat.md) - Dynamic skill attachment during conversations
+- [Manage Skills](./manage-skills.md) - Edit and maintain your skills

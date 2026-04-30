@@ -90,7 +90,7 @@ The **paperclip icon** in the chat input toolbar lets you attach files to your m
 Uploaded files remain accessible throughout the conversation and can be referenced in
 subsequent messages without re-uploading.
 
-See [Supported File Formats](./supported-file-formats-and-csv-handling-in-chat-assistant)
+See [Supported File Formats](./supported-file-formats-and-csv-handling-in-chat-assistant.md)
 for the full list of supported formats, size limits, and CSV handling capabilities.
 
 ## Skills
@@ -99,5 +99,5 @@ The **Skills** button (lightning bolt icon, labelled **Skills**) lets you attach
 skills to the current conversation without modifying the assistant's configuration. A badge
 on the button shows how many skills are currently active.
 
-See [Skills in Chat](../skills/skills-in-chat) for full details on selecting, managing,
+See [Skills in Chat](../skills/skills-in-chat.md) for full details on selecting, managing,
 and removing skills from a conversation.

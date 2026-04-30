@@ -45,7 +45,7 @@ The CodeMie platform is built with security-first principles, implementing indus
 
 This section describes the fundamental security patterns and practices implemented in the CodeMie platform:
 
-- **[Data Processing & Storage Architecture](./data-processing-storage)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
+- **[Data Processing & Storage Architecture](./data-processing-storage.md)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
 
 ### 1. Defense in Depth
 
@@ -81,5 +81,5 @@ For security-related questions:
 - Enable audit logging for security event monitoring
 
 :::warning Security Updates
-Regularly update the CodeMie platform and its components to receive the latest security patches. See the [Update Guide](../update/) for procedures.
+Regularly update the CodeMie platform and its components to receive the latest security patches. See the [Update Guide](../update/index.mdx) for procedures.
 :::

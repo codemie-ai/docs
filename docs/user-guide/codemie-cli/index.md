@@ -148,6 +148,8 @@ codemie uninstall <agent>            # Remove an agent
 
 ```bash
 codemie setup                        # Configuration wizard
+codemie setup assistants             # Register CodeMie assistants in Claude Code
+codemie setup skills                 # Register CodeMie skills as slash commands
 codemie doctor                       # Health check and diagnostics
 codemie --version                    # Show version
 codemie --help                       # Show help

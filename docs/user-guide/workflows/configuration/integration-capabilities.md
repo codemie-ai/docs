@@ -1053,7 +1053,7 @@ The following headers are **automatically blocked** and never forwarded to MCP s
 - `X-Api-Key`, `X-Auth-Token` (API credentials)
 - `X-Internal-Secret`, `X-Internal-Token` (Internal secrets)
 
-Administrators can customize the blocklist via `MCP_BLOCKED_HEADERS` environment variable. See [API Configuration](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation) for details.
+Administrators can customize the blocklist via `MCP_BLOCKED_HEADERS` environment variable. See [API Configuration](../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation) for details.
 
 **Best Practices:**
 
@@ -1171,8 +1171,8 @@ X-End-User-Role: admin
 - Distributed traces link workflow execution → MCP calls → external systems
 - Audit logs capture which user triggered the workflow
 
-[Learn more about MCP Header Propagation →](../../tools_integrations/tools/adding-an-mcp-server#propagating-client-headers-to-mcp-servers)
+[Learn more about MCP Header Propagation →](../../tools_integrations/tools/adding-an-mcp-server.md#propagating-client-headers-to-mcp-servers)
 
-[Security Configuration →](../../../admin/configuration/codemie/api-configuration#mcp-header-propagation)
+[Security Configuration →](../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation)
 
 ---

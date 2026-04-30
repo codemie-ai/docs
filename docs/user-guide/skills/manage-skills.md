@@ -248,7 +248,7 @@ To share a skill with the community:
 
 The skill becomes available in the Skills Marketplace for all users.
 
-[Learn more about Marketplace →](./marketplace-skills)
+[Learn more about Marketplace →](./marketplace-skills.md)
 
 ## Troubleshooting
 
@@ -265,6 +265,6 @@ The skill becomes available in the Skills Marketplace for all users.
 
 ## Next Steps
 
-- [Attach Skills to Assistants](./attach-skills-to-assistants) - Learn how to use skills
-- [Marketplace Skills](./marketplace-skills) - Publish and discover public skills
-- [Skills in Chat](./skills-in-chat) - Dynamic skill attachment
+- [Attach Skills to Assistants](./attach-skills-to-assistants.md) - Learn how to use skills
+- [Marketplace Skills](./marketplace-skills.md) - Publish and discover public skills
+- [Skills in Chat](./skills-in-chat.md) - Dynamic skill attachment

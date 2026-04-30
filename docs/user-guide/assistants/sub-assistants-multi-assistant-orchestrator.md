@@ -117,7 +117,7 @@ If you decide to publish a multi-assistant orchestrator to the Marketplace, foll
    - Only the orchestrator assistant
    - Both the orchestrator and individual sub-assistants
 
-3. Follow the standard [Publish to Marketplace](./marketplace-publishing) procedure.
+3. Follow the standard [Publish to Marketplace](./marketplace-publishing.md) procedure.
 
 4. **Specify categories** for the orchestrator and each sub-assistant you're publishing.
 
