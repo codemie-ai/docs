@@ -150,6 +150,7 @@ codemie uninstall <agent>            # Remove an agent
 codemie setup                        # Configuration wizard
 codemie setup assistants             # Register CodeMie assistants in Claude Code
 codemie setup skills                 # Register CodeMie skills as slash commands
+codemie skill run <skill-id> [msg]   # Execute a skill directly from the terminal
 codemie doctor                       # Health check and diagnostics
 codemie --version                    # Show version
 codemie --help                       # Show help
