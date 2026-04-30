@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 
 The Code Executor runs Python code in isolated Kubernetes pods with enforced resource limits and security policies.
 
-It supports three deployment modes: local execution inside the API pod, sandbox pods in the same cluster, or sandbox pods in a dedicated cluster.
+It supports four deployment modes: local execution inside the API pod, sandbox pods in the same cluster with shared namespace, sandbox pods in the same cluster with dedicated namespace, or sandbox pods in a dedicated cluster.
 
 ## Choosing a Deployment Mode
 
@@ -23,7 +23,7 @@ It supports three deployment modes: local execution inside the API pod, sandbox 
 | **Same cluster, dedicated namespace** | Namespace-level workload isolation    | Separate pod, separate namespace | Yes (cross-namespace) |
 | **Dedicated cluster**                 | Compliance, multi-tenant environments | Full cluster isolation           | No (kubeconfig)       |
 
-## Deployment Options
+## Deployment Modes
 
 ### Local Mode
 
@@ -121,7 +121,7 @@ extraEnv:
 
 ## Updating CodeMie API
 
-After configuring any sandbox option, add the following common environment variables and apply the chart:
+After configuring a sandbox deployment mode (Same Cluster or Dedicated Cluster), add the following environment variables and apply the chart:
 
 ```yaml
 extraEnv:
