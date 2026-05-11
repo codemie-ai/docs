@@ -260,7 +260,7 @@ These settings control the MF Analyzer Backend behavior and integrations. All va
 
 Update `mflens/frontend-values.yaml` before deploying. Set the `host` values to the actual domain:
 
-```yaml {4,11}
+```yaml {4}
 ingress:
   # ... additional configuration fields
   hosts:
@@ -268,10 +268,6 @@ ingress:
       paths:
         - path: "/mflens"
           pathType: Prefix
-  tls:
-    - secretName: custom-tls
-      hosts:
-        - codemie.%%DOMAIN%%
 ```
 
 ### Install Helm Chart
