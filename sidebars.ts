@@ -625,6 +625,7 @@ const sidebars: SidebarsConfig = {
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
                 'admin/deployment/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
                 'admin/deployment/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
+                'admin/deployment/extensions/mf-lens/mf-lens',
               ],
             },
           ],
