@@ -218,11 +218,11 @@ Primary relational database for structured data and transactional operations.
 
 Document store for full-text search, analytics, and unstructured data.
 
-| Parameter          | Type   | Default                   | Description                                        |
-| ------------------ | ------ | ------------------------- | -------------------------------------------------- |
-| `ELASTIC_URL`                 | string  | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                                             |
-| `ELASTIC_PASSWORD`            | string  | `""`                      | Password for `elastic` user or configured username                             |
-| `ELASTIC_USERNAME`            | string  | `""`                      | Username for Elasticsearch authentication                                      |
+| Parameter                     | Type    | Default                   | Description                                                                                                                                                                          |
+| ----------------------------- | ------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ELASTIC_URL`                 | string  | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                                                                                                                                                   |
+| `ELASTIC_PASSWORD`            | string  | `""`                      | Password for `elastic` user or configured username                                                                                                                                   |
+| `ELASTIC_USERNAME`            | string  | `""`                      | Username for Elasticsearch authentication                                                                                                                                            |
 | `ELASTIC_DATASOURCE_REPLICAS` | integer | `1`                       | Number of replica shards for datasource indexes; set to `0` to have only the primary shard for each indexed datasource, reducing total shard usage on clusters with limited capacity |
 
 #### Elasticsearch Indexes
