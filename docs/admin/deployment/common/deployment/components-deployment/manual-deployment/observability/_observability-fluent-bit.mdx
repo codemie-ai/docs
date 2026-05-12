@@ -22,8 +22,9 @@ Collects application logs from the following namespaces:
 - `security` - Keycloak and security components
 - `elastic` - Elasticsearch and Kibana logs
 - `ingress-nginx` - Ingress controller logs
+- `litellm` - LiteLLM proxy server logs (if deployed)
 
-These logs are stored in the `codemie_infra_logs` index for troubleshooting and operational insights.
+These logs are stored in the `logs-codemie-infra` index for troubleshooting and operational insights.
 
 :::info Using External Logging System?
 If you have an existing logging solution (CloudWatch, Stackdriver, Splunk, etc.), you can disable infrastructure log collection by removing the first `[INPUT]` section (tagged `kube.codemie-infra.*`) and its corresponding `[OUTPUT]` section from `fluent-bit/values.yaml`. User metrics collection must remain enabled for Kibana dashboards to function.

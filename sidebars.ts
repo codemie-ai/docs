@@ -738,6 +738,16 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
+            {
+              type: 'category',
+              label: 'Observability',
+              link: {
+                type: 'doc',
+                id: 'admin/configuration/observability/observability-overview',
+              },
+              collapsed: true,
+              items: ['admin/configuration/observability/logs-retention'],
+            },
           ],
         },
         {

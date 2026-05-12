@@ -233,7 +233,7 @@ Index names for different data types. Customize to avoid collisions in shared cl
 | ----------------------------------------- | ------------ | -------------------------------------- | -------------------------------------------------------- |
 | `ELASTIC_APPLICATION_INDEX`               | string       | `"applications"`                       | Indexed applications and their metadata                  |
 | `ELASTIC_GIT_REPO_INDEX`                  | string       | `"repositories"`                       | Code repository metadata and indexing status             |
-| `ELASTIC_LOGS_INDEX`                      | string       | `"codemie_infra_logs*"`                | Infrastructure logs pattern for monitoring and debugging |
+| `ELASTIC_LOGS_INDEX`                      | string       | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging |
 | `FEEDBACK_INDEX_NAME`                     | string       | `"ca_feedback"`                        | User feedback and ratings on AI responses                |
 | `BACKGROUND_TASKS_INDEX`                  | string       | `"background_tasks"`                   | Async task queue and execution status                    |
 | `USER_CONVERSATION_INDEX`                 | string       | `"codemie_raw_user_conversations"`     | Complete conversation history and messages               |
