@@ -24,7 +24,20 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **Update LiteLLM budget env vars** — remove `LITELLM_SPEND_COLLECTOR_SCHEDULE` and set `LLM_PROXY_BUDGET_BACKFILL_ENABLED: "true"`. See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md).
+
+2. **One-time reconciliation via `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`**
+
+   :::warning One-time operation
+   Enable only on a **single API replica**, wait for reconciliation to complete (check pod logs), then disable and scale replicas back.
+   :::
+
+   Steps:
+   1. Scale API to 1 replica.
+   2. Set `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED: "true"`.
+   3. Wait for reconciliation log confirmation.
+   4. Remove or set the variable to `"false"`.
+   5. Scale API replicas back to the desired count.
 
 <h3>Hotfixes</h3>
 
