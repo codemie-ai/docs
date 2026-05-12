@@ -26,6 +26,14 @@ No third-party component updates in this release.
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Known Issues</h3>
+
+:::warning Skip to 2.26.0 if using LiteLLM integration
+If your deployment has the **LiteLLM proxy integration enabled**, it is strongly recommended to **skip this version and upgrade directly to CodeMie 2.26.0**.
+
+Version 2.25.0 contains a known issue that causes instability in environments with LiteLLM configured. Upgrading to 2.26.0 resolves this issue.
+:::
+
 </details>
 
 <details>
