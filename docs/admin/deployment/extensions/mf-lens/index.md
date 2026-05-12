@@ -125,7 +125,7 @@ neo4j:
     data:
       mode: "dynamic"
       dynamic:
-        storageClassName: "pd-balanced"
+        storageClassName: "storage-class"  # e.g., "gp3", "standard", etc.
   # ... additional configuration fields
 ```
 
@@ -190,7 +190,7 @@ volumeClaimTemplates:
       # ... additional configuration fields
       accessModes:
         - "ReadWriteOnce"
-      storageClassName: "pd-balanced"
+      storageClassName: "storage-class"  # e.g., "gp3", "standard", etc.
       # ... additional configuration fields
 ```
 
