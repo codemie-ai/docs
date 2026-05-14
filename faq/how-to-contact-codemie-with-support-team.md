@@ -1,7 +1,12 @@
 # How to Contact codemie with support team? How to write to support? How to leave feedback on a project?
 
-To contact us, you can always create a request through the support portal [link](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D): [https://support.epam.com/ess?id=sc_cat_item\&sys_id=a914679897ffd910386e3a871153afca\&name=RequestHelpOrConsultation\&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D) . Or leave feedback link:  
-https://codemie.lab.epam.com/#/assistants/4ac75d4a-35ab-4500-b6f5-11f43a4abd28 with feedback assistant
+Use the **Help Center** built into the platform. Click the **Help Center** link in the bottom-left corner of the UI to access the following options:
+
+- **AI/Run FAQ** — ask the FAQ assistant any questions about CodeMie capabilities and usage.
+- **AI/Run Feedback** — report bugs and suggest improvements. The assistant generates a structured Jira ticket from your input.
+- **Survey** — fill out a satisfaction survey to share your overall experience.
+
+You can also report documentation issues, suggest improvements, or ask questions you could not find answers to in the documentation or FAQ directly on GitHub: [github.com/codemie-ai/docs/issues](https://github.com/codemie-ai/docs/issues).
 
 ## Sources
 
