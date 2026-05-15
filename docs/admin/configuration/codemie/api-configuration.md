@@ -554,12 +554,11 @@ Configure LiteLLM proxy for unified LLM access, budget management, and usage tra
 
 ### Proxy Mode
 
-| Parameter                        | Type    | Default      | Description                                                                    |
-| -------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------ |
-| `LLM_PROXY_MODE`                 | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy) |
-| `LLM_PROXY_ENABLED`              | boolean | `false`      | Enable LLM proxy for centralized model access control                          |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED` | boolean | `true`       | Enforce budget limits before allowing LLM requests                             |
-| `LLM_PROXY_TIMEOUT`              | integer | `60`         | Max seconds to wait for proxy responses                                        |
+| Parameter           | Type    | Default      | Description                                                                    |
+| ------------------- | ------- | ------------ | ------------------------------------------------------------------------------ |
+| `LLM_PROXY_MODE`    | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy) |
+| `LLM_PROXY_ENABLED` | boolean | `false`      | Enable LLM proxy for centralized model access control                          |
+| `LLM_PROXY_TIMEOUT` | integer | `300`        | Max seconds to wait for proxy responses                                        |
 
 ### LiteLLM Connection
 
@@ -584,20 +583,38 @@ Tag LLM requests for cost tracking and usage analytics.
 
 Set spending limits per user or team to control LLM usage costs.
 
-:::warning Deprecated
-`DEFAULT_SOFT_BUDGET_LIMIT`, `DEFAULT_HARD_BUDGET_LIMIT`, `DEFAULT_BUDGET_DURATION`, `DEFAULT_BUDGET_ID`, `LITELLM_PREMIUM_MODELS_BUDGET_NAME`, and `LITELLM_CLI_BUDGET_NAME` are deprecated in 2.23.0.
+| Parameter                                         | Type         | Default          | Description                                                                                                                                                                                                                            |
+| ------------------------------------------------- | ------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`                  | boolean      | `false`          | Enables budget limit checking for LLM proxy requests. When `true`, CodeMie enforces predefined budgets from `budgets-config.yaml`.                                                                                                     |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | boolean      | `false`          | Runs a budget reconciliation job after app readiness to align LiteLLM and CodeMie budget states.                                                                                                                                       |
+| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | integer      | `600`            | Timeout in seconds for a single reconciliation run.                                                                                                                                                                                    |
+| `LITELLM_PREMIUM_MODELS_ALIASES`                  | list[string] | `[]`             | List of model name substrings treated as premium (e.g., `["opus", "claude-4"]`). Matched case-insensitively against the requested model name. Required when a `premium_models` budget category is configured in `budgets-config.yaml`. |
+| `BUDGETS_CONFIG_DIR`                              | Path         | `config/budgets` | Directory path for the `budgets-config.yaml` file defining predefined budget policies.                                                                                                                                                 |
 
-Replace them with the equivalent `budgets-config.yaml` fields.
+#### Budget Cache
 
-See the [Release Notes](../../update/release-notes.md) for the migration table and [Budget Configuration](../extensions/litellm-proxy/budget-configuration.md) for full details.
-:::
+Caches user-to-budget resolution results to reduce database load on high-traffic deployments.
 
-| Parameter                           | Type    | Default | Description                                                                                                                                                                               |
-| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables budget limit checking for LLM proxy requests. When `true`, CodeMie enforces predefined budgets from `budgets-config.yaml`.                                                        |
-| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup. Required for budget enforcement to work.                                                                |
-| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup. Ensures existing users are assigned the correct budgets retroactively.                                                         |
-| `LITELLM_PREMIUM_MODELS_ALIASES`    | string  | `""`    | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when premium budget is enabled. |
+| Parameter                             | Type    | Default  | Description                                                                                                                           |
+| ------------------------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `BUDGET_ASSIGNMENT_CACHE_TTL`         | integer | `60`     | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping).                                       |
+| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the assignment cache.                                                                                    |
+| `BUDGET_RESOLUTION_CACHE_TTL`         | integer | `60`     | TTL in seconds for the budget resolution cache.                                                                                       |
+| `BUDGET_RESOLUTION_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the resolution cache.                                                                                    |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS` | integer | `600000` | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
+
+#### Budget Reset Tracking
+
+Manages automatic reset of per-member budget windows aligned with LiteLLM's reset cycle.
+
+| Parameter                                            | Type    | Default          | Description                                                                                                                             |
+| ---------------------------------------------------- | ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`               | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                          |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`              | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                     |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`                | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                        |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`          | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"`   | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`             | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
 
 ### LiteLLM Spend Tracking
 
@@ -605,9 +622,10 @@ Configure the background scheduler that collects project-level spending snapshot
 and stores them in the `project_spend_tracking` table. The collector runs automatically for all
 projects — no per-project filtering configuration is required.
 
-| Parameter                          | Type   | Default        | Description                                                                               |
-| ---------------------------------- | ------ | -------------- | ----------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`). |
+| Parameter                          | Type    | Default        | Description                                                                                   |
+| ---------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`  | boolean | `false`        | Enables the background spend collector job that stores project-level LiteLLM spend snapshots. |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string  | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`).     |
 
 ### LiteLLM Cache & Optimization
 
