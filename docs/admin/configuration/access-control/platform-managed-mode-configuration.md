@@ -2,7 +2,7 @@
 id: platform-managed-mode-configuration
 sidebar_position: 3
 title: Platform-managed Mode Configuration
-description: How to switch to Platform-managed mode and migrate existing Keycloak users
+description: How to enable Platform-managed mode for fresh installations and when switching from Keycloak-managed mode
 pagination_prev: admin/configuration/access-control/access-control-overview
 pagination_next: null
 ---
@@ -15,6 +15,13 @@ mode, where roles and project access are read from JWT claims on every request.
 For a comparison of both modes, see the
 [Access Control Overview](./index.md#deployment-modes).
 
+## Deployment Scenarios
+
+| Scenario                                                                              | Steps required                                                                                                          |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Fresh installation** — deploying AI/Run CodeMie for the first time                  | [Step 1](#step-1-configure-helm-values) only                                                                            |
+| **Switching from Keycloak-managed mode** — existing deployment with users in Keycloak | [Step 1](#step-1-configure-helm-values) and [Step 2](#step-2-migrate-existing-keycloak-users-existing-deployments-only) |
+
 ## Prerequisites
 
 - Access to the Kubernetes cluster and Helm values file of AI/Run CodeMie Backend and UI
@@ -22,7 +29,7 @@ For a comparison of both modes, see the
 
 ---
 
-## Step 1: Enable Platform-managed Mode
+## Step 1: Configure Helm Values
 
 :::warning Both components must be updated
 The AI/Run CodeMie backend and the UI must be configured consistently. Enabling only one of them results
@@ -34,13 +41,19 @@ in either missing UI controls or API errors.
 Set the `ENABLE_USER_MANAGEMENT` environment variable to `true` in the AI/Run CodeMie Backend
 deployment.
 
-In the `codemie-api` Helm chart , add `ENABLE_USER_MANAGEMENT` to the `extraEnv` list:
+In the `codemie-api` Helm chart, add the following variables to the `extraEnv` list:
 
 ```yaml
 extraEnv:
   - name: ENABLE_USER_MANAGEMENT
     value: 'true'
+  - name: USER_PROJECT_LIMIT
+    value: '3'
 ```
+
+`USER_PROJECT_LIMIT` sets the maximum number of shared projects a regular user can be
+assigned to. Super Admins are always exempt from this limit. Adjust the value to match
+your organisation's policy.
 
 Apply the changes to the deployment.
 
@@ -53,7 +66,11 @@ In the `codemie-ui` Helm chart `values.yaml`, set:
 
 ```yaml
 viteEnableUserManagement: true
+viteEnableBudgetManagement: true
 ```
+
+`viteEnableBudgetManagement` enables budget columns and the budget management section on
+project detail pages. Set it to `false` if your deployment does not use budget tracking.
 
 Apply the changes to the deployment.
 
@@ -186,6 +203,44 @@ UPDATE users SET is_maintainer = true, is_admin = true WHERE email = '<user-emai
 :::info
 `is_admin` must also be set to `true` — the Maintainer role implies Admin.
 :::
+
+## Upgrading from 2.18.x to 2.19.0
+
+AI/Run CodeMie 2.19.0 introduces Platform-managed mode. The table below summarizes what
+changes during the upgrade and what action, if any, is required from you.
+
+| Area                               | What happens                                                                                                            | Action required                                                                                                                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Database schema                    | New user management tables (`users`, `user_projects`, and related tables) are created automatically when the pod starts | None — Alembic migrations run on startup                                                                                                                                        |
+| Platform-managed mode activation   | Off by default in 2.19.0 (`ENABLE_USER_MANAGEMENT=false`)                                                               | Add the Helm values from [Step 1](#step-1-configure-helm-values) before or during the upgrade if you want to enable it                                                          |
+| Existing Keycloak user assignments | Not migrated automatically                                                                                              | Follow [Step 2](#step-2-migrate-existing-keycloak-users-existing-deployments-only) on first startup if you use `IDP_PROVIDER=keycloak` and want to preserve project assignments |
+
+### How to upgrade
+
+1. Update your Helm values to add the Platform-managed mode parameters from
+   [Step 1](#step-1-configure-helm-values).
+
+2. Run `helm upgrade` for both components:
+
+   ```bash
+   helm upgrade codemie-api <chart> -f values.yaml -n codemie
+   helm upgrade codemie-ui <chart> -f values.yaml -n codemie
+   ```
+
+3. The `codemie-api` pod runs Alembic database migrations automatically on startup — no
+   manual database steps are required. The startup probe allows up to **600 seconds** for
+   migrations to complete.
+
+   :::info Multiple replicas
+   If you run multiple `codemie-api` replicas, the migration runner acquires an exclusive
+   lock on the `alembic_version` table. Only the first replica to acquire the lock runs
+   the migration; the others wait and proceed once the lock is released.
+   :::
+
+4. Verify the upgrade: log in as an admin and confirm the **Projects management** and
+   **Users management** tabs appear under **Settings → Administration**.
+
+---
 
 ## See Also
 
