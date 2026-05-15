@@ -10,7 +10,8 @@ pagination_next: user-guide/data-source/datasources-types/add-google-data-source
 
 Upload and index files as data sources.
 
-File data sources enable you to upload documents directly to AI/Run CodeMie, making their content accessible to assistants. This guide walks you through the process of adding and indexing various file types.
+File data sources enable you to upload documents directly to AI/Run CodeMie, making their content accessible to
+assistants. This guide walks you through the process of adding and indexing various file types.
 
 ## Prerequisites
 
@@ -24,26 +25,34 @@ Before adding a File data source, ensure you have:
 
 AI/Run CodeMie supports the following file formats:
 
-| Format         | Extension       | Description                                                |
-| -------------- | --------------- | ---------------------------------------------------------- |
-| **PDF**        | `.pdf`          | Portable Document Format                                   |
-| **Text**       | `.txt`          | Plain text files                                           |
-| **CSV**        | `.csv`          | Comma-separated values with advanced configuration options |
-| **PowerPoint** | `.pptx`         | Microsoft PowerPoint presentations                         |
-| **XML**        | `.xml`          | Extensible Markup Language files                           |
-| **JSON**       | `.json`         | JavaScript Object Notation files                           |
-| **YAML**       | `.yaml`, `.yml` | YAML Ain't Markup Language files                           |
-| **Word**       | `.docx`         | Microsoft Word documents                                   |
-| **Excel**      | `.xlsx`         | Microsoft Excel spreadsheets                               |
+| Format         | Extension                       | Description                                                |
+| -------------- | ------------------------------- | ---------------------------------------------------------- |
+| **PDF**        | `.pdf`                          | Portable Document Format                                   |
+| **Text**       | `.txt`                          | Plain text files                                           |
+| **CSV**        | `.csv`                          | Comma-separated values with advanced configuration options |
+| **PowerPoint** | `.pptx`                         | Microsoft PowerPoint presentations                         |
+| **XML**        | `.xml`                          | Extensible Markup Language files                           |
+| **JSON**       | `.json`                         | JavaScript Object Notation files                           |
+| **YAML**       | `.yaml`, `.yml`                 | YAML Ain't Markup Language files                           |
+| **Word**       | `.docx`                         | Microsoft Word documents                                   |
+| **Excel**      | `.xlsx`                         | Microsoft Excel spreadsheets                               |
+| **Images**     | `.jpg`, `.jpeg`, `.png`, `.gif` | Raster image files                                         |
 
 **Other formats**: Processed as plain text
+
+:::info Image Indexing
+Images are processed using an LLM vision model.
+:::
 
 ### File Size Limitations
 
 **Maximum file size**: 100Mb per file
 
+**Maximum image file size**: 10MB per image
+
 :::warning Size Limit
-Files larger than 100Mb cannot be uploaded. If you need to index larger files, consider splitting them into smaller chunks or using alternative data source types (e.g., Git repositories for code, Confluence for documentation).
+Files larger than 100Mb cannot be uploaded. If you need to index larger files, consider splitting them into smaller
+chunks or using alternative data source types (e.g., Git repositories for code, Confluence for documentation).
 :::
 
 :::tip Reducing File Size
@@ -137,7 +146,8 @@ Define how many rows should be grouped together for search:
 - Transaction log with 1000 entries, search by batches of 100 → use `100`
 
 :::warning CSV Configuration Impact
-Choosing `1` row per document creates more granular search but increases index size. Choosing higher values (like `50`) creates broader search but may miss specific rows.
+Choosing `1` row per document creates more granular search but increases index size. Choosing higher values (like `50`)
+creates broader search but may miss specific rows.
 :::
 
 ##### JSON File Configuration
@@ -155,7 +165,10 @@ For `.json` file format, we recommend structuring your data with content and met
     "title": "Document Title",
     "author": "Author Name",
     "date": "2024-01-01",
-    "tags": ["tag1", "tag2"]
+    "tags": [
+      "tag1",
+      "tag2"
+    ]
   }
 }
 ```
@@ -168,7 +181,8 @@ For `.json` file format, we recommend structuring your data with content and met
 - Easier content organization
 
 :::tip JSON Best Practices
-Always include a `content` field with your main text. Add `metadata` for filtering and categorization. Avoid deeply nested structures (max 3 levels).
+Always include a `content` field with your main text. Add `metadata` for filtering and categorization. Avoid deeply
+nested structures (max 3 levels).
 :::
 
 **Alternative structures:**
@@ -177,11 +191,15 @@ Always include a `content` field with your main text. Add `metadata` for filteri
 [
   {
     "content": "First document content",
-    "metadata": { "type": "documentation" }
+    "metadata": {
+      "type": "documentation"
+    }
   },
   {
     "content": "Second document content",
-    "metadata": { "type": "tutorial" }
+    "metadata": {
+      "type": "tutorial"
+    }
   }
 ]
 ```
@@ -267,7 +285,8 @@ Click the **+ Create** button and wait for the process to finish.
 
 ## Using File Data Source in Assistants
 
-After successfully uploading and indexing your files, you can connect the data source to any assistant to provide access to document content.
+After successfully uploading and indexing your files, you can connect the data source to any assistant to provide access
+to document content.
 
 ### Adding Data Source to Assistant
 
