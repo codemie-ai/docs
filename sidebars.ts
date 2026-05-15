@@ -683,6 +683,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: [
                 'admin/configuration/access-control/initial-realm-setup',
+                'admin/configuration/access-control/platform-managed-mode-configuration',
                 {
                   type: 'category',
                   label: 'User Provisioning',

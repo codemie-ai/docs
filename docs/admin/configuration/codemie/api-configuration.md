@@ -382,6 +382,10 @@ Controls whether user roles and project access are read from JWT claims (Keycloa
 or stored in the platform database (Platform-managed mode). See
 [Access Control Overview](../access-control/index.md) for a full comparison.
 
+For step-by-step instructions on enabling Platform-managed mode and migrating existing
+Keycloak users, see
+[Platform-managed Mode Configuration](../access-control/platform-managed-mode-configuration.md).
+
 | Parameter                | Type | Default | Description                                                                                                                                                                                                                          |
 | ------------------------ | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ENABLE_USER_MANAGEMENT` | bool | `false` | Master switch. `true` enables Platform-managed mode: roles and project membership are stored in the platform DB and managed through the in-app UI. `false` uses Keycloak-managed mode where JWT claims are the authoritative source. |
@@ -399,7 +403,7 @@ database on startup.
 | `KEYCLOAK_ADMIN_URL`           | string | `""`    | Keycloak base URL for admin API access (e.g., `https://keycloak.example.com`).                                                                   |
 | `KEYCLOAK_ADMIN_REALM`         | string | `""`    | Keycloak realm to migrate (e.g., `codemie-prod`).                                                                                                |
 | `KEYCLOAK_ADMIN_CLIENT_ID`     | string | `""`    | Service account client ID with Keycloak admin permissions.                                                                                       |
-| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret. Store in a Kubernetes secret and reference via `valueFrom.secretKeyRef`.                                          |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret.                                                                                                                   |
 
 ---
 
