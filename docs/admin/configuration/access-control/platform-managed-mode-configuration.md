@@ -38,9 +38,6 @@ in either missing UI controls or API errors.
 
 ### AI/Run CodeMie Backend
 
-Set the `ENABLE_USER_MANAGEMENT` environment variable to `true` in the AI/Run CodeMie Backend
-deployment.
-
 In the `codemie-api` Helm chart, add the following variables to the `extraEnv` list:
 
 ```yaml
@@ -50,6 +47,10 @@ extraEnv:
   - name: USER_PROJECT_LIMIT
     value: '3'
 ```
+
+`ENABLE_USER_MANAGEMENT` activates Platform-managed mode. When set to `true`, user roles
+and project assignments are stored in the platform database and managed through the in-app
+UI instead of being read from Keycloak JWT claims.
 
 `USER_PROJECT_LIMIT` sets the maximum number of shared projects a regular user can be
 assigned to. Super Admins are always exempt from this limit. Adjust the value to match
@@ -68,6 +69,10 @@ In the `codemie-ui` Helm chart `values.yaml`, set:
 viteEnableUserManagement: true
 viteEnableBudgetManagement: true
 ```
+
+`viteEnableUserManagement` tells the UI that Platform-managed mode is active. When set to
+`true`, the **Users management** and **Projects management** tabs appear under
+**Settings → Administration**.
 
 `viteEnableBudgetManagement` enables budget columns and the budget management section on
 project detail pages. Set it to `false` if your deployment does not use budget tracking.
