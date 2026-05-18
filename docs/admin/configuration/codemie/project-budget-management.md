@@ -193,26 +193,36 @@ Two background jobs maintain budget state. All jobs use PostgreSQL advisory lock
 | `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                       |
 | `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                     |
 
-**In Helm Values** (`values.yaml`):
+In the `codemie-api` Helm chart, add to the `extraEnv` list:
 
 ```yaml
-api:
-  env:
-    - name: LITELLM_SPEND_COLLECTOR_ENABLED
-      value: "true"
-    - name: LITELLM_SPEND_COLLECTOR_SCHEDULE
-      value: "0 23 * * *"
-    - name: LITELLM_BUDGET_RESET_TRACKER_ENABLED
-      value: "true"
-    - name: LITELLM_BUDGET_RESET_TRACKER_SCHEDULE
-      value: "0 0 * * *"
-    - name: LLM_PROXY_BUDGET_RECONCILIATION_ENABLED
-      value: "true"
+extraEnv:
+  - name: LITELLM_SPEND_COLLECTOR_ENABLED
+    value: 'true'
+  - name: LITELLM_SPEND_COLLECTOR_SCHEDULE
+    value: '0 23 * * *'
+  - name: LITELLM_BUDGET_RESET_TRACKER_ENABLED
+    value: 'true'
+  - name: LITELLM_BUDGET_RESET_TRACKER_SCHEDULE
+    value: '0 0 * * *'
+  - name: LLM_PROXY_BUDGET_RECONCILIATION_ENABLED
+    value: 'true'
 ```
 
 :::warning
 Without `LITELLM_SPEND_COLLECTOR_ENABLED=true`, spend data will not be collected and budget consumption will not be visible in the UI.
 :::
+
+### AI/Run CodeMie UI
+
+In the `codemie-ui` Helm chart `values.yaml`, set:
+
+```yaml
+viteEnableBudgetManagement: true
+```
+
+`viteEnableBudgetManagement` enables budget columns and the budget management section on
+project detail pages. Set it to `false` if your deployment does not use budget tracking.
 
 ## See Also
 
