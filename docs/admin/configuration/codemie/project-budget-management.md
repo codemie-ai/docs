@@ -36,7 +36,7 @@ Category is resolved automatically per request. If a project budget exists for t
 Before managing project budgets, ensure the following are configured:
 
 - LiteLLM Proxy is deployed and connected to CodeMie.
-- Budget enforcement is enabled. See [LiteLLM Budget Configuration](../extensions/litellm-proxy/budget-configuration) for the required environment variables (`LLM_PROXY_BUDGET_CHECK_ENABLED`, `LLM_PROXY_BUDGET_SYNC_ENABLED`).
+- Budget enforcement is enabled. See [LiteLLM Budget Configuration](../extensions/litellm-proxy/budget-configuration) for the required environment variables (`LLM_PROXY_BUDGET_CHECK_ENABLED`, `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`).
 
 ## Creating a Project Budget
 
@@ -184,14 +184,14 @@ Two background jobs maintain budget state. All jobs use PostgreSQL advisory lock
 
 ### Environment variables
 
-| Variable                                          | Default      | Description                                                                                              |
-| ------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_ENABLED`                 | `false`      | Enable the spend collector background job                                                                |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 23 * * *` | Cron expression (UTC) for the spend collector. See [API Configuration](./api-configuration) for details. |
-| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`      | Enable the budget reset tracker background job                                                           |
-| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | —            | Cron expression (UTC) for the reset tracker                                                              |
-| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`      | Enable one-time startup reconciliation on pod start                                                      |
-| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`        | Timeout in seconds for the startup reconciliation job                                                    |
+| Variable                                          | Default        | Description                                                                                              |
+| ------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`                 | `false`        | Enable the spend collector background job                                                                |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 23 * * *`   | Cron expression (UTC) for the spend collector. See [API Configuration](./api-configuration) for details. |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`        | Enable the budget reset tracker background job                                                           |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | `*/10 * * * *` | Cron expression (UTC) for the reset tracker                                                              |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                      |
+| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                    |
 
 **In Helm Values** (`values.yaml`):
 
