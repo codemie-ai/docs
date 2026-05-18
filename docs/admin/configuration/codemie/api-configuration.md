@@ -836,23 +836,33 @@ LLM models are configured via YAML files located at `LLM_TEMPLATES_ROOT/llm-{MOD
 
 Each model entry supports these configuration options:
 
-| Field                              | Type    | Description                                                                  |
-| ---------------------------------- | ------- | ---------------------------------------------------------------------------- |
-| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4`, `claude-3-opus-20240229`)         |
-| `deployment_name`                  | string  | Provider-specific deployment name (Azure deployment, Bedrock model ID)       |
-| `label`                            | string  | Human-friendly display name shown in UI model selector                       |
-| `multimodal`                       | boolean | Model supports vision (images/video) in addition to text                     |
-| `react_agent`                      | boolean | Compatible with ReAct agent pattern (reasoning + acting)                     |
-| `enabled`                          | boolean | Model available for selection (allows disabling without removal)             |
-| `provider`                         | string  | Provider type: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic` |
-| `default_for_categories`           | list    | Categories where this model is auto-selected                                 |
-| `cost.input`                       | float   | USD per input token for cost tracking                                        |
-| `cost.output`                      | float   | USD per output token                                                         |
-| `cost.cache_read_input_token_cost` | float   | USD per cached token (for providers supporting caching)                      |
-| `max_output_tokens`                | integer | Maximum generation length supported by model                                 |
-| `features.streaming`               | boolean | Supports streaming responses for real-time output                            |
-| `features.tools`                   | boolean | Supports function calling / tool use                                         |
-| `features.parallel_tool_calls`     | boolean | Can execute multiple tools simultaneously                                    |
+| Field                              | Type    | Description                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4`, `claude-3-opus-20240229`)                                                                                                                                                                                                                                                                                                      |
+| `deployment_name`                  | string  | Provider-specific deployment name (Azure deployment, Bedrock model ID)                                                                                                                                                                                                                                                                                                    |
+| `label`                            | string  | Human-friendly display name shown in UI model selector                                                                                                                                                                                                                                                                                                                    |
+| `multimodal`                       | boolean | Model supports vision (images/video) in addition to text                                                                                                                                                                                                                                                                                                                  |
+| `react_agent`                      | boolean | Compatible with ReAct agent pattern (reasoning + acting)                                                                                                                                                                                                                                                                                                                  |
+| `enabled`                          | boolean | Model available for selection (allows disabling without removal)                                                                                                                                                                                                                                                                                                          |
+| `provider`                         | string  | Provider type: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic`                                                                                                                                                                                                                                                                                              |
+| `default_for_categories`           | list    | Categories where this model is auto-selected                                                                                                                                                                                                                                                                                                                              |
+| `cost.input`                       | float   | USD per input token for cost tracking                                                                                                                                                                                                                                                                                                                                     |
+| `cost.output`                      | float   | USD per output token                                                                                                                                                                                                                                                                                                                                                      |
+| `cost.cache_read_input_token_cost` | float   | USD per cached token (for providers supporting caching)                                                                                                                                                                                                                                                                                                                   |
+| `max_output_tokens`                | integer | Maximum generation length supported by model                                                                                                                                                                                                                                                                                                                              |
+| `features.streaming`               | boolean | Supports streaming responses for real-time output                                                                                                                                                                                                                                                                                                                         |
+| `features.tools`                   | boolean | Supports function calling / tool use                                                                                                                                                                                                                                                                                                                                      |
+| `features.parallel_tool_calls`     | boolean | Whether the model can execute multiple tool calls in a single inference round. Defaults to `false`. Set to `false` explicitly for reasoning models (o-series) that do not support the `parallel_tool_calls` OpenAI parameter — sending it to these models causes an API error. When `false`, the platform strips the parameter from every outgoing request to that model. |
+
+:::info How parallel tool calls work
+When `parallel_tool_calls` is `true` for a model, the agent can issue and stream multiple
+tool calls simultaneously within one inference round. Results arrive concurrently and are
+rendered in the UI as parallel entries under the same thought step.
+
+Standard GPT and Claude models support parallel tool calls. Reasoning models
+(`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** — always set
+`parallel_tool_calls: false` in their `features` block.
+:::
 
 ### Model Categories
 

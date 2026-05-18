@@ -317,6 +317,21 @@ embeddings_models:
 
 </details>
 
+:::info Parallel tool calls and reasoning models
+Standard models (`gpt-4.1`, Claude, Gemini) support parallel tool calls — the agent can
+issue multiple tool calls in one inference round and stream their results concurrently.
+
+Reasoning models (`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** support the
+`parallel_tool_calls` OpenAI parameter. Sending it causes an API error. Always set
+`parallel_tool_calls: false` in the `features` block for these models, as shown in the
+Azure examples above. When this flag is `false`, the platform automatically strips the
+parameter from every outgoing request to that model.
+
+For standard models, you can omit the flag entirely — it defaults to `false`, and parallel
+execution is controlled by the model's own behavior. Set `parallel_tool_calls: true` only
+if you explicitly want to enable and advertise the capability for a specific model.
+:::
+
 <details>
 <summary><strong>Google Vertex AI Configuration Example</strong></summary>
 
