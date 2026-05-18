@@ -93,11 +93,21 @@ The `budget_category` field controls which type of usage the budget applies to:
 
 Budget enforcement is disabled by default. To activate it, set the following environment variables in the CodeMie API deployment:
 
-| Variable                            | Type    | Default | Description                                                                      |
-| ----------------------------------- | ------- | ------- | -------------------------------------------------------------------------------- |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables budget limit checking for LLM proxy requests                             |
-| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
-| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
+| Variable                            | Type    | Default | Description                                                                                                                                                                                                                                 |
+| ----------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables LLM budget enforcement. When `true`, CodeMie actively enforces spending limits — LLM requests from users or projects that have exceeded their budget are blocked. Also enables budget API routes and background budget maintenance. |
+| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup                                                                                                                                                            |
+| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup for existing users                                                                                                                                                                |
+
+### How budget enforcement works
+
+When `LLM_PROXY_BUDGET_CHECK_ENABLED` is enabled, CodeMie loads predefined budgets from `budgets-config.yaml` into LiteLLM on every startup. The config file is the **source of truth**: if a budget already exists in LiteLLM with different values, it is automatically overwritten to match. Spending counters are preserved when only limits change; the counter resets if `budget_duration` changes.
+
+Once loaded, LLM proxy requests are checked against the active budgets. Requests from users or projects that have exceeded their `max_budget` are rejected. Requests approaching `soft_budget` generate warnings.
+
+:::info Reconciliation
+Optionally, set `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED=true` to run an additional reconciliation job after startup that aligns spending state between CodeMie and LiteLLM.
+:::
 
 **In Helm Values** (`values.yaml`):
 

@@ -155,11 +155,11 @@ No third-party component updates in this release.
 
 Three new environment variables have been introduced to control LLM budget enforcement. All default to `false` (disabled):
 
-| Variable                            | Default | Description                                                                      |
-| ----------------------------------- | ------- | -------------------------------------------------------------------------------- |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | `false` | Enables budget limit checking for LLM proxy requests                             |
-| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
-| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
+| Variable                            | Default | Description                                                                                               |
+| ----------------------------------- | ------- | --------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | `false` | Enables LLM budget enforcement. When `true`, requests that exceed configured spending limits are blocked. |
+| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup                          |
+| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | `false` | Backfills user budget assignments from LiteLLM on startup for existing users                              |
 
 See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md) and [API Configuration](../configuration/codemie/api-configuration.md) for details.
 
