@@ -49,6 +49,20 @@ Integration actions, including supplying credentials and configuring connections
 ## Authentication & Identity
 
 <details>
+<summary><strong>How does CodeMie authenticate with external integrations like Jira, Confluence, or Git?</strong></summary>
+
+OAuth2/OIDC governs user authentication **into the CodeMie platform** only. Access to external integrations (Jira, Confluence, Git, SharePoint) is controlled entirely by the token or account configured for each integration — the user's platform session is not forwarded to those services.
+
+This means:
+
+- A **shared service account** configured for a project covers all project members using that service account's permission scope.
+- A **personal token** configured in a personal project is bounded by that individual user's permissions on the external platform.
+
+The platform does not re-check the authenticated user's original permissions on external sources at query or retrieval time. Data returned by the system is based on what was accessible to the configured credential at indexing time. For shared projects, ensure the service account only has access to content that all project members are permitted to see.
+
+</details>
+
+<details>
 <summary><strong>Why do we need Keycloak if we already have OKTA, Entra ID, or another Identity Provider?</strong></summary>
 
 Keycloak serves as a middleware identity broker that provides several key benefits:
@@ -244,6 +258,93 @@ curl -I https://your-domain.com
 # Check SSL certificate
 openssl s_client -connect your-domain.com:443 -servername your-domain.com
 ```
+
+</details>
+
+## Security & Data Privacy
+
+<details>
+<summary><strong>What data is sent to LLMs during a conversation?</strong></summary>
+
+Only the user's prompt and the relevant retrieved context are sent to the LLM — not entire databases or all indexed content. Integration and data source credentials are never included in LLM requests and cannot be accessed by the model.
+
+The exact content sent depends on how assistants, workflows, and data sources are configured. Any data available in indexed sources or provided directly in user prompts can appear in the context forwarded to the LLM. The platform itself does not classify data types before transmission.
+
+LLM providers used under enterprise agreements do not train on customer data.
+
+</details>
+
+<details>
+<summary><strong>Can MCP server connectivity be restricted or disabled?</strong></summary>
+
+The entire MCP Connect feature can be toggled on or off across the CodeMie platform via configuration. Disabling it prevents any MCP server usage for all users.
+
+The ability for administrators to allow MCP connectivity while restricting users to a curated catalog of approved servers only (i.e., disabling Manual Setup specifically while keeping the catalog available) is not currently supported.
+
+</details>
+
+<details>
+<summary><strong>Does CodeMie support human-in-the-loop approval for write actions?</strong></summary>
+
+Human-in-the-loop controls are available within the **Workflows** feature. You can configure approval gates that pause execution and require a human to confirm before the workflow proceeds.
+
+However, mandatory human-in-the-loop is not a platform-wide default — it is configured per-workflow, not enforced automatically for all write actions. Each workflow that performs write operations (creating Jira tickets, modifying Confluence pages, Git operations, etc.) must have an approval node explicitly added to its definition.
+
+</details>
+
+<details>
+<summary><strong>How are integration credentials (Jira, Confluence, Git tokens) stored?</strong></summary>
+
+Integration and data source credentials are stored as KMS/Vault-encrypted strings in PostgreSQL. Decryption happens on-demand via KMS/Vault APIs only when an API call requires it. Plaintext credentials exist only in memory for the duration of that call and are never persisted to disk.
+
+By default, only the CodeMie API service has access to the database. No direct human database access is provisioned out of the box.
+
+</details>
+
+<details>
+<summary><strong>Can a user access information through the agent that they would not have direct access to?</strong></summary>
+
+It depends on how integrations are configured:
+
+- **Per-user integrations (MCP with user context propagation):** The user's own JWT token is forwarded to the external service via `{{user.token}}` placeholders. Access is bounded by that individual user's permissions on the source system.
+
+- **Shared project-level integrations (Jira, Confluence, Git):** All project members inherit the configured service account's permission scope. A user can effectively access anything the service account can access, regardless of their direct permissions on the source.
+
+For maximum access control, use per-user authentication where possible (e.g., MCP servers with `{{user.token}}`, GitHub App integration) and configure service account credentials with the minimum required permissions scoped to approved sources only.
+
+</details>
+
+<details>
+<summary><strong>Does CodeMie enforce per-user access control when retrieving indexed documents?</strong></summary>
+
+No. CodeMie uses a local-first indexing architecture: data from external sources (Jira, Confluence, Git, SharePoint) is fetched using the service credential configured by the customer and stored locally. At retrieval time, the system does not dynamically verify the authenticated user's original permissions on the source — it returns content based on what was accessible to the configured credential at indexing time.
+
+**Practical implication:** For shared projects, the configured service account must only have access to content that all authorized project members are permitted to see. Restrict the service account's scope at the source (Jira project, Confluence space, Git repository) to match the intended audience.
+
+</details>
+
+<details>
+<summary><strong>Is LangFuse observability data sent to external cloud services?</strong></summary>
+
+No. LangFuse is deployed exclusively as a self-hosted Kubernetes workload within the CodeMie cluster. All LLM traces, prompt/response data, and analytics remain within the cluster boundary — no data is sent to `langfuse.cloud` or any external LangFuse endpoint.
+
+Integration between CodeMie and LangFuse is handled entirely via internal Kubernetes service DNS.
+
+</details>
+
+<details>
+<summary><strong>Can chat history retention be configured?</strong></summary>
+
+Chat history and user profile retention are not configurable in CodeMie. No retention period, purge schedule, or data lifecycle controls are exposed by default.
+
+</details>
+
+<details>
+<summary><strong>Does LiteLLM support guardrails for prompt injection or content filtering?</strong></summary>
+
+Yes. LiteLLM supports guardrails natively, including integrations with providers and custom guardrail hooks.
+
+Guardrail configuration is not part of the default CodeMie deployment and must be explicitly configured. Refer to the [LiteLLM guardrails documentation](https://docs.litellm.ai/docs/guardrail_providers) for available options.
 
 </details>
 
