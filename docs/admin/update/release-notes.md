@@ -14,6 +14,21 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.27.0</strong></summary>
+
+**Release Date:** TBD
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **Remove `viteEnableAnalytics` from AI/Run CodeMie UI Helm chart** — the `viteEnableAnalytics` value and the corresponding `VITE_ENABLE_ANALYTICS` environment variable were deprecated and are no longer supported. You can safely remove them from your `values.yaml` when upgrading.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.26.0</strong></summary>
 
 **Release Date:** May 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.26.0)
