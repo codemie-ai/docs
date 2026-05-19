@@ -24,7 +24,9 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **Removed `USE_POSTGRES` variable from AI/Run CodeMie Backend Helm chart** — this variable was deprecated and has been removed.
+
+   **Required action:** If you are upgrading to 2.27.0, remove `USE_POSTGRES` from your `AI/Run CodeMie Backend` Helm Chart values.
 
 </details>
 
