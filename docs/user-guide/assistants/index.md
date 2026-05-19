@@ -46,6 +46,13 @@ Coordinate multiple assistants:
 
 - [Sub-Assistants and Orchestration](./sub-assistants-multi-assistant-orchestrator.md) - Coordinate multiple specialized assistants
 
+## Favorites and Pinned Assistants
+
+Personalize your workspace for faster access:
+
+- [Favorites](./favorites.md) - Save frequently used assistants, skills, and workflows as favorites
+- [Pinned Assistants](./pinned-assistants.md) - Pin assistants to the navigation sidebar for one-click access
+
 ## Moving Assistants Between Projects
 
 You can move an assistant from one project to another by changing its project assignment:

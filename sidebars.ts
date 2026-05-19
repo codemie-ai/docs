@@ -54,6 +54,8 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/assistant-categories-management',
             'user-guide/assistants/clone-assistant-from-marketplace',
             'user-guide/assistants/sub-assistants-multi-assistant-orchestrator',
+            'user-guide/assistants/favorites',
+            'user-guide/assistants/pinned-assistants',
             {
               type: 'category',
               label: 'Organizing and Managing Communication with Assistants',
