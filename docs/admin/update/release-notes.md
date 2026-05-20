@@ -60,6 +60,12 @@ No third-party component updates in this release.
 
    :::
 
+4. **`LITELLM_PREMIUM_MODELS_BUDGET_NAME` removed** — this variable was deprecated and is no longer supported. Remove it from your `extraEnv` if still present.
+
+   :::tip Configuration housekeeping
+   The budget name is now derived automatically from the `budget_category: premium_models` entry in `budgets-config.yaml`. No replacement variable is needed.
+   :::
+
 </details>
 
 <details>
