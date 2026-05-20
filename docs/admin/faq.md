@@ -281,14 +281,30 @@ Two levels of MCP access control are available via `customer-config.yaml`.
 
 **Disable MCP entirely**
 
-Use the `mcpConnect` component to remove the MCP Servers option from all assistant and workflow configurations. No users can add or use MCP servers.
+Fully disabling MCP requires these steps:
 
-```yaml
-components:
-  - id: "mcpConnect"
-    settings:
-      enabled: false
-```
+1. **Disable the UI component** — set `mcpConnect` to `false` in `customer-config.yaml` to remove the MCP Servers option from all assistant and workflow configurations:
+
+   ```yaml
+   components:
+     - id: "mcpConnect"
+       settings:
+         enabled: false
+   ```
+
+2. **Disable the backend** — set `MCP_CONNECT_ENABLED=false` in the `codemie-api` values and redeploy. This variable is documented in the [API Configuration Guide](../configuration/codemie/api-configuration#mcp-model-context-protocol-configuration).
+
+3. **Remove the MCP Connect service** (optional) — uninstall the Helm release or scale the deployment to 0 to free up cluster resources:
+
+   ```bash
+   # Uninstall
+   helm uninstall codemie-mcp-connect-service -n codemie
+
+   # Or scale down without uninstalling
+   kubectl scale deployment codemie-mcp-connect-service --replicas=0 -n codemie
+   ```
+
+   The `codemie-mcp-connect-service` is a core component deployed as part of the standard CodeMie installation. Refer to your cloud-specific components deployment guide for reinstallation steps if needed.
 
 **Restrict to catalog-only**
 
