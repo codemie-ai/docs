@@ -301,7 +301,7 @@ components:
       enabled: true
 ```
 
-For a full description of these components and other available feature flags, see [Customer Feature Configuration](./configuration/codemie/customer-feature-configuration).
+For a full description of these components and other available feature flags, see [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration).
 
 </details>
 
