@@ -277,9 +277,31 @@ LLM providers used under enterprise agreements do not train on customer data.
 <details>
 <summary><strong>Can MCP server connectivity be restricted or disabled?</strong></summary>
 
-The entire MCP Connect feature can be toggled on or off across the CodeMie platform via configuration. Disabling it prevents any MCP server usage for all users.
+Two levels of MCP access control are available via `customer-config.yaml`.
 
-The ability for administrators to allow MCP connectivity while restricting users to a curated catalog of approved servers only (i.e., disabling Manual Setup specifically while keeping the catalog available) is not currently supported.
+**Disable MCP entirely**
+
+Use the `mcpConnect` component to remove the MCP Servers option from all assistant and workflow configurations. No users can add or use MCP servers.
+
+```yaml
+components:
+  - id: "mcpConnect"
+    settings:
+      enabled: false
+```
+
+**Restrict to catalog-only**
+
+Use the `mcpCustomServersDisabled` component to keep MCP connectivity available while preventing users from configuring custom (inline) MCP servers. Only servers from the admin-managed catalog can be selected.
+
+```yaml
+components:
+  - id: "mcpCustomServersDisabled"
+    settings:
+      enabled: true
+```
+
+For a full description of these components and other available feature flags, see [Customer Feature Configuration](./configuration/codemie/customer-feature-configuration).
 
 </details>
 
