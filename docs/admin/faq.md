@@ -279,6 +279,19 @@ LLM providers used under enterprise agreements do not train on customer data.
 
 Two levels of MCP access control are available via `customer-config.yaml`.
 
+For a full description of `customer-config.yaml` components and other available feature flags, see [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration).
+
+**Restrict to catalog-only**
+
+Use the `mcpCustomServersDisabled` component to keep MCP connectivity available while preventing users from configuring custom (inline) MCP servers. Only servers from the admin-managed catalog can be selected.
+
+```yaml
+components:
+  - id: "mcpCustomServersDisabled"
+    settings:
+      enabled: true
+```
+
 **Disable MCP entirely**
 
 Fully disabling MCP requires these steps:
@@ -305,19 +318,6 @@ Fully disabling MCP requires these steps:
    ```
 
    The `codemie-mcp-connect-service` is a core component deployed as part of the standard CodeMie installation. Refer to your cloud-specific components deployment guide for reinstallation steps if needed.
-
-**Restrict to catalog-only**
-
-Use the `mcpCustomServersDisabled` component to keep MCP connectivity available while preventing users from configuring custom (inline) MCP servers. Only servers from the admin-managed catalog can be selected.
-
-```yaml
-components:
-  - id: "mcpCustomServersDisabled"
-    settings:
-      enabled: true
-```
-
-For a full description of these components and other available feature flags, see [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration).
 
 </details>
 
