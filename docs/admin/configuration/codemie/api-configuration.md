@@ -554,11 +554,12 @@ Configure LiteLLM proxy for unified LLM access, budget management, and usage tra
 
 ### Proxy Mode
 
-| Parameter           | Type    | Default      | Description                                                                    |
-| ------------------- | ------- | ------------ | ------------------------------------------------------------------------------ |
-| `LLM_PROXY_MODE`    | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy) |
-| `LLM_PROXY_ENABLED` | boolean | `false`      | Enable LLM proxy for centralized model access control                          |
-| `LLM_PROXY_TIMEOUT` | integer | `300`        | Max seconds to wait for proxy responses                                        |
+| Parameter                       | Type    | Default      | Description                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LLM_PROXY_MODE`                | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy)                                                                                                                                                                                                                                                                         |
+| `LLM_PROXY_ENABLED`             | boolean | `false`      | Enable LLM proxy for centralized model access control                                                                                                                                                                                                                                                                                                  |
+| `LLM_PROXY_TIMEOUT`             | integer | `300`        | Max seconds to wait for proxy responses                                                                                                                                                                                                                                                                                                                |
+| `LLM_PROXY_EMBEDDINGS_DISABLED` | boolean | `false`      | When `true`, bypasses the LiteLLM proxy for embedding requests and sends them directly to the native provider (e.g., Azure OpenAI). Useful when LiteLLM does not support a required embedding model or when lower-latency direct access is preferred for vector operations. Has no effect when `LLM_PROXY_ENABLED=false` or `LLM_PROXY_MODE=internal`. |
 
 ### LiteLLM Connection
 
