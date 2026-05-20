@@ -93,36 +93,101 @@ The `budget_category` field controls which type of usage the budget applies to:
 
 Budget enforcement is disabled by default. To activate it, set the following environment variables in the CodeMie API deployment:
 
-| Variable                                  | Type    | Default | Description                                                                                                                                                                                                                                  |
-| ----------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED`          | boolean | `false` | Enables LLM budget enforcement. When `true`, CodeMie actively enforces spending limits - LLM requests from users or projects that have exceeded their budget are blocked. Also enables budget API routes and background budget maintenance.  |
-| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED` | boolean | `false` | Runs a post-startup reconciliation job that syncs predefined budgets from `budgets-config.yaml`, backfills user and project budget assignments, and aligns spending state with LiteLLM. Required for YAML budget definitions to take effect. |
+| Variable                                  | Type    | Default | Description                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`          | boolean | `false` | Enables LLM budget enforcement. When `true`, CodeMie actively enforces spending limits - LLM requests from users or projects that have exceeded their budget are blocked. Also enables budget API routes and background budget maintenance.                                                  |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED` | boolean | `false` | Triggers a **one-time** reconciliation job on startup that syncs predefined budgets from `budgets-config.yaml`, backfills user and project budget assignments, and aligns spending state with LiteLLM. Must be disabled after reconciliation completes — it is not intended to stay enabled. |
 
 ### How budget enforcement works
 
 When `LLM_PROXY_BUDGET_CHECK_ENABLED` is enabled, CodeMie registers the budget enforcement provider and enables budget API routes. LLM requests are checked against active budgets - requests from users or projects that have exceeded their `max_budget` are rejected; requests approaching `soft_budget` generate warnings.
 
-**Predefined budgets from `budgets-config.yaml` are not loaded by `LLM_PROXY_BUDGET_CHECK_ENABLED` alone.** To sync the YAML config into the database and LiteLLM, you must also set `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED=true`. The reconciliation job runs once after startup and:
+**Predefined budgets from `budgets-config.yaml` are not loaded by `LLM_PROXY_BUDGET_CHECK_ENABLED` alone.** To sync the YAML config into the database and LiteLLM, run the one-time reconciliation by temporarily setting `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED=true`. The reconciliation job runs once after startup and:
 
 1. Syncs predefined budgets from `budgets-config.yaml` into PostgreSQL and LiteLLM - config is the **source of truth**: existing budgets are created or updated, spending counters are preserved unless `budget_duration` changes
 2. Syncs current spending state from LiteLLM back into CodeMie
 3. Backfills budget assignments for existing users and projects
 
-Without `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED=true`, changes to `budgets-config.yaml` never reach the database even after a pod restart.
+Without running reconciliation, changes to `budgets-config.yaml` never reach the database even after a pod restart.
 
-**In AI/Run CodeMie Backend values** (`values.yaml`):
+### Running reconciliation
+
+Reconciliation is a one-time operation. Run it whenever you update `budgets-config.yaml` or on initial setup.
+
+When multiple replicas are running, a PostgreSQL advisory lock ensures only one pod executes the reconciliation — other pods acquire the lock, skip, and log `"Budget reconciliation lock held by another instance, skipping"`. You do not need to scale down to a single replica.
+
+1. Set `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED: "true"` in `extraEnv`.
+2. Apply the Helm values and wait for pods to restart.
+3. Confirm reconciliation completed successfully in pod logs.
+4. Remove the variable (or set it to `"false"`) and re-apply.
+
+**In AI/Run CodeMie Backend values** (`values.yaml`) — enable budget enforcement permanently, run reconciliation once:
 
 ```yaml
 extraEnv:
   - name: LLM_PROXY_BUDGET_CHECK_ENABLED
     value: "true"
+  # Set to "true" temporarily during reconciliation, then remove
   - name: LLM_PROXY_BUDGET_RECONCILIATION_ENABLED
     value: "true"
 ```
 
-:::warning
-`LLM_PROXY_BUDGET_RECONCILIATION_ENABLED` must be `true` for predefined budgets from `budgets-config.yaml` to be loaded into the database and LiteLLM. Without it, budget definitions in the config file have no effect even after a pod restart.
+## Spend Tracking Background Jobs
+
+CodeMie includes background APScheduler jobs that collect spend data from LiteLLM, track upcoming budget resets, and reconcile daily resets. All three jobs are disabled by default and require `LLM_PROXY_ENABLED=true` to function.
+
+:::warning Prerequisite
+All spend tracking jobs require the LiteLLM proxy to be enabled (`LLM_PROXY_ENABLED=true`). If any of these variables is set to `true` while `LLM_PROXY_ENABLED=false`, the scheduler will not start and a warning will be logged.
 :::
+
+### Variables
+
+| Variable                                             | Type    | Default        | Description                                                                                                                                                                         |
+| ---------------------------------------------------- | ------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`                    | boolean | `false`        | Enables the nightly spend collector job. Pulls spend data from LiteLLM and inserts rows into the spend tracking table.                                                              |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                   | string  | `0 23 * * *`   | Cron schedule (UTC) for the spend collector. Default: every day at 23:00 UTC.                                                                                                       |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`               | boolean | `false`        | Enables the budget reset-window tracker job. Periodically checks which members have a budget reset approaching within the configured look-ahead window.                             |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`              | string  | `*/10 * * * *` | Cron schedule (UTC) for the reset-window tracker. Default: every 10 minutes.                                                                                                        |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`                | integer | `15`           | Look-ahead window in minutes. Members whose budget resets within this window are captured by the tracker job.                                                                       |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`        | Enables the daily reset reconciliation job. Runs shortly after midnight UTC and reconciles actual budget resets, correcting any mismatches between LiteLLM and CodeMie state.       |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `10 0 * * *`   | Cron schedule (UTC) for the reconciliation job. Must be a daily schedule that falls within the midnight UTC window defined by `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES`. |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`           | Allowed execution window in minutes after 00:00 UTC. The reconciliation schedule must run within this window — if not, the application will fail to start.                          |
+
+### How each job works
+
+**Spend Collector** (`LITELLM_SPEND_COLLECTOR_ENABLED`)
+
+Runs nightly at 23:00 UTC. Queries LiteLLM for accumulated spend data across applications and inserts the results into the CodeMie spend tracking table. In a multi-replica deployment, an advisory lock ensures only one pod runs the job.
+
+**Budget Reset Tracker** (`LITELLM_BUDGET_RESET_TRACKER_ENABLED`)
+
+Runs every 10 minutes. Scans member budget reset windows and records which members are approaching a reset within the next `LITELLM_BUDGET_RESET_WINDOW_MINUTES` minutes. Keeps the budget reset state up to date between nightly reconciliations.
+
+**Budget Reset Reconciliation** (`LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`)
+
+Runs daily at 00:10 UTC (default). After budget periods roll over at midnight, this job verifies that all resets were applied correctly in both LiteLLM and CodeMie. It logs `updated`, `failed`, and `mismatch_warnings` counts on completion.
+
+:::info Schedule validation
+When `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED=true`, CodeMie validates `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE` at startup. The schedule must be a daily cron expression and must fire within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` minutes of midnight UTC. If validation fails, the application will not start.
+:::
+
+### Enabling all three jobs
+
+For a complete spend tracking setup, enable all three jobs together:
+
+**In AI/Run CodeMie Backend values** (`values.yaml`):
+
+```yaml
+extraEnv:
+  - name: LITELLM_SPEND_COLLECTOR_ENABLED
+    value: "true"
+  - name: LITELLM_BUDGET_RESET_TRACKER_ENABLED
+    value: "true"
+  - name: LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED
+    value: "true"
+```
+
+The three jobs are independent and can be enabled individually, but together they form a complete pipeline: the collector captures historical spend, the tracker monitors upcoming resets, and the reconciliation job corrects any state mismatches after midnight.
 
 ## Customizing Budgets via Helm
 
