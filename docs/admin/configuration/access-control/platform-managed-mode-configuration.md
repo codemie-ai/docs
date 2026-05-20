@@ -172,15 +172,22 @@ re-import users on every pod restart, potentially overwriting manual changes mad
 in-app UI.
 :::
 
-After confirming the migration completed successfully, set `KEYCLOAK_MIGRATION_ENABLED`
-back to `false` (or remove the variable entirely):
+After confirming the migration completed successfully, remove all migration-specific
+variables from `extraEnv`. The following variables are only needed for the one-time import
+and must not remain in your configuration:
 
-```yaml {4-5}
+- `KEYCLOAK_MIGRATION_ENABLED`
+- `KEYCLOAK_ADMIN_URL`
+- `KEYCLOAK_ADMIN_REALM`
+- `KEYCLOAK_ADMIN_CLIENT_ID`
+- `KEYCLOAK_ADMIN_CLIENT_SECRET`
+
+Your final `extraEnv` should contain only the Platform-managed mode setting:
+
+```yaml
 extraEnv:
   - name: ENABLE_USER_MANAGEMENT
     value: 'true'
-  - name: KEYCLOAK_MIGRATION_ENABLED
-    value: 'false'
 ```
 
 Apply the changes to the deployment.

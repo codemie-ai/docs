@@ -26,7 +26,22 @@ No third-party component updates in this release.
 
 1. **`USE_POSTGRES` removed from AI/Run CodeMie Backend Helm Chart** — this variable was deprecated and is no longer supported.
 
+   :::tip Configuration housekeeping
    If your `AI/Run CodeMie Backend` Helm Chart values still contain `USE_POSTGRES`, you can safely remove it.
+   :::
+
+2. **Post-migration cleanup** — if you completed the Platform-Managed Mode migration but haven't yet removed the one-time migration variables, this is a good time to clean them up.
+
+   :::tip Post-migration housekeeping
+   After a successful migration, the following variables are no longer needed and should be removed from your `extraEnv`:
+   - `KEYCLOAK_MIGRATION_ENABLED`
+   - `KEYCLOAK_ADMIN_URL`
+   - `KEYCLOAK_ADMIN_REALM`
+   - `KEYCLOAK_ADMIN_CLIENT_ID`
+   - `KEYCLOAK_ADMIN_CLIENT_SECRET`
+
+   See [Disable migration after the first run](../configuration/access-control/platform-managed-mode-configuration.md#22-disable-migration-after-the-first-run) for the full cleanup steps.
+   :::
 
 </details>
 
