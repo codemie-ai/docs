@@ -15,6 +15,13 @@ The Users Management page is only accessible to **Platform Admins**. Regular use
 members within their own projects from the [Projects Management](./projects.md) page.
 :::
 
+:::info Admin configuration required
+Users Management is only available when **Platform-managed mode** is enabled. If this tab
+is not visible, ask your administrator to follow the
+[Platform-managed Mode Configuration](../../admin/configuration/access-control/platform-managed-mode-configuration.md)
+guide.
+:::
+
 The Users Management page gives Platform Admins a unified view of all users registered on the
 platform, their roles, and their project memberships. From here you can filter users, inspect
 individual user details, and manage project assignments.

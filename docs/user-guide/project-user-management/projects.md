@@ -16,6 +16,13 @@ Platform Admins can view and manage all projects across the platform.
 
 To access Projects Management, click the **Profile** icon in the bottom-left corner → **Settings → Administration → Projects management**.
 
+:::info Admin configuration required
+Projects Management is only available when **Platform-managed mode** is enabled. If the
+**Projects management** tab is not visible, ask your administrator to follow the
+[Platform-managed Mode Configuration](../../admin/configuration/access-control/platform-managed-mode-configuration.md)
+guide.
+:::
+
 ## Projects List
 
 The projects list displays all projects you have access to. For each project, the table shows:
