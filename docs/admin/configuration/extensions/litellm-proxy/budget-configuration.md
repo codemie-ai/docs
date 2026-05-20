@@ -351,6 +351,18 @@ When `LITELLM_PREMIUM_MODELS_ALIASES` is set to an empty array (`'[]'`), premium
 
 The `/spending` endpoint returns an additional `premium_current_spending` field when this feature is enabled, so you can monitor premium model costs separately.
 
+## UI Configuration
+
+### AI/Run CodeMie UI
+
+In the `codemie-ui` Helm chart `values.yaml`, set:
+
+```yaml
+viteEnableBudgetManagement: true
+```
+
+`viteEnableBudgetManagement` enables budget columns and the budget management section on project detail pages. Set it to `false` if your deployment does not use budget tracking.
+
 ## See Also
 
 - [LiteLLM Proxy Installation Guide](../../../deployment/extensions/litellm-proxy/index.md)
