@@ -14,6 +14,61 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.27.0</strong></summary>
+
+**Release Date:** May 18, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.27.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **`USE_POSTGRES` removed from AI/Run CodeMie Backend Helm Chart** — this variable was deprecated and is no longer supported.
+
+   :::tip Configuration housekeeping
+   If your `AI/Run CodeMie Backend` Helm Chart values still contain `USE_POSTGRES`, you can safely remove it.
+   :::
+
+2. **Post-migration cleanup** — if you completed the Platform-Managed Mode migration but haven't yet removed the one-time migration variables, this is a good time to clean them up.
+
+   :::tip Post-migration housekeeping
+   After a successful migration, the following variables are no longer needed and should be removed from your `extraEnv`:
+   - `KEYCLOAK_MIGRATION_ENABLED`
+   - `KEYCLOAK_ADMIN_URL`
+   - `KEYCLOAK_ADMIN_REALM`
+   - `KEYCLOAK_ADMIN_CLIENT_ID`
+   - `KEYCLOAK_ADMIN_CLIENT_SECRET`
+
+   See [Disable migration after the first run](../configuration/access-control/platform-managed-mode-configuration.md#22-disable-migration-after-the-first-run) for the full cleanup steps.
+   :::
+
+3. **`LITELLM_PREMIUM_MODELS_ALIASES` format changed to JSON array** — if you use this variable, update its value from a comma-separated string to a JSON array.
+
+   :::warning Format change required
+   The previous comma-separated format is no longer supported. Update your `extraEnv` before upgrading:
+
+   ```yaml
+   # Before
+   - name: LITELLM_PREMIUM_MODELS_ALIASES
+     value: "opus,o1"
+
+   # After
+   - name: LITELLM_PREMIUM_MODELS_ALIASES
+     value: '["opus", "o1"]'
+   ```
+
+   :::
+
+4. **`LITELLM_PREMIUM_MODELS_BUDGET_NAME` removed** — this variable was deprecated and is no longer supported. Remove it from your `extraEnv` if still present.
+
+   :::tip Configuration housekeeping
+   The budget name is now derived automatically from the `budget_category: premium_models` entry in `budgets-config.yaml`. No replacement variable is needed.
+   :::
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.26.0</strong></summary>
 
 **Release Date:** May 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.26.0)
