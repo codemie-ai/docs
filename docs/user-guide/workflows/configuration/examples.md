@@ -1267,3 +1267,92 @@ execution_config:
 - Data validation and enrichment
 
 ---
+
+### 11.5 Example: Human-in-the-Loop Workflow (interrupt_before)
+
+This workflow demonstrates how to pause execution before a critical state and wait for
+user review before proceeding. The pattern is based on the **Project Onboarding Kick-off**
+template: the workflow generates an onboarding email, converts it to HTML, and then pauses
+before sending — giving the user a chance to review and approve the final output.
+
+---
+
+**Complete YAML Configuration:**
+
+```yaml
+assistants:
+  - id: onboarding-writer
+    model: gpt-4.1
+    system_prompt: |
+      Generate a welcome onboarding email for a new team member.
+      Ask for the recipient's name or email address first, then produce
+      the full email body following the standard onboarding template.
+
+  - id: html-formatter
+    model: gpt-4.1
+    system_prompt: |
+      Convert the provided email text into a responsive HTML email.
+      Do not change any text or titles. Output only the HTML code block.
+
+  - id: email-sender
+    model: gpt-4.1
+    tools:
+      - name: Email
+    system_prompt: |
+      Send the provided HTML email to the recipient.
+      Before sending, summarise the email details and ask for explicit
+      approval. Send only after the user confirms.
+
+states:
+  - id: write-email
+    assistant_id: onboarding-writer
+    task: |
+      Take the recipient's email address and generate the onboarding email.
+    next:
+      state_id: format-html
+
+  - id: format-html
+    assistant_id: html-formatter
+    task: |
+      Transform the generated email text into a responsive HTML email.
+    next:
+      state_id: send-email
+
+  - id: send-email
+    assistant_id: email-sender
+    task: |
+      Send the HTML email to the recipient's address.
+    interrupt_before: true   # workflow pauses here — user reviews before sending
+    next:
+      state_id: end
+```
+
+**What happens at runtime:**
+
+1. `write-email` runs and generates the email text.
+2. `format-html` converts it to HTML.
+3. Before `send-email` executes, the workflow **pauses** and notifies the user.
+4. The user reviews the prepared email and clicks **Continue** or **Abort**.
+5. If continued, `send-email` dispatches the email via the Email tool.
+
+**Key concepts:**
+
+- `interrupt_before: true` on a state pauses the graph **before** that state runs — the
+  assistant has not executed yet, so no irreversible action has been taken.
+- Place the interrupt **after analysis / generation and before the side-effecting action**
+  (sending email, creating tickets, running `terraform apply`, etc.).
+- Only one `interrupt_before` state is needed per critical gate; chain multiple gates for
+  multi-step approval flows.
+- The deprecated `wait_for_user_confirmation` key maps to the same behavior but should
+  not be used in new configurations.
+
+**When to use `interrupt_before`:**
+
+| Use it for                                                     | Avoid it for                             |
+| -------------------------------------------------------------- | ---------------------------------------- |
+| Sending emails or notifications                                | Read-only analysis steps                 |
+| Creating or modifying Jira issues                              | Intermediate data transformations        |
+| Applying infrastructure changes (`terraform apply`, `kubectl`) | Low-risk, easily reversible operations   |
+| Any action the user should explicitly approve before it runs   | Steps that run dozens of times in a loop |
+
+---
