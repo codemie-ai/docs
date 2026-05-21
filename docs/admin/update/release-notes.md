@@ -45,6 +45,10 @@ No third-party component updates in this release.
 
    :::
 
+<h3>Hotfixes</h3>
+
+- **2.28.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.28.1) – May 21, 2026
+
 </details>
 
 <details>
