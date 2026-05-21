@@ -24,7 +24,13 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **`viteEnableAnalytics` removed from AI/Run CodeMie UI Helm chart** — this value and the corresponding `VITE_ENABLE_ANALYTICS` environment variable were deprecated and are no longer supported.
+
+   :::tip Configuration housekeeping
+   If your `AI/Run CodeMie UI` Helm chart values still contain `viteEnableAnalytics`, you can safely remove it.
+   :::
+
+2. **Infrastructure logs index renamed** — the default value of `ELASTIC_LOGS_INDEX` changed from `codemie_infra_logs*` to `logs-codemie-infra*`. If your deployment sets this value explicitly, update it accordingly. See [Logs Retention](../configuration/observability/logs-retention.md) for cleanup and retention configuration.
 
 </details>
 
