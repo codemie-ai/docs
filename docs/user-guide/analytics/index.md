@@ -34,6 +34,12 @@ If the widget shows no data, your administrator has not configured a budget limi
 account via LiteLLM. Contact your administrator to set up budget tracking.
 :::
 
+:::info Platform Admins: viewing another user's spending
+Platform Admins can view the budget spending for any individual user directly from the
+[Users Management](../project-user-management/users.md#budget-spending) page. Open the
+User Details panel for the target user to see their spending across all budget categories.
+:::
+
 ### Accessing the Widget
 
 1. Click your **profile icon** or **Settings** in the bottom-left navigation.

@@ -67,10 +67,44 @@ The panel shows:
 - **User Type**: `Regular` or `External`
 - **Email**: user's email address
 - **Projects** table — list of projects the user is assigned to, with their role in each
+- **Budget Spending** widget — current budget consumption for the selected user (see below)
 
 ![User Details panel for a Regular user](./images/user-details-regular.png)
 
 ![User Details panel for an External user](./images/user-details-external.png)
+
+### Budget Spending
+
+The **Budget Spending** widget is displayed at the bottom of the User Details panel and shows
+the current budget consumption for the selected user across all three budget categories.
+
+| Column               | Description                                                          |
+| -------------------- | -------------------------------------------------------------------- |
+| **Category**         | Budget category: **Platform**, **CLI**, or **Premium models**        |
+| **Current Spending** | Amount spent in the current budget period (USD)                      |
+| **Budget Limit**     | The configured maximum spend for the period (USD)                    |
+| **Budget Reset**     | The date and time when the budget counter resets                     |
+| **Time Until Reset** | Days, hours, and minutes remaining until the next budget reset       |
+| **Progress**         | Visual progress bar showing consumption relative to the budget limit |
+
+Each row represents one budget category. A row is shown only for categories that have a
+budget configured for the user.
+
+:::tip
+If the widget shows no data, no budget has been configured for the selected user. Budget limits
+are set up by a platform administrator via the LiteLLM integration. See
+[LiteLLM Budget Configuration](../../admin/configuration/extensions/litellm-proxy/budget-configuration.md)
+for details.
+:::
+
+:::info Prerequisites
+The Budget Spending widget requires:
+
+- **Platform-managed mode** enabled (`ENABLE_USER_MANAGEMENT=True`). See
+  [Platform-managed Mode Configuration](../../admin/configuration/access-control/platform-managed-mode-configuration.md).
+- **Budget management** enabled (`viteEnableBudgetManagement: true`). See
+  [Platform Administration](../../admin/configuration/codemie/platform-administration.md).
+  :::
 
 ## Manage a User's Project Assignments
 
