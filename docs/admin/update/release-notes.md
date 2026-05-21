@@ -27,15 +27,15 @@ No third-party component updates in this release.
 1. **`viteEnableAnalytics` removed from AI/Run CodeMie UI Helm chart** — this value and the corresponding `VITE_ENABLE_ANALYTICS` environment variable were deprecated and are no longer supported.
 
    :::tip Configuration housekeeping
-   If your `AI/Run CodeMie UI` Helm chart values still contain `viteEnableAnalytics`, you can safely remove it.
+   If the `AI/Run CodeMie UI` Helm chart values still contain `viteEnableAnalytics`, it can be safely removed.
    :::
 
-2. **Infrastructure logs index renamed** — the default value of `ELASTIC_LOGS_INDEX` changed from `codemie_infra_logs*` to `logs-codemie-infra*`. If your deployment sets this value explicitly, update it accordingly. See [Logs Retention](../configuration/observability/logs-retention.md) for cleanup and retention configuration.
+2. **Infrastructure logs index renamed** — the default value of `ELASTIC_LOGS_INDEX` changed from `codemie_infra_logs*` to `logs-codemie-infra*`. If this value is set explicitly in the deployment, update it accordingly. See [Logs Retention](../configuration/observability/logs-retention.md) for cleanup and retention configuration.
 
 3. **Upcoming change: ingress annotations** — the following oauth2-proxy ingress annotations will be removed from the **AI/Run CodeMie Backend** and **AI/Run CodeMie UI** Helm charts in a future release:
 
    :::warning Upcoming removal
-   These annotations will be removed in a future CodeMie release. Add them to your custom Helm values before upgrading to preserve this behavior.
+   These annotations will be removed in a future CodeMie release. Add them to the custom Helm values before upgrading to preserve this behavior.
 
    ```yaml
    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Access-Token,Authorization
@@ -61,13 +61,13 @@ No third-party component updates in this release.
 1. **`USE_POSTGRES` removed from AI/Run CodeMie Backend Helm Chart** — this variable was deprecated and is no longer supported.
 
    :::tip Configuration housekeeping
-   If your `AI/Run CodeMie Backend` Helm Chart values still contain `USE_POSTGRES`, you can safely remove it.
+   If the `AI/Run CodeMie Backend` Helm Chart values still contain `USE_POSTGRES`, it can be safely removed.
    :::
 
-2. **Post-migration cleanup** — if you completed the Platform-Managed Mode migration but haven't yet removed the one-time migration variables, this is a good time to clean them up.
+2. **Post-migration cleanup** — if the Platform-Managed Mode migration has been completed but the one-time migration variables have not yet been removed, this is a good time to clean them up.
 
    :::tip Post-migration housekeeping
-   After a successful migration, the following variables are no longer needed and should be removed from your `extraEnv`:
+   After a successful migration, the following variables are no longer needed and should be removed from `extraEnv`:
    - `KEYCLOAK_MIGRATION_ENABLED`
    - `KEYCLOAK_ADMIN_URL`
    - `KEYCLOAK_ADMIN_REALM`
@@ -77,10 +77,10 @@ No third-party component updates in this release.
    See [Disable migration after the first run](../configuration/access-control/platform-managed-mode-configuration.md#22-disable-migration-after-the-first-run) for the full cleanup steps.
    :::
 
-3. **`LITELLM_PREMIUM_MODELS_ALIASES` format changed to JSON array** — if you use this variable, update its value from a comma-separated string to a JSON array.
+3. **`LITELLM_PREMIUM_MODELS_ALIASES` format changed to JSON array** — if this variable is in use, update its value from a comma-separated string to a JSON array.
 
    :::warning Format change required
-   The previous comma-separated format is no longer supported. Update your `extraEnv` before upgrading:
+   The previous comma-separated format is no longer supported. Update `extraEnv` before upgrading:
 
    ```yaml
    # Before
@@ -94,7 +94,7 @@ No third-party component updates in this release.
 
    :::
 
-4. **`LITELLM_PREMIUM_MODELS_BUDGET_NAME` removed** — this variable was deprecated and is no longer supported. Remove it from your `extraEnv` if still present.
+4. **`LITELLM_PREMIUM_MODELS_BUDGET_NAME` removed** — this variable was deprecated and is no longer supported. Remove it from `extraEnv` if still present.
 
    :::tip Configuration housekeeping
    The budget name is now derived automatically from the `budget_category: premium_models` entry in `budgets-config.yaml`. No replacement variable is needed.
