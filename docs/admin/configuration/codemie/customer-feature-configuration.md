@@ -42,7 +42,7 @@ Use this table to quickly find where each component appears in the UI.
 | `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                        | No documentation link               | Triggers: User selects type from dropdown |
 | **ASSISTANT FEATURES**                    |                                                           |                                                                    |                                     |                                           |
 | `features:favorites`                      | Assistants list, Skills list, Workflows list              | Favorite/Unfavorite action buttons                                 | Favorite actions hidden             |                                           |
-| `features:pinnedAssistants`               | Assistants list, Chat sidebar                             | Pin/Unpin actions and Pinned Assistants sidebar section            | Pin actions and sidebar section hidden |                                        |
+| `features:pinnedAssistants`               | Assistants list, Navigation sidebar                       | Pin/Unpin actions and Pinned Assistants sidebar section            | Pin actions and sidebar section hidden |                                        |
 | `features:favoritesPage`                  | Main navigation                                           | Favorites page and navigation link                                 | Favorites page and nav link hidden  | Default: disabled                         |
 | **INTEGRATED APPLICATIONS**               |                                                           |                                                                    |                                     |                                           |
 | `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                         | Application card                    | Type: `module`, `iframe`, or `link`       |
@@ -309,7 +309,7 @@ components:
       name: "Favorites"
       description: "Enable favorite/unfavorite actions for assistants, skills, and workflows"
 
-  # WHERE: Assistants list, Chat interface sidebar
+  # WHERE: Assistants list, Navigation sidebar
   # ENABLED: Shows pin/unpin actions and Pinned Assistants section in sidebar
   # DISABLED: Hides pin actions and pinned assistants sidebar section
   - id: "features:pinnedAssistants"
