@@ -40,6 +40,10 @@ Use this table to quickly find where each component appears in the UI.
 | `helpLinks:workflows:configuration`       | Workflow editor → YAML tab                                | Help documentation link                                            | No documentation link               | Triggers: User switches to YAML           |
 | `helpLinks:integrations:selection:<type>` | Integration creation form                                 | Help link for selected type                                        | No documentation link               | Triggers: User selects type from dropdown |
 | `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                        | No documentation link               | Triggers: User selects type from dropdown |
+| **ASSISTANT FEATURES**                    |                                                           |                                                                    |                                     |                                           |
+| `features:favorites`                      | Assistants list, Skills list, Workflows list              | Favorite/Unfavorite action buttons                                 | Favorite actions hidden             |                                           |
+| `features:pinnedAssistants`               | Assistants list, Chat sidebar                             | Pin/Unpin actions and Pinned Assistants sidebar section            | Pin actions and sidebar section hidden |                                        |
+| `features:favoritesPage`                  | Main navigation                                           | Favorites page and navigation link                                 | Favorites page and nav link hidden  | Default: disabled                         |
 | **INTEGRATED APPLICATIONS**               |                                                           |                                                                    |                                     |                                           |
 | `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                         | Application card                    | Type: `module`, `iframe`, or `link`       |
 | **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                    |                                     |                                           |
@@ -295,6 +299,34 @@ components:
       enabled: true
       name: "Code Interpreter"
       description: "Enable Python code execution and data analysis capabilities"
+
+  # WHERE: Assistants list, Skills list, Workflows list
+  # ENABLED: Shows favorite/unfavorite action buttons on items
+  # DISABLED: Hides favorite actions
+  - id: "features:favorites"
+    settings:
+      enabled: true
+      name: "Favorites"
+      description: "Enable favorite/unfavorite actions for assistants, skills, and workflows"
+
+  # WHERE: Assistants list, Chat interface sidebar
+  # ENABLED: Shows pin/unpin actions and Pinned Assistants section in sidebar
+  # DISABLED: Hides pin actions and pinned assistants sidebar section
+  - id: "features:pinnedAssistants"
+    settings:
+      enabled: true
+      name: "Pinned Assistants"
+      description: "Enable pin/unpin actions for assistants and the pinned assistants sidebar section"
+
+  # WHERE: Main navigation
+  # ENABLED: Shows dedicated Favorites page and its navigation link
+  # DISABLED: Hides Favorites page and navigation link
+  # NOTE: Disabled by default
+  - id: "features:favoritesPage"
+    settings:
+      enabled: false
+      name: "Favorites Page"
+      description: "Enable the dedicated Favorites page and its navigation link"
 ```
 
 ### Integrated Applications
@@ -938,6 +970,24 @@ extraObjects:
               enabled: true
               name: "Code Interpreter"
               description: "Enable Python code execution and data analysis capabilities"
+
+          - id: "features:favorites"
+            settings:
+              enabled: true
+              name: "Favorites"
+              description: "Enable favorite/unfavorite actions for assistants, skills, and workflows"
+
+          - id: "features:pinnedAssistants"
+            settings:
+              enabled: true
+              name: "Pinned Assistants"
+              description: "Enable pin/unpin actions for assistants and the pinned assistants sidebar section"
+
+          - id: "features:favoritesPage"
+            settings:
+              enabled: false
+              name: "Favorites Page"
+              description: "Enable the dedicated Favorites page and its navigation link"
 
           # Integrated Applications
           - id: "applications:angular-upgrade-app"
