@@ -14,6 +14,37 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.29.0 RC</strong></summary>
+
+**Release Date:** TBD
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **[BREAKING]** Ingress annotations removed from upstream Helm charts
+
+   :::danger Breaking Change
+   Add these annotations to the custom Helm values before upgrading to preserve oauth2-proxy authentication behavior.
+   :::
+
+   The following oauth2-proxy ingress annotations announced for removal in 2.28.0 have been removed from the **AI/Run CodeMie Backend** and **AI/Run CodeMie UI** Helm charts:
+
+   ```yaml
+   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Access-Token,Authorization
+   nginx.ingress.kubernetes.io/auth-signin: https://$host/oauth2/start?rd=$escaped_request_uri
+   nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.oauth2-proxy.svc.cluster.local:80/oauth2/auth
+   ```
+
+<h3>Hotfixes</h3>
+
+No hotfixes in this release.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.28.0</strong></summary>
 
 **Release Date:** May 21, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.28.0)
