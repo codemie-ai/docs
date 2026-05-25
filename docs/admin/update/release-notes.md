@@ -42,6 +42,13 @@ No third-party component updates in this release.
 
 - **2.29.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.29.1) – May 25, 2026
 
+  **Configuration Changes**
+  1. **`opsPool` removed from AI/Run CodeMie Backend Helm chart** — this workload was deprecated and is no longer supported. Remove all `opsPool.*` fields from the custom Helm values before upgrading.
+
+     :::tip Configuration housekeeping
+     If the **AI/Run CodeMie Backend** Helm chart values still contain `opsPool`, it can be safely removed.
+     :::
+
 </details>
 
 <details>
