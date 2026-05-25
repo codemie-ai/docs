@@ -287,6 +287,8 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
+            'user-guide/codemie-cli/codemie-claude-skills',
+            'user-guide/codemie-cli/sdk-cli-reference',
           ],
         },
         {
@@ -674,6 +676,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/project-budget-management',
               ],
             },
             {

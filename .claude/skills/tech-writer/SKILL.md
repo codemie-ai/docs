@@ -418,8 +418,12 @@ pagination_next: section/next-step
    (basic → advanced). Include prerequisites. Numbered lists for sequential steps,
    bullets for non-sequential items.
 
-3. **User focus**: Write from user's perspective ("You will...", not "The system will...").
-   Include real-world examples. Anticipate common questions. Provide expected outcomes.
+3. **Impersonal voice**: Never use "you" or "your" in documentation. Write impersonally using
+   passive constructions or referring to roles/components directly.
+   - ✅ "If the value is set explicitly, update it accordingly."
+   - ✅ "If the Helm chart values still contain `X`, it can be safely removed."
+   - ❌ "If your deployment sets this value, update your config."
+     Include real-world examples. Anticipate common questions. Provide expected outcomes.
 
 4. **Code examples**: Complete, runnable examples with expected output. Always specify
    language. Explain what the code does, not just how.
@@ -478,7 +482,8 @@ For each pending screenshot:
 - [ ] Admonitions use Docusaurus syntax (`:::type`)
 - [ ] Pagination configured appropriately
 - [ ] Sidebar updated in sidebars.ts if new page created
-- [ ] Self-review: read through as target user, verify all steps logical and complete
+- [ ] No "you" or "your" in the documentation — use impersonal constructions throughout
+- [ ] Self-review: read through as target reader, verify all steps logical and complete
 
 ### Validation
 

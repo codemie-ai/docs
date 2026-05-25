@@ -9,6 +9,10 @@ sidebar_position: 21
 
 # Adding an MCP Server
 
+:::note Restricted Mode
+Your administrator may enable the **mcpCustomServersDisabled** component. When active, only MCP servers from the admin-managed catalog are permitted. The **Manual Setup** option will be blocked at save time. Contact your platform administrator if you need to use a server that is not in the catalog.
+:::
+
 ## Configuration Steps
 
 1. Navigate to the **Create Assistant** or **Edit Assistant** page

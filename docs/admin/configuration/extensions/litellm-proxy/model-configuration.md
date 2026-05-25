@@ -346,13 +346,14 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### Vertex AI Models
 
-| Model Name                                                         | Description                    |
-| ------------------------------------------------------------------ | ------------------------------ |
-| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1)                  | Claude 4.5 Sonnet              |
-| [`gemini-3-flash`](#gemini-3-flash)                                | Gemini 3 Flash                 |
-| [`gemini-3.1-pro`](#gemini-31-pro)                                 | Gemini 3.1 Pro                 |
-| [`gemini-3.1-flash-image-preview`](#gemini-31-flash-image-preview) | Gemini 3.1 Flash Image Preview |
-| [`text-embedding-005`](#embeddings-for-text)                       | Text Embedding                 |
+| Model Name                                                         | Description                                    |
+| ------------------------------------------------------------------ | ---------------------------------------------- |
+| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1)                  | Claude 4.5 Sonnet                              |
+| [`gemini-3-flash`](#gemini-3-flash)                                | Gemini 3 Flash                                 |
+| [`gemini-3.1-pro`](#gemini-31-pro)                                 | Gemini 3.1 Pro                                 |
+| [`gemini-3.1-flash-image-preview`](#gemini-31-flash-image-preview) | Gemini 3.1 Flash Image Preview (Nano Banana 2) |
+| [`gemini-3.5-flash`](#gemini-35-flash)                             | Gemini 3.5 Flash                               |
+| [`text-embedding-005`](#embeddings-for-text)                       | Text Embedding                                 |
 
 ### GitHub Copilot Models
 
@@ -1287,6 +1288,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     base_model: gemini-3.1-flash-image-preview
     label: "Gemini 3.1 Flash Image Preview"
     forbidden_for_web: true
+```
+
+</details>
+
+#### Gemini 3.5 Flash
+
+<details>
+<summary><strong>Gemini 3.5 Flash</strong></summary>
+
+```yaml
+- model_name: gemini-3.5-flash
+  litellm_params:
+    model: vertex_ai/gemini-3.5-flash
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.5-flash-global
+    base_model: gemini-3.5-flash
+    label: "Gemini 3.5 Flash"
 ```
 
 </details>
