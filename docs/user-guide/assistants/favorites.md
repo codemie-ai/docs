@@ -54,8 +54,8 @@ The Favorites page is available when enabled by your administrator.
 
 Use the type tabs in the left panel to view a specific category:
 
-| Tab            | Shows                     |
-| -------------- | ------------------------- |
+| Tab            | Shows                    |
+| -------------- | ------------------------ |
 | **All**        | All favorite items       |
 | **Assistants** | Only favorite assistants |
 | **Skills**     | Only favorite skills     |
