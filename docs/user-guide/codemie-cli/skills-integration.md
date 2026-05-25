@@ -132,10 +132,10 @@ cat prompt.txt | codemie skill run "<skill-id>"
 
 **Options:**
 
-| Flag | Short | Description |
-| ---- | ----- | ----------- |
-| `--conversation-id <id>` | | Continue a previous conversation. History is stored in `~/.codemie/sessions/`. Also accepts the `CODEMIE_SESSION_ID` environment variable |
-| `--verbose` | `-v` | Enable debug output |
+| Flag                     | Short | Description                                                                                                                               |
+| ------------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `--conversation-id <id>` |       | Continue a previous conversation. History is stored in `~/.codemie/sessions/`. Also accepts the `CODEMIE_SESSION_ID` environment variable |
+| `--verbose`              | `-v`  | Enable debug output                                                                                                                       |
 
 :::tip
 Not sure of the skill's ID? It is embedded in the generated `SKILL.md` file at
