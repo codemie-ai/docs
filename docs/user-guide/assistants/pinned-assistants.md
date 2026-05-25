@@ -17,7 +17,7 @@ Pin assistants to the navigation sidebar to open a new chat in one click, withou
 You can pin an assistant from any of these locations:
 
 - **Assistants** → **Project Assistants** or **Marketplace** — click the **Pin** button (pin icon) on the assistant card
-- **Favorites** tab or **Favorites** page — click the **Pin** button on a favorited assistant card
+- **Favorites** tab or **Favorites** page — click the **Pin** button on a favorite assistant card
 - **Assistant Details** page — click the **Pin** button on the details page
 
 ![Pin button on an assistant card](./images/pin-button-on-card.png)

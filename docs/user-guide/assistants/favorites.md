@@ -27,12 +27,12 @@ Each card has a **star icon** in the top-right corner. Click it to mark the item
 The star icon fills in to confirm the item is saved. Click it again to remove the item from favorites.
 
 :::tip
-Favorites are personal — only you see your favorited items.
+Favorites are personal — only you see your favorite items.
 :::
 
 ## View Favorites Within a Section
 
-Each section (**Assistants**, **Skills**, **Workflows**) has a **Favorites** tab in the left filter panel under **Browse**. Click it to show only your favorited items in that section:
+Each section (**Assistants**, **Skills**, **Workflows**) has a **Favorites** tab in the left filter panel under **Browse**. Click it to show only your favorite items in that section:
 
 ![Favorites tab in the Assistants section](./images/favorites-tab.png)
 
@@ -42,9 +42,9 @@ You can combine the Favorites tab with other filters (Project, Categories, Creat
 
 ## Favorites Page
 
-The **Favorites** page in the navigation sidebar collects all your favorited assistants, skills, and workflows in one place:
+The **Favorites** page in the navigation sidebar collects all your favorite assistants, skills, and workflows in one place:
 
-![Favorites page showing all favorited items](./images/favorites-sidebar-page.png)
+![Favorites page showing all favorite items](./images/favorites-sidebar-page.png)
 
 :::info
 The Favorites page is available when enabled by your administrator.
@@ -56,16 +56,16 @@ Use the type tabs in the left panel to view a specific category:
 
 | Tab            | Shows                     |
 | -------------- | ------------------------- |
-| **All**        | All favorited items       |
-| **Assistants** | Only favorited assistants |
-| **Skills**     | Only favorited skills     |
-| **Workflows**  | Only favorited workflows  |
+| **All**        | All favorite items       |
+| **Assistants** | Only favorite assistants |
+| **Skills**     | Only favorite skills     |
+| **Workflows**  | Only favorite workflows  |
 
 You can also use the search box and additional filters (Project, Created By) to narrow the results:
 
 ![Favorites page filtered to Skills with a search applied](./images/favorites-sidebar-page-filtered.png)
 
-### Actions on Favorited Items
+### Actions on Favorite Items
 
 On the Favorites page you can use the same actions as on the main section pages:
 
