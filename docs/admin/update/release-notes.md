@@ -38,6 +38,10 @@ No third-party component updates in this release.
    nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.oauth2-proxy.svc.cluster.local:80/oauth2/auth
    ```
 
+<h3>Hotfixes</h3>
+
+- **2.29.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.29.1) – May 25, 2026
+
 </details>
 
 <details>
