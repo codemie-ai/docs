@@ -305,6 +305,7 @@ words:
   - pguser
   - dbname
   - jdbc
+  - msgraph
   - mflens
   - APIURL
   - DEPLOYMENTNAME
