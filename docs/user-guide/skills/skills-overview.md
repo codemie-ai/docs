@@ -66,7 +66,7 @@ Public skills can be discovered and attached from the Skills Marketplace.
 
 You can mark any skill as a favorite for quick access. Click the **Favorite** button (star icon) on a skill card to save it. All favorite skills are available on the **Favorites** page in the left navigation panel, alongside favorite assistants and workflows.
 
-See [Favorites and Pinned Assistants](../assistants/favorites-and-pinned-assistants.md) for full details.
+See [Favorites](../assistants/favorites.md) for full details.
 
 ## Getting Started
 

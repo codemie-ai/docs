@@ -211,7 +211,7 @@ The abort button is only available while the workflow is actively executing.
 
 You can mark any workflow as a favorite for quick access. Click the **Favorite** button (star icon) on a workflow card to save it. All favorite workflows are available on the **Favorites** page in the left navigation panel, alongside favorite assistants and skills.
 
-See [Favorites and Pinned Assistants](../assistants/favorites-and-pinned-assistants.md) for full details.
+See [Favorites](../assistants/favorites.md) for full details.
 
 ![Abort workflow button](./images/workflows-overview/execution-abort-button.png)
 
