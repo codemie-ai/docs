@@ -10,7 +10,7 @@ Examples where webhooks are beneficial:
 
 3. Trigger a customer support assistant when a new support ticket is created in your helpdesk system.
 
-To create a webhook integrations (Project Admins only)application-admins to request permission you can create support request ticket [https://support.epam.com/ess?id=sc_cat_item\&sys_id=a914679897ffd910386e3a871153afca\&name=RequestHelpOrConsultation\&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D), follow the steps below:
+To create webhook integrations, you must have the **Project Admin** role. If you are not a Project Admin, contact your project administrator to request access. Once you have the required role, follow the steps below:
 
 1. Create the assistant you want to react to webhooks.
 

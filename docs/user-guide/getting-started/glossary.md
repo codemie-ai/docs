@@ -194,6 +194,10 @@ A workspace within the CodeMie platform that delineates and isolates working env
 
 **Important**: Project names must be in lowercase only. Uppercase characters are not allowed in project names.
 
+### Platform Admin
+
+A user with platform-wide administrative privileges in CodeMie, identified by the `isAdmin = true` flag. Platform Admins can create projects, manage all users and integrations, access platform-wide analytics data, and perform all administrative operations across the entire platform, regardless of project membership.
+
 ### Project Admin
 
 A user with administrative privileges within the CodeMie platform. Project Admins have extended functionality including the ability configure Project Integrations (available to all team members), view all project assistants and workflows and manage project-level settings. Only Admin roles or user with attribute applications_admin have access to these administrative functions.

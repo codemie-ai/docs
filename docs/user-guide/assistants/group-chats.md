@@ -2,7 +2,7 @@
 id: group-chats
 sidebar_position: 13
 title: Group Chats
-pagination_prev: user-guide/assistants/sub-assistants-multi-assistant-orchestrator
+pagination_prev: user-guide/assistants/search-chats
 pagination_next: user-guide/assistants/folders-overview
 description: Communicate with multiple assistants in a single chat conversation
 ---

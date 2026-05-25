@@ -34,6 +34,12 @@ If the widget shows no data, your administrator has not configured a budget limi
 account via LiteLLM. Contact your administrator to set up budget tracking.
 :::
 
+:::info Platform Admins: viewing another user's spending
+Platform Admins can view the budget spending for any individual user directly from the
+[Users Management](../project-user-management/users.md#budget-spending) page. Open the
+User Details panel for the target user to see their spending across all budget categories.
+:::
+
 ### Accessing the Widget
 
 1. Click your **profile icon** or **Settings** in the bottom-left navigation.
@@ -131,3 +137,15 @@ The Analytics Dashboard features a powerful filtering system that allows you to 
 - **Combined Filtering**: All active filters work together to refine data
 - **Persistent Selections**: Filter choices remain active as you navigate between dashboard sections
 - **Clear All**: Reset all filters with a single action using the "Clear all" button
+
+## AI Champions Leaderboard
+
+The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by
+their overall AI platform engagement score. Scores are calculated across six dimensions —
+from daily platform usage to CLI-based agentic engineering — and users are grouped into
+tiers from Newcomer to Pioneer.
+
+Platform admins can browse the full ranked leaderboard with filters and drill into individual
+user profiles. Regular users can view their own score and tier.
+
+See [AI Champions Leaderboard](./ai-champions-leaderboard.md) for the full overview.

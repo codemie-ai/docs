@@ -1,8 +1,6 @@
 [extend]
 useDefault = true
 
-[allowlist]
-paths = [
-  '''build/''',
-  '''.docusaurus/''',
-]
+[[allowlists]]
+description = "Ignore gitignored directories not relevant for secret scanning"
+paths = ['''.idea/''', '''build/''', '''node_modules/''']

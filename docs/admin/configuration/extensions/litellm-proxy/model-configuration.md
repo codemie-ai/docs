@@ -335,6 +335,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5-2-2025-12-11`](#gpt-52)                             | GPT-5.2                |
 | [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`gpt-5.4-2026-03-05`](#gpt-54)                             | GPT-5.4                |
+| [`gpt-5.5-2026-04-24`](#gpt-55)                             | GPT-5.5                |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -345,13 +346,14 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### Vertex AI Models
 
-| Model Name                                                         | Description                    |
-| ------------------------------------------------------------------ | ------------------------------ |
-| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1)                  | Claude 4.5 Sonnet              |
-| [`gemini-3-flash`](#gemini-3-flash)                                | Gemini 3 Flash                 |
-| [`gemini-3.1-pro`](#gemini-31-pro)                                 | Gemini 3.1 Pro                 |
-| [`gemini-3.1-flash-image-preview`](#gemini-31-flash-image-preview) | Gemini 3.1 Flash Image Preview |
-| [`text-embedding-005`](#embeddings-for-text)                       | Text Embedding                 |
+| Model Name                                                         | Description                                    |
+| ------------------------------------------------------------------ | ---------------------------------------------- |
+| [`claude-4-5-sonnet-vertex`](#claude-sonnet-45-1)                  | Claude 4.5 Sonnet                              |
+| [`gemini-3-flash`](#gemini-3-flash)                                | Gemini 3 Flash                                 |
+| [`gemini-3.1-pro`](#gemini-31-pro)                                 | Gemini 3.1 Pro                                 |
+| [`gemini-3.1-flash-image-preview`](#gemini-31-flash-image-preview) | Gemini 3.1 Flash Image Preview (Nano Banana 2) |
+| [`gemini-3.5-flash`](#gemini-35-flash)                             | Gemini 3.5 Flash                               |
+| [`text-embedding-005`](#embeddings-for-text)                       | Text Embedding                                 |
 
 ### GitHub Copilot Models
 
@@ -930,6 +932,39 @@ model_list:
 
 </details>
 
+### GPT-5.5 series
+
+#### GPT-5.5
+
+<details>
+<summary><strong>GPT-5.5</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.5-2026-04-24
+  litellm_params:
+    model: azure/codemie-gpt-5.5-2026-04-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-5-2026-04-24-eastus2-0
+    base_model: azure/gpt-5.5
+    label: "GPT-5.5"
+
+# EU Region
+- model_name: gpt-5.5-2026-04-24
+  litellm_params:
+    model: azure/codemie-gpt-5.5-2026-04-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-5-2026-04-24-swedencentral-0
+    base_model: azure/gpt-5.5
+    label: "GPT-5.5"
+```
+
+</details>
+
 ### GPT-5-codex
 
 #### GPT-5.3-codex
@@ -1253,6 +1288,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     base_model: gemini-3.1-flash-image-preview
     label: "Gemini 3.1 Flash Image Preview"
     forbidden_for_web: true
+```
+
+</details>
+
+#### Gemini 3.5 Flash
+
+<details>
+<summary><strong>Gemini 3.5 Flash</strong></summary>
+
+```yaml
+- model_name: gemini-3.5-flash
+  litellm_params:
+    model: vertex_ai/gemini-3.5-flash
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.5-flash-global
+    base_model: gemini-3.5-flash
+    label: "Gemini 3.5 Flash"
 ```
 
 </details>

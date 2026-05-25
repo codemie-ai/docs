@@ -82,18 +82,10 @@ Kibana can be accessed at:
 - Username: `elastic`
 - Password: Retrieved from Elasticsearch secret (see [Data Layer](../data-layer#step-2-create-elasticsearch-credentials-secret))
 
-### Step 6: Configure Log Index Pattern (Optional)
+### Step 6: Review Logs (Optional)
 
-If you enabled infrastructure logging, configure the index pattern to view logs:
-
-1. Navigate to **Stack Management** → **Index Patterns**
-2. Click **Create index pattern**
-3. Enter index pattern: `codemie_infra_logs*`
-4. Select timestamp field: `@timestamp`
-5. Click **Create index pattern**
-
-Now you can view historical infrastructure logs in **Discover** section.
+If infrastructure logging is enabled, you can access historical infrastructure logs in **Discover** section.
 
 :::note Metrics Index
-The `codemie_metrics_logs` index for user metrics is automatically configured during Kibana Dashboards installation. You don't need to create it manually.
+The `codemie_metrics_logs` data view for user metrics is automatically configured during [Kibana Dashboards](#kibana-dashboards-installation) installation.
 :::

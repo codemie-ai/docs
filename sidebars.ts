@@ -59,6 +59,7 @@ const sidebars: SidebarsConfig = {
               label: 'Organizing and Managing Communication with Assistants',
               collapsed: true,
               items: [
+                'user-guide/assistants/search-chats',
                 'user-guide/assistants/group-chats',
                 'user-guide/assistants/folders-overview',
                 'user-guide/assistants/supported-file-formats-and-csv-handling-in-chat-assistant',
@@ -284,6 +285,8 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
+            'user-guide/codemie-cli/codemie-claude-skills',
+            'user-guide/codemie-cli/sdk-cli-reference',
           ],
         },
         {
@@ -301,9 +304,14 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'doc',
-          id: 'user-guide/analytics/analytics-overview',
+          type: 'category',
           label: 'Analytics',
+          link: {
+            type: 'doc',
+            id: 'user-guide/analytics/analytics-overview',
+          },
+          collapsed: true,
+          items: ['user-guide/analytics/ai-champions-leaderboard'],
         },
         {
           type: 'category',
@@ -620,6 +628,7 @@ const sidebars: SidebarsConfig = {
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
                 'admin/deployment/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
                 'admin/deployment/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
+                'admin/deployment/extensions/mf-lens/mf-lens',
               ],
             },
           ],
@@ -665,6 +674,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/project-budget-management',
               ],
             },
             {
@@ -677,6 +687,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: [
                 'admin/configuration/access-control/initial-realm-setup',
+                'admin/configuration/access-control/platform-managed-mode-configuration',
                 {
                   type: 'category',
                   label: 'User Provisioning',
@@ -730,6 +741,16 @@ const sidebars: SidebarsConfig = {
                   ],
                 },
               ],
+            },
+            {
+              type: 'category',
+              label: 'Observability',
+              link: {
+                type: 'doc',
+                id: 'admin/configuration/observability/observability-overview',
+              },
+              collapsed: true,
+              items: ['admin/configuration/observability/logs-retention'],
             },
           ],
         },
