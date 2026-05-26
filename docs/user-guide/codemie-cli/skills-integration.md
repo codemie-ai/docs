@@ -14,7 +14,8 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 <EnterpriseFeature />
 
 CodeMie CLI lets you install any CodeMie skill into Claude Code so you can invoke it directly
-as a slash command from your coding session.
+as a slash command from your coding session. You can also run skills directly from the terminal
+at any time using `codemie skill run`.
 
 ## Prerequisites
 
@@ -106,6 +107,39 @@ Then invoke a skill by typing `/` followed by its name:
 :::tip
 Not sure of the skill's name? Re-run `codemie setup skills` and check the **Registered** tab,
 or type `/` in Claude Code to see all available slash commands.
+:::
+
+## Step 3: Run a Skill from the Terminal
+
+You can also execute skills directly from the terminal without opening Claude Code.
+
+### Single-Message Mode
+
+Pass the skill ID and message as arguments to get a single response:
+
+```bash
+codemie skill run "<skill-id>" "Help me write a PRD for this feature"
+```
+
+Only the skill's response is printed — useful in scripts or when called from other tools.
+
+### Pipe a message from stdin
+
+```bash
+echo "Summarize this pull request" | codemie skill run "<skill-id>"
+cat prompt.txt | codemie skill run "<skill-id>"
+```
+
+**Options:**
+
+| Flag                     | Short | Description                                                                                                                               |
+| ------------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `--conversation-id <id>` |       | Continue a previous conversation. History is stored in `~/.codemie/sessions/`. Also accepts the `CODEMIE_SESSION_ID` environment variable |
+| `--verbose`              | `-v`  | Enable debug output                                                                                                                       |
+
+:::tip
+Not sure of the skill's ID? It is embedded in the generated `SKILL.md` file at
+`~/.claude/skills/<skill-slug>/SKILL.md` (global) or `.claude/skills/<skill-slug>/SKILL.md` (local).
 :::
 
 ## Managing Registered Skills
