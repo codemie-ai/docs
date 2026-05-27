@@ -38,12 +38,6 @@ No third-party component updates in this release.
    nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.oauth2-proxy.svc.cluster.local:80/oauth2/auth
    ```
 
-2. **`opsPool` removed from AI/Run CodeMie Backend Helm chart** — this workload was deprecated and is no longer supported. Remove all `opsPool.*` fields from the custom Helm values before upgrading.
-
-   :::tip Configuration housekeeping
-   If the **AI/Run CodeMie Backend** Helm chart values still contain `opsPool`, it can be safely removed.
-   :::
-
 <h3>Hotfixes</h3>
 
 - **2.29.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.29.1) – May 25, 2026
