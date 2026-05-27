@@ -72,7 +72,9 @@ This allows to use claude without Claude subscription and obtaining Anthropic AP
 
 ![Marketplace](./images/configure-claude-proxy.png)
 
-2. Open Claude Code extension and start working with it
+2. Open the Claude Code extension UI in VS Code and use it from the plugin sidebar/interface.
+
+   > Important: use the Claude Code **plugin UI**, not Claude Code **CLI mode**. The CodeMie proxy integration is intended for the VS Code extension experience.
 
 ![Marketplace](./images/claude-extension-usage.png)
 
