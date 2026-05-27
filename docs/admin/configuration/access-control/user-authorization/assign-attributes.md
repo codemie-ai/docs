@@ -3,6 +3,8 @@ id: assign-attributes
 sidebar_position: 3
 title: Assign Attributes
 description: Configure user access to projects and features
+pagination_prev: admin/configuration/access-control/user-authorization/user-authorization-overview
+pagination_next: admin/configuration/access-control/user-authorization/configure-guest-mapper
 ---
 
 :::warning Keycloak-managed mode only

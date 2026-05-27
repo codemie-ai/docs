@@ -4,7 +4,7 @@ title: Data Processing & Storage Architecture
 sidebar_label: Data Processing & Storage
 sidebar_position: 1
 pagination_prev: admin/security/index
-pagination_next: null
+pagination_next: admin/security/roles-rbac
 ---
 
 # CodeMie Platform - Data Processing & Storage Architecture
