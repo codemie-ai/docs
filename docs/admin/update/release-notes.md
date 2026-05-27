@@ -20,7 +20,9 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Keycloak Operator 1.34.0</h4>
+
+keycloak-operator has been updated from 1.32.0 to 1.34.0 (Helm chart 1.32.0 to 1.34.0). For details, see the [keycloak-operator 1.34.0 Release Notes ↗](https://github.com/epam/edp-keycloak-operator/releases/tag/v1.34.0).
 
 <h3>Configuration Changes</h3>
 
