@@ -54,7 +54,7 @@ Role descriptions and capability details are documented in
 
 Source:
 
-- [CodeMie Roles Overview](https://codemie-ai.github.io/docs/admin/security/roles-rbac)
+- [CodeMie Roles Overview](./security/roles-rbac.md)
 
 </details>
 
