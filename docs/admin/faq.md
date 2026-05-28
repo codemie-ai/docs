@@ -46,6 +46,18 @@ Integration actions, including supplying credentials and configuring connections
 
 </details>
 
+<details>
+<summary><strong>What roles does CodeMie have and what can each role do?</strong></summary>
+
+Role descriptions and capability details are documented in
+[Role Descriptions](./security/roles-rbac.md#role-descriptions).
+
+Source:
+
+- [CodeMie Roles Overview](https://codemie-ai.github.io/docs/admin/security/roles-rbac)
+
+</details>
+
 ## Authentication & Identity
 
 <details>
