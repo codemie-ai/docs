@@ -9,12 +9,12 @@ pagination_next: null
 
 # CodeMie Roles Overview
 
-CodeMie uses a role-based access control model built on top of Keycloak.
-This page describes the platform roles and how they map to Keycloak realm roles and user attributes.
+A role-based access control model built on top of Keycloak is used in CodeMie.
+The platform roles and their mapping to Keycloak realm roles and user attributes are described on this page.
 
 ## Roles in CodeMie
 
-CodeMie has five role levels:
+Five role levels are defined in CodeMie:
 
 1. **Maintainer**
 2. **Admin**
@@ -26,8 +26,8 @@ CodeMie has five role levels:
 
 ### Realm Roles
 
-- The `admin` realm role in Keycloak grants platform-level **Admin** rights in CodeMie.
-- The `developer` realm role does not grant elevated admin rights by itself.
+- Platform-level **Admin** rights in CodeMie are granted by the `admin` realm role in Keycloak.
+- Elevated admin rights are not granted by the `developer` realm role by itself.
   It is treated as a standard user role unless additional Project Admin access is explicitly assigned.
 
 ### Project Attributes
@@ -39,49 +39,31 @@ CodeMie has five role levels:
 
 **Attribute resolution rules:**
 
-- If a project appears in **both** attributes, the user is treated as **Project Admin** for that project.
-- If a project appears **only** in `applications_admin`, the user still receives Project Admin access.
+- If a project is present in **both** attributes, the user is treated as **Project Admin** for that project.
+- If a project is present **only** in `applications_admin`, Project Admin access is still granted.
 
-### Note on Access Timing
+:::tip Note on Access Timing
 
 - In deployments where user management is enabled inside CodeMie, project access and admin status
   are read from identity data at first sign-in and then managed within CodeMie.
 - In deployments where user management is **not** enabled in CodeMie, platform admin status
   is resolved directly from the identity provider settings on each authentication.
+  :::
 
 ## Role Descriptions
 
-### Maintainer
-
-- Highest operational role in the platform.
-- Includes all Admin rights.
-- Exclusively manages budget and billing controls.
-- Assigned in CodeMie directly — not a separate Keycloak realm role.
-
-### Admin
-
-- Platform-wide administrative access.
-- Manages users and access assignments across the platform.
-- Manages key platform settings and operational views.
-- Does **not** automatically include Maintainer-only budget controls.
-
-### Project Admin
-
-- Administrative rights scoped to specific projects only.
-- Can manage members and project-level access within those projects.
-- Can view project-level analytics, including spending trends, for managed projects.
-- Cannot perform platform-wide admin actions.
-
-### Regular User
-
-- Works with own and shared resources.
-- Has access only to assigned projects and knowledge sources.
-- Can view own usage and spending analytics in accessible projects.
-
-### External User
-
-- A special user type for external or guest scenarios.
-- Follows regular-user behavior by default, but with stricter limits where required.
+| Capability / Scope                                       | Maintainer                                                        | Admin                                   | Project Admin                                                | Regular User                             | External User                                          |
+| -------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------ |
+| Role level                                               | Highest operational role                                          | Platform-wide administrative role       | Project-scoped administrative role                           | Standard user role                       | Special user type for guest/external scenarios         |
+| Platform-wide admin access                               | Yes                                                               | Yes                                     | No                                                           | No                                       | No                                                     |
+| Manage users and access assignments across the platform  | Yes                                                               | Yes                                     | No                                                           | No                                       | No                                                     |
+| Manage key platform settings and operational views       | Yes                                                               | Yes                                     | No                                                           | No                                       | No                                                     |
+| Manage budget and billing controls                       | Yes (exclusive)                                                   | No                                      | No                                                           | No                                       | No                                                     |
+| Manage members and project-level access                  | Yes                                                               | Yes                                     | Yes (managed projects only)                                  | No                                       | No                                                     |
+| View project-level analytics (including spending trends) | Yes                                                               | Yes                                     | Yes (managed projects only)                                  | No                                       | No                                                     |
+| View own usage and spending analytics                    | Yes                                                               | Yes                                     | Yes                                                          | Yes                                      | Yes (where access is allowed)                          |
+| Access scope                                             | Platform-wide                                                     | Platform-wide                           | Assigned projects only                                       | Assigned projects and knowledge sources  | Regular-user scope with stricter limits where required |
+| Assignment model                                         | Assigned in CodeMie directly (not a separate Keycloak realm role) | Granted via Keycloak `admin` realm role | Derived from project attributes such as `applications_admin` | Derived from standard access assignments | Determined by external/guest user classification       |
 
 ## Role Hierarchy
 
