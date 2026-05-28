@@ -15,35 +15,36 @@ Control which features, UI elements, and integrations are available to users in 
 
 Use this table to quickly find where each component appears in the UI.
 
-| Component ID                              | Where It Appears                                          | When Enabled Shows                                                 | When Disabled Hides                 | Notes                                     |
-| ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------- | ----------------------------------------- |
-| **CORE FEATURES**                         |                                                           |                                                                    |                                     |                                           |
-| `adminActions`                            | Settings → Administration                                 | Menu items: AI/Run Adoption, Categories, MCPs, Projects, Providers | Entire Administration menu          |                                           |
-| `feedbackAssistant`                       | Help Center, Quick actions (top-right)                    | Feedback assistant card/button                                     | Feedback collection interface       |                                           |
-| `mcpConnect`                              | Assistant/Workflow config → Tools                         | "MCP Servers" option in dropdown                                   | MCP integration option              |                                           |
-| `skills`                                  | Navigation, Chat config, Assistant config                 | Skills menu, skill selector, management pages                      | Entire Skills subsystem             | Major feature gate                        |
-| `aiAdoption`                              | Analytics page, Settings → Administration                 | Analytics dashboard with 4 dimensions                              | Analytics dashboard and config      | Enterprise Edition only                   |
-| `visualWorkflowEditor`                    | Workflow editor page                                      | Visual drag-and-drop editor (React Flow)                           | Visual editor (YAML only)           |                                           |
-| `defaultConversationAssistant`            | New chat creation                                         | Pre-selects specified assistant                                    | Default behavior (no pre-selection) | Requires `slug` parameter                 |
-| **DYNAMIC TOOLS (Chat Interface)**        |                                                           |                                                                    |                                     |                                           |
-| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                 | "Web Search" toggle                                                | Web search option                   | If both disabled, entire section hidden   |
-| `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                 | "Code Interpreter" toggle                                          | Code interpreter option             | If both disabled, entire section hidden   |
-| **HELP CENTER LINKS**                     |                                                           |                                                                    |                                     |                                           |
-| `videoPortal`                             | Help Center → Learning Resources                          | Link card with "Open Guide" button                                 | Link card                           |                                           |
-| `youtubeChannel`                          | Help Center → Learning Resources                          | YouTube channel link card                                          | Link card                           |                                           |
-| `userGuide`                               | Help Center → Learning Resources                          | Documentation link card                                            | Link card                           |                                           |
-| `userSurvey`                              | Help Center → Learning Resources                          | Survey form link card                                              | Link card                           |                                           |
-| **CONTEXTUAL HELP (Conditional Display)** |                                                           |                                                                    |                                     |                                           |
-| `helpLinks:assistants:creating`           | Create Assistant page (top-right)                         | Help documentation link                                            | No documentation link               | Triggers: Page load                       |
-| `helpLinks:assistants:tools`              | Assistant config → Tools section                          | Help documentation link                                            | No documentation link               | Triggers: User opens tools                |
-| `helpLinks:workflows:creating`            | Create Workflow page (top-right)                          | Help documentation link                                            | No documentation link               | Triggers: Page load                       |
-| `helpLinks:workflows:configuration`       | Workflow editor → YAML tab                                | Help documentation link                                            | No documentation link               | Triggers: User switches to YAML           |
-| `helpLinks:integrations:selection:<type>` | Integration creation form                                 | Help link for selected type                                        | No documentation link               | Triggers: User selects type from dropdown |
-| `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                        | No documentation link               | Triggers: User selects type from dropdown |
-| **INTEGRATED APPLICATIONS**               |                                                           |                                                                    |                                     |                                           |
-| `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                         | Application card                    | Type: `module`, `iframe`, or `link`       |
-| **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                    |                                     |                                           |
-| Any assistant ID                          | Assistants list, New chat dropdown, Help Center → AI Help | Assistant appears in all locations                                 | Assistant hidden from all locations | Default: enabled if not configured        |
+| Component ID                              | Where It Appears                                          | When Enabled Shows                                                 | When Disabled Hides                         | Notes                                     |
+| ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------- | ----------------------------------------- |
+| **CORE FEATURES**                         |                                                           |                                                                    |                                             |                                           |
+| `adminActions`                            | Settings → Administration                                 | Menu items: AI/Run Adoption, Categories, MCPs, Projects, Providers | Entire Administration menu                  |                                           |
+| `feedbackAssistant`                       | Help Center, Quick actions (top-right)                    | Feedback assistant card/button                                     | Feedback collection interface               |                                           |
+| `mcpConnect`                              | Assistant/Workflow config → Tools                         | "MCP Servers" option in dropdown                                   | MCP integration option                      |                                           |
+| `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                   | Catalog-referenced and custom MCP servers                          | Possibility to configure custom MCP servers |                                           |
+| `skills`                                  | Navigation, Chat config, Assistant config                 | Skills menu, skill selector, management pages                      | Entire Skills subsystem                     | Major feature gate                        |
+| `aiAdoption`                              | Analytics page, Settings → Administration                 | Analytics dashboard with 4 dimensions                              | Analytics dashboard and config              | Enterprise Edition only                   |
+| `visualWorkflowEditor`                    | Workflow editor page                                      | Visual drag-and-drop editor (React Flow)                           | Visual editor (YAML only)                   |                                           |
+| `defaultConversationAssistant`            | New chat creation                                         | Pre-selects specified assistant                                    | Default behavior (no pre-selection)         | Requires `slug` parameter                 |
+| **DYNAMIC TOOLS (Chat Interface)**        |                                                           |                                                                    |                                             |                                           |
+| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                 | "Web Search" toggle                                                | Web search option                           | If both disabled, entire section hidden   |
+| `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                 | "Code Interpreter" toggle                                          | Code interpreter option                     | If both disabled, entire section hidden   |
+| **HELP CENTER LINKS**                     |                                                           |                                                                    |                                             |                                           |
+| `videoPortal`                             | Help Center → Learning Resources                          | Link card with "Open Guide" button                                 | Link card                                   |                                           |
+| `youtubeChannel`                          | Help Center → Learning Resources                          | YouTube channel link card                                          | Link card                                   |                                           |
+| `userGuide`                               | Help Center → Learning Resources                          | Documentation link card                                            | Link card                                   |                                           |
+| `userSurvey`                              | Help Center → Learning Resources                          | Survey form link card                                              | Link card                                   |                                           |
+| **CONTEXTUAL HELP (Conditional Display)** |                                                           |                                                                    |                                             |                                           |
+| `helpLinks:assistants:creating`           | Create Assistant page (top-right)                         | Help documentation link                                            | No documentation link                       | Triggers: Page load                       |
+| `helpLinks:assistants:tools`              | Assistant config → Tools section                          | Help documentation link                                            | No documentation link                       | Triggers: User opens tools                |
+| `helpLinks:workflows:creating`            | Create Workflow page (top-right)                          | Help documentation link                                            | No documentation link                       | Triggers: Page load                       |
+| `helpLinks:workflows:configuration`       | Workflow editor → YAML tab                                | Help documentation link                                            | No documentation link                       | Triggers: User switches to YAML           |
+| `helpLinks:integrations:selection:<type>` | Integration creation form                                 | Help link for selected type                                        | No documentation link                       | Triggers: User selects type from dropdown |
+| `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                        | No documentation link                       | Triggers: User selects type from dropdown |
+| **INTEGRATED APPLICATIONS**               |                                                           |                                                                    |                                             |                                           |
+| `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                         | Application card                            | Type: `module`, `iframe`, or `link`       |
+| **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                    |                                             |                                           |
+| Any assistant ID                          | Assistants list, New chat dropdown, Help Center → AI Help | Assistant appears in all locations                                 | Assistant hidden from all locations         | Default: enabled if not configured        |
 
 ## Configuration Parameters
 
@@ -169,6 +170,14 @@ components:
   - id: "mcpConnect"
     settings:
       enabled: true
+
+  # WHERE: Assistant/Workflow configuration → MCP Servers
+  # ENABLED: Restricts users to catalog-referenced MCP servers only.
+  #          Custom inline MCP server configuration is not permitted.
+  # DISABLED: Users can configure both catalog-referenced and custom MCP servers
+  - id: "mcpCustomServersDisabled"
+    settings:
+      enabled: false
 
   # WHERE: Chat conversation → After each assistant message
   # ENABLED: Shows thumbs up/down buttons below assistant responses
@@ -875,6 +884,10 @@ extraObjects:
           - id: "mcpConnect"
             settings:
               enabled: true
+
+          - id: "mcpCustomServersDisabled"
+            settings:
+              enabled: false
 
           - id: "likeForm"
             settings:

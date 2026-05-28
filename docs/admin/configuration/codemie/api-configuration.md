@@ -218,11 +218,12 @@ Primary relational database for structured data and transactional operations.
 
 Document store for full-text search, analytics, and unstructured data.
 
-| Parameter          | Type   | Default                   | Description                                        |
-| ------------------ | ------ | ------------------------- | -------------------------------------------------- |
-| `ELASTIC_URL`      | string | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                 |
-| `ELASTIC_PASSWORD` | string | `""`                      | Password for `elastic` user or configured username |
-| `ELASTIC_USERNAME` | string | `""`                      | Username for Elasticsearch authentication          |
+| Parameter                     | Type    | Default                   | Description                                                                                                                                                                          |
+| ----------------------------- | ------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ELASTIC_URL`                 | string  | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                                                                                                                                                   |
+| `ELASTIC_PASSWORD`            | string  | `""`                      | Password for `elastic` user or configured username                                                                                                                                   |
+| `ELASTIC_USERNAME`            | string  | `""`                      | Username for Elasticsearch authentication                                                                                                                                            |
+| `ELASTIC_DATASOURCE_REPLICAS` | integer | `1`                       | Number of replica shards for datasource indexes; set to `0` to have only the primary shard for each indexed datasource, reducing total shard usage on clusters with limited capacity |
 
 #### Elasticsearch Indexes
 
@@ -232,7 +233,7 @@ Index names for different data types. Customize to avoid collisions in shared cl
 | ----------------------------------------- | ------------ | -------------------------------------- | -------------------------------------------------------- |
 | `ELASTIC_APPLICATION_INDEX`               | string       | `"applications"`                       | Indexed applications and their metadata                  |
 | `ELASTIC_GIT_REPO_INDEX`                  | string       | `"repositories"`                       | Code repository metadata and indexing status             |
-| `ELASTIC_LOGS_INDEX`                      | string       | `"codemie_infra_logs*"`                | Infrastructure logs pattern for monitoring and debugging |
+| `ELASTIC_LOGS_INDEX`                      | string       | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging |
 | `FEEDBACK_INDEX_NAME`                     | string       | `"ca_feedback"`                        | User feedback and ratings on AI responses                |
 | `BACKGROUND_TASKS_INDEX`                  | string       | `"background_tasks"`                   | Async task queue and execution status                    |
 | `USER_CONVERSATION_INDEX`                 | string       | `"codemie_raw_user_conversations"`     | Complete conversation history and messages               |
@@ -381,6 +382,10 @@ Controls whether user roles and project access are read from JWT claims (Keycloa
 or stored in the platform database (Platform-managed mode). See
 [Access Control Overview](../access-control/index.md) for a full comparison.
 
+For step-by-step instructions on enabling Platform-managed mode and migrating existing
+Keycloak users, see
+[Platform-managed Mode Configuration](../access-control/platform-managed-mode-configuration.md).
+
 | Parameter                | Type | Default | Description                                                                                                                                                                                                                          |
 | ------------------------ | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ENABLE_USER_MANAGEMENT` | bool | `false` | Master switch. `true` enables Platform-managed mode: roles and project membership are stored in the platform DB and managed through the in-app UI. `false` uses Keycloak-managed mode where JWT claims are the authoritative source. |
@@ -398,7 +403,7 @@ database on startup.
 | `KEYCLOAK_ADMIN_URL`           | string | `""`    | Keycloak base URL for admin API access (e.g., `https://keycloak.example.com`).                                                                   |
 | `KEYCLOAK_ADMIN_REALM`         | string | `""`    | Keycloak realm to migrate (e.g., `codemie-prod`).                                                                                                |
 | `KEYCLOAK_ADMIN_CLIENT_ID`     | string | `""`    | Service account client ID with Keycloak admin permissions.                                                                                       |
-| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret. Store in a Kubernetes secret and reference via `valueFrom.secretKeyRef`.                                          |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret.                                                                                                                   |
 
 ---
 
@@ -549,12 +554,12 @@ Configure LiteLLM proxy for unified LLM access, budget management, and usage tra
 
 ### Proxy Mode
 
-| Parameter                        | Type    | Default      | Description                                                                    |
-| -------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------ |
-| `LLM_PROXY_MODE`                 | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy) |
-| `LLM_PROXY_ENABLED`              | boolean | `false`      | Enable LLM proxy for centralized model access control                          |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED` | boolean | `true`       | Enforce budget limits before allowing LLM requests                             |
-| `LLM_PROXY_TIMEOUT`              | integer | `60`         | Max seconds to wait for proxy responses                                        |
+| Parameter                       | Type    | Default      | Description                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LLM_PROXY_MODE`                | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy)                                                                                                                                                                                                                                                                         |
+| `LLM_PROXY_ENABLED`             | boolean | `false`      | Enable LLM proxy for centralized model access control                                                                                                                                                                                                                                                                                                  |
+| `LLM_PROXY_TIMEOUT`             | integer | `300`        | Max seconds to wait for proxy responses                                                                                                                                                                                                                                                                                                                |
+| `LLM_PROXY_EMBEDDINGS_DISABLED` | boolean | `false`      | When `true`, bypasses the LiteLLM proxy for embedding requests and sends them directly to the native provider (e.g., Azure OpenAI). Useful when LiteLLM does not support a required embedding model or when lower-latency direct access is preferred for vector operations. Has no effect when `LLM_PROXY_ENABLED=false` or `LLM_PROXY_MODE=internal`. |
 
 ### LiteLLM Connection
 
@@ -579,20 +584,38 @@ Tag LLM requests for cost tracking and usage analytics.
 
 Set spending limits per user or team to control LLM usage costs.
 
-:::warning Deprecated
-`DEFAULT_SOFT_BUDGET_LIMIT`, `DEFAULT_HARD_BUDGET_LIMIT`, `DEFAULT_BUDGET_DURATION`, `DEFAULT_BUDGET_ID`, `LITELLM_PREMIUM_MODELS_BUDGET_NAME`, and `LITELLM_CLI_BUDGET_NAME` are deprecated in 2.23.0.
+| Parameter                                         | Type         | Default          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------- | ------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LLM_PROXY_BUDGET_CHECK_ENABLED`                  | boolean      | `false`          | Enables LLM budget enforcement. When `true`, CodeMie actively enforces spending limits - requests from users or projects that have exceeded their budget are blocked. Also enables budget API routes and background budget maintenance. `budgets-config.yaml` defines predefined budgets; set `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED=true` to sync them into the database and LiteLLM on startup.                                          |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | boolean      | `false`          | Runs a budget reconciliation job after app readiness to align LiteLLM and CodeMie budget states.                                                                                                                                                                                                                                                                                                                                             |
+| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | integer      | `600`            | Timeout in seconds for a single reconciliation run.                                                                                                                                                                                                                                                                                                                                                                                          |
+| `LITELLM_PREMIUM_MODELS_ALIASES`                  | list[string] | `[]`             | List of model name substrings treated as premium (e.g., `["opus", "claude-4"]`). Matched case-insensitively against the requested model name. When a match is found, the request is routed to a separate `premium_models` budget instead of the default platform budget, enabling independent spend tracking and stricter limits for costly models. Required when a `premium_models` budget category is configured in `budgets-config.yaml`. |
+| `BUDGETS_CONFIG_DIR`                              | Path         | `config/budgets` | Directory path for the `budgets-config.yaml` file defining predefined budget policies.                                                                                                                                                                                                                                                                                                                                                       |
 
-Replace them with the equivalent `budgets-config.yaml` fields.
+#### Budget Cache
 
-See the [Release Notes](../../update/release-notes.md) for the migration table and [Budget Configuration](../extensions/litellm-proxy/budget-configuration.md) for full details.
-:::
+Caches user-to-budget resolution results to reduce database load on high-traffic deployments.
 
-| Parameter                           | Type    | Default | Description                                                                                                                                                                               |
-| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LLM_PROXY_BUDGET_CHECK_ENABLED`    | boolean | `false` | Enables budget limit checking for LLM proxy requests. When `true`, CodeMie enforces predefined budgets from `budgets-config.yaml`.                                                        |
-| `LLM_PROXY_BUDGET_SYNC_ENABLED`     | boolean | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup. Required for budget enforcement to work.                                                                |
-| `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | boolean | `false` | Backfills user budget assignments from LiteLLM on startup. Ensures existing users are assigned the correct budgets retroactively.                                                         |
-| `LITELLM_PREMIUM_MODELS_ALIASES`    | string  | `""`    | Comma-separated list of model name substrings treated as premium (e.g., `opus,o1`). Matched case-insensitively against the requested model name. Required when premium budget is enabled. |
+| Parameter                             | Type    | Default  | Description                                                                                                                           |
+| ------------------------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `BUDGET_ASSIGNMENT_CACHE_TTL`         | integer | `60`     | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping).                                       |
+| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the assignment cache.                                                                                    |
+| `BUDGET_RESOLUTION_CACHE_TTL`         | integer | `60`     | TTL in seconds for the budget resolution cache.                                                                                       |
+| `BUDGET_RESOLUTION_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the resolution cache.                                                                                    |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS` | integer | `600000` | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
+
+#### Budget Reset Tracking
+
+Manages automatic reset of per-member budget windows aligned with LiteLLM's reset cycle.
+
+| Parameter                                            | Type    | Default          | Description                                                                                                                             |
+| ---------------------------------------------------- | ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`               | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                          |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`              | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                     |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`                | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                        |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`          | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"`   | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`             | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
 
 ### LiteLLM Spend Tracking
 
@@ -600,9 +623,10 @@ Configure the background scheduler that collects project-level spending snapshot
 and stores them in the `project_spend_tracking` table. The collector runs automatically for all
 projects — no per-project filtering configuration is required.
 
-| Parameter                          | Type   | Default        | Description                                                                               |
-| ---------------------------------- | ------ | -------------- | ----------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`). |
+| Parameter                          | Type    | Default        | Description                                                                                   |
+| ---------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`  | boolean | `false`        | Enables the background spend collector job that stores project-level LiteLLM spend snapshots. |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string  | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`).     |
 
 ### LiteLLM Cache & Optimization
 
@@ -813,23 +837,33 @@ LLM models are configured via YAML files located at `LLM_TEMPLATES_ROOT/llm-{MOD
 
 Each model entry supports these configuration options:
 
-| Field                              | Type    | Description                                                                  |
-| ---------------------------------- | ------- | ---------------------------------------------------------------------------- |
-| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4`, `claude-3-opus-20240229`)         |
-| `deployment_name`                  | string  | Provider-specific deployment name (Azure deployment, Bedrock model ID)       |
-| `label`                            | string  | Human-friendly display name shown in UI model selector                       |
-| `multimodal`                       | boolean | Model supports vision (images/video) in addition to text                     |
-| `react_agent`                      | boolean | Compatible with ReAct agent pattern (reasoning + acting)                     |
-| `enabled`                          | boolean | Model available for selection (allows disabling without removal)             |
-| `provider`                         | string  | Provider type: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic` |
-| `default_for_categories`           | list    | Categories where this model is auto-selected                                 |
-| `cost.input`                       | float   | USD per input token for cost tracking                                        |
-| `cost.output`                      | float   | USD per output token                                                         |
-| `cost.cache_read_input_token_cost` | float   | USD per cached token (for providers supporting caching)                      |
-| `max_output_tokens`                | integer | Maximum generation length supported by model                                 |
-| `features.streaming`               | boolean | Supports streaming responses for real-time output                            |
-| `features.tools`                   | boolean | Supports function calling / tool use                                         |
-| `features.parallel_tool_calls`     | boolean | Can execute multiple tools simultaneously                                    |
+| Field                              | Type    | Description                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4`, `claude-3-opus-20240229`)                                                                                                                                                                                                                                                                                                      |
+| `deployment_name`                  | string  | Provider-specific deployment name (Azure deployment, Bedrock model ID)                                                                                                                                                                                                                                                                                                    |
+| `label`                            | string  | Human-friendly display name shown in UI model selector                                                                                                                                                                                                                                                                                                                    |
+| `multimodal`                       | boolean | Model supports vision (images/video) in addition to text                                                                                                                                                                                                                                                                                                                  |
+| `react_agent`                      | boolean | Compatible with ReAct agent pattern (reasoning + acting)                                                                                                                                                                                                                                                                                                                  |
+| `enabled`                          | boolean | Model available for selection (allows disabling without removal)                                                                                                                                                                                                                                                                                                          |
+| `provider`                         | string  | Provider type: `azure_openai`, `aws_bedrock`, `google_vertexai`, `anthropic`                                                                                                                                                                                                                                                                                              |
+| `default_for_categories`           | list    | Categories where this model is auto-selected                                                                                                                                                                                                                                                                                                                              |
+| `cost.input`                       | float   | USD per input token for cost tracking                                                                                                                                                                                                                                                                                                                                     |
+| `cost.output`                      | float   | USD per output token                                                                                                                                                                                                                                                                                                                                                      |
+| `cost.cache_read_input_token_cost` | float   | USD per cached token (for providers supporting caching)                                                                                                                                                                                                                                                                                                                   |
+| `max_output_tokens`                | integer | Maximum generation length supported by model                                                                                                                                                                                                                                                                                                                              |
+| `features.streaming`               | boolean | Supports streaming responses for real-time output                                                                                                                                                                                                                                                                                                                         |
+| `features.tools`                   | boolean | Supports function calling / tool use                                                                                                                                                                                                                                                                                                                                      |
+| `features.parallel_tool_calls`     | boolean | Whether the model can execute multiple tool calls in a single inference round. Defaults to `false`. Set to `false` explicitly for reasoning models (o-series) that do not support the `parallel_tool_calls` OpenAI parameter — sending it to these models causes an API error. When `false`, the platform strips the parameter from every outgoing request to that model. |
+
+:::info How parallel tool calls work
+When `parallel_tool_calls` is `true` for a model, the agent can issue and stream multiple
+tool calls simultaneously within one inference round. Results arrive concurrently and are
+rendered in the UI as parallel entries under the same thought step.
+
+Standard GPT and Claude models support parallel tool calls. Reasoning models
+(`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** — always set
+`parallel_tool_calls: false` in their `features` block.
+:::
 
 ### Model Categories
 

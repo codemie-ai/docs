@@ -1,11 +1,35 @@
-# How to share my assistant with my team? How to share my assistant in CodeMie? How to add my project to CodeMie How to add my team to CodeMie? How to work as a team? How to add a new project in CodeMie? How can I contribute to the codemie repository as a developer ? I want to upload my plugin to codemie-plugins upstream repository?
+# How to share my assistant with my team? How to share my assistant in CodeMie? How to add my project to CodeMie How to add my team to CodeMie? How to work as a team? How to add a new project in CodeMie?
 
-1. [Onboard a new project in CodeMie](https://support.epam.com/ess?id=sc_cat_item&sys_id=12f071d6ff4d02d04045f800e34fd9fd&name=OnboardANewProjectInCodeAssistant&sysparm_copy_vars=%7B%7D) - request the team to onboard a new project use this link: https://support.epam.com/ess?id=sc_cat_item\&sys_id=12f071d6ff4d02d04045f800e34fd9fd\&name=OnboardANewProjectInCodeAssistant\&sysparm_copy_vars=%7B%7D
-2. [Add a user to the existing project in CodeMie](https://support.epam.com/ess?id=sc_cat_item&sys_id=47512e46ff81ce904045f800e34fd967&name=AddAUserToTheExistingProjectInCodeAssistant&sysparm_copy_vars=%7B%7D) - request the team to add users (provide access rights) use this link: https://support.epam.com/ess?id=sc_cat_item\&sys_id=47512e46ff81ce904045f800e34fd967\&name=AddAUserToTheExistingProjectInCodeAssistant\&sysparm_copy_vars=%7B%7D
-3. [Request help or consultation / CodeMie](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D) - request the team to assist with all questions use this link: [https://support.epam.com/ess?id=sc_cat_item\&sys_id=a914679897ffd910386e3a871153afca\&name=RequestHelpOrConsultation\&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D](https://support.epam.com/ess?id=sc_cat_item&sys_id=a914679897ffd910386e3a871153afca&name=RequestHelpOrConsultation&sysparm_copy_vars=%7B%22u_warning%22%3A%22%22%2C%22confrmation%22%3A%22false%22%2C%22u_topic%22%3A%2234cec5fd1b4d8a5c934e32649b4bcb63%22%7D)
-4. To onboard your as developer in codemie repository you can use our onboarding assistant: https://codemie.lab.epam.com/#/assistants/365782c7-6515-4748-bab8-830ce0323c77
+Projects and team membership in CodeMie are fully self-service — no support ticket required.
+
+## Create a New Project
+
+1. Click the **Profile** icon in the bottom-left corner → **Settings → Administration → Projects management**.
+2. Click **Create**, enter a unique lowercase **Name** and a **Description**, then click **Create**.
+
+The project is ready immediately.
+
+## Add Users to a Project
+
+Open the project detail page, then:
+
+- **One user at a time** — click **Add User to Project**, search by name or email, pick a role (**User** or **Project Admin**), and click **Add**.
+- **Multiple users at once** — click **Import Users** and upload a CSV file with `email` and `role` columns.
+
+:::info User not found in search?
+The user must log in to CodeMie at least once before they appear in search results.
+:::
+
+## Share an Assistant with Your Team
+
+Once team members are added to the project, open the assistant and use the **Share** option to make it available to the project. See [Sharing Assistants](https://docs.codemie.ai/user-guide/assistants/sharing-assistants) for details.
+
+## Get Help
+
+For questions and feedback, use the **Help Center** accessible from the bottom-left corner of the platform. The **AI/Run FAQ** assistant can answer questions about capabilities and usage, and **AI/Run Feedback** lets you report bugs or suggest improvements.
 
 ## Sources
 
+- [Projects Management](https://docs.codemie.ai/user-guide/project-user-management/projects)
 - [Sharing Assistants](https://docs.codemie.ai/user-guide/assistants/sharing-assistants)
 - [Marketplace Overview](https://docs.codemie.ai/user-guide/assistants/marketplace-overview)
