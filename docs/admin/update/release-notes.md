@@ -28,6 +28,10 @@ keycloak-operator has been updated from 1.32.0 to 1.34.0 (Helm chart 1.32.0 to 1
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Hotfixes</h3>
+
+- **2.30.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.30.1) – May 29, 2026
+
 </details>
 
 <details>
