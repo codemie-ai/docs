@@ -31,6 +31,12 @@ import TabItem from '@theme/TabItem';
     ![Domain Mode Diagram](./images/domain-mode-diagram.drawio.png)
 
   </TabItem>
+  <TabItem value="private" label="Private IP Mode">
+    When `TF_VAR_private_ip_only=true`, EC2 is placed in a private subnet with NAT Gateway for outbound traffic. Access is via VPN only:
+
+    ![Private Mode Diagram](./images/private-mode-diagram.drawio.png)
+
+  </TabItem>
 </Tabs>
 
 ### AWS Resources
