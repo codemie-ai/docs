@@ -44,6 +44,10 @@ You will not be able to view this key again. Make sure to copy and save it befor
 
 ## 2. Configure Integration in AI/Run CodeMie
 
+:::info
+Creating a LiteLLM integration under the **User** tab requires the `features:personalLiteLLMIntegrations` feature to be enabled in the customer configuration. If this option is not available, contact an administrator to enable it.
+:::
+
 2.1. In the AI/Run CodeMie main menu, click **Integrations**, select **User** or **Project** tab, and click **+ Create**.
 
 2.2. Specify the integration parameters and click **Save**:
