@@ -13,9 +13,25 @@ This page describes the infrastructure and application architecture of CodeMie L
 
 ## Infrastructure Overview
 
-CodeMie Lightweight runs on a single EC2 instance with supporting AWS services. Terraform provisions the following resources:
+CodeMie Lightweight runs on a single EC2 instance with supporting AWS services. Terraform provisions the following resources depending on the network mode:
 
-![Infrastructure Diagram](./images/infrastructure-diagram.drawio.png)
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="ip" label="IP Mode (default)" default>
+    Direct access to the EC2 instance via Elastic IP:
+
+    ![IP Mode Diagram](./images/ip-mode-diagram.drawio.png)
+
+  </TabItem>
+  <TabItem value="domain" label="Domain Mode (ALB + ACM)">
+    When `TF_VAR_platform_domain_name` is configured, an ALB with trusted TLS certificate is created:
+
+    ![Domain Mode Diagram](./images/domain-mode-diagram.drawio.png)
+
+  </TabItem>
+</Tabs>
 
 ### AWS Resources
 
