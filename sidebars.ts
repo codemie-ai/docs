@@ -568,6 +568,21 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'category',
+              label: 'AWS Lightweight',
+              link: {
+                type: 'doc',
+                id: 'admin/deployment/lightweight/overview',
+              },
+              collapsed: true,
+              items: [
+                'admin/deployment/lightweight/prerequisites',
+                'admin/deployment/lightweight/architecture',
+                'admin/deployment/lightweight/deployment',
+                'admin/deployment/lightweight/byo',
+              ],
+            },
+            {
+              type: 'category',
               label: 'Extensions',
               link: {
                 type: 'doc',
