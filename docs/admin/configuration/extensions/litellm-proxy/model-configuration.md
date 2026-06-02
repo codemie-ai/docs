@@ -245,6 +245,7 @@ Each model entry in the `model_list` array consists of three main sections:
 
 - **`label`**: Human-readable display name shown in CodeMie UI
 - **`forbidden_for_web`**: (Optional) Set to `true` to hide this model from CodeMie UI
+- **`supports_image_generation`**: (Optional) Set to `true` to include this model in the image generation model selector. Typically combined with `forbidden_for_web: true` since image generation models are not intended for general chat.
 - **`default_for_categories`**: Array of categories for default model selection.
 
   Available categories:
@@ -1320,6 +1321,7 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     base_model: gemini-3.1-flash-image-preview
     label: "Gemini 3.1 Flash Image Preview"
     forbidden_for_web: true
+    supports_image_generation: true
 ```
 
 </details>
