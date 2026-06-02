@@ -41,7 +41,11 @@ keycloak-operator has been updated from 1.32.0 to 1.34.0 (Helm chart 1.32.0 to 1
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **`opsPool` removed from AI/Run CodeMie Backend Helm chart** - this workload was deprecated and is no longer supported. Remove all `opsPool.*` fields from the custom Helm values before upgrading.
+
+   :::tip Configuration housekeeping
+   If the **AI/Run CodeMie Backend** Helm chart values still contain `opsPool`, it can be safely removed.
+   :::
 
 <h3>Hotfixes</h3>
 
