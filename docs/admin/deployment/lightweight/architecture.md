@@ -1,0 +1,117 @@
+---
+id: architecture
+title: Lightweight Deployment Architecture
+sidebar_label: Architecture
+sidebar_position: 3
+pagination_prev: admin/deployment/lightweight/prerequisites
+pagination_next: admin/deployment/lightweight/deployment
+---
+
+# Lightweight Deployment Architecture
+
+This page describes the infrastructure and application architecture of CodeMie Lightweight.
+
+## Infrastructure Overview
+
+CodeMie Lightweight runs on a single EC2 instance with supporting AWS services. Terraform provisions the following resources:
+
+![Infrastructure Diagram](./images/infrastructure-diagram.drawio.png)
+
+### AWS Resources
+
+| Resource                 | Purpose                                                               |
+| ------------------------ | --------------------------------------------------------------------- |
+| **VPC**                  | Isolated network with public subnets (+ private if `private_ip_only`) |
+| **EC2 Instance**         | Single instance running Docker Compose (Ubuntu, t3.2xlarge default)   |
+| **Elastic IP**           | Static public IP for the EC2 instance                                 |
+| **S3 Bucket**            | Persistent storage for user data (repos, files)                       |
+| **KMS Key**              | Encryption key for S3 data at rest                                    |
+| **ALB**                  | Application Load Balancer with TLS (if domain configured)             |
+| **ACM Certificate**      | Trusted TLS certificate for the domain (if domain configured)         |
+| **Route 53 Record**      | DNS A record pointing to ALB (if domain configured)                   |
+| **SSM Parameter**        | Stores EC2 SSH private key securely                                   |
+| **Security Groups**      | Controls inbound traffic to ALB and EC2                               |
+| **IAM Instance Profile** | Grants EC2 access to Bedrock, S3, KMS, SSM                            |
+
+### Network Modes
+
+| Mode                    | Configuration                               | Access                            |
+| ----------------------- | ------------------------------------------- | --------------------------------- |
+| **Public IP** (default) | `TF_VAR_private_ip_only=false`              | EC2 gets EIP, direct HTTPS access |
+| **Domain + ALB**        | `TF_VAR_platform_domain_name="example.com"` | ALB with ACM cert, Route 53 DNS   |
+| **Private IP**          | `TF_VAR_private_ip_only=true`               | No public IP, access via VPN only |
+
+## Application Architecture
+
+All CodeMie services run as Docker containers on the EC2 instance, orchestrated by Docker Compose.
+
+![Docker Compose Services](./images/docker-compose-diagram.drawio.png)
+
+### Services by Profile
+
+**Shared services** (both profiles):
+
+| Service       | Image                       | Purpose                             |
+| ------------- | --------------------------- | ----------------------------------- |
+| postgres      | pgvector/pgvector:pg17      | Primary database with vector search |
+| elasticsearch | elasticsearch:8.x           | Full-text search and indexing       |
+| kibana        | kibana:8.x                  | Elasticsearch management UI         |
+| mcp-connect   | codemie-mcp-connect-service | MCP protocol bridge                 |
+| nginx         | nginx:1.31-alpine           | Reverse proxy, TLS termination      |
+
+**OSS profile:**
+
+| Service        | Purpose                                       |
+| -------------- | --------------------------------------------- |
+| codemie-oss    | API server with built-in local authentication |
+| codemie-ui-oss | Web frontend                                  |
+
+**Enterprise profile:**
+
+| Service           | Purpose                                        |
+| ----------------- | ---------------------------------------------- |
+| codemie           | API server                                     |
+| codemie-ui        | Web frontend                                   |
+| keycloak          | Identity provider (SSO, OIDC)                  |
+| oauth2-proxy      | Authentication proxy in front of nginx         |
+| litellm           | LLM proxy for model routing and key management |
+| nats              | Messaging for plugin engine                    |
+| nats-auth-callout | NATS authentication service                    |
+| mermaid-server    | Diagram rendering                              |
+
+### Traffic Flow
+
+```
+User → ALB (TLS) → EC2:443 → nginx → oauth2-proxy → codemie API
+                                    → codemie-ui (static assets)
+                                    → keycloak /auth/* (enterprise)
+```
+
+In OSS mode, oauth2-proxy and keycloak are absent — nginx routes directly to `codemie-oss`.
+
+## Resource Requirements
+
+### Minimum EC2 Instance
+
+| Resource | Minimum | Recommended    |
+| -------- | ------- | -------------- |
+| vCPU     | 4       | 8 (t3.2xlarge) |
+| RAM      | 16 GB   | 32 GB          |
+| Disk     | 50 GB   | 100 GB (gp3)   |
+
+### Estimated AWS Costs
+
+Costs vary by region. Approximate monthly costs for `eu-north-1` with t3.2xlarge:
+
+| Resource                    | Estimated Cost |
+| --------------------------- | -------------- |
+| EC2 (t3.2xlarge, on-demand) | ~$250/mo       |
+| EBS (100 GB gp3)            | ~$8/mo         |
+| S3 + KMS                    | < $5/mo        |
+| ALB (if domain)             | ~$20/mo        |
+| NAT Gateway (if private)    | ~$35/mo        |
+
+## Next Steps
+
+- [Deployment](./deployment) — Deploy CodeMie Lightweight with Terraform
+- [BYO EC2](./byo) — Deploy on an existing EC2 instance without Terraform

@@ -82,6 +82,8 @@ words:
   - NACLs
   - xlarge
   - AWSIRSA
+  - envsubst
+  - superadmin
   # GCP
   - GCP
   - GKE
