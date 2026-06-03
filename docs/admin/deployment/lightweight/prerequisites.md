@@ -38,8 +38,8 @@ The following tools must be installed on the machine where you run `./deploy.sh`
 | [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)                                                | latest  | AWS resource management     |
 | [Session Manager Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html) | latest  | SSH access via AWS SSM      |
 | [jq](https://jqlang.github.io/jq/download/)                                                                                             | latest  | JSON parsing                |
-| [openssl](https://www.openssl.org/)                                                                                                     | latest  | Secret generation           |
-| envsubst (gettext)                                                                                                                      | latest  | Template rendering          |
+| openssl                                                                                                                                 | latest  | Secret generation           |
+| envsubst                                                                                                                                | latest  | Template rendering          |
 
 **Enterprise profile only:**
 
