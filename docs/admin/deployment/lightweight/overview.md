@@ -19,7 +19,7 @@ CodeMie Lightweight is designed for:
 - **Demo environments** — showcase CodeMie to stakeholders without complex infrastructure
 
 :::warning Not for Production
-For production workloads with high availability, scaling, and multi-AZ redundancy, use the full [AWS Deployment Guide](../aws/overview).
+For production workloads with high availability, scaling, and multi-AZ redundancy, use the full [AWS Deployment Guide](/admin/deployment/aws/overview).
 :::
 
 ## Deployment Profiles
@@ -50,4 +50,4 @@ codemie-lightweight/
 
 ## Next Steps
 
-Proceed to [Prerequisites](./prerequisites) to verify your environment is ready for deployment.
+Proceed to [Prerequisites](/admin/deployment/lightweight/prerequisites) to verify your environment is ready for deployment.

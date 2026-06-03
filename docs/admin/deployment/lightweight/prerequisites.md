@@ -84,4 +84,4 @@ The repository contains two directories:
 
 ## Next Steps
 
-After verifying all prerequisites, review the [Architecture](./architecture) to understand what will be deployed.
+After verifying all prerequisites, review the [Architecture](/admin/deployment/lightweight/architecture) to understand what will be deployed.

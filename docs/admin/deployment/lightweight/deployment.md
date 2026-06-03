@@ -212,4 +212,4 @@ The script detects the existing `deployment_outputs.env` and preserves all secre
 
 ## Next Steps
 
-- [BYO EC2](./byo) — Alternative deployment on an existing EC2 instance
+- [BYO EC2](/admin/deployment/lightweight/byo) — Alternative deployment on an existing EC2 instance
