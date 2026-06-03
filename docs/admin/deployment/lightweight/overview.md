@@ -26,10 +26,10 @@ For production workloads with high availability, scaling, and multi-AZ redundanc
 
 CodeMie Lightweight supports two profiles:
 
-| Profile        | Authentication          | LLM Proxy | NATS Messaging | Use Case                   |
-| -------------- | ----------------------- | --------- | -------------- | -------------------------- |
-| **OSS**        | Local (built-in)        | Internal  | No             | Simple setups, quick demos |
-| **Enterprise** | Keycloak + OAuth2 Proxy | LiteLLM   | Yes            | Full feature set, SSO      |
+| Profile        | Authentication          | LLM Proxy | Plugin Tool |
+| -------------- | ----------------------- | --------- | ----------- |
+| **OSS**        | Local (built-in)        | Internal  | No          |
+| **Enterprise** | Keycloak + OAuth2 Proxy | LiteLLM   | Yes         |
 
 ## Deployment Modes
 
