@@ -69,7 +69,7 @@ CODEMIE_VERSION="2.26.0"
 COMPOSE_PROFILE="enterprise"            # oss | enterprise
 
 # ── BYO EC2 ──────────────────────────────────────────────────────────
-BYO_EC2_HOST="1.2.3.4"                 # IP or hostname for SSH
+BYO_EC2_HOST="1.2.3.4"                 # Public IP, private IP, or hostname
 BYO_EC2_USER="ubuntu"                   # SSH user
 BYO_EC2_SSH_KEY="/path/to/key.pem"     # Absolute path to SSH private key
 BYO_EC2_SSH_MODE="direct"               # direct | ssm
@@ -79,12 +79,29 @@ BYO_AWS_KMS_KEY_ID=""                   # KMS key ID (empty = plain encryption)
 BYO_PLATFORM_DOMAIN_NAME=""             # Optional: overrides CODEMIE_HOST URL
 ```
 
+### BYO_EC2_HOST
+
+This variable serves two purposes depending on the SSH mode:
+
+| SSH Mode   | Purpose of `BYO_EC2_HOST`                                     |
+| ---------- | ------------------------------------------------------------- |
+| **direct** | SSH target address AND application URL (`CODEMIE_HOST`)       |
+| **ssm**    | Application URL only (SSH connects via `BYO_EC2_INSTANCE_ID`) |
+
+Set it based on how users will access the application:
+
+| Scenario                    | `BYO_EC2_HOST` value            | Result                                 |
+| --------------------------- | ------------------------------- | -------------------------------------- |
+| EC2 has a public IP         | Public IP (e.g. `1.2.3.4`)      | `CODEMIE_HOST=https://1.2.3.4`         |
+| EC2 in private subnet (VPN) | Private IP (e.g. `10.0.10.104`) | `CODEMIE_HOST=https://10.0.10.104`     |
+| ALB with domain in front    | Any IP (overridden)             | Set `BYO_PLATFORM_DOMAIN_NAME` instead |
+
 ### SSH Modes
 
-| Mode       | When to Use                               | Requirements                                           |
-| ---------- | ----------------------------------------- | ------------------------------------------------------ |
-| **direct** | EC2 has a reachable IP/hostname           | SSH private key, network access to port 22             |
-| **ssm**    | EC2 is in a private subnet, no direct SSH | SSM Agent on EC2, AWS credentials locally, instance ID |
+| Mode       | When to Use                                                   | Requirements                                                           |
+| ---------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **direct** | EC2 has a reachable IP/hostname and port 22 is open           | SSH private key, network access to port 22                             |
+| **ssm**    | EC2 is in a private subnet, or you prefer not to open port 22 | SSM Agent installed on EC2, valid AWS credentials locally, instance ID |
 
 ### Encryption
 

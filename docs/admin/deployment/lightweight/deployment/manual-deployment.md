@@ -166,7 +166,8 @@ terraform apply tfplan
 
 ```bash
 terraform output ec2_instance_id
-terraform output ec2_public_ip
+terraform output ec2_public_ip      # Empty if private_ip_only=true
+terraform output ec2_private_ip
 terraform output s3_bucket_name
 terraform output kms_key_id
 terraform output ssm_ec2_private_key
@@ -203,23 +204,66 @@ cd codemie-lightweight/
 cp /path/to/key.json ./key.json
 ```
 
-3. Configure `deployment.conf` with BYO settings:
+3. Configure `deployment.conf` with BYO settings.
+
+**`BYO_EC2_HOST`** determines the application URL (`CODEMIE_HOST`). Set it based on your network mode:
+
+| Network Mode | `BYO_EC2_HOST` value                              | Access              |
+| ------------ | ------------------------------------------------- | ------------------- |
+| Public IP    | `ec2_public_ip` from outputs                      | Direct HTTPS to EIP |
+| Private IP   | `ec2_private_ip` from outputs                     | HTTPS via VPN only  |
+| Domain + ALB | Any IP (overridden by `BYO_PLATFORM_DOMAIN_NAME`) | HTTPS via ALB       |
+
+**`BYO_EC2_SSH_MODE`** determines how the script connects to the instance:
+
+| SSH Mode | When to use                                        | `BYO_EC2_HOST` used for SSH?  |
+| -------- | -------------------------------------------------- | ----------------------------- |
+| `ssm`    | Instance created by this Terraform (has SSM agent) | No — connects via instance ID |
+| `direct` | Instance with port 22 reachable from your machine  | Yes — SSH target              |
+
+**Example: Public IP mode**
 
 ```bash
 # ── Shared ───────────────────────────────────────────────────────────
 TF_VAR_region="eu-north-1"
 CODEMIE_VERSION="2.26.0"
-COMPOSE_PROFILE="enterprise"            # oss | enterprise
+COMPOSE_PROFILE="enterprise"
 
 # ── BYO EC2 ──────────────────────────────────────────────────────────
-BYO_EC2_HOST="<EC2_PUBLIC_IP>"          # From terraform output ec2_public_ip
+BYO_EC2_HOST="*.*.*.*"             # ec2_public_ip
 BYO_EC2_USER="ubuntu"
 BYO_EC2_SSH_KEY="./terraform/platform/codemie-key.pem"
-BYO_EC2_SSH_MODE="ssm"                  # Use SSM since Terraform created the instance
-BYO_EC2_INSTANCE_ID="<EC2_INSTANCE_ID>" # From terraform output ec2_instance_id
-BYO_AWS_S3_BUCKET_NAME="<S3_BUCKET>"    # From terraform output s3_bucket_name
-BYO_AWS_KMS_KEY_ID="<KMS_KEY_ID>"       # From terraform output kms_key_id
-BYO_PLATFORM_DOMAIN_NAME=""             # Set if you configured a domain in Phase 3
+BYO_EC2_SSH_MODE="ssm"
+BYO_EC2_INSTANCE_ID="i-xxxxxxxxxxxxxxxxx"
+BYO_AWS_S3_BUCKET_NAME="codemie-user-data"
+BYO_AWS_KMS_KEY_ID="<kms-key-id>"
+BYO_PLATFORM_DOMAIN_NAME=""
+```
+
+**Example: Private IP mode** (`private_ip_only=true`)
+
+```bash
+BYO_EC2_HOST="10.0.10.104"            # ec2_private_ip (accessible via VPN)
+BYO_EC2_USER="ubuntu"
+BYO_EC2_SSH_KEY="./terraform/platform/codemie-key.pem"
+BYO_EC2_SSH_MODE="ssm"
+BYO_EC2_INSTANCE_ID="i-xxxxxxxxxxxxxxxxx"
+BYO_AWS_S3_BUCKET_NAME="codemie-user-data"
+BYO_AWS_KMS_KEY_ID="<kms-key-id>"
+BYO_PLATFORM_DOMAIN_NAME=""
+```
+
+**Example: Domain mode** (ALB + ACM configured in Phase 3)
+
+```bash
+BYO_EC2_HOST="10.0.10.104"            # Any reachable IP (not used for URL)
+BYO_EC2_USER="ubuntu"
+BYO_EC2_SSH_KEY="./terraform/platform/codemie-key.pem"
+BYO_EC2_SSH_MODE="ssm"
+BYO_EC2_INSTANCE_ID="i-xxxxxxxxxxxxxxxxx"
+BYO_AWS_S3_BUCKET_NAME="codemie-user-data"
+BYO_AWS_KMS_KEY_ID="<kms-key-id>"
+BYO_PLATFORM_DOMAIN_NAME="example.com"
 ```
 
 4. Run the BYO deployment:
