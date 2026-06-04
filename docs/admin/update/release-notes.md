@@ -14,6 +14,21 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.31.0</strong></summary>
+
+**Release Date:** June 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.31.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.30.0</strong></summary>
 
 **Release Date:** May 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.30.0)
@@ -26,7 +41,15 @@ keycloak-operator has been updated from 1.32.0 to 1.34.0 (Helm chart 1.32.0 to 1
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **`opsPool` removed from AI/Run CodeMie Backend Helm chart** - this workload was deprecated and is no longer supported. Remove all `opsPool.*` fields from the custom Helm values before upgrading.
+
+   :::tip Configuration housekeeping
+   If the **AI/Run CodeMie Backend** Helm chart values still contain `opsPool`, it can be safely removed.
+   :::
+
+<h3>Hotfixes</h3>
+
+- **2.30.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.30.1) – May 29, 2026
 
 </details>
 

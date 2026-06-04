@@ -47,9 +47,10 @@ You can add the following Data Sources to the CodeMie platform:
 
 **File**
 
-- Upload local files: PDF (including documents with images), TXT, CSV, JSON
+- Upload local files: PDF (including documents with images), TXT, CSV, JSON, JPEG, PNG, GIF
 - Manual reindexing only (no automatic scheduler)
-- Max file size: 50MB
+- Max file size: 100MB
+- Images (JPEG, PNG, GIF): processed using LLM vision; max size 10MB per image
 - JSON files require special format:
 
 Choose the type that best fits the data you want to incorporate into your assistant.

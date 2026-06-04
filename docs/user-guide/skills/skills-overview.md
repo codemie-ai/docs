@@ -62,6 +62,12 @@ Workflow YAML defines an assistant with a skills list
 
 Public skills can be discovered and attached from the Skills Marketplace.
 
+## Marking Skills as Favorites
+
+You can mark any skill as a favorite for quick access. Click the **Favorite** button (star icon) on a skill card to save it. All favorite skills are available on the **Favorites** page in the left navigation panel, alongside favorite assistants and workflows.
+
+See [Favorites](../assistants/favorites.md) for full details.
+
 ## Getting Started
 
 Ready to create your first skill? Continue to the next guide:
