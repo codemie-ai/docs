@@ -209,7 +209,3 @@ To update CodeMie version or configuration:
 2. Run `./deploy.sh` again
 
 The script detects the existing `deployment_outputs.env` and preserves all secrets. Only the Docker Compose services are updated.
-
-## Next Steps
-
-- [BYO EC2](/admin/deployment/lightweight/byo) — Alternative deployment on an existing EC2 instance
