@@ -577,7 +577,19 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/deployment/lightweight/prerequisites',
                 'admin/deployment/lightweight/architecture',
-                'admin/deployment/lightweight/deployment',
+                {
+                  type: 'category',
+                  label: 'Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/deployment/lightweight/deployment',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/deployment/lightweight/scripted-deployment',
+                    'admin/deployment/lightweight/manual-deployment',
+                  ],
+                },
                 'admin/deployment/lightweight/byo',
               ],
             },

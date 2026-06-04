@@ -2,8 +2,8 @@
 id: byo
 title: BYO EC2 Deployment
 sidebar_label: BYO EC2
-sidebar_position: 5
-pagination_prev: admin/deployment/lightweight/deployment
+sidebar_position: 7
+pagination_prev: admin/deployment/lightweight/manual-deployment
 pagination_next: null
 ---
 
