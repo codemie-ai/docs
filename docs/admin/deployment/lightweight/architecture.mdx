@@ -101,16 +101,6 @@ All CodeMie services run as Docker containers on the EC2 instance, orchestrated 
 | nats-auth-callout | NATS authentication service                    |
 | mermaid-server    | Diagram rendering                              |
 
-### Traffic Flow
-
-```
-User → ALB (TLS) → EC2:443 → nginx → oauth2-proxy → codemie API
-                                    → codemie-ui (static assets)
-                                    → keycloak /auth/* (enterprise)
-```
-
-In OSS mode, oauth2-proxy and keycloak are absent — nginx routes directly to `codemie-oss`.
-
 ## Resource Requirements
 
 ### Minimum EC2 Instance
