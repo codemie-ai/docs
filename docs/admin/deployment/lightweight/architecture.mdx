@@ -73,13 +73,13 @@ All CodeMie services run as Docker containers on the EC2 instance, orchestrated 
 
 **Shared services** (both profiles):
 
-| Service       | Image                       | Purpose                             |
-| ------------- | --------------------------- | ----------------------------------- |
-| postgres      | pgvector/pgvector:pg17      | Primary database with vector search |
-| elasticsearch | elasticsearch:8.x           | Full-text search and indexing       |
-| kibana        | kibana:8.x                  | Elasticsearch management UI         |
-| mcp-connect   | codemie-mcp-connect-service | MCP protocol bridge                 |
-| nginx         | nginx:1.31-alpine           | Reverse proxy, TLS termination      |
+| Service       | Image                       | Purpose                                           |
+| ------------- | --------------------------- | ------------------------------------------------- |
+| postgres      | pgvector/pgvector:pg17      | Primary database for application data             |
+| elasticsearch | elasticsearch:8.x           | Document storage and search for Data Sources      |
+| kibana        | kibana:8.x                  | Log visualization and analytics for Elasticsearch |
+| mcp-connect   | codemie-mcp-connect-service | Connector for MCP servers                         |
+| nginx         | nginx:1.31-alpine           | Reverse proxy, TLS termination                    |
 
 **OSS profile:**
 
