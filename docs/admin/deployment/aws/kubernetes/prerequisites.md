@@ -3,16 +3,16 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
-pagination_prev: admin/deployment/aws/overview
-pagination_next: admin/deployment/aws/architecture
+pagination_prev: admin/deployment/aws/kubernetes/overview
+pagination_next: admin/deployment/aws/kubernetes/architecture
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import NetworkRequirements from '../common/deployment/prerequisites/\_network-requirements.mdx';
-import ClusterRequirements from '../common/deployment/prerequisites/\_cluster-requirements.mdx';
-import DeploymentMachineTools from '../common/deployment/prerequisites/\_deployment-machine-tools.mdx';
-import NextSteps from '../common/deployment/prerequisites/\_next-steps.mdx';
+import NetworkRequirements from '../../common/deployment/prerequisites/\_network-requirements.mdx';
+import ClusterRequirements from '../../common/deployment/prerequisites/\_cluster-requirements.mdx';
+import DeploymentMachineTools from '../../common/deployment/prerequisites/\_deployment-machine-tools.mdx';
+import NextSteps from '../../common/deployment/prerequisites/\_next-steps.mdx';
 
 # Prerequisites
 

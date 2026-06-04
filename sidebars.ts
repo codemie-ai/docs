@@ -366,68 +366,102 @@ const sidebars: SidebarsConfig = {
             {
               type: 'category',
               label: 'AWS',
-              link: {
-                type: 'doc',
-                id: 'admin/deployment/aws/overview',
-              },
               collapsed: true,
               items: [
                 {
-                  type: 'doc',
-                  id: 'admin/deployment/aws/prerequisites',
-                  label: 'Prerequisites',
-                },
-                {
-                  type: 'doc',
-                  id: 'admin/deployment/aws/architecture',
-                  label: 'Architecture',
-                },
-                {
                   type: 'category',
-                  label: 'Infrastructure Deployment',
+                  label: 'Kubernetes (EKS)',
                   link: {
                     type: 'doc',
-                    id: 'admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview',
+                    id: 'admin/deployment/aws/kubernetes/overview',
                   },
                   collapsed: true,
                   items: [
-                    'admin/deployment/aws/infrastructure-deployment/infrastructure-scripted-deployment',
-                    'admin/deployment/aws/infrastructure-deployment/infrastructure-manual-deployment',
-                  ],
-                },
-                {
-                  type: 'category',
-                  label: 'CodeMie Components Deployment',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/aws/components-deployment/components-deployment-overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/aws/components-deployment/components-scripted-deployment',
+                    {
+                      type: 'doc',
+                      id: 'admin/deployment/aws/kubernetes/prerequisites',
+                      label: 'Prerequisites',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'admin/deployment/aws/kubernetes/architecture',
+                      label: 'Architecture',
+                    },
                     {
                       type: 'category',
-                      label: 'CodeMie Manual Deployment',
+                      label: 'Infrastructure Deployment',
                       link: {
                         type: 'doc',
-                        id: 'admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview',
+                        id: 'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-deployment-overview',
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/aws/components-deployment/manual-deployment/k8s-components',
-                        'admin/deployment/aws/components-deployment/manual-deployment/data-layer',
-                        'admin/deployment/aws/components-deployment/manual-deployment/security-and-identity',
-                        'admin/deployment/aws/components-deployment/manual-deployment/plugin-engine',
-                        'admin/deployment/aws/components-deployment/manual-deployment/core-components',
-                        'admin/deployment/aws/components-deployment/manual-deployment/observability',
+                        'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment',
+                        'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-manual-deployment',
                       ],
+                    },
+                    {
+                      type: 'category',
+                      label: 'CodeMie Components Deployment',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/deployment/aws/kubernetes/components-deployment/components-deployment-overview',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/deployment/aws/kubernetes/components-deployment/components-scripted-deployment',
+                        {
+                          type: 'category',
+                          label: 'CodeMie Manual Deployment',
+                          link: {
+                            type: 'doc',
+                            id: 'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/manual-deployment-overview',
+                          },
+                          collapsed: true,
+                          items: [
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/k8s-components',
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer',
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/security-and-identity',
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/plugin-engine',
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/core-components',
+                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/observability',
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: 'doc',
+                      id: 'admin/deployment/aws/kubernetes/accessing-applications',
+                      label: 'Accessing Applications',
                     },
                   ],
                 },
                 {
-                  type: 'doc',
-                  id: 'admin/deployment/aws/accessing-applications',
-                  label: 'Accessing Applications',
+                  type: 'category',
+                  label: 'Lightweight (EC2)',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/deployment/aws/lightweight/overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/deployment/aws/lightweight/prerequisites',
+                    'admin/deployment/aws/lightweight/architecture',
+                    {
+                      type: 'category',
+                      label: 'Deployment',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/deployment/aws/lightweight/deployment/deployment',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/deployment/aws/lightweight/deployment/scripted-deployment',
+                        'admin/deployment/aws/lightweight/deployment/manual-deployment',
+                        'admin/deployment/aws/lightweight/deployment/byo',
+                      ],
+                    },
+                  ],
                 },
               ],
             },
@@ -563,33 +597,6 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'admin/deployment/gcp/accessing-applications',
                   label: 'Accessing Applications',
-                },
-              ],
-            },
-            {
-              type: 'category',
-              label: 'AWS Lightweight',
-              link: {
-                type: 'doc',
-                id: 'admin/deployment/lightweight/overview',
-              },
-              collapsed: true,
-              items: [
-                'admin/deployment/lightweight/prerequisites',
-                'admin/deployment/lightweight/architecture',
-                {
-                  type: 'category',
-                  label: 'Deployment',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/lightweight/deployment/deployment',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/lightweight/deployment/scripted-deployment',
-                    'admin/deployment/lightweight/deployment/manual-deployment',
-                    'admin/deployment/lightweight/deployment/byo',
-                  ],
                 },
               ],
             },

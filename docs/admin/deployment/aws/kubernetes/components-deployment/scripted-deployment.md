@@ -3,8 +3,8 @@ id: components-scripted-deployment
 sidebar_position: 1
 title: CodeMie Scripted Deployment
 sidebar_label: CodeMie Scripted Deployment
-pagination_prev: admin/deployment/aws/components-deployment/components-deployment-overview
-pagination_next: admin/deployment/aws/accessing-applications
+pagination_prev: admin/deployment/aws/kubernetes/components-deployment/components-deployment-overview
+pagination_next: admin/deployment/aws/kubernetes/accessing-applications
 ---
 
 # Scripted CodeMie Components Deployment

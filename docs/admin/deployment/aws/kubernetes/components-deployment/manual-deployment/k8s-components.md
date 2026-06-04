@@ -3,14 +3,14 @@ id: k8s-components
 sidebar_position: 1
 title: Kubernetes Components
 sidebar_label: Kubernetes Components
-pagination_prev: admin/deployment/aws/components-deployment/manual-deployment/manual-deployment-overview
-pagination_next: admin/deployment/aws/components-deployment/manual-deployment/data-layer
+pagination_prev: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/manual-deployment-overview
+pagination_next: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer
 ---
 
-import StorageIngressOverview from '../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-overview.mdx';
-import StorageIngressNginx from '../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-nginx.mdx';
-import StorageClassInstallation from '../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-class-installation.mdx';
-import StorageIngressValidation from '../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-validation.mdx';
+import StorageIngressOverview from '../../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-overview.mdx';
+import StorageIngressNginx from '../../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-nginx.mdx';
+import StorageClassInstallation from '../../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-class-installation.mdx';
+import StorageIngressValidation from '../../../../common/deployment/components-deployment/manual-deployment/k8s/\_storage-ingress-validation.mdx';
 
 <StorageIngressOverview
   storageClassName="AWS gp3"

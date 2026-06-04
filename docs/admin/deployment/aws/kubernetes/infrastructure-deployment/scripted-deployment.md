@@ -3,8 +3,8 @@ id: infrastructure-scripted-deployment
 title: Infrastructure Scripted Deployment
 sidebar_label: Infrastructure Scripted Deployment
 sidebar_position: 1
-pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
-pagination_next: admin/deployment/aws/components-deployment/components-deployment-overview
+pagination_prev: admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/kubernetes/components-deployment/components-deployment-overview
 ---
 
 # Scripted Infrastructure Deployment

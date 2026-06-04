@@ -3,7 +3,7 @@ id: byo
 title: BYO EC2 Deployment
 sidebar_label: BYO EC2
 sidebar_position: 7
-pagination_prev: admin/deployment/lightweight/deployment/manual-deployment
+pagination_prev: admin/deployment/aws/lightweight/deployment/manual-deployment
 pagination_next: null
 ---
 

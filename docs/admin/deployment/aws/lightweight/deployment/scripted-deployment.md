@@ -3,8 +3,8 @@ id: scripted-deployment
 title: Scripted Deployment
 sidebar_label: Scripted Deployment
 sidebar_position: 5
-pagination_prev: admin/deployment/lightweight/deployment/deployment
-pagination_next: admin/deployment/lightweight/deployment/manual-deployment
+pagination_prev: admin/deployment/aws/lightweight/deployment/deployment
+pagination_next: admin/deployment/aws/lightweight/deployment/manual-deployment
 ---
 
 # Scripted Deployment

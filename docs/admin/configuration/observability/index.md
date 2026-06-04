@@ -96,5 +96,5 @@ Langfuse integration is configured via environment variables in the CodeMie API 
 
 - [API Configuration](../codemie/api-configuration.md) — full reference for all observability
   environment variables
-- [Observability Components Deployment](../../deployment/aws/components-deployment/manual-deployment/observability.md) —
+- [Observability Components Deployment](../../deployment/aws/kubernetes/components-deployment/manual-deployment/observability.md) —
   install Fluent Bit, Elasticsearch, and Kibana on your cluster

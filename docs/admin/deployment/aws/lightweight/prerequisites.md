@@ -3,8 +3,8 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
-pagination_prev: admin/deployment/lightweight/overview
-pagination_next: admin/deployment/lightweight/architecture
+pagination_prev: admin/deployment/aws/lightweight/overview
+pagination_next: admin/deployment/aws/lightweight/architecture
 ---
 
 # Prerequisites
@@ -84,4 +84,4 @@ The repository contains two directories:
 
 ## Next Steps
 
-After verifying all prerequisites, review the [Architecture](/admin/deployment/lightweight/architecture) to understand what will be deployed.
+After verifying all prerequisites, review the [Architecture](/admin/deployment/aws/lightweight/architecture) to understand what will be deployed.

@@ -3,8 +3,8 @@ id: infrastructure-manual-deployment
 sidebar_position: 2
 title: Manual Deployment
 description: Manual AWS infrastructure deployment with Terraform
-pagination_prev: admin/deployment/aws/infrastructure-deployment/infrastructure-deployment-overview
-pagination_next: admin/deployment/aws/components-deployment/components-deployment-overview
+pagination_prev: admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/aws/kubernetes/components-deployment/components-deployment-overview
 ---
 
 import Tabs from '@theme/Tabs';

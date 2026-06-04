@@ -3,8 +3,8 @@ id: manual-deployment
 title: Manual Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 6
-pagination_prev: admin/deployment/lightweight/deployment/scripted-deployment
-pagination_next: admin/deployment/lightweight/deployment/byo
+pagination_prev: admin/deployment/aws/lightweight/deployment/scripted-deployment
+pagination_next: admin/deployment/aws/lightweight/deployment/byo
 ---
 
 # Manual Deployment

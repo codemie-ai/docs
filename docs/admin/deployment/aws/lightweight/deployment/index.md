@@ -3,8 +3,8 @@ id: deployment
 title: Deployment
 sidebar_label: Deployment
 sidebar_position: 4
-pagination_prev: admin/deployment/lightweight/architecture
-pagination_next: admin/deployment/lightweight/deployment/scripted-deployment
+pagination_prev: admin/deployment/aws/lightweight/architecture
+pagination_next: admin/deployment/aws/lightweight/deployment/scripted-deployment
 ---
 
 # Deployment

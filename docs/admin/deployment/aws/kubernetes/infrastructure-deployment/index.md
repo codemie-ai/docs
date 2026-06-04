@@ -3,8 +3,8 @@ id: infrastructure-deployment-overview
 title: AWS Infrastructure Deployment
 sidebar_label: Infrastructure Deployment
 sidebar_position: 4
-pagination_prev: admin/deployment/aws/architecture
-pagination_next: admin/deployment/aws/infrastructure-deployment/infrastructure-scripted-deployment
+pagination_prev: admin/deployment/aws/kubernetes/architecture
+pagination_next: admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment
 ---
 
 # AWS Infrastructure Deployment
