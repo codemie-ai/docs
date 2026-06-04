@@ -97,7 +97,7 @@ Click the **Workflow Config** button to access configuration options:
 
 **Basic Tab:**
 
-![Basic Configuration](./images/workflow-config-start-hint.png)
+![Basic Configuration](./images/visual-editor-basic-config.png)
 
 Configure essential workflow settings:
 
