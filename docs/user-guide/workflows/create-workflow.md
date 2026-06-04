@@ -97,7 +97,7 @@ Click the **Workflow Config** button to access configuration options:
 
 **Basic Tab:**
 
-![Basic Configuration](./images/visual-editor-basic-config.png)
+![Basic Configuration](./images/workflow-config-start-hint.png)
 
 Configure essential workflow settings:
 
@@ -105,6 +105,7 @@ Configure essential workflow settings:
 - **Shared with Project**: Enable to make your workflow visible to your project team
 - **Name\*** (Required): Unique identifier for your workflow
 - **Description**: Brief explanation of the workflow's purpose and features
+- **Start Hint**: Custom text displayed below the prompt input field when users start a workflow execution.
 - **Icon URL**: Link to an image (.png or .svg) for the workflow avatar
 
 :::info Required Fields

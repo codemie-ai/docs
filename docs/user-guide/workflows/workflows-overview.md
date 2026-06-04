@@ -185,6 +185,8 @@ The standard way to launch a workflow with a dedicated execution interface.
 
    ![New Workflow Execution window](./images/workflows-overview/new-execution-window.png)
 
+   The prompt input field may display a hint set by the workflow creator to guide what input is expected.
+
 3. Click **Create** to initiate the execution.
 
 ### Monitoring Execution
