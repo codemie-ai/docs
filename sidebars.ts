@@ -582,15 +582,15 @@ const sidebars: SidebarsConfig = {
                   label: 'Deployment',
                   link: {
                     type: 'doc',
-                    id: 'admin/deployment/lightweight/deployment',
+                    id: 'admin/deployment/lightweight/deployment/deployment',
                   },
                   collapsed: true,
                   items: [
-                    'admin/deployment/lightweight/scripted-deployment',
-                    'admin/deployment/lightweight/manual-deployment',
+                    'admin/deployment/lightweight/deployment/scripted-deployment',
+                    'admin/deployment/lightweight/deployment/manual-deployment',
+                    'admin/deployment/lightweight/deployment/byo',
                   ],
                 },
-                'admin/deployment/lightweight/byo',
               ],
             },
             {

@@ -3,8 +3,8 @@ id: scripted-deployment
 title: Scripted Deployment
 sidebar_label: Scripted Deployment
 sidebar_position: 5
-pagination_prev: admin/deployment/lightweight/deployment
-pagination_next: admin/deployment/lightweight/manual-deployment
+pagination_prev: admin/deployment/lightweight/deployment/deployment
+pagination_next: admin/deployment/lightweight/deployment/manual-deployment
 ---
 
 # Scripted Deployment
@@ -216,4 +216,4 @@ The script detects the existing `deployment_outputs.env` and preserves all secre
 
 ## Next Steps
 
-- [Manual Deployment](./manual-deployment) — Alternative method with full Terraform control
+- [Manual Deployment](../manual-deployment) — Alternative method with full Terraform control

@@ -3,8 +3,8 @@ id: manual-deployment
 title: Manual Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 6
-pagination_prev: admin/deployment/lightweight/scripted-deployment
-pagination_next: admin/deployment/lightweight/byo
+pagination_prev: admin/deployment/lightweight/deployment/scripted-deployment
+pagination_next: admin/deployment/lightweight/deployment/byo
 ---
 
 # Manual Deployment
@@ -17,7 +17,7 @@ Manual deployment is suitable when you need fine-grained control over each Terra
 
 ## Prerequisites
 
-Ensure you have completed all requirements from the [Prerequisites](./prerequisites) page:
+Ensure you have completed all requirements from the [Prerequisites](../../prerequisites) page:
 
 - [ ] **AWS Access**: Programmatic access with IAM permissions
 - [ ] **Tools Installed**: Terraform 1.15.x, AWS CLI, jq, openssl, envsubst, session-manager-plugin
@@ -264,4 +264,4 @@ To change infrastructure (e.g., instance type, add domain):
 
 ## Next Steps
 
-- [BYO EC2](./byo) — Deploy on a completely external EC2 instance (not managed by this Terraform)
+- [BYO EC2](../byo) — Deploy on a completely external EC2 instance (not managed by this Terraform)
