@@ -78,3 +78,7 @@ On the Favorites page you can use the same actions as on the main section pages:
 ## Remove a Favorite
 
 Click the filled star icon on any card — in the original section, on the **Favorites** tab, or on the **Favorites** page. The item is removed immediately and remains accessible in its original section.
+
+## Administrator Configuration
+
+The favorites feature is controlled by the administrator. See [Customer Feature Configuration](../../admin/configuration/codemie/customer-feature-configuration.md) for the `features:favorites` and `features:favoritesPage` settings.

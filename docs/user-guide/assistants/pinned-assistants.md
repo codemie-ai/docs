@@ -60,3 +60,7 @@ You can unpin an assistant from any of these locations:
 - **Assistant Details** page — click the **Pin** button on the details page
 
 Unpinning requires confirmation in a popup. The assistant is removed from the navigation sidebar and remains available in the Assistants list.
+
+## Administrator Configuration
+
+The pinned assistants feature is controlled by the administrator. See [Customer Feature Configuration](../../admin/configuration/codemie/customer-feature-configuration.md) for the `features:pinnedAssistants` setting.
