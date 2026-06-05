@@ -124,13 +124,13 @@ In the Keycloak Admin Console, create a new client in the target realm:
 Add the following environment variables to the AI/Run CodeMie Backend deployment alongside
 `ENABLE_USER_MANAGEMENT=true`:
 
-| Variable                       | Example value                  | Description                                                      |
-| ------------------------------ | ------------------------------ | ---------------------------------------------------------------- |
-| `KEYCLOAK_MIGRATION_ENABLED`   | `true`                         | Enables the one-time import on startup. Disable after first run. |
-| `KEYCLOAK_ADMIN_URL`           | `https://keycloak.example.com` | Keycloak base URL (no trailing slash, no `/auth` path).          |
-| `KEYCLOAK_ADMIN_REALM`         | `codemie-prod`                 | Realm that contains the users to migrate.                        |
-| `KEYCLOAK_ADMIN_CLIENT_ID`     | `codemie-migration-client`     | Service account client ID with admin read permissions.           |
-| `KEYCLOAK_ADMIN_CLIENT_SECRET` | _(from Kubernetes secret)_     | Service account client secret. Use a Kubernetes secret.          |
+| Variable                       | Example value                  | Description                                                                                                                                 |
+| ------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `KEYCLOAK_MIGRATION_ENABLED`   | `true`                         | Enables the one-time import on startup. Disable after first run.                                                                            |
+| `KEYCLOAK_ADMIN_URL`           | `https://keycloak.example.com` | Keycloak base URL without trailing slash. Include the subpath if Keycloak is deployed under one (e.g. `https://keycloak.example.com/auth`). |
+| `KEYCLOAK_ADMIN_REALM`         | `codemie-prod`                 | Realm that contains the users to migrate.                                                                                                   |
+| `KEYCLOAK_ADMIN_CLIENT_ID`     | `codemie-migration-client`     | Service account client ID with admin read permissions.                                                                                      |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET` | _(from Kubernetes secret)_     | Service account client secret. Use a Kubernetes secret.                                                                                     |
 
 #### Create Kubernetes secret for the client secret
 
