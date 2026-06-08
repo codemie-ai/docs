@@ -298,6 +298,21 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 
 ---
 
+## Redis Configuration
+
+| Parameter                       | Type   | Default     | Description                                                                            |
+| ------------------------------- | ------ | ----------- | -------------------------------------------------------------------------------------- |
+| `REDIS_HOST`                    | string | `localhost` | Redis endpoint address                                                                 |
+| `REDIS_PORT`                    | int    | `6379`      | Remote port                                                                            |
+| `REDIS_PASSWORD`                | string | `""`        | Authentication secret for `default` user                                               |
+| `REDIS_DB`                      | int    | `0`         | Redis database ID                                                                      |
+| `REDIS_SSL`                     | bool   | `False`     | Enforce SSL connection to the remote endpoint                                          |
+| `REDIS_SSL_CERT_REQS`           | string | `none`      | Require valid certificates from endpoint. Valid values: `none`, `optional`, `required` |
+| `REDIS_CONNECT_TIMEOUT_SECONDS` | float  | `5.0`       | Connection timeout                                                                     |
+| `REDIS_TIMEOUT_SECONDS`         | float  | `5.0`       | Socket timeout for regular operations                                                  |
+
+---
+
 ## Security & Encryption
 
 ### Encryption Configuration

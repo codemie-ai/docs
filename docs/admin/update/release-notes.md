@@ -39,7 +39,13 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. AWS EKS authentication via ConfigMap no longer supported and removed from terraform scripts.
+
+2. Added optional provisioning AWS Valkey (Redis Cache).
+
+   :::tip Redis usage
+   Redis instance is required to enable functionality such as WebHook rate limiter.
+   :::
 
 </details>
 
