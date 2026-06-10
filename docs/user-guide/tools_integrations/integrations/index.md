@@ -15,12 +15,12 @@ There are three types of integrations, distinguished by scope and who can create
 - **Project Integration**: Shared configuration available to all project members. Requires the `isAdmin` or `applications_admin` role.
 
 :::note
-To create a **Project Integration**, you need the `isAdmin` or `applications_admin` role. To request `applications_admin` access, submit a Support ticket.
+To create a **Project Integration**, you need the `isAdmin` or `applications_admin` role. To request `applications_admin` access, submit a Support ticket. See [Project & User Management](../../project-user-management/index.mdx) for details on managing roles.
 :::
 
 ## How the Default Integration Is Selected
 
-When a tool requires an integration and you haven't explicitly chosen one, CodeMie picks it automatically. **User Integration always takes priority over Project Integration.**
+When a tool requires an integration and no specific one has been chosen, CodeMie picks it automatically. **User Integration always takes priority over Project Integration.**
 
 | Priority | Type                        | Created in                                               | Visible to                                        |
 | -------- | --------------------------- | -------------------------------------------------------- | ------------------------------------------------- |
@@ -32,15 +32,40 @@ If no matching integration is found at any level, the action requiring it will f
 
 ### When does this matter?
 
-**One integration of a type** — it's always used automatically. Nothing to configure.
+**One integration of a type** — it is always used automatically. Nothing to configure.
 
-**Multiple integrations of the same type** — select the one you need when creating or editing an assistant. If you don't, the priority above applies.
+**Multiple integrations of the same type** — the priority above applies unless a specific one is selected manually in the assistant form.
 
 ### Tips
 
 - Use **User Global Integration** if you use the same credentials across multiple projects — configure once, use everywhere.
 - **Project Integration** acts as a shared fallback for team members who haven't set up their own.
 - If a tool is using unexpected credentials, go to **Integrations → User** and check whether a User Integration is overriding the project-level one.
+
+## Automatic Credentials Lookup
+
+When adding a tool to an assistant, each tool that has at least one configured integration displays an **Automatic Credentials Lookup** toggle.
+
+| Toggle state     | Behavior                                                                                                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **On** (default) | CodeMie selects the integration automatically using the priority order above. Each user of the assistant uses their own integration. Recommended for shared assistants. |
+| **Off**          | A specific integration must be selected from the dropdown. Other users of the assistant may not have access to that integration. Not recommended for shared assistants. |
+
+When the toggle is **On**, the integration dropdown is hidden — no manual selection is needed:
+
+![Automatic Credentials Lookup toggle enabled](./images/automatic-credentials-lookup-on.png)
+
+When the toggle is **Off**, the dropdown becomes visible and a specific integration can be chosen:
+
+![Automatic Credentials Lookup toggle disabled with integration dropdown](./images/automatic-credentials-lookup-off.png)
+
+:::tip
+Leave **Automatic Credentials Lookup** on for shared assistants. This ensures each team member uses their own credentials automatically, without requiring the assistant owner to share their personal integration.
+:::
+
+:::warning
+If **Automatic Credentials Lookup** is turned off and a specific integration is selected, other users who do not have access to that integration will not be able to use the tool.
+:::
 
 ## Setting Up Integrations
 
@@ -97,9 +122,7 @@ As an alternative way of getting to the Integrations page, you can click the **A
 
 This link will also lead to the Create User Integration page. Note that this link appears only if no such tools are configured by the users.
 
-If you have two or more integrations related to one tool, you can specify the needed one when adding/editing assistants:
-
-![Selecting specific integration](./images/assistant-select-integration-dropdown.png)
+If you have two or more integrations related to one tool, you can specify the needed one when adding/editing assistants.
 
 ## Creating Integration from Data Source Page
 
