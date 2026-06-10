@@ -63,6 +63,15 @@ Make sure the **Is Enabled** toggle is turned ON. If disabled, the webhook will 
 - **Resource Type**: Choose the resource to be triggered when receiving the webhook (Assistant, Workflow, or Datasource).
 - **Resource ID**: Enter the ID of the Assistant/Workflow/Datasource copied from step 1.2.
 
+:::warning Datasource Type Restrictions
+Not all datasource types support webhook triggering. The following datasource types **cannot** be used as a webhook trigger target:
+
+- **File**
+- **SharePoint**
+
+If a datasource of one of these types is entered in the **Resource ID** field, the system displays a validation error and prevents saving the integration. Selecting a supported datasource type clears the error and allows the configuration to be saved.
+:::
+
 ![Webhook integration form](./images/webhook-integration-form.png)
 
 ## 3. Copy Webhook URL
