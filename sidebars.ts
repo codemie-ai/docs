@@ -601,6 +601,7 @@ const sidebars: SidebarsConfig = {
                       items: [
                         'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment',
                         'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-manual-deployment',
+                        'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-bastion-host-access',
                       ],
                     },
                     {

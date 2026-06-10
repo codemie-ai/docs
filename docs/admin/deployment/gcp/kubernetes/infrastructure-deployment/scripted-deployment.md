@@ -210,6 +210,7 @@ less logs/codemie_gcp_deployment_YYYY-MM-DD-HHMMSS.log
 
 ## Next Steps
 
-After successful infrastructure deployment and validation, proceed to:
+After successful infrastructure deployment and validation:
 
-**[Components Deployment](../components-deployment/index.md)** - Deploy AI/Run CodeMie application components to your GKE cluster
+- **Private GKE cluster with private DNS** — proceed to [Bastion Host Access Configuration](./bastion-host-access.md) to set up secure access before deploying components.
+- **Public cluster or authorized networks** — proceed directly to [Components Deployment](../components-deployment/index.md).
