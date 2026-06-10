@@ -69,11 +69,29 @@ terraform output get_kubectl_credentials_for_private_cluster
 gcloud container clusters get-credentials your-cluster-name --region=europe-west3 --project=your-project
 ```
 
-4. Clone the Helm charts repository needed for component deployment:
+4. Transfer the Helm charts repository to the Bastion Host.
+
+:::warning VPN Required for gitbud.epam.com
+`gitbud.epam.com` is only accessible through VPN and is not reachable from the Bastion Host directly. Clone the repository on your local machine first, then transfer it using `gcloud scp`.
+:::
+
+On your **local machine** (with VPN active):
 
 ```bash
 git clone https://gitbud.epam.com/epm-cdme/codemie-helm-charts.git
-cd codemie-helm-charts
+```
+
+Then transfer the cloned directory to the Bastion Host:
+
+```bash
+gcloud compute scp --recurse ./codemie-helm-charts bastion-vm:~/ \
+  --project=your-project --zone=europe-west3-a
+```
+
+On the **Bastion Host**, navigate to the transferred directory:
+
+```bash
+cd ~/codemie-helm-charts
 ```
 
 You're now ready to proceed with [Components Deployment](../components-deployment/index.md).
