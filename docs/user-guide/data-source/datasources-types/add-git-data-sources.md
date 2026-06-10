@@ -13,7 +13,30 @@ import TabItem from '@theme/TabItem';
 
 Connect and index Git repositories as data sources.
 
-Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. This guide walks you through the process of adding and indexing Git repositories.
+Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. Git data sources index both source code and binary document types — including PDFs, MS Office files, and images — making them suitable for Talk-to-your-Data scenarios where a repository serves as a document store. This guide walks you through the process of adding and indexing Git repositories.
+
+## Supported File Types
+
+Git data sources index all text-based files and the following binary document formats:
+
+| Format     | Extensions              | Processing method                       |
+| ---------- | ----------------------- | --------------------------------------- |
+| PDF        | `.pdf`                  | Text extraction                         |
+| Word       | `.docx`                 | Text and content extraction             |
+| Excel      | `.xlsx`                 | Markdown tables                         |
+| PowerPoint | `.pptx`                 | Text extraction                         |
+| Email      | `.msg`, `.eml`          | Text and metadata extraction            |
+| Images     | `.png`, `.jpg`, `.jpeg` | Semantic description via multimodal LLM |
+
+All other files (source code, Markdown, JSON, YAML, plain text, etc.) are indexed as text.
+
+:::info Image Indexing
+Images are processed using an LLM vision model to extract semantic information. If no multimodal model is configured in the CodeMie instance, image files are skipped during indexing.
+:::
+
+:::tip Filtering document types
+Use the **Files Filter** field to include or exclude specific formats. For example, to index only documents and skip code files: `*.pdf,*.docx,*.xlsx,*.pptx`
+:::
 
 ## Prerequisites
 
@@ -124,6 +147,8 @@ Always use stable branches (e.g., `main`, `master`, `develop`) for indexing. Fea
 - Java source only: `src/**/*.java` - Only Java files in src directory
 - Python without tests: `*.py,!test_*.py,!*_test.py` - Python files excluding tests
 - Documentation only: `*.md,*.rst,*.txt` - Only documentation files
+- Documents only: `*.pdf,*.docx,*.xlsx,*.pptx` - Only MS Office and PDF files
+- Code and documents: `*.py,*.pdf,*.docx` - Python files and documents
   :::
 
 - Model Used for Embeddings: Select model Used for Embeddings.
