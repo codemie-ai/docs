@@ -202,6 +202,11 @@ create_private_dns_zone = false               # Set to true if using private DNS
 keycloak_db_config = { enabled = true }
 langfuse_db_config = { enabled = false }
 litellm_db_config  = { enabled = false }
+
+# Optional: Dedicated Cloud Memorystore Redis Instance
+# Set enabled = true to provision a Memorystore Redis instance for caching.
+# Supported fields: enabled, tier (BASIC|STANDARD_HA), memory_size_gb, redis_version.
+codemie_cache_config = { enabled = false }
 ```
 
 :::info Configuration References
@@ -250,6 +255,7 @@ gcloud sql instances list --project=<your-project-id>
 - Keycloak Cloud SQL details (`keycloak_pg_host`, `keycloak_pg_database`, `keycloak_pg_user`, `keycloak_pg_secret_name`) — present when `keycloak_db_config.enabled = true`
 - LiteLLM Cloud SQL details (`litellm_pg_host`, `litellm_pg_database`, `litellm_pg_user`, `litellm_pg_secret_name`) — present when `litellm_db_config.enabled = true`
 - Langfuse Cloud SQL details (`langfuse_pg_host`, `langfuse_pg_database`, `langfuse_pg_user`, `langfuse_pg_secret_name`) — present when `langfuse_db_config.enabled = true`
+- Cache details (`codemie_cache_address`, `codemie_cache_secret`) — present when `codemie_cache_config.enabled = true`
 - Service account information
 
 :::tip Infrastructure Ready

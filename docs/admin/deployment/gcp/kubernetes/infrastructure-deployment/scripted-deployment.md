@@ -91,6 +91,11 @@ TF_VAR_extra_authorized_networks='[]'
 TF_VAR_keycloak_db_config='{"enabled":true}'
 TF_VAR_langfuse_db_config='{"enabled":false}'
 TF_VAR_litellm_db_config='{"enabled":false}'
+
+# Optional: Dedicated Cloud Memorystore Redis Instance Configuration
+# Set enabled=true to provision a Memorystore Redis instance for caching.
+# Supported fields: enabled, tier (BASIC|STANDARD_HA), memory_size_gb, redis_version.
+TF_VAR_codemie_cache_config='{"enabled":false}'
 ```
 
 :::info Complete Variable List
@@ -165,6 +170,10 @@ LANGFUSE_POSTGRES_DATABASE_USER=langfuse_admin
 LANGFUSE_POSTGRES_DATABASE_INSTANCE=codemie-langfuse-postgresql
 LANGFUSE_POSTGRES_DATABASE_SECRET=codemieLangfusePGDB
 LANGFUSE_POSTGRES_DATABASE_PASSWORD=generated-password
+
+# Cache (present when codemie_cache_config.enabled=true)
+CODEMIE_CACHE_ADDRESS=<memorystore-redis-private-ip>
+CODEMIE_CACHE_SECRET=generated-auth-string
 ```
 
 :::tip Save These Outputs
@@ -183,6 +192,9 @@ gcloud container clusters list --project=<your-project-id>
 
 # Check Cloud SQL instance
 gcloud sql instances list --project=<your-project-id>
+
+# Check Memorystore Redis instance (if enabled)
+gcloud redis instances list --project=<your-project-id> --region=<your-region>
 
 # Verify GCS state bucket
 gcloud storage buckets list | grep terraform
