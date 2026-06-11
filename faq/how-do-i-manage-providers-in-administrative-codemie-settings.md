@@ -155,4 +155,4 @@ Both appear in the same **External Tools** section when configuring assistants, 
 
 ## Sources
 
-- [Platform Administration](https://docs.codemie.ai/admin/configuration/codemie/platform-administration)
+- [Add and Index Provider Data Source](https://docs.codemie.ai/user-guide/data-source/datasources-types/add-provider-datasource)
