@@ -7,11 +7,7 @@ pagination_prev: admin/configuration/index
 pagination_next: null
 ---
 
-import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
-
 # LiteLLM Budget Configuration
-
-<EnterpriseFeature />
 
 LiteLLM allows you to set spending limits and rate limits through budgets. This guide explains how predefined budgets work in CodeMie and how to customize them via Helm.
 
