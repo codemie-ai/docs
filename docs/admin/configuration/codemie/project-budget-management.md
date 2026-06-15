@@ -7,7 +7,11 @@ pagination_prev: admin/configuration/codemie/platform-administration
 pagination_next: null
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # Project Budget Management
+
+<EnterpriseFeature />
 
 Project budgets let platform administrators allocate a dedicated spend envelope to a specific project and [budget category](#budget-categories). When a user makes LLM requests within a project context, CodeMie enforces both the project-level cap and the per-member allocation — independently from any global or personal budgets.
 
