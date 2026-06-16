@@ -31,6 +31,14 @@ Manage and share your workflow executions:
 - [Exporting Workflow Execution](./exporting-workflow-execution.md) - Export execution data
 - [LLM Model Name in Workflow](./llm-model-name-in-workflow.md) - Configure AI models for workflows
 
+## Workflow Marketplace
+
+Discover, execute, and share workflows across the platform:
+
+- [Marketplace Overview](./marketplace-overview.md) - Browse and execute community-published workflows
+- [Publish to Marketplace](./marketplace-publishing.md) - Share a workflow globally with publishing requirements and credential policies
+- [Clone Workflow from Marketplace](./clone-workflow-from-marketplace.md) - Create a personal copy of a marketplace workflow
+
 ## Moving Workflows Between Projects
 
 You can move a workflow from one project to another by changing its project assignment:

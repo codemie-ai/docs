@@ -5,23 +5,32 @@
 #   scripts/secrets-check.sh --git    # scan full git history
 
 GITLEAKS_IMAGE="ghcr.io/gitleaks/gitleaks:v8.30.1"
-CONTAINER_ENGINE=$(command -v docker 2>/dev/null || command -v podman 2>/dev/null)
 
+# Find the first container engine whose daemon is actually running
+CONTAINER_ENGINE=""
+for engine in docker podman; do
+  if command -v "$engine" >/dev/null 2>&1 && "$engine" info >/dev/null 2>&1; then
+    CONTAINER_ENGINE=$(command -v "$engine")
+    break
+  fi
+done
+
+# If no running engine found, fall back to any installed engine for a helpful error
 if [[ -z "$CONTAINER_ENGINE" ]]; then
-  echo "No suitable container engine found - skipping secrets detection"
-  echo "Install Docker to enable local secrets scanning"
-  exit 1
-fi
-
-if ! $CONTAINER_ENGINE info >/dev/null 2>&1; then
+  FALLBACK=$(command -v docker 2>/dev/null || command -v podman 2>/dev/null)
+  if [[ -z "$FALLBACK" ]]; then
+    echo "No suitable container engine found - skipping secrets detection"
+    echo "Install Docker or Podman to enable local secrets scanning"
+    exit 1
+  fi
   if command -v colima >/dev/null 2>&1; then
-    echo "Docker daemon not running - Colima is installed"
+    echo "Container engine found but daemon is not running - Colima is installed"
     echo "Run 'colima start' to enable secrets detection locally"
   elif command -v podman >/dev/null 2>&1; then
-    echo "Docker daemon not running - Podman is installed"
+    echo "Container engine found but daemon is not running - Podman is installed"
     echo "Run 'podman machine start' to enable secrets detection locally"
   elif command -v orbstack >/dev/null 2>&1; then
-    echo "Docker daemon not running - OrbStack is installed"
+    echo "Container engine found but daemon is not running - OrbStack is installed"
     echo "Start OrbStack to enable secrets detection locally"
   else
     echo "Container engine found but daemon is not running"

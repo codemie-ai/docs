@@ -22,11 +22,12 @@ Navigate to the **Workflows** tab in the left sidebar:
 
 Workflows are organized into three main categories:
 
-| Category          | Description                                                         |
-| ----------------- | ------------------------------------------------------------------- |
-| **My Workflows**  | Your personal workflows that you own or manage                      |
-| **All Workflows** | A complete list of workflows available for you to use               |
-| **Templates**     | Ready-made templates for quickly creating and customizing workflows |
+| Category          | Description                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| **My Workflows**  | Your personal workflows that you own or manage                                     |
+| **All Workflows** | A complete list of workflows available for you to use                              |
+| **Templates**     | Ready-made templates for quickly creating and customizing workflows                |
+| **Marketplace**   | Globally published workflows discoverable and executable by any authenticated user |
 
 ![Workflow categories view](./images/workflows-overview/workflow-categories-view.png)
 
