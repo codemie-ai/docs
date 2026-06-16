@@ -24,7 +24,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-The IAM Role for Service Accounts (IRSA) for External Secrets Operator has been removed from the AWS Terraform code. No manual action is required.
+External Secrets Operator IRSA provisioning removed from AWS Terraform code.
 
 </details>
 
