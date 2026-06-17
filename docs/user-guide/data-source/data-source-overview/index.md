@@ -87,6 +87,10 @@ Specify data source type. It can be:
 - File (PPTX, DOCX, XLSX, PDF, CSV, and others as plain text)
 - Google document
 
+:::tip
+The **Data Source Type** dropdown is sorted alphabetically and includes a scrollbar, making it easy to locate the required type even when many options are available.
+:::
+
 ## Filtering Data Sources
 
 As you work with CodeMie, the number of data sources will increase. To simplify navigation between data sources, use the **filters**. You can filter datasources by:

@@ -77,12 +77,16 @@ If **Automatic Credentials Lookup** is turned off and a specific integration is 
 
    ![Create integration button](./images/integrations-list-create-button.png)
 
-3. Select the desired tool and specify the credentials and click **Save**:
+3. Select the desired tool from the **Credential Type** dropdown and specify the credentials, then click **Save**:
 
    ![Integration creation form](./images/integration-create-form.png)
 
 :::note
 Most of the tools require you to specify the URL, token, and alias. Alias is the name of the setting that will be displayed in the integrations list.
+:::
+
+:::tip
+The **Credential Type** dropdown is sorted alphabetically and includes a scrollbar, making it easy to locate the required credential type even when many options are available.
 :::
 
 ## Integration Validation During Assistant Save
