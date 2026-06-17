@@ -8,13 +8,7 @@ pagination_next: null
 description: Overview of all Enterprise Edition features in AI/Run CodeMie, with links to documentation.
 ---
 
-import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
-
-# Enterprise Features
-
-<EnterpriseFeature />
-
-AI/Run CodeMie Enterprise Edition includes a set of advanced features designed for organizations that need enhanced governance, multi-agent CLI tooling, LLM observability, and specialized AI-powered extensions.
+# ✨ Enterprise Features
 
 ## CLI & Developer Experience
 
