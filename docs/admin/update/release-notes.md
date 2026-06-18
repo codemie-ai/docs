@@ -39,11 +39,28 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. External Secrets Operator IRSA provisioning removed from AWS Terraform code.
+1. **`security.processAuthSecret` removed from AI/Run CodeMie Backend Helm chart** — the static shared-secret approach for inter-process authentication (`INTERNAL_BIND_KEY`) has been replaced with per-request HMAC signing. The key is now generated in-memory at pod startup and no Kubernetes Secret is needed.
 
-2. SSH key pair module and its usage in the EKS cluster configuration removed from AWS Terraform code.
+   :::tip Configuration housekeeping
+   If the **AI/Run CodeMie Backend** Helm chart values still contain `security.processAuthSecret`, it can be safely removed:
 
-3. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
+   ```yaml
+   # Remove the following block from your custom Helm values:
+   security:
+     processAuthSecret:
+       create: false
+       name: "internal-bind-key"
+       field: "bind-key"
+   ```
+
+   If you created a Kubernetes Secret for `INTERNAL_BIND_KEY` manually (e.g. for ArgoRollout deployments), it can also be safely deleted.
+   :::
+
+2. External Secrets Operator IRSA provisioning removed from AWS Terraform code.
+
+3. SSH key pair module and its usage in the EKS cluster configuration removed from AWS Terraform code.
+
+4. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
 
 </details>
 
@@ -365,13 +382,6 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
    Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
    See [API Configuration](../configuration/codemie/api-configuration.md) for full details.
-
-   :::info Deprecated in 2.34.0
-   As of CodeMie 2.34.0, `INTERNAL_BIND_KEY` is no longer required.
-   Inter-process authentication was replaced with per-request HMAC signing — the key is now
-   generated in-memory at pod startup and shared secret configuration is no longer needed.
-   If you set up a Kubernetes Secret for this variable, it can be safely removed.
-   :::
 
 <h3>Hotfixes</h3>
 
