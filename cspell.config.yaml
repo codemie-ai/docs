@@ -21,6 +21,7 @@ ignorePaths:
 # Custom dictionary - project-specific words that are correct
 words:
   # Project/Brand names
+  - HMAC
   - codemie
   - AI/Run
   - airun

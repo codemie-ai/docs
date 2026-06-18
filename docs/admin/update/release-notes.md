@@ -364,7 +364,14 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
    Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
    Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
-   See [API Configuration](../configuration/codemie/api-configuration.md#inter-process-communication) for full details.
+   See [API Configuration](../configuration/codemie/api-configuration.md) for full details.
+
+   :::info Deprecated in 2.34.0
+   As of CodeMie 2.34.0, `INTERNAL_BIND_KEY` is no longer required.
+   Inter-process authentication was replaced with per-request HMAC signing — the key is now
+   generated in-memory at pod startup and shared secret configuration is no longer needed.
+   If you set up a Kubernetes Secret for this variable, it can be safely removed.
+   :::
 
 <h3>Hotfixes</h3>
 
