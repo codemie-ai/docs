@@ -91,6 +91,8 @@ No third-party component updates in this release.
 
 3. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
 
+4. Spot node group (`worker_group_spot`) removed from AWS EKS Terraform configuration — the Auto Scaling Group was permanently scaled to zero. Associated IAM role, instance profile, and launch template are destroyed on the next `terraform apply`.
+
 </details>
 
 <details>
