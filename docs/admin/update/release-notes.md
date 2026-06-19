@@ -28,6 +28,8 @@ No third-party component updates in this release.
 
 2. SSH key pair module and its usage in the EKS cluster configuration removed from AWS Terraform code.
 
+3. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
+
 </details>
 
 <details>
