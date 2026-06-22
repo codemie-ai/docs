@@ -24,21 +24,6 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
-
-</details>
-
-<details>
-<summary><strong>CodeMie 2.34.0</strong></summary>
-
-**Release Date:** June 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.34.0)
-
-<h3>Third-Party Component Updates</h3>
-
-No third-party component updates in this release.
-
-<h3>Configuration Changes</h3>
-
 1. **`security.processAuthSecret` removed from AI/Run CodeMie Backend Helm chart** — the static shared-secret approach for inter-process authentication (`INTERNAL_BIND_KEY`) has been replaced with per-request HMAC signing. The key is now generated in-memory at pod startup and no Kubernetes Secret is needed.
 
    :::tip Configuration housekeeping
@@ -56,11 +41,24 @@ No third-party component updates in this release.
    If you created a Kubernetes Secret for `INTERNAL_BIND_KEY` manually (e.g. for ArgoRollout deployments), it can also be safely deleted.
    :::
 
-2. External Secrets Operator IRSA provisioning removed from AWS Terraform code.
+</details>
 
-3. SSH key pair module and its usage in the EKS cluster configuration removed from AWS Terraform code.
+<details>
+<summary><strong>CodeMie 2.34.0</strong></summary>
 
-4. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
+**Release Date:** June 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.34.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. External Secrets Operator IRSA provisioning removed from AWS Terraform code.
+
+2. SSH key pair module and its usage in the EKS cluster configuration removed from AWS Terraform code.
+
+3. Fluent-bit version upgrade from 4.2.3.1 to 5.0.7.
 
 </details>
 
