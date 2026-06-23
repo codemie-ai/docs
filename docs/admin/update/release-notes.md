@@ -152,6 +152,8 @@ No breaking configuration changes were introduced in this release.
 
 keycloak-operator has been updated from 1.32.0 to 1.34.0 (Helm chart 1.32.0 to 1.34.0). For details, see the [keycloak-operator 1.34.0 Release Notes ↗](https://github.com/epam/edp-keycloak-operator/releases/tag/v1.34.0).
 
+Starting from v1.33.0, keycloak-operator no longer auto-appends the `/auth` context path. If your Keycloak is deployed with a context path (e.g. `/auth`), include it explicitly in `keycloak.url` in your `oauth2-proxy` Helm chart values (e.g. `http://keycloakx-http/auth`). If Keycloak runs without a context path, leave the URL as-is.
+
 <h3>Configuration Changes</h3>
 
 1. **`opsPool` removed from AI/Run CodeMie Backend Helm chart** - this workload was deprecated and is no longer supported. Remove all `opsPool.*` fields from the custom Helm values before upgrading.
