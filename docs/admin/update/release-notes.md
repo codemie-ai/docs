@@ -69,6 +69,9 @@ No third-party component updates in this release.
    3. Delete the old deployment from the `codemie` namespace.
       :::
 
+3. **AWS Terraform changes**
+   - **KMS hardening** — replaced the account-root `kms:*` wildcard with least-privilege policies. Key administrators now have management permissions only, and the IRSA role has cryptographic operations only. The KMS IAM policy scope is narrowed to the specific key. Review KMS-dependent workloads for access regressions after upgrading.
+
 </details>
 
 <details>
