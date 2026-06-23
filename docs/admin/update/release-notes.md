@@ -41,6 +41,34 @@ No third-party component updates in this release.
    If you created a Kubernetes Secret for `INTERNAL_BIND_KEY` manually (e.g. for ArgoRollout deployments), it can also be safely deleted.
    :::
 
+2. **MCP Connect Service isolated to a dedicated Kubernetes namespace** — `codemie-mcp-connect-service` is now deployed in its own `codemie-mcp-connect-service` namespace with Pod Security Admission (`restricted`) enforced. This improves workload isolation and aligns with security best practices.
+
+   :::tip Script deployments
+   The provided deployment script handles namespace creation, Pod Security Admission labeling, and service deployment automatically. No manual action is required.
+   :::
+
+   :::note Manual migration (without deployment script)
+   To apply the same isolation manually:
+   1. Create the namespace and apply Pod Security Admission labels:
+
+      ```bash
+      kubectl create namespace codemie-mcp-connect-service
+      kubectl label namespace codemie-mcp-connect-service \
+        pod-security.kubernetes.io/enforce=restricted \
+        pod-security.kubernetes.io/enforce-version=latest \
+        --overwrite
+      ```
+
+   2. Redeploy the Helm chart into the new namespace and update `MCP_CONNECT_URL` in the **AI/Run CodeMie Backend** Helm values:
+
+      ```yaml
+      - name: MCP_CONNECT_URL
+        value: "http://codemie-mcp-connect-service-{MCP_CONNECT_BUCKET}.codemie-mcp-connect-service-headless.codemie-mcp-connect-service:3000"
+      ```
+
+   3. Delete the old deployment from the `codemie` namespace.
+      :::
+
 </details>
 
 <details>
