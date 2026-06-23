@@ -438,27 +438,27 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'category',
-                  label: 'Lightweight (EC2)',
+                  label: 'On VM (EC2)',
                   link: {
                     type: 'doc',
-                    id: 'admin/deployment/aws/lightweight/overview',
+                    id: 'admin/deployment/aws/on-vm/overview',
                   },
                   collapsed: true,
                   items: [
-                    'admin/deployment/aws/lightweight/prerequisites',
-                    'admin/deployment/aws/lightweight/architecture',
+                    'admin/deployment/aws/on-vm/prerequisites',
+                    'admin/deployment/aws/on-vm/architecture',
                     {
                       type: 'category',
                       label: 'Deployment',
                       link: {
                         type: 'doc',
-                        id: 'admin/deployment/aws/lightweight/deployment/deployment',
+                        id: 'admin/deployment/aws/on-vm/deployment/deployment',
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/aws/lightweight/deployment/scripted-deployment',
-                        'admin/deployment/aws/lightweight/deployment/manual-deployment',
-                        'admin/deployment/aws/lightweight/deployment/byo',
+                        'admin/deployment/aws/on-vm/deployment/scripted-deployment',
+                        'admin/deployment/aws/on-vm/deployment/manual-deployment',
+                        'admin/deployment/aws/on-vm/deployment/byo',
                       ],
                     },
                   ],

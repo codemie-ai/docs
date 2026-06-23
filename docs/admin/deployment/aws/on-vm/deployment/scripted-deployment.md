@@ -3,13 +3,13 @@ id: scripted-deployment
 title: Scripted Deployment
 sidebar_label: Scripted Deployment
 sidebar_position: 5
-pagination_prev: admin/deployment/aws/lightweight/deployment/deployment
-pagination_next: admin/deployment/aws/lightweight/deployment/manual-deployment
+pagination_prev: admin/deployment/aws/on-vm/deployment/deployment
+pagination_next: admin/deployment/aws/on-vm/deployment/manual-deployment
 ---
 
 # Scripted Deployment
 
-This guide walks through deploying CodeMie Lightweight using the automated `deploy.sh` script. The script handles all phases automatically: IAM role creation, Terraform state backend, infrastructure provisioning, and application deployment.
+This guide walks through deploying CodeMie On VM using the automated `deploy.sh` script. The script handles all phases automatically: IAM role creation, Terraform state backend, infrastructure provisioning, and application deployment.
 
 :::tip Recommended Approach
 Scripted deployment is the recommended method as it handles prerequisite checks, configuration validation, and proper sequencing of Terraform operations automatically.
@@ -26,7 +26,7 @@ Phase 1 only needs to run once per AWS account. If the role already exists, skip
 ### Step 1: Navigate to the IAM module
 
 ```bash
-cd codemie-lightweight-aws-iam/
+cd terraform/aws/codemie-on-vm-aws-iam/
 ```
 
 ### Step 2: Configure variables
@@ -36,7 +36,7 @@ Create a `terraform.tfvars` file:
 ```hcl
 region             = "eu-north-1"
 platform_name      = "codemie"
-deployer_role_name = "CodemieLightweightDeployerRole"
+deployer_role_name = "CodemieOnVmDeployerRole"
 
 # Optional: IAM permissions boundary (leave empty if not required)
 iam_permissions_boundary_policy_arn = ""
@@ -45,7 +45,7 @@ iam_permissions_boundary_policy_arn = ""
 tags = {
   "SysName"     = "CodeMie"
   "Environment" = "Development"
-  "Project"     = "codemie-lightweight"
+  "Project"     = "codemie-on-vm"
 }
 ```
 
@@ -61,7 +61,7 @@ terraform apply
 
 ```bash
 terraform output deployer_iam_role_arn
-# Example: arn:aws:iam::123456789012:role/CodemieLightweightDeployerRole
+# Example: arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole
 ```
 
 Save this ARN — you will use it as `TF_VAR_role_arn` in the next phase.
@@ -70,11 +70,7 @@ Save this ARN — you will use it as `TF_VAR_role_arn` in the next phase.
 
 ## Phase 2: Platform Deployment
 
-### Step 1: Navigate to the platform directory
-
-```bash
-cd codemie-lightweight/
-```
+### Step 1: Navigate to the repo root
 
 ### Step 2: Place the GCP registry key
 
@@ -96,7 +92,7 @@ Edit `deployment.conf`:
 # ── AWS ──────────────────────────────────────────────────────────────
 AWS_PROFILE=""                          # AWS CLI profile (optional)
 TF_VAR_region="eu-north-1"
-TF_VAR_role_arn="arn:aws:iam::123456789012:role/CodemieLightweightDeployerRole"
+TF_VAR_role_arn="arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole"
 
 # ── Terraform State ──────────────────────────────────────────────────
 TF_VAR_s3_states_bucket_name="codemie-terraform-states"

@@ -3,13 +3,13 @@ id: manual-deployment
 title: Manual Deployment
 sidebar_label: Manual Deployment
 sidebar_position: 6
-pagination_prev: admin/deployment/aws/lightweight/deployment/scripted-deployment
-pagination_next: admin/deployment/aws/lightweight/deployment/byo
+pagination_prev: admin/deployment/aws/on-vm/deployment/scripted-deployment
+pagination_next: admin/deployment/aws/on-vm/deployment/byo
 ---
 
 # Manual Deployment
 
-This guide provides step-by-step instructions for manually deploying CodeMie Lightweight infrastructure using Terraform, followed by application provisioning via the BYO mode (`./deploy.sh --byo`).
+This guide provides step-by-step instructions for manually deploying CodeMie On VM infrastructure using Terraform, followed by application provisioning via the BYO mode (`./deploy.sh --byo`).
 
 :::info When to Use Manual Deployment
 Manual deployment is suitable when you need fine-grained control over each Terraform phase, want to customize infrastructure configurations, or are integrating with existing infrastructure management workflows.
@@ -22,17 +22,17 @@ Ensure you have completed all requirements from the [Prerequisites](../../prereq
 - [ ] **AWS Access**: Programmatic access with IAM permissions
 - [ ] **Tools Installed**: Terraform 1.15.x, AWS CLI, jq, openssl, envsubst, session-manager-plugin
 - [ ] **AWS Authentication**: Configured AWS credentials
-- [ ] **Repository Access**: Cloned [codemie-lightweight](https://gitbud.epam.com/epm-cdme/codemie-lightweight)
+- [ ] **Repository Access**: Cloned [codemie-on-vm](https://gitbud.epam.com/epm-cdme/codemie-on-vm)
 - [ ] **GCP Registry**: `key.json` file available
 
 ## Deployment Phases
 
-| Phase                                | Description                                | Directory                                       |
-| ------------------------------------ | ------------------------------------------ | ----------------------------------------------- |
-| **Phase 1: IAM Deployer Role**       | Creates IAM role with required permissions | `codemie-lightweight-aws-iam/`                  |
-| **Phase 2: State Backend**           | Creates S3 bucket for Terraform state      | `codemie-lightweight/terraform/remote-backend/` |
-| **Phase 3: Platform Infrastructure** | Provisions VPC, EC2, S3, KMS, ALB          | `codemie-lightweight/terraform/platform/`       |
-| **Phase 4: Application**             | Deploys Docker Compose stack via BYO mode  | `codemie-lightweight/`                          |
+| Phase                                | Description                                | Directory                              |
+| ------------------------------------ | ------------------------------------------ | -------------------------------------- |
+| **Phase 1: IAM Deployer Role**       | Creates IAM role with required permissions | `terraform/aws/codemie-on-vm-aws-iam/` |
+| **Phase 2: State Backend**           | Creates S3 bucket for Terraform state      | `terraform/aws/remote-backend/`        |
+| **Phase 3: Platform Infrastructure** | Provisions VPC, EC2, S3, KMS, ALB          | `terraform/aws/platform/`              |
+| **Phase 4: Application**             | Deploys Docker Compose stack via BYO mode  | `./` (repo root)                       |
 
 ---
 
@@ -45,7 +45,7 @@ This phase only needs to run once per AWS account.
 1. Navigate to the IAM module:
 
 ```bash
-cd codemie-lightweight-aws-iam/
+cd terraform/aws/codemie-on-vm-aws-iam/
 ```
 
 2. Create a `terraform.tfvars` file:
@@ -53,7 +53,7 @@ cd codemie-lightweight-aws-iam/
 ```hcl
 region             = "eu-north-1"
 platform_name      = "codemie"
-deployer_role_name = "CodemieLightweightDeployerRole"
+deployer_role_name = "CodemieOnVmDeployerRole"
 
 # Optional: IAM Permissions Boundary
 iam_permissions_boundary_policy_arn = ""
@@ -62,7 +62,7 @@ iam_permissions_boundary_policy_arn = ""
 tags = {
   "SysName"     = "CodeMie"
   "Environment" = "Development"
-  "Project"     = "codemie-lightweight"
+  "Project"     = "codemie-on-vm"
 }
 ```
 
@@ -78,7 +78,7 @@ terraform apply tfplan
 
 ```bash
 terraform output deployer_iam_role_arn
-# Example: arn:aws:iam::123456789012:role/CodemieLightweightDeployerRole
+# Example: arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole
 ```
 
 ---
@@ -88,7 +88,7 @@ terraform output deployer_iam_role_arn
 1. Navigate to the remote backend directory:
 
 ```bash
-cd codemie-lightweight/terraform/remote-backend/
+cd terraform/aws/remote-backend/
 ```
 
 2. Initialize Terraform:
@@ -102,7 +102,7 @@ terraform init
 ```bash
 terraform plan -out=tfplan \
   -var="region=eu-north-1" \
-  -var="role_arn=arn:aws:iam::123456789012:role/CodemieLightweightDeployerRole" \
+  -var="role_arn=arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole" \
   -var="bucket_name=codemie-terraform-states"
 
 terraform apply tfplan
@@ -117,7 +117,7 @@ The S3 bucket is now ready for storing platform state.
 1. Navigate to the platform directory:
 
 ```bash
-cd codemie-lightweight/terraform/platform/
+cd terraform/aws/platform/
 ```
 
 2. Create `backend.tfvars`:
@@ -139,7 +139,7 @@ terraform init -backend-config=backend.tfvars
 
 ```hcl
 region              = "eu-north-1"
-role_arn            = "arn:aws:iam::123456789012:role/CodemieLightweightDeployerRole"
+role_arn            = "arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole"
 platform_name       = "codemie"
 instance_type       = "t3.2xlarge"
 volume_size         = 100
@@ -193,10 +193,6 @@ chmod 600 codemie-key.pem
 Now that infrastructure is provisioned manually, use the BYO mode to deploy the application stack. The BYO mode skips Terraform and connects directly to the EC2 instance.
 
 1. Navigate to the project root:
-
-```bash
-cd codemie-lightweight/
-```
 
 2. Place the GCP registry key:
 

@@ -3,13 +3,13 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
-pagination_prev: admin/deployment/aws/lightweight/overview
-pagination_next: admin/deployment/aws/lightweight/architecture
+pagination_prev: admin/deployment/aws/on-vm/overview
+pagination_next: admin/deployment/aws/on-vm/architecture
 ---
 
 # Prerequisites
 
-This page outlines the requirements for deploying AI/Run CodeMie Lightweight. Ensure all prerequisites are met before proceeding.
+This page outlines the requirements for deploying AI/Run CodeMie On VM. Ensure all prerequisites are met before proceeding.
 
 ## AWS Account Requirements
 
@@ -71,17 +71,20 @@ Contact your CodeMie administrator or EPAM delivery team to obtain the `key.json
 Clone the deployment repository:
 
 ```bash
-git clone https://gitbud.epam.com/epm-cdme/codemie-lightweight.git
-cd codemie-lightweight
+git clone https://gitbud.epam.com/epm-cdme/codemie-on-vm.git
+cd codemie-on-vm
 ```
 
-The repository contains two directories:
+The repository structure:
 
-| Directory                      | Purpose                                                   |
-| ------------------------------ | --------------------------------------------------------- |
-| `codemie-lightweight/`         | Main deployment: Terraform, Docker Compose, deploy script |
-| `codemie-lightweight-aws-iam/` | Terraform module for IAM deployer role                    |
+| Directory                              | Purpose                                        |
+| -------------------------------------- | ---------------------------------------------- |
+| `compose/`                             | Docker Compose files and service configuration |
+| `deploy.sh`                            | Deployment script                              |
+| `terraform/aws/codemie-on-vm-aws-iam/` | IAM deployer role Terraform module             |
+| `terraform/aws/remote-backend/`        | S3 Terraform state bucket                      |
+| `terraform/aws/platform/`              | EC2, VPC, ALB, S3, KMS infrastructure          |
 
 ## Next Steps
 
-After verifying all prerequisites, review the [Architecture](/admin/deployment/aws/lightweight/architecture) to understand what will be deployed.
+After verifying all prerequisites, review the [Architecture](/admin/deployment/aws/on-vm/architecture) to understand what will be deployed.

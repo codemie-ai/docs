@@ -3,13 +3,13 @@ id: deployment
 title: Deployment
 sidebar_label: Deployment
 sidebar_position: 4
-pagination_prev: admin/deployment/aws/lightweight/architecture
-pagination_next: admin/deployment/aws/lightweight/deployment/scripted-deployment
+pagination_prev: admin/deployment/aws/on-vm/architecture
+pagination_next: admin/deployment/aws/on-vm/deployment/scripted-deployment
 ---
 
 # Deployment
 
-This section covers deploying CodeMie Lightweight infrastructure and application stack.
+This section covers deploying CodeMie On VM infrastructure and application stack.
 
 ## Deployment Methods
 
