@@ -747,6 +747,12 @@ const sidebars: SidebarsConfig = {
                     'admin/configuration/extensions/litellm-proxy/spend-logs-retention',
                   ],
                 },
+                {
+                  type: 'category',
+                  label: 'AWS',
+                  collapsed: true,
+                  items: ['admin/configuration/extensions/aws-agentcore/agentcore'],
+                },
               ],
             },
             {

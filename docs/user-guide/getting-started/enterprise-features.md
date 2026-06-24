@@ -30,6 +30,12 @@ description: Overview of all Enterprise Edition features in AI/Run CodeMie, with
 | **Salesforce DevForce AI**    | AI-powered development accelerator for Salesforce workflows. Provides intelligent assistance for Salesforce-related development tasks and automation.                                                                                                              | [Salesforce DevForce AI](../../../admin/deployment/extensions/salesforce-devforce-ai/)       |
 | **MF Lens**                   | Mainframe code analysis and exploration solution. Uses graph-based (Neo4j) knowledge representation for COBOL and mainframe code, with LiteLLM for AI-powered insights.                                                                                            | [MF Lens](../../../admin/deployment/extensions/mf-lens/)                                     |
 
+## AWS AgentCore
+
+| Feature           | Description                                                                                                                                                                        | Documentation                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **AWS AgentCore** | Discover AWS-hosted agent runtimes, browse their endpoints, and install them as assistants in the platform — without writing integration code. Requires an active AWS integration. | [AWS AgentCore](../../../admin/configuration/extensions/aws-agentcore/agentcore) |
+
 ## Analytics & Governance
 
 | Feature                   | Description                                                                                                                                                                                                                                                                               | Documentation                                                                                                                                                                                  |
