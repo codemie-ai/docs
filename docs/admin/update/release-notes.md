@@ -72,7 +72,7 @@ No third-party component updates in this release.
    :::tip Network isolation hardening
    Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
    recommended to enforce least-privilege traffic controls. See
-   [Network Policies for MCP Connect Service](../security/network-policies/mcp-connect-service.md) for
+   [Network Policies for MCP Connect Service](../security/network-policies/mcp-connect-service.mdx) for
    cloud-specific configurations and helper scripts.
    :::
 

@@ -7,6 +7,9 @@ pagination_prev: admin/security/network-policies/index
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Network Policies for MCP Connect Service
 
 Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
@@ -41,7 +44,10 @@ kubectl get pods -n kube-system --show-labels | grep -i dns
 
 :::
 
-## GCP Configuration
+## Cloud Configuration
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="gcp" label="GCP" default>
 
 To enforce traffic controls on GCP, the policy must be added manually to the
 `extraObjects` section of the `codemie-mcp-connect-service` Helm chart values, with the
@@ -165,7 +171,8 @@ extraObjects:
 
 Once the values are updated, redeploy the chart to apply the changes.
 
-## AWS Configuration
+  </TabItem>
+  <TabItem value="aws" label="AWS">
 
 To enforce traffic controls on AWS, the AWS block in the `extraObjects` section of the
 `codemie-mcp-connect-service` Helm chart values must be uncommented and the GCP block
@@ -269,3 +276,6 @@ extraObjects:
 ```
 
 Once the values are updated, redeploy the chart to apply the changes.
+
+  </TabItem>
+</Tabs>
