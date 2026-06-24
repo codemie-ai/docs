@@ -769,7 +769,20 @@ const sidebars: SidebarsConfig = {
             id: 'admin/security/index',
           },
           collapsed: true,
-          items: ['admin/security/data-processing-storage', 'admin/security/roles-rbac'],
+          items: [
+            'admin/security/data-processing-storage',
+            'admin/security/roles-rbac',
+            {
+              type: 'category',
+              label: 'Network Policies',
+              link: {
+                type: 'doc',
+                id: 'admin/security/network-policies/index',
+              },
+              collapsed: true,
+              items: ['admin/security/network-policies/mcp-connect-service'],
+            },
+          ],
         },
         {
           type: 'category',

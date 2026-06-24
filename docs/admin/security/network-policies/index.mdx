@@ -1,0 +1,45 @@
+---
+id: index
+title: Network Policies
+sidebar_label: Network Policies
+sidebar_position: 3
+pagination_prev: admin/security/index
+pagination_next: null
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Network Policies
+
+Kubernetes `NetworkPolicy` controls pod-level traffic by allowing only explicitly defined
+sources and destinations. Applying network policies to CodeMie service namespaces
+enforces network segmentation and limits unnecessary communication between workloads in
+the cluster.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/protect.svg"
+    iconType="image"
+    title="MCP Connect Service"
+    description="Allow inbound traffic only from the CodeMie API and permit outbound access to DNS and the public internet."
+    link="/admin/security/network-policies/mcp-connect-service"
+  />
+  <div
+    style={{
+      border: '1px dashed var(--ifm-color-emphasis-300)',
+      borderRadius: '8px',
+      padding: '1.5rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '160px',
+      opacity: 0.5,
+    }}
+  >
+    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--ifm-color-emphasis-600)' }}>
+      More services coming soon
+    </p>
+  </div>
+</FeatureGrid>

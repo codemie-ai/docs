@@ -69,6 +69,13 @@ No third-party component updates in this release.
    3. Delete the old deployment from the `codemie` namespace.
       :::
 
+   :::tip Network isolation hardening
+   Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
+   recommended to enforce least-privilege traffic controls. See
+   [Network Policies for MCP Connect Service](../security/network-policies/mcp-connect-service.md) for
+   cloud-specific configurations and helper scripts.
+   :::
+
 3. **AWS Terraform changes**
    - **KMS hardening** — replaced the account-root `kms:*` wildcard with least-privilege policies. Key administrators now have management permissions only, and the IRSA role has cryptographic operations only. The KMS IAM policy scope is narrowed to the specific key. Review KMS-dependent workloads for access regressions after upgrading.
 
