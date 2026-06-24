@@ -183,6 +183,46 @@ configured. If any are missing, a **Missing Integrations** modal appears with op
 add them or skip validation. See [Integration Validation During Assistant Save](../tools_integrations/integrations/index.md#integration-validation-during-assistant-save).
 :::
 
+## Limit Tool Output Tokens
+
+Large tool outputs — a full file read, a long API response, or a wide search result — can
+consume a significant share of the model's context window. The **Limit Tool Output Tokens**
+setting caps, per assistant, how many tokens a single tool's output may contribute to the
+conversation.
+
+The setting is located in the assistant configuration form, inside the **Extra configuration**
+section, alongside **LLM model**, **Temperature**, and **Top P**.
+
+![Limit Tool Output Tokens field in the Extra configuration section](./images/limit-tool-output-tokens.png)
+
+**Behavior**
+
+- When the field is left empty, each tool applies its own built-in output limit. This is the
+  default behavior.
+- When a value is set, it acts as a single, assistant-wide cap that overrides every tool's
+  individual default, including per-MCP-server limits. Tool outputs larger than the limit are
+  truncated before they reach the model.
+
+**Field rules**
+
+| Property       | Behavior                                                               |
+| -------------- | ---------------------------------------------------------------------- |
+| Default state  | Empty — no assistant-specific limit is applied                         |
+| Accepted input | Positive whole numbers only                                            |
+| Placeholder    | `30000` is shown as a hint only; it does not set a value automatically |
+| Persistence    | A saved value is retained and shown again when the assistant is edited |
+
+:::tip
+Lower the limit for an assistant that calls tools returning very large payloads, to preserve
+context space for reasoning. Raise it — or leave it empty — when the full tool output is needed
+for accurate answers.
+:::
+
+:::note
+The `30000` placeholder is a visual hint only. Until a value is entered and saved, the assistant
+continues to use each tool's own default limit.
+:::
+
 ## Managing Your Assistant
 
 4. Once created, your assistant appears in the **My Assistants** menu:
