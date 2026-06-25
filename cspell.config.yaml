@@ -116,6 +116,7 @@ words:
   - Keycloak
   - OIDC
   - OAuth
+  - PKCE
   - DaemonSet
   - ConfigMap
   - tfvars
