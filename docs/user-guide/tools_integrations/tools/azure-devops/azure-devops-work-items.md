@@ -28,15 +28,15 @@ Before adding the Work Items tool to an assistant, set up an AzureDevOps integra
 
 ## Available Operations
 
-| Operation              | Description                                                                |
-| ---------------------- | -------------------------------------------------------------------------- |
-| **Create Work Item**   | Create a new work item of type Task, Bug, Issue, or Epic                   |
-| **Update Work Item**   | Update fields on an existing work item by ID                               |
-| **Get Work Item**      | Retrieve a work item by ID, optionally including relations and attachments |
-| **Search Work Items**  | Search work items using a WIQL query                                       |
-| **Link Work Items**    | Create a relationship link between two work items                          |
-| **Get Relation Types** | List all available relation type names and reference names                 |
-| **Get Comments**       | Retrieve comments for a specific work item                                 |
+| Operation              | Description                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| **Create Work Item**   | Create a new work item of type Task, Bug, Issue, or Epic; supports file attachments |
+| **Update Work Item**   | Update fields on an existing work item by ID; supports adding file attachments      |
+| **Get Work Item**      | Retrieve a work item by ID, optionally including relations and attachments          |
+| **Search Work Items**  | Search work items using a WIQL query                                                |
+| **Link Work Items**    | Create a relationship link between two work items                                   |
+| **Get Relation Types** | List all available relation type names and reference names                          |
+| **Get Comments**       | Retrieve comments for a specific work item                                          |
 
 ## Usage Examples
 
@@ -53,6 +53,10 @@ Once the assistant is set up, interact with it using natural language:
 **Update a work item:**
 
 > "Update work item 1042 — set status to In Progress and add a comment: started implementation"
+
+**Attach a file to an existing work item:**
+
+> "Attach the file report.pdf to work item 1042"
 
 **Link work items:**
 
