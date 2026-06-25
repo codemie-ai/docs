@@ -457,6 +457,30 @@ Configure Git provider detection for repository indexing and code analysis.
 | `BITBUCKET_IDENTIFIERS`          | list[string] | `["bitbucket"]`     | URL patterns identifying Bitbucket repositories    |
 | `AZURE_DEVOPS_REPOS_IDENTIFIERS` | list[string] | `["dev.azure.com"]` | URL patterns identifying Azure DevOps repositories |
 
+### SharePoint OAuth
+
+Enable delegated authentication for SharePoint datasources using Authorization Code + PKCE flow.
+
+| Parameter                    | Type    | Default                                                    | Description                                                                                                                                 |
+| ---------------------------- | ------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SHAREPOINT_PKCE_ENABLED`    | boolean | `false`                                                    | Enable Authorization Code + PKCE flow for SharePoint OAuth. Requires `SHAREPOINT_OAUTH_CLIENT_ID` and a matching Azure AD app registration. |
+| `SHAREPOINT_OAUTH_CLIENT_ID` | string  | `""`                                                       | Azure AD application (client) ID used for SharePoint OAuth authorization.                                                                   |
+| `SHAREPOINT_OAUTH_SCOPES`    | string  | `"Sites.Read.All Files.Read.All offline_access User.Read"` | Space-separated OAuth scopes requested during authorization.                                                                                |
+
+:::warning Redis Required
+SharePoint PKCE flow stores OAuth state and tokens in Redis during the authorization handshake. A running Redis instance must be configured (see [Redis Configuration](#redis-configuration)) before enabling `SHAREPOINT_PKCE_ENABLED`.
+:::
+
+:::info Azure AD Setup
+The redirect URI registered in your Azure AD app must match:
+
+```
+{CALLBACK_API_BASE_URL}{API_ROOT_PATH}/v1/sharepoint/oauth/callback
+```
+
+Use the **Web** platform type in Azure AD app registration. Also enable the customer feature flag `features:sharepointCodeMieOAuth` to show the "Sign in with Microsoft" button in the SharePoint datasource setup UI.
+:::
+
 ---
 
 ## NATS Message Broker Configuration
