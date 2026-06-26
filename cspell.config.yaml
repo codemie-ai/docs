@@ -206,7 +206,6 @@ words:
   - phpt
   - rhtml
   # Shell commands, utilities and variables
-  - apiserver
   - orbstack
   - pwgen
   - bcrypt
