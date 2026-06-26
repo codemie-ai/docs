@@ -7,7 +7,7 @@
 GITLEAKS_IMAGE="ghcr.io/gitleaks/gitleaks:v8.30.1"
 
 # Find the first container engine whose daemon is actually running.
-# Apple Containers uses `container` CLI with `container system info`.
+# Apple Containers uses `container` CLI with `container system status`.
 CONTAINER_ENGINE=""
 for engine in docker podman; do
   if command -v "$engine" >/dev/null 2>&1 && "$engine" info >/dev/null 2>&1; then
@@ -16,8 +16,13 @@ for engine in docker podman; do
   fi
 done
 
-if [[ -z "$CONTAINER_ENGINE" ]] && command -v container >/dev/null 2>&1 && container system status 2>/dev/null | grep -q "running"; then
-  CONTAINER_ENGINE=$(command -v container)
+if [[ -z "$CONTAINER_ENGINE" ]] && command -v container >/dev/null 2>&1; then
+  _container_status=$(container system status 2>/dev/null)
+  if echo "$_container_status" | grep -q "container-apiserver" \
+    && echo "$_container_status" | grep -qi "running"; then
+    CONTAINER_ENGINE=$(command -v container)
+  fi
+  unset _container_status
 fi
 
 # If no running engine found, fall back to any installed engine for a helpful error
