@@ -78,6 +78,7 @@ No third-party component updates in this release.
 
 3. **AWS Terraform changes**
    - **KMS hardening** — replaced the account-root `kms:*` wildcard with least-privilege policies. Key administrators now have management permissions only, and the IRSA role has cryptographic operations only. The KMS IAM policy scope is narrowed to the specific key. Review KMS-dependent workloads for access regressions after upgrading.
+   - **Multi-AZ enabled by default for all RDS instances** — all RDS instances (main CodeMie, Keycloak, LiteLLM, Langfuse) now run with a standby replica in a secondary Availability Zone, providing automatic failover in case of an AZ outage. The change is applied during the next scheduled RDS maintenance window.
 
 </details>
 
