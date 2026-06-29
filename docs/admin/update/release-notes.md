@@ -14,6 +14,23 @@ This page provides information about updated third-party components and configur
 ---
 
 <details>
+<summary><strong>CodeMie 2.36.0</strong></summary>
+
+**Release Date:** June 26, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.36.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **AWS Terraform changes**
+   - **IMDS hop limit reduced to 1** — prevents containers from accessing the instance metadata service.
+   - **S3 user data bucket versioning enabled** — the user data S3 bucket now has versioning enabled, protecting against accidental deletion and overwrites. Noncurrent object versions are automatically expired after 365 days.
+
+</details>
+
+<details>
 <summary><strong>CodeMie 2.35.0</strong></summary>
 
 **Release Date:** June 22, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.35.0)
@@ -69,8 +86,17 @@ No third-party component updates in this release.
    3. Delete the old deployment from the `codemie` namespace.
       :::
 
+   :::tip Network isolation hardening
+   Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
+   recommended to enforce least-privilege traffic controls. See
+   [Network Policies for MCP Connect Service](../security/network-policies/mcp-connect-service.mdx) for
+   cloud-specific configurations and helper scripts.
+   :::
+
 3. **AWS Terraform changes**
    - **KMS hardening** — replaced the account-root `kms:*` wildcard with least-privilege policies. Key administrators now have management permissions only, and the IRSA role has cryptographic operations only. The KMS IAM policy scope is narrowed to the specific key. Review KMS-dependent workloads for access regressions after upgrading.
+   - **Multi-AZ enabled by default for all RDS instances** — all RDS instances (main CodeMie, Keycloak, LiteLLM, Langfuse) now run with a standby replica in a secondary Availability Zone, providing automatic failover in case of an AZ outage. The change is applied during the next scheduled RDS maintenance window.
+   - **Network Policy enforcement enabled for the AWS VPC CNI addon.**
 
 </details>
 

@@ -1,0 +1,281 @@
+---
+id: mcp-connect-service
+title: Network Policies for MCP Connect Service
+sidebar_label: MCP Connect Service
+sidebar_position: 1
+pagination_prev: admin/security/network-policies/index
+pagination_next: null
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Network Policies for MCP Connect Service
+
+Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
+recommended so that least-privilege traffic controls are enforced. When no policy is
+defined, pods in the namespace are allowed to communicate with any workload in the
+cluster and to reach any external destination.
+
+## Policy Design
+
+Both ingress and egress for the `codemie-mcp-connect-service` pod are covered by a
+single `NetworkPolicy` resource:
+
+| Direction | Rule                                                                                  | Purpose                                                                                         |
+| --------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Ingress   | Traffic from the `codemie-api` pod in the `codemie` namespace on port 3000 is allowed | Access to MCP Connect Service is restricted to the API backend                                  |
+| Egress    | Traffic to `kube-dns` in `kube-system` on UDP/TCP 53 is allowed                       | DNS name resolution                                                                             |
+| Egress    | Traffic to `0.0.0.0/0`, with internal CIDRs listed under `ipBlock.except`, is allowed | Outbound access to external MCP servers is permitted while cluster-internal ranges are excluded |
+
+Once the policy is applied, all traffic that is not explicitly permitted is denied.
+
+:::info Cloud-specific values
+The `ipBlock.except` block in the egress rule must list the internal CIDRs of the
+specific cluster. These differ between GCP and AWS. The helper scripts below can be used
+to retrieve the correct values before the policy is applied.
+
+The DNS egress rule uses `k8s-app: kube-dns` to select the DNS pods in `kube-system`.
+Verify the label on the cluster before applying:
+
+```bash
+kubectl get pods -n kube-system --show-labels | grep -i dns
+```
+
+:::
+
+## Cloud Configuration
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="gcp" label="GCP" default>
+
+To enforce traffic controls on GCP, the policy must be added manually to the
+`extraObjects` section of the `codemie-mcp-connect-service` Helm chart values, with the
+cluster-specific CIDRs listed under `ipBlock.except`.
+
+### Retrieving CIDRs
+
+:::tip Prerequisites
+The script requires `gcloud` to be authenticated (`gcloud auth login`) and the
+principal must have the `container.clusters.get` and `compute.subnetworks.get`
+permissions on the project.
+:::
+
+<details>
+<summary>Script: get-gcp-network-policy-cidrs.sh</summary>
+
+```bash
+#!/usr/bin/env bash
+# Usage: ./get-gcp-network-policy-cidrs.sh <cluster-name> <region> <project>
+
+CLUSTER=$1
+REGION=$2
+PROJECT=$3
+
+SUBNET=$(gcloud container clusters describe "$CLUSTER" \
+  --region "$REGION" --project "$PROJECT" \
+  --format='value(subnetwork)')
+
+NODE_CIDR=$(gcloud compute networks subnets describe "$SUBNET" \
+  --region "$REGION" --project "$PROJECT" \
+  --format='value(ipCidrRange)')
+
+POD_CIDR=$(gcloud container clusters describe "$CLUSTER" \
+  --region "$REGION" --project "$PROJECT" \
+  --format='value(clusterIpv4Cidr)')
+
+SVC_CIDR=$(gcloud container clusters describe "$CLUSTER" \
+  --region "$REGION" --project "$PROJECT" \
+  --format='value(servicesIpv4Cidr)')
+
+MASTER_CIDR=$(gcloud container clusters describe "$CLUSTER" \
+  --region "$REGION" --project "$PROJECT" \
+  --format='value(privateClusterConfig.masterIpv4CidrBlock)')
+
+echo " - $NODE_CIDR     # node subnet"
+echo " - $MASTER_CIDR   # master"
+echo " - $POD_CIDR      # pods"
+echo " - $SVC_CIDR      # services"
+echo " - 169.254.169.254/32 # GCP metadata"
+```
+
+**Example output:**
+
+```
+ - 10.10.10.0/24      # node subnet
+ - 10.0.0.0/28        # master
+ - 172.20.0.0/16      # pods
+ - 172.21.0.0/17      # services
+ - 169.254.169.254/32 # GCP metadata
+```
+
+</details>
+
+Once retrieved, each line is placed as an individual entry under the `ipBlock.except`
+list of the egress rule (see the Policy YAML below). The inline `# comments` are valid
+YAML and serve as documentation only.
+
+### Policy YAML
+
+Place the values from the script output under the `except` block in the Helm chart values:
+
+```yaml
+...
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: codemie-mcp-connect-service-policy
+    spec:
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: codemie-mcp-connect-service
+          app.kubernetes.io/name: codemie-mcp-connect-service
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: codemie
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: codemie-api
+          ports:
+            - protocol: TCP
+              port: 3000
+      egress:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - protocol: UDP
+              port: 53
+            - protocol: TCP
+              port: 53
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.10.10.0/24      # node subnet
+                  - 10.0.0.0/28        # master
+                  - 172.20.0.0/16      # pods
+                  - 172.21.0.0/17      # services
+                  - 169.254.169.254/32 # GCP metadata
+```
+
+Once the values are updated, redeploy the chart to apply the changes.
+
+  </TabItem>
+  <TabItem value="aws" label="AWS">
+
+To enforce traffic controls on AWS, the AWS block in the `extraObjects` section of the
+`codemie-mcp-connect-service` Helm chart values must be uncommented and the GCP block
+removed, with the cluster-specific CIDRs listed under `ipBlock.except`.
+
+:::warning Prerequisite: network policy enforcement on EKS
+`NetworkPolicy` requires `enableNetworkPolicy: true` on the `vpc-cni` add-on (or
+Calico/Cilium). If this is not configured, the policy is applied but no traffic is
+filtered.
+:::
+
+### Retrieving CIDRs
+
+<details>
+<summary>Script: get-aws-network-policy-cidrs.sh</summary>
+
+```bash
+#!/usr/bin/env bash
+# Usage: ./get-aws-network-policy-cidrs.sh <cluster-name> <region>
+
+CLUSTER=$1
+REGION=$2
+
+VPC_ID=$(aws eks describe-cluster --name "$CLUSTER" --region "$REGION" \
+  --query 'cluster.resourcesVpcConfig.vpcId' --output text)
+
+echo "VPC CIDR(s): $(aws ec2 describe-vpcs --vpc-ids "$VPC_ID" --region "$REGION" \
+  --query 'Vpcs[0].CidrBlockAssociationSet[*].CidrBlock' --output text)"
+
+echo "Service CIDR: $(aws eks describe-cluster --name "$CLUSTER" --region "$REGION" \
+  --query 'cluster.kubernetesNetworkConfig.serviceIpv4Cidr' --output text)"
+
+echo "AWS metadata: 169.254.169.254/32"
+```
+
+**Example output:**
+
+```
+VPC CIDR(s): 10.0.0.0/16
+Service CIDR: 172.20.0.0/16
+AWS metadata: 169.254.169.254/32
+```
+
+</details>
+
+:::note Secondary VPC CIDRs
+If the VPC has secondary CIDR associations, more than one VPC CIDR is returned. Each
+block must be added as a separate entry under `except`.
+:::
+
+### Policy YAML
+
+The `except` block is updated with the values from the script above:
+
+```yaml
+...
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: codemie-mcp-connect-service-policy
+    spec:
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: codemie-mcp-connect-service
+          app.kubernetes.io/name: codemie-mcp-connect-service
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: codemie
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: codemie-api
+          ports:
+            - protocol: TCP
+              port: 3000
+      egress:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - protocol: UDP
+              port: 53
+            - protocol: TCP
+              port: 53
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/16        # VPC (nodes + pods, aws-vpc-cni)
+                  - 172.20.0.0/16      # services
+                  - 169.254.169.254/32 # AWS metadata
+```
+
+Once the values are updated, redeploy the chart to apply the changes.
+
+  </TabItem>
+</Tabs>

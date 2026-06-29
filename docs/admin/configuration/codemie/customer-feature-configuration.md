@@ -46,6 +46,8 @@ Use this table to quickly find where each component appears in the UI.
 | `features:favorites`                      | Assistants list, Skills list, Workflows list              | Favorite/Unfavorite action buttons                                 | Favorite actions hidden                                                             |                                           |
 | `features:pinnedAssistants`               | Assistants list, Navigation sidebar                       | Pin/Unpin actions and Pinned Assistants sidebar section            | Pin actions and sidebar section hidden                                              |                                           |
 | `features:favoritesPage`                  | Main navigation                                           | Favorites page and navigation link                                 | Favorites page and nav link hidden                                                  | Default: disabled                         |
+| **DATASOURCE FEATURES**                   |                                                           |                                                                    |                                                                                     |                                           |
+| `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                      | "Sign in with Microsoft (CodeMie Project)" authentication option   | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`   |
 | **INTEGRATED APPLICATIONS**               |                                                           |                                                                    |                                                                                     |                                           |
 | `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                         | Application card                                                                    | Type: `module`, `iframe`, or `link`       |
 | **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                    |                                                                                     |                                           |
@@ -347,6 +349,31 @@ components:
       enabled: false
       name: "Favorites Page"
       description: "Enable the dedicated Favorites page and its navigation link"
+
+  # WHERE: Data Sources → SharePoint setup form
+  # ENABLED: Shows "Sign in with Microsoft (CodeMie Project)" authentication option
+  # DISABLED: Hides SharePoint PKCE auth option
+  # NOTE: Requires SHAREPOINT_PKCE_ENABLED=true in API configuration
+  - id: "features:sharepointCodeMieOAuth"
+    settings:
+      enabled: true
+      name: "SharePoint CodeMie OAuth"
+      description: "Show Sign in with Microsoft (CodeMie Project) authentication option for SharePoint datasource"
+```
+
+### Datasource Features
+
+Controls authentication options available in the datasource setup UI.
+
+**Where it appears:** Data Sources → creation/edit form for the relevant datasource type
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true         # Required
+  name: "Display Name"  # Label shown in the UI
+  description: "..."    # Tooltip or helper text
 ```
 
 ### Integrated Applications

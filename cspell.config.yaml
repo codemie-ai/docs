@@ -17,6 +17,7 @@ ignorePaths:
   - .vscode
   - cspell.config.yaml
   - CLAUDE.md
+  - scripts/
 
 # Custom dictionary - project-specific words that are correct
 words:
@@ -63,6 +64,7 @@ words:
   # AWS
   - AgentCore
   - agentcore
+  - IMDS
   - EKS
   - S3
   - RDS
@@ -118,6 +120,7 @@ words:
   - Keycloak
   - OIDC
   - OAuth
+  - PKCE
   - DaemonSet
   - ConfigMap
   - tfvars
