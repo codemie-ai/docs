@@ -24,7 +24,8 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **AWS Terraform changes**
+   - **IMDS hop limit reduced to 1** — prevents containers from accessing the instance metadata service.
 
 </details>
 

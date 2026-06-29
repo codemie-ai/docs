@@ -61,6 +61,7 @@ words:
   - IRSA
   - rollouts
   # AWS
+  - IMDS
   - EKS
   - S3
   - RDS
