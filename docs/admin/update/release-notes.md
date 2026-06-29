@@ -27,6 +27,7 @@ No third-party component updates in this release.
 1. **AWS Terraform changes**
    - **IMDS hop limit reduced to 1** — prevents containers from accessing the instance metadata service.
    - **S3 user data bucket versioning enabled** — the user data S3 bucket now has versioning enabled, protecting against accidental deletion and overwrites. Noncurrent object versions are automatically expired after 365 days.
+   - **`AmazonBedrockFullAccess` replaced with a custom IAM policy** — the broad AWS-managed policy is replaced with a least-privilege custom policy scoped to Anthropic, Amazon Titan, Qwen, and Moonshot AI models, including cross-region inference profiles for all supported prefixes (`us`, `eu`, `ap`, `global`, `jp`, `au`).
 
 </details>
 
