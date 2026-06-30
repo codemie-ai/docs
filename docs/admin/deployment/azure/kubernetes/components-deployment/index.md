@@ -3,8 +3,8 @@ id: components-deployment-overview
 sidebar_position: 5
 title: AI/Run CodeMie Components Deployment
 sidebar_label: CodeMie Components Deployment
-pagination_prev: admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview
-pagination_next: admin/deployment/azure/components-deployment/components-scripted-deployment
+pagination_prev: admin/deployment/azure/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/azure/kubernetes/components-deployment/components-scripted-deployment
 ---
 
 # AI/Run CodeMie Components Deployment
@@ -30,7 +30,7 @@ This phase assumes you have completed [Infrastructure Deployment](../infrastruct
 
 The AI/Run CodeMie application consists of multiple integrated components organized into functional categories:
 
-![Application Stack](../../common/deployment/images/application-stack-diagram.drawio.png)
+![Application Stack](../../../common/deployment/images/application-stack-diagram.drawio.png)
 
 #### Core AI/Run CodeMie Services
 

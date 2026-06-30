@@ -3,8 +3,8 @@ id: infrastructure-deployment-overview
 title: Azure Infrastructure Deployment
 sidebar_label: Infrastructure Deployment
 sidebar_position: 4
-pagination_prev: admin/deployment/azure/architecture
-pagination_next: admin/deployment/azure/infrastructure-deployment/infrastructure-scripted-deployment
+pagination_prev: admin/deployment/azure/kubernetes/architecture
+pagination_next: admin/deployment/azure/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment
 ---
 
 # Azure Infrastructure Deployment

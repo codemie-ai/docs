@@ -3,8 +3,8 @@ id: infrastructure-scripted-deployment
 title: Infrastructure Scripted Deployment
 sidebar_label: Infrastructure Scripted Deployment
 sidebar_position: 1
-pagination_prev: admin/deployment/azure/infrastructure-deployment/infrastructure-deployment-overview
-pagination_next: admin/deployment/azure/components-deployment/components-deployment-overview
+pagination_prev: admin/deployment/azure/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/azure/kubernetes/components-deployment/components-deployment-overview
 ---
 
 import Tabs from '@theme/Tabs';
