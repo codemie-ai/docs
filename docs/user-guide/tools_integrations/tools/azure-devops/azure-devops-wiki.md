@@ -49,6 +49,7 @@ Before adding the Wiki tool to an assistant, set up an AzureDevOps integration i
 | **Add Wiki Comment By Path**       | Add a comment to a wiki page identified by its path                 |
 | **Get Wiki Page Stats By ID**      | Get view statistics for a page by ID (up to 30 days)                |
 | **Get Wiki Page Stats By Path**    | Get view statistics for a page by path (up to 30 days)              |
+| **Get Wiki Attachment Content**    | Retrieve and parse the content of a file attached to a wiki page    |
 
 :::tip
 Wiki identifiers can be either the wiki ID or the wiki name (e.g., `MyProject.wiki`). Page paths must start from the page level — do not include the `/Overview/Wiki` prefix shown in Azure DevOps breadcrumbs.
@@ -91,3 +92,48 @@ Once the assistant is set up, interact with it using natural language:
 **Move a page:**
 
 > "Move the 'Old Processes' page to the /Archive section"
+
+## Get Wiki Attachment Content
+
+The **Get Wiki Attachment Content** tool retrieves and parses the actual content of files attached to Azure DevOps wiki pages — not just metadata. This lets assistants read PDFs, documents, spreadsheets, presentations, images, and plain-text files embedded in wiki pages.
+
+### Identification Modes
+
+The tool supports two ways to identify the attachment:
+
+| Mode           | When to use                                                                                                    | Required parameters                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **Direct URL** | Recommended when you already have the attachment URL (e.g., from Get Wiki Page By ID or Get Wiki Page By Path) | `attachment_url`                                             |
+| **Discovery**  | When the page and file name are known but not the URL                                                          | `wiki_identifier` (page ID or page path) + `attachment_name` |
+
+In discovery mode the tool fetches the page markdown, parses all attachment links, and resolves the correct file automatically.
+
+### Supported File Types
+
+| File type      | Extensions                                                                                                                                | How content is returned                                                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Text           | `.txt`, `.md`, `.json`, `.xml`, `.csv`, `.yaml`, `.yml`, `.toml`, `.ini`, `.cfg`, `.conf`, `.log`, `.html`, `.rst`, `.properties`, `.env` | UTF-8 text                                                                           |
+| PDF            | `.pdf`                                                                                                                                    | Extracted text; OCR via AI vision for image-only PDFs (requires multimodal model)    |
+| Images         | `.png`, `.jpg`, `.gif`, `.bmp`, `.webp`                                                                                                   | AI vision description (requires multimodal model); base64 fallback for files ≤ 50 KB |
+| Word           | `.docx`                                                                                                                                   | Extracted text                                                                       |
+| PowerPoint     | `.pptx`                                                                                                                                   | Slide text                                                                           |
+| Excel          | `.xls`, `.xlsx`                                                                                                                           | Sheet content as text                                                                |
+| Other / binary | any other extension                                                                                                                       | Base64-encoded content for files ≤ 50 KB; metadata only for larger files             |
+
+:::note
+PDF OCR and image description require a multimodal AI model to be configured in your CodeMie instance. If no multimodal model is available, image attachments return base64-encoded content (≤ 50 KB) or metadata only.
+:::
+
+### Usage Examples
+
+**Read an attachment by URL:**
+
+> "Read the PDF attached to the Architecture wiki page — use the URL from the page content"
+
+**Read an attachment by name:**
+
+> "Get the content of `requirements.xlsx` attached to the `/Project/Requirements` wiki page"
+
+**Summarize an attached document:**
+
+> "Summarize the Word document attached to the Onboarding wiki page"

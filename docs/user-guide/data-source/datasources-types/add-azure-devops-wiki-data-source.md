@@ -3,7 +3,7 @@ id: add-azure-devops-wiki-data-source
 title: Add and Index Azure DevOps Wiki Data Source
 sidebar_label: Add and Index Azure DevOps Wiki Data Source
 pagination_prev: user-guide/data-source/datasources-types/add-aws-knowledge-bases
-pagination_next: user-guide/data-source/datasources-types/add-provider-datasource
+pagination_next: user-guide/data-source/datasources-types/add-azure-devops-work-items-data-source
 ---
 
 # Add and Index Azure DevOps Wiki Data Source
