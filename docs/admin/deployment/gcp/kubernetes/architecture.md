@@ -3,11 +3,11 @@ id: architecture
 title: AI/Run CodeMie Deployment Architecture
 sidebar_label: Architecture
 sidebar_position: 3
-pagination_prev: admin/deployment/gcp/prerequisites
-pagination_next: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
+pagination_prev: admin/deployment/gcp/kubernetes/prerequisites
+pagination_next: admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
 ---
 
-import ContainerResources from '../common/deployment/architecture/\_container-resources.mdx';
+import ContainerResources from '../../common/deployment/architecture/\_container-resources.mdx';
 
 # AI/Run CodeMie Deployment Architecture
 

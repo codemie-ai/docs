@@ -3,8 +3,8 @@ id: components-deployment-overview
 title: AI/Run CodeMie Components Deployment Overview
 sidebar_label: CodeMie Components Deployment
 sidebar_position: 5
-pagination_prev: admin/deployment/gcp/infrastructure-deployment/infrastructure-deployment-overview
-pagination_next: admin/deployment/gcp/components-deployment/components-scripted-deployment
+pagination_prev: admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-deployment-overview
+pagination_next: admin/deployment/gcp/kubernetes/components-deployment/components-scripted-deployment
 ---
 
 # AI/Run CodeMie Components Deployment
@@ -30,7 +30,7 @@ This phase assumes you have completed [Infrastructure Deployment](../infrastruct
 
 The AI/Run CodeMie application consists of multiple integrated components organized into functional categories. Understanding this architecture helps you plan the deployment sequence and troubleshoot issues effectively.
 
-![Application Stack](../../common/deployment/images/application-stack-diagram.drawio.png)
+![Application Stack](../../../common/deployment/images/application-stack-diagram.drawio.png)
 
 #### Core AI/Run CodeMie Services
 
@@ -255,4 +255,4 @@ Use **Scripted Deployment** for initial installations. Switch to manual deployme
 
 ## Next Steps
 
-After successful component deployment, proceed to [Configuration](../../../configuration/index.mdx) to set up users, AI models, and complete the platform configuration.
+After successful component deployment, proceed to [Configuration](../../../../configuration/index.mdx) to set up users, AI models, and complete the platform configuration.

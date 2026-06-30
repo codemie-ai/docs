@@ -974,4 +974,4 @@ AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 
 - [AWS Deployment Guide](../../deployment/aws/kubernetes/overview.md) - Complete AWS deployment walkthrough
 - [Azure Deployment Guide](../../deployment/azure/kubernetes/overview.md) - Azure-specific setup instructions
-- [GCP Deployment Guide](../../deployment/gcp/overview.md) - Google Cloud deployment steps
+- [GCP Deployment Guide](../../deployment/gcp/kubernetes/overview.md) - Google Cloud deployment steps

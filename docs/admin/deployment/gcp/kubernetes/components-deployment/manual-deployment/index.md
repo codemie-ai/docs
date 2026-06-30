@@ -225,4 +225,4 @@ Installing components out of order will cause deployment failures. Always follow
 
 Begin the installation process by following the guides in order, starting with **[Kubernetes Components](./k8s-components.md)**.
 
-After completing all component installations, proceed to **[Configuration](../../../../configuration/index.mdx)** to configure users, AI models, and data sources.
+After completing all component installations, proceed to **[Configuration](../../../../../configuration/index.mdx)** to configure users, AI models, and data sources.

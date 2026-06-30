@@ -1,0 +1,90 @@
+---
+id: architecture
+title: On VM Deployment Architecture (GCP)
+sidebar_label: Architecture
+sidebar_position: 3
+pagination_prev: admin/deployment/gcp/on-vm/prerequisites
+pagination_next: admin/deployment/gcp/on-vm/deployment/deployment
+---
+
+# On VM Deployment Architecture (GCP)
+
+This page describes the infrastructure and application architecture of CodeMie On VM on GCP.
+
+## Infrastructure Overview
+
+:::info Infrastructure Diagram Coming Soon
+Detailed infrastructure diagrams for GCP On VM are in progress. The table below describes all GCP resources provisioned by Terraform.
+:::
+
+CodeMie On VM runs on a single GCE VM with supporting GCP services. Terraform provisions the following resources:
+
+| Resource                       | Purpose                                                              |
+| ------------------------------ | -------------------------------------------------------------------- |
+| **GCE VM (n2-standard-8)**     | Single VM running Docker Compose (8 vCPU, 32 GB RAM)                 |
+| **VPC / Subnet**               | Isolated network for the VM                                          |
+| **Firewall Rules**             | Controls inbound/outbound traffic to the VM                          |
+| **GCS Bucket**                 | Persistent storage for user data (repos, files)                      |
+| **Cloud KMS Key**              | Encryption key management for storage data                           |
+| **Cloud DNS Private Zone**     | Custom domain resolution (when `TF_VAR_platform_domain_name` is set) |
+| **IAP (Identity-Aware Proxy)** | Secure SSH access to the VM without exposing a public IP             |
+| **Secret Manager**             | Stores the SSH private key for VM access                             |
+
+### Network Modes
+
+| Mode                     | Configuration                                    | Access                                          |
+| ------------------------ | ------------------------------------------------ | ----------------------------------------------- |
+| **Private IP** (default) | `TF_VAR_platform_domain_name` empty              | VM private IP, access via VPN or IAP            |
+| **Domain**               | `TF_VAR_platform_domain_name="codemie.internal"` | Creates Cloud DNS private zone, access via name |
+
+## Application Architecture
+
+All CodeMie services run as Docker containers on the GCE VM, orchestrated by Docker Compose.
+
+![Docker Compose Services](./images/docker-compose-diagram.drawio.png)
+
+### Services by Profile
+
+**Shared services** (both profiles):
+
+| Service       | Image                       | Purpose                                           |
+| ------------- | --------------------------- | ------------------------------------------------- |
+| postgres      | pgvector/pgvector:pg17      | Primary database for application data             |
+| elasticsearch | elasticsearch:8.x           | Document storage and search for Data Sources      |
+| kibana        | kibana:8.x                  | Log visualization and analytics for Elasticsearch |
+| mcp-connect   | codemie-mcp-connect-service | Connector for MCP servers                         |
+| nginx         | nginx:1.31-alpine           | Reverse proxy, TLS termination                    |
+
+**OSS profile:**
+
+| Service        | Purpose                                       |
+| -------------- | --------------------------------------------- |
+| codemie-oss    | API server with built-in local authentication |
+| codemie-ui-oss | Web frontend                                  |
+
+**Enterprise profile:**
+
+| Service           | Purpose                                        |
+| ----------------- | ---------------------------------------------- |
+| codemie           | API server                                     |
+| codemie-ui        | Web frontend                                   |
+| keycloak          | Identity provider (SSO, OIDC)                  |
+| oauth2-proxy      | Authentication proxy in front of nginx         |
+| litellm           | LLM proxy for model routing and key management |
+| nats              | Messaging for plugin engine                    |
+| nats-auth-callout | NATS authentication service                    |
+| mermaid-server    | Diagram rendering                              |
+
+## Resource Requirements
+
+### Minimum GCE VM
+
+| Resource | Minimum | Recommended       |
+| -------- | ------- | ----------------- |
+| vCPU     | 4       | 8 (n2-standard-8) |
+| RAM      | 16 GB   | 32 GB             |
+| Disk     | 50 GB   | 100 GB            |
+
+## Next Steps
+
+- [Deployment](../deployment/) — Deploy CodeMie On VM with Terraform

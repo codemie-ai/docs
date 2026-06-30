@@ -87,12 +87,14 @@ words:
   # GCP
   - GCP
   - GKE
+  - GCE
   - gcloud
   - gsutil
   - anthos
   - t1iylu
   - aiplatform
   - cloudkms
+  - secretmanager
   - Stackdriver
   # Azure
   - AKS

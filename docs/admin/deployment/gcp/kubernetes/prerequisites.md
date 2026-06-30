@@ -3,16 +3,16 @@ id: prerequisites
 title: Prerequisites
 sidebar_label: Prerequisites
 sidebar_position: 2
-pagination_prev: admin/deployment/gcp/overview
-pagination_next: admin/deployment/gcp/architecture
+pagination_prev: admin/deployment/gcp/kubernetes/overview
+pagination_next: admin/deployment/gcp/kubernetes/architecture
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import ClusterRequirements from '../common/deployment/prerequisites/\_cluster-requirements.mdx';
-import NetworkRequirements from '../common/deployment/prerequisites/\_network-requirements.mdx';
-import DeploymentMachineTools from '../common/deployment/prerequisites/\_deployment-machine-tools.mdx';
-import NextSteps from '../common/deployment/prerequisites/\_next-steps.mdx';
+import ClusterRequirements from '../../common/deployment/prerequisites/\_cluster-requirements.mdx';
+import NetworkRequirements from '../../common/deployment/prerequisites/\_network-requirements.mdx';
+import DeploymentMachineTools from '../../common/deployment/prerequisites/\_deployment-machine-tools.mdx';
+import NextSteps from '../../common/deployment/prerequisites/\_next-steps.mdx';
 
 # Prerequisites
 
