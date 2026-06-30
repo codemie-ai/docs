@@ -29,6 +29,10 @@ No third-party component updates in this release.
    - **S3 user data bucket versioning enabled** — the user data S3 bucket now has versioning enabled, protecting against accidental deletion and overwrites. Noncurrent object versions are automatically expired after 365 days.
    - **`AmazonBedrockFullAccess` replaced with a custom IAM policy** — the broad AWS-managed policy is replaced with a least-privilege custom policy scoped to Anthropic, Amazon Titan, Qwen, and Moonshot AI models, including cross-region inference profiles for all supported prefixes (`us`, `eu`, `ap`, `global`, `jp`, `au`).
 
+<h3>Hotfixes</h3>
+
+- **2.36.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.36.1) – June 29, 2026
+
 </details>
 
 <details>
