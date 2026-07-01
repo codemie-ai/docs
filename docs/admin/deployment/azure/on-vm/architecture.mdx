@@ -13,9 +13,7 @@ This page describes the infrastructure and application architecture of CodeMie O
 
 ## Infrastructure Overview
 
-:::info Infrastructure Diagram Coming Soon
-Detailed infrastructure diagrams for Azure On VM are in progress. The table below describes all Azure resources provisioned by Terraform.
-:::
+![Azure On VM Infrastructure Architecture](./images/architecture-diagram.drawio.png)
 
 CodeMie On VM runs on a single Azure VM with supporting Azure services. Terraform provisions the following resources:
 
@@ -27,7 +25,7 @@ CodeMie On VM runs on a single Azure VM with supporting Azure services. Terrafor
 | **Azure Storage Account**      | Persistent storage for user data (repos, files)                      |
 | **Azure Key Vault**            | Encryption key management for storage data                           |
 | **Private DNS Zone**           | Custom domain resolution (when `TF_VAR_platform_domain_name` is set) |
-| **Azure Bastion**              | Secure SSH/RDP access to the VM without exposing a public IP         |
+| **Azure Bastion**              | Secure SSH access to the VM without exposing a public IP             |
 
 ### Network Modes
 
