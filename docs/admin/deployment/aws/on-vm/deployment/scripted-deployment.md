@@ -101,7 +101,7 @@ TF_VAR_s3_states_bucket_name="codemie-terraform-states"
 TF_VAR_platform_name="codemie"
 
 # ── EC2 ──────────────────────────────────────────────────────────────
-TF_VAR_instance_type="t3.2xlarge"       # 8 vCPU, 32GB RAM
+TF_VAR_instance_type="r5.xlarge"        # 4 vCPU, 32GB RAM
 TF_VAR_volume_size=100                  # Root EBS size in GB
 TF_VAR_access_prefix_list_ids='[]'      # Prefix lists for ALB/EC2 SG access
 

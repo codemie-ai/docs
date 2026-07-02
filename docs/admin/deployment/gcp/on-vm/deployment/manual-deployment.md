@@ -100,7 +100,7 @@ project_id           = "my-codemie-project"
 region               = "europe-west3"
 zone_suffix          = "a"
 platform_name        = "codemie"
-machine_type         = "n2-standard-8"
+machine_type         = "n2-highmem-4"
 disk_size            = 100
 platform_domain_name = ""   # Leave empty for private IP access
 ```

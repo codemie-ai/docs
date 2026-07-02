@@ -19,7 +19,7 @@ CodeMie On VM runs on a single Azure VM with supporting Azure services. Terrafor
 
 | Resource                       | Purpose                                                              |
 | ------------------------------ | -------------------------------------------------------------------- |
-| **Azure VM (Standard_D8s_v5)** | Single VM running Docker Compose (8 vCPU, 32 GB RAM)                 |
+| **Azure VM (Standard_E4s_v5)** | Single VM running Docker Compose (4 vCPU, 32 GB RAM)                 |
 | **Virtual Network / Subnet**   | Isolated network for the VM                                          |
 | **Network Security Group**     | Controls inbound/outbound traffic to the VM                          |
 | **Azure Storage Account**      | Persistent storage for user data (repos, files)                      |
@@ -78,7 +78,7 @@ All CodeMie services run as Docker containers on the Azure VM, orchestrated by D
 
 | Resource | Minimum | Recommended         |
 | -------- | ------- | ------------------- |
-| vCPU     | 4       | 8 (Standard_D8s_v5) |
+| vCPU     | 4       | 4 (Standard_E4s_v5) |
 | RAM      | 16 GB   | 32 GB               |
 | Disk     | 50 GB   | 100 GB              |
 

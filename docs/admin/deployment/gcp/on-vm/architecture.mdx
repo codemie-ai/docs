@@ -19,7 +19,7 @@ CodeMie On VM runs on a single GCE VM with supporting GCP services. Terraform pr
 
 | Resource                       | Purpose                                                              |
 | ------------------------------ | -------------------------------------------------------------------- |
-| **GCE VM (n2-standard-8)**     | Single VM running Docker Compose (8 vCPU, 32 GB RAM)                 |
+| **GCE VM (n2-highmem-4)**      | Single VM running Docker Compose (4 vCPU, 32 GB RAM)                 |
 | **VPC / Subnet**               | Isolated network for the VM                                          |
 | **Firewall Rules**             | Controls inbound/outbound traffic to the VM                          |
 | **GCS Bucket**                 | Persistent storage for user data (repos, files)                      |
@@ -77,11 +77,11 @@ All CodeMie services run as Docker containers on the GCE VM, orchestrated by Doc
 
 ### Minimum GCE VM
 
-| Resource | Minimum | Recommended       |
-| -------- | ------- | ----------------- |
-| vCPU     | 4       | 8 (n2-standard-8) |
-| RAM      | 16 GB   | 32 GB             |
-| Disk     | 50 GB   | 100 GB            |
+| Resource | Minimum | Recommended      |
+| -------- | ------- | ---------------- |
+| vCPU     | 4       | 4 (n2-highmem-4) |
+| RAM      | 16 GB   | 32 GB            |
+| Disk     | 50 GB   | 100 GB           |
 
 ## Next Steps
 

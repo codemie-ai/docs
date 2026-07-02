@@ -106,7 +106,7 @@ terraform init -backend-config=backend.tfvars
 ```hcl
 location              = "westeurope"
 platform_name         = "codemie"
-vm_size               = "Standard_D8s_v5"
+vm_size               = "Standard_E4s_v5"
 vm_os_disk_size       = 100
 platform_domain_name  = ""   # Leave empty for private IP access
 ```

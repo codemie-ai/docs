@@ -96,6 +96,7 @@ words:
   - cloudkms
   - secretmanager
   - Stackdriver
+  - highmem
   # Azure
   - AKS
   - Azure

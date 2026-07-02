@@ -27,7 +27,7 @@ Verify sufficient quota for:
 
 | Resource               | Count        |
 | ---------------------- | ------------ |
-| n2-standard-8 VM       | 1            |
+| n2-highmem-4 VM        | 1            |
 | GCS Bucket             | 1            |
 | Cloud KMS Key          | 1            |
 | Cloud DNS Private Zone | 1 (optional) |

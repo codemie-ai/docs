@@ -141,7 +141,7 @@ terraform init -backend-config=backend.tfvars
 region              = "eu-north-1"
 role_arn            = "arn:aws:iam::123456789012:role/CodemieOnVmDeployerRole"
 platform_name       = "codemie"
-instance_type       = "t3.2xlarge"
+instance_type       = "r5.xlarge"
 volume_size         = 100
 
 # Network: set to true for private-only deployment (requires VPN)

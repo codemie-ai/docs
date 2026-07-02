@@ -48,7 +48,7 @@ AZURE_TENANT_ID=""                # Your Azure tenant ID
 # ── Terraform ────────────────────────────────────────────────────────
 TF_VAR_location="westeurope"
 TF_VAR_platform_name="codemie"
-TF_VAR_vm_size="Standard_D8s_v5"        # 8 vCPU, 32 GB RAM
+TF_VAR_vm_size="Standard_E4s_v5"        # 4 vCPU, 32 GB RAM
 TF_VAR_vm_os_disk_size=100               # OS disk size in GB
 TF_VAR_platform_domain_name=""           # Private DNS zone (e.g. private.lab.com)
 

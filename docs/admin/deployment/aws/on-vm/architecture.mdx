@@ -44,7 +44,7 @@ import TabItem from '@theme/TabItem';
 | Resource                 | Purpose                                                               |
 | ------------------------ | --------------------------------------------------------------------- |
 | **VPC**                  | Isolated network with public subnets (+ private if `private_ip_only`) |
-| **EC2 Instance**         | Single instance running Docker Compose (Ubuntu, t3.2xlarge default)   |
+| **EC2 Instance**         | Single instance running Docker Compose (Ubuntu, r5.xlarge default)    |
 | **Elastic IP**           | Static public IP for the EC2 instance                                 |
 | **S3 Bucket**            | Persistent storage for user data (repos, files)                       |
 | **KMS Key**              | Encryption key for S3 data at rest                                    |
@@ -105,23 +105,23 @@ All CodeMie services run as Docker containers on the EC2 instance, orchestrated 
 
 ### Minimum EC2 Instance
 
-| Resource | Minimum | Recommended    |
-| -------- | ------- | -------------- |
-| vCPU     | 4       | 8 (t3.2xlarge) |
-| RAM      | 16 GB   | 32 GB          |
-| Disk     | 50 GB   | 100 GB (gp3)   |
+| Resource | Minimum | Recommended   |
+| -------- | ------- | ------------- |
+| vCPU     | 4       | 4 (r5.xlarge) |
+| RAM      | 16 GB   | 32 GB         |
+| Disk     | 50 GB   | 100 GB (gp3)  |
 
 ### Estimated AWS Costs
 
-Costs vary by region. Approximate monthly costs for `eu-north-1` with t3.2xlarge:
+Costs vary by region. Approximate monthly costs for `eu-north-1` with r5.xlarge:
 
-| Resource                    | Estimated Cost |
-| --------------------------- | -------------- |
-| EC2 (t3.2xlarge, on-demand) | ~$250/mo       |
-| EBS (100 GB gp3)            | ~$8/mo         |
-| S3 + KMS                    | < $5/mo        |
-| ALB (if domain)             | ~$20/mo        |
-| NAT Gateway (if private)    | ~$35/mo        |
+| Resource                   | Estimated Cost |
+| -------------------------- | -------------- |
+| EC2 (r5.xlarge, on-demand) | ~$180/mo       |
+| EBS (100 GB gp3)           | ~$8/mo         |
+| S3 + KMS                   | < $5/mo        |
+| ALB (if domain)            | ~$20/mo        |
+| NAT Gateway (if private)   | ~$35/mo        |
 
 ## Next Steps
 

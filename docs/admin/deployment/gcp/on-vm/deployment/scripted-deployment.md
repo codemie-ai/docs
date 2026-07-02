@@ -53,7 +53,7 @@ TF_VAR_states_bucket_name=""          # GCS bucket name (created by bootstrap ph
 TF_VAR_platform_name="codemie"
 
 # ── VM ───────────────────────────────────────────────────────────────
-TF_VAR_machine_type="n2-standard-8"   # 8 vCPU, 32 GB RAM
+TF_VAR_machine_type="n2-highmem-4"    # 4 vCPU, 32 GB RAM
 TF_VAR_disk_size=100                  # Boot disk size in GB
 
 # ── Domain & Private DNS (optional) ──────────────────────────────────

@@ -21,13 +21,13 @@ Deploy CodeMie on an **existing GCE VM** that is not managed by this project's T
 
 Your existing GCE VM must meet these requirements:
 
-| Requirement         | Details                                                              |
-| ------------------- | -------------------------------------------------------------------- |
-| **OS**              | Ubuntu 22.04 or later                                                |
-| **Machine type**    | Minimum n2-standard-4 (4 vCPU, 16 GB RAM); recommended n2-standard-8 |
-| **Disk**            | Minimum 50 GB; recommended 100 GB                                    |
-| **Internet access** | Outbound HTTPS for pulling Docker images                             |
-| **IAP access**      | VM must be in a VPC with IAP firewall rule (if using `iap` mode)     |
+| Requirement         | Details                                                             |
+| ------------------- | ------------------------------------------------------------------- |
+| **OS**              | Ubuntu 22.04 or later                                               |
+| **Machine type**    | Minimum n2-standard-4 (4 vCPU, 16 GB RAM); recommended n2-highmem-4 |
+| **Disk**            | Minimum 50 GB; recommended 100 GB                                   |
+| **Internet access** | Outbound HTTPS for pulling Docker images                            |
+| **IAP access**      | VM must be in a VPC with IAP firewall rule (if using `iap` mode)    |
 
 ## Configuration
 

@@ -25,7 +25,7 @@ Verify sufficient quota for:
 
 | Resource         | Count |
 | ---------------- | ----- |
-| Standard_D8s_v5  | 1     |
+| Standard_E4s_v5  | 1     |
 | Azure Key Vault  | 1     |
 | Storage Account  | 1     |
 | Private DNS Zone | 1     |
