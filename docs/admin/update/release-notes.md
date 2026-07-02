@@ -26,6 +26,10 @@ No third-party component updates in this release.
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Hotfixes</h3>
+
+- **2.37.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.37.1) – July 2, 2026
+
 </details>
 
 <details>
