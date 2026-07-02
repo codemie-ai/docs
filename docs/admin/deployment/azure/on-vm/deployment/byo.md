@@ -23,7 +23,7 @@ Your existing Azure VM must meet these requirements:
 
 | Requirement          | Details                                                                  |
 | -------------------- | ------------------------------------------------------------------------ |
-| **OS**               | Ubuntu 22.04 or later                                                    |
+| **OS**               | Ubuntu 24.04                                                             |
 | **VM size**          | Minimum Standard_D4s_v5 (4 vCPU, 16 GB RAM); recommended Standard_E4s_v5 |
 | **Disk**             | Minimum 50 GB; recommended 100 GB                                        |
 | **Internet access**  | Outbound HTTPS for pulling Docker images                                 |

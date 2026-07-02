@@ -23,7 +23,7 @@ Your existing GCE VM must meet these requirements:
 
 | Requirement         | Details                                                             |
 | ------------------- | ------------------------------------------------------------------- |
-| **OS**              | Ubuntu 22.04 or later                                               |
+| **OS**              | Ubuntu 24.04                                                        |
 | **Machine type**    | Minimum n2-standard-4 (4 vCPU, 16 GB RAM); recommended n2-highmem-4 |
 | **Disk**            | Minimum 50 GB; recommended 100 GB                                   |
 | **Internet access** | Outbound HTTPS for pulling Docker images                            |

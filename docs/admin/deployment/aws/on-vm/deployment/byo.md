@@ -23,7 +23,7 @@ Your existing EC2 instance must meet these requirements:
 
 | Requirement           | Details                                                        |
 | --------------------- | -------------------------------------------------------------- |
-| **OS**                | Ubuntu 22.04 or later                                          |
+| **OS**                | Ubuntu 24.04                                                   |
 | **Instance type**     | Minimum t3.xlarge (4 vCPU, 16 GB RAM); recommended r5.xlarge   |
 | **Disk**              | Minimum 50 GB; recommended 100 GB                              |
 | **Internet access**   | Outbound HTTPS for pulling Docker images and accessing Bedrock |
