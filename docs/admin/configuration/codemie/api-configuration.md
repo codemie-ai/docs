@@ -735,7 +735,8 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 
 | Parameter                              | Type    | Default                          | Description                                                                                                                                                 |
 | -------------------------------------- | ------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CODE_EXECUTOR_EXECUTION_MODE`         | string  | `"local"`                        | Execution mode: `sandbox` (isolated K8s pod, recommended for production), `local` (embedded kernel, less secure)                                            |
+| `CODE_EXECUTOR_ENABLED`                | boolean | `false`                          | Enable the Code Executor tool. When `false`, the tool is neither listed in the tools catalog nor executed. Set `true` to opt in.                            |
+| `CODE_EXECUTOR_EXECUTION_MODE`         | string  | `"sandbox"`                      | Execution mode. Code runs in an isolated Kubernetes sandbox pod.                                                                                            |
 | `CODE_EXECUTOR_KUBECONFIG_PATH`        | string  | `""`                             | Path to kubeconfig for Kubernetes authentication (optional, uses in-cluster config if empty). Set if you want to move code execution to a dedicated cluster |
 | `CODE_EXECUTOR_WORKDIR_BASE`           | string  | `"/home/codemie"`                | Base working directory for code execution inside containers                                                                                                 |
 | `CODE_EXECUTOR_NAMESPACE`              | string  | `"codemie-runtime"`              | Kubernetes namespace for executor pods                                                                                                                      |
@@ -752,14 +753,14 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | `CODE_EXECUTOR_RUN_AS_USER`            | integer | `1001`                           | Unix user ID for pod security context (non-root execution)                                                                                                  |
 | `CODE_EXECUTOR_RUN_AS_GROUP`           | integer | `1001`                           | Unix group ID for pod security context                                                                                                                      |
 | `CODE_EXECUTOR_FS_GROUP`               | integer | `1001`                           | Filesystem group ID for pod volume permissions                                                                                                              |
-| `CODE_EXECUTOR_SECURITY_THRESHOLD`     | string  | `"LOW"`                          | Security policy: `SAFE` (permissive), `LOW`, `MEDIUM`, `HIGH` (restrictive)                                                                                 |
+| `CODE_EXECUTOR_SECURITY_THRESHOLD`     | string  | `"LOW"`                          | Required security policy threshold: `SAFE`, `LOW`, `MEDIUM`, `HIGH`                                                                                         |
 | `CODE_EXECUTOR_YAML_POLICY_PATH`       | string  | `""`                             | Path to custom YAML security policy file (optional, overrides default policy)                                                                               |
 | `CODE_EXECUTOR_VERBOSE`                | boolean | `false`                          | Enable verbose logging for executor debugging                                                                                                               |
 | `CODE_EXECUTOR_KEEP_TEMPLATE`          | boolean | `true`                           | Persist pod template after execution for performance optimization                                                                                           |
 | `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP` | boolean | `false`                          | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                                      |
 
 :::warning Security Considerations
-**Local Mode:** `CODE_EXECUTOR_EXECUTION_MODE=local` provides less isolation and security. Use `sandbox` mode in production where untrusted code execution is required.
+**Sandbox Isolation:** `CODE_EXECUTOR_EXECUTION_MODE=sandbox` runs user-supplied code in a dedicated Kubernetes pod, isolated from the CodeMie API. This is the execution model for running untrusted code safely in production.
 
 **Security Threshold:** The security policy controls what operations are allowed:
 

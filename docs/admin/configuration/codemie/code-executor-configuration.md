@@ -10,26 +10,31 @@ import TabItem from '@theme/TabItem';
 
 # Code Executor Configuration
 
-The Code Executor runs Python code in isolated Kubernetes pods with enforced resource limits and security policies.
+The Code Executor runs Python code in isolated Kubernetes sandbox pods with enforced resource limits and security policies. Every execution request is dispatched to a dedicated sandbox pod, keeping user-supplied code isolated from the CodeMie API.
 
-It supports four deployment modes: local execution inside the API pod, sandbox pods in the same cluster with shared namespace, sandbox pods in the same cluster with dedicated namespace, or sandbox pods in a dedicated cluster.
+You choose where those sandbox pods run: in the same cluster as CodeMie API sharing its namespace, in the same cluster in a dedicated namespace, or in a separate dedicated cluster.
 
-## Choosing a Deployment Mode
+## Enabling the Code Executor
 
-| Mode                                  | When to use                           | Isolation                        | RBAC required         |
+The Code Executor is disabled by default. To make it available, set `CODE_EXECUTOR_ENABLED=true` in the CodeMie API environment:
+
+```yaml
+extraEnv:
+  - name: CODE_EXECUTOR_ENABLED
+    value: "true"
+```
+
+While disabled, the tool is neither listed in the tools catalog nor executed at runtime.
+
+## Choosing a Deployment Topology
+
+| Topology                              | When to use                           | Isolation                        | RBAC required         |
 | ------------------------------------- | ------------------------------------- | -------------------------------- | --------------------- |
-| **Local**                             | No Kubernetes, quick prototyping      | None — runs inside the API pod   | No                    |
 | **Same cluster, shared namespace**    | Standard production setup             | Separate pod                     | Yes                   |
 | **Same cluster, dedicated namespace** | Namespace-level workload isolation    | Separate pod, separate namespace | Yes (cross-namespace) |
 | **Dedicated cluster**                 | Compliance, multi-tenant environments | Full cluster isolation           | No (kubeconfig)       |
 
-## Deployment Modes
-
-### Local Mode
-
-The default mode. Code is executed directly inside the CodeMie API pod via subprocess. No Kubernetes resources needed.
-
-No changes required. The default value of `CODE_EXECUTOR_EXECUTION_MODE` is `local`.
+## Deployment Topologies
 
 ### Same Cluster as CodeMie API
 
@@ -47,7 +52,7 @@ features:
   tools:
     code_executor:
       rbac:
-        enabled: true  # Creates role and assign it to the service account configured for codemie-api
+        enabled: true
         namespace: ""  # defaults to the CodeMie release namespace
 
 extraEnv:
@@ -119,14 +124,14 @@ extraEnv:
     value: "/secrets/kubeconfig"
 ```
 
-## Updating CodeMie API
+## Applying CodeMie API Settings
 
-After configuring a sandbox deployment mode (Same Cluster or Dedicated Cluster), add the following environment variables and apply the chart:
+The Code Executor is disabled by default, so `CODE_EXECUTOR_ENABLED` must be set to `true` to make the tool available. Tune the remaining Code Executor settings as needed and apply the chart:
 
 ```yaml
 extraEnv:
-  - name: CODE_EXECUTOR_EXECUTION_MODE
-    value: "sandbox"
+  - name: CODE_EXECUTOR_ENABLED
+    value: "true"
   - name: CODE_EXECUTOR_MAX_POD_POOL_SIZE
     value: "5"
   - name: CODE_EXECUTOR_DOCKER_IMAGE
