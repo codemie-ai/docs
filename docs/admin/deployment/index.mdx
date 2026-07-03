@@ -16,7 +16,7 @@ import FeatureGrid from '@site/src/components/FeatureGrid';
 
 Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to get started with deploying CodeMie in your environment.
 
-## Public Cloud Providers
+## Kubernetes Deployments
 
 <FeatureGrid>
   <FeatureCard
@@ -36,6 +36,27 @@ Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to g
     link="/admin/deployment/gcp/kubernetes/overview"
   />
   <FeatureCard
+    icon="/img/cloud-providers/azure.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Azure Deployment Guide"
+    description="Deploy AI/Run CodeMie on Microsoft Azure with step-by-step guidance for infrastructure and application deployment."
+    link="/admin/deployment/azure/kubernetes/overview"
+  />
+</FeatureGrid>
+
+## VM Deployments
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/cloud-providers/aws.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="AWS On VM Deployment"
+    description="Deploy AI/Run CodeMie on a single EC2 instance with Docker Compose. Ideal for PoC and demo environments."
+    link="/admin/deployment/aws/on-vm/overview"
+  />
+  <FeatureCard
     icon="/img/cloud-providers/gcp.svg"
     iconType="image"
     invertInDarkTheme={false}
@@ -47,18 +68,15 @@ Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to g
     icon="/img/cloud-providers/azure.svg"
     iconType="image"
     invertInDarkTheme={false}
-    title="Azure Deployment Guide"
-    description="Deploy AI/Run CodeMie on Microsoft Azure with step-by-step guidance for infrastructure and application deployment."
-    link="/admin/deployment/azure/kubernetes/overview"
-  />
-  <FeatureCard
-    icon="/img/cloud-providers/azure.svg"
-    iconType="image"
-    invertInDarkTheme={false}
     title="Azure On VM Deployment"
     description="Deploy AI/Run CodeMie on a single Azure VM with Docker Compose. Ideal for PoC and demo environments."
     link="/admin/deployment/azure/on-vm/overview"
   />
+</FeatureGrid>
+
+## Marketplace
+
+<FeatureGrid>
   <FeatureCard
     icon="/img/cloud-providers/aws.svg"
     iconType="image"
@@ -66,14 +84,6 @@ Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to g
     title="AWS Marketplace"
     description="Deploy AI/Run CodeMie directly from AWS Marketplace."
     link="https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1"
-  />
-  <FeatureCard
-    icon="/img/cloud-providers/aws.svg"
-    iconType="image"
-    invertInDarkTheme={false}
-    title="AWS On VM Deployment"
-    description="Deploy AI/Run CodeMie on a single EC2 instance with Docker Compose. Ideal for PoC and demo environments."
-    link="/admin/deployment/aws/on-vm/overview"
   />
 </FeatureGrid>
 
