@@ -928,7 +928,7 @@ External applications that can access CodeMie APIs via JWT authentication are co
 ```yaml
 authorized_applications:
   - name: app-name # Application identifier
-    public_key_url: https://app.com/.well-known/public-key # JWT verification key URL
+    public_key_url: https://app.trusted.example/.well-known/public-key # JWT verification key URL, must use https and match an allowed domain
     # OR
     public_key_path: /path/to/public/key.pem # Local public key file
     allowed_resources: # Permitted resource types
@@ -946,6 +946,27 @@ Control granular access to CodeMie resources:
 - `CONVERSATION` - Read/write conversation history
 - `USER` - User profile management
 - `PROJECT` - Project-level access
+
+### Public Key URL Domain Allowlist
+
+`public_key_url` values are validated against a domain allowlist before the key is fetched — once when the configuration loads (fails fast on startup) and again immediately before each fetch (defense in depth). This stops a tampered or misconfigured entry from pointing at an attacker-controlled host.
+
+| Parameter                             | Type          | Default | Description                                                                                                            |
+| ------------------------------------- | ------------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS` | list\[string] | `[]`    | Domains permitted to host `public_key_url` keys. A host matches if it equals a listed domain or is a subdomain of one. |
+
+Validation rules:
+
+- `public_key_url` must use `https`.
+- The URL host must not be an IP literal.
+- The URL host must equal, or be a subdomain of, one of the configured domains.
+- An empty allowlist (the default) rejects every URL-based key — only `public_key_path` (local file) entries are permitted until at least one domain is configured.
+
+Override with a JSON array via environment variable:
+
+```bash
+AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
+```
 
 ---
 
