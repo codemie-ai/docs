@@ -129,6 +129,12 @@ If you have your own ALB with ACM certificate in front of the EC2:
 
 ### Step 1: Place the GCP registry key
 
+This is a GCP service account credentials file used to pull CodeMie container images from Google Artifact Registry.
+
+:::info
+For open-source deployments with self-built images, this key is optional.
+:::
+
 ```bash
 cp /path/to/key.json ./key.json
 ```
