@@ -26,6 +26,38 @@ No third-party component updates in this release.
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Other Improvements</h3>
+
+This release also delivers a set of security and hardening improvements across the CodeMie platform, its infrastructure, and supporting services.
+
+<h4>Code Execution &amp; Tooling Security</h4>
+
+- Deprecated the legacy Python tool in favor of the sandboxed CodeExecutor tool.
+- Hardened the Code Executor by closing security-policy and threshold bypass paths and strengthening execution isolation.
+- Reduced arbitrary code-execution risk in MCP server configuration and added corresponding security validation.
+- Mitigated remote code-execution risks in workspace script execution and MCP tools.
+- Hardened the internal MCP-Connect service bridge.
+
+<h4>Authentication, Authorization &amp; Access Control</h4>
+
+- Revised legacy header-based authentication logic and removed an redundant authentication header.
+- Reviewed AWS IAM trust policies for service accounts and hardened cloud IAM configurations, including role-chaining and access-scope reductions.
+
+<h4>Platform &amp; Dependency Maintenance</h4>
+
+- Upgraded multiple platform components and dependencies (logging, search, networking, storage drivers, and security sensors) to address known CVEs, including a kernel-level fix.
+- Reviewed and reduced exposure of internal code-execution endpoints.
+
+<h4>AWS Infrastructure</h4>
+
+- Reviewed and tightened cluster API access, IMDS access, and authentication tokens.
+- Improved project configuration security, enabled default fault-tolerance and monitoring for the managed database, and enabled versioning for user-data storage.
+- Disabled EKS Auto Mode IAM policy for cluster role.
+- Revised IAM policies permissions and improved observability and encryption for the EKS cluster.
+- Removed an unused spot node group.
+- Enabled reuse of an existing VPC / subnets and enabled enforcement of network policies for the VPC CNI.
+- Removed EKS SSH key pair creation and usage.
+
 <h3>Hotfixes</h3>
 
 - **2.37.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.37.1) – July 2, 2026
