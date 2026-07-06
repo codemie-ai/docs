@@ -25,6 +25,8 @@ const config: Config = {
     },
   },
 
+  clientModules: [require.resolve('./src/clientModules/openDetailsOnHash.ts')],
+
   trailingSlash: true,
 
   i18n: {
