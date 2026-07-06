@@ -210,6 +210,7 @@ const sidebars: SidebarsConfig = {
                   ],
                 },
                 'user-guide/tools_integrations/tools/adding-an-mcp-server',
+                'user-guide/tools_integrations/tools/mcp-integration-credentials',
                 'user-guide/tools_integrations/tools/using-mcp-tools-in-assistants',
               ],
             },

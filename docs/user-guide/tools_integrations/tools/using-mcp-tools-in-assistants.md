@@ -2,9 +2,9 @@
 id: using-mcp-tools-in-assistants
 title: Using MCP Tools in Assistants
 sidebar_label: Using MCP Tools in Assistants
-pagination_prev: user-guide/tools_integrations/tools/overview
+pagination_prev: user-guide/tools_integrations/tools/mcp-integration-credentials
 pagination_next: null
-sidebar_position: 22
+sidebar_position: 23
 ---
 
 # Using MCP Tools in Assistants
