@@ -56,7 +56,6 @@ This release also delivers a set of security and hardening improvements across t
 - Improved project configuration security, enabled default fault-tolerance and monitoring for the managed database, and enabled versioning for user-data storage.
 - Disabled EKS Auto Mode IAM policy for cluster role.
 - Revised IAM policies permissions and improved observability and encryption for the EKS cluster.
-- Removed an unused spot node group.
 - Enabled reuse of an existing VPC / subnets and enabled enforcement of network policies for the VPC CNI.
 - Removed EKS SSH key pair creation and usage.
 
