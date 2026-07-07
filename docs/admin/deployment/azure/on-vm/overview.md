@@ -19,7 +19,7 @@ CodeMie On VM is designed for:
 - **Demo environments** — showcase CodeMie to stakeholders without complex infrastructure
 
 :::warning Not for Production
-For production workloads with high availability, scaling, and redundancy, use the full [Azure Deployment Guide](../../kubernetes/overview).
+For production workloads with high availability, scaling, and redundancy, use the full [Azure AKS Deployment Guide](../../kubernetes/overview).
 :::
 
 ## Deployment Profiles
