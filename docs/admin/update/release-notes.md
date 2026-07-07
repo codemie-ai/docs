@@ -13,6 +13,43 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.38.0 {#v2-38-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** TBD
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **Google OAuth credentials required for Google Docs datasources** — Google Docs indexing now authenticates via per-user Google OAuth instead of a shared service account. Three new environment variables must be set before Google Docs datasources can be created:
+
+   | Variable                     | Description                                                                                                                                 |
+   | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `GOOGLE_OAUTH_CLIENT_ID`     | OAuth 2.0 Client ID from Google Cloud Console                                                                                               |
+   | `GOOGLE_OAUTH_CLIENT_SECRET` | OAuth 2.0 Client Secret from Google Cloud Console                                                                                           |
+   | `CALLBACK_API_BASE_URL`      | Public HTTPS hostname of your deployment (defaults to `http://host.docker.internal:8080` — must be overridden in all non-local deployments) |
+
+   See [Google OAuth](../configuration/codemie/api-configuration.md#google-oauth) in the API Configuration guide for the full Google Cloud Console setup steps.
+
+   :::warning Action required
+   Existing Google Docs datasources that relied on the service account sharing approach will need to be updated.
+   :::
+
+<h3>New Features</h3>
+
+- **Google OAuth integration for Google Docs datasources** — Users can now connect their Google account directly via OAuth instead of manually sharing documents with a service account email. A new **Google OAuth** integration type is available in the Integrations page; once created, it can be selected in the Google Docs datasource form. See [Add and Index Google Data Source](../../user-guide/data-source/datasources-types/add-google-data-source.md) for setup instructions.
+
+<h3>Hotfixes</h3>
+
+None.
+
+</details>
+
 ### CodeMie 2.37.0 {#v2-37-0}
 
 <details>

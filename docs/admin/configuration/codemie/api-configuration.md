@@ -481,6 +481,30 @@ The redirect URI registered in your Azure AD app must match:
 Use the **Web** platform type in Azure AD app registration. Also enable the customer feature flag `features:sharepointCodeMieOAuth` to show the "Sign in with Microsoft" button in the SharePoint datasource setup UI.
 :::
 
+### Google OAuth
+
+Enable delegated Google authentication for Google Docs datasources using Authorization Code + PKCE flow.
+
+| Parameter                    | Type   | Default | Description                                        |
+| ---------------------------- | ------ | ------- | -------------------------------------------------- |
+| `GOOGLE_OAUTH_CLIENT_ID`     | string | `""`    | OAuth 2.0 Client ID from Google Cloud Console.     |
+| `GOOGLE_OAUTH_CLIENT_SECRET` | string | `""`    | OAuth 2.0 Client Secret from Google Cloud Console. |
+
+:::warning Redis Required
+The Google OAuth flow stores PKCE state and tokens in Redis during the authorization handshake. A running Redis instance must be configured (see [Redis Configuration](#redis-configuration)) before enabling Google OAuth.
+:::
+
+:::info Google Cloud Console Setup
+
+1. Create an **OAuth 2.0 Client ID** (application type: **Web application**) in [Google Cloud Console](https://console.cloud.google.com/) under **APIs & Services → Credentials**.
+2. Register the following **Authorized Redirect URI**:
+   ```
+   {CALLBACK_API_BASE_URL}{API_ROOT_PATH}/v1/google-oauth/callback
+   ```
+   `CALLBACK_API_BASE_URL` is documented in [Callback Configuration](#callback-configuration). `API_ROOT_PATH` defaults to `/code-assistant-api` in Helm deployments.
+3. Enable these APIs under **APIs & Services → Library**: **Google Docs API**.
+   :::
+
 ---
 
 ## NATS Message Broker Configuration

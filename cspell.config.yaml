@@ -241,6 +241,8 @@ words:
   # Google Drive
   - GDRIVE
   - gdrive
+  # Google OAuth integration credential type identifier
+  - googleoauth
   # codemie terms
   - kata
   - katas
