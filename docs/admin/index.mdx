@@ -22,6 +22,8 @@ Welcome to the AI/Run CodeMie Administration Guide. This section provides compre
 
 Set up AI/Run CodeMie in your cloud environment with comprehensive deployment guides.
 
+## Kubernetes
+
 <FeatureGrid>
   <FeatureCard
     icon="/img/cloud-providers/aws.svg"
@@ -32,14 +34,6 @@ Set up AI/Run CodeMie in your cloud environment with comprehensive deployment gu
     link="/admin/deployment/aws/kubernetes/overview"
   />
   <FeatureCard
-    icon="/img/cloud-providers/azure.svg"
-    iconType="image"
-    invertInDarkTheme={false}
-    title="Azure Deployment"
-    description="Deploy CodeMie on Microsoft Azure with AKS, managed databases, and integrated Azure services."
-    link="/admin/deployment/azure/kubernetes/overview"
-  />
-  <FeatureCard
     icon="/img/cloud-providers/gcp.svg"
     iconType="image"
     invertInDarkTheme={false}
@@ -47,6 +41,48 @@ Set up AI/Run CodeMie in your cloud environment with comprehensive deployment gu
     description="Deploy CodeMie on Google Cloud Platform using GKE and managed GCP services with Terraform automation."
     link="/admin/deployment/gcp/kubernetes/overview"
   />
+  <FeatureCard
+    icon="/img/cloud-providers/azure.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Azure Deployment"
+    description="Deploy CodeMie on Microsoft Azure with AKS, managed databases, and integrated Azure services."
+    link="/admin/deployment/azure/kubernetes/overview"
+  />
+</FeatureGrid>
+
+## VM
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/cloud-providers/aws.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="AWS On VM"
+    description="Deploy CodeMie on a single EC2 instance with Docker Compose. Ideal for PoC and demo environments."
+    link="/admin/deployment/aws/on-vm/overview"
+  />
+  <FeatureCard
+    icon="/img/cloud-providers/gcp.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="GCP On VM"
+    description="Deploy CodeMie on a single GCE VM with Docker Compose. Ideal for PoC and demo environments."
+    link="/admin/deployment/gcp/on-vm/overview"
+  />
+  <FeatureCard
+    icon="/img/cloud-providers/azure.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Azure On VM"
+    description="Deploy CodeMie on a single Azure VM with Docker Compose. Ideal for PoC and demo environments."
+    link="/admin/deployment/azure/on-vm/overview"
+  />
+</FeatureGrid>
+
+## Other
+
+<FeatureGrid>
   <FeatureCard
     icon="/img/cloud-providers/aws.svg"
     iconType="image"
