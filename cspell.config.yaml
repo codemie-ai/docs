@@ -246,6 +246,7 @@ words:
   # Google Drive
   - GDRIVE
   - gdrive
+  - googleoauth
   # codemie terms
   - kata
   - katas

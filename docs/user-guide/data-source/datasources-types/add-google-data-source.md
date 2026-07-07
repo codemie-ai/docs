@@ -14,15 +14,19 @@ Google Documents are a valuable knowledge source in AI/Run CodeMie, enabling ass
 
 ## Overview
 
-Google Documents can be indexed by providing a link with read-only access to AI/Run CodeMie's Google account. The document must be formatted in a specific way, such as FAQs, to be compatible with the platform's parsing and LLM routing capabilities.
+Google Documents are indexed by connecting your Google account through a Google OAuth integration. The document must be formatted in a specific way, such as FAQs, to be compatible with the platform's parsing and LLM routing capabilities.
 
 ## Prerequisites
+
+:::note Administrator Setup Required
+The Google OAuth integration requires administrator configuration before users can sign in with Google. See [Google OAuth](../../../admin/configuration/codemie/api-configuration.md#google-oauth) in the API Configuration guide.
+:::
 
 Before adding a Google Docs data source, ensure you have:
 
 - A Google Document formatted according to AI/Run CodeMie requirements
-- Permission to share the document with AI/Run CodeMie's service account
-- Required document structure
+- A Google OAuth integration created in AI/Run CodeMie (see [Setting Up a Google OAuth Integration](#setting-up-a-google-oauth-integration) below)
+- Viewer access to the Google Document with your Google account
 
 :::danger Strict Format Required
 Google Docs must follow the triple numeration format (1.1.1.) with Heading 3 style. Documents without this format will fail to parse correctly.
@@ -69,32 +73,21 @@ The triple numeration format enables AI/Run CodeMie to create a semantic hierarc
 For a complete example of the correct format, refer to [this example Google Document](https://docs.google.com/document/d/19EXgnFCgJontz0ToCAH6zMGwBTdhi5X97P9JIby4wHs/edit#heading=h.b01c2ig0adfg).
 :::
 
-## Sharing the Document
+## Setting Up a Google OAuth Integration
 
-To allow AI/Run CodeMie to parse a Google Document, you must share the document with AI/Run CodeMie's service account.
+A Google OAuth integration links your Google account to AI/Run CodeMie. You only need to create it once and can reuse it for multiple Google Docs datasources.
 
-### Service Account Email
+### Steps
 
-Share your document with:
+1. In the AI/Run CodeMie main menu, click **Integrations**.
+2. Click **+ Create** and select **Create User Integration**.
+3. In the **Credential Type** dropdown, select **Google OAuth**.
+4. Click the **Sign in with Google** button.
+5. A browser popup opens. Select your Google account and grant the requested permissions (read-only access to Google Documents).
+6. Once sign-in is complete, the button shows **Re-authenticate** and **Signed in as: `<your-email>`** above it.
 
-```
-codemie-kb-crawler@or2-msq-epmd-edp-anthos-t1iylu.iam.gserviceaccount.com
-```
-
-:::warning Service Account Security
-This service account only has read access and cannot modify your documents. Sharing with this account is safe and does not expose your data.
-:::
-
-### How to Share
-
-1. Open your Google Document
-2. Click the **Share** button in the top-right corner
-3. Enter the service account email address
-4. Set permissions to **Viewer** (read-only access)
-5. Click **Send**
-
-:::warning Important
-Ensure you grant at least **Viewer** permissions. The service account only needs read access to index the document.
+:::tip
+If you use Google Docs across multiple projects, enable the **Global** toggle when creating the integration. This makes the integration available in all projects where you are onboarded, so you only need to authenticate once.
 :::
 
 ## Adding a Google Data Source
@@ -111,8 +104,9 @@ Follow these detailed steps to add a Google Document as a data source:
    - **Project**: Select target project
    - **Name**: Provide a descriptive name for the data source
    - **Description**: Add details about the document content
-   - **Datasource Type**: Select **Google**
-   - **Document URL**: Paste the Google Document link
+   - **Datasource Type**: Select **Google Docs**
+   - **Google Auth Integration**: Select your Google OAuth integration from the dropdown or click **Add User Integration**
+   - **Google Docs Link**: Paste the Google Document URL (e.g., `https://docs.google.com/document/d/your-doc-id`)
    - **Model used for embeddings**: Select embedding model
 
 4. **Configure Reindex Schedule (Optional)**

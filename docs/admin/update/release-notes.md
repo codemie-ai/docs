@@ -26,9 +26,20 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **Google Docs data source (Google OAuth)** — to use the Google Docs data source, you now need to:
-   - Set the `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET` environment variables with your Google OAuth client credentials.
-   - Enable the **Google Docs API** for the OAuth client's project in Google Cloud Console.
+1. **Google OAuth credentials required for Google Docs datasources** — Google Docs indexing now authenticates via per-user Google OAuth instead of a shared service account. Three new environment variables must be set before Google Docs datasources can be created:
+
+   | Variable                     | Description                                                                                                                                 |
+   | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `GOOGLE_OAUTH_CLIENT_ID`     | OAuth 2.0 Client ID from Google Cloud Console                                                                                               |
+   | `GOOGLE_OAUTH_CLIENT_SECRET` | OAuth 2.0 Client Secret from Google Cloud Console                                                                                           |
+   | `CALLBACK_API_BASE_URL`      | Public HTTPS hostname of your deployment (defaults to `http://host.docker.internal:8080` — must be overridden in all non-local deployments) |
+
+   See [Google OAuth](../configuration/codemie/api-configuration.md#google-oauth) in the API Configuration guide for the full Google Cloud Console setup steps. See also [Add and Index Google Data Source](../../user-guide/data-source/datasources-types/add-google-data-source.md) for datasource setup instructions.
+
+   :::warning Action required
+   Existing Google Docs datasources that relied on the service account sharing approach will need to be updated.
+   :::
+
 2. **Code Executor is disabled by default** — set `CODE_EXECUTOR_ENABLED=true` to opt in; while disabled, the tool is neither listed in the tools catalog nor executed.
 3. **`AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS` required for Authorized Applications** — set it to the list of domains allowed to host `public_key_url` keys before relying on your Authorized Applications configuration. Requests referencing a `public_key_url` on a domain not in the allowlist are rejected.
 
