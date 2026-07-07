@@ -111,18 +111,6 @@ All CodeMie services run as Docker containers on the EC2 instance, orchestrated 
 | RAM      | 16 GB   | 32 GB         |
 | Disk     | 50 GB   | 100 GB (gp3)  |
 
-### Estimated AWS Costs
-
-Costs vary by region. Approximate monthly costs for `eu-north-1` with r5.xlarge:
-
-| Resource                   | Estimated Cost |
-| -------------------------- | -------------- |
-| EC2 (r5.xlarge, on-demand) | ~$180/mo       |
-| EBS (100 GB gp3)           | ~$8/mo         |
-| S3 + KMS                   | < $5/mo        |
-| ALB (if domain)            | ~$20/mo        |
-| NAT Gateway (if private)   | ~$35/mo        |
-
 ## Next Steps
 
 - [Deployment](../deployment/) — Deploy CodeMie On VM with Terraform
