@@ -36,7 +36,7 @@ No third-party component updates in this release.
 
 This release also delivers a set of security and hardening improvements across the CodeMie platform.
 
-- Removed the legacy local Code Executor; the sandboxed Code Executor tool is now disabled by default and must be explicitly enabled via `CODE_EXECUTOR_ENABLED`.
+- Removed the local mode of Code Executor; the sandboxed Code Executor tool is now disabled by default and must be explicitly enabled via `CODE_EXECUTOR_ENABLED`.
 - Hardened Authorized Applications by validating `public_key_url` domains against an explicit allowlist (`AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS`).
 
 </details>
