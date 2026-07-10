@@ -97,7 +97,7 @@ When a project budget is created, CodeMie automatically distributes the budget e
 
 ### Equal allocation (default)
 
-- `max_budget` and `soft_budget` are divided equally among all members using precise decimal arithmetic (9 decimal places).
+- `max_budget` and `soft_budget` are divided equally among all members using precise decimal arithmetic.
 - Values are rounded to the nearest cent for display and enforcement.
 - If a rounding remainder exists (e.g., `$0.01` that cannot be split evenly), it is assigned to the last member determined by ascending `user_id` sort order.
 - The total of all member allocations never exceeds the project budget.
@@ -178,12 +178,13 @@ Spend data updates on the collect schedule (nightly by default). There is typica
 
 ## Background Jobs and Environment Variables
 
-Two background jobs maintain budget state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
+Three background jobs maintain budget state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
 
 | Job                                                       | Purpose                                                                                                                |
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **Spend collector** (`litellm_spend_collector`)           | Polls LiteLLM for spend data and writes deltas to `project_spend_tracking`                                             |
 | **Budget reset tracker** (`litellm_budget_reset_tracker`) | Detects budget period rollovers and adjusts spend records accordingly                                                  |
+| **Budget reset reconciliation**                           | Runs daily after midnight UTC: verifies all budget resets were applied correctly in both LiteLLM and CodeMie           |
 | **Startup reconciliation**                                | One-time on pod start: aligns DB state with LiteLLM (predefined budgets, user assignments, project budget assignments) |
 
 ### Environment variables
@@ -194,6 +195,7 @@ Two background jobs maintain budget state. All jobs use PostgreSQL advisory lock
 | `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 23 * * *`   | Cron expression (UTC) for the spend collector. See [API Configuration](../api-configuration) for details. |
 | `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`        | Enable the budget reset tracker background job                                                            |
 | `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | `*/10 * * * *` | Cron expression (UTC) for the reset tracker                                                               |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`     | `false`        | Enable the daily budget reset reconciliation background job                                               |
 | `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                       |
 | `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                     |
 
@@ -208,7 +210,7 @@ extraEnv:
   - name: LITELLM_BUDGET_RESET_TRACKER_ENABLED
     value: 'true'
   - name: LITELLM_BUDGET_RESET_TRACKER_SCHEDULE
-    value: '0 0 * * *'
+    value: '*/10 * * * *'
   - name: LLM_PROXY_BUDGET_RECONCILIATION_ENABLED
     value: 'true'
 ```
