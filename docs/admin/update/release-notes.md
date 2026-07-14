@@ -13,10 +13,10 @@ This page provides information about updated third-party components and configur
 
 ---
 
-### CodeMie 2.38.0 {#v2-38-0}
+### CodeMie 2.39.0 {#v2-39-0}
 
 <details>
-<summary><strong>CodeMie 2.39.0</strong></summary>
+<summary>Release details</summary>
 
 **Release Date:** July 14, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.39.0)
 
@@ -28,7 +28,13 @@ No third-party component updates in this release.
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Hotfixes</h3>
+
+- **2.39.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.39.1) – July 2, 2026
+
 </details>
+
+### CodeMie 2.38.0 {#v2-38-0}
 
 <details>
 <summary>Release details</summary>
