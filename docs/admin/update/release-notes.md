@@ -80,19 +80,19 @@ No third-party component updates in this release.
 
 3. **`features:userManagement` and `features:enterpriseEdition` are now runtime-computed** — remove these entries from `customer-config.yaml` if present; they are ignored at runtime.
 
-   | Entry                        | Now computed from                               |
-   | ---------------------------- | ----------------------------------------------- |
-   | `features:userManagement`    | `ENABLE_USER_MANAGEMENT` environment variable   |
-   | `features:enterpriseEdition` | Enterprise package auto-detection               |
+   | Entry                        | Now computed from                             |
+   | ---------------------------- | --------------------------------------------- |
+   | `features:userManagement`    | `ENABLE_USER_MANAGEMENT` environment variable |
+   | `features:enterpriseEdition` | Enterprise package auto-detection             |
 
 4. **New YAML-configurable entries added to `customer-config.yaml`**:
 
-   | New entry               | Description                                             |
-   | ----------------------- | ------------------------------------------------------- |
+   | New entry               | Description                                            |
+   | ----------------------- | ------------------------------------------------------ |
    | `mcpAuthTimeoutSeconds` | MCP authentication timeout in seconds (default: `60`)  |
-   | `bannerMessage`         | Text content of the banner message (default: disabled)  |
-   | `bannerLinkLabel`       | Label for the banner link (default: disabled)           |
-   | `bannerLinkRoute`       | Route/URL for the banner link (default: disabled)       |
+   | `bannerMessage`         | Text content of the banner message (default: disabled) |
+   | `bannerLinkLabel`       | Label for the banner link (default: disabled)          |
+   | `bannerLinkRoute`       | Route/URL for the banner link (default: disabled)      |
 
    See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for configuration details.
 
