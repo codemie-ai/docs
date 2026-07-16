@@ -343,6 +343,16 @@ const sidebars: SidebarsConfig = {
             'user-guide/project-user-management/users',
           ],
         },
+        {
+          type: 'category',
+          label: 'Budget Management',
+          link: {
+            type: 'doc',
+            id: 'user-guide/budget-management/budget-management',
+          },
+          collapsed: true,
+          items: [],
+        },
       ],
     },
     {
