@@ -34,25 +34,13 @@ No third-party component updates in this release.
 
    | Removed variable             | Was in                      | Default | Replacement in `customer-config.yaml` |
    | ---------------------------- | --------------------------- | ------- | ------------------------------------- |
-   | `viteEnableUserManagement`   | `codemie-ui` Helm values    | `false` | `features:userManagement`             |
    | `viteEnableBudgetManagement` | `codemie-ui` Helm values    | `false` | `features:budgetManagement`           |
-   | `VITE_IS_ENTERPRISE_EDITION` | `codemie-ui` runtime config | `false` | `features:enterpriseEdition`          |
    | `VITE_SHOW_ALL_PROJECTS`     | `codemie-ui` runtime config | `false` | `features:showAllProjects`            |
 
    Add the required entries to `customer-config.yaml`:
 
    ```yaml
    components:
-     # Required if VITE_IS_ENTERPRISE_EDITION was true (enterprise deployments)
-     - id: "features:enterpriseEdition"
-       settings:
-         enabled: true
-
-     # Required if viteEnableUserManagement was true
-     - id: "features:userManagement"
-       settings:
-         enabled: true
-
      # Required if viteEnableBudgetManagement was true
      - id: "features:budgetManagement"
        settings:
@@ -68,11 +56,13 @@ No third-party component updates in this release.
 
 2. **Additional frontend env vars removed from `codemie-ui`** — no `customer-config.yaml` action required for these; they are now computed at runtime by the backend.
 
-   | Removed variable    | Was in                   | Now computed from                               |
-   | ------------------- | ------------------------ | ----------------------------------------------- |
-   | `viteIdpProvider`   | `codemie-ui` Helm values | `IDP_PROVIDER` environment variable             |
-   | `viteMcpAuthOrigin` | `codemie-ui` Helm values | `CALLBACK_API_BASE_URL` environment variable    |
-   | `viteBannerMessage` | `codemie-ui` Helm values | `bannerMessage` entry in `customer-config.yaml` |
+   | Removed variable             | Was in                      | Now computed from                               |
+   | ---------------------------- | --------------------------- | ----------------------------------------------- |
+   | `viteEnableUserManagement`   | `codemie-ui` Helm values    | `ENABLE_USER_MANAGEMENT` backend env var        |
+   | `VITE_IS_ENTERPRISE_EDITION` | `codemie-ui` runtime config | Enterprise package auto-detection               |
+   | `viteIdpProvider`            | `codemie-ui` Helm values    | `IDP_PROVIDER` environment variable             |
+   | `viteMcpAuthOrigin`          | `codemie-ui` Helm values    | `CALLBACK_API_BASE_URL` environment variable    |
+   | `viteBannerMessage`          | `codemie-ui` Helm values    | `bannerMessage` entry in `customer-config.yaml` |
 
    :::tip Banner message migration
    If `viteBannerMessage` was set in your deployment, move its value to the new `bannerMessage` entry in `customer-config.yaml` (see item 4 below).
