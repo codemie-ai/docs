@@ -26,47 +26,21 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **[BREAKING] Frontend environment variables removed from `codemie-ui`** — the following variables have been removed from the `codemie-ui` Helm chart and runtime config. Each has been replaced by a backend-side mechanism: either a `customer-config.yaml` entry or automatic backend computation. Review the table below to determine whether action is required in your deployment.
+1. **[BREAKING] Frontend environment variables removed from `codemie-ui`** — the following variables have been removed from the `codemie-ui` Helm chart and runtime config and replaced by backend-side mechanisms.
 
-   | Removed variable             | Was in                      | Default | Replaced by                                            | Action required?          |
-   | ---------------------------- | --------------------------- | ------- | ------------------------------------------------------ | ------------------------- |
-   | `viteEnableBudgetManagement` | `codemie-ui` Helm values    | `false` | `features:budgetManagement` in `customer-config.yaml`  | **Yes** — if was `true`   |
-   | `VITE_SHOW_ALL_PROJECTS`     | `codemie-ui` runtime config | `false` | `features:showAllProjects` in `customer-config.yaml`   | **Yes** — if was `true`   |
-   | `viteEnableUserManagement`   | `codemie-ui` Helm values    | `false` | Computed from `ENABLE_USER_MANAGEMENT` backend env var | No — backend-controlled   |
-   | `VITE_IS_ENTERPRISE_EDITION` | `codemie-ui` runtime config | `false` | Computed from enterprise package auto-detection        | No — backend-controlled   |
-   | `viteIdpProvider`            | `codemie-ui` Helm values    | —       | Computed from `IDP_PROVIDER` backend env var           | No — backend-controlled   |
-   | `viteMcpAuthOrigin`          | `codemie-ui` Helm values    | —       | Computed from `CALLBACK_API_BASE_URL` backend env var  | No — backend-controlled   |
-   | `viteBannerMessage`          | `codemie-ui` Helm values    | —       | `bannerMessage` entry in `customer-config.yaml`        | Only if banner was in use |
+   | Removed variable             | Default | Replaced by                                            |
+   | ---------------------------- | ------- | ------------------------------------------------------ |
+   | `viteEnableBudgetManagement` | `false` | `features:budgetManagement` in `customer-config.yaml`  |
+   | `VITE_SHOW_ALL_PROJECTS`     | `false` | `features:showAllProjects` in `customer-config.yaml`   |
+   | `viteEnableUserManagement`   | `false` | Computed from `ENABLE_USER_MANAGEMENT` backend env var |
+   | `VITE_IS_ENTERPRISE_EDITION` | `false` | Computed from enterprise package auto-detection        |
+   | `viteIdpProvider`            | —       | Computed from `IDP_PROVIDER` backend env var           |
+   | `viteMcpAuthOrigin`          | —       | Computed from `CALLBACK_API_BASE_URL` backend env var  |
+   | `viteBannerMessage`          | —       | `bannerMessage` entry in `customer-config.yaml`        |
 
-   :::danger Breaking Change
-   If `viteEnableBudgetManagement` or `VITE_SHOW_ALL_PROJECTS` was explicitly set to `true` in your deployment, add the corresponding entry to `customer-config.yaml` before upgrading. Failing to do so will cause affected features to silently revert to their disabled state.
-   :::
+   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for full deployment instructions.
 
-   ```yaml
-   components:
-     # Required if viteEnableBudgetManagement was true
-     - id: "features:budgetManagement"
-       settings:
-         enabled: true
-
-     # Required if VITE_SHOW_ALL_PROJECTS was true
-     - id: "features:showAllProjects"
-       settings:
-         enabled: true
-   ```
-
-   :::tip Banner message migration
-   If `viteBannerMessage` was set in your deployment, move its value to the new `bannerMessage` entry in `customer-config.yaml` (see item 4 below).
-   :::
-
-2. **`features:userManagement` and `features:enterpriseEdition` are now runtime-computed** — remove these entries from `customer-config.yaml` if present; they are ignored at runtime.
-
-   | Entry                        | Now computed from                             |
-   | ---------------------------- | --------------------------------------------- |
-   | `features:userManagement`    | `ENABLE_USER_MANAGEMENT` environment variable |
-   | `features:enterpriseEdition` | Enterprise package auto-detection             |
-
-3. **New YAML-configurable entries added to `customer-config.yaml`**:
+2. **New YAML-configurable entries added to `customer-config.yaml`**:
 
    | New entry               | Description                                            |
    | ----------------------- | ------------------------------------------------------ |
