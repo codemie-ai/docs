@@ -15,48 +15,57 @@ Control which features, UI elements, and integrations are available to users in 
 
 Use this table to quickly find where each component appears in the UI.
 
-| Component ID                              | Where It Appears                                          | When Enabled Shows                                                         | When Disabled Hides                                                                 | Notes                                     |
-| ----------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------- |
-| **CORE FEATURES**                         |                                                           |                                                                            |                                                                                     |                                           |
-| `adminActions`                            | Settings → Administration                                 | Menu items: AI/Run Adoption, Categories, MCPs, Projects, Providers         | Entire Administration menu                                                          |                                           |
-| `feedbackAssistant`                       | Help Center, Quick actions (top-right)                    | Feedback assistant card/button                                             | Feedback collection interface                                                       |                                           |
-| `mcpConnect`                              | Assistant/Workflow config → Tools                         | "MCP Servers" option in dropdown                                           | MCP integration option                                                              |                                           |
-| `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                   | Catalog-referenced and custom MCP servers                                  | Possibility to configure custom MCP servers                                         |                                           |
-| `skills`                                  | Navigation, Chat config, Assistant config                 | Skills menu, skill selector, management pages                              | Entire Skills subsystem                                                             | Major feature gate                        |
-| `aiAdoption`                              | Analytics page, Settings → Administration                 | Analytics dashboard with 4 dimensions                                      | Analytics dashboard and config                                                      | Enterprise Edition only                   |
-| `features:enterpriseEdition`              | Analytics, navigation, Settings, profile                  | Analytics, AI adoption config, enterprise admin tabs, LiteLLM              | All enterprise-only UI                                                              | Master enterprise switch                  |
-| `features:showAllProjects`                | Settings → Administration → project selector              | All projects returned by admin project picker (no limit or search minimum) | Admin project picker limited to 5 results with 3-char search minimum                |                                           |
-| `visualWorkflowEditor`                    | Workflow editor page                                      | Visual drag-and-drop editor (React Flow)                                   | Visual editor (YAML only)                                                           |                                           |
-| `defaultConversationAssistant`            | New chat creation                                         | Pre-selects specified assistant                                            | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                 |
-| `features:personalLiteLLMIntegrations`    | Integrations → User tab                                   | LiteLLM as a personal integration option for regular users                 | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                       |
-| **PLATFORM-MANAGED MODE**                 |                                                           |                                                                            |                                                                                     |                                           |
-| `features:userManagement`                 | Settings → Administration                                 | Users management and Projects management tabs                              | Management tabs                                                                     | Requires `ENABLE_USER_MANAGEMENT=true`    |
-| `features:budgetManagement`               | Project detail pages, Settings → Administration           | Budget columns and budget management section                               | Budget tracking UI                                                                  |                                           |
-| **DYNAMIC TOOLS (Chat Interface)**        |                                                           |                                                                            |                                                                                     |                                           |
-| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                 | "Web Search" toggle                                                        | Web search option                                                                   | If both disabled, entire section hidden   |
-| `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                 | "Code Interpreter" toggle                                                  | Code interpreter option                                                             | If both disabled, entire section hidden   |
-| **HELP CENTER LINKS**                     |                                                           |                                                                            |                                                                                     |                                           |
-| `videoPortal`                             | Help Center → Learning Resources                          | Link card with "Open Guide" button                                         | Link card                                                                           |                                           |
-| `youtubeChannel`                          | Help Center → Learning Resources                          | YouTube channel link card                                                  | Link card                                                                           |                                           |
-| `userGuide`                               | Help Center → Learning Resources                          | Documentation link card                                                    | Link card                                                                           |                                           |
-| `userSurvey`                              | Help Center → Learning Resources                          | Survey form link card                                                      | Link card                                                                           |                                           |
-| **CONTEXTUAL HELP (Conditional Display)** |                                                           |                                                                            |                                                                                     |                                           |
-| `helpLinks:assistants:creating`           | Create Assistant page (top-right)                         | Help documentation link                                                    | No documentation link                                                               | Triggers: Page load                       |
-| `helpLinks:assistants:tools`              | Assistant config → Tools section                          | Help documentation link                                                    | No documentation link                                                               | Triggers: User opens tools                |
-| `helpLinks:workflows:creating`            | Create Workflow page (top-right)                          | Help documentation link                                                    | No documentation link                                                               | Triggers: Page load                       |
-| `helpLinks:workflows:configuration`       | Workflow editor → YAML tab                                | Help documentation link                                                    | No documentation link                                                               | Triggers: User switches to YAML           |
-| `helpLinks:integrations:selection:<type>` | Integration creation form                                 | Help link for selected type                                                | No documentation link                                                               | Triggers: User selects type from dropdown |
-| `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                                | No documentation link                                                               | Triggers: User selects type from dropdown |
-| **ASSISTANT FEATURES**                    |                                                           |                                                                            |                                                                                     |                                           |
-| `features:favorites`                      | Assistants list, Skills list, Workflows list              | Favorite/Unfavorite action buttons                                         | Favorite actions hidden                                                             |                                           |
-| `features:pinnedAssistants`               | Assistants list, Navigation sidebar                       | Pin/Unpin actions and Pinned Assistants sidebar section                    | Pin actions and sidebar section hidden                                              |                                           |
-| `features:favoritesPage`                  | Main navigation                                           | Favorites page and navigation link                                         | Favorites page and nav link hidden                                                  | Default: disabled                         |
-| **DATASOURCE FEATURES**                   |                                                           |                                                                            |                                                                                     |                                           |
-| `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                      | "Sign in with Microsoft (CodeMie Project)" authentication option           | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`   |
-| **INTEGRATED APPLICATIONS**               |                                                           |                                                                            |                                                                                     |                                           |
-| `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                                 | Application card                                                                    | Type: `module`, `iframe`, or `link`       |
-| **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                            |                                                                                     |                                           |
-| Any assistant ID                          | Assistants list, New chat dropdown, Help Center → AI Help | Assistant appears in all locations                                         | Assistant hidden from all locations                                                 | Default: enabled if not configured        |
+| Component ID                              | Where It Appears                                          | When Enabled Shows                                                         | When Disabled Hides                                                                 | Notes                                                                                                                 |
+| ----------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **CORE FEATURES**                         |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `adminActions`                            | Settings → Administration                                 | Menu items: AI/Run Adoption, Categories, MCPs, Projects, Providers         | Entire Administration menu                                                          |                                                                                                                       |
+| `feedbackAssistant`                       | Help Center, Quick actions (top-right)                    | Feedback assistant card/button                                             | Feedback collection interface                                                       |                                                                                                                       |
+| `mcpConnect`                              | Assistant/Workflow config → Tools                         | "MCP Servers" option in dropdown                                           | MCP integration option                                                              |                                                                                                                       |
+| `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                   | Catalog-referenced and custom MCP servers                                  | Possibility to configure custom MCP servers                                         |                                                                                                                       |
+| `skills`                                  | Navigation, Chat config, Assistant config                 | Skills menu, skill selector, management pages                              | Entire Skills subsystem                                                             | Major feature gate                                                                                                    |
+| `aiAdoption`                              | Analytics page, Settings → Administration                 | Analytics dashboard with 4 dimensions                                      | Analytics dashboard and config                                                      | Enterprise Edition only                                                                                               |
+| `features:enterpriseEdition`              | Analytics, navigation, Settings, profile                  | Analytics, AI adoption config, enterprise admin tabs, LiteLLM              | All enterprise-only UI                                                              | **Runtime-computed** — reflects enterprise package auto-detection; not configurable via `customer-config.yaml`        |
+| `features:showAllProjects`                | Settings → Administration → project selector              | All projects returned by admin project picker (no limit or search minimum) | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                                       |
+| `visualWorkflowEditor`                    | Workflow editor page                                      | Visual drag-and-drop editor (React Flow)                                   | Visual editor (YAML only)                                                           |                                                                                                                       |
+| `defaultConversationAssistant`            | New chat creation                                         | Pre-selects specified assistant                                            | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                                                                             |
+| `features:personalLiteLLMIntegrations`    | Integrations → User tab                                   | LiteLLM as a personal integration option for regular users                 | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                                                   |
+| **PLATFORM-MANAGED MODE**                 |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `features:userManagement`                 | Settings → Administration                                 | Users management and Projects management tabs                              | Management tabs                                                                     | **Runtime-computed** — reflects `ENABLE_USER_MANAGEMENT` backend env var; not configurable via `customer-config.yaml` |
+| `features:budgetManagement`               | Project detail pages, Settings → Administration           | Budget columns and budget management section                               | Budget tracking UI                                                                  |                                                                                                                       |
+| **DYNAMIC TOOLS (Chat Interface)**        |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                 | "Web Search" toggle                                                        | Web search option                                                                   | If both disabled, entire section hidden                                                                               |
+| `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                 | "Code Interpreter" toggle                                                  | Code interpreter option                                                             | If both disabled, entire section hidden                                                                               |
+| **BANNER CONFIGURATION**                  |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `bannerMessage`                           | All pages (top banner)                                    | Banner text displayed across the app                                       | No banner shown                                                                     | String, default: `""` — configurable via `customer-config.yaml`                                                       |
+| `bannerLinkLabel`                         | All pages (top banner)                                    | Label for the optional banner link                                         | No link label shown                                                                 | String, default: `""` — set alongside `bannerLinkRoute`                                                               |
+| `bannerLinkRoute`                         | All pages (top banner)                                    | Route for the optional banner link                                         | No link route                                                                       | String, default: `""` — set alongside `bannerLinkLabel`                                                               |
+| **MCP CONFIGURATION**                     |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `mcpAuthTimeoutSeconds`                   | MCP OAuth flow                                            | MCP OAuth timeout duration                                                 | Uses default timeout                                                                | Integer, default: `60` — configurable via `customer-config.yaml`                                                      |
+| **READ-ONLY RUNTIME FIELDS**              |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `idpProvider`                             | `/v1/config` API response                                 | N/A (read-only field)                                                      | N/A                                                                                 | Reflects `IDP_PROVIDER` backend env var; default: `keycloak`; not configurable via `customer-config.yaml`             |
+| `mcpAuthOrigin`                           | `/v1/config` API response                                 | N/A (read-only field)                                                      | N/A                                                                                 | Reflects `CALLBACK_API_BASE_URL` backend env var; not configurable via `customer-config.yaml`                         |
+| **HELP CENTER LINKS**                     |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `videoPortal`                             | Help Center → Learning Resources                          | Link card with "Open Guide" button                                         | Link card                                                                           |                                                                                                                       |
+| `youtubeChannel`                          | Help Center → Learning Resources                          | YouTube channel link card                                                  | Link card                                                                           |                                                                                                                       |
+| `userGuide`                               | Help Center → Learning Resources                          | Documentation link card                                                    | Link card                                                                           |                                                                                                                       |
+| `userSurvey`                              | Help Center → Learning Resources                          | Survey form link card                                                      | Link card                                                                           |                                                                                                                       |
+| **CONTEXTUAL HELP (Conditional Display)** |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `helpLinks:assistants:creating`           | Create Assistant page (top-right)                         | Help documentation link                                                    | No documentation link                                                               | Triggers: Page load                                                                                                   |
+| `helpLinks:assistants:tools`              | Assistant config → Tools section                          | Help documentation link                                                    | No documentation link                                                               | Triggers: User opens tools                                                                                            |
+| `helpLinks:workflows:creating`            | Create Workflow page (top-right)                          | Help documentation link                                                    | No documentation link                                                               | Triggers: Page load                                                                                                   |
+| `helpLinks:workflows:configuration`       | Workflow editor → YAML tab                                | Help documentation link                                                    | No documentation link                                                               | Triggers: User switches to YAML                                                                                       |
+| `helpLinks:integrations:selection:<type>` | Integration creation form                                 | Help link for selected type                                                | No documentation link                                                               | Triggers: User selects type from dropdown                                                                             |
+| `helpLinks:datasources:selection:<type>`  | Data source creation form                                 | Help link for selected type                                                | No documentation link                                                               | Triggers: User selects type from dropdown                                                                             |
+| **ASSISTANT FEATURES**                    |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `features:favorites`                      | Assistants list, Skills list, Workflows list              | Favorite/Unfavorite action buttons                                         | Favorite actions hidden                                                             |                                                                                                                       |
+| `features:pinnedAssistants`               | Assistants list, Navigation sidebar                       | Pin/Unpin actions and Pinned Assistants sidebar section                    | Pin actions and sidebar section hidden                                              |                                                                                                                       |
+| `features:favoritesPage`                  | Main navigation                                           | Favorites page and navigation link                                         | Favorites page and nav link hidden                                                  | Default: disabled                                                                                                     |
+| **DATASOURCE FEATURES**                   |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                      | "Sign in with Microsoft (CodeMie Project)" authentication option           | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`                                                                               |
+| **INTEGRATED APPLICATIONS**               |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| `applications:<your-app-id>`              | Applications menu                                         | Application card with icon                                                 | Application card                                                                    | Type: `module`, `iframe`, or `link`                                                                                   |
+| **PRECONFIGURED ASSISTANTS**              |                                                           |                                                                            |                                                                                     |                                                                                                                       |
+| Any assistant ID                          | Assistants list, New chat dropdown, Help Center → AI Help | Assistant appears in all locations                                         | Assistant hidden from all locations                                                 | Default: enabled if not configured                                                                                    |
 
 ## Configuration Parameters
 
@@ -266,14 +275,6 @@ components:
     settings:
       enabled: true
 
-  # WHERE: Settings → Administration → Users management, Projects management tabs
-  # ENABLED: Shows "Users management" and "Projects management" tabs under Settings → Administration
-  # DISABLED: Hides management tabs (Platform-managed mode UI is inactive)
-  # NOTE: Requires ENABLE_USER_MANAGEMENT=true in the backend
-  - id: "features:userManagement"
-    settings:
-      enabled: true
-
   # WHERE: Project detail pages, Settings → Administration → Budget management
   # ENABLED: Shows budget columns in project lists and budget management section on project detail pages
   # DISABLED: Hides all budget tracking UI
@@ -288,6 +289,12 @@ components:
     settings:
       enabled: true
 ```
+
+:::warning `features:userManagement` is runtime-computed
+As of CodeMie 2.40.0, `features:userManagement` is derived automatically from the `ENABLE_USER_MANAGEMENT` backend environment variable. Setting this entry in `customer-config.yaml` has no effect. To enable the Platform-managed mode UI, set `ENABLE_USER_MANAGEMENT=true` in the `codemie-api` Helm chart.
+
+See [Platform-Managed Mode Configuration](../access-control/platform-managed-mode-configuration.md) for full setup instructions.
+:::
 
 ### Advanced Features
 
@@ -314,14 +321,6 @@ components:
       enabled: true
       name: "Skills"
       description: "Modular knowledge units that provide domain-specific instructions to assistants"
-
-  # WHERE: Analytics routes, navigation, Settings admin tabs, profile page, integrations
-  # ENABLED: Activates all enterprise-only UI — analytics routes and nav link, AI adoption config,
-  #          enterprise admin tabs (AI Adoption, Budgets, Categories, MCPs, Providers, Users).
-  # DISABLED: Hides all enterprise-specific UI; only the Projects management tab remains in admin
-  - id: "features:enterpriseEdition"
-    settings:
-      enabled: true
 
   # WHERE: 1) Analytics page → AI Adoption dashboard
   #        2) Settings → Administration → AI Adoption Config
@@ -395,6 +394,87 @@ components:
       name: "SharePoint CodeMie OAuth"
       description: "Show Sign in with Microsoft (CodeMie Project) authentication option for SharePoint datasource"
 ```
+
+:::warning `features:enterpriseEdition` is runtime-computed
+As of CodeMie 2.40.0, `features:enterpriseEdition` is determined automatically through enterprise package auto-detection. Setting this entry in `customer-config.yaml` has no effect.
+:::
+
+### Banner Configuration
+
+Controls the banner message displayed at the top of all pages.
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Required
+  value: "..."      # String value for the configuration entry
+```
+
+```yaml
+components:
+  # WHERE: All pages — top banner area
+  # WHEN SET: Displays a banner with the specified text across the entire application
+  # WHEN EMPTY: No banner is shown
+  # NOTE: Default is "" (empty — no banner displayed)
+  - id: "bannerMessage"
+    settings:
+      enabled: true
+      value: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+
+  # WHERE: Top banner (appears alongside bannerMessage)
+  # WHEN SET: Shows a clickable link with this label in the banner
+  # WHEN EMPTY: No link label shown
+  # NOTE: Set alongside bannerLinkRoute; default is ""
+  - id: "bannerLinkLabel"
+    settings:
+      enabled: true
+      value: "Learn more"
+
+  # WHERE: Top banner (appears alongside bannerMessage)
+  # WHEN SET: Route navigated to when the banner link is clicked
+  # WHEN EMPTY: No link route set
+  # NOTE: Set alongside bannerLinkLabel; default is ""
+  - id: "bannerLinkRoute"
+    settings:
+      enabled: true
+      value: "/help"
+```
+
+### MCP Auth Configuration
+
+Controls the timeout for MCP OAuth flows.
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true
+  value: 60         # Integer — timeout in seconds
+```
+
+```yaml
+components:
+  # Controls how long (in seconds) the MCP OAuth flow waits before timing out
+  # NOTE: Default is 60 seconds
+  - id: "mcpAuthTimeoutSeconds"
+    settings:
+      enabled: true
+      value: 60
+```
+
+### Read-Only Runtime Fields
+
+The following fields appear in the `/v1/config` API response but are **not configurable** via `customer-config.yaml`. They reflect backend environment variables set in the `codemie-api` Helm chart.
+
+:::note Read-only fields
+These values are served automatically from the backend configuration. No `customer-config.yaml` action is required.
+:::
+
+| Field           | Backend env var         | Default    | Description                        |
+| --------------- | ----------------------- | ---------- | ---------------------------------- |
+| `idpProvider`   | `IDP_PROVIDER`          | `keycloak` | Identity provider in use           |
+| `mcpAuthOrigin` | `CALLBACK_API_BASE_URL` | _(none)_   | Origin URL for MCP OAuth callbacks |
 
 ### Datasource Features
 
@@ -1035,10 +1115,6 @@ extraObjects:
             settings:
               enabled: true
 
-          - id: "features:userManagement"
-            settings:
-              enabled: true
-
           - id: "features:budgetManagement"
             settings:
               enabled: true
@@ -1047,16 +1123,34 @@ extraObjects:
             settings:
               enabled: true
 
+          # Banner Configuration
+          - id: "bannerMessage"
+            settings:
+              enabled: true
+              value: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+
+          - id: "bannerLinkLabel"
+            settings:
+              enabled: true
+              value: "Learn more"
+
+          - id: "bannerLinkRoute"
+            settings:
+              enabled: true
+              value: "/help"
+
+          # MCP Auth Configuration
+          - id: "mcpAuthTimeoutSeconds"
+            settings:
+              enabled: true
+              value: 60
+
           # Advanced Features
           - id: "skills"
             settings:
               enabled: true
               name: "Skills"
               description: "Modular knowledge units that provide domain-specific instructions to assistants"
-
-          - id: "features:enterpriseEdition"
-            settings:
-              enabled: true
 
           - id: "aiAdoption"
             settings:

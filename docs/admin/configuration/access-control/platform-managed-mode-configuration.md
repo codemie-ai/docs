@@ -31,12 +31,6 @@ For a comparison of both modes, see the
 
 ## Step 1: Configure Helm Values
 
-:::warning Both backend settings must be enabled
-`ENABLE_USER_MANAGEMENT` activates Platform-managed mode in the backend, while the
-`features:userManagement` flag in `customer-config.yaml` tells the UI to show the management
-tabs. Enabling only one results in either missing UI controls or API errors.
-:::
-
 ### AI/Run CodeMie Backend
 
 In the `codemie-api` Helm chart, add the following variables to the `extraEnv` list:
@@ -59,26 +53,19 @@ your organisation's policy.
 
 Apply the changes to the deployment.
 
-### AI/Run CodeMie UI Feature Flags
+### AI/Run CodeMie UI
 
-The UI reads feature flags from the backend configuration to determine which management views
-to show. Add the following entries to your `customer-config.yaml`:
+To enable budget tracking, add the following entry to `customer-config.yaml`:
 
 ```yaml
 components:
-  - id: "features:userManagement"
-    settings:
-      enabled: true
   - id: "features:budgetManagement"
     settings:
       enabled: true
 ```
 
-`features:userManagement` controls the **Users management** and **Projects management** tabs
-under **Settings → Administration**. Set to `true` to enable them.
-
 `features:budgetManagement` enables budget columns and the budget management section on project
-detail pages. Set to `false` if your deployment does not use budget tracking.
+detail pages. Set to `false` if the deployment does not use budget tracking.
 
 Apply the changes to the deployment.
 

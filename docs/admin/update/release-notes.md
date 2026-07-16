@@ -13,6 +13,90 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.40.0 {#v2-40-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.40.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **[BREAKING] Frontend feature flags moved to backend config** — the following UI configuration variables have been removed from the `codemie-ui` Helm chart and runtime config. They are now controlled through `customer-config.yaml`, allowing runtime changes without redeploying the UI.
+
+   :::danger Breaking Change
+   If any of the removed variables were explicitly set to `true` in your deployment, you must add the corresponding entry to `customer-config.yaml` before upgrading. Failing to do so will cause affected features to silently revert to their disabled state.
+   :::
+
+   | Removed variable             | Was in                      | Default | Replacement in `customer-config.yaml` |
+   | ---------------------------- | --------------------------- | ------- | ------------------------------------- |
+   | `viteEnableUserManagement`   | `codemie-ui` Helm values    | `false` | `features:userManagement`             |
+   | `viteEnableBudgetManagement` | `codemie-ui` Helm values    | `false` | `features:budgetManagement`           |
+   | `VITE_IS_ENTERPRISE_EDITION` | `codemie-ui` runtime config | `false` | `features:enterpriseEdition`          |
+   | `VITE_SHOW_ALL_PROJECTS`     | `codemie-ui` runtime config | `false` | `features:showAllProjects`            |
+
+   Add the required entries to `customer-config.yaml`:
+
+   ```yaml
+   components:
+     # Required if VITE_IS_ENTERPRISE_EDITION was true (enterprise deployments)
+     - id: "features:enterpriseEdition"
+       settings:
+         enabled: true
+
+     # Required if viteEnableUserManagement was true
+     - id: "features:userManagement"
+       settings:
+         enabled: true
+
+     # Required if viteEnableBudgetManagement was true
+     - id: "features:budgetManagement"
+       settings:
+         enabled: true
+
+     # Required if VITE_SHOW_ALL_PROJECTS was true
+     - id: "features:showAllProjects"
+       settings:
+         enabled: true
+   ```
+
+   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for full deployment instructions.
+
+2. **Additional frontend env vars removed from `codemie-ui`** — no `customer-config.yaml` action required for these; they are now computed at runtime by the backend.
+
+   | Removed variable    | Was in                   | Now computed from                               |
+   | ------------------- | ------------------------ | ----------------------------------------------- |
+   | `viteIdpProvider`   | `codemie-ui` Helm values | `IDP_PROVIDER` environment variable             |
+   | `viteMcpAuthOrigin` | `codemie-ui` Helm values | `CALLBACK_API_BASE_URL` environment variable    |
+   | `viteBannerMessage` | `codemie-ui` Helm values | `bannerMessage` entry in `customer-config.yaml` |
+
+   :::tip Banner message migration
+   If `viteBannerMessage` was set in your deployment, move its value to the new `bannerMessage` entry in `customer-config.yaml` (see item 4 below).
+   :::
+
+3. **`features:userManagement` and `features:enterpriseEdition` are now runtime-computed** — remove these entries from `customer-config.yaml` if present; they are ignored at runtime.
+
+   | Entry                        | Now computed from                               |
+   | ---------------------------- | ----------------------------------------------- |
+   | `features:userManagement`    | `ENABLE_USER_MANAGEMENT` environment variable   |
+   | `features:enterpriseEdition` | Enterprise package auto-detection               |
+
+4. **New YAML-configurable entries added to `customer-config.yaml`**:
+
+   | New entry               | Description                                             |
+   | ----------------------- | ------------------------------------------------------- |
+   | `mcpAuthTimeoutSeconds` | MCP authentication timeout in seconds (default: `60`)  |
+   | `bannerMessage`         | Text content of the banner message (default: disabled)  |
+   | `bannerLinkLabel`       | Label for the banner link (default: disabled)           |
+   | `bannerLinkRoute`       | Route/URL for the banner link (default: disabled)       |
+
+   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for configuration details.
+
+</details>
 ### CodeMie 2.39.0 {#v2-39-0}
 
 <details>
