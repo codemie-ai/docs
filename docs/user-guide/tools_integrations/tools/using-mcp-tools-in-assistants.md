@@ -4,7 +4,7 @@ title: Using MCP Tools in Assistants
 sidebar_label: Using MCP Tools in Assistants
 pagination_prev: user-guide/tools_integrations/tools/overview
 pagination_next: null
-sidebar_position: 22
+sidebar_position: 23
 ---
 
 # Using MCP Tools in Assistants
@@ -15,6 +15,10 @@ Once configured, your assistant can use tools from the MCP server:
 2. Users can invoke these tools through the assistant interface
 3. Tool responses are formatted and presented to the user
 4. If connection issues occur, the assistant provides appropriate error messages
+
+:::info Running under personal credentials
+On a shared or marketplace assistant, the MCP server can run under the current user's own integration. If the author has not pinned an integration, open the assistant's **Your Integration Settings** section and select one. See [MCP Integration Credentials](./mcp-integration-credentials.md) for details.
+:::
 
 ## Troubleshooting MCP Server Connections
 

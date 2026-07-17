@@ -90,6 +90,10 @@ MCP servers often require environment variables for proper operation:
    - **Value**: The value to assign (will be securely stored)
 4. Click **Add Environment Variables** to save the configuration
 
+:::tip Credentials on shared assistants
+When the assistant is used by other people, decide whether the integration configured here is shared by everyone or chosen per user. See [MCP Integration Credentials](./mcp-integration-credentials.md) for how the credential source is resolved for each user at run time.
+:::
+
 ## Configuring Headers with User Context Placeholders
 
 For Streamable HTTP MCP servers, you can configure custom headers with dynamic placeholders that are automatically resolved at request time.

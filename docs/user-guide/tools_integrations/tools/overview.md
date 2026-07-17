@@ -44,6 +44,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
 | **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
 | **[Adding MCP Server](./adding-an-mcp-server.md)**                           | Add and configure Model Context Protocol (MCP) servers                                                            |
+| **[MCP Integration Credentials](./mcp-integration-credentials.md)**          | Decide whose credentials each user runs the MCP server under (pinned, per-user, or base configuration)            |
 | **[Using MCP Tools](./using-mcp-tools-in-assistants.md)**                    | Use MCP tools in assistants for extended capabilities                                                             |
 
 ---
@@ -166,10 +167,11 @@ The table below shows which tools require integration setup and the integration 
 
 AI/Run CodeMie supports MCP servers for extending assistant capabilities.
 
-| Topic                                                                   | Description                                       |
-| ----------------------------------------------------------------------- | ------------------------------------------------- |
-| **[Adding an MCP Server](./adding-an-mcp-server.md)**                   | Learn how to add and configure MCP servers        |
-| **[Using MCP Tools in Assistants](./using-mcp-tools-in-assistants.md)** | Learn how to use MCP tools within your assistants |
+| Topic                                                                   | Description                                                  |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **[Adding an MCP Server](./adding-an-mcp-server.md)**                   | Learn how to add and configure MCP servers                   |
+| **[MCP Integration Credentials](./mcp-integration-credentials.md)**     | Choose whose credentials each user runs the MCP server under |
+| **[Using MCP Tools in Assistants](./using-mcp-tools-in-assistants.md)** | Learn how to use MCP tools within your assistants            |
 
 ---
 
