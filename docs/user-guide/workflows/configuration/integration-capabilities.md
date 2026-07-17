@@ -1171,7 +1171,7 @@ X-End-User-Role: admin
 - Distributed traces link workflow execution → MCP calls → external systems
 - Audit logs capture which user triggered the workflow
 
-[Learn more about MCP Header Propagation →](../../tools_integrations/tools/adding-an-mcp-server.md#propagating-client-headers-to-mcp-servers)
+[Learn more about MCP Header Propagation →](../../tools_integrations/tools/mcp/adding-an-mcp-server.md#propagating-client-headers-to-mcp-servers)
 
 [Security Configuration →](../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation)
 

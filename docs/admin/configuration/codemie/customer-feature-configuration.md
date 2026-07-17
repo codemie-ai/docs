@@ -652,7 +652,7 @@ components:
       enabled: true
       availableForExternal: true
       name: "How to create MCP integration"
-      url: "https://docs.codemie.ai/user-guide/tools_integrations/tools/adding-an-mcp-server"
+      url: "https://docs.codemie.ai/user-guide/tools_integrations/tools/mcp/adding-an-mcp-server"
 
   - id: "helpLinks:integrations:selection:scheduler"
     settings:
@@ -1261,7 +1261,7 @@ extraObjects:
               enabled: true
               availableForExternal: true
               name: "How to create MCP integration"
-              url: "https://docs.codemie.ai/user-guide/tools_integrations/tools/adding-an-mcp-server"
+              url: "https://docs.codemie.ai/user-guide/tools_integrations/tools/mcp/adding-an-mcp-server"
 
           - id: "helpLinks:integrations:selection:scheduler"
             settings:

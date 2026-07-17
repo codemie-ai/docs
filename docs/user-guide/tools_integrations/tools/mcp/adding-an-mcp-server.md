@@ -2,9 +2,9 @@
 id: adding-an-mcp-server
 title: Adding an MCP Server
 sidebar_label: Adding an MCP Server
-pagination_prev: user-guide/tools_integrations/tools/overview
-pagination_next: null
-sidebar_position: 21
+pagination_prev: user-guide/tools_integrations/tools/mcp/mcp
+pagination_next: user-guide/tools_integrations/tools/mcp/mcp-integration-credentials
+sidebar_position: 1
 ---
 
 # Adding an MCP Server
@@ -20,7 +20,7 @@ Your administrator may enable the **mcpCustomServersDisabled** component. When a
 3. Click on the External tools card to expand it
 4. Select **Browse Catalog** for already predefined MCP servers or **Manual Setup** for adding your own MCP server
 
-![External tools](./images/image90.png)
+![External tools](../images/image90.png)
 
 ## Add Predefined MCP Servers from Browse Catalog
 
@@ -30,7 +30,7 @@ Your administrator may enable the **mcpCustomServersDisabled** component. When a
 4. And click **Save**
 5. Click **Test Integration** and **Add** to complete the configuration
 
-![Browse catalog](./images/image95.png)
+![Browse catalog](../images/image95.png)
 
 ## Add MCP Server with Form Manual Setup
 
@@ -52,7 +52,7 @@ When configuring an MCP server using the Form method:
 - **Command**: uvx
 - **Arguments**: `mcp-server-time --local-timezone=America/New_York`
 
-![Form setup](./images/image71.png)
+![Form setup](../images/image71.png)
 
 ## Add MCP Server with JSON Method Manual Setup
 
@@ -72,11 +72,11 @@ For advanced configurations, you can use the JSON method:
 }
 ```
 
-![JSON setup](./images/image49.png)
+![JSON setup](../images/image49.png)
 
 **Example of the conversation**:
 
-![MCP conversation](./images/image80.png)
+![MCP conversation](../images/image80.png)
 
 ## Managing Environment Variables
 
@@ -281,7 +281,7 @@ Not all `X-*` headers are forwarded. CodeMie applies a blocklist to prevent prop
 | `X-Internal-Token`  | Internal service tokens   |
 
 :::warning Important
-Administrators can customize the blocklist via the `MCP_BLOCKED_HEADERS` environment variable. See the [API Configuration Guide](../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation) for details.
+Administrators can customize the blocklist via the `MCP_BLOCKED_HEADERS` environment variable. See the [API Configuration Guide](../../../../admin/configuration/codemie/api-configuration.md#mcp-header-propagation) for details.
 :::
 
 ### Configuring MCP Servers to Receive Propagated Headers
@@ -368,3 +368,12 @@ X-End-User-Role: developer
 Do not pass raw auth tokens (e.g., `X-Auth-Token`) via header propagation — these are blocked by default.
 If the MCP server needs user authentication, configure it through the MCP server's `integration_alias` or `env` credentials instead.
 :::
+
+## Troubleshooting
+
+If your assistant cannot reach the MCP server:
+
+- Verify the server URL and authentication are correct
+- Check that the MCP server is operational and accessible
+- Ensure network connectivity between CodeMie and the MCP server
+- Review environment variable configurations

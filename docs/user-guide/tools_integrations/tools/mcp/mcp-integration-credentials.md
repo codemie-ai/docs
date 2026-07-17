@@ -2,9 +2,9 @@
 id: mcp-integration-credentials
 title: MCP Integration Credentials
 sidebar_label: MCP Integration Credentials
-pagination_prev: user-guide/tools_integrations/tools/overview
+pagination_prev: user-guide/tools_integrations/tools/mcp/adding-an-mcp-server
 pagination_next: null
-sidebar_position: 22
+sidebar_position: 2
 ---
 
 # MCP Integration Credentials
@@ -35,7 +35,7 @@ Pin an integration when a single, shared account should back the MCP server for 
 2. In the assistant form, select an integration for the server. Any integration available to the author can be pinned — a personal integration, a project integration, or a global integration.
 3. Save the assistant.
 
-![Selecting an integration for the MCP server in the Edit Assistant form](./images/mcp-cred-pin-integration.png)
+![Selecting an integration for the MCP server in the Edit Assistant form](../images/mcp-cred-pin-integration.png)
 
 Once pinned, those credentials are applied to **every** user of the assistant when its MCP tools run. A pinned integration is **not** shown to other users in their own selection, and its secret values are never exposed to them — the integration is simply used on their behalf. The server therefore does **not** appear in each user's per-user integration settings: there is nothing for consumers to choose.
 
@@ -55,7 +55,7 @@ When the author does **not** pin an integration, the MCP server becomes availabl
 2. Find the MCP server in the list.
 3. Choose one of the integrations offered for the server from the dropdown.
 
-![The Your Integration Settings section on the assistant, with the per-user integration selector for the MCP server](./images/mcp-cred-your-integration-settings.png)
+![The Your Integration Settings section on the assistant, with the per-user integration selector for the MCP server](../images/mcp-cred-your-integration-settings.png)
 
 The choice is stored **per user** and applied automatically in every chat with the assistant — no other user is affected.
 
@@ -74,7 +74,7 @@ _The fallback when no integration is pinned and the user has not selected one._
 
 The **Your Integration Settings** dropdown includes an explicit **No integration** option. Selecting it — or leaving the selection untouched — means the MCP server runs on its **base configuration**: the inline configuration defined on the server itself, with no integration credentials applied. The server keeps working; it simply does not carry any per-user credentials.
 
-![The Your Integration Settings dropdown with the No integration option selected](./images/mcp-cred-no-integration.png)
+![The Your Integration Settings dropdown with the No integration option selected](../images/mcp-cred-no-integration.png)
 
 There is no automatic guessing: the platform never silently picks one of the user's other integrations. To run under personal credentials, the integration must be selected explicitly.
 
@@ -88,7 +88,7 @@ When an assistant is published to the marketplace, AI/Run CodeMie checks whether
 Inline credentials will not be visible to other users, but will be used for integration purposes.
 :::
 
-![The Credential Review step in the Publish to Marketplace dialog](./images/mcp-cred-credential-review.png)
+![The Credential Review step in the Publish to Marketplace dialog](../images/mcp-cred-credential-review.png)
 
 This is a deliberate confirmation, not an error. It reminds the author that consumers of the published assistant will run the MCP server under the author's pinned/inline credentials (without ever seeing the secret values), so the author can decide whether that is the intent — or whether the server should instead be left unpinned so each user brings their own integration.
 

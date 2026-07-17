@@ -149,7 +149,7 @@ X-Tenant-ID: my-tenant
 
 :::
 
-[Learn more about MCP Header Propagation →](../tools_integrations/tools/adding-an-mcp-server#propagating-client-headers-to-mcp-servers)
+[Learn more about MCP Header Propagation →](../tools_integrations/tools/mcp/adding-an-mcp-server#propagating-client-headers-to-mcp-servers)
 
 ---
 
