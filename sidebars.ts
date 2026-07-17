@@ -877,7 +877,10 @@ const sidebars: SidebarsConfig = {
                 id: 'admin/configuration/observability/observability-overview',
               },
               collapsed: true,
-              items: ['admin/configuration/observability/logs-retention'],
+              items: [
+                'admin/configuration/observability/logs-retention',
+                'admin/configuration/observability/request-tagging',
+              ],
             },
           ],
         },
