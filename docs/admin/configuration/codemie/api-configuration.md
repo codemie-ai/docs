@@ -675,6 +675,14 @@ Control AI agent behavior, workflow execution limits, and parallel processing.
 | `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage |
 | `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow             |
 
+### Generate Workflow Configuration
+
+Controls the LLM model used to generate workflow definitions from natural language descriptions.
+
+| Parameter                      | Type   | Default | Description                                                                                                         |
+| ------------------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| `WORKFLOW_GENERATOR_LLM_MODEL` | string | `""`    | LLM model used to generate workflow definitions from natural language; uses the platform default model when not set |
+
 ### Trigger Engine
 
 Enable time-based or event-driven workflow automation.
