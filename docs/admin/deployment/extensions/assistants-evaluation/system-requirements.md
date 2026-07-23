@@ -16,17 +16,17 @@ The diagram below depicts the Langfuse LLM Observability Platform deployed on Ku
 
 ## Components and Requirements
 
-| Component               | CPU (Limits/Requests) | Memory (Limits/Requests) | Storage         |
-| ----------------------- | --------------------- | ------------------------ | --------------- |
-| Langfuse Web            | 2 / 1                 | 4Gi / 2Gi                | —               |
-| Langfuse Worker         | 2 / 1                 | 4Gi / 2Gi                | —               |
-| PostgreSQL[^1]          | —                     | —                        | —               |
-| ClickHouse x 3 Replicas | 2 / 0.3               | 8Gi / 8Gi                | 100Gi PVC       |
-| Zookeeper x 3 Replicas  | 2 / 0.1               | 4Gi / 4Gi                | 1Gi             |
-| Redis                   | 1 / 0.1               | 1.5Gi / 512Mi            | 2Gi             |
-| S3 (Minio)[^2]          | 2 / 0.1               | 4Gi / 512Mi              | 100Gi PVC       |
-| **Total**               | **~11 / ~2.6 vCPU**   | **~49.5 / ~33 GiB RAM**  | **~400 Gi PVC** |
+| Component               | CPU (Limits/Requests) | Memory (Limits/Requests)  | Storage         |
+| ----------------------- | --------------------- | ------------------------- | --------------- |
+| Langfuse Web            | 2 / 1                 | 4Gi / 2Gi                 | —               |
+| Langfuse Worker         | 2 / 1                 | 4Gi / 2Gi                 | —               |
+| PostgreSQL[^1]          | —                     | —                         | —               |
+| ClickHouse x 3 Replicas | 2 / 0.3               | 8Gi / 8Gi                 | 100Gi PVC       |
+| Zookeeper x 3 Replicas  | 2 / 0.1               | 4Gi / 4Gi                 | 1Gi             |
+| Redis                   | 1 / 0.1               | 1.5Gi / 512Mi             | 2Gi             |
+| Object Storage[^2]      | —                     | —                         | —               |
+| **Total**               | **~9 / ~2.5 vCPU**    | **~45.5 / ~32.5 GiB RAM** | **~300 Gi PVC** |
 
 [^1]: Reusing main AI/Run CodeMie PostgreSQL instance
 
-[^2]: Can use S3 instead of MinIO
+[^2]: External, client-provided bucket (AWS S3, Azure Blob Storage, or Google Cloud Storage)

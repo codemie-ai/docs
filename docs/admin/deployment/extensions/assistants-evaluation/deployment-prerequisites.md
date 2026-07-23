@@ -161,8 +161,15 @@ redis:
     size: "2Gi"         # Adjust as needed
 
 s3:
-  persistence:
-    size: "100Gi"         # Adjust as needed
+  deploy: false
+  storageProvider: "s3"       # AWS S3 (default) — see commented Azure/GCP options in values.yaml
+  bucket: "your-bucket-name"    # your bucket name
+  region: "us-east-1"
+  endpoint: ""
+  accessKeyId:
+    secretKeyRef: { name: "langfuse-object-storage", key: "access-key-id" }
+  secretAccessKey:
+    secretKeyRef: { name: "langfuse-object-storage", key: "secret-access-key" }
 
 # Configure data retention policies for langfuse (optional):
 retention:
@@ -242,7 +249,28 @@ If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/v
 
 </details>
 
-## Step 4: Configure Data Retention (Optional)
+## Step 4: Configure Object Storage
+
+Langfuse stores event, batch-export, and media uploads in your own cloud object storage — AWS S3, Azure Blob Storage, or Google Cloud Storage. Set your provider in `langfuse/values.yaml`'s `s3:` block; the AWS block is active by default, with commented Azure and GCS alternatives immediately below it.
+
+Credentials are read from a single Kubernetes secret, `langfuse-object-storage`, with two generic keys:
+
+- `access-key-id` — AWS access key ID, or Azure Storage Account name (leave unset for GCP)
+- `secret-access-key` — AWS secret access key, Azure Storage Account key, or the full GCP service-account JSON
+
+This secret is created automatically by `deploy-langfuse.sh` — the script will prompt for these values if the secret does not exist.
+
+For manual deployment, create the secret before running Helm:
+
+```bash
+kubectl create secret generic langfuse-object-storage \
+--namespace langfuse \
+--from-literal=access-key-id="your_access_key_id" \
+--from-literal=secret-access-key="your_secret_access_key" \
+--type=Opaque
+```
+
+## Step 5: Configure Data Retention (Optional)
 
 To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
 
