@@ -13,8 +13,6 @@ This page provides information about updated third-party components and configur
 
 ---
 
-### CodeMie 2.39.0 {#v2-39-0}
-
 ### CodeMie 2.40.0 {#v2-40-0}
 
 <details>
@@ -31,6 +29,8 @@ No third-party component updates in this release.
 No breaking configuration changes were introduced in this release.
 
 </details>
+
+### CodeMie 2.39.0 {#v2-39-0}
 
 <details>
 <summary>Release details</summary>
