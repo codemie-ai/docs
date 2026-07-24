@@ -88,14 +88,24 @@ API tokens should be treated as passwords. Keep them secure and never share them
 - **Global Integration**: Toggle on if you want to use this integration across multiple projects.
 - **Credential Type**: Select **Jira** from the dropdown.
 - **Alias**: Alias is a representation of the integration (e.g., `jira-example`).
-- **URL**: Your Jira instance URL:
-  - For Jira Cloud: `https://<your-domain>.atlassian.net`
+- **URL**: The Jira instance URL. For Jira Cloud, the correct value depends on the API token type (see the warning below):
+  - For Jira Cloud with a **classic (unscoped)** token: `https://<your-domain>.atlassian.net`
+  - For Jira Cloud with a **scoped** token: `https://api.atlassian.com/ex/jira/<your-cloud-id>`
   - For Jira Self-hosted: `https://<your-jira-server-url>`
 - **Is Jira Cloud**:
   - ✅ **Check this box** if you're using **Jira Cloud**
   - ❌ **Leave unchecked** if you're using **Jira Self-hosted** (self-hosted Jira)
 - **Username/email for Jira**: Your Atlassian account email (e.g., `user@example.com`).
 - **Token**: Paste the API token created in step 1.
+
+:::warning Cloud URL depends on the API token type
+Atlassian Cloud offers two kinds of API tokens, and each one requires a different **URL** value. CodeMie sends requests to exactly the URL provided, so the URL and token type must match:
+
+- A **classic (unscoped)** token works with the site URL: `https://<your-domain>.atlassian.net`.
+- A **scoped** token (created with specific permissions) only works through the Atlassian API gateway: `https://api.atlassian.com/ex/jira/<your-cloud-id>`.
+
+To find the cloud ID, open `https://<your-domain>.atlassian.net/_edge/tenant_info` in a browser while signed in to Atlassian. The returned `cloudId` value is the `<your-cloud-id>` used in the gateway URL.
+:::
 
 ![Jira Integration Form](./images/jira-integration-form.png)
 
