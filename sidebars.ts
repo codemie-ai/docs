@@ -209,8 +209,19 @@ const sidebars: SidebarsConfig = {
                     'user-guide/tools_integrations/tools/azure-devops/azure-devops-test-plans',
                   ],
                 },
-                'user-guide/tools_integrations/tools/adding-an-mcp-server',
-                'user-guide/tools_integrations/tools/using-mcp-tools-in-assistants',
+                {
+                  type: 'category',
+                  label: 'MCP',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/tools_integrations/tools/mcp/mcp',
+                  },
+                  collapsed: true,
+                  items: [
+                    'user-guide/tools_integrations/tools/mcp/adding-an-mcp-server',
+                    'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
+                  ],
+                },
               ],
             },
           ],
@@ -342,6 +353,16 @@ const sidebars: SidebarsConfig = {
             'user-guide/project-user-management/projects',
             'user-guide/project-user-management/users',
           ],
+        },
+        {
+          type: 'category',
+          label: 'Budget Management',
+          link: {
+            type: 'doc',
+            id: 'user-guide/budget-management/budget-management',
+          },
+          collapsed: true,
+          items: [],
         },
       ],
     },
