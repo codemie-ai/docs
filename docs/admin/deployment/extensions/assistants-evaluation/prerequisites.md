@@ -24,6 +24,10 @@ Before starting any deployment method, ensure you have:
 - PostgreSQL database instance
 - Sufficient cluster resources for Langfuse components
 - Kubernetes cluster with appropriate permissions
+- Object storage bucket for Langfuse event, batch-export, and media uploads — one of:
+  - **AWS S3** (recommended for EKS): a dedicated S3 bucket with an IRSA role granting `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:ListBucket`. Provisioned automatically via `codemie-terraform-aws-platform` with `TF_VAR_enable_langfuse_s3=true`.
+  - **Azure Blob Storage**: a Storage Account with a container; static credentials required (IRSA not supported by Langfuse for Azure).
+  - **Google Cloud Storage**: a GCS bucket with a service-account JSON key; static credentials required (IRSA not supported by Langfuse for GCS).
 
 :::warning Minimum CodeMie Version
 
