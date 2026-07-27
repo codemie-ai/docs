@@ -24,7 +24,7 @@ For a comparison of both modes, see the
 
 ## Prerequisites
 
-- Access to the Kubernetes cluster and Helm values file of AI/Run CodeMie Backend and UI
+- Access to the Kubernetes cluster and the Helm values file of AI/Run CodeMie Backend (`codemie-api`)
 - If migrating from an existing Keycloak deployment: Keycloak service account client with `realm-management` roles in the target realm (see [Create Keycloak service account client](#create-keycloak-service-account-client))
 
 ---
@@ -50,10 +50,6 @@ UI instead of being read from Keycloak JWT claims.
 `USER_PROJECT_LIMIT` sets the maximum number of shared projects a regular user can be
 assigned to. Super Admins are always exempt from this limit. Adjust the value to match
 your organisation's policy.
-
-Apply the changes to the deployment.
-
-### AI/Run CodeMie UI
 
 To enable budget tracking, add the following entry to `customer-config.yaml`:
 
