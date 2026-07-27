@@ -253,14 +253,30 @@ If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/v
 
 Langfuse stores event, batch-export, and media uploads in your own cloud object storage — AWS S3, Azure Blob Storage, or Google Cloud Storage. Set your provider in `langfuse/values.yaml`'s `s3:` block; the AWS block is active by default, with commented Azure and GCS alternatives immediately below it.
 
-Credentials are read from a single Kubernetes secret, `langfuse-object-storage`, with two generic keys:
+### AWS S3 — IRSA (recommended for EKS)
 
-- `access-key-id` — AWS access key ID, or Azure Storage Account name (leave unset for GCP)
-- `secret-access-key` — AWS secret access key, Azure Storage Account key, or the full GCP service-account JSON
+On EKS, use IRSA instead of static credentials. Annotate the Langfuse service account with your IAM role ARN in `values.yaml`:
 
-This secret is created automatically by `deploy-langfuse.sh` — the script will prompt for these values if the secret does not exist.
+```yaml
+langfuse:
+  langfuse:
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: "arn:aws:iam::<account-id>:role/<role-name>"
+```
 
-For manual deployment, create the secret before running Helm:
+Leave `s3.accessKeyId` and `s3.secretAccessKey` unset — the AWS SDK picks up credentials from the pod's IAM role automatically. The `langfuse-object-storage` secret is not needed for this path.
+
+### Azure Blob Storage / GCS — static credentials
+
+IRSA is not supported by Langfuse for Azure or GCS. Credentials are read from the `langfuse-object-storage` secret:
+
+- `access-key-id` — Azure Storage Account name (unused for GCS)
+- `secret-access-key` — Azure Storage Account key, or the full GCP service-account JSON
+
+`deploy-langfuse.sh` will prompt to create this secret if it does not exist (choose to skip only if using IRSA).
+
+For manual deployment:
 
 ```bash
 kubectl create secret generic langfuse-object-storage \
