@@ -267,14 +267,39 @@ langfuse:
 
 Leave `s3.accessKeyId` and `s3.secretAccessKey` unset — the AWS SDK picks up credentials from the pod's IAM role automatically. The `langfuse-object-storage` secret is not needed for this path.
 
-### Azure Blob Storage / GCS — static credentials
+### Google Cloud Storage — Workload Identity (recommended for GKE)
 
-IRSA is not supported by Langfuse for Azure or GCS. Credentials are read from the `langfuse-object-storage` secret:
+On GKE, use Workload Identity instead of static credentials. Annotate the Langfuse service account with your GCP service account in `values.yaml`:
 
-- `access-key-id` — Azure Storage Account name (unused for GCS)
-- `secret-access-key` — Azure Storage Account key, or the full GCP service-account JSON
+```yaml
+langfuse:
+  langfuse:
+    serviceAccount:
+      annotations:
+        iam.gke.io/gcp-service-account: <gsa-name>@<project>.iam.gserviceaccount.com
+```
 
-`deploy-langfuse.sh` will prompt to create this secret if it does not exist (choose to skip only if using IRSA).
+Set `gcs.credentials: {}` (empty) in the `s3:` block — Langfuse's GCS client falls back to Application Default Credentials automatically. The `langfuse-object-storage` secret is not needed for this path.
+
+```yaml
+s3:
+  deploy: false
+  storageProvider: "gcs"
+  bucket: "your-bucket-name"
+  gcs:
+    credentials: {}   # empty → uses Workload Identity / ADC
+```
+
+The GCP service account must have the `storage.objectAdmin` role (or equivalent) on the bucket.
+
+### Azure Blob Storage — static credentials
+
+Credentials are read from the `langfuse-object-storage` secret:
+
+- `access-key-id` — Azure Storage Account name
+- `secret-access-key` — Azure Storage Account key
+
+`deploy-langfuse.sh` will prompt to create this secret if it does not exist (choose to skip only if using IRSA or GCS Workload Identity).
 
 For manual deployment:
 
@@ -283,6 +308,28 @@ kubectl create secret generic langfuse-object-storage \
 --namespace langfuse \
 --from-literal=access-key-id="your_access_key_id" \
 --from-literal=secret-access-key="your_secret_access_key" \
+--type=Opaque
+```
+
+### GCS — static credentials (non-GKE)
+
+If not using GKE Workload Identity, provide a GCP service-account JSON key via the `langfuse-object-storage` secret and reference it in `values.yaml`:
+
+```yaml
+s3:
+  storageProvider: "gcs"
+  bucket: "your-bucket-name"
+  gcs:
+    credentials:
+      secretKeyRef: { name: "langfuse-object-storage", key: "secret-access-key" }
+```
+
+Create the secret with the JSON key content:
+
+```bash
+kubectl create secret generic langfuse-object-storage \
+--namespace langfuse \
+--from-literal=secret-access-key="$(cat path/to/service-account-key.json)" \
 --type=Opaque
 ```
 
