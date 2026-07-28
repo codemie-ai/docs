@@ -88,12 +88,13 @@ Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DA
 **3. Object storage credentials** — the script asks whether to skip creating the `langfuse-object-storage` secret:
 
 ```
-Skip object storage secret creation? (y to skip for IRSA) [y/N]:
+Skip object storage secret creation? (y to skip for IRSA / GCS Workload Identity) [y/N]:
 ```
 
 - **AWS EKS with IRSA** (recommended): type `y`. The pod's IAM role grants S3 access; no secret is needed. Verify that `langfuse.langfuse.serviceAccount.annotations` in `values.yaml` contains the correct IRSA role ARN (output `LANGFUSE_AWS_ROLE_ARN` from `deployment_outputs.env`).
+- **GKE with Workload Identity** (recommended for GCS): type `y`. The pod's GCP service account grants GCS access; no secret is needed. Verify that `langfuse.langfuse.serviceAccount.annotations` in `values.yaml` contains the correct `iam.gke.io/gcp-service-account` annotation and `s3.gcs.credentials: {}` is set.
 - **Azure Blob Storage**: type `N`. Enter the Storage Account name as the access key ID and the Storage Account key as the secret.
-- **Google Cloud Storage**: type `N`. Leave the access key ID blank; paste the full GCP service-account JSON as a single line when prompted for the secret.
+- **GCS (non-GKE / static credentials)**: type `N`. Leave the access key ID blank; paste the full GCP service-account JSON as a single line when prompted for the secret.
 
 ### Help
 
