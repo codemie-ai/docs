@@ -311,7 +311,7 @@ kubectl create secret generic langfuse-object-storage \
 --type=Opaque
 ```
 
-### GCS — static credentials (non-GKE)
+### GCS — static credentials
 
 If not using GKE Workload Identity, provide a GCP service-account JSON key via the `langfuse-object-storage` secret and reference it in `values.yaml`:
 
