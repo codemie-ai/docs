@@ -43,15 +43,13 @@ Each budget belongs to one of three independent categories:
 | **CLI**            | Requests from codemie-code, codemie-claude, and other CLI agents to non-premium models |
 | **Premium Models** | Any requests to premium models — regardless of source: both UI and CLI                 |
 
-:::info
-Only one budget is charged per request:
+Only one budget is charged per request. The category is resolved automatically by request type:
 
-- Premium model → Premium Models budget (regardless of whether the source is UI or CLI)
-- Non-premium model + CLI request → CLI budget
-- Non-premium model + UI request → Platform budget
-  :::
+- Premium model → **Premium Models** (regardless of source: UI or CLI)
+- Non-premium model + CLI request → **CLI**
+- Non-premium model + UI request → **Platform**
 
-Category is resolved automatically per request. If a project budget exists for the resolved category, it takes precedence over the user's global budget.
+For details on how project membership affects category resolution, see [Budget Priority](#budget-priority).
 
 ## Budget Parameters
 
@@ -95,23 +93,44 @@ For details on roles, see [Roles & RBAC](../../admin/security/roles-rbac).
 
 ### Budget Priority
 
+<div
+  style={{cursor: 'zoom-in'}}
+  title="Click to open full size"
+  onClick={(e) => {
+    const svg = e.currentTarget.querySelector('svg');
+    if (svg) {
+      const serialized = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([serialized], {type: 'image/svg+xml'});
+      window.open(URL.createObjectURL(blob));
+    }
+  }}
+>
+
+```mermaid
+flowchart LR
+    A([User request]) --> B{"Premium model?<br/>LITELLM_PREMIUM_MODELS_ALIASES"}
+
+    B -->|YES| C[premium_models]
+    B -->|NO| D{Request source?}
+
+    D -->|CLI| E[cli]
+    D -->|Web UI| F[platform]
+
+    C & E & F --> G{"In a project with<br/>ANY budget configured?"}
+
+    G -->|NO| H["1. Personal budget<br/>2. Default budget<br/>3. ❌ Blocked"]
+    G -->|YES| I{"Base category<br/>in project_scopes?"}
+
+    I -->|YES| J[Project budget ✅]
+    I -->|NO| K{"Project has<br/>Platform budget?"}
+
+    K -->|YES| L[Project Platform budget]
+    K -->|NO| M[Personal / Default<br/>Platform budget]
+
+    H & J & L & M --> Z([Budget enforcement<br/>LiteLLM Proxy])
 ```
-User request
-      │
-      ▼
-Is the model premium?
-(LITELLM_PREMIUM_MODELS_ALIASES)
-      │
- ┌────┴──────────────────────────────┐
- │ YES                               │ NO
- ▼                                   ▼
-Premium Models budget      Request source?
-(regardless of source)            │
-                       ┌──────────┴──────────┐
-                       │ CLI                 │ Web UI
-                       ▼                     ▼
-                  CLI budget          Platform budget
-```
+
+</div>
 
 For each category, the first matching budget is applied in the following priority order:
 
@@ -119,8 +138,16 @@ For each category, the first matching budget is applied in the following priorit
 2. **Personal budget** — if the user has a personal budget explicitly assigned for this category
 3. **Default budget** — if neither project nor personal budget is assigned
 
-:::info
-If the user has no project budget for a given category — the personal or default budget applies, as if there were no project.
+**Project context** applies when the user belongs to a project that has at least one budget configured. In this case, all requests are resolved within the project — regardless of category:
+
+- If the project covers the resolved category → the project budget is used
+- If the project does not cover the resolved category → falls back to the project's Platform budget
+- If the project has no Platform budget either → personal or default Platform budget is used
+
+If the project has no budgets configured at all, personal and default budgets apply as normal.
+
+:::note
+The Platform budget acts as the universal fallback within a project. If a project has only a Platform budget, CLI and premium model requests are also charged against it. To track each category independently, configure a dedicated budget for each category on the project.
 :::
 
 ### Personal Budgets
@@ -191,14 +218,14 @@ The **Project members** table includes a **Budget Allocations** column showing e
 
 This is the key parameter that controls how the budget is distributed among members.
 
-**Enforce member spend limits = off** (default)
+**Enforce member spend limits = Disabled** (default)
 
 The budget acts as a shared team pool. Individual shares are calculated and stored in CodeMie, but no per-user hard limit is enforced in LiteLLM:
 
 - One member may spend $5, another $50 — nobody is blocked until the team collectively exhausts the full limit
 - If a member has a personal budget (e.g. $20), it is still irrelevant — the shared project limit applies to the whole team
 
-**Enforce member spend limits = on**
+**Enforce member spend limits = Enabled**
 
 Each member receives a hard individual limit in LiteLLM:
 
@@ -223,8 +250,8 @@ The member is switched to fixed allocation mode. Their amount is locked, and the
 
 | Enforce member spend limits state | Override behavior                                                                                                                               |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **On**                            | Override sets a hard personal limit in LiteLLM. The remaining budget is recalculated and redistributed among members without an override        |
-| **Off**                           | Override records the calculated share in CodeMie DB, but no real per-user restriction exists — all members work through the shared project pool |
+| **Enabled**                       | Override sets a hard personal limit in LiteLLM. The remaining budget is recalculated and redistributed among members without an override        |
+| **Disabled**                      | Override records the calculated share in CodeMie DB, but no real per-user restriction exists — all members work through the shared project pool |
 
 To remove an override — click **Clear Override** → the member returns to equal distribution and the remaining budget is recalculated.
 
@@ -278,29 +305,39 @@ Use the **Budget** filter and **Search** field to quickly locate users by budget
 
 ### Basic Scenarios
 
-| #   | Configuration                                          | Platform                                          | CLI                        | Premium              |
-| --- | ------------------------------------------------------ | ------------------------------------------------- | -------------------------- | -------------------- |
-| 1   | Default Platform budget only                           | ✅ Default Platform (individual counter per user) | ❌ Blocked — no CLI budget | ❌ Blocked           |
-| 2   | Default Platform + CLI + Premium                       | ✅ Default Platform                               | ✅ Default CLI             | ✅ Default Premium   |
-| 3   | Personal Platform only                                 | ✅ Personal Platform                              | ❌ No CLI budget           | ❌ No Premium budget |
-| 4   | Personal Platform + default CLI                        | ✅ Personal Platform                              | ✅ Default CLI             | ❌ No Premium budget |
-| 5   | Project Platform + personal Platform                   | ✅ Project (priority)                             | ❌ No CLI budget           | ❌ No Premium budget |
-| 6   | Project CLI + default Platform + CLI                   | ✅ Default Platform                               | ✅ Project CLI (priority)  | ❌ No Premium budget |
-| 7   | Project with no budget for category + default Platform | ✅ Default Platform                               | ❌ No CLI budget           | ❌ No Premium budget |
-| 8   | All three defaults + personal Premium                  | ✅ Default Platform                               | ✅ Default CLI             | ✅ Personal Premium  |
+| #   | Budget                                               | Platform request                                                      | CLI request                                                        | Premium model request                                               |
+| --- | ---------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| 1   | Default: Platform only                               | ✅ Default Platform (individual counter per user)                     | ❌ Blocked — no CLI budget                                         | ❌ Blocked — no Premium budget                                      |
+| 2   | Default: Platform + CLI + Premium                    | ✅ Default Platform                                                   | ✅ Default CLI                                                     | ✅ Default Premium                                                  |
+| 3   | Personal: Platform only                              | ✅ Personal Platform                                                  | ❌ No CLI budget                                                   | ❌ No Premium budget                                                |
+| 4   | Personal: Platform, Default: CLI                     | ✅ Personal Platform                                                  | ✅ Default CLI                                                     | ❌ No Premium budget                                                |
+| 5   | Default: Platform + CLI + Premium, Personal: Premium | ✅ Default Platform                                                   | ✅ Default CLI                                                     | ✅ Personal Premium (priority over default)                         |
+| 6   | Project: Platform only                               | ✅ Project Platform (priority)                                        | ✅ Project Platform (fallback — no project CLI budget)             | ✅ Project Platform (fallback — no project Premium budget)          |
+| 7   | Project: CLI only                                    | ✅ Project CLI (fallback — no project Platform budget)                | ✅ Project CLI (priority)                                          | ✅ Project CLI (fallback — no project Premium budget)               |
+| 8   | Project: Premium only                                | ✅ Default Platform (no project Platform budget → global fallback)    | ✅ Default Platform (no project CLI or Platform → global fallback) | ✅ Project Premium (priority)                                       |
+| 9   | Project: Platform + CLI + Premium                    | ✅ Project Platform                                                   | ✅ Project CLI                                                     | ✅ Project Premium                                                  |
+| 10  | Project: no budgets configured                       | ✅ Personal Platform / Default Platform (if configured, otherwise ❌) | ✅ Personal CLI / Default CLI (if configured, otherwise ❌)        | ✅ Personal Premium / Default Premium (if configured, otherwise ❌) |
+| 11  | Personal: Platform, Project: Platform                | ✅ Project Platform                                                   | ✅ Project Platform (fallback — no CLI budget)                     | ✅ Project Platform (fallback — no Premium budget)                  |
+
+### Project context and category fallback
+
+In rows 6–9 and 11, the user is in a project context (project has at least one budget configured). Personal and default budgets are bypassed for all categories — **except** when the project has no Platform budget at all (row 8 — Premium-only project), in which case global personal/default Platform budget is used as the final fallback. The **Platform budget is the universal fallback hub** within a project: if a project lacks a budget for the resolved category (CLI or Premium), the request falls back to the project Platform budget. Row 10 applies when the user is in a shared project with no budgets configured at all — the system treats it as if there is no project.
+
+### Personal space
+
+A personal space is technically a project (`project_type = personal`, `name = user@email`). When no project budget is assigned to it (typical case), it behaves identically to the "No project" context (rows 1–5). Row 11 shows the non-typical case where an admin has explicitly assigned a project budget to a user's personal space.
 
 ### Webhooks and Workflows
 
 LLM usage triggered by a Webhook or Workflow is charged to the budget of the user who created the integration.
 
-:::info
-**Key takeaways:**
+### Key takeaways
 
 - If no budget exists for a category — requests for that category are blocked
-- Configuring only a default Platform budget means users will not be able to use CLI
-- Project budget has the highest priority and always overrides personal and default budgets
-- When a project budget is active, the user's personal budget is not affected and is not charged
-  :::
+- Budgets for Platform, CLI, and Premium Models categories are independent. Configuring a Platform budget does not automatically cover CLI or premium model requests — each category must be configured separately.
+- Project budget has the highest priority and overrides personal and default budgets — but only when the project has at least one budget configured. If the project has no budgets at all, personal and default budgets apply normally.
+- When a project budget is active, the user's personal and default budgets are not affected and are not charged.
+- ⚠️ **Platform budget is the universal fallback within a project context.** If a project has budgets for some categories but not others, requests to uncovered categories fall back to the project's Platform budget — not to personal or default budgets. The only exception is a Premium-only project (no Platform budget configured): in this case both Platform and CLI requests fall back to personal/default Platform budget, as the system always resolves uncovered categories through the Platform fallback path. To track each category separately within a project, configure Platform, CLI, and Premium Models budgets on the project explicitly.
 
 ## Spending Data Update Frequency
 
@@ -383,15 +420,16 @@ This is not a bug. Enforcement precision is bounded by `LITELLM_CUSTOMER_CACHE_T
 
 ## Recommendations
 
-| Goal                                                  | Recommendation                                                                                                                                               |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Getting started                                       | Create default budgets for all three categories (Platform, CLI, Premium) — otherwise users without a personal budget will be blocked in uncovered categories |
-| Team cost control without blocking individual members | Create a project budget with **Enforce member spend limits = off** — the overall limit is controlled at the team level without blocking individual members   |
-| Strict per-user control within a project              | Enable **Enforce member spend limits** — each member receives a fixed quota with blocking on overspend                                                       |
-| VIP users / team leads                                | Use Override with **Enforce member spend limits** enabled to individually increase a specific member's quota                                                 |
-| Adding new members to a project                       | After adding members, run a manual **Rebalance** — the budget is not recalculated automatically on member addition                                           |
-| Premium models                                        | Create a separate default Premium Models budget and specify the model list in the platform configuration                                                     |
-| Emergency unblocking                                  | **Reset Budget** on the user card — resets the spending counter (Maintainer only)                                                                            |
+| Goal                                                  | Recommendation                                                                                                                                                                                                                                                                                                          |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Getting started                                       | Create default budgets for all three categories (Platform, CLI, Premium) — otherwise users without a personal budget will be blocked in uncovered categories                                                                                                                                                            |
+| Team cost control without blocking individual members | Create a project budget with **Enforce member spend limits = Disabled** — the overall limit is controlled at the team level without blocking individual members                                                                                                                                                         |
+| Strict per-user control within a project              | Enable **Enforce member spend limits** — each member receives a fixed quota with blocking on overspend                                                                                                                                                                                                                  |
+| VIP users / team leads                                | Use Override with **Enforce member spend limits** enabled to individually increase a specific member's quota                                                                                                                                                                                                            |
+| Adding new members to a project                       | After adding members, run a manual **Rebalance** — the budget is not recalculated automatically on member addition                                                                                                                                                                                                      |
+| Premium models                                        | Create a separate default Premium Models budget and specify the model list in the platform configuration                                                                                                                                                                                                                |
+| Emergency unblocking                                  | **Reset Budget** on the user card — resets the spending counter (Maintainer only)                                                                                                                                                                                                                                       |
+| Accurate per-category cost tracking within a project  | Configure a **dedicated budget for each category** (Platform, CLI, Premium Models) on the project. Without all three budgets, requests to categories that are not configured fall back to the project Platform budget — making it impossible to distinguish platform, CLI, and premium model costs in project analytics |
 
 ## Platform Limitations
 
@@ -401,7 +439,7 @@ The following summarizes known constraints in the current version of the budgeti
 - One budget per category per project
 - The category of a budget cannot be changed if there are active user assignments — all assignments must be removed first
 - Budget ID is generated automatically from the name and cannot be edited after creation
-- Budget creation, modification, and deletion require the Maintainer role; Project Admin cannot manage budgets
+- Budget creation and modification require the Maintainer role; Project Admin cannot manage budgets
 - No global platform-wide spending cap across all projects
 - Direct budget configuration via the LiteLLM API is not recommended — it may cause unpredictable platform behavior
 - When a project budget is recreated, the LiteLLM spending counter resets; historical spend in analytics (Elasticsearch) is preserved
