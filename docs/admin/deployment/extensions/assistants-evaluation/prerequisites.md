@@ -27,7 +27,7 @@ Before starting any deployment method, ensure you have:
 - Object storage bucket for Langfuse event, batch-export, and media uploads — one of:
   - **AWS S3** (recommended for EKS): a dedicated S3 bucket with an IRSA role granting `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:ListBucket`. Provisioned automatically via `codemie-terraform-aws-platform` with `TF_VAR_enable_langfuse_s3=true`.
   - **Azure Blob Storage**: a Storage Account with a container; static credentials required (IRSA not supported by Langfuse for Azure).
-  - **Google Cloud Storage**: a GCS bucket with a service-account JSON key; static credentials required (IRSA not supported by Langfuse for GCS).
+  - **Google Cloud Storage**: a GCS bucket. On GKE, use Workload Identity (recommended) — annotate the Langfuse service account with `iam.gke.io/gcp-service-account` and grant the GCP SA `storage.objectAdmin` on the bucket; no static credentials needed. Also can provide a service-account JSON key.
 
 :::warning Minimum CodeMie Version
 
