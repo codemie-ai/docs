@@ -79,14 +79,24 @@ You won't be able to see your token once you leave this screen. Make sure to cop
 - **Global Integration**: Toggle on to use across multiple projects. If disabled, the integration will only be available within the selected project, and assistants and workflows attached to other projects will not be able to use it.
 - **Credential Type**: Confluence
 - **Alias**: Enter integration name (e.g., "codemie-demo").
-- **URL**: Your Confluence instance URL:
-  - For Confluence Cloud: `https://your-domain.atlassian.net`
-  - For Confluence Self-hosted: your own Confluence server URL (e.g., `https://confluence.example.com`)
+- **URL**: The Confluence instance URL. For Confluence Cloud, the correct value depends on the API token type (see the warning below):
+  - For Confluence Cloud with a **classic (unscoped)** token: `https://your-domain.atlassian.net`
+  - For Confluence Cloud with a **scoped** token: `https://api.atlassian.com/ex/confluence/your-cloud-id`
+  - For Confluence Self-hosted: the Confluence server URL (e.g., `https://confluence.example.com`)
 - **Is Confluence Cloud**:
   - ✅ **Check this box** if you're using **Confluence Cloud**
   - ❌ **Leave unchecked** if you're using **Confluence Self-hosted**
 - **Username/email for Confluence**: Your Atlassian account email (e.g., `user@example.com`).
 - **Token/ApiKey**: Paste the API token copied in step 1.4.
+
+:::warning Cloud URL depends on the API token type
+Atlassian Cloud offers two kinds of API tokens, and each one requires a different **URL** value. CodeMie sends requests to exactly the URL provided, so the URL and token type must match:
+
+- A **classic (unscoped)** token works with the site URL: `https://your-domain.atlassian.net`.
+- A **scoped** token (created with specific permissions) only works through the Atlassian API gateway: `https://api.atlassian.com/ex/confluence/your-cloud-id`.
+
+To find the cloud ID, open `https://your-domain.atlassian.net/_edge/tenant_info` in a browser while signed in to Atlassian. The returned `cloudId` value is the `your-cloud-id` used in the gateway URL.
+:::
 
 ![CodeMie Confluence integration form](./images/confluence-codemie-integration.png)
 
