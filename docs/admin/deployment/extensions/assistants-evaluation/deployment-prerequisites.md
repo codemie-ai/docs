@@ -287,7 +287,7 @@ s3:
   storageProvider: "gcs"
   bucket: "your-bucket-name"
   gcs:
-    credentials: {}   # empty → uses Workload Identity / ADC
+    credentials: {}   # empty → uses Workload Identity / Application Default Credentials (ADC)
 ```
 
 The GCP service account must have the `storage.objectAdmin` role (or equivalent) on the bucket.
