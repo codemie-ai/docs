@@ -21,15 +21,16 @@ These settings control fundamental application behavior, deployment environment,
 
 ### Application Metadata
 
-| Parameter       | Type    | Default    | Description                                                                            |
-| --------------- | ------- | ---------- | -------------------------------------------------------------------------------------- |
-| `APP_VERSION`   | string  | `"0.16.0"` | Application version displayed in UI and logs for tracking deployments                  |
-| `ENV`           | string  | `"local"`  | Deployment environment identifier affecting logging format and feature flags           |
-| `MODELS_ENV`    | string  | `"dial"`   | LLM configuration profile to load (points to `llm-{value}-config.yaml`)                |
-| `LOG_LEVEL`     | string  | `"INFO"`   | Minimum log severity to output; use `DEBUG` for troubleshooting, `INFO` for production |
-| `TIMEZONE`      | string  | `"UTC"`    | System timezone for timestamp normalization across distributed components              |
-| `API_ROOT_PATH` | string  | `""`       | URL prefix for API endpoints when behind reverse proxy (e.g., `/api/v1`)               |
-| `WORKERS`       | integer | `1`        | Uvicorn worker processes; increase for production to handle concurrent requests        |
+| Parameter          | Type    | Default    | Description                                                                                                                           |
+| ------------------ | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `APP_VERSION`      | string  | `"0.16.0"` | Application version displayed in UI and logs for tracking deployments                                                                 |
+| `ENV`              | string  | `"local"`  | Deployment environment identifier affecting logging format and feature flags                                                          |
+| `MODELS_ENV`       | string  | `"dial"`   | LLM configuration profile to load (points to `llm-{value}-config.yaml`)                                                               |
+| `LOG_LEVEL`        | string  | `"INFO"`   | Minimum log severity to output; use `DEBUG` for troubleshooting, `INFO` for production                                                |
+| `TIMEZONE`         | string  | `"UTC"`    | System timezone for timestamp normalization across distributed components                                                             |
+| `API_ROOT_PATH`    | string  | `""`       | URL prefix for API endpoints when behind reverse proxy (e.g., `/api/v1`)                                                              |
+| `WORKERS`          | integer | `1`        | Uvicorn worker processes; increase for production to handle concurrent requests                                                       |
+| `HTTPS_VERIFY_SSL` | boolean | `true`     | Verify SSL certificates for outbound HTTP requests; disable only in controlled development environments with self-signed certificates |
 
 ### Callback Configuration
 
@@ -51,10 +52,28 @@ Converts Mermaid diagram syntax to images for documentation and visualizations.
 
 Enable CodeMie agents to communicate with external AI agents and services.
 
-| Parameter                      | Type  | Default | Description                                               |
-| ------------------------------ | ----- | ------- | --------------------------------------------------------- |
-| `A2A_AGENT_CARD_FETCH_TIMEOUT` | float | `30.0`  | Max seconds to fetch agent capability cards for discovery |
-| `A2A_AGENT_REQUEST_TIMEOUT`    | float | `30.0`  | Max seconds to wait for responses from external agents    |
+| Parameter                      | Type   | Default | Description                                                                         |
+| ------------------------------ | ------ | ------- | ----------------------------------------------------------------------------------- |
+| `A2A_AGENT_CARD_FETCH_TIMEOUT` | float  | `30.0`  | Max seconds to fetch agent capability cards for discovery                           |
+| `A2A_AGENT_REQUEST_TIMEOUT`    | float  | `30.0`  | Max seconds to wait for responses from external agents                              |
+| `A2A_PROVIDER_ORGANIZATION`    | string | `""`    | Organization identifier sent to external A2A providers for routing and auth context |
+| `A2A_PROVIDER_URL`             | string | `""`    | Base URL of the external A2A provider endpoint                                      |
+
+### Datasource Indexing Concurrency
+
+Limit simultaneous datasource indexing operations to prevent overloading backend resources.
+
+| Parameter                              | Type    | Default | Description                                                                                   |
+| -------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------- |
+| `DATASOURCE_CONCURRENCY_LIMIT_ENABLED` | boolean | `false` | Enable concurrency limiting for datasource indexing operations                                |
+| `MAX_CONCURRENT_DATASOURCE_INDEXING`   | integer | `5`     | Max number of datasource indexing jobs that can run simultaneously                            |
+| `DATASOURCE_QUEUE_TIMEOUT`             | integer | `3600`  | Max seconds an indexing job can wait in the queue before timing out; `0` disables the timeout |
+
+### Stale Indexing Watchdog
+
+| Parameter                         | Type    | Default | Description                                                                                   |
+| --------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------- |
+| `STALE_INDEXING_WATCHDOG_ENABLED` | boolean | `false` | Enable background watchdog that detects and resets datasource indexing jobs stuck in-progress |
 
 ### Platform & Marketplace
 
@@ -69,21 +88,24 @@ Configure marketplace integration for sharing and discovering assistants.
 
 Configure data migration, backup, and state import/export capabilities.
 
-| Parameter                 | Type    | Default            | Description                                      |
-| ------------------------- | ------- | ------------------ | ------------------------------------------------ |
-| `STATE_IMPORT_DIR`        | string  | `"./state_import"` | Directory containing state files for bulk import |
-| `STATE_IMPORT_ENABLED`    | boolean | `false`            | Enable state import on startup (for migrations)  |
-| `CODEMIE_EXPORT_ROOT`     | string  | `"/app"`           | Root path for exported data and backups          |
-| `THREAD_POOL_MAX_WORKERS` | integer | `5`                | Worker threads for parallel background tasks     |
+| Parameter                           | Type    | Default            | Description                                                 |
+| ----------------------------------- | ------- | ------------------ | ----------------------------------------------------------- |
+| `STATE_IMPORT_DIR`                  | string  | `"./state_import"` | Directory containing state files for bulk import            |
+| `STATE_IMPORT_ENABLED`              | boolean | `false`            | Enable state import on startup (for migrations)             |
+| `CODEMIE_EXPORT_ROOT`               | string  | `"/app"`           | Root path for exported data and backups                     |
+| `THREAD_POOL_MAX_WORKERS`           | integer | `20`               | Worker threads for parallel background tasks                |
+| `ASSISTANT_THREAD_POOL_MAX_WORKERS` | integer | `60`               | Dedicated thread pool size for assistant request processing |
 
 ### Feature Flags & Experimental Features
 
 Enable or disable experimental features and beta functionality.
 
-| Parameter                         | Type    | Default | Description                                                  |
-| --------------------------------- | ------- | ------- | ------------------------------------------------------------ |
-| `AMNA_AIRN_PRECREATE_WORKFLOWS`   | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)  |
-| `LLM_REQUEST_ADD_MARKDOWN_PROMPT` | boolean | `true`  | Add markdown formatting hint to improve LLM output structure |
+| Parameter                                       | Type    | Default | Description                                                                                                                                                         |
+| ----------------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                         |
+| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                        |
+| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the marketplace; disable to skip validation and allow any assistant to be published without review |
+| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                |
 
 ### Support & Help
 
@@ -95,19 +117,20 @@ Enable or disable experimental features and beta functionality.
 
 These parameters define paths to configuration files and directories. Typically auto-detected and rarely need manual configuration.
 
-| Parameter                         | Type | Default                          | Description                                              |
-| --------------------------------- | ---- | -------------------------------- | -------------------------------------------------------- |
-| `PROJECT_ROOT`                    | Path | Auto-detected                    | Project root directory (auto-detected from installation) |
-| `LLM_TEMPLATES_ROOT`              | Path | `config/llms`                    | Directory containing LLM model configuration YAML files  |
-| `DATASOURCES_CONFIG_DIR`          | Path | `config/datasources`             | Datasource connector definitions and schemas             |
-| `ASSISTANT_TEMPLATES_DIR`         | Path | `config/templates/assistant`     | Pre-built assistant templates for quick setup            |
-| `WORKFLOW_TEMPLATES_DIR`          | Path | `config/templates/workflow`      | Workflow templates for common automation patterns        |
-| `CUSTOMER_CONFIG_DIR`             | Path | `config/customer`                | Customer-specific customizations and branding            |
-| `ASSISTANT_CATEGORIES_CONFIG_DIR` | Path | `config/categories`              | Assistant categorization and organization                |
-| `AUTHORIZED_APPS_CONFIG_DIR`      | Path | `config/authorized_applications` | External application access control definitions          |
-| `INDEX_DUMPS_DIR`                 | Path | `config/index-dumps`             | Pre-built index snapshots for faster deployment          |
-| `ALEMBIC_MIGRATIONS_DIR`          | Path | `external/alembic`               | Database schema migration scripts                        |
-| `ALEMBIC_INI_PATH`                | Path | `external/alembic/alembic.ini`   | Alembic database migration configuration                 |
+| Parameter                         | Type | Default                          | Description                                                                                    |
+| --------------------------------- | ---- | -------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `PROJECT_ROOT`                    | Path | Auto-detected                    | Project root directory (auto-detected from installation)                                       |
+| `LLM_TEMPLATES_ROOT`              | Path | `config/llms`                    | Directory containing LLM model configuration YAML files                                        |
+| `DATASOURCES_CONFIG_DIR`          | Path | `config/datasources`             | Datasource connector definitions and schemas                                                   |
+| `ASSISTANT_TEMPLATES_DIR`         | Path | `config/templates/assistant`     | Pre-built assistant templates for quick setup                                                  |
+| `WORKFLOW_TEMPLATES_DIR`          | Path | `config/templates/workflow`      | Workflow templates for common automation patterns                                              |
+| `SKILL_TEMPLATES_DIR`             | Path | `config/templates/skill`         | Directory scanned at startup to discover and upsert built-in skill templates into the database |
+| `CUSTOMER_CONFIG_DIR`             | Path | `config/customer`                | Customer-specific customizations and branding                                                  |
+| `ASSISTANT_CATEGORIES_CONFIG_DIR` | Path | `config/categories`              | Assistant categorization and organization                                                      |
+| `AUTHORIZED_APPS_CONFIG_DIR`      | Path | `config/authorized_applications` | External application access control definitions                                                |
+| `INDEX_DUMPS_DIR`                 | Path | `config/index-dumps`             | Pre-built index snapshots for faster deployment                                                |
+| `ALEMBIC_MIGRATIONS_DIR`          | Path | `external/alembic`               | Database schema migration scripts                                                              |
+| `ALEMBIC_INI_PATH`                | Path | `external/alembic/alembic.ini`   | Alembic database migration configuration                                                       |
 
 ---
 
@@ -122,7 +145,7 @@ For LLMs and embedding models via Azure OpenAI Service.
 | Parameter                  | Type    | Default                | Description                                                                    |
 | -------------------------- | ------- | ---------------------- | ------------------------------------------------------------------------------ |
 | `OPENAI_API_TYPE`          | string  | `"azure"`              | Provider type: `azure` for Azure OpenAI, `openai` for direct OpenAI API        |
-| `OPENAI_API_VERSION`       | string  | `"2024-12-01-preview"` | Azure OpenAI API version; update to access new features or model capabilities  |
+| `OPENAI_API_VERSION`       | string  | `"2025-04-01-preview"` | Azure OpenAI API version; update to access new features or model capabilities  |
 | `AZURE_OPENAI_API_KEY`     | string  | `""`                   | Authentication key from Azure OpenAI resource (required for Azure deployments) |
 | `AZURE_OPENAI_URL`         | string  | `""`                   | Azure OpenAI endpoint URL from resource overview page                          |
 | `AZURE_OPENAI_MAX_RETRIES` | integer | `5`                    | Retry attempts for failed requests due to rate limits or transient errors      |
@@ -150,14 +173,15 @@ For Claude, Llama, Titan, and other models via AWS Bedrock managed service.
 
 For Gemini, and Claude via Google Cloud's Vertex AI platform.
 
-| Parameter                       | Type    | Default | Description                                                           |
-| ------------------------------- | ------- | ------- | --------------------------------------------------------------------- |
-| `GOOGLE_VERTEXAI_REGION`        | string  | `""`    | Region for Vertex AI models (e.g., `us-central1`, `europe-west4`)     |
-| `GOOGLE_CLAUDE_VERTEXAI_REGION` | string  | `""`    | Separate region for Claude on Vertex AI if different from main region |
-| `GOOGLE_VERTEXAI_MAX_RETRIES`   | integer | `5`     | Retry attempts for rate-limited or failed Vertex AI requests          |
-| `GOOGLE_PROJECT_ID`             | string  | `""`    | GCP project ID where Vertex AI is enabled                             |
-| `GOOGLE_REGION`                 | string  | `""`    | Default GCP region for all Google services                            |
-| `GCP_API_KEY`                   | string  | `""`    | Base64-encoded service account JSON key for GCP authentication        |
+| Parameter                                 | Type    | Default | Description                                                                                                                                                                 |
+| ----------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GOOGLE_VERTEXAI_REGION`                  | string  | `""`    | Region for Vertex AI models (e.g., `us-central1`, `europe-west4`)                                                                                                           |
+| `GOOGLE_CLAUDE_VERTEXAI_REGION`           | string  | `""`    | Separate region for Claude on Vertex AI if different from main region                                                                                                       |
+| `GOOGLE_VERTEXAI_MAX_RETRIES`             | integer | `5`     | Retry attempts for rate-limited or failed Vertex AI requests                                                                                                                |
+| `GOOGLE_PROJECT_ID`                       | string  | `""`    | GCP project ID where Vertex AI is enabled                                                                                                                                   |
+| `GOOGLE_REGION`                           | string  | `""`    | Default GCP region for all Google services                                                                                                                                  |
+| `GCP_API_KEY`                             | string  | `""`    | Base64-encoded service account JSON key for GCP authentication; not recommended for production — use Workload Identity instead to avoid storing long-lived credentials      |
+| `VERTEX_AI_ANTHROPIC_ENABLE_PROMPT_CACHE` | boolean | `false` | Enable Anthropic prompt-caching headers when calling Claude models via Vertex AI; set to `true` only when your Vertex AI endpoint has confirmed support for caching headers |
 
 ---
 
@@ -203,16 +227,20 @@ Configure persistent data storage for conversations, users, workflows, and appli
 
 Primary relational database for structured data and transactional operations.
 
-| Parameter           | Type    | Default       | Description                                                     |
-| ------------------- | ------- | ------------- | --------------------------------------------------------------- |
-| `POSTGRES_HOST`     | string  | `"localhost"` | PostgreSQL server hostname or IP address                        |
-| `POSTGRES_PORT`     | integer | `5432`        | PostgreSQL server port                                          |
-| `POSTGRES_DB`       | string  | `"postgres"`  | Database name for CodeMie tables and data                       |
-| `POSTGRES_USER`     | string  | `"postgres"`  | Database username with read/write permissions                   |
-| `POSTGRES_PASSWORD` | string  | `"password"`  | Database password (use secrets manager in production)           |
-| `PG_URL`            | string  | `""`          | Complete connection string (overrides individual params if set) |
-| `PG_POOL_SIZE`      | integer | `10`          | Connection pool size; increase for high concurrency workloads   |
-| `DEFAULT_DB_SCHEMA` | string  | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                 |
+| Parameter                 | Type                                 | Default       | Description                                                                                                                                                                                            |
+| ------------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `POSTGRES_HOST`           | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                               |
+| `POSTGRES_PORT`           | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                 |
+| `POSTGRES_DB`             | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                              |
+| `POSTGRES_USER`           | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                          |
+| `POSTGRES_PASSWORD`       | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                  |
+| `PG_URL`                  | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                        |
+| `PG_POOL_SIZE`            | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                          |
+| `DEFAULT_DB_SCHEMA`       | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                        |
+| `DB_INSERT_BATCH_SIZE`    | integer                              | `1000`        | Maximum rows per single INSERT statement; splits bulk inserts into batches to stay within PostgreSQL's per-query parameter limit                                                                       |
+| `DB_IN_CLAUSE_BATCH_SIZE` | integer                              | `500`         | Maximum items per SQL `IN (...)` clause in complex SELECT queries; prevents stack-depth limit exhaustion when querying large key sets                                                                  |
+| `PG_IAM_AUTH_PROVIDER`    | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
+| `PG_AWS_RDS_REGION`       | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
 
 ### Elasticsearch
 
@@ -229,29 +257,30 @@ Document store for full-text search, analytics, and unstructured data.
 
 Index names for different data types. Customize to avoid collisions in shared clusters.
 
-| Parameter                                 | Type         | Default                                | Description                                              |
-| ----------------------------------------- | ------------ | -------------------------------------- | -------------------------------------------------------- |
-| `ELASTIC_APPLICATION_INDEX`               | string       | `"applications"`                       | Indexed applications and their metadata                  |
-| `ELASTIC_GIT_REPO_INDEX`                  | string       | `"repositories"`                       | Code repository metadata and indexing status             |
-| `ELASTIC_LOGS_INDEX`                      | string       | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging |
-| `FEEDBACK_INDEX_NAME`                     | string       | `"ca_feedback"`                        | User feedback and ratings on AI responses                |
-| `BACKGROUND_TASKS_INDEX`                  | string       | `"background_tasks"`                   | Async task queue and execution status                    |
-| `USER_CONVERSATION_INDEX`                 | string       | `"codemie_raw_user_conversations"`     | Complete conversation history and messages               |
-| `USER_CONVERSATION_FOLDER_INDEX`          | string       | `"codemie_conversation_folder"`        | Folder organization for conversation management          |
-| `CONVERSATIONS_METRICS_INDEX`             | string       | `"codemie_conversation_metrics"`       | Analytics data on conversation usage and performance     |
-| `SHARED_CONVERSATION_INDEX`               | string       | `"codemie_shared_conversations"`       | Conversations shared across users or teams               |
-| `KZ_USERS_INDEX`                          | string       | `"codemie_kz_users_data"`              | User profiles and searchable user data                   |
-| `ASSISTANTS_INDEX`                        | string       | `"codemie_assistants"`                 | Assistant definitions, configurations, and templates     |
-| `WORKFLOWS_INDEX`                         | string       | `"workflows"`                          | Workflow definitions and templates                       |
-| `SETTINGS_INDEX`                          | string       | `"codemie_user_settings"`              | User preferences and personalization data                |
-| `USER_DATA_INDEX`                         | string       | `"codemie_user_data"`                  | Additional user-related data and metadata                |
-| `INDEX_STATUS_INDEX`                      | string       | `"index_status"`                       | Status tracking for repository and datasource indexing   |
-| `PROVIDERS_INDEX`                         | string       | `"providers"`                          | AI provider configurations and availability              |
-| `WORKFLOW_EXECUTION_INDEX`                | string       | `"workflows_execution_history"`        | Historical workflow runs and outcomes                    |
-| `WORKFLOW_EXECUTION_STATE_INDEX`          | string       | `"workflows_execution_states"`         | Current state of running workflows                       |
-| `WORKFLOW_EXECUTION_STATE_THOUGHTS_INDEX` | string       | `"workflows_execution_state_thoughts"` | Workflow reasoning and decision logs                     |
-| `TOOLS_INDEX_NAME`                        | string       | `"codemie_tools"`                      | Semantic index for intelligent tool selection            |
-| `INDEXES_PERMITTED_FOR_SEARCH`            | list[string] | `["codemie_kz_users_data"]`            | Indexes accessible via general search API                |
+| Parameter                                 | Type         | Default                                | Description                                                                                                                                                                            |
+| ----------------------------------------- | ------------ | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ELASTIC_APPLICATION_INDEX`               | string       | `"applications"`                       | Indexed applications and their metadata                                                                                                                                                |
+| `ELASTIC_GIT_REPO_INDEX`                  | string       | `"repositories"`                       | Code repository metadata and indexing status                                                                                                                                           |
+| `ELASTIC_LOGS_INDEX`                      | string       | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging                                                                                                                               |
+| `ELASTIC_METRICS_INDEX`                   | string       | `"codemie_metrics_logs*"`              | Index pattern used by the analytics repository for all ES\|QL queries and dashboard aggregations; changing this redirects the entire analytics dashboard to a different index or alias |
+| `FEEDBACK_INDEX_NAME`                     | string       | `"ca_feedback"`                        | User feedback and ratings on AI responses                                                                                                                                              |
+| `BACKGROUND_TASKS_INDEX`                  | string       | `"background_tasks"`                   | Async task queue and execution status                                                                                                                                                  |
+| `USER_CONVERSATION_INDEX`                 | string       | `"codemie_raw_user_conversations"`     | Complete conversation history and messages                                                                                                                                             |
+| `USER_CONVERSATION_FOLDER_INDEX`          | string       | `"codemie_conversation_folder"`        | Folder organization for conversation management                                                                                                                                        |
+| `CONVERSATIONS_METRICS_INDEX`             | string       | `"codemie_conversation_metrics"`       | Analytics data on conversation usage and performance                                                                                                                                   |
+| `SHARED_CONVERSATION_INDEX`               | string       | `"codemie_shared_conversations"`       | Conversations shared across users or teams                                                                                                                                             |
+| `KZ_USERS_INDEX`                          | string       | `"codemie_kz_users_data"`              | User profiles and searchable user data                                                                                                                                                 |
+| `ASSISTANTS_INDEX`                        | string       | `"codemie_assistants"`                 | Assistant definitions, configurations, and templates                                                                                                                                   |
+| `WORKFLOWS_INDEX`                         | string       | `"workflows"`                          | Workflow definitions and templates                                                                                                                                                     |
+| `SETTINGS_INDEX`                          | string       | `"codemie_user_settings"`              | User preferences and personalization data                                                                                                                                              |
+| `USER_DATA_INDEX`                         | string       | `"codemie_user_data"`                  | Additional user-related data and metadata                                                                                                                                              |
+| `INDEX_STATUS_INDEX`                      | string       | `"index_status"`                       | Status tracking for repository and datasource indexing                                                                                                                                 |
+| `PROVIDERS_INDEX`                         | string       | `"providers"`                          | AI provider configurations and availability                                                                                                                                            |
+| `WORKFLOW_EXECUTION_INDEX`                | string       | `"workflows_execution_history"`        | Historical workflow runs and outcomes                                                                                                                                                  |
+| `WORKFLOW_EXECUTION_STATE_INDEX`          | string       | `"workflows_execution_states"`         | Current state of running workflows                                                                                                                                                     |
+| `WORKFLOW_EXECUTION_STATE_THOUGHTS_INDEX` | string       | `"workflows_execution_state_thoughts"` | Workflow reasoning and decision logs                                                                                                                                                   |
+| `TOOLS_INDEX_NAME`                        | string       | `"codemie_tools"`                      | Semantic index for intelligent tool selection                                                                                                                                          |
+| `INDEXES_PERMITTED_FOR_SEARCH`            | list[string] | `["codemie_kz_users_data"]`            | Indexes accessible via general search API                                                                                                                                              |
 
 ---
 
@@ -261,12 +290,13 @@ Configure where and how CodeMie stores uploaded files, attachments, and generate
 
 ### General Storage Settings
 
-| Parameter                       | Type    | Default               | Description                                                                              |
-| ------------------------------- | ------- | --------------------- | ---------------------------------------------------------------------------------------- |
-| `FILES_STORAGE_TYPE`            | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket) |
-| `FILES_STORAGE_DIR`             | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                |
-| `FILES_STORAGE_MAX_UPLOAD_SIZE` | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing      |
-| `REPOS_LOCAL_DIR`               | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                               |
+| Parameter                       | Type    | Default               | Description                                                                                                 |
+| ------------------------------- | ------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `FILES_STORAGE_TYPE`            | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket)                    |
+| `FILES_STORAGE_DIR`             | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                                   |
+| `FILES_STORAGE_MAX_UPLOAD_SIZE` | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing                         |
+| `REPOS_LOCAL_DIR`               | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                                                  |
+| `IMAGE_INDEXING_MAX_SIZE_BYTES` | integer | `10485760`            | Maximum image file size in bytes (10 MB) during datasource indexing; files exceeding this limit are skipped |
 
 ### Cloud Storage - AWS S3
 
@@ -374,12 +404,12 @@ Configure authentication providers and access control for users and administrato
 
 ### IDP Configuration
 
-| Parameter             | Type   | Default   | Description                                                                                                             |
-| --------------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development), `oidc` (generic OIDC for specific client needs) |
-| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                 |
-| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                              |
-| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                      |
+| Parameter             | Type   | Default   | Description                                                                                                                                                                                                                                                                                                 |
+| --------------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (development only), `oidc` (generic OIDC — reads `firstname`/`lastname`, maps roles from `groups` claims prefixed with `application_`), `entraid-oidc` (Microsoft EntraID — reads `name`, maps roles via `ENTRA_ROLE_*` and `ENTRA_ACCESS_*` env vars) |
+| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                                                                                                                                                                                                     |
+| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                                                                                                                                                                                                                  |
+| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                                                                                                                                                                                                          |
 
 ### User Management Mode
 
@@ -402,13 +432,129 @@ Required only when `ENABLE_USER_MANAGEMENT=true` and `IDP_PROVIDER=keycloak`. En
 one-time import of existing Keycloak users and their project attributes into the platform
 database on startup.
 
-| Parameter                      | Type   | Default | Description                                                                                                                                      |
-| ------------------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `KEYCLOAK_MIGRATION_ENABLED`   | bool   | `false` | Enables the one-time import of Keycloak users into the platform database. Run once during initial migration; disable after the import completes. |
-| `KEYCLOAK_ADMIN_URL`           | string | `""`    | Keycloak base URL for admin API access (e.g., `https://keycloak.example.com`).                                                                   |
-| `KEYCLOAK_ADMIN_REALM`         | string | `""`    | Keycloak realm to migrate (e.g., `codemie-prod`).                                                                                                |
-| `KEYCLOAK_ADMIN_CLIENT_ID`     | string | `""`    | Service account client ID with Keycloak admin permissions.                                                                                       |
-| `KEYCLOAK_ADMIN_CLIENT_SECRET` | string | `""`    | Service account client secret.                                                                                                                   |
+| Parameter                                  | Type    | Default | Description                                                                                                                                      |
+| ------------------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KEYCLOAK_MIGRATION_ENABLED`               | bool    | `false` | Enables the one-time import of Keycloak users into the platform database. Run once during initial migration; disable after the import completes. |
+| `KEYCLOAK_ADMIN_URL`                       | string  | `""`    | Keycloak base URL for admin API access (e.g., `https://keycloak.example.com`).                                                                   |
+| `KEYCLOAK_ADMIN_REALM`                     | string  | `""`    | Keycloak realm to migrate (e.g., `codemie-prod`).                                                                                                |
+| `KEYCLOAK_ADMIN_CLIENT_ID`                 | string  | `""`    | Service account client ID with Keycloak admin permissions.                                                                                       |
+| `KEYCLOAK_ADMIN_CLIENT_SECRET`             | string  | `""`    | Service account client secret.                                                                                                                   |
+| `KEYCLOAK_MIGRATION_BATCH_SIZE`            | integer | `100`   | Number of Keycloak users fetched per paginated API call; smaller values reduce memory pressure during large migrations.                          |
+| `KEYCLOAK_MIGRATION_LOCK_TIMEOUT_MINUTES`  | integer | `30`    | Age threshold after which a migration lock held by another pod is considered stale and may be taken over; prevents deadlocks when a pod crashes. |
+| `KEYCLOAK_MIGRATION_WAIT_INTERVAL_SECONDS` | integer | `5`     | How long a follower pod sleeps between polls while waiting for the leader pod to finish the migration.                                           |
+
+---
+
+### Admin Bootstrap
+
+Auto-create a SuperAdmin account on startup when none exists. Active only when `IDP_PROVIDER=local` and `ENABLE_USER_MANAGEMENT=true` in non-local environments.
+
+| Parameter             | Type   | Default | Description                                                                            |
+| --------------------- | ------ | ------- | -------------------------------------------------------------------------------------- |
+| `SUPERADMIN_EMAIL`    | string | `""`    | Email for the auto-created SuperAdmin; both fields must be set to trigger bootstrap    |
+| `SUPERADMIN_PASSWORD` | string | `""`    | Password for the auto-created SuperAdmin; both fields must be set to trigger bootstrap |
+
+---
+
+### Local Authentication (JWT)
+
+Used only when `IDP_PROVIDER=local`. Keys are auto-generated on first startup if the files do not exist.
+
+| Parameter              | Type    | Default                   | Description                                                                                                      |
+| ---------------------- | ------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `JWT_ALGORITHM`        | string  | `"RS256"`                 | Algorithm used to sign and verify local-auth JWTs; changing this requires regenerating the key files             |
+| `JWT_EXPIRATION_HOURS` | integer | `24`                      | Lifetime of locally-issued access tokens in hours                                                                |
+| `JWT_PRIVATE_KEY_PATH` | string  | `".keys/jwt_private.pem"` | Path to the RSA private key PEM file used to sign tokens                                                         |
+| `JWT_PUBLIC_KEY_PATH`  | string  | `".keys/jwt_public.pem"`  | Path to the RSA public key PEM file used to verify tokens                                                        |
+| `JWT_ISSUER`           | string  | `"codemie-local"`         | Value of the `iss` claim in every locally-issued JWT; tokens with a mismatched issuer are rejected with HTTP 401 |
+
+---
+
+### JWKS Signature Validation
+
+Optional defense-in-depth layer that cryptographically verifies inbound bearer JWTs against trusted issuers' JWKS endpoints before any IDP claim extraction.
+
+| Parameter                   | Type    | Default | Description                                                                                                                          |
+| --------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `JWKS_VALIDATION_ENABLED`   | boolean | `false` | When `true`, wraps the active IDP with a JWKS-validating layer; every inbound JWT is verified against the configured trusted issuers |
+| `JWKS_TRUSTED_ISSUERS`      | string  | `""`    | JSON array of `{issuer, audience, jwks_uri?, discovery_url?}` objects; required when `JWKS_VALIDATION_ENABLED=true`                  |
+| `JWKS_CACHE_TTL_SECONDS`    | integer | `300`   | How long fetched public key sets are cached in memory before a fresh fetch from the issuer's endpoint                                |
+| `JWKS_HTTP_TIMEOUT_SECONDS` | float   | `3.0`   | Per-request HTTP timeout when fetching JWKS or OIDC discovery documents from trusted issuers                                         |
+| `JWKS_LEEWAY_SECONDS`       | integer | `30`    | Clock-skew tolerance applied when verifying JWT `exp` and `nbf` claims                                                               |
+
+---
+
+### Cookie-Based Authentication
+
+Session cookie settings for the local-auth login flow. Only relevant when `IDP_PROVIDER=local`.
+
+| Parameter                   | Type                             | Default                  | Description                                                                                                                          |
+| --------------------------- | -------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `RATE_LIMIT_LOGIN`          | string                           | `"5/15minutes"`          | Slowdown rate for the login endpoint expressed as `"<count>/<period>"`; exceeding it returns HTTP 429 to prevent credential-stuffing |
+| `AUTH_COOKIE_NAME`          | string                           | `"codemie_access_token"` | Name of the HTTP cookie that carries the access token to browsers                                                                    |
+| `AUTH_COOKIE_HTTPONLY`      | boolean                          | `true`                   | Sets `HttpOnly` on the auth cookie; prevents JavaScript from reading it, reducing XSS token-theft risk                               |
+| `AUTH_COOKIE_SECURE`        | boolean                          | `false`                  | Sets `Secure` on the auth cookie so browsers transmit it over HTTPS only; must be `true` in production                               |
+| `AUTH_COOKIE_SAMESITE`      | string (`lax`, `strict`, `none`) | `"lax"`                  | `SameSite` attribute controlling cross-site request inclusion; use `strict` for maximum CSRF protection                              |
+| `AUTH_COOKIE_PATH`          | string                           | `"/"`                    | Cookie `Path` attribute; narrowing this prevents the cookie from being sent to unrelated endpoints                                   |
+| `AUTH_TOKEN_CACHE_MAX_SIZE` | integer                          | `10000`                  | Maximum entries in the in-memory cache that maps validated tokens to user objects, avoiding repeated database lookups                |
+| `AUTH_TOKEN_CACHE_TTL`      | integer                          | `30`                     | TTL in seconds for cached token-to-user mappings; shorter values shrink the window where a revoked token is still accepted           |
+
+---
+
+### Email & Password (Local Auth)
+
+SMTP configuration for sending verification and password-reset emails. Only active when `IDP_PROVIDER=local`.
+
+| Parameter                    | Type    | Default                   | Description                                                                                               |
+| ---------------------------- | ------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `EMAIL_VERIFICATION_ENABLED` | boolean | `true`                    | When `true`, new users must verify their email before logging in; set `false` to auto-verify all accounts |
+| `EMAIL_SMTP_HOST`            | string  | `""`                      | SMTP server hostname; leave empty to disable email sending entirely                                       |
+| `EMAIL_SMTP_PORT`            | integer | `587`                     | SMTP server port                                                                                          |
+| `EMAIL_SMTP_USERNAME`        | string  | `""`                      | SMTP account username                                                                                     |
+| `EMAIL_SMTP_PASSWORD`        | string  | `""`                      | SMTP account password                                                                                     |
+| `EMAIL_FROM_ADDRESS`         | string  | `""`                      | `From:` address for outbound emails; must be set for email delivery to be active                          |
+| `EMAIL_FROM_NAME`            | string  | `"CodeMie"`               | Display name shown alongside `EMAIL_FROM_ADDRESS` in email clients                                        |
+| `EMAIL_USE_TLS`              | boolean | `true`                    | Use STARTTLS upgrade on the configured port; set `false` for servers using implicit TLS or no TLS         |
+| `FRONTEND_URL`               | string  | `"http://localhost:3000"` | Base URL of the frontend, used to build clickable verification and password-reset links in emails         |
+| `PASSWORD_MIN_LENGTH`        | integer | `12`                      | Minimum character length for passwords; shorter passwords are rejected with HTTP 400                      |
+
+---
+
+### Cost Center
+
+| Parameter                  | Type   | Default                   | Description                                                                                                            |
+| -------------------------- | ------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `COST_CENTER_NAME_PATTERN` | string | `"^[a-z0-9]+-[a-z0-9]+$"` | Regex applied via `re.fullmatch` to every cost-center name at creation or update time; names not matching are rejected |
+
+---
+
+### Broker Token Exchange
+
+Multi-hop Keycloak token exchange chain. Activated automatically when `BROKER_TOKEN_URLS` is non-empty.
+
+| Parameter                  | Type   | Default | Description                                                                                                                                 |
+| -------------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BROKER_TOKEN_URLS`        | string | `""`    | Comma-separated base URLs for each hop in the exchange chain; must have the same length as `BROKER_TOKEN_REALMS` and `BROKER_TOKEN_BROKERS` |
+| `BROKER_TOKEN_REALMS`      | string | `""`    | Comma-separated realm names, one per hop                                                                                                    |
+| `BROKER_TOKEN_BROKERS`     | string | `""`    | Comma-separated broker identifiers, one per hop                                                                                             |
+| `BROKER_TOKEN_TIMEOUT`     | float  | `5.0`   | Per-hop HTTP request timeout in seconds                                                                                                     |
+| `BROKER_AUTH_LOCATION_URL` | string | `""`    | Value placed in the `x-user-mcp-auth-location` response header when a broker exchange step returns an auth failure                          |
+
+---
+
+### OIDC Token Exchange (RFC 8693)
+
+Swaps a user's current access token for an audience-scoped token required by an MCP server, using a Keycloak or Okta token endpoint.
+
+| Parameter                           | Type   | Default                                             | Description                                                                                              |
+| ----------------------------------- | ------ | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `TOKEN_EXCHANGE_URL`                | string | `""`                                                | OAuth 2.0 token endpoint URL; leave empty to disable OIDC token exchange                                 |
+| `TOKEN_EXCHANGE_GRANT_TYPE`         | string | `"urn:ietf:params:oauth:grant-type:token-exchange"` | OAuth 2.0 `grant_type` sent to the exchange endpoint; rarely needs changing                              |
+| `TOKEN_EXCHANGE_CLIENT_ID`          | string | `""`                                                | OAuth 2.0 client ID for the token exchange service account                                               |
+| `TOKEN_EXCHANGE_CLIENT_SECRET`      | string | `""`                                                | OAuth 2.0 client secret for the token exchange service account                                           |
+| `TOKEN_EXCHANGE_SUBJECT_TOKEN_TYPE` | string | `"urn:ietf:params:oauth:token-type:access_token"`   | `subject_token_type` parameter sent with the exchange request                                            |
+| `TOKEN_EXCHANGE_TIMEOUT`            | float  | `5.0`                                               | HTTP request timeout in seconds for each token exchange call                                             |
+| `TOKEN_EXCHANGE_SERVICE`            | string | `"keycloak"`                                        | Credential encoding: `keycloak` sends credentials in the POST body; `okta` uses HTTP Basic Authorization |
 
 ---
 
@@ -591,11 +737,79 @@ Improve MCP performance by caching toolkit instances and reducing initialization
 
 ### MCP Header Propagation
 
-Control which HTTP headers are forwarded to MCP servers for security and privacy.
+Control which HTTP headers are forwarded to downstream services (MCP servers, providers) for security and privacy.
 
-| Parameter             | Type   | Default                      | Description                                                             |
-| --------------------- | ------ | ---------------------------- | ----------------------------------------------------------------------- |
-| `MCP_BLOCKED_HEADERS` | string | `"authorization,cookie,..."` | Comma-separated headers to block from MCP server propagation (security) |
+| Parameter                     | Type   | Default                                                                                       | Description                                                                                                                                               |
+| ----------------------------- | ------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FORWARDED_HEADERS_BLOCKLIST` | string | `"authorization,cookie,set-cookie,x-api-key,x-auth-token,x-internal-secret,x-internal-token"` | Comma-separated header names (case-insensitive) to block from forwarding to downstream services; prevents credential leakage to MCP servers and providers |
+
+### MCP Token Cache
+
+| Parameter              | Type    | Default | Description                                                                    |
+| ---------------------- | ------- | ------- | ------------------------------------------------------------------------------ |
+| `TOKEN_CACHE_TTL`      | integer | `600`   | Lifetime in seconds for cached exchanged tokens (10 minutes)                   |
+| `TOKEN_CACHE_MAX_SIZE` | integer | `1024`  | Max total entries across all token caches (per-user and per-audience combined) |
+
+---
+
+## MCP Auth Configuration
+
+Configure MCP OAuth2 authorization server integration for secure MCP client authentication and token management.
+
+### MCP Auth Core
+
+| Parameter              | Type    | Default | Description                                                                                                      |
+| ---------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------- |
+| `MCP_AUTH_ENABLED`     | boolean | `false` | Enable MCP OAuth2 authorization server; required for MCP clients that need delegated access to external services |
+| `MCP_AUTH_HMAC_SECRET` | string  | `""`    | HMAC secret for signing MCP auth state tokens; set a strong random value in production                           |
+
+### MCP Auth Security
+
+| Parameter                                  | Type    | Default              | Description                                                                                           |
+| ------------------------------------------ | ------- | -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `MCP_AUTH_REDIS_KEY_NAMESPACE`             | string  | `"codemie:mcp_auth"` | Redis key namespace prefix for all MCP auth stores; must not end with `:`                             |
+| `MCP_AUTH_ENFORCE_HTTPS`                   | boolean | `true`               | Enforce HTTPS for all MCP auth redirect and callback URLs; disable only in development                |
+| `MCP_AUTH_ALLOW_LOCAL_CLIENT_METADATA_URL` | boolean | `false`              | Allow `localhost` URLs for MCP client metadata discovery; enable only for local development           |
+| `MCP_AUTH_CALLBACK_KEEP_TAB_OPEN`          | boolean | `false`              | Keep the OAuth2 callback tab open after successful auth instead of auto-closing; enable for debugging |
+
+### MCP Auth Discovery
+
+| Parameter                                              | Type    | Default | Description                                                             |
+| ------------------------------------------------------ | ------- | ------- | ----------------------------------------------------------------------- |
+| `MCP_AUTH_DISCOVERY_CONCURRENCY_LIMIT`                 | integer | `5`     | Max concurrent MCP authorization server metadata discovery requests     |
+| `MCP_AUTH_AS_METADATA_DISCOVERY_TIMEOUT_SECONDS`       | float   | `30.0`  | Timeout in seconds for authorization server metadata discovery requests |
+| `MCP_AUTH_DCR_REGISTRATION_TIMEOUT_SECONDS`            | float   | `30.0`  | Timeout in seconds for dynamic client registration (DCR) requests       |
+| `MCP_AUTH_DISCOVERY_PROBE_OVERALL_TIMEOUT_SECONDS`     | float   | `30.0`  | Overall timeout in seconds for the full discovery probe sequence        |
+| `MCP_AUTH_RESOURCE_METADATA_DISCOVERY_TIMEOUT_SECONDS` | float   | `30.0`  | Timeout in seconds for protected resource metadata discovery            |
+
+### MCP Auth Token Management System (TMS)
+
+Enterprise-grade PostgreSQL-backed token storage with KMS encryption. Replaces the default in-memory mock TMS.
+
+| Parameter                                     | Type    | Default                             | Description                                                                                                      |
+| --------------------------------------------- | ------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `MCP_AUTH_TMS_ENABLED`                        | boolean | `false`                             | Enable PostgreSQL-backed enterprise TMS instead of the in-memory mock; required for production deployments       |
+| `MCP_AUTH_TMS_KMS_KEY_ID`                     | string  | `""`                                | KMS key ID for envelope encryption of stored credentials; required when TMS is enabled                           |
+| `MCP_AUTH_TMS_ENCRYPTION_CONTEXT_PREFIX`      | string  | `"codemie-enterprise:mcp-auth:tms"` | Stable encryption context prefix used in credential AAD; changing this breaks decryption of existing tokens      |
+| `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`        | float   | `2.5`                               | OAuth2 token refresh timeout in seconds; enterprise validation requires a value between 0 and 3                  |
+| `MCP_AUTH_TMS_REDIS_LOCK_ENABLED`             | boolean | `true`                              | Enable Redis refresh locks to prevent duplicate refresh storms across clustered backend instances                |
+| `MCP_AUTH_TMS_REDIS_LOCK_TTL_SECONDS`         | integer | `10`                                | Refresh lock TTL in seconds; must be greater than `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`                         |
+| `MCP_AUTH_TMS_AUDIT_REQUIRED`                 | boolean | `true`                              | Require a durable audit write to complete before credential operations return successfully                       |
+| `MCP_AUTH_TMS_AUDIT_FALLBACK_ENABLED`         | boolean | `false`                             | Enable a durable fallback audit sink when the primary audit write path is unavailable                            |
+| `MCP_AUTH_TMS_AUDIT_FALLBACK_SINK_CONFIGURED` | boolean | `false`                             | Confirm that a fallback audit sink is configured; must be `true` when `MCP_AUTH_TMS_AUDIT_FALLBACK_ENABLED=true` |
+| `MCP_AUTH_TMS_AUDIT_SANITIZE_DIAGNOSTICS`     | boolean | `true`                              | Sanitize sensitive diagnostic details from audit records before storage                                          |
+| `MCP_AUTH_TMS_ALLOW_MOCK`                     | boolean | `false`                             | Allow in-memory mock TMS in non-production environments when real TMS is disabled; never enable in production    |
+
+### Webhook Rate Limiting
+
+Protect webhook endpoints with Redis-backed fixed-window rate limiting.
+
+| Parameter                                | Type    | Default                        | Description                                             |
+| ---------------------------------------- | ------- | ------------------------------ | ------------------------------------------------------- |
+| `WEBHOOK_RATE_LIMIT_ENABLED`             | boolean | `true`                         | Enable rate limiting on incoming webhook requests       |
+| `WEBHOOK_RATE_LIMIT_MAX_REQUESTS`        | integer | `10`                           | Max webhook requests allowed per time window per client |
+| `WEBHOOK_RATE_LIMIT_WINDOW_SECONDS`      | integer | `60`                           | Rate limit time window in seconds                       |
+| `WEBHOOK_RATE_LIMIT_REDIS_KEY_NAMESPACE` | string  | `"codemie:webhook_rate_limit"` | Redis key namespace prefix for rate limit counters      |
 
 ---
 
@@ -607,22 +821,26 @@ Configure LiteLLM proxy for unified LLM access, budget management, and usage tra
 
 ### Proxy Mode
 
-| Parameter                       | Type    | Default      | Description                                                                                                                                                                                                                                                                                                                                            |
-| ------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `LLM_PROXY_MODE`                | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy)                                                                                                                                                                                                                                                                         |
-| `LLM_PROXY_ENABLED`             | boolean | `false`      | Enable LLM proxy for centralized model access control                                                                                                                                                                                                                                                                                                  |
-| `LLM_PROXY_TIMEOUT`             | integer | `300`        | Max seconds to wait for proxy responses                                                                                                                                                                                                                                                                                                                |
-| `LLM_PROXY_EMBEDDINGS_DISABLED` | boolean | `false`      | When `true`, bypasses the LiteLLM proxy for embedding requests and sends them directly to the native provider (e.g., Azure OpenAI). Useful when LiteLLM does not support a required embedding model or when lower-latency direct access is preferred for vector operations. Has no effect when `LLM_PROXY_ENABLED=false` or `LLM_PROXY_MODE=internal`. |
+| Parameter                                               | Type    | Default      | Description                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------- | ------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LLM_PROXY_MODE`                                        | string  | `"internal"` | Proxy mode: `internal` (built-in routing), `lite_llm` (external LiteLLM proxy)                                                                                                                                                                                                                                                                         |
+| `LLM_PROXY_ENABLED`                                     | boolean | `false`      | Enable LLM proxy for centralized model access control                                                                                                                                                                                                                                                                                                  |
+| `LLM_PROXY_TIMEOUT`                                     | integer | `300`        | Max seconds to wait for proxy responses                                                                                                                                                                                                                                                                                                                |
+| `LLM_PROXY_EMBEDDINGS_DISABLED`                         | boolean | `false`      | When `true`, bypasses the LiteLLM proxy for embedding requests and sends them directly to the native provider (e.g., Azure OpenAI). Useful when LiteLLM does not support a required embedding model or when lower-latency direct access is preferred for vector operations. Has no effect when `LLM_PROXY_ENABLED=false` or `LLM_PROXY_MODE=internal`. |
+| `LLM_PROXY_LANGFUSE_TRACES`                             | boolean | `false`      | Enable Langfuse tracing for requests going through the LiteLLM proxy                                                                                                                                                                                                                                                                                   |
+| `LLM_PROXY_TRACK_USAGE`                                 | boolean | `true`       | Track token usage for requests going through the LiteLLM proxy; disable to skip usage recording                                                                                                                                                                                                                                                        |
+| `LLM_PROXY_SHARED_ASSET_PROJECT_BUDGET_ROUTING_ENABLED` | boolean | `true`       | Route requests for shared assets (assistants, workflows not owned by a personal project) to the project budget instead of the user's personal budget                                                                                                                                                                                                   |
 
 ### LiteLLM Connection
 
 Connect to external LiteLLM proxy for advanced features like load balancing and fallbacks.
 
-| Parameter             | Type   | Default | Description                                            |
-| --------------------- | ------ | ------- | ------------------------------------------------------ |
-| `LITE_LLM_URL`        | string | `""`    | LiteLLM proxy server URL (e.g., `http://litellm:4000`) |
-| `LITE_LLM_APP_KEY`    | string | `""`    | Application-specific key for LiteLLM authentication    |
-| `LITE_LLM_MASTER_KEY` | string | `""`    | Master key for LiteLLM administrative operations       |
+| Parameter                | Type   | Default | Description                                                                                           |
+| ------------------------ | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
+| `LITE_LLM_URL`           | string | `""`    | LiteLLM proxy server URL (e.g., `http://litellm:4000`)                                                |
+| `LITE_LLM_APP_KEY`       | string | `""`    | Application-specific key for LiteLLM authentication                                                   |
+| `LITE_LLM_MASTER_KEY`    | string | `""`    | Master key for LiteLLM administrative operations                                                      |
+| `LITE_LLM_PROXY_APP_KEY` | string | `""`    | Optional API key for proxy endpoints used by coding agents; falls back to `LITE_LLM_APP_KEY` if empty |
 
 ### LiteLLM Model Tagging
 
@@ -685,12 +903,23 @@ projects — no per-project filtering configuration is required.
 
 Reduce latency and API costs by caching metadata and responses.
 
-| Parameter                    | Type    | Default | Description                                                 |
-| ---------------------------- | ------- | ------- | ----------------------------------------------------------- |
-| `LITELLM_CUSTOMER_CACHE_TTL` | integer | `300`   | Customer info cache duration in seconds (5 minutes)         |
-| `LITELLM_MODELS_CACHE_TTL`   | integer | `1800`  | Available models list cache duration (30 minutes)           |
-| `LITELLM_REQUEST_TIMEOUT`    | float   | `5.0`   | Timeout for metadata requests to LiteLLM proxy              |
-| `LITELLM_FAIL_OPEN_ON_503`   | boolean | `true`  | Allow requests when LiteLLM proxy unavailable (bypass mode) |
+| Parameter                            | Type    | Default | Description                                                                  |
+| ------------------------------------ | ------- | ------- | ---------------------------------------------------------------------------- |
+| `LITELLM_CUSTOMER_CACHE_TTL`         | integer | `300`   | Customer info cache duration in seconds (5 minutes)                          |
+| `LITELLM_USER_CREDENTIALS_CACHE_TTL` | integer | `600`   | User LiteLLM credential lookup cache duration in seconds (10 minutes)        |
+| `LITELLM_MODELS_CACHE_TTL`           | integer | `1800`  | Available models list cache duration in seconds (30 minutes)                 |
+| `LITELLM_REQUEST_TIMEOUT`            | float   | `5.0`   | Timeout in seconds for metadata requests to LiteLLM proxy                    |
+| `LITELLM_LIST_REQUEST_TIMEOUT`       | float   | `30.0`  | Timeout in seconds for list and bulk endpoints that return larger payloads   |
+| `LITELLM_FAIL_OPEN_ON_503`           | boolean | `true`  | Allow requests when LiteLLM proxy is unavailable (bypass mode on 503 errors) |
+
+### LiteLLM Proxy Endpoints
+
+List of HTTP API paths exposed by the LiteLLM proxy. Overridable via environment variable as a JSON string. Defaults include OpenAI-compatible chat/completions, Anthropic Messages API, Google Gemini endpoints, embeddings, and health/models endpoints required by CLI tools.
+
+| Parameter                  | Type       | Default           | Description                                                                           |
+| -------------------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------- |
+| `LITE_LLM_PROXY_ENDPOINTS` | list[dict] | _(see config.py)_ | List of `{"path": "...", "methods": [...]}` entries defining the proxy's HTTP surface |
+| `CODEMIE_MIN_CLI_VERSION`  | string     | `"0.0.47"`        | Minimum CodeMie CLI version accepted for proxy requests; older versions are rejected  |
 
 ---
 
@@ -700,18 +929,60 @@ Control AI agent behavior, workflow execution limits, and parallel processing.
 
 ### AI Agent Settings
 
-| Parameter                               | Type         | Default                 | Description                                               |
-| --------------------------------------- | ------------ | ----------------------- | --------------------------------------------------------- |
-| `AI_AGENT_RECURSION_LIMIT`              | integer      | `150`                   | Max agent reasoning steps to prevent infinite loops       |
-| `ENABLE_LANGGRAPH_AITOOLS_AGENT`        | boolean      | `true`                  | Use LangGraph-based agent for advanced tool orchestration |
-| `DISABLE_PARALLEL_TOOLS_CALLING_MODELS` | list[string] | `["gpt-4o", "gpt-4.1"]` | Models incompatible with parallel tool execution          |
+| Parameter                                 | Type         | Default                 | Description                                                                          |
+| ----------------------------------------- | ------------ | ----------------------- | ------------------------------------------------------------------------------------ |
+| `AI_AGENT_RECURSION_LIMIT`                | integer      | `150`                   | Max agent reasoning steps to prevent infinite loops                                  |
+| `ENABLE_LANGGRAPH_AITOOLS_AGENT`          | boolean      | `true`                  | Use LangGraph-based agent for advanced tool orchestration                            |
+| `DISABLE_PARALLEL_TOOLS_CALLING_MODELS`   | list[string] | `["gpt-4o", "gpt-4.1"]` | Models incompatible with parallel tool execution                                     |
+| `AI_AGENT_CONVERSATION_REPLAY_V2_ENABLED` | boolean      | `true`                  | Enable v2 conversation replay that summarizes older tool turns to reduce token usage |
+
+### AI Agent History Replay
+
+Control how previous conversation turns are replayed to the agent to balance context fidelity with token usage.
+
+| Parameter                                           | Type    | Default | Description                                                                      |
+| --------------------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------- |
+| `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_TURNS`           | integer | `4`     | Number of most-recent tool turns to include in full (uncompressed) form          |
+| `AI_AGENT_HISTORY_REPLAY_SUMMARIZED_TOOL_TURNS`     | integer | `6`     | Number of older tool turns to include in summarized form before they are dropped |
+| `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_RESULT_LIMIT`    | integer | `2500`  | Max characters of a single tool result kept in full form during replay           |
+| `AI_AGENT_HISTORY_REPLAY_SUMMARY_TOOL_RESULT_LIMIT` | integer | `600`   | Max characters of a single tool result kept in summarized form during replay     |
+| `AI_AGENT_HISTORY_REPLAY_LOG_CONTENT_LIMIT`         | integer | `800`   | Max characters of log/print content per tool turn included during replay         |
+
+### AI Agent History Compaction
+
+Automatically compress long conversation histories when token usage exceeds a threshold, preserving recent context while summarizing older turns.
+
+| Parameter                                       | Type    | Default                              | Description                                                                                         |
+| ----------------------------------------------- | ------- | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `AI_AGENT_HISTORY_COMPACTION_ENABLED`           | boolean | `false`                              | Enable automatic history compaction when conversation exceeds the token limit                       |
+| `AI_AGENT_HISTORY_COMPACTION_TOKEN_LIMIT`       | integer | `120000`                             | Token count that triggers compaction; history is summarized when this threshold is reached          |
+| `AI_AGENT_HISTORY_COMPACTION_TRIGGER_RATE`      | float   | `0.8`                                | Fraction of `TOKEN_LIMIT` at which compaction is triggered (e.g., `0.8` = trigger at 96000 tokens)  |
+| `AI_AGENT_HISTORY_COMPACTION_TARGET_RATE`       | float   | `0.5`                                | Fraction of `TOKEN_LIMIT` to reduce history to after compaction (e.g., `0.5` = target 60000 tokens) |
+| `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`                                  | Number of most-recent conversation groups to preserve verbatim during compaction                    |
+| `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`                              | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
+| `AI_AGENT_HISTORY_COMPACTION_SUMMARY_PREFIX`    | string  | `"[Compacted conversation summary]"` | Prefix prepended to compacted history summaries to mark them as synthetic                           |
 
 ### Workflow Configuration
 
-| Parameter                      | Type    | Default | Description                                                    |
-| ------------------------------ | ------- | ------- | -------------------------------------------------------------- |
-| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage |
-| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow             |
+| Parameter                      | Type    | Default | Description                                                                           |
+| ------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------- |
+| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage                        |
+| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                    |
+| `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                        |
+| `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty |
+
+### Background Jobs
+
+| Parameter                    | Type    | Default | Description                                                                     |
+| ---------------------------- | ------- | ------- | ------------------------------------------------------------------------------- |
+| `CRON_SCHEDULER_MAX_WORKERS` | integer | `20`    | Max threads for the background cron scheduler; controls concurrent job capacity |
+
+### Activity Events
+
+| Parameter                        | Type    | Default | Description                                                               |
+| -------------------------------- | ------- | ------- | ------------------------------------------------------------------------- |
+| `ACTIVITY_EVENTS_ENABLED`        | boolean | `false` | Enable recording of user activity events for audit and analytics purposes |
+| `ACTIVITY_EVENTS_RETENTION_DAYS` | integer | `90`    | Number of days to retain activity event records before automatic cleanup  |
 
 ### Trigger Engine
 
@@ -794,6 +1065,26 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 - `HIGH` (3): Very restrictive, only allows safe operations
   :::
 
+### Dynamic Tool Mappings
+
+Define which tools are treated as web search or code interpreter tools for dynamic tool selection.
+
+| Parameter                        | Type         | Default                                                                     | Description                                                                            |
+| -------------------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `DYNAMIC_WEB_SEARCH_TOOLS`       | list[string] | `["google_search_tool_json", "tavily_search_results_json", "web_scrapper"]` | Tool names classified as web search tools for dynamic selection                        |
+| `DYNAMIC_CODE_INTERPRETER_TOOLS` | list[string] | `["code_executor"]`                                                         | Tool names classified as code interpreter tools for dynamic selection                  |
+| `HTTP_BLOCKED_TOOLS`             | list[string] | `["code_executor"]`                                                         | Tool names blocked from direct HTTP invocation via `POST /v1/tools/{tool_name}/invoke` |
+
+### File Datasource Multiprocessing
+
+Enable parallel processing of file indexing tasks using multiple worker processes.
+
+| Parameter                                           | Type    | Default | Description                                                                            |
+| --------------------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------- |
+| `ENABLE_FILE_MULTIPROCESSING`                       | boolean | `false` | Enable multiprocessing for file datasource indexing to speed up large-volume ingestion |
+| `FILE_DATASOURCE_MULTIPROCESSING_MAX_WORKERS`       | integer | `2`     | Max worker processes for parallel file indexing                                        |
+| `FILE_MULTIPROCESSING_MAX_EXECUTED_TASK_PER_WORKER` | integer | `100`   | Max tasks each worker process handles before recycling to prevent memory accumulation  |
+
 ### Azure DevOps Integration
 
 Configuration for Azure DevOps work items, test plans, and wiki integrations.
@@ -814,10 +1105,10 @@ Track LLM usage, performance metrics, and debugging information.
 
 Send LLM traces to Langfuse for observability, debugging, and prompt optimization.
 
-| Parameter                                 | Type         | Default                 | Description                                             |
-| ----------------------------------------- | ------------ | ----------------------- | ------------------------------------------------------- |
-| `LANGFUSE_TRACES`                         | boolean      | `false`                 | Enable detailed LLM tracing (requires Langfuse account) |
-| `LANGFUSE_BLOCKED_INSTRUMENTATION_SCOPES` | list[string] | `["elasticsearch-api"]` | Exclude noisy scopes from instrumentation               |
+| Parameter                                 | Type         | Default                                                                                                                                             | Description                                                                        |
+| ----------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `LANGFUSE_TRACES`                         | boolean      | `false`                                                                                                                                             | Enable detailed LLM tracing (requires Langfuse account)                            |
+| `LANGFUSE_BLOCKED_INSTRUMENTATION_SCOPES` | list[string] | `["elasticsearch-api", "opentelemetry.instrumentation.fastapi", "opentelemetry.instrumentation.sqlalchemy", "opentelemetry.instrumentation.httpx"]` | Instrumentation scope names excluded from Langfuse tracing to suppress noisy spans |
 
 :::info
 When `LANGFUSE_TRACES` is enabled, you must also set the following environment variables (provided by Langfuse):
@@ -826,6 +1117,61 @@ When `LANGFUSE_TRACES` is enabled, you must also set the following environment v
 - `LANGFUSE_SECRET_KEY` - Secret key for authentication
 - `LANGFUSE_HOST` - Langfuse instance URL (cloud or self-hosted)
   :::
+
+### Observability Provider
+
+Select the active observability backend for distributed tracing. Only one provider is active at a time.
+
+| Parameter                | Type   | Default  | Description                                                                                                           |
+| ------------------------ | ------ | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `OBSERVABILITY_PROVIDER` | string | `"none"` | Active tracing backend: `none` (disabled), `langfuse` (LLM traces), `phoenix` (Arize Phoenix), `otel` (OpenTelemetry) |
+
+### Phoenix (Arize) Configuration
+
+Send traces to Arize Phoenix for LLM observability and evaluation. Enable by setting `OBSERVABILITY_PROVIDER=phoenix`.
+
+| Parameter                      | Type    | Default                   | Description                                                                             |
+| ------------------------------ | ------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| `PHOENIX_HOST`                 | string  | `"http://localhost:6006"` | Phoenix server endpoint URL                                                             |
+| `PHOENIX_PROJECT_NAME`         | string  | `"codemie"`               | Phoenix project name to group traces under                                              |
+| `PHOENIX_API_KEY`              | string  | `null`                    | Phoenix API key for authenticated deployments; omit for local unauthenticated instances |
+| `PHOENIX_BATCH_SPAN_PROCESSOR` | boolean | `true`                    | Use batch span processor for better throughput; set `false` for synchronous/debug mode  |
+
+### OpenTelemetry Configuration
+
+Export traces via OpenTelemetry to any OTLP-compatible backend. Enable by setting `OBSERVABILITY_PROVIDER=otel`.
+
+| Parameter            | Type    | Default                 | Description                                                                                             |
+| -------------------- | ------- | ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `OTEL_ENABLED`       | boolean | `false`                 | Enable OpenTelemetry tracing bootstrap; setting `OBSERVABILITY_PROVIDER=otel` also requires this        |
+| `OTEL_EXCLUDED_URLS` | string  | `"healthcheck,metrics"` | Comma-separated URL fragments excluded from tracing to suppress health check and metrics endpoint noise |
+
+### Prometheus Configuration
+
+Expose application metrics in Prometheus format on a dedicated port.
+
+| Parameter                 | Type    | Default      | Description                                                               |
+| ------------------------- | ------- | ------------ | ------------------------------------------------------------------------- |
+| `PROMETHEUS_ENABLED`      | boolean | `false`      | Enable Prometheus metrics exposition                                      |
+| `PROMETHEUS_ENDPOINT`     | string  | `"/metrics"` | HTTP path for the Prometheus metrics scrape endpoint                      |
+| `PROMETHEUS_METRICS_HOST` | string  | `"0.0.0.0"`  | Host address the metrics server binds to                                  |
+| `PROMETHEUS_METRICS_PORT` | integer | `9091`       | Port the dedicated metrics server listens on (separate from the API port) |
+
+### Pyroscope Configuration
+
+Continuous profiling integration for CPU and memory profiling in production.
+
+| Parameter                       | Type    | Default                   | Description                                                                         |
+| ------------------------------- | ------- | ------------------------- | ----------------------------------------------------------------------------------- |
+| `PYROSCOPE_ENABLED`             | boolean | `false`                   | Enable Pyroscope continuous profiling                                               |
+| `PYROSCOPE_SERVER_URL`          | string  | `"http://localhost:4040"` | Pyroscope server endpoint to send profiling data to                                 |
+| `PYROSCOPE_APP_NAME`            | string  | `"codemie"`               | Application name label attached to all profiling data                               |
+| `PYROSCOPE_SAMPLE_RATE`         | integer | `100`                     | Profiling samples per second; lower values reduce overhead                          |
+| `PYROSCOPE_ONCPU`               | boolean | `true`                    | Enable CPU profiling via wall-clock sampling                                        |
+| `PYROSCOPE_GIL_ONLY`            | boolean | `false`                   | Restrict sampling to GIL-holding threads only; reduces overhead but limits coverage |
+| `PYROSCOPE_ENABLE_LOGGING`      | boolean | `false`                   | Enable Pyroscope internal debug logging                                             |
+| `PYROSCOPE_DETECT_SUBPROCESSES` | boolean | `false`                   | Automatically profile spawned subprocesses                                          |
+| `PYROSCOPE_TAGS`                | string  | `""`                      | Comma-separated `key=value` tags added to all profiling data for filtering          |
 
 ### Memory Profiling
 
@@ -849,6 +1195,47 @@ Memory profiling uses Python's built-in tracemalloc module to capture memory all
 Memory profiling adds CPU overhead and should be used cautiously in production environments. The file detail level has lower performance impact compared to line. Consider
 increasing the interval (e.g., 30-60 minutes) for production use to minimize resource consumption.
 :::
+
+---
+
+## Conversation Analysis
+
+Automated background job that runs LLM-based analysis on completed conversations to extract insights, patterns, and quality signals.
+
+| Parameter                               | Type         | Default                           | Description                                                                                   |
+| --------------------------------------- | ------------ | --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `CONVERSATION_ANALYSIS_ENABLED`         | boolean      | `false`                           | Enable the nightly conversation analysis background job                                       |
+| `CONVERSATION_ANALYSIS_SCHEDULE`        | string       | `"0 0 * * *"`                     | Cron schedule (UTC) for the analysis job; defaults to midnight daily                          |
+| `CONVERSATION_ANALYSIS_START_DATE`      | string       | `"2025-12-01"`                    | Only analyze conversations created on or after this date (ISO format)                         |
+| `CONVERSATION_ANALYSIS_LOOKBACK_DAYS`   | integer      | `1`                               | Analyze conversations that are at least this many days old (avoids in-progress conversations) |
+| `CONVERSATION_ANALYSIS_BATCH_SIZE`      | integer      | `20`                              | Number of conversations processed per batch per pod                                           |
+| `CONVERSATION_ANALYSIS_MAX_RETRIES`     | integer      | `3`                               | Max retry attempts for failed conversation analyses before marking as permanently failed      |
+| `CONVERSATION_ANALYSIS_LLM_MODEL`       | string       | `"gemini-3-flash"`                | LLM model used for conversation analysis; should be a fast, cost-efficient model              |
+| `CONVERSATION_ANALYSIS_PROJECTS_FILTER` | list[string] | `["demo", "codemie", "epm-cdme"]` | Project names to include in analysis; empty list includes all projects                        |
+
+---
+
+## Stale Datasource Detection
+
+Nightly background job that identifies datasources with no recent usage or updates and marks them as stale to prompt review or cleanup.
+
+| Parameter                         | Type    | Default       | Description                                                                                        |
+| --------------------------------- | ------- | ------------- | -------------------------------------------------------------------------------------------------- |
+| `STALE_DATASOURCE_ENABLED`        | boolean | `false`       | Enable the nightly stale datasource detection job                                                  |
+| `STALE_DATASOURCE_SCHEDULE`       | string  | `"0 3 * * *"` | Cron schedule (UTC) for the detection job; defaults to 3 AM daily                                  |
+| `STALE_DATASOURCE_NO_USAGE_DAYS`  | integer | `90`          | Days without usage metrics after which a datasource is considered stale                            |
+| `STALE_DATASOURCE_NO_UPDATE_DAYS` | integer | `120`         | Days without any update used as a fallback staleness criterion when no usage metrics are available |
+| `STALE_DATASOURCE_GRACE_DAYS`     | integer | `7`           | Newly created datasources are never marked stale within this grace period                          |
+| `STALE_DATASOURCE_BATCH_SIZE`     | integer | `100`         | Elasticsearch query batch size for metrics aggregation during detection                            |
+
+---
+
+## Analytics
+
+| Parameter                     | Type    | Default        | Description                                                                                                     |
+| ----------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
+| `ANALYTICS_DEFAULT_PAGE_SIZE` | integer | `20`           | Default number of rows returned per page by analytics API endpoints                                             |
+| `CLI_METRICS_CUTOFF_DATE`     | string  | `"2026-02-07"` | Earliest date used for CLI metrics data quality filtering; records before this date are excluded from analytics |
 
 ---
 
