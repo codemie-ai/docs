@@ -250,6 +250,7 @@ words:
   # codemie terms
   - kata
   - katas
+  - gvisor
   - codemieai
   # Other
   - LFPDPPP
