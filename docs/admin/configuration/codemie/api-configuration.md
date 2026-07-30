@@ -400,12 +400,12 @@ Configure authentication providers and access control for users and administrato
 
 ### IDP Configuration
 
-| Parameter             | Type   | Default   | Description                                                                                                                                                                                                                                                                                                 |
-| --------------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (development only), `oidc` (generic OIDC — reads `firstname`/`lastname`, maps roles from `groups` claims prefixed with `application_`), `entraid-oidc` (Microsoft EntraID — reads `name`, maps roles via `ENTRA_ROLE_*` and `ENTRA_ACCESS_*` env vars) |
-| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                                                                                                                                                                                                                                                     |
-| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup                                                                                                                                                                                                                                                  |
-| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                                                                                                                                                                                                                                                          |
+| Parameter             | Type   | Default   | Description                                                            |
+| --------------------- | ------ | --------- | ---------------------------------------------------------------------- |
+| `IDP_PROVIDER`        | string | `"local"` | Identity provider: `keycloak` (recommended), `local` (for development) |
+| `KEYCLOAK_LOGOUT_URL` | string | `""`      | Keycloak logout endpoint for proper session termination                |
+| `ADMIN_USER_ID`       | string | `""`      | User ID to automatically grant admin privileges on startup             |
+| `ADMIN_ROLE_NAME`     | string | `"admin"` | Role name identifying administrators in the system                     |
 
 ### User Management Mode
 
