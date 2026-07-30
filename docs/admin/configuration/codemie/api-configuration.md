@@ -173,15 +173,15 @@ For Claude, Llama, Titan, and other models via AWS Bedrock managed service.
 
 For Gemini, and Claude via Google Cloud's Vertex AI platform.
 
-| Parameter                                 | Type    | Default | Description                                                                                                                                                                 |
-| ----------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GOOGLE_VERTEXAI_REGION`                  | string  | `""`    | Region for Vertex AI models (e.g., `us-central1`, `europe-west4`)                                                                                                           |
-| `GOOGLE_CLAUDE_VERTEXAI_REGION`           | string  | `""`    | Separate region for Claude on Vertex AI if different from main region                                                                                                       |
-| `GOOGLE_VERTEXAI_MAX_RETRIES`             | integer | `5`     | Retry attempts for rate-limited or failed Vertex AI requests                                                                                                                |
-| `GOOGLE_PROJECT_ID`                       | string  | `""`    | GCP project ID where Vertex AI is enabled                                                                                                                                   |
-| `GOOGLE_REGION`                           | string  | `""`    | Default GCP region for all Google services                                                                                                                                  |
-| `GCP_API_KEY`                             | string  | `""`    | Base64-encoded service account JSON key for GCP authentication; not recommended for production — use Workload Identity instead to avoid storing long-lived credentials      |
-| `VERTEX_AI_ANTHROPIC_ENABLE_PROMPT_CACHE` | boolean | `false` | Enable Anthropic prompt-caching headers when calling Claude models via Vertex AI; set to `true` only when your Vertex AI endpoint has confirmed support for caching headers |
+| Parameter                                 | Type    | Default | Description                                                                                                                                                                |
+| ----------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GOOGLE_VERTEXAI_REGION`                  | string  | `""`    | Region for Vertex AI models (e.g., `us-central1`, `europe-west4`)                                                                                                          |
+| `GOOGLE_CLAUDE_VERTEXAI_REGION`           | string  | `""`    | Separate region for Claude on Vertex AI if different from main region                                                                                                      |
+| `GOOGLE_VERTEXAI_MAX_RETRIES`             | integer | `5`     | Retry attempts for rate-limited or failed Vertex AI requests                                                                                                               |
+| `GOOGLE_PROJECT_ID`                       | string  | `""`    | GCP project ID where Vertex AI is enabled                                                                                                                                  |
+| `GOOGLE_REGION`                           | string  | `""`    | Default GCP region for all Google services                                                                                                                                 |
+| `GCP_API_KEY`                             | string  | `""`    | Base64-encoded service account JSON key for GCP authentication; not recommended for production — use Workload Identity instead to avoid storing long-lived credentials     |
+| `VERTEX_AI_ANTHROPIC_ENABLE_PROMPT_CACHE` | boolean | `false` | Enable Anthropic prompt-caching headers when calling Claude models via Vertex AI; set to `true` only when the Vertex AI endpoint has confirmed support for caching headers |
 
 ---
 
@@ -575,7 +575,7 @@ Enable web search capabilities for assistants to access current information.
 
 | Parameter               | Type   | Default | Description                                                                                                                          |
 | ----------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `GOOGLE_SEARCH_API_KEY` | string | `""`    | API key for Google Custom Search integration. Can be registered in your GCP account                                                  |
+| `GOOGLE_SEARCH_API_KEY` | string | `""`    | API key for Google Custom Search integration. Can be registered in the GCP account                                                   |
 | `GOOGLE_SEARCH_CSE_ID`  | string | `""`    | Custom Search Engine ID for scoped web searches. Can be registered here https://programmablesearchengine.google.com/controlpanel/all |
 | `TAVILY_API_KEY`        | string | `""`    | Tavily API key for AI-optimized web search and extraction                                                                            |
 
@@ -614,7 +614,7 @@ SharePoint PKCE flow stores OAuth state and tokens in Redis during the authoriza
 :::
 
 :::info Azure AD Setup
-The redirect URI registered in your Azure AD app must match:
+The redirect URI registered in the Azure AD app must match:
 
 ```
 {CALLBACK_API_BASE_URL}{API_ROOT_PATH}/v1/sharepoint/oauth/callback
@@ -1007,31 +1007,31 @@ Integration with advanced code analysis platforms (e.g., AICE).
 
 Configure secure Python code execution in isolated Kubernetes pods for running user-generated code safely.
 
-| Parameter                              | Type    | Default                          | Description                                                                                                                                                 |
-| -------------------------------------- | ------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CODE_EXECUTOR_ENABLED`                | boolean | `false`                          | Enable the Code Executor tool. When `false`, the tool is neither listed in the tools catalog nor executed. Set `true` to opt in.                            |
-| `CODE_EXECUTOR_EXECUTION_MODE`         | string  | `"sandbox"`                      | Execution mode. Code runs in an isolated Kubernetes sandbox pod.                                                                                            |
-| `CODE_EXECUTOR_KUBECONFIG_PATH`        | string  | `""`                             | Path to kubeconfig for Kubernetes authentication (optional, uses in-cluster config if empty). Set if you want to move code execution to a dedicated cluster |
-| `CODE_EXECUTOR_WORKDIR_BASE`           | string  | `"/home/codemie"`                | Base working directory for code execution inside containers                                                                                                 |
-| `CODE_EXECUTOR_NAMESPACE`              | string  | `"codemie-runtime"`              | Kubernetes namespace for executor pods                                                                                                                      |
-| `CODE_EXECUTOR_DOCKER_IMAGE`           | string  | `"codemie/codemie-python:2.5.0"` | Docker image with Python environment and dependencies for code execution                                                                                    |
-| `CODE_EXECUTOR_EXECUTION_TIMEOUT`      | float   | `30.0`                           | Max seconds for code execution before timeout (prevents infinite loops)                                                                                     |
-| `CODE_EXECUTOR_SESSION_TIMEOUT`        | float   | `300.0`                          | Max session lifetime in seconds before automatic cleanup                                                                                                    |
-| `CODE_EXECUTOR_DEFAULT_TIMEOUT`        | float   | `30.0`                           | Default timeout for operations in seconds                                                                                                                   |
-| `CODE_EXECUTOR_MEMORY_LIMIT`           | string  | `"256Mi"`                        | Kubernetes memory limit for executor pods                                                                                                                   |
-| `CODE_EXECUTOR_MEMORY_REQUEST`         | string  | `"256Mi"`                        | Kubernetes memory request for executor pods                                                                                                                 |
-| `CODE_EXECUTOR_CPU_LIMIT`              | string  | `"1"`                            | Kubernetes CPU limit for executor pods (cores)                                                                                                              |
-| `CODE_EXECUTOR_CPU_REQUEST`            | string  | `"500m"`                         | Kubernetes CPU request for executor pods (millicores)                                                                                                       |
-| `CODE_EXECUTOR_MAX_POD_POOL_SIZE`      | integer | `5`                              | Max number of executor pods in dynamic pool for concurrent executions                                                                                       |
-| `CODE_EXECUTOR_POD_NAME_PREFIX`        | string  | `"codemie-executor-"`            | Prefix for dynamically created executor pod names                                                                                                           |
-| `CODE_EXECUTOR_RUN_AS_USER`            | integer | `1001`                           | Unix user ID for pod security context (non-root execution)                                                                                                  |
-| `CODE_EXECUTOR_RUN_AS_GROUP`           | integer | `1001`                           | Unix group ID for pod security context                                                                                                                      |
-| `CODE_EXECUTOR_FS_GROUP`               | integer | `1001`                           | Filesystem group ID for pod volume permissions                                                                                                              |
-| `CODE_EXECUTOR_SECURITY_THRESHOLD`     | string  | `"LOW"`                          | Required security policy threshold: `SAFE`, `LOW`, `MEDIUM`, `HIGH`                                                                                         |
-| `CODE_EXECUTOR_YAML_POLICY_PATH`       | string  | `""`                             | Path to custom YAML security policy file (optional, overrides default policy)                                                                               |
-| `CODE_EXECUTOR_VERBOSE`                | boolean | `false`                          | Enable verbose logging for executor debugging                                                                                                               |
-| `CODE_EXECUTOR_KEEP_TEMPLATE`          | boolean | `true`                           | Persist pod template after execution for performance optimization                                                                                           |
-| `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP` | boolean | `false`                          | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                                      |
+| Parameter                              | Type    | Default                          | Description                                                                                                                                     |
+| -------------------------------------- | ------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CODE_EXECUTOR_ENABLED`                | boolean | `false`                          | Enable the Code Executor tool. When `false`, the tool is neither listed in the tools catalog nor executed. Set `true` to opt in.                |
+| `CODE_EXECUTOR_EXECUTION_MODE`         | string  | `"sandbox"`                      | Execution mode. Code runs in an isolated Kubernetes sandbox pod.                                                                                |
+| `CODE_EXECUTOR_KUBECONFIG_PATH`        | string  | `""`                             | Path to kubeconfig for Kubernetes authentication (optional, uses in-cluster config if empty). Set to move code execution to a dedicated cluster |
+| `CODE_EXECUTOR_WORKDIR_BASE`           | string  | `"/home/codemie"`                | Base working directory for code execution inside containers                                                                                     |
+| `CODE_EXECUTOR_NAMESPACE`              | string  | `"codemie-runtime"`              | Kubernetes namespace for executor pods                                                                                                          |
+| `CODE_EXECUTOR_DOCKER_IMAGE`           | string  | `"codemie/codemie-python:2.5.0"` | Docker image with Python environment and dependencies for code execution                                                                        |
+| `CODE_EXECUTOR_EXECUTION_TIMEOUT`      | float   | `30.0`                           | Max seconds for code execution before timeout (prevents infinite loops)                                                                         |
+| `CODE_EXECUTOR_SESSION_TIMEOUT`        | float   | `300.0`                          | Max session lifetime in seconds before automatic cleanup                                                                                        |
+| `CODE_EXECUTOR_DEFAULT_TIMEOUT`        | float   | `30.0`                           | Default timeout for operations in seconds                                                                                                       |
+| `CODE_EXECUTOR_MEMORY_LIMIT`           | string  | `"256Mi"`                        | Kubernetes memory limit for executor pods                                                                                                       |
+| `CODE_EXECUTOR_MEMORY_REQUEST`         | string  | `"256Mi"`                        | Kubernetes memory request for executor pods                                                                                                     |
+| `CODE_EXECUTOR_CPU_LIMIT`              | string  | `"1"`                            | Kubernetes CPU limit for executor pods (cores)                                                                                                  |
+| `CODE_EXECUTOR_CPU_REQUEST`            | string  | `"500m"`                         | Kubernetes CPU request for executor pods (millicores)                                                                                           |
+| `CODE_EXECUTOR_MAX_POD_POOL_SIZE`      | integer | `5`                              | Max number of executor pods in dynamic pool for concurrent executions                                                                           |
+| `CODE_EXECUTOR_POD_NAME_PREFIX`        | string  | `"codemie-executor-"`            | Prefix for dynamically created executor pod names                                                                                               |
+| `CODE_EXECUTOR_RUN_AS_USER`            | integer | `1001`                           | Unix user ID for pod security context (non-root execution)                                                                                      |
+| `CODE_EXECUTOR_RUN_AS_GROUP`           | integer | `1001`                           | Unix group ID for pod security context                                                                                                          |
+| `CODE_EXECUTOR_FS_GROUP`               | integer | `1001`                           | Filesystem group ID for pod volume permissions                                                                                                  |
+| `CODE_EXECUTOR_SECURITY_THRESHOLD`     | string  | `"LOW"`                          | Required security policy threshold: `SAFE`, `LOW`, `MEDIUM`, `HIGH`                                                                             |
+| `CODE_EXECUTOR_YAML_POLICY_PATH`       | string  | `""`                             | Path to custom YAML security policy file (optional, overrides default policy)                                                                   |
+| `CODE_EXECUTOR_VERBOSE`                | boolean | `false`                          | Enable verbose logging for executor debugging                                                                                                   |
+| `CODE_EXECUTOR_KEEP_TEMPLATE`          | boolean | `true`                           | Persist pod template after execution for performance optimization                                                                               |
+| `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP` | boolean | `false`                          | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                          |
 
 :::warning Security Considerations
 **Sandbox Isolation:** `CODE_EXECUTOR_EXECUTION_MODE=sandbox` runs user-supplied code in a dedicated Kubernetes pod, isolated from the CodeMie API. This is the execution model for running untrusted code safely in production.
@@ -1080,7 +1080,7 @@ Send LLM traces to Langfuse for observability, debugging, and prompt optimizatio
 | `LANGFUSE_BLOCKED_INSTRUMENTATION_SCOPES` | list[string] | `["elasticsearch-api", "opentelemetry.instrumentation.fastapi", "opentelemetry.instrumentation.sqlalchemy", "opentelemetry.instrumentation.httpx"]` | Instrumentation scope names excluded from Langfuse tracing to suppress noisy spans |
 
 :::info
-When `LANGFUSE_TRACES` is enabled, you must also set the following environment variables (provided by Langfuse):
+When `LANGFUSE_TRACES` is enabled, the following environment variables (provided by Langfuse) must also be set:
 
 - `LANGFUSE_PUBLIC_KEY` - Public API key from Langfuse project
 - `LANGFUSE_SECRET_KEY` - Secret key for authentication
@@ -1154,7 +1154,7 @@ Track memory usage and identify memory leaks during application runtime using Py
 | `MEMORY_PROFILING_SNAPSHOT_PREFIX`  | string  | `"memory_snapshots"` | Prefix path for snapshot storage location                                         |
 
 :::info
-Memory profiling uses Python's built-in tracemalloc module to capture memory allocation snapshots at regular intervals. Choose detail level based on your needs:
+Memory profiling uses Python's built-in tracemalloc module to capture memory allocation snapshots at regular intervals. Available detail levels:
 
 - file: Faster, groups memory usage by file (recommended for production debugging)
 - line: Slower, shows exact line numbers (use for detailed analysis in development)
