@@ -227,20 +227,18 @@ Configure persistent data storage for conversations, users, workflows, and appli
 
 Primary relational database for structured data and transactional operations.
 
-| Parameter                 | Type                                 | Default       | Description                                                                                                                                                                                            |
-| ------------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `POSTGRES_HOST`           | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                               |
-| `POSTGRES_PORT`           | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                 |
-| `POSTGRES_DB`             | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                              |
-| `POSTGRES_USER`           | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                          |
-| `POSTGRES_PASSWORD`       | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                  |
-| `PG_URL`                  | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                        |
-| `PG_POOL_SIZE`            | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                          |
-| `DEFAULT_DB_SCHEMA`       | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                        |
-| `DB_INSERT_BATCH_SIZE`    | integer                              | `1000`        | Maximum rows per single INSERT statement; splits bulk inserts into batches to stay within PostgreSQL's per-query parameter limit                                                                       |
-| `DB_IN_CLAUSE_BATCH_SIZE` | integer                              | `500`         | Maximum items per SQL `IN (...)` clause in complex SELECT queries; prevents stack-depth limit exhaustion when querying large key sets                                                                  |
-| `PG_IAM_AUTH_PROVIDER`    | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
-| `PG_AWS_RDS_REGION`       | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
+| Parameter              | Type                                 | Default       | Description                                                                                                                                                                                            |
+| ---------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `POSTGRES_HOST`        | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                               |
+| `POSTGRES_PORT`        | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                 |
+| `POSTGRES_DB`          | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                              |
+| `POSTGRES_USER`        | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                          |
+| `POSTGRES_PASSWORD`    | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                  |
+| `PG_URL`               | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                        |
+| `PG_POOL_SIZE`         | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                          |
+| `DEFAULT_DB_SCHEMA`    | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                        |
+| `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
+| `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
 
 ### Elasticsearch
 
@@ -257,30 +255,28 @@ Document store for full-text search, analytics, and unstructured data.
 
 Index names for different data types. Customize to avoid collisions in shared clusters.
 
-| Parameter                                 | Type         | Default                                | Description                                                                                                                                                                            |
-| ----------------------------------------- | ------------ | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ELASTIC_APPLICATION_INDEX`               | string       | `"applications"`                       | Indexed applications and their metadata                                                                                                                                                |
-| `ELASTIC_GIT_REPO_INDEX`                  | string       | `"repositories"`                       | Code repository metadata and indexing status                                                                                                                                           |
-| `ELASTIC_LOGS_INDEX`                      | string       | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging                                                                                                                               |
-| `ELASTIC_METRICS_INDEX`                   | string       | `"codemie_metrics_logs*"`              | Index pattern used by the analytics repository for all ES\|QL queries and dashboard aggregations; changing this redirects the entire analytics dashboard to a different index or alias |
-| `FEEDBACK_INDEX_NAME`                     | string       | `"ca_feedback"`                        | User feedback and ratings on AI responses                                                                                                                                              |
-| `BACKGROUND_TASKS_INDEX`                  | string       | `"background_tasks"`                   | Async task queue and execution status                                                                                                                                                  |
-| `USER_CONVERSATION_INDEX`                 | string       | `"codemie_raw_user_conversations"`     | Complete conversation history and messages                                                                                                                                             |
-| `USER_CONVERSATION_FOLDER_INDEX`          | string       | `"codemie_conversation_folder"`        | Folder organization for conversation management                                                                                                                                        |
-| `CONVERSATIONS_METRICS_INDEX`             | string       | `"codemie_conversation_metrics"`       | Analytics data on conversation usage and performance                                                                                                                                   |
-| `SHARED_CONVERSATION_INDEX`               | string       | `"codemie_shared_conversations"`       | Conversations shared across users or teams                                                                                                                                             |
-| `KZ_USERS_INDEX`                          | string       | `"codemie_kz_users_data"`              | User profiles and searchable user data                                                                                                                                                 |
-| `ASSISTANTS_INDEX`                        | string       | `"codemie_assistants"`                 | Assistant definitions, configurations, and templates                                                                                                                                   |
-| `WORKFLOWS_INDEX`                         | string       | `"workflows"`                          | Workflow definitions and templates                                                                                                                                                     |
-| `SETTINGS_INDEX`                          | string       | `"codemie_user_settings"`              | User preferences and personalization data                                                                                                                                              |
-| `USER_DATA_INDEX`                         | string       | `"codemie_user_data"`                  | Additional user-related data and metadata                                                                                                                                              |
-| `INDEX_STATUS_INDEX`                      | string       | `"index_status"`                       | Status tracking for repository and datasource indexing                                                                                                                                 |
-| `PROVIDERS_INDEX`                         | string       | `"providers"`                          | AI provider configurations and availability                                                                                                                                            |
-| `WORKFLOW_EXECUTION_INDEX`                | string       | `"workflows_execution_history"`        | Historical workflow runs and outcomes                                                                                                                                                  |
-| `WORKFLOW_EXECUTION_STATE_INDEX`          | string       | `"workflows_execution_states"`         | Current state of running workflows                                                                                                                                                     |
-| `WORKFLOW_EXECUTION_STATE_THOUGHTS_INDEX` | string       | `"workflows_execution_state_thoughts"` | Workflow reasoning and decision logs                                                                                                                                                   |
-| `TOOLS_INDEX_NAME`                        | string       | `"codemie_tools"`                      | Semantic index for intelligent tool selection                                                                                                                                          |
-| `INDEXES_PERMITTED_FOR_SEARCH`            | list[string] | `["codemie_kz_users_data"]`            | Indexes accessible via general search API                                                                                                                                              |
+| Parameter                                 | Type   | Default                                | Description                                                                                                                                                                            |
+| ----------------------------------------- | ------ | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ELASTIC_APPLICATION_INDEX`               | string | `"applications"`                       | Indexed applications and their metadata                                                                                                                                                |
+| `ELASTIC_GIT_REPO_INDEX`                  | string | `"repositories"`                       | Code repository metadata and indexing status                                                                                                                                           |
+| `ELASTIC_LOGS_INDEX`                      | string | `"logs-codemie-infra*"`                | Infrastructure logs pattern for monitoring and debugging                                                                                                                               |
+| `ELASTIC_METRICS_INDEX`                   | string | `"codemie_metrics_logs*"`              | Index pattern used by the analytics repository for all ES\|QL queries and dashboard aggregations; changing this redirects the entire analytics dashboard to a different index or alias |
+| `FEEDBACK_INDEX_NAME`                     | string | `"ca_feedback"`                        | User feedback and ratings on AI responses                                                                                                                                              |
+| `BACKGROUND_TASKS_INDEX`                  | string | `"background_tasks"`                   | Async task queue and execution status                                                                                                                                                  |
+| `USER_CONVERSATION_INDEX`                 | string | `"codemie_raw_user_conversations"`     | Complete conversation history and messages                                                                                                                                             |
+| `USER_CONVERSATION_FOLDER_INDEX`          | string | `"codemie_conversation_folder"`        | Folder organization for conversation management                                                                                                                                        |
+| `CONVERSATIONS_METRICS_INDEX`             | string | `"codemie_conversation_metrics"`       | Analytics data on conversation usage and performance                                                                                                                                   |
+| `SHARED_CONVERSATION_INDEX`               | string | `"codemie_shared_conversations"`       | Conversations shared across users or teams                                                                                                                                             |
+| `ASSISTANTS_INDEX`                        | string | `"codemie_assistants"`                 | Assistant definitions, configurations, and templates                                                                                                                                   |
+| `WORKFLOWS_INDEX`                         | string | `"workflows"`                          | Workflow definitions and templates                                                                                                                                                     |
+| `SETTINGS_INDEX`                          | string | `"codemie_user_settings"`              | User preferences and personalization data                                                                                                                                              |
+| `USER_DATA_INDEX`                         | string | `"codemie_user_data"`                  | Additional user-related data and metadata                                                                                                                                              |
+| `INDEX_STATUS_INDEX`                      | string | `"index_status"`                       | Status tracking for repository and datasource indexing                                                                                                                                 |
+| `PROVIDERS_INDEX`                         | string | `"providers"`                          | AI provider configurations and availability                                                                                                                                            |
+| `WORKFLOW_EXECUTION_INDEX`                | string | `"workflows_execution_history"`        | Historical workflow runs and outcomes                                                                                                                                                  |
+| `WORKFLOW_EXECUTION_STATE_INDEX`          | string | `"workflows_execution_states"`         | Current state of running workflows                                                                                                                                                     |
+| `WORKFLOW_EXECUTION_STATE_THOUGHTS_INDEX` | string | `"workflows_execution_state_thoughts"` | Workflow reasoning and decision logs                                                                                                                                                   |
+| `TOOLS_INDEX_NAME`                        | string | `"codemie_tools"`                      | Semantic index for intelligent tool selection                                                                                                                                          |
 
 ---
 
@@ -765,12 +761,11 @@ Configure MCP OAuth2 authorization server integration for secure MCP client auth
 
 ### MCP Auth Security
 
-| Parameter                                  | Type    | Default              | Description                                                                                           |
-| ------------------------------------------ | ------- | -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MCP_AUTH_REDIS_KEY_NAMESPACE`             | string  | `"codemie:mcp_auth"` | Redis key namespace prefix for all MCP auth stores; must not end with `:`                             |
-| `MCP_AUTH_ENFORCE_HTTPS`                   | boolean | `true`               | Enforce HTTPS for all MCP auth redirect and callback URLs; disable only in development                |
-| `MCP_AUTH_ALLOW_LOCAL_CLIENT_METADATA_URL` | boolean | `false`              | Allow `localhost` URLs for MCP client metadata discovery; enable only for local development           |
-| `MCP_AUTH_CALLBACK_KEEP_TAB_OPEN`          | boolean | `false`              | Keep the OAuth2 callback tab open after successful auth instead of auto-closing; enable for debugging |
+| Parameter                                  | Type    | Default              | Description                                                                                 |
+| ------------------------------------------ | ------- | -------------------- | ------------------------------------------------------------------------------------------- |
+| `MCP_AUTH_REDIS_KEY_NAMESPACE`             | string  | `"codemie:mcp_auth"` | Redis key namespace prefix for all MCP auth stores; must not end with `:`                   |
+| `MCP_AUTH_ENFORCE_HTTPS`                   | boolean | `true`               | Enforce HTTPS for all MCP auth redirect and callback URLs; disable only in development      |
+| `MCP_AUTH_ALLOW_LOCAL_CLIENT_METADATA_URL` | boolean | `false`              | Allow `localhost` URLs for MCP client metadata discovery; enable only for local development |
 
 ### MCP Auth Discovery
 
@@ -786,19 +781,17 @@ Configure MCP OAuth2 authorization server integration for secure MCP client auth
 
 Enterprise-grade PostgreSQL-backed token storage with KMS encryption. Replaces the default in-memory mock TMS.
 
-| Parameter                                     | Type    | Default                             | Description                                                                                                      |
-| --------------------------------------------- | ------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `MCP_AUTH_TMS_ENABLED`                        | boolean | `false`                             | Enable PostgreSQL-backed enterprise TMS instead of the in-memory mock; required for production deployments       |
-| `MCP_AUTH_TMS_KMS_KEY_ID`                     | string  | `""`                                | KMS key ID for envelope encryption of stored credentials; required when TMS is enabled                           |
-| `MCP_AUTH_TMS_ENCRYPTION_CONTEXT_PREFIX`      | string  | `"codemie-enterprise:mcp-auth:tms"` | Stable encryption context prefix used in credential AAD; changing this breaks decryption of existing tokens      |
-| `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`        | float   | `2.5`                               | OAuth2 token refresh timeout in seconds; enterprise validation requires a value between 0 and 3                  |
-| `MCP_AUTH_TMS_REDIS_LOCK_ENABLED`             | boolean | `true`                              | Enable Redis refresh locks to prevent duplicate refresh storms across clustered backend instances                |
-| `MCP_AUTH_TMS_REDIS_LOCK_TTL_SECONDS`         | integer | `10`                                | Refresh lock TTL in seconds; must be greater than `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`                         |
-| `MCP_AUTH_TMS_AUDIT_REQUIRED`                 | boolean | `true`                              | Require a durable audit write to complete before credential operations return successfully                       |
-| `MCP_AUTH_TMS_AUDIT_FALLBACK_ENABLED`         | boolean | `false`                             | Enable a durable fallback audit sink when the primary audit write path is unavailable                            |
-| `MCP_AUTH_TMS_AUDIT_FALLBACK_SINK_CONFIGURED` | boolean | `false`                             | Confirm that a fallback audit sink is configured; must be `true` when `MCP_AUTH_TMS_AUDIT_FALLBACK_ENABLED=true` |
-| `MCP_AUTH_TMS_AUDIT_SANITIZE_DIAGNOSTICS`     | boolean | `true`                              | Sanitize sensitive diagnostic details from audit records before storage                                          |
-| `MCP_AUTH_TMS_ALLOW_MOCK`                     | boolean | `false`                             | Allow in-memory mock TMS in non-production environments when real TMS is disabled; never enable in production    |
+| Parameter                                 | Type    | Default | Description                                                                                                   |
+| ----------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| `MCP_AUTH_TMS_ENABLED`                    | boolean | `false` | Enable PostgreSQL-backed enterprise TMS instead of the in-memory mock; required for production deployments    |
+| `MCP_AUTH_TMS_KMS_KEY_ID`                 | string  | `""`    | KMS key ID for envelope encryption of stored credentials; required when TMS is enabled                        |
+| `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`    | float   | `2.5`   | OAuth2 token refresh timeout in seconds; enterprise validation requires a value between 0 and 3               |
+| `MCP_AUTH_TMS_REDIS_LOCK_ENABLED`         | boolean | `true`  | Enable Redis refresh locks to prevent duplicate refresh storms across clustered backend instances             |
+| `MCP_AUTH_TMS_REDIS_LOCK_TTL_SECONDS`     | integer | `10`    | Refresh lock TTL in seconds; must be greater than `MCP_AUTH_TMS_REFRESH_TIMEOUT_SECONDS`                      |
+| `MCP_AUTH_TMS_AUDIT_REQUIRED`             | boolean | `true`  | Require a durable audit write to complete before credential operations return successfully                    |
+| `MCP_AUTH_TMS_AUDIT_FALLBACK_ENABLED`     | boolean | `false` | Enable a durable fallback audit sink when the primary audit write path is unavailable                         |
+| `MCP_AUTH_TMS_AUDIT_SANITIZE_DIAGNOSTICS` | boolean | `true`  | Sanitize sensitive diagnostic details from audit records before storage                                       |
+| `MCP_AUTH_TMS_ALLOW_MOCK`                 | boolean | `false` | Allow in-memory mock TMS in non-production environments when real TMS is disabled; never enable in production |
 
 ### Webhook Rate Limiting
 
@@ -912,15 +905,6 @@ Reduce latency and API costs by caching metadata and responses.
 | `LITELLM_LIST_REQUEST_TIMEOUT`       | float   | `30.0`  | Timeout in seconds for list and bulk endpoints that return larger payloads   |
 | `LITELLM_FAIL_OPEN_ON_503`           | boolean | `true`  | Allow requests when LiteLLM proxy is unavailable (bypass mode on 503 errors) |
 
-### LiteLLM Proxy Endpoints
-
-List of HTTP API paths exposed by the LiteLLM proxy. Overridable via environment variable as a JSON string. Defaults include OpenAI-compatible chat/completions, Anthropic Messages API, Google Gemini endpoints, embeddings, and health/models endpoints required by CLI tools.
-
-| Parameter                  | Type       | Default           | Description                                                                           |
-| -------------------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------- |
-| `LITE_LLM_PROXY_ENDPOINTS` | list[dict] | _(see config.py)_ | List of `{"path": "...", "methods": [...]}` entries defining the proxy's HTTP surface |
-| `CODEMIE_MIN_CLI_VERSION`  | string     | `"0.0.47"`        | Minimum CodeMie CLI version accepted for proxy requests; older versions are rejected  |
-
 ---
 
 ## Agent & Workflow Configuration
@@ -929,38 +913,33 @@ Control AI agent behavior, workflow execution limits, and parallel processing.
 
 ### AI Agent Settings
 
-| Parameter                                 | Type         | Default                 | Description                                                                          |
-| ----------------------------------------- | ------------ | ----------------------- | ------------------------------------------------------------------------------------ |
-| `AI_AGENT_RECURSION_LIMIT`                | integer      | `150`                   | Max agent reasoning steps to prevent infinite loops                                  |
-| `ENABLE_LANGGRAPH_AITOOLS_AGENT`          | boolean      | `true`                  | Use LangGraph-based agent for advanced tool orchestration                            |
-| `DISABLE_PARALLEL_TOOLS_CALLING_MODELS`   | list[string] | `["gpt-4o", "gpt-4.1"]` | Models incompatible with parallel tool execution                                     |
-| `AI_AGENT_CONVERSATION_REPLAY_V2_ENABLED` | boolean      | `true`                  | Enable v2 conversation replay that summarizes older tool turns to reduce token usage |
+| Parameter                                 | Type    | Default | Description                                                                          |
+| ----------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------ |
+| `AI_AGENT_RECURSION_LIMIT`                | integer | `150`   | Max agent reasoning steps to prevent infinite loops                                  |
+| `ENABLE_LANGGRAPH_AITOOLS_AGENT`          | boolean | `true`  | Use LangGraph-based agent for advanced tool orchestration                            |
+| `AI_AGENT_CONVERSATION_REPLAY_V2_ENABLED` | boolean | `true`  | Enable v2 conversation replay that summarizes older tool turns to reduce token usage |
 
 ### AI Agent History Replay
 
 Control how previous conversation turns are replayed to the agent to balance context fidelity with token usage.
 
-| Parameter                                           | Type    | Default | Description                                                                      |
-| --------------------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------- |
-| `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_TURNS`           | integer | `4`     | Number of most-recent tool turns to include in full (uncompressed) form          |
-| `AI_AGENT_HISTORY_REPLAY_SUMMARIZED_TOOL_TURNS`     | integer | `6`     | Number of older tool turns to include in summarized form before they are dropped |
-| `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_RESULT_LIMIT`    | integer | `2500`  | Max characters of a single tool result kept in full form during replay           |
-| `AI_AGENT_HISTORY_REPLAY_SUMMARY_TOOL_RESULT_LIMIT` | integer | `600`   | Max characters of a single tool result kept in summarized form during replay     |
-| `AI_AGENT_HISTORY_REPLAY_LOG_CONTENT_LIMIT`         | integer | `800`   | Max characters of log/print content per tool turn included during replay         |
+| Parameter                                       | Type    | Default | Description                                                                      |
+| ----------------------------------------------- | ------- | ------- | -------------------------------------------------------------------------------- |
+| `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_TURNS`       | integer | `4`     | Number of most-recent tool turns to include in full (uncompressed) form          |
+| `AI_AGENT_HISTORY_REPLAY_SUMMARIZED_TOOL_TURNS` | integer | `6`     | Number of older tool turns to include in summarized form before they are dropped |
 
 ### AI Agent History Compaction
 
 Automatically compress long conversation histories when token usage exceeds a threshold, preserving recent context while summarizing older turns.
 
-| Parameter                                       | Type    | Default                              | Description                                                                                         |
-| ----------------------------------------------- | ------- | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `AI_AGENT_HISTORY_COMPACTION_ENABLED`           | boolean | `false`                              | Enable automatic history compaction when conversation exceeds the token limit                       |
-| `AI_AGENT_HISTORY_COMPACTION_TOKEN_LIMIT`       | integer | `120000`                             | Token count that triggers compaction; history is summarized when this threshold is reached          |
-| `AI_AGENT_HISTORY_COMPACTION_TRIGGER_RATE`      | float   | `0.8`                                | Fraction of `TOKEN_LIMIT` at which compaction is triggered (e.g., `0.8` = trigger at 96000 tokens)  |
-| `AI_AGENT_HISTORY_COMPACTION_TARGET_RATE`       | float   | `0.5`                                | Fraction of `TOKEN_LIMIT` to reduce history to after compaction (e.g., `0.5` = target 60000 tokens) |
-| `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`                                  | Number of most-recent conversation groups to preserve verbatim during compaction                    |
-| `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`                              | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
-| `AI_AGENT_HISTORY_COMPACTION_SUMMARY_PREFIX`    | string  | `"[Compacted conversation summary]"` | Prefix prepended to compacted history summaries to mark them as synthetic                           |
+| Parameter                                       | Type    | Default  | Description                                                                                         |
+| ----------------------------------------------- | ------- | -------- | --------------------------------------------------------------------------------------------------- |
+| `AI_AGENT_HISTORY_COMPACTION_ENABLED`           | boolean | `false`  | Enable automatic history compaction when conversation exceeds the token limit                       |
+| `AI_AGENT_HISTORY_COMPACTION_TOKEN_LIMIT`       | integer | `120000` | Token count that triggers compaction; history is summarized when this threshold is reached          |
+| `AI_AGENT_HISTORY_COMPACTION_TRIGGER_RATE`      | float   | `0.8`    | Fraction of `TOKEN_LIMIT` at which compaction is triggered (e.g., `0.8` = trigger at 96000 tokens)  |
+| `AI_AGENT_HISTORY_COMPACTION_TARGET_RATE`       | float   | `0.5`    | Fraction of `TOKEN_LIMIT` to reduce history to after compaction (e.g., `0.5` = target 60000 tokens) |
+| `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`      | Number of most-recent conversation groups to preserve verbatim during compaction                    |
+| `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`  | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
 
 ### Workflow Configuration
 
@@ -1064,16 +1043,6 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 - `MEDIUM` (2): More restrictive, blocks potentially dangerous operations
 - `HIGH` (3): Very restrictive, only allows safe operations
   :::
-
-### Dynamic Tool Mappings
-
-Define which tools are treated as web search or code interpreter tools for dynamic tool selection.
-
-| Parameter                        | Type         | Default                                                                     | Description                                                                            |
-| -------------------------------- | ------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `DYNAMIC_WEB_SEARCH_TOOLS`       | list[string] | `["google_search_tool_json", "tavily_search_results_json", "web_scrapper"]` | Tool names classified as web search tools for dynamic selection                        |
-| `DYNAMIC_CODE_INTERPRETER_TOOLS` | list[string] | `["code_executor"]`                                                         | Tool names classified as code interpreter tools for dynamic selection                  |
-| `HTTP_BLOCKED_TOOLS`             | list[string] | `["code_executor"]`                                                         | Tool names blocked from direct HTTP invocation via `POST /v1/tools/{tool_name}/invoke` |
 
 ### File Datasource Multiprocessing
 
@@ -1202,16 +1171,14 @@ increasing the interval (e.g., 30-60 minutes) for production use to minimize res
 
 Automated background job that runs LLM-based analysis on completed conversations to extract insights, patterns, and quality signals.
 
-| Parameter                               | Type         | Default                           | Description                                                                                   |
-| --------------------------------------- | ------------ | --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `CONVERSATION_ANALYSIS_ENABLED`         | boolean      | `false`                           | Enable the nightly conversation analysis background job                                       |
-| `CONVERSATION_ANALYSIS_SCHEDULE`        | string       | `"0 0 * * *"`                     | Cron schedule (UTC) for the analysis job; defaults to midnight daily                          |
-| `CONVERSATION_ANALYSIS_START_DATE`      | string       | `"2025-12-01"`                    | Only analyze conversations created on or after this date (ISO format)                         |
-| `CONVERSATION_ANALYSIS_LOOKBACK_DAYS`   | integer      | `1`                               | Analyze conversations that are at least this many days old (avoids in-progress conversations) |
-| `CONVERSATION_ANALYSIS_BATCH_SIZE`      | integer      | `20`                              | Number of conversations processed per batch per pod                                           |
-| `CONVERSATION_ANALYSIS_MAX_RETRIES`     | integer      | `3`                               | Max retry attempts for failed conversation analyses before marking as permanently failed      |
-| `CONVERSATION_ANALYSIS_LLM_MODEL`       | string       | `"gemini-3-flash"`                | LLM model used for conversation analysis; should be a fast, cost-efficient model              |
-| `CONVERSATION_ANALYSIS_PROJECTS_FILTER` | list[string] | `["demo", "codemie", "epm-cdme"]` | Project names to include in analysis; empty list includes all projects                        |
+| Parameter                             | Type    | Default            | Description                                                                                   |
+| ------------------------------------- | ------- | ------------------ | --------------------------------------------------------------------------------------------- |
+| `CONVERSATION_ANALYSIS_ENABLED`       | boolean | `false`            | Enable the nightly conversation analysis background job                                       |
+| `CONVERSATION_ANALYSIS_SCHEDULE`      | string  | `"0 0 * * *"`      | Cron schedule (UTC) for the analysis job; defaults to midnight daily                          |
+| `CONVERSATION_ANALYSIS_LOOKBACK_DAYS` | integer | `1`                | Analyze conversations that are at least this many days old (avoids in-progress conversations) |
+| `CONVERSATION_ANALYSIS_BATCH_SIZE`    | integer | `20`               | Number of conversations processed per batch per pod                                           |
+| `CONVERSATION_ANALYSIS_MAX_RETRIES`   | integer | `3`                | Max retry attempts for failed conversation analyses before marking as permanently failed      |
+| `CONVERSATION_ANALYSIS_LLM_MODEL`     | string  | `"gemini-3-flash"` | LLM model used for conversation analysis; should be a fast, cost-efficient model              |
 
 ---
 
@@ -1232,10 +1199,9 @@ Nightly background job that identifies datasources with no recent usage or updat
 
 ## Analytics
 
-| Parameter                     | Type    | Default        | Description                                                                                                     |
-| ----------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
-| `ANALYTICS_DEFAULT_PAGE_SIZE` | integer | `20`           | Default number of rows returned per page by analytics API endpoints                                             |
-| `CLI_METRICS_CUTOFF_DATE`     | string  | `"2026-02-07"` | Earliest date used for CLI metrics data quality filtering; records before this date are excluded from analytics |
+| Parameter                     | Type    | Default | Description                                                         |
+| ----------------------------- | ------- | ------- | ------------------------------------------------------------------- |
+| `ANALYTICS_DEFAULT_PAGE_SIZE` | integer | `20`    | Default number of rows returned per page by analytics API endpoints |
 
 ---
 
