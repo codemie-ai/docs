@@ -82,6 +82,10 @@ For more advanced use cases, you can create Scheduler integrations that trigger 
 
 ![Scheduler integration](./images/image45.png)
 
+:::tip
+The enabled/disabled state of each scheduler integration is visible directly in the Integrations list — no need to open individual records to check whether a scheduler is active. See [Scheduler State in the Integrations List](../integrations/index.md#scheduler-state-in-the-integrations-list) for details.
+:::
+
 ### 3. Set Up Authentication & Scheduling
 
 - **Valid Cron Expression**: Enter your cron schedule (e.g., `0 0 * * MON-FRI` for daily at midnight, weekdays only)

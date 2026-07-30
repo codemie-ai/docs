@@ -143,6 +143,18 @@ For Datasource you can create user integration from data source page:
 
 4. After saving, the new integration appears in the existing list without requiring a page reload or navigation away.
 
+## Scheduler State in the Integrations List
+
+For integrations with **Credential Type: Scheduler**, the enabled/disabled state is shown directly in the integration list — no need to open individual records to check whether a scheduler is active.
+
+Each scheduler entry in the list displays a visible state indicator (enabled or disabled). This makes it possible to scan all scheduled integrations at a glance and identify which ones are currently running without navigating into the record.
+
+:::tip
+To see all scheduler integrations in one view, use the **TYPE** filter and select **Scheduler**. The state of each scheduler is immediately visible in the filtered list.
+:::
+
+To change the state of a scheduler, open the record and toggle the **Is Enabled** field.
+
 ## Filter Integrations
 
 As you work with AI/Run CodeMie, the number of integrations will increase. To simplify navigation between integrations, use the filters. You can filter integrations by:
