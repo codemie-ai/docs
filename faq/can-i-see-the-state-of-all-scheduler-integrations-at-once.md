@@ -6,7 +6,7 @@ Yes. Use the **TYPE** filter on the Integrations page to show only scheduler int
 2. In the filter bar, set **TYPE** to **Scheduler**.
 3. The filtered list shows all scheduler integrations with their enabled/disabled state visible for each entry.
 
-This makes it possible to audit all scheduled automations across the project without opening each one individually.
+This makes it possible to audit all scheduled integrations across the project without opening each one individually.
 
 ## Sources
 
