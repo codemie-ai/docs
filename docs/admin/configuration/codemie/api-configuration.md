@@ -193,9 +193,9 @@ Additional AI services for multimodal capabilities beyond text generation.
 
 Enables AI-generated images for visual content creation within assistants.
 
-| Parameter                | Type   | Default                          | Description                        |
-| ------------------------ | ------ | -------------------------------- | ---------------------------------- |
-| `IMAGE_GENERATION_MODEL` | string | `gemini-3.1-flash-image-preview` | Model used for AI image generation |
+| Parameter                | Type   | Default                  | Description                        |
+| ------------------------ | ------ | ------------------------ | ---------------------------------- |
+| `IMAGE_GENERATION_MODEL` | string | `gemini-3.1-flash-image` | Model used for AI image generation |
 
 ### Speech-to-Text (STT)
 
