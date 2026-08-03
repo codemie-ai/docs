@@ -90,6 +90,13 @@ The enabled/disabled state of each scheduler integration is visible directly in 
 
 - **Valid Cron Expression**: Enter your cron schedule (e.g., `0 0 * * MON-FRI` for daily at midnight, weekdays only)
 - Use the "Need help?" link for cron expression guidance
+- **Timezone**: Select the timezone in which the cron expression is interpreted (e.g., `Europe/Warsaw`, `UTC`). A default timezone is preselected and can be changed before saving.
+
+![Scheduler integration form with timezone selection](./images/scheduler-integration-timezone.png)
+
+:::info
+The cron schedule is evaluated in the selected timezone. For example, `12 11 * * *` with `Europe/Warsaw` fires at 11:12 Warsaw local time each day. If you change the timezone after the integration is created, the schedule shifts accordingly.
+:::
 
 ### 4. Configure Resource Settings
 
