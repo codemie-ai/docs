@@ -162,7 +162,6 @@ code_loader:
     common:
       - .ico
       - .mng
-      - .pdf
       - .bpm
       - .exe
       - .dll
@@ -179,12 +178,13 @@ code_loader:
       - .webm
       - .zip
       - .xls
-      - .xlsx
       - .lock
     docs_only:
       - .md
       - .toml
       - .json
+      - .pdf
+      - .xlsx
     code_only: []
 ```
 
@@ -222,15 +222,17 @@ Processes Confluence pages and spaces.
 
 ```yaml
 confluence_loader:
-  loader_max_pages: 1000            # Maximum pages to load
-  loader_pages_per_request: 20      # Pages per API request
-  loader_batch_size: 50             # Pages per processing batch
+  loader_max_pages: 1000            # Number of pages lazy_load holds in memory at once before yielding and moving to the next chunk
+  loader_pages_per_request: 20      # Number of pages returned by a single Confluence API HTTP request (the ?limit= param)
+  loader_batch_size: 50             # Number of Documents passed to one _process_batch call (splitting + embedding + ES write)
   loader_timeout: 180               # Request timeout (seconds)
 ```
 
 **Key Parameters:**
 
-- `loader_max_pages` - Set limits for large Confluence instances
+- `loader_max_pages` - Controls the in-memory page buffer for lazy loading; set lower for memory-constrained environments
+- `loader_pages_per_request` - Maps directly to the `?limit=` parameter of the Confluence API; lower values reduce individual request size
+- `loader_batch_size` - Number of documents sent through splitting, embedding, and Elasticsearch write in a single batch
 - `loader_timeout` - Increase for slow networks or large pages
 
 ### File Loader
@@ -243,6 +245,84 @@ file_loader:
   chunk_overlap: 100            # Overlap between chunks
 ```
 
+### Azure DevOps Wiki Loader
+
+Processes Azure DevOps wiki pages.
+
+```yaml
+azure_devops_wiki_loader:
+  chunk_size: 1000              # Characters per chunk
+  chunk_overlap: 50             # Overlap between chunks
+  loader_batch_size: 50         # Documents per processing batch
+```
+
+### Azure DevOps Work Item Loader
+
+Processes Azure DevOps work items, optionally including comments and attachments.
+
+```yaml
+azure_devops_work_item_loader:
+  chunk_size: 1000              # Characters per chunk
+  chunk_overlap: 50             # Overlap between chunks
+  loader_batch_size: 50         # Work items per processing batch
+  index_comments: true          # Index work item comments
+  index_attachments: true       # Index work item attachments
+```
+
+**Key Parameters:**
+
+- `index_comments` - Enable to include work item comment threads in the index
+- `index_attachments` - Enable to include attached files in the index
+
+### Xray Loader
+
+Processes Xray test management data from Jira.
+
+```yaml
+xray_loader:
+  chunk_size: 1000              # Characters per chunk
+  chunk_overlap: 50             # Overlap between chunks
+  loader_batch_size: 50         # Documents per processing batch
+```
+
+### SharePoint Loader
+
+Processes SharePoint documents and libraries via the Microsoft Graph API.
+
+```yaml
+sharepoint_loader:
+  loader_batch_size: 20                        # Documents per processing batch
+  loader_timeout: 300                          # Request timeout (seconds)
+  chunk_size: 2000                             # Characters per chunk
+  chunk_overlap: 200                           # Overlap between chunks
+  max_file_size_mb: 50                         # Maximum file size to process (MB)
+  max_retries: 3                               # Retry attempts for failed requests
+  graph_api_version: "v1.0"                   # Microsoft Graph API version
+  graph_base_url: "https://graph.microsoft.com" # Microsoft Graph API base URL
+```
+
+**Key Parameters:**
+
+- `max_file_size_mb` - Files exceeding this limit are skipped during indexing
+- `graph_api_version` - Update if a newer stable Graph API version is required
+- `max_retries` - Increase for unstable network connections to SharePoint
+
+### SVN Loader
+
+Processes Subversion repositories.
+
+```yaml
+svn_loader:
+  loader_batch_size: 250              # Documents per processing batch
+  checkout_timeout_seconds: 300       # Timeout for SVN checkout operations
+  max_file_size_kb: 5000              # Maximum file size to process (KB)
+```
+
+**Key Parameters:**
+
+- `checkout_timeout_seconds` - Increase for large repositories or slow SVN servers
+- `max_file_size_kb` - Files exceeding this limit are skipped during indexing
+
 ## Storage Configuration
 
 Configure how processed data is stored and indexed in Elasticsearch.
@@ -251,18 +331,23 @@ Configure how processed data is stored and indexed in Elasticsearch.
 storage:
   embeddings_max_docs_count: 20                         # Max documents for embedding context
   indexing_bulk_max_chunk_bytes: 104857600              # Max bulk request size (100 MB)
-  indexing_max_retries: 10                              # Retry attempts for failed indexing
-  indexing_error_retry_wait_min_seconds: 10             # Minimum retry wait time
-  indexing_error_retry_wait_max_seconds: 600            # Maximum retry wait time
+  indexing_max_retries: 2                               # Retry attempts for failed indexing
+  indexing_error_retry_wait_min_seconds: 10             # Minimum retry wait time (seconds)
+  indexing_error_retry_wait_max_seconds: 120            # Maximum retry wait time (seconds)
   indexing_threads_count: 20                            # Parallel indexing threads
-  processed_documents_threshold: 1000                   # Max processed documents in Elasticsearch
+  processed_documents_threshold: 1000                   # Max processed documents stored in Elasticsearch
+  stale_indexing_threshold_seconds: 300                 # Time after which an indexing task is considered stale
+  stale_indexing_resume_batch_size: 5                   # Number of stale tasks resumed per cycle
+  indexing_heartbeat_interval: 10                       # Frequency (in completed docs) for committing indexing stats
 ```
 
 **Key Parameters:**
 
 - `indexing_threads_count` - Increase for faster indexing on high-performance clusters
 - `indexing_bulk_max_chunk_bytes` - Adjust based on Elasticsearch cluster capacity
-- `indexing_max_retries` - Higher values improve reliability for transient failures
+- `indexing_max_retries` - Worst-case retry duration equals `indexing_max_retries × indexing_error_retry_wait_max_seconds`; keep below `stale_indexing_threshold_seconds`
+- `stale_indexing_threshold_seconds` - Tasks that exceed this duration without a heartbeat are treated as stale and resumed
+- `indexing_heartbeat_interval` - Lower values keep `update_date` fresher and reduce false stale detection
 
 ## Complete Configuration Example
 
@@ -352,7 +437,6 @@ extraObjects:
               common:
                 - .ico
                 - .mng
-                - .pdf
                 - .bpm
                 - .exe
                 - .dll
@@ -369,12 +453,13 @@ extraObjects:
                 - .webm
                 - .zip
                 - .xls
-                - .xlsx
                 - .lock
               docs_only:
                 - .md
                 - .toml
                 - .json
+                - .pdf
+                - .xlsx
               code_only: []
 
           jira_loader:
@@ -396,14 +481,49 @@ extraObjects:
             chunk_size: 1500
             chunk_overlap: 100
 
+          azure_devops_wiki_loader:
+            chunk_size: 1000
+            chunk_overlap: 50
+            loader_batch_size: 50
+
+          azure_devops_work_item_loader:
+            chunk_size: 1000
+            chunk_overlap: 50
+            loader_batch_size: 50
+            index_comments: true
+            index_attachments: true
+
+          xray_loader:
+            chunk_size: 1000
+            chunk_overlap: 50
+            loader_batch_size: 50
+
+          sharepoint_loader:
+            loader_batch_size: 20
+            loader_timeout: 300
+            chunk_size: 2000
+            chunk_overlap: 200
+            max_file_size_mb: 50
+            max_retries: 3
+            graph_api_version: "v1.0"
+            graph_base_url: "https://graph.microsoft.com"
+
+          svn_loader:
+            loader_batch_size: 250
+            checkout_timeout_seconds: 300
+            max_file_size_kb: 5000
+
         storage:
           embeddings_max_docs_count: 20
-          indexing_bulk_max_chunk_bytes: 104857600  # 100 MB
-          indexing_max_retries: 10
+          indexing_bulk_max_chunk_bytes: 104857600
+          indexing_max_retries: 2
           indexing_error_retry_wait_min_seconds: 10
-          indexing_error_retry_wait_max_seconds: 600
+          indexing_error_retry_wait_max_seconds: 120
           indexing_threads_count: 20
           processed_documents_threshold: 1000
+          stale_indexing_threshold_seconds: 300
+          stale_indexing_resume_batch_size: 5
+          indexing_heartbeat_interval: 10
 ```
 
 </details>
