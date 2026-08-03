@@ -161,8 +161,15 @@ redis:
     size: "2Gi"         # Adjust as needed
 
 s3:
-  persistence:
-    size: "100Gi"         # Adjust as needed
+  deploy: false
+  storageProvider: "s3"       # AWS S3 (default) — see commented Azure/GCP options in values.yaml
+  bucket: "your-bucket-name"    # your bucket name
+  region: "us-east-1"
+  endpoint: ""
+  accessKeyId:
+    secretKeyRef: { name: "langfuse-object-storage", key: "access-key-id" }
+  secretAccessKey:
+    secretKeyRef: { name: "langfuse-object-storage", key: "secret-access-key" }
 
 # Configure data retention policies for langfuse (optional):
 retention:
@@ -242,7 +249,91 @@ If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/v
 
 </details>
 
-## Step 4: Configure Data Retention (Optional)
+## Step 4: Configure Object Storage
+
+Langfuse stores event, batch-export, and media uploads in your own cloud object storage — AWS S3, Azure Blob Storage, or Google Cloud Storage. Set your provider in `langfuse/values.yaml`'s `s3:` block; the AWS block is active by default, with commented Azure and GCS alternatives immediately below it.
+
+### AWS S3 — IRSA (recommended for EKS)
+
+On EKS, use IRSA instead of static credentials. Annotate the Langfuse service account with your IAM role ARN in `values.yaml`:
+
+```yaml
+langfuse:
+  langfuse:
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: "arn:aws:iam::<account-id>:role/<role-name>"
+```
+
+Leave `s3.accessKeyId` and `s3.secretAccessKey` unset — the AWS SDK picks up credentials from the pod's IAM role automatically. The `langfuse-object-storage` secret is not needed for this path.
+
+### Google Cloud Storage — Workload Identity (recommended for GKE)
+
+On GKE, use Workload Identity instead of static credentials. Annotate the Langfuse service account with your GCP service account in `values.yaml`:
+
+```yaml
+langfuse:
+  langfuse:
+    serviceAccount:
+      annotations:
+        iam.gke.io/gcp-service-account: <gsa-name>@<project>.iam.gserviceaccount.com
+```
+
+Set `gcs.credentials: {}` (empty) in the `s3:` block — Langfuse's GCS client falls back to Application Default Credentials automatically. The `langfuse-object-storage` secret is not needed for this path.
+
+```yaml
+s3:
+  deploy: false
+  storageProvider: "gcs"
+  bucket: "your-bucket-name"
+  gcs:
+    credentials: {}   # empty → uses Workload Identity / Application Default Credentials (ADC)
+```
+
+The GCP service account must have the `storage.objectAdmin` role (or equivalent) on the bucket.
+
+### Azure Blob Storage — static credentials
+
+Credentials are read from the `langfuse-object-storage` secret:
+
+- `access-key-id` — Azure Storage Account name
+- `secret-access-key` — Azure Storage Account key
+
+`deploy-langfuse.sh` will prompt to create this secret if it does not exist (choose to skip only if using IRSA or GCS Workload Identity).
+
+For manual deployment:
+
+```bash
+kubectl create secret generic langfuse-object-storage \
+--namespace langfuse \
+--from-literal=access-key-id="your_access_key_id" \
+--from-literal=secret-access-key="your_secret_access_key" \
+--type=Opaque
+```
+
+### GCS — static credentials
+
+If not using GKE Workload Identity, provide a GCP service-account JSON key via the `langfuse-object-storage` secret and reference it in `values.yaml`:
+
+```yaml
+s3:
+  storageProvider: "gcs"
+  bucket: "your-bucket-name"
+  gcs:
+    credentials:
+      secretKeyRef: { name: "langfuse-object-storage", key: "secret-access-key" }
+```
+
+Create the secret with the JSON key content:
+
+```bash
+kubectl create secret generic langfuse-object-storage \
+--namespace langfuse \
+--from-literal=secret-access-key="$(cat path/to/service-account-key.json)" \
+--type=Opaque
+```
+
+## Step 5: Configure Data Retention (Optional)
 
 To prevent disk overflow, configure [TTL](https://clickhouse.com/docs/guides/developer/ttl) policies in `values.yaml` to automatically remove old data. Default retention: 90 days.
 

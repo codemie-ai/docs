@@ -85,6 +85,17 @@ PostgreSQL admin password (input hidden):
 
 Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`).
 
+**3. Object storage credentials** — the script asks whether to skip creating the `langfuse-object-storage` secret:
+
+```
+Skip object storage secret creation? (y to skip for IRSA / GCS Workload Identity) [y/N]:
+```
+
+- **AWS EKS with IRSA** (recommended): The pod's IAM role grants S3 access directly — no Kubernetes secret is needed. Answer `y` to skip secret creation. Verify that `langfuse.langfuse.serviceAccount.annotations` in `values.yaml` contains the correct IRSA role ARN (output `LANGFUSE_AWS_ROLE_ARN` from `deployment_outputs.env`).
+- **GKE with Workload Identity** (recommended for GCS): The pod's GCP service account grants GCS access via Workload Identity — no Kubernetes secret is needed. Answer `y` to skip secret creation. Verify that `langfuse.langfuse.serviceAccount.annotations` in `values.yaml` contains the correct `iam.gke.io/gcp-service-account` annotation and `s3.gcs.credentials: {}` is set.
+- **Azure Blob Storage**: Azure does not support pod-level identity federation for Langfuse, so static credentials are required. Answer `N` to create the secret. When prompted, enter the Storage Account name as the access key ID and the Storage Account primary key as the secret access key.
+- **GCS (static credentials)**: When running outside GKE or without Workload Identity, a service-account JSON key is required. Answer `N` to create the secret. Leave the access key ID blank; paste the full GCP service-account JSON as a single line when prompted for the secret access key.
+
 ### Help
 
 ```bash

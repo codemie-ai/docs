@@ -66,11 +66,14 @@ kubectl create secret generic langfuse-clickhouse \
 --from-literal=admin-password="$(openssl rand -hex 16)" \
 --type=Opaque
 
-# MinIO Secret
-kubectl create secret generic langfuse-s3 \
+# Object Storage Secret (S3 / Azure Blob / GCS static creds)
+# Skip this for AWS IRSA or GCS Workload Identity — credentials come from the pod's IAM/GCP service account.
+# Azure: access-key-id = Storage Account name, secret-access-key = Storage Account key
+# GCS (static credentials): secret-access-key = GCP service-account JSON key content
+kubectl create secret generic langfuse-object-storage \
 --namespace langfuse \
---from-literal=root-user="minio" \
---from-literal=root-password="$(openssl rand -hex 16)" \
+--from-literal=access-key-id="your_access_key_id" \
+--from-literal=secret-access-key="your_secret_access_key" \
 --type=Opaque
 
 # Redis (Valkey) Secret
