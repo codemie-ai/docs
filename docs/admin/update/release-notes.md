@@ -26,7 +26,30 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **[BREAKING] Frontend environment variables removed from `codemie-ui`** — the following variables have been removed from the `codemie-ui` Helm chart and runtime config and replaced by backend-side mechanisms.
+
+   | Removed variable             | Default | Replaced by                                            |
+   | ---------------------------- | ------- | ------------------------------------------------------ |
+   | `viteEnableBudgetManagement` | `false` | `features:budgetManagement` in `customer-config.yaml`  |
+   | `VITE_SHOW_ALL_PROJECTS`     | `false` | `features:showAllProjects` in `customer-config.yaml`   |
+   | `viteEnableUserManagement`   | `false` | Computed from `ENABLE_USER_MANAGEMENT` backend env var |
+   | `VITE_IS_ENTERPRISE_EDITION` | `false` | Computed from enterprise package auto-detection        |
+   | `viteIdpProvider`            | —       | Computed from `IDP_PROVIDER` backend env var           |
+   | `viteMcpAuthOrigin`          | —       | Computed from `CALLBACK_API_BASE_URL` backend env var  |
+   | `viteBannerMessage`          | —       | `bannerMessage` entry in `customer-config.yaml`        |
+
+   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for full deployment instructions.
+
+2. **New YAML-configurable entries added to `customer-config.yaml`**:
+
+   | New entry               | Description                                            |
+   | ----------------------- | ------------------------------------------------------ |
+   | `mcpAuthTimeoutSeconds` | MCP authentication timeout in seconds (default: `60`)  |
+   | `bannerMessage`         | Text content of the banner message (default: disabled) |
+   | `bannerLinkLabel`       | Label for the banner link (default: disabled)          |
+   | `bannerLinkRoute`       | Route/URL for the banner link (default: disabled)      |
+
+   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for configuration details.
 
 </details>
 

@@ -15,11 +15,13 @@ extraEnv:
     value: '3'
 ```
 
-**`codemie-ui` — `values.yaml`:**
+**`customer-config.yaml` — feature flags:**
 
 ```yaml
-viteEnableUserManagement: true
-viteEnableBudgetManagement: true
+components:
+  - id: "features:budgetManagement"
+    settings:
+      enabled: true
 ```
 
 After applying both changes, the **Projects management** and **Users management** tabs

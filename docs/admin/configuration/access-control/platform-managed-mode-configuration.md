@@ -24,17 +24,12 @@ For a comparison of both modes, see the
 
 ## Prerequisites
 
-- Access to the Kubernetes cluster and Helm values file of AI/Run CodeMie Backend and UI
+- Access to the Kubernetes cluster and the Helm values file of AI/Run CodeMie Backend (`codemie-api`)
 - If migrating from an existing Keycloak deployment: Keycloak service account client with `realm-management` roles in the target realm (see [Create Keycloak service account client](#create-keycloak-service-account-client))
 
 ---
 
 ## Step 1: Configure Helm Values
-
-:::warning Both components must be updated
-The AI/Run CodeMie backend and the UI must be configured consistently. Enabling only one of them results
-in either missing UI controls or API errors.
-:::
 
 ### AI/Run CodeMie Backend
 
@@ -56,26 +51,17 @@ UI instead of being read from Keycloak JWT claims.
 assigned to. Super Admins are always exempt from this limit. Adjust the value to match
 your organisation's policy.
 
-Apply the changes to the deployment.
-
-### AI/Run CodeMie UI
-
-The UI must be told that Platform-managed mode is active so it shows the in-app
-**Users management** and **Projects management** tabs under **Settings → Administration**.
-
-In the `codemie-ui` Helm chart `values.yaml`, set:
+To enable budget tracking, add the following entry to `customer-config.yaml`:
 
 ```yaml
-viteEnableUserManagement: true
-viteEnableBudgetManagement: true
+components:
+  - id: "features:budgetManagement"
+    settings:
+      enabled: true
 ```
 
-`viteEnableUserManagement` tells the UI that Platform-managed mode is active. When set to
-`true`, the **Users management** and **Projects management** tabs appear under
-**Settings → Administration**.
-
-`viteEnableBudgetManagement` enables budget columns and the budget management section on
-project detail pages. Set it to `false` if your deployment does not use budget tracking.
+`features:budgetManagement` enables budget columns and the budget management section on project
+detail pages. Set to `false` if the deployment does not use budget tracking.
 
 Apply the changes to the deployment.
 
@@ -224,7 +210,7 @@ changes during the upgrade and what action, if any, is required from you.
 | Area                               | What happens                                                                                                            | Action required                                                                                                                                                                 |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Database schema                    | New user management tables (`users`, `user_projects`, and related tables) are created automatically when the pod starts | None — Alembic migrations run on startup                                                                                                                                        |
-| Platform-managed mode activation   | Off by default in 2.19.0 (`ENABLE_USER_MANAGEMENT=false`)                                                               | Add the Helm values from [Step 1](#step-1-configure-helm-values) before or during the upgrade if you want to enable it                                                          |
+| Platform-managed mode activation   | Off by default in 2.19.0 (`ENABLE_USER_MANAGEMENT=false`)                                                               | Add the backend environment variable and feature flags from [Step 1](#step-1-configure-helm-values) before or during the upgrade if you want to enable it                       |
 | Existing Keycloak user assignments | Not migrated automatically                                                                                              | Follow [Step 2](#step-2-migrate-existing-keycloak-users-existing-deployments-only) on first startup if you use `IDP_PROVIDER=keycloak` and want to preserve project assignments |
 
 ### How to upgrade
