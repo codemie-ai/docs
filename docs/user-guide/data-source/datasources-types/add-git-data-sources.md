@@ -40,19 +40,15 @@ Use the **Files Filter** field to include or exclude specific formats. For examp
 
 ## Prerequisites
 
-:::note Required Integration
-This data source requires you to have at least one Git integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines.
+:::info Git Integration
+A Git integration is required only for **private repositories**. For **public repositories**, no integration is needed — AI/Run CodeMie verifies public access directly without credentials.
 :::
 
-Before adding a Git data source, ensure you have:
+Before adding a Git data source, ensure:
 
-- Configured Git integration (GitHub, GitLab, or Bitbucket)
-- Access to the repository you want to index
-- Appropriate permissions to access repository content
-
-:::tip Integration Setup
-If you haven't configured a Git integration yet, follow the [Integrations Guide](../../tools_integrations/integrations/index.md) first.
-:::
+- For **private repositories**: a Git integration is configured (GitHub, GitLab, or Bitbucket). See [Integrations Guide](../../tools_integrations/integrations/index.md).
+- The repository is accessible — either publicly available, or accessible via a configured integration.
+- Appropriate permissions are in place to read the repository content.
 
 ## Adding a Git Data Source
 
@@ -152,7 +148,7 @@ Always use stable branches (e.g., `main`, `master`, `develop`) for indexing. Fea
   :::
 
 - Model Used for Embeddings: Select model Used for Embeddings.
-- Select integration for Git: Choose integration.
+- Select integration for Git: Choose the Git integration for repository access. This field is **optional for public repositories** — when left empty, AI/Run CodeMie verifies public accessibility directly. For private repositories, an integration is required.
 
 #### 5. Configure Reindex Schedule (Optional)
 
@@ -239,6 +235,16 @@ Now your Git repository is configured as a data source and ready to enhance your
 - Check repository visibility settings (public/private)
 - Update integration credentials
 - Request access from repository owner
+
+#### Repository Not Publicly Accessible
+
+**Cause**: No integration was selected and the repository could not be accessed publicly.
+
+**Solutions:**
+
+- Verify the repository URL is correct
+- Check that the repository visibility is set to **Public** on the Git hosting platform (GitHub, GitLab, or Bitbucket)
+- If the repository is private, select a Git integration in the data source form
 
 ## Using Git Data Source in Assistants
 
