@@ -250,6 +250,7 @@ words:
   # codemie terms
   - kata
   - katas
+  - gvisor
   - codemieai
   # Other
   - LFPDPPP
@@ -325,6 +326,20 @@ words:
   - APIURL
   - DEPLOYMENTNAME
   - REQS
+  - firstname
+  - lastname
+  - HTTPONLY
+  - STARTTLS
+  - fullmatch
+  - fastapi
+  - sqlalchemy
+  - httpx
+  - Arize
+  - healthcheck
+  - Pyroscope
+  - PYROSCOPE
+  - ONCPU
+  - LOOKBACK
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
