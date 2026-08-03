@@ -24,9 +24,6 @@ The diagram below depicts the Langfuse LLM Observability Platform deployed on Ku
 | ClickHouse x 3 Replicas | 2 / 0.3               | 8Gi / 8Gi                 | 100Gi PVC       |
 | Zookeeper x 3 Replicas  | 2 / 0.1               | 4Gi / 4Gi                 | 1Gi             |
 | Redis                   | 1 / 0.1               | 1.5Gi / 512Mi             | 2Gi             |
-| Object Storage[^2]      | —                     | —                         | —               |
 | **Total**               | **~9 / ~2.5 vCPU**    | **~45.5 / ~32.5 GiB RAM** | **~300 Gi PVC** |
 
 [^1]: Reusing main AI/Run CodeMie PostgreSQL instance
-
-[^2]: External, client-provided bucket (AWS S3, Azure Blob Storage, or Google Cloud Storage)
