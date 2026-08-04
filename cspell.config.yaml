@@ -160,6 +160,7 @@ words:
   - autoscaling
   - localhost
   - hostname
+  - hostnames
   - subdomain
   - subdomains
   - endpoint

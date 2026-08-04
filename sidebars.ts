@@ -323,6 +323,19 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Chrome Extension',
+          link: {
+            type: 'doc',
+            id: 'user-guide/chrome-extension/index',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/chrome-extension/installation',
+            'user-guide/chrome-extension/privacy-policy',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
