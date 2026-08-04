@@ -9,11 +9,6 @@ sidebar_position: 2
 
 # Chrome Extension Privacy Policy
 
-:::warning Pending review — remove this notice before publishing
-This policy is awaiting legal review, and the bracketed placeholders below must be filled in. Do not merge
-this page or submit its URL to the Chrome Web Store until both are done.
-:::
-
 **Last updated: 4 August 2026**
 
 **Applies to:** the EPAM AI/Run CodeMie browser extension for Google Chrome, version 0.3.2 and later.
@@ -25,15 +20,19 @@ stores data, see [Data Processing and Storage Architecture](../../admin/security
 
 ## 1. Who we are
 
-The EPAM AI/Run CodeMie browser extension ("the Extension") is published by **[LEGAL ENTITY NAME]**
-("we", "us").
+The EPAM AI/Run CodeMie browser extension ("the Extension") is published by **EPAM Systems, Inc.**
+("EPAM", "we", "us").
 
 The Extension is a client for the CodeMie platform. It does not operate a backend of its own. All
 server-side processing happens on the CodeMie instance your organization configures — for enterprise
 deployments, that instance is operated by your organization, or by us under your organization's agreement
 with us.
 
-Contact for privacy questions: **[PRIVACY CONTACT EMAIL]**
+In most enterprise deployments your organization is the data controller for the content you send through
+the Extension, and EPAM acts as a processor under the agreement between you. Where that is the case,
+requests about your personal data are handled first by your own organization.
+
+Contact for privacy questions about the Extension: **[AskCodeMie@epam.com](mailto:AskCodeMie@epam.com)**
 
 ## 2. What the Extension does
 
@@ -172,7 +171,8 @@ your CodeMie instance — request deletion through your CodeMie administrator.
 Depending on your jurisdiction, including under the GDPR, you may have the right to access, correct,
 delete, export, or restrict processing of your personal data, and to object to processing. Because most
 server-side data is held by your CodeMie instance, exercise these rights through your organization's
-CodeMie administrator, or by contacting us at **[PRIVACY CONTACT EMAIL]**.
+CodeMie administrator, or by contacting us at
+[AskCodeMie@epam.com](mailto:AskCodeMie@epam.com).
 
 ## 8. Children
 
@@ -182,3 +182,16 @@ The Extension is a workplace tool and is not directed at children under 16.
 
 We will update this page and revise the date above when practices change. Material changes will be
 communicated through the Extension or by your CodeMie administrator.
+
+## 10. Contact
+
+| Purpose                                     | Contact                                             |
+| ------------------------------------------- | --------------------------------------------------- |
+| Privacy questions and data subject requests | [AskCodeMie@epam.com](mailto:AskCodeMie@epam.com)   |
+| General questions about CodeMie             | [AskCodeMie@epam.com](mailto:AskCodeMie@epam.com)   |
+| Product demos and evaluations               | [CodeMieDemo@epam.com](mailto:CodeMieDemo@epam.com) |
+
+If your organization runs its own CodeMie instance, contact your CodeMie administrator first — they
+control the deployment that holds your data.
+
+© 2026 EPAM Systems, Inc.
