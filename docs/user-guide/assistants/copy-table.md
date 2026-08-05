@@ -14,3 +14,5 @@ When an assistant response includes a markdown table, a **Copy** button appears 
 A **"Table copied to clipboard"** confirmation message appears briefly after the copy is complete.
 
 This makes it easy to reuse structured data from assistant responses — for example, pasting a table into a spreadsheet, document, or another tool without requiring manual text selection.
+
+![Copy Table button and toast](./images/copy-table-btn.png)
