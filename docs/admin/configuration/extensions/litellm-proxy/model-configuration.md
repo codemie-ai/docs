@@ -356,6 +356,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.1-pro`](#gemini-31-pro)                 | Gemini 3.1 Pro                         |
 | [`gemini-3.1-flash-image`](#gemini-31-flash-image) | Gemini 3.1 Flash Image (Nano Banana 2) |
 | [`gemini-3.5-flash`](#gemini-35-flash)             | Gemini 3.5 Flash                       |
+| [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -1361,6 +1362,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.5-flash-global
     base_model: gemini-3.5-flash
     label: "Gemini 3.5 Flash"
+```
+
+</details>
+
+#### Gemini 3.6 Flash
+
+<details>
+<summary><strong>Gemini 3.6 Flash</strong></summary>
+
+```yaml
+- model_name: gemini-3.6-flash
+  litellm_params:
+    model: vertex_ai/gemini-3.6-flash
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.6-flash-global
+    base_model: vertex_ai/gemini-3.6-flash
+    label: "Gemini 3.6 Flash"
 ```
 
 </details>
