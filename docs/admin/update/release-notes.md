@@ -13,6 +13,23 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.42.0 {#v2-42-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** August 4, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.42.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ### CodeMie 2.41.0 {#v2-41-0}
 
 <details>
