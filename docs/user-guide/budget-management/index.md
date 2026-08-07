@@ -55,14 +55,14 @@ Category is resolved automatically per request. If a project budget exists for t
 
 ## Budget Parameters
 
-| Parameter        | Required | Description                                                                                       |
-| ---------------- | -------- | ------------------------------------------------------------------------------------------------- |
-| **Name**         | Yes      | Human-readable label for the budget                                                               |
-| **Description**  | No       | Optional note on the budget's purpose                                                             |
-| **Category**     | Yes      | `Platform`, `CLI`, or `Premium Models`                                                            |
-| **Reset period** | Yes      | How often spend counters reset (e.g., `Monthly (30d)`, `Weekly (7d)`)                             |
-| **Soft limit**   | No       | Warning threshold in USD. Requests are not blocked at this threshold, but alerts can be triggered |
-| **Hard limit**   | Yes      | Enforcement cap in USD. Requests are blocked once this amount is reached. Must be `> 0`           |
+| Parameter        | Required | Description                                                                             |
+| ---------------- | -------- | --------------------------------------------------------------------------------------- |
+| **Name**         | Yes      | Human-readable label for the budget                                                     |
+| **Description**  | No       | Optional note on the budget's purpose                                                   |
+| **Category**     | Yes      | `Platform`, `CLI`, or `Premium Models`                                                  |
+| **Reset period** | Yes      | How often spend counters reset (e.g., `Monthly (30d)`, `Weekly (7d)`)                   |
+| **Soft limit**   | No       | Warning threshold in USD. Requests are not blocked at this threshold.                   |
+| **Hard limit**   | Yes      | Enforcement cap in USD. Requests are blocked once this amount is reached. Must be `> 0` |
 
 ## Pre-configured Budgets
 
