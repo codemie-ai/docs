@@ -26,7 +26,13 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **Container image registry path updated in `codemie-helm-charts` values files** — the default container image repository has changed from `prod` to `codemie-clients-releases` in the Helm chart values.
+
+   Affected charts: `codemie`, `codemie-ui`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, `mermaid-server`.
+
+   :::warning
+   All existing releases are available in both repositories, and future releases will continue to be published to both. Therefore, no immediate action is required. However, we recommend updating any custom `values.yaml` overrides that reference `prod` to use `codemie-clients-releases` instead.
+   :::
 
 </details>
 
