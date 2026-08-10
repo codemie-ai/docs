@@ -53,15 +53,27 @@ fi
 
 echo "Checking for secrets with Gitleaks..."
 
+# On Windows (Git Bash / MSYS2), pwd returns a POSIX path that breaks Docker/Podman
+# volume mounts because Git Bash path conversion mangles the colon separator.
+# Use pwd -W to get the Windows path (C:\...), convert backslashes, and set
+# MSYS_NO_PATHCONV=1 so Git Bash does not convert the container-side /path argument.
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+  HOST_PATH=$(pwd -W | tr '\\' '/')
+  RUN_PREFIX="MSYS_NO_PATHCONV=1"
+else
+  HOST_PATH=$(pwd)
+  RUN_PREFIX=""
+fi
+
 CONFIG_FLAG=""
 if [[ -f ".gitleaks.toml" ]]; then
   CONFIG_FLAG="--config /path/.gitleaks.toml"
 fi
 
 if [[ "$1" == "--git" ]]; then
-  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" git --no-banner --verbose $CONFIG_FLAG /path
+  env $RUN_PREFIX "$CONTAINER_ENGINE" run --rm -v "${HOST_PATH}:/path" "$GITLEAKS_IMAGE" git --no-banner --verbose $CONFIG_FLAG /path
 else
-  $CONTAINER_ENGINE run --rm -v "$(pwd):/path" "$GITLEAKS_IMAGE" dir --no-banner --verbose $CONFIG_FLAG /path
+  env $RUN_PREFIX "$CONTAINER_ENGINE" run --rm -v "${HOST_PATH}:/path" "$GITLEAKS_IMAGE" dir --no-banner --verbose $CONFIG_FLAG /path
 fi
 
 if [[ $? -ne 0 ]]; then

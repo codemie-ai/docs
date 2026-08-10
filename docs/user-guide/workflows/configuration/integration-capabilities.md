@@ -821,6 +821,26 @@ Workflow Execution Request  ──►  Workflow Engine  ──►  Assistant  �
   propagate_headers: true        filter blocked         invokes MCP    X-Tenant-ID: acme
 ```
 
+#### Headers in the Context Store
+
+In addition to being forwarded to MCP server tool calls, the same safe headers are stored in the workflow **context store** under the `propagated_headers` key before the first state runs. This makes them available to all workflow states via template variable syntax — in task prompts, tool arguments, and conditional expressions.
+
+```yaml
+# In a state task prompt:
+task: |
+  Process request for tenant {{propagated_headers.X-Tenant-ID}}.
+  Trace ID: {{propagated_headers.X-Correlation-ID}}.
+
+# In tool_args:
+tool_args:
+  tenant_id: "{{propagated_headers.X-Tenant-ID}}"
+
+# In a condition expression (no {{}} syntax):
+expression: "propagated_headers.get('X-Environment') == 'production'"
+```
+
+For a complete reference on the `propagated_headers` context key, blocked headers, and usage patterns, see [Context Management — Section 6.4](./context-management.md#64-propagated-request-headers).
+
 #### Workflow YAML Configuration
 
 Configure MCP servers in workflow assistants. Headers are automatically propagated when enabled in the execution request.

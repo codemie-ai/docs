@@ -30,7 +30,7 @@ The **context store** is a key-value storage system that persists throughout wor
 
 **Automatic Flow:**
 
-1. **Workflow Initialization**: User input is parsed; if JSON, root keys populate the initial context store
+1. **Workflow Initialization**: User input is parsed; if JSON, root keys populate the initial context store. When `propagate_headers: true` is set in the execution request, safe incoming HTTP headers are also added under the `propagated_headers` key (see [Section 6.4](#64-propagated-request-headers)).
 2. **State Executes**: An AI assistant or tool generates output
 3. **Output Captured**: The result is captured as a string or structured data
 4. **Context Updated**: If `store_in_context: true`, the output is added to context store
@@ -38,7 +38,7 @@ The **context store** is a key-value storage system that persists throughout wor
 
 **Context Lifecycle:**
 
-- **Before first state**: Context contains variables from user input (if JSON)
+- **Before first state**: Context contains variables from user input (if JSON) and, when `propagate_headers: true` is set, incoming request headers under the `propagated_headers` key
 - **After each state**: Context grows with new variables from state outputs
 - **Throughout workflow**: All states share the same context store
 
@@ -708,14 +708,22 @@ When dynamic resolution is enabled, the system intelligently resolves variable r
 
 The resolution process works with values from the **context store**, which accumulates data from multiple sources throughout workflow execution:
 
-- **User Input**: When you start a workflow with JSON input, all root-level keys are automatically added to the context store
+- **User Input**: When a workflow is started with JSON input, all root-level keys are automatically added to the context store
 
   ```yaml
   # Input: {"user_id": "123", "mode": "fast"}
   # Context now contains: user_id, mode
   ```
 
+- **Request Headers**: When `propagate_headers: true` is set in the execution request, safe incoming HTTP headers are stored under the `propagated_headers` key before the first state runs
+
+  ```yaml
+  # Request headers: X-Tenant-ID: acme, X-Correlation-ID: trace-123
+  # Context now contains: propagated_headers.X-Tenant-ID, propagated_headers.X-Correlation-ID
+  ```
+
 - **State Outputs**: Each state that executes with `store_in_context: true` adds its output to the context store
+
   ```yaml
   # State outputs: {"name": "Alice", "email": "alice@example.com"}
   # Context now also contains: name, email
@@ -883,5 +891,113 @@ next:
   clear_prior_messages: true  # Start fresh
   reset_keys_in_context_store: [temp_data, cache]
 ```
+
+### 6.4 Propagated Request Headers
+
+When a workflow execution request includes `"propagate_headers": true`, safe incoming HTTP request headers are automatically stored in the context store under the `propagated_headers` key before the first state runs. Sensitive credentials are excluded, and all header values are sanitized before storage.
+
+This makes request-scoped context — such as tenant identifiers, correlation IDs, or user identity — available to all workflow states as template variables.
+
+#### How It Works
+
+1. The execution request body includes `"propagate_headers": true`.
+2. All `X-*` and other non-sensitive headers are extracted from the request.
+3. Headers whose names match the security blocklist are excluded (see [Blocked Headers](#blocked-headers) below).
+4. All remaining header values are stripped of CR/LF characters to prevent header injection.
+5. The sanitized headers are stored as a dictionary under the `propagated_headers` context key.
+
+#### Accessing Headers in Workflow YAML
+
+Use Jinja2 dot notation to reference individual header values anywhere template variables are supported:
+
+**In state task prompts:**
+
+```yaml
+states:
+  - id: process-request
+    assistant_id: processor
+    task: |
+      Process the request for tenant {{propagated_headers.X-Tenant-ID}}.
+      Correlation ID: {{propagated_headers.X-Correlation-ID}}.
+    next:
+      state_id: end
+```
+
+**In tool arguments (`tool_args`):**
+
+```yaml
+states:
+  - id: call-external-api
+    tool_id: api-tool
+    tool_args:
+      tenant_id: "{{propagated_headers.X-Tenant-ID}}"
+      trace_id: "{{propagated_headers.X-Correlation-ID}}"
+    next:
+      state_id: end
+```
+
+**In conditional expressions (no `{{}}` syntax):**
+
+```yaml
+next:
+  condition:
+    expression: "propagated_headers.get('X-Environment') == 'production'"
+    then: production-path
+    otherwise: staging-path
+```
+
+#### Example: Request and Context State
+
+```http
+POST /v1/workflows/{workflow_id}/executions
+Content-Type: application/json
+X-Tenant-ID: acme-corp
+X-Correlation-ID: trace-abc-123
+X-End-User-Role: admin
+Authorization: Bearer <token>
+
+{
+  "user_input": "Generate health report",
+  "propagate_headers": true
+}
+```
+
+After workflow initialization, the context store contains:
+
+```yaml
+propagated_headers:
+  X-Tenant-ID: "acme-corp"
+  X-Correlation-ID: "trace-abc-123"
+  X-End-User-Role: "admin"
+  # Authorization is excluded — it matches the security blocklist
+```
+
+#### Blocked Headers
+
+The following headers are always excluded from context store injection:
+
+| Header                      | Reason                                   |
+| --------------------------- | ---------------------------------------- |
+| `Authorization`             | Bearer tokens and Basic auth credentials |
+| `Cookie`, `Set-Cookie`      | Session cookies                          |
+| `Proxy-Authorization`       | Proxy authentication credentials         |
+| `X-Api-Key`, `X-Auth-Token` | API keys and auth tokens                 |
+
+Matching is case-insensitive: `authorization`, `Authorization`, and `AUTHORIZATION` are all blocked.
+
+:::warning
+Do not use `propagated_headers` values for security enforcement within the workflow itself. Headers originate from the caller and should be validated by downstream services rather than trusted unconditionally by workflow logic.
+:::
+
+#### Relationship to MCP Header Propagation
+
+When `propagate_headers: true` is combined with MCP server usage, the same safe headers are both:
+
+1. Stored in the context store (accessible via `{{propagated_headers.*}}` in YAML)
+2. Forwarded as HTTP headers to MCP server tool calls
+
+The context store copy is useful for driving workflow logic (conditions, task prompts, tool arguments). The MCP forwarding is useful for context-aware tool execution on the MCP server side.
+
+See [Section 9.4 MCP Header Propagation in Workflows](./integration-capabilities.md#94-mcp-header-propagation-in-workflows) for details on MCP forwarding.
 
 ---
