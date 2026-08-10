@@ -238,6 +238,35 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
+### Connect VS Code through CodeMie Proxy
+
+Use the CodeMie proxy to route VS Code chat and agent requests through an SSO-backed CodeMie profile:
+
+```bash
+codemie proxy connect vscode
+```
+
+By default, the command uses the active CodeMie profile. Use `--profile <name>` for a one-time profile override, or `--insiders` to configure VS Code Insiders:
+
+```bash
+codemie proxy connect vscode --profile <name>
+codemie proxy connect vscode --insiders
+```
+
+The command starts or reuses the local proxy and adds the managed CodeMie model catalog to VS Code. Your SSO credentials remain in CodeMie and are not written to VS Code. The `--profile` option does not change the active profile.
+
+On first use, configure the local key in VS Code:
+
+1. Open the Command Palette (`⇧⌘P` on macOS or `Ctrl+Shift+P` on Windows/Linux) and run **Chat: Manage Language Models**.
+2. Right-click any CodeMie model, select **Update API Key**, and enter `codemie-proxy`.
+3. Reload VS Code and select a CodeMie model from the model picker.
+
+:::note
+
+This integration covers VS Code chat and agent workflows. Inline suggestions continue to use Copilot.
+
+:::
+
 ## Resources
 
 - **GitHub Repository**: [https://github.com/codemie-ai/codemie-code](https://github.com/codemie-ai/codemie-code)
