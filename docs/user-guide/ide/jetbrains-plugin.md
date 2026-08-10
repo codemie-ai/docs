@@ -9,6 +9,12 @@ sidebar_position: 1
 
 # CodeMie JetBrains IDE Plugin
 
+:::warning Deprecated
+
+The CodeMie JetBrains IDE plugin is currently deprecated. You can use the [CodeMie CLI](../codemie-cli/index.md) instead.
+
+:::
+
 The CodeMie JetBrains IDE plugin brings native CodeMie integration directly into your JetBrains development environment, including IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs. This plugin provides seamless access to CodeMie assistants, project selection, and development tools without leaving your IDE.
 
 ---

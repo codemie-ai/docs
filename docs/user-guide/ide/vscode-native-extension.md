@@ -9,6 +9,12 @@ sidebar_position: 3
 
 # CodeMie VS Code Native Extension
 
+:::warning Deprecated
+
+The CodeMie VS Code Native Extension is currently deprecated. You can use the [CodeMie CLI](../codemie-cli/index.md) instead.
+
+:::
+
 The CodeMie Native VS Code extension provides a dedicated sidebar interface for CodeMie within Visual Studio Code. This extension offers full-featured access to CodeMie assistants, conversations, and tools in a native VS Code experience.
 
 ---

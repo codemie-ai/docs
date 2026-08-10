@@ -166,12 +166,12 @@ codemie analytics
 
 ### Comparison with Other CodeMie Tools
 
-| Tool                  | Purpose                | Interface          | Use Case                                   |
-| --------------------- | ---------------------- | ------------------ | ------------------------------------------ |
-| **CodeMie CLI**       | AI agent orchestration | Terminal/CLI       | Multi-agent development workflows, CI/CD   |
-| **codemie-plugins**   | Plugin management      | Python CLI         | MCP server management, development toolkit |
-| **JetBrains Plugin**  | IDE integration        | GUI (sidebar)      | In-editor AI assistance                    |
-| **VS Code Extension** | IDE integration        | GUI (Copilot Chat) | In-editor AI assistance                    |
+| Tool                                 | Purpose                | Interface          | Use Case                                   |
+| ------------------------------------ | ---------------------- | ------------------ | ------------------------------------------ |
+| **CodeMie CLI**                      | AI agent orchestration | Terminal/CLI       | Multi-agent development workflows, CI/CD   |
+| **codemie-plugins**                  | Plugin management      | Python CLI         | MCP server management, development toolkit |
+| **JetBrains Plugin** _(deprecated)_  | IDE integration        | GUI (sidebar)      | In-editor AI assistance                    |
+| **VS Code Extension** _(deprecated)_ | IDE integration        | GUI (Copilot Chat) | In-editor AI assistance                    |
 
 ### When to Use CodeMie CLI
 

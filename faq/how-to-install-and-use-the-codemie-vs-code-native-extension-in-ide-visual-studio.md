@@ -1,5 +1,11 @@
 # How to Install and Use the CodeMie VS Code Native Extension in IDE Visual Studio Code?
 
+:::warning Deprecated
+
+The CodeMie VS Code Native Extension is currently deprecated. You can use the [CodeMie CLI](https://docs.codemie.ai/user-guide/codemie-cli/) instead.
+
+:::
+
 ## Overview
 
 The CodeMie VS Code extension brings native CodeMie integrations directly into Visual Studio Code. This extension provides a dedicated sidebar interface with full-featured access to CodeMie assistants, conversations, and tools without leaving your editor.

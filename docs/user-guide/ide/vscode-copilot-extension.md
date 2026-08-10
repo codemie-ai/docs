@@ -9,6 +9,12 @@ sidebar_position: 2
 
 # CodeMie VS Code GitHub Copilot Extension
 
+:::warning Deprecated
+
+The CodeMie VS Code GitHub Copilot Extension is currently deprecated. You can use the [CodeMie CLI](../codemie-cli/index.md) instead.
+
+:::
+
 The CodeMie GitHub Copilot extension integrates CodeMie's AI-powered assistants directly into Visual Studio Code through the GitHub Copilot Chat interface. This extension provides seamless access to CodeMie capabilities while leveraging the familiar Copilot Chat experience.
 
 ---
