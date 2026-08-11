@@ -347,6 +347,12 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
 
+### Azure AI Models
+
+| Model Name                            | Description     |
+| ------------------------------------- | --------------- |
+| [`deepseek-v4-pro`](#deepseek-v4-pro) | DeepSeek V4 Pro |
+
 ### Vertex AI Models
 
 | Model Name                                         | Description                            |
@@ -1261,6 +1267,29 @@ model_list:
     base_model: azure/text-embedding-3-large
     label: "Text Embedding 3 Large"
     mode: embedding
+```
+
+</details>
+
+## Azure AI Provider Examples
+
+### DeepSeek
+
+#### DeepSeek V4 Pro
+
+<details>
+<summary><strong>DeepSeek V4 Pro</strong></summary>
+
+```yaml
+- model_name: deepseek-v4-pro
+  litellm_params:
+    model: azure_ai/deepseek-v4-pro-2026-04-23
+    api_base: https://api-base-eastus2.services.ai.azure.com
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: deepseek-v4-pro-2026-04-23-eastus2
+    base_model: azure_ai/deepseek-v4-pro
+    label: "DeepSeek V4 Pro"
 ```
 
 </details>
