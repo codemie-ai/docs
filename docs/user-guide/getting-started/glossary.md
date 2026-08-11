@@ -124,10 +124,10 @@ Native IDE extensions and plugins that bring CodeMie capabilities directly into 
 **Supported IDEs:**
 
 - **Visual Studio Code (VSCode)** extensions:
-  - [GH Copilot Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.codemie)
-  - [Native VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.ai-run-codemie)
+  - [GH Copilot Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.codemie) _(deprecated)_
+  - [Native VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ai-run-codemie.ai-run-codemie) _(deprecated)_
 
-- **JetBrains** plugin: [IntelliJ IDEA, WebStorm, PyCharm, and others](https://plugins.jetbrains.com/plugin/27730-ai-run-codemie)
+- **JetBrains** plugin: [IntelliJ IDEA, WebStorm, PyCharm, and others](https://plugins.jetbrains.com/plugin/27730-ai-run-codemie) _(deprecated)_
 
 ### Integration
 

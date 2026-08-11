@@ -1,5 +1,11 @@
 # How do I install the CodeMie JetBrains IDE plugin and what are the system requirements? How can I troubleshoot CodeMie JetBrains plugin issues like freezing or authentication problems? How to Install and Use the CodeMie JetBrains IDE Plugin?
 
+:::warning Deprecated
+
+The CodeMie JetBrains IDE plugin is currently deprecated. You can use the [CodeMie CLI](https://docs.codemie.ai/user-guide/codemie-cli/) instead.
+
+:::
+
 ## How to Install and Use the CodeMie JetBrains IDE Plugin
 
 ## Overview
