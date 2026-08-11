@@ -193,7 +193,7 @@ Tools extend workflow capabilities beyond AI reasoning:
 - **Cloud Platform Tools**: AWS, Azure, GCP, Kubernetes operations
 - **Git Tools**: Repository operations, diff analysis, branch management
 - **Knowledge Base Tools**: Search and retrieve from indexed data sources
-- **Plugin Tools**: NATS-based integration with external systems
+- **Plugin Tools**: NATS-based integration with external systems _(deprecated)_
 - **MCP Tools**: Model Context Protocol servers for extended capabilities
 
 **Tool Configuration:**

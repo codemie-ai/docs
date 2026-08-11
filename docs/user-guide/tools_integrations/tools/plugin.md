@@ -9,6 +9,12 @@ sidebar_position: 19
 
 # Plugin
 
+:::warning Deprecated
+
+The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+
+:::
+
 ## Overview
 
 This guide provides step-by-step instructions for setting up and configuring CodeMie Plugins to enhance your AI Assistant capabilities with external tools.
