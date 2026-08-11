@@ -143,6 +143,12 @@ No. Platform components currently only support PostgreSQL as the database backen
 <details>
 <summary><strong>Why do we need external access to NATS via Network Load Balancer?</strong></summary>
 
+:::warning Deprecated
+
+NATS is currently deprecated as part of the NATS retirement direction.
+
+:::
+
 NATS is part of the AI/Run CodeMie Plugin Engine and enables tool execution in external environments beyond the CodeMie backend.
 
 **Use Cases:**
