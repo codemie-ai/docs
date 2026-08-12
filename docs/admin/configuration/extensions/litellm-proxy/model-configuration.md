@@ -1286,6 +1286,7 @@ model_list:
     model: azure_ai/deepseek-v4-pro-2026-04-23
     api_base: https://api-base-eastus2.services.ai.azure.com
     litellm_credential_name: default_azure_openai_credential
+    api_version: "2024-05-01-preview"
   model_info:
     id: deepseek-v4-pro-2026-04-23-eastus2
     base_model: azure_ai/deepseek-v4-pro
