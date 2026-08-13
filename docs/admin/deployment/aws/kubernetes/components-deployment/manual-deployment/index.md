@@ -33,7 +33,6 @@ This guide covers all components required for a fully functional AI/Run CodeMie 
 - **Infrastructure services** - Storage provisioning and ingress routing
 - **Data layer** - Document storage and relational databases
 - **Security components** - Identity management and authentication proxies
-- **Messaging system** - Inter-service communication infrastructure
 - **Core CodeMie services** - Main application components
 - **Observability stack** - Logging and monitoring dashboards
 
@@ -102,6 +101,12 @@ Components must be installed in the following order to satisfy dependencies:
 **Dependencies**: Requires RDS from infrastructure deployment
 
 ### 4. [Plugin Engine](./plugin-engine)
+
+:::warning Deprecated
+
+NATS is no longer supported.
+
+:::
 
 **Purpose**: Inter-service messaging and plugin communication infrastructure
 

@@ -22,7 +22,6 @@ The deployment script automates the installation of:
 - **Infrastructure services** (Nginx Ingress, Storage Class)
 - **Data layer** (Elasticsearch)
 - **Security components** (Keycloak, OAuth2 Proxy)
-- **Messaging system** (NATS)
 - **Core CodeMie services** (API, UI, MCP Connect)
 - **Observability stack** (Fluent Bit, Kibana)
 

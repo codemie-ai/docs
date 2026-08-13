@@ -20,7 +20,7 @@ The CodeMie platform is an AI-powered coding assistant that processes user conve
 **1. Regional Data Isolation**
 
 - Persistent storage regions are independently configurable – PostgreSQL (Keycloak), PostgreSQL (CodeMie), Object Storage, and KMS/Vault can be deployed in the same region or distributed across different regions based on customer requirements
-- In-cluster components (Elasticsearch, NATS, and other in-cluster services) run within the Kubernetes cluster region
+- In-cluster components (Elasticsearch, and other in-cluster services) run within the Kubernetes cluster region
 - AI processing regions are configurable per LLM provider – customers can select specific regions for each model based on compliance and latency requirements
 - PostgreSQL (Keycloak) is deployed in the same region as the Kubernetes cluster in default configuration, but can be configured to use an external managed PostgreSQL instance in a different region if required
 

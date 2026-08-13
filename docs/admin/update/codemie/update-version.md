@@ -22,7 +22,7 @@ This update process will upgrade the following AI/Run CodeMie components:
 
 - **CodeMie MCP Connect** - Model Context Protocol integration service
 - **Mermaid Server** - Diagram rendering service
-- **CodeMie NATS Auth Callout** - Message bus authentication service
+- **CodeMie NATS Auth Callout** - Message bus authentication service (_deprecated_)
 - **CodeMie UI** - Frontend application
 - **CodeMie API** - Backend services and APIs
 
@@ -117,7 +117,7 @@ The automated script updates components in the following order to ensure compati
 
 1. **CodeMie MCP Connect** - Model Context Protocol integration service
 2. **Mermaid Server** - Diagram rendering service
-3. **CodeMie NATS Auth Callout** - Message bus authentication service
+3. **CodeMie NATS Auth Callout** - Message bus authentication service (_deprecated_)
 4. **CodeMie UI** - Frontend application
 5. **CodeMie API** - Backend services and APIs
 
@@ -156,6 +156,12 @@ helm upgrade --install mermaid-server \
 ```
 
 #### Step 3: Update CodeMie NATS Auth Callout
+
+:::warning Deprecated
+
+NATS is no longer supported.
+
+:::
 
 Update the message bus authentication service with cloud-specific configuration.
 
