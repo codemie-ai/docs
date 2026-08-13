@@ -15,7 +15,7 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 :::warning Deprecated
 
-NATS is currently deprecated as part of the NATS retirement direction.
+NATS is currently deprecated.
 
 :::
 
