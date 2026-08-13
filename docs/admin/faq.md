@@ -145,7 +145,7 @@ No. Platform components currently only support PostgreSQL as the database backen
 
 :::warning Deprecated
 
-NATS is currently deprecated as part of the NATS retirement direction.
+NATS is currently deprecated.
 
 :::
 

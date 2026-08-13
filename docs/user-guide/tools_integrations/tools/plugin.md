@@ -11,7 +11,7 @@ sidebar_position: 19
 
 :::warning Deprecated
 
-The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+The CodeMie Plugin Engine is currently deprecated.
 
 :::
 
