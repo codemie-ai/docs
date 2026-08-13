@@ -101,6 +101,12 @@ Components must be installed in the following order to satisfy dependencies:
 
 ### 4. [Plugin Engine](./plugin-engine.mdx)
 
+:::warning Deprecated
+
+NATS is no longer supported.
+
+:::
+
 **Purpose**: Inter-service messaging and plugin communication infrastructure
 
 **Components**:

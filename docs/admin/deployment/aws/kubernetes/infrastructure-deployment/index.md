@@ -89,7 +89,6 @@ The core platform infrastructure provisions all AWS resources needed to run AI/R
 | **NAT Gateway**               | Provides consistent outbound public IP for private subnet resources |
 | **Route Tables**              | Controls routing between subnets and internet                       |
 | **Application Load Balancer** | Distributes incoming HTTPS traffic to application services          |
-| **Network Load Balancer**     | Handles TCP traffic for NATS messaging system                       |
 | **Route 53 DNS Records**      | Automated DNS record creation for CodeMie services                  |
 | **Network Security Groups**   | Firewall rules controlling traffic flow                             |
 

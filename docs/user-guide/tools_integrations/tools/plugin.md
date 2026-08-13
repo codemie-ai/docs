@@ -169,6 +169,12 @@ This template includes generic instructions and predefined tools for Plugins. Ho
 
 ## Running AI/Run Development Plugin
 
+:::warning Deprecated
+
+NATS is no longer supported.
+
+:::
+
 To allow your AI Assistant to use pre-built external tools, run the AI/Run Development Plugin:
 
 ```bash
