@@ -1,6 +1,6 @@
 # How do I configure my plugin key with the codemie-plugins CLI? How do I configure my plugin key with the codemie-plugins CLI?
 
-> **Deprecated**: The CodeMie Plugin Engine is currently deprecated.
+> **Deprecated**: The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 You can configure your plugin key for the codemie-plugins CLI in several ways:
 

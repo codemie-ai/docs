@@ -1,6 +1,6 @@
 # How do I run MCP servers with the codemie-plugins package?
 
-> **Deprecated**: The CodeMie Plugin Engine is currently deprecated.
+> **Deprecated**: The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 The codemie-plugins package allows you to run various MCP (Model Context Protocol) servers directly from the command line:
 

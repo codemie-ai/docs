@@ -159,7 +159,7 @@ helm upgrade --install mermaid-server \
 
 :::warning Deprecated
 
-NATS is no longer supported.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 

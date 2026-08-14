@@ -653,7 +653,7 @@ The Google OAuth flow stores PKCE state and tokens in Redis during the authoriza
 
 :::warning Deprecated
 
-NATS is currently deprecated.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 
