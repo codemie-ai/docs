@@ -145,7 +145,7 @@ No. Platform components currently only support PostgreSQL as the database backen
 
 :::warning Deprecated
 
-NATS is currently deprecated.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 

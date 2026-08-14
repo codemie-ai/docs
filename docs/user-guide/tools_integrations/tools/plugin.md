@@ -11,7 +11,7 @@ sidebar_position: 19
 
 :::warning Deprecated
 
-The CodeMie Plugin Engine is currently deprecated.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 
@@ -171,7 +171,7 @@ This template includes generic instructions and predefined tools for Plugins. Ho
 
 :::warning Deprecated
 
-NATS is no longer supported.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 

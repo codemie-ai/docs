@@ -182,7 +182,7 @@ Never deploy a public LoadBalancer without `loadBalancerSourceRanges` configured
 
 :::warning Deprecated
 
-NATS is no longer supported.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 
@@ -344,7 +344,7 @@ kubectl get service ingress-nginx-controller -n ingress-nginx \
 
 :::warning Deprecated
 
-NATS is no longer supported.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 

@@ -1,6 +1,6 @@
 # How to Install codemie-plugins using pip? How to setup codemie plugins on Windows? MacOS codemie plugin installation steps?
 
-> **Deprecated**: The CodeMie Plugin Engine is currently deprecated.
+> **Deprecated**: The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 You can install and use CodeMie plugins by using the `codemie-plugins` PyPi package:
 
