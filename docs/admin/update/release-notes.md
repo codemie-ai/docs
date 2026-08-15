@@ -22,7 +22,9 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>LiteLLM 1.93.0</h4>
+
+Updated from 1.83.7. For details, see the [LiteLLM 1.93.0 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.93.0).
 
 <h3>Configuration Changes</h3>
 
