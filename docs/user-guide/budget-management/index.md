@@ -265,113 +265,29 @@ Use the **Budget** filter and **Search** field to quickly locate users by budget
 
 ## Usage Scenarios
 
-### Basic Scenarios with different budget configurations
+### How Requests Are Routed to Budgets: Configuration Examples
 
-<table style={{tableLayout: 'fixed', width: '100%'}}>
-  <colgroup>
-    <col style={{width: '3%'}} />
-    <col style={{width: '28%'}} />
-    <col style={{width: '23%'}} />
-    <col style={{width: '23%'}} />
-    <col style={{width: '23%'}} />
-  </colgroup>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Configured Budgets</th>
-      <th>Platform requests</th>
-      <th>CLI requests</th>
-      <th>Premium model requests</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget</td>
-      <td>✅ Default Platform<br /><small>(individual counter per user)</small></td>
-      <td>❌ Blocked — no CLI budget</td>
-      <td>❌ Blocked — no Premium budget</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget</td>
-      <td>✅ Default Platform</td>
-      <td>✅ Default CLI</td>
-      <td>✅ Default Premium</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget</td>
-      <td>✅ Personal Platform</td>
-      <td>❌ Blocked — no CLI budget</td>
-      <td>❌ Blocked — no Premium budget</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget<br />Default CLI Budget</td>
-      <td>✅ Personal Platform</td>
-      <td>✅ Default CLI</td>
-      <td>❌ Blocked — no Premium budget</td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget<br />Personal Premium Budget</td>
-      <td>✅ Default Platform</td>
-      <td>✅ Default CLI</td>
-      <td>✅ Personal Premium<br /><small>(priority over default)</small></td>
-    </tr>
-    <tr>
-      <td>6</td>
-      <td style={{whiteSpace: 'nowrap'}}>Project Platform Budget</td>
-      <td>✅ Project Platform<br /><small>(priority)</small></td>
-      <td>✅ Project Platform<br /><small>(fallback — no project CLI budget)</small></td>
-      <td>✅ Project Platform<br /><small>(fallback — no project Premium budget)</small></td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td style={{whiteSpace: 'nowrap'}}>Project CLI Budget</td>
-      <td>✅ Project CLI<br /><small>(fallback — no project Platform budget)</small></td>
-      <td>✅ Project CLI<br /><small>(priority)</small></td>
-      <td>✅ Project CLI<br /><small>(fallback — no project Premium budget)</small></td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td style={{whiteSpace: 'nowrap'}}>Project Premium Budget</td>
-      <td>✅ Default Platform<br /><small>(no project Platform budget → global fallback)</small></td>
-      <td>✅ Default Platform<br /><small>(no project CLI or Platform → global fallback)</small></td>
-      <td>✅ Project Premium<br /><small>(priority)</small></td>
-    </tr>
-    <tr>
-      <td>9</td>
-      <td style={{whiteSpace: 'nowrap'}}>Project Platform Budget<br />Project CLI Budget<br />Project Premium Budget</td>
-      <td>✅ Project Platform</td>
-      <td>✅ Project CLI</td>
-      <td>✅ Project Premium</td>
-    </tr>
-    <tr>
-      <td>10</td>
-      <td style={{whiteSpace: 'nowrap'}}>No budgets configured</td>
-      <td>✅ Default Platform Budget<br /><small>(Default Platform Budget is <a href="../../admin/configuration/extensions/litellm-proxy/budget-configuration#default-platform-budget">pre-configured by default</a>)</small></td>
-      <td>✅ Project Platform<br /><small>(fallback — no CLI budget)</small></td>
-      <td>✅ Project Platform<br /><small>(fallback — no Premium budget)</small></td>
-    </tr>
-    <tr>
-      <td>11</td>
-      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget<br />Project Platform Budget</td>
-      <td>✅ Project Platform</td>
-      <td>✅ Project Platform<br /><small>(fallback — no CLI budget)</small></td>
-      <td>✅ Project Platform<br /><small>(fallback — no Premium budget)</small></td>
-    </tr>
-  </tbody>
-</table>
+| #   | Configured Budgets                                                                                       | Platform requests                                                                                                                                                                                        | CLI requests                                                                           | Premium model requests                                                 |
+| --- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 1   | Default Platform Budget                                                                                  | ✅ Default Platform<br /><small>(individual counter per user)</small>                                                                                                                                    | ✅ Default Platform<br /><small>(fallback — no CLI budget)</small>                     | ✅ Default Platform<br /><small>(fallback — no Premium budget)</small> |
+| 2   | No budgets configured                                                                                    | ✅ Default Platform Budget<br /><small>(Default Platform Budget is [pre-configured by default](../../admin/configuration/extensions/litellm-proxy/budget-configuration#default-platform-budget))</small> | ✅ Default Platform<br /><small>(fallback — no CLI budget)</small>                     | ✅ Default Platform<br /><small>(fallback — no Premium budget)</small> |
+| 3   | Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget                              | ✅ Default Platform                                                                                                                                                                                      | ✅ Default CLI                                                                         | ✅ Default Premium                                                     |
+| 4   | Personal Platform Budget                                                                                 | ✅ Personal Platform                                                                                                                                                                                     | ❌ Blocked — no CLI budget                                                             | ❌ Blocked — no Premium budget                                         |
+| 5   | Personal Platform Budget<br />Default CLI Budget                                                         | ✅ Personal Platform                                                                                                                                                                                     | ✅ Default CLI                                                                         | ❌ Blocked — no Premium budget                                         |
+| 6   | Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget<br />Personal Premium Budget | ✅ Default Platform                                                                                                                                                                                      | ✅ Default CLI                                                                         | ✅ Personal Premium<br /><small>(priority over default)</small>        |
+| 7   | Project Platform Budget                                                                                  | ✅ Project Platform                                                                                                                                                                                      | ✅ Project Platform<br /><small>(fallback — no CLI budget)</small>                     | ✅ Project Platform<br /><small>(fallback — no Premium budget)</small> |
+| 8   | Project CLI Budget                                                                                       | ✅ Project CLI<br /><small>(fallback — no Platform budget)</small>                                                                                                                                       | ✅ Project CLI                                                                         | ✅ Project CLI<br /><small>(fallback — no Premium budget)</small>      |
+| 9   | Project Premium Budget                                                                                   | ✅ Default Platform<br /><small>(global fallback → no Platform budget)</small>                                                                                                                           | ✅ Default Platform<br /><small>(global fallback → no CLI or Platform budgets)</small> | ✅ Project Premium                                                     |
+| 10  | Project Platform Budget<br />Project CLI Budget<br />Project Premium Budget                              | ✅ Project Platform                                                                                                                                                                                      | ✅ Project CLI                                                                         | ✅ Project Premium                                                     |
+| 11  | Personal Platform Budget<br />Project Platform Budget                                                    | ✅ Project Platform                                                                                                                                                                                      | ✅ Project Platform<br /><small>(fallback — no CLI budget)</small>                     | ✅ Project Platform<br /><small>(fallback — no Premium budget)</small> |
 
 ### Project context and category fallback
 
-In rows 6–9 and 11, the user is in a project context (project has at least one budget configured). Personal and default budgets are bypassed for all categories — **except** when the project has no Platform budget at all (row 8 — Premium-only project), in which case global personal/default Platform budget is used as the final fallback. The **Platform budget is the universal fallback hub** within a project: if a project lacks a budget for the resolved category (CLI or Premium), the request falls back to the project Platform budget. Row 10 applies when the user is in a shared project with no budgets configured at all — the system treats it as if there is no project.
+In rows 7–10 and 11, the user is in a project context (project has at least one budget configured). Personal and default budgets are bypassed for all categories — **except** when the project has no Platform budget at all (row 9 — Premium-only project), in which case global personal/default Platform budget is used as the final fallback. The **Platform budget is the universal fallback hub** within a project: if a project lacks a budget for the resolved category (CLI or Premium), the request falls back to the project Platform budget. Row 2 applies when the user is in a shared project with no budgets configured at all — the system treats it as if there is no project.
 
 ### Personal space
 
-A personal space is technically a project (`project_type = personal`, `name = user@email`). When no project budget is assigned to it (typical case), it behaves identically to the "No project" context (rows 1–5). Row 11 shows the non-typical case where an admin has explicitly assigned a project budget to a user's personal space.
+A personal space is technically a project (`project_type = personal`, `name = user@email`). When no project budget is assigned to it (typical case), it behaves identically to the "No project" context (rows 1–6). Row 11 shows the non-typical case where an admin has explicitly assigned a project budget to a user's personal space.
 
 ### Webhooks and Workflows
 
