@@ -5,6 +5,7 @@ useGitignore: true
 ignorePaths:
   - node_modules
   - build
+  - docs/codemie/
   - .docusaurus
   - .git
   - package-lock.json
