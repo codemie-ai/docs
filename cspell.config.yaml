@@ -18,6 +18,7 @@ ignorePaths:
   - cspell.config.yaml
   - CLAUDE.md
   - scripts/
+  - codemie/
 
 # Custom dictionary - project-specific words that are correct
 words:
