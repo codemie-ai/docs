@@ -37,18 +37,17 @@ The default budget is not a shared pool for all users. When the default budget i
 
 Each budget belongs to one of three independent categories:
 
-| Category           | When Applied                                                                           |
-| ------------------ | -------------------------------------------------------------------------------------- |
-| **Platform**       | All requests from the browser UI to non-premium models                                 |
-| **CLI**            | Requests from codemie-code, codemie-claude, and other CLI agents to non-premium models |
-| **Premium Models** | Any requests to premium models — regardless of source: both UI and CLI                 |
+| Budget Category    | When Applied                                                                                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Platform**       | Non-premium requests from the browser UI, workflows, API, and similar sources                                                                                              |
+| **CLI**            | Non-premium requests from CLI agents (for example, codemie-code, codemie-claude, and codemie-codex) and desktop applications, such as Claude Code Desktop, in Gateway mode |
+| **Premium Models** | All premium-model requests, regardless of source (UI or CLI)                                                                                                               |
 
-Only one budget is charged per request. The category is resolved automatically by request type:
+:::note
+Premium models are defined in the `LITELLM_PREMIUM_MODELS_ALIASES` environment variable. See [Configure Premium Model Aliases](../../admin/configuration/extensions/litellm-proxy/budget-configuration#step-2-configure-premium-model-aliases).
+:::
 
-- Premium model → **Premium Models** (regardless of source: UI or CLI)
-- Non-premium model + CLI request → **CLI**
-- Non-premium model + UI request → **Platform**
-
+Only one budget is charged per request. If a project budget exists for the resolved category, it takes precedence over the default and user's personal budgets.
 For details on how project membership affects category resolution, see [Budget Priority](#budget-priority).
 
 ## Budget Parameters
@@ -93,44 +92,7 @@ For details on roles, see [Roles & RBAC](../../admin/security/roles-rbac).
 
 ### Budget Priority
 
-<div
-  style={{cursor: 'zoom-in'}}
-  title="Click to open full size"
-  onClick={(e) => {
-    const svg = e.currentTarget.querySelector('svg');
-    if (svg) {
-      const serialized = new XMLSerializer().serializeToString(svg);
-      const blob = new Blob([serialized], {type: 'image/svg+xml'});
-      window.open(URL.createObjectURL(blob));
-    }
-  }}
->
-
-```mermaid
-flowchart LR
-    A([User request]) --> B{"Premium model?<br/>LITELLM_PREMIUM_MODELS_ALIASES"}
-
-    B -->|YES| C[premium_models]
-    B -->|NO| D{Request source?}
-
-    D -->|CLI| E[cli]
-    D -->|Web UI| F[platform]
-
-    C & E & F --> G{"In a project with<br/>ANY budget configured?"}
-
-    G -->|NO| H["1. Personal budget<br/>2. Default budget<br/>3. ❌ Blocked"]
-    G -->|YES| I{"Base category<br/>in project_scopes?"}
-
-    I -->|YES| J[Project budget ✅]
-    I -->|NO| K{"Project has<br/>Platform budget?"}
-
-    K -->|YES| L[Project Platform budget]
-    K -->|NO| M[Personal / Default<br/>Platform budget]
-
-    H & J & L & M --> Z([Budget enforcement<br/>LiteLLM Proxy])
-```
-
-</div>
+![Budget priority resolution flowchart](./images/budget-priority.svg)
 
 For each category, the first matching budget is applied in the following priority order:
 
@@ -303,21 +265,105 @@ Use the **Budget** filter and **Search** field to quickly locate users by budget
 
 ## Usage Scenarios
 
-### Basic Scenarios
+### Basic Scenarios with different budget configurations
 
-| #   | Budget                                               | Platform request                                                      | CLI request                                                        | Premium model request                                               |
-| --- | ---------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| 1   | Default: Platform only                               | ✅ Default Platform (individual counter per user)                     | ❌ Blocked — no CLI budget                                         | ❌ Blocked — no Premium budget                                      |
-| 2   | Default: Platform + CLI + Premium                    | ✅ Default Platform                                                   | ✅ Default CLI                                                     | ✅ Default Premium                                                  |
-| 3   | Personal: Platform only                              | ✅ Personal Platform                                                  | ❌ No CLI budget                                                   | ❌ No Premium budget                                                |
-| 4   | Personal: Platform, Default: CLI                     | ✅ Personal Platform                                                  | ✅ Default CLI                                                     | ❌ No Premium budget                                                |
-| 5   | Default: Platform + CLI + Premium, Personal: Premium | ✅ Default Platform                                                   | ✅ Default CLI                                                     | ✅ Personal Premium (priority over default)                         |
-| 6   | Project: Platform only                               | ✅ Project Platform (priority)                                        | ✅ Project Platform (fallback — no project CLI budget)             | ✅ Project Platform (fallback — no project Premium budget)          |
-| 7   | Project: CLI only                                    | ✅ Project CLI (fallback — no project Platform budget)                | ✅ Project CLI (priority)                                          | ✅ Project CLI (fallback — no project Premium budget)               |
-| 8   | Project: Premium only                                | ✅ Default Platform (no project Platform budget → global fallback)    | ✅ Default Platform (no project CLI or Platform → global fallback) | ✅ Project Premium (priority)                                       |
-| 9   | Project: Platform + CLI + Premium                    | ✅ Project Platform                                                   | ✅ Project CLI                                                     | ✅ Project Premium                                                  |
-| 10  | Project: no budgets configured                       | ✅ Personal Platform / Default Platform (if configured, otherwise ❌) | ✅ Personal CLI / Default CLI (if configured, otherwise ❌)        | ✅ Personal Premium / Default Premium (if configured, otherwise ❌) |
-| 11  | Personal: Platform, Project: Platform                | ✅ Project Platform                                                   | ✅ Project Platform (fallback — no CLI budget)                     | ✅ Project Platform (fallback — no Premium budget)                  |
+<table style={{tableLayout: 'fixed', width: '100%'}}>
+  <colgroup>
+    <col style={{width: '3%'}} />
+    <col style={{width: '28%'}} />
+    <col style={{width: '23%'}} />
+    <col style={{width: '23%'}} />
+    <col style={{width: '23%'}} />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Configured Budgets</th>
+      <th>Platform requests</th>
+      <th>CLI requests</th>
+      <th>Premium model requests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget</td>
+      <td>✅ Default Platform<br /><small>(individual counter per user)</small></td>
+      <td>❌ Blocked — no CLI budget</td>
+      <td>❌ Blocked — no Premium budget</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget</td>
+      <td>✅ Default Platform</td>
+      <td>✅ Default CLI</td>
+      <td>✅ Default Premium</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget</td>
+      <td>✅ Personal Platform</td>
+      <td>❌ Blocked — no CLI budget</td>
+      <td>❌ Blocked — no Premium budget</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget<br />Default CLI Budget</td>
+      <td>✅ Personal Platform</td>
+      <td>✅ Default CLI</td>
+      <td>❌ Blocked — no Premium budget</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style={{whiteSpace: 'nowrap'}}>Default Platform Budget<br />Default CLI Budget<br />Default Premium Budget<br />Personal Premium Budget</td>
+      <td>✅ Default Platform</td>
+      <td>✅ Default CLI</td>
+      <td>✅ Personal Premium<br /><small>(priority over default)</small></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style={{whiteSpace: 'nowrap'}}>Project Platform Budget</td>
+      <td>✅ Project Platform<br /><small>(priority)</small></td>
+      <td>✅ Project Platform<br /><small>(fallback — no project CLI budget)</small></td>
+      <td>✅ Project Platform<br /><small>(fallback — no project Premium budget)</small></td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style={{whiteSpace: 'nowrap'}}>Project CLI Budget</td>
+      <td>✅ Project CLI<br /><small>(fallback — no project Platform budget)</small></td>
+      <td>✅ Project CLI<br /><small>(priority)</small></td>
+      <td>✅ Project CLI<br /><small>(fallback — no project Premium budget)</small></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style={{whiteSpace: 'nowrap'}}>Project Premium Budget</td>
+      <td>✅ Default Platform<br /><small>(no project Platform budget → global fallback)</small></td>
+      <td>✅ Default Platform<br /><small>(no project CLI or Platform → global fallback)</small></td>
+      <td>✅ Project Premium<br /><small>(priority)</small></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style={{whiteSpace: 'nowrap'}}>Project Platform Budget<br />Project CLI Budget<br />Project Premium Budget</td>
+      <td>✅ Project Platform</td>
+      <td>✅ Project CLI</td>
+      <td>✅ Project Premium</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td style={{whiteSpace: 'nowrap'}}>No budgets configured</td>
+      <td>✅ Default Platform Budget<br /><small>(Default Platform Budget is <a href="../../admin/configuration/extensions/litellm-proxy/budget-configuration#default-platform-budget">pre-configured by default</a>)</small></td>
+      <td>✅ Project Platform<br /><small>(fallback — no CLI budget)</small></td>
+      <td>✅ Project Platform<br /><small>(fallback — no Premium budget)</small></td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td style={{whiteSpace: 'nowrap'}}>Personal Platform Budget<br />Project Platform Budget</td>
+      <td>✅ Project Platform</td>
+      <td>✅ Project Platform<br /><small>(fallback — no CLI budget)</small></td>
+      <td>✅ Project Platform<br /><small>(fallback — no Premium budget)</small></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Project context and category fallback
 
@@ -425,7 +471,7 @@ This is not a bug. Enforcement precision is bounded by `LITELLM_CUSTOMER_CACHE_T
 | Getting started                                       | Create default budgets for all three categories (Platform, CLI, Premium) — otherwise users without a personal budget will be blocked in uncovered categories                                                                                                                                                            |
 | Team cost control without blocking individual members | Create a project budget with **Enforce member spend limits = Disabled** — the overall limit is controlled at the team level without blocking individual members                                                                                                                                                         |
 | Strict per-user control within a project              | Enable **Enforce member spend limits** — each member receives a fixed quota with blocking on overspend                                                                                                                                                                                                                  |
-| VIP users / team leads                                | Use Override with **Enforce member spend limits** enabled to individually increase a specific member's quota                                                                                                                                                                                                            |
+| Architects / Team leads                               | Use Override with **Enforce member spend limits** enabled to individually increase a specific member's quota                                                                                                                                                                                                            |
 | Adding new members to a project                       | After adding members, run a manual **Rebalance** — the budget is not recalculated automatically on member addition                                                                                                                                                                                                      |
 | Premium models                                        | Create a separate default Premium Models budget and specify the model list in the platform configuration                                                                                                                                                                                                                |
 | Emergency unblocking                                  | **Reset Budget** on the user card — resets the spending counter (Maintainer only)                                                                                                                                                                                                                                       |
