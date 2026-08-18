@@ -483,6 +483,10 @@ model_list:
 
 #### Claude Fable 5
 
+:::warning AWS data retention requirement
+Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data retention mode is set to `provider_data_share`. With this mode, prompts and completions sent to the model leave AWS's data boundary and are shared with Anthropic for model improvement purposes, unlike the default retention mode where data stays within AWS. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests to `claude-fable-5` fail with `data retention mode 'default' is not available for this model`.
+:::
+
 <details>
 <summary><strong>Claude Fable 5</strong></summary>
 
