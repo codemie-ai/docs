@@ -89,10 +89,6 @@ The `budget_category` field controls which type of usage the budget applies to:
 | `cli`            | CodeMie CLI proxy spending          |
 | `premium_models` | Costly model spending via CLI       |
 
-:::note
-Premium models are defined in the `LITELLM_PREMIUM_MODELS_ALIASES` environment variable. See [Step 2: Configure Premium Model Aliases](#step-2-configure-premium-model-aliases).
-:::
-
 ## Enabling Budget Enforcement
 
 Budget enforcement is disabled by default. To activate it, set the following environment variables in the CodeMie API deployment:
