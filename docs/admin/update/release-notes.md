@@ -26,6 +26,10 @@ This page provides information about updated third-party components and configur
 
 Updated from 1.83.7. For details, see the [LiteLLM 1.93.0 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.93.0).
 
+<h4>oauth2-proxy 7.15.3</h4>
+
+Updated from 7.15.1. For details, see the [oauth2-proxy 7.15.3 Release Notes ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.3).
+
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
