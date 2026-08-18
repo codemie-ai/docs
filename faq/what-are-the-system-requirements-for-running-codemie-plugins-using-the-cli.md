@@ -1,5 +1,7 @@
 # What are the system requirements for running CodeMie plugins using the CLI?
 
+> **Deprecated**: The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+
 ```markdown
  What are the system requirements for running CodeMie plugins using the CLI?
 

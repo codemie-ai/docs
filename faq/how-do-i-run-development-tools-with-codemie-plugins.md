@@ -1,5 +1,7 @@
 # How do I run development tools with codemie-plugins?
 
+> **Deprecated**: The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+
 You can run the development toolkit with the codemie-plugins CLI by following these steps:
 
 ## Basic usage

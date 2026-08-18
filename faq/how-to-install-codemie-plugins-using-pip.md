@@ -1,5 +1,7 @@
 # How to Install codemie-plugins using pip? How to setup codemie plugins on Windows? MacOS codemie plugin installation steps?
 
+> **Deprecated**: The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+
 You can install and use CodeMie plugins by using the `codemie-plugins` PyPi package:
 
 First you need to clone repository https://gitbud.epam.com/epm-cdme/codemie-plugins

@@ -358,7 +358,7 @@ CodeMie Workflows provides extensive built-in tools for cloud platforms, code ma
 **Integration Tools:**
 
 - **IDE Integration**: File operations, navigation, code actions
-- **NATS Plugin System**: Custom tool development via message broker
+- **NATS Plugin System**: Custom tool development via message broker _(deprecated)_
 - **HTTP Tools**: REST API calls, webhooks, external service integration
 
 #### Tool Integration Examples

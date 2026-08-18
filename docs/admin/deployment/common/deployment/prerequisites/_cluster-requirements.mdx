@@ -19,6 +19,12 @@ If deploying to an **existing {props.clusterName} cluster**, ensure that admissi
 <Tabs>
   <TabItem value="nats" label="NATS Messaging" default>
 
+:::warning Deprecated
+
+NATS is currently deprecated as part of the NATS retirement direction.
+
+:::
+
 **Kubernetes API:** `Service` (LoadBalancer type)
 
 **Purpose:** NATS is a core component of the CodeMie Plugin Engine, providing messaging infrastructure for communication between the [codemie-plugins](https://pypi.org/project/codemie-plugins/) CLI tool with MCP and the AI/Run CodeMie platform.
