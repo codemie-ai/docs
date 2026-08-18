@@ -13,6 +13,29 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.43.0 {#v2-43-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** August 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.43.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.93.0</h4>
+
+Updated from 1.83.7. For details, see the [LiteLLM 1.93.0 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.93.0).
+
+<h4>oauth2-proxy 7.15.3</h4>
+
+Updated from 7.15.1. For details, see the [oauth2-proxy 7.15.3 Release Notes ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.3).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ### CodeMie 2.42.0 {#v2-42-0}
 
 <details>
