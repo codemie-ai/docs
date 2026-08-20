@@ -1,6 +1,6 @@
 ---
 id: marketplace-publishing
-sidebar_position: 9
+sidebar_position: 10
 title: Publish Workflow to Marketplace
 sidebar_label: Publish to Marketplace
 pagination_prev: user-guide/workflows/marketplace-overview

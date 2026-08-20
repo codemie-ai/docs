@@ -139,6 +139,12 @@ The Visual Editor provides intelligent configuration assistance for Tool and Cus
 
 The configuration panel prevents you from saving incomplete or invalid node settings, ensuring that your workflow is ready to run without configuration errors. While the editor generates and updates the YAML configuration automatically in the background, you work primarily with a structured, user-friendly interface that guides you through the setup process. If you need direct control over the configuration, the YAML editor view remains available.
 
+#### Assistant Integrations and Saving
+
+An assistant node may use tools whose integrations are not pinned by the assistant author. Such integration slots belong to whoever runs the workflow — resolved automatically or selected personally — so the workflow author does not have to own an integration for them.
+
+Saving the workflow therefore succeeds even when those slots are empty for the author. The save response lists the affected tools as a **warning**, not an error: it is a reminder that these tools will depend on each user's own setup at run time. See [Automatic Credentials Lookup](../tools_integrations/integrations/index.md#automatic-credentials-lookup) for how a slot is resolved, and [Assistant Panel on the Executions Page](./assistant-panel-in-executions.md) for selecting a personal integration from a workflow.
+
 ### Duplicating Nodes
 
 Quickly duplicate existing nodes with their configuration:
