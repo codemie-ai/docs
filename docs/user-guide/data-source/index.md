@@ -21,6 +21,7 @@ Learn the fundamentals of data sources and indexing:
 - [Data Source Overview](./data-source-overview/index.md) - Understanding data sources and their role in the platform
 - [Indexing Data Sources](./data-source-overview/indexing-data-sources.md) - How to index data sources for assistant access
 - [Indexing Duration](./data-source-overview/indexing-duration.md) - Understanding indexing timeframes and processes
+- [Refreshing the Integration List](./data-source-overview/refresh-integrations.md) - Reload available integrations in the creation form without losing form progress
 
 ## Data Source Types
 
