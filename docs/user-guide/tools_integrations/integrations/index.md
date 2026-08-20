@@ -72,6 +72,15 @@ Every slot the author did not pin is offered to each user of a shared assistant 
 
 A user's own decision always wins over automatic lookup, including an explicit **No integration**: the choice is remembered and is not replaced by an automatically resolved integration the next time the assistant is opened or run.
 
+How widely the choice is remembered depends on where it is made:
+
+| Saved from                        | Applies to                                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| The assistant page                | The assistant everywhere for that user — chat, the assistant page, and every workflow using the assistant     |
+| The assistant panel of a workflow | That workflow only, unless **Apply to the whole assistant, not just this workflow** is selected before saving |
+
+A workflow-scoped selection takes precedence over the assistant-scoped one when that workflow runs, and leaves the same assistant untouched in chat and in other workflows. Both scopes are personal and never affect other users. See [Assistant Panel on the Executions Page](../../workflows/assistant-panel-in-executions.md#where-the-selection-applies) for the full behavior.
+
 :::tip
 Leave **Automatic Credentials Lookup** on for shared assistants. This ensures each team member uses their own credentials automatically, without requiring the assistant owner to share their personal integration.
 :::
