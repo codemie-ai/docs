@@ -246,6 +246,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'user-guide/data-source/data-source-overview/indexing-data-sources',
                 'user-guide/data-source/data-source-overview/indexing-duration',
+                'user-guide/data-source/data-source-overview/refresh-integrations',
               ],
             },
             {
