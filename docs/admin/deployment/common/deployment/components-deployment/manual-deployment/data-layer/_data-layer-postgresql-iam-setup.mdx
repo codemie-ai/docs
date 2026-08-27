@@ -28,6 +28,9 @@ If <code>codemie_admin</code> was already created (e.g. by a prior deployment ru
 
 ### Upgrading an Existing Deployment to IAM Authentication
 
+<details>
+<summary>Migration steps for existing deployments</summary>
+
 To move an existing deployment from password-based authentication to IAM database authentication:
 
 1. Apply the updated Terraform configuration to enable IAM database authentication on the RDS instance.
@@ -58,3 +61,5 @@ To move an existing deployment from password-based authentication to IAM databas
 </CodeBlock>
 
 - Remove the <code>POSTGRES_PASSWORD</code> and <code>PG_URL</code> entries (IAM token auth replaces password-based connection).
+
+</details>

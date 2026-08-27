@@ -32,11 +32,7 @@ No third-party component updates in this release.
         ```bash
         aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
         ```
-   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. The master user (`dbadmin`) remains password-based and is only used for administrative bootstrap tasks; a dedicated database role (`codemie_admin` by default) is granted the `rds_iam` role and used exclusively for IAM token authentication.
-
-     :::warning Action required for existing AWS deployments
-     Existing AWS deployments must be migrated to IAM authentication. See [Upgrading an Existing Deployment to IAM Authentication](../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication) for the full migration steps.
-     :::
+   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
 
 <h3>Hotfixes</h3>
 
