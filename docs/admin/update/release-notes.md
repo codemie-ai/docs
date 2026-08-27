@@ -27,9 +27,8 @@ No third-party component updates in this release.
 <h3>Configuration Changes</h3>
 
 1. **AWS Terraform changes**
-   - **S3 user data bucket encryption switched to SSE-KMS** — the user data S3 bucket is now encrypted with a dedicated customer-managed KMS key instead of SSE-S3 (`AES256`), enabling CloudTrail audit logging for key usage and key-policy-based access control. This change only applies to objects uploaded after the update; existing objects keep their current encryption and remain fully readable. To re-encrypt existing files with the new key:
-     1. Retrieve the bucket name from `AWS_S3_BUCKET_NAME` in `deployment_outputs.env`.
-     2. Run:
+   - **S3 user data bucket encryption switched to SSE-KMS** — the user data S3 bucket is now encrypted with a dedicated customer-managed KMS key instead of SSE-S3 (`AES256`). This change only applies to objects uploaded after the update; existing objects keep their current encryption and remain fully readable. To re-encrypt existing files with the new key:
+     1. Run:
         ```bash
         aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
         ```
