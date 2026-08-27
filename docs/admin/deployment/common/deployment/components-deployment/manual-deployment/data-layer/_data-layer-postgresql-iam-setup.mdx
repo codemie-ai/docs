@@ -1,0 +1,60 @@
+import CodeBlock from '@theme/CodeBlock';
+import Admonition from '@theme/Admonition';
+
+### Create the IAM Authentication Database User
+
+Before creating the connection secret, bootstrap the dedicated `codemie_admin` role that codemie-api will use for IAM authentication. This connects as the master user `dbadmin` (password auth) to create the new role, grant it `rds_iam`, and grant it full access to the `codemie` database:
+
+<CodeBlock language="bash">
+{`kubectl run pg-iam-setup --rm -i --restart=Never \\
+  --image=alpine/psql:18.3 \\
+  --namespace codemie \\
+  --env="PGPASSWORD=<CODEMIE_POSTGRES_DATABASE_PASSWORD>" \\
+  --env="PGSSLMODE=require" \\
+  -- \\
+    -h <CODEMIE_POSTGRES_DATABASE_HOST> \\
+    -U <CODEMIE_POSTGRES_DATABASE_USER> \\
+    -d <CODEMIE_POSTGRES_DATABASE_NAME> \\
+    -c "CREATE USER <CODEMIE_IAM_DATABASE_USER>; GRANT rds_iam TO <CODEMIE_IAM_DATABASE_USER>; GRANT ALL PRIVILEGES ON DATABASE <CODEMIE_POSTGRES_DATABASE_NAME> TO <CODEMIE_IAM_DATABASE_USER>; GRANT ALL ON SCHEMA public TO <CODEMIE_IAM_DATABASE_USER>; GRANT ALL ON ALL TABLES IN SCHEMA public TO <CODEMIE_IAM_DATABASE_USER>; GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO <CODEMIE_IAM_DATABASE_USER>; ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO <CODEMIE_IAM_DATABASE_USER>; ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO <CODEMIE_IAM_DATABASE_USER>;" < /dev/null`}
+</CodeBlock>
+
+<Admonition type="warning" title="Replace Placeholders">
+Replace every <code>CODEMIE_*</code> placeholder with the actual value from <code>deployment_outputs.env</code>. <code>PGSSLMODE=require</code> is required — RDS rejects unencrypted connections once IAM database authentication is enabled on the instance.
+</Admonition>
+
+<Admonition type="tip" title="Already exists">
+If <code>codemie_admin</code> was already created (e.g. by a prior deployment run), <code>CREATE USER</code> fails with <code>role "codemie_admin" already exists</code>. This is safe to ignore — re-run the command without the <code>CREATE USER ...;</code> clause to (re-)apply the grants only.
+</Admonition>
+
+### Upgrading an Existing Deployment to IAM Authentication
+
+To move an existing deployment from password-based authentication to IAM database authentication:
+
+1. Apply the updated Terraform configuration to enable IAM database authentication on the RDS instance.
+2. Create the <code>codemie_admin</code> role as described above.
+3. Add <code>PG_IAM_USER</code> to the existing <code>codemie-postgresql</code> secret instead of recreating it:
+
+<CodeBlock language="bash">
+{`kubectl -n codemie patch secret codemie-postgresql --type merge \\
+  -p "{\\"data\\":{\\"PG_IAM_USER\\":\\"$(echo -n <CODEMIE_IAM_DATABASE_USER> | base64)\\"}}"`}
+</CodeBlock>
+
+4. Update <code>codemie-api/values-aws.yaml</code> and redeploy <code>codemie-api</code>:
+   - Add <code>PG_IAM_AUTH_PROVIDER</code>:
+
+<CodeBlock language="yaml">
+{`- name: PG_IAM_AUTH_PROVIDER
+  value: "aws"`}
+</CodeBlock>
+
+- Change <code>POSTGRES_USER</code> to read from <code>PG_IAM_USER</code> instead of <code>PG_USER</code>:
+
+<CodeBlock language="yaml">
+{`- name: POSTGRES_USER
+  valueFrom:
+    secretKeyRef:
+      name: codemie-postgresql
+      key: PG_IAM_USER`}
+</CodeBlock>
+
+- Remove the <code>POSTGRES_PASSWORD</code> and <code>PG_URL</code> entries (IAM token auth replaces password-based connection).
