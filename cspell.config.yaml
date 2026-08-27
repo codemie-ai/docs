@@ -214,6 +214,8 @@ words:
   - phpt
   - rhtml
   # Shell commands, utilities and variables
+  - PGPASSWORD
+  - PGSSLMODE
   - orbstack
   - pwgen
   - bcrypt

@@ -10,6 +10,7 @@ pagination_next: admin/deployment/azure/kubernetes/components-deployment/manual-
 import DataLayerOverview from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-overview.mdx';
 import DataLayerElasticsearch from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-elasticsearch.mdx';
 import DataLayerPostgresConfig from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-config.mdx';
+import DataLayerPostgresSecret from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-secret-common.mdx';
 import DataLayerValidation from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-validation.mdx';
 
 <DataLayerOverview />
@@ -18,6 +19,10 @@ import DataLayerValidation from '../../../../common/deployment/components-deploy
 
 <DataLayerPostgresConfig
   postgresServiceName="Azure Database for PostgreSQL"
+  postgresExampleHost="codemie-postgres.postgres.database.azure.com"
+/>
+
+<DataLayerPostgresSecret
   postgresExampleHost="codemie-postgres.postgres.database.azure.com"
 />
 
