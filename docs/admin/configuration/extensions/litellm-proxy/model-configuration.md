@@ -341,7 +341,6 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`gpt-5.4-2026-03-05`](#gpt-54)                             | GPT-5.4                |
 | [`gpt-5.5-2026-04-24`](#gpt-55)                             | GPT-5.5                |
-| [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
 | [`o4-mini-2025-04-16`](#o4-mini)                            | o4 mini                |
@@ -1147,27 +1146,6 @@ model_list:
 </details>
 
 ### o-series
-
-#### o1
-
-<details>
-<summary><strong>o1</strong></summary>
-
-```yaml
-- model_name: o1
-  litellm_params:
-    model: azure/o1-2024-12-17
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o1-swedencentral-0-eu
-    base_model: azure/eu/o1-2024-12-17
-    label: "o1 2024-12-17"
-    supports_native_streaming: false
-```
-
-</details>
 
 #### o3
 
