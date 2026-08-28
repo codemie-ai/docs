@@ -55,6 +55,7 @@ No third-party component updates in this release.
         ```bash
         aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
         ```
+   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../deployment/aws/kubernetes/infrastructure-deployment/manual-deployment.md#phase-2-terraform-backend-resources-deployment).
    - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
 
 <h3>Hotfixes</h3>
