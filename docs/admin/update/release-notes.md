@@ -22,7 +22,9 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Langfuse 3.224.1</h4>
+
+Updated from 3.129.0. For details, see the [Langfuse 3.224.1 Release Notes ↗](https://github.com/langfuse/langfuse/releases/tag/v3.224.1).
 
 <h3>Configuration Changes</h3>
 
