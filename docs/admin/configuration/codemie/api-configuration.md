@@ -1282,7 +1282,7 @@ tool calls simultaneously within one inference round. Results arrive concurrentl
 rendered in the UI as parallel entries under the same thought step.
 
 Standard GPT and Claude models support parallel tool calls. Reasoning models
-(`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** — always set
+(`o1`, `o4-mini`, and similar) do **not** — always set
 `parallel_tool_calls: false` in their `features` block.
 :::
 
