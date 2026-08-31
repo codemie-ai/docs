@@ -27,6 +27,8 @@ Use this table to quickly find where each component appears in the UI.
 | `features:showAllProjects`                | Settings → Administration → project selector              | All projects returned by admin project picker (no limit or search minimum) | Admin project picker limited to 5 results with 3-char search minimum                |                                                                  |
 | `defaultConversationAssistant`            | New chat creation                                         | Pre-selects specified assistant                                            | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                        |
 | `features:personalLiteLLMIntegrations`    | Integrations → User tab                                   | LiteLLM as a personal integration option for regular users                 | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                              |
+| `subWorkflowNode`                         | Workflow visual editor → Action nodes                     | Sub-workflow node UI                                                       | Sub-workflow node UI                                                                | Disabled by default; enable with `features:subWorkflow`          |
+| `features:subWorkflow`                    | Workflow editor and execution                             | Sub-workflow configuration and execution                                   | Sub-workflow controls; API and runtime access return `403`                          | Disabled by default; enable with `subWorkflowNode`               |
 | **PLATFORM-MANAGED MODE**                 |                                                           |                                                                            |                                                                                     |                                                                  |
 | `features:budgetManagement`               | Project detail pages, Settings → Administration           | Budget columns and budget management section                               | Budget tracking UI                                                                  |                                                                  |
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                           |                                                                            |                                                                                     |                                                                  |
@@ -238,6 +240,22 @@ components:
     settings:
       enabled: true
 
+  # WHERE: Workflow visual editor → Action nodes
+  # ENABLED: Shows the Sub-workflow node UI when features:subWorkflow is also enabled
+  # DISABLED: Hides the Sub-workflow node UI
+  # NOTE: Disabled by default; keep aligned with features:subWorkflow
+  - id: "subWorkflowNode"
+    settings:
+      enabled: false
+
+  # WHERE: Workflow editor, Sub-workflow API endpoints, and workflow execution
+  # ENABLED: Allows users to configure and execute Sub-workflow nodes
+  # DISABLED: Hides Sub-workflow controls; API and runtime requests are rejected
+  # NOTE: Disabled by default; keep aligned with subWorkflowNode to avoid 403 responses
+  - id: "features:subWorkflow"
+    settings:
+      enabled: false
+
   # WHERE: Dashboard page
   # ENABLED: Allows users to customize dashboard layout and widgets
   # DISABLED: Shows static dashboard layout (no customization)
@@ -283,6 +301,8 @@ components:
     settings:
       enabled: true
 ```
+
+Enable `subWorkflowNode` and `features:subWorkflow` together. Enabling only the UI-facing component can expose Sub-workflow controls while the backend gate still rejects Sub-workflow requests with a `403` response.
 
 ### Advanced Features
 
