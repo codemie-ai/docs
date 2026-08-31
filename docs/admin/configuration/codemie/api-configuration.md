@@ -963,7 +963,7 @@ The customer configuration feature gate `features:subWorkflow` controls whether 
 | Parameter                                  | Type    | Default | Description                                                                                         |
 | ------------------------------------------ | ------- | ------- | --------------------------------------------------------------------------------------------------- |
 | `SUBWORKFLOW_MAX_NESTING_DEPTH`            | integer | `1`     | Default nesting limit when the selected child workflow does not define `max_nesting_level`          |
-| `SUBWORKFLOW_POOL_ENABLED`                 | boolean | `true`  | Globally permits workflow pooling; the selected child must also set `pool_config.enabled` to `true` |
+| `SUBWORKFLOW_POOL_ENABLED`                 | boolean | `false` | Globally permits workflow pooling; the selected child must also set `pool_config.enabled` to `true` |
 | `SUBWORKFLOW_POOL_MAX_SIZE`                | integer | `5`     | Global cap applied to the number of pooled instances for each workflow                              |
 | `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS` | integer | `60`    | Interval in seconds used by the background watcher to discover and refill eligible workflow pools   |
 
