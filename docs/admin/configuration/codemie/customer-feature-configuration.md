@@ -302,8 +302,6 @@ components:
       enabled: true
 ```
 
-Enable `subWorkflowNode` and `features:subWorkflow` together. Enabling only the UI-facing component can expose Sub-workflow controls while the backend gate still rejects Sub-workflow requests with a `403` response.
-
 ### Advanced Features
 
 **Fields used in this section:**
