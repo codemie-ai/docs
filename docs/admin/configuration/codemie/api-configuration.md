@@ -956,6 +956,21 @@ Automatically compress long conversation histories when token usage exceeds a th
 | `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                        |
 | `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty |
 
+### Sub-workflows
+
+The customer configuration feature gate `features:subWorkflow` controls whether Sub-workflows are available. When the gate is disabled, the visual editor hides Sub-workflow controls and the API and runtime reject Sub-workflow use, independently of the backend defaults below.
+
+| Parameter                                  | Type    | Default | Description                                                                                         |
+| ------------------------------------------ | ------- | ------- | --------------------------------------------------------------------------------------------------- |
+| `SUBWORKFLOW_MAX_NESTING_DEPTH`            | integer | `1`     | Default nesting limit when the selected child workflow does not define `max_nesting_level`          |
+| `SUBWORKFLOW_POOL_ENABLED`                 | boolean | `true`  | Globally permits workflow pooling; the selected child must also set `pool_config.enabled` to `true` |
+| `SUBWORKFLOW_POOL_MAX_SIZE`                | integer | `5`     | Global cap applied to the number of pooled instances for each workflow                              |
+| `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS` | integer | `60`    | Interval in seconds used by the background watcher to discover and refill eligible workflow pools   |
+
+Pooling is active for a workflow only when `SUBWORKFLOW_POOL_ENABLED` and that workflow's `pool_config.enabled` are both enabled. The effective pool size cannot exceed `SUBWORKFLOW_POOL_MAX_SIZE`, even when the workflow defines a larger `pool_config.max_size`. The watcher cadence is controlled by `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS`, not by the workflow's `pool_config.refill_interval_seconds` value.
+
+For authoring instructions, see [Sub-workflows](../../../user-guide/workflows/subworkflows.md). For per-workflow YAML settings and supported ranges, see [Sub-workflow Node](../../../user-guide/workflows/configuration/specialized-nodes.md#85-sub-workflow-node).
+
 ### Background Jobs
 
 | Parameter                    | Type    | Default | Description                                                                     |
