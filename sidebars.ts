@@ -270,16 +270,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Applications',
-          link: {
-            type: 'doc',
-            id: 'user-guide/applications/index',
-          },
-          collapsed: true,
-          items: ['user-guide/applications/ai-testmate'],
-        },
-        {
-          type: 'category',
           label: 'AI Katas',
           link: {
             type: 'doc',
