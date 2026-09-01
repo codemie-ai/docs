@@ -20,6 +20,7 @@ Learn the basics of creating and managing workflows:
 
 - [Workflows Overview](./workflows-overview.md) - Introduction to workflows and their capabilities
 - [Create Workflow](./create-workflow.md) - Build a workflow from scratch
+- [Sub-workflows](./subworkflows.md) - Invoke a child workflow from a parent workflow
 - [Create a Workflow from a Template](./create-workflow-from-template.md) - Start with pre-built templates
 - [Workflow Templates](./workflow-templates.md) - Explore available workflow templates
 

@@ -3,7 +3,7 @@ id: create-workflow
 title: Create Workflow
 sidebar_label: Create Workflow
 pagination_prev: user-guide/workflows/workflows-overview
-pagination_next: user-guide/workflows/llm-model-name-in-workflow
+pagination_next: user-guide/workflows/subworkflows
 sidebar_position: 2
 description: Step-by-step guide to creating custom workflows using the Visual Workflow Editor in AI/Run CodeMie
 ---
@@ -366,6 +366,7 @@ Workflows enable you to build sophisticated automation that adapts to your data,
 Now that you understand the Visual Workflow Editor interface and controls, explore these topics:
 
 - **[Create from Template](./create-workflow-from-template.md)**: Start with pre-built templates and customize them
+- **[Sub-workflows](./subworkflows.md)**: Invoke another workflow with an isolated execution context
 - **[LLM Model Configuration](./llm-model-name-in-workflow.md)**: Configure AI models for workflow states
 - **[Workflow Templates](./workflow-templates.md)**: Browse available templates for common use cases
 - **[YAML Configuration Guide](./configuration/introduction.md)**: Deep dive into advanced YAML features

@@ -2,7 +2,7 @@
 id: llm-model-name-in-workflow
 title: LLM Model Name in Workflow
 sidebar_label: LLM Model Name
-pagination_prev: user-guide/workflows/create-workflow
+pagination_prev: user-guide/workflows/subworkflows
 pagination_next: user-guide/workflows/workflow-templates
 sidebar_position: 3
 description: How to identify which LLM model is being used in a workflow

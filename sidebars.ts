@@ -103,6 +103,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/workflows/workflows-overview',
             'user-guide/workflows/create-workflow',
+            'user-guide/workflows/subworkflows',
             'user-guide/workflows/llm-model-name-in-workflow',
             'user-guide/workflows/workflow-templates',
             'user-guide/workflows/create-workflow-from-template',
