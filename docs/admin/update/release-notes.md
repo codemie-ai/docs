@@ -13,6 +13,46 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.46.0 {#v2-46-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** September 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.46.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+### CodeMie 2.45.0 {#v2-45-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** August 28, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.45.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Langfuse 3.224.1</h4>
+
+Updated from 3.129.0. For details, see the [Langfuse 3.224.1 Release Notes ↗](https://github.com/langfuse/langfuse/releases/tag/v3.224.1).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+<h3>Hotfixes</h3>
+
+- **2.45.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.45.1) – August 28, 2026
+
+</details>
+
 ### CodeMie 2.44.0 {#v2-44-0}
 
 <details>
@@ -26,7 +66,18 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **AWS Terraform changes**
+   - **S3 user data bucket encryption switched to SSE-KMS** — the user data S3 bucket is now encrypted with a dedicated customer-managed KMS key instead of SSE-S3 (`AES256`). This change only applies to objects uploaded after the update; existing objects keep their current encryption and remain fully readable. To re-encrypt existing files with the new key:
+     1. Run:
+        ```bash
+        aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
+        ```
+   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../deployment/aws/kubernetes/infrastructure-deployment/manual-deployment.md#phase-2-terraform-backend-resources-deployment).
+   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
+
+<h3>Hotfixes</h3>
+
+- **2.44.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.44.1) – August 20, 2026
 
 </details>
 

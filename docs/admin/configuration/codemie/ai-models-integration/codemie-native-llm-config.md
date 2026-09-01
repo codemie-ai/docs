@@ -212,15 +212,6 @@ llm_models:
       output: 0.0000004
       cache_read_input_token_cost: 0.000000005
 
-  - base_name: "gpt-4-vision"
-    deployment_name: "gpt-4-vision-preview"
-    multimodal: false
-    enabled: false
-    provider: "azure_openai"
-    cost:
-      input: 0.00001
-      output: 0.00003
-
   - base_name: "o3-mini"
     deployment_name: "o3-mini-2025-01-31"
     label: "o3 Mini 2025-01-31"

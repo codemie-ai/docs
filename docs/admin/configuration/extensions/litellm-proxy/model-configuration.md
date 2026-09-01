@@ -325,6 +325,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8         |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
+| [`grok-4.6`](#grok-46)                          | Grok 4.6                |
 
 ### Azure OpenAI Models
 
@@ -671,6 +672,28 @@ Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data r
     id: claude-opus-4-8-eu-central-1
     base_model: eu.anthropic.claude-opus-4-8
     label: "Bedrock Claude Opus 4.8"
+```
+
+</details>
+
+### Grok
+
+#### Grok 4.6
+
+<details>
+<summary><strong>Grok 4.6</strong></summary>
+
+```yaml
+# US Region
+- model_name: grok-4.6
+  litellm_params:
+    model: bedrock/us.xai.grok-4.6
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+  model_info:
+    id: grok-4.6-us-east-1
+    base_model: us.xai.grok-4.6
+    label: "Grok 4.6"
 ```
 
 </details>

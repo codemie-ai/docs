@@ -247,6 +247,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'user-guide/data-source/data-source-overview/indexing-data-sources',
                 'user-guide/data-source/data-source-overview/indexing-duration',
+                'user-guide/data-source/data-source-overview/refresh-integrations',
               ],
             },
             {
@@ -267,16 +268,6 @@ const sidebars: SidebarsConfig = {
               ],
             },
           ],
-        },
-        {
-          type: 'category',
-          label: 'Applications',
-          link: {
-            type: 'doc',
-            id: 'user-guide/applications/index',
-          },
-          collapsed: true,
-          items: ['user-guide/applications/ai-testmate'],
         },
         {
           type: 'category',
