@@ -1142,16 +1142,6 @@ extraObjects:
               created_by: "Your Team"
               icon_url: "https://your-cdn.com/angular-icon.svg"
 
-          - id: "applications:test-mate"
-            settings:
-              enabled: true
-              name: "AI TestMate"
-              url: "/aitestmate"
-              type: "link"
-              description: "Autonomous GenAI solution that automatically generates and commits unit tests"
-              created_by: "DPEO"
-              icon_url: "https://github.com/alk-epam/test-repo/blob/main/ai_testmate_small.png?raw=true"
-
           - id: "applications:aice"
             settings:
               enabled: true
