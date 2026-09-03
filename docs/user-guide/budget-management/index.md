@@ -73,16 +73,16 @@ For configuration details, see [LiteLLM Budget Configuration](../../admin/config
 
 Path: **Profile → Settings → Administration → Budgets**
 
-Users with the **Admin** or **Maintainer** role can view the budget list. Creating, editing, deleting, and syncing budgets is available to **Maintainer** only. Users with the Admin role (without Maintainer) can only view the list.
+Users with the **Admin**, **Maintainer**, or **Auditor** role can view the budget list and all associated spend data. Creating, editing, deleting, and syncing budgets is available to **Maintainer** only. Users with the Admin role (without Maintainer) can only view the list.
 
-Budget management is a unique role. Project Admin cannot manage budgets in any project — neither their own nor others'.
+Budget management is a unique role. Project Admin cannot manage budgets in any project — neither their own nor others'. Regular users and Project Admins are redirected away from the Budgets section; Auditors have direct read-only access.
 
-| Action                              | Maintainer | Admin | Project admin |
-| ----------------------------------- | ---------- | ----- | ------------- |
-| Create / update / delete any budget | Yes        | No    | No            |
-| View budget list                    | Yes        | Yes   | No            |
-| View own project budget             | Yes        | Yes   | Yes           |
-| Override a member's allocation      | Yes        | No    | No            |
+| Action                              | Maintainer | Admin | Project admin | Auditor   |
+| ----------------------------------- | ---------- | ----- | ------------- | --------- |
+| Create / update / delete any budget | Yes        | No    | No            | No        |
+| View budget list                    | Yes        | Yes   | No            | Yes       |
+| View own project budget             | Yes        | Yes   | Yes           | Yes (all) |
+| Override a member's allocation      | Yes        | No    | No            | No        |
 
 :::info
 For details on roles, see [Roles & RBAC](../../admin/security/roles-rbac).

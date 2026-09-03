@@ -10,9 +10,12 @@ description: View and manage all platform users in AI/Run CodeMie. Inspect user 
 
 # Users Management
 
-:::info Platform Admin only
-The Users Management page is only accessible to **Platform Admins**. Regular users can manage
-members within their own projects from the [Projects Management](./projects.md) page.
+:::info Access levels
+**Platform Admins and Maintainers** can view user details, manage project assignments, and assign platform roles including the Auditor flag.
+
+**Auditors** have read-only access — all user details and budget spend data are visible, but create, edit, deactivate, and role-change controls are not available.
+
+Regular users manage project members from the [Projects Management](./projects.md) page.
 :::
 
 :::info Admin configuration required
@@ -66,6 +69,7 @@ The panel shows:
 - **Avatar** and display name
 - **User Type**: `Regular` or `External`
 - **Email**: user's email address
+- **Platform Roles** block — Admin, Maintainer, and Auditor toggles (visible to Platform Admins and Maintainers only)
 - **Projects** table — list of projects the user is assigned to, with their role in each
 - **Budget Spending** widget — current budget consumption for the selected user (see below)
 
@@ -73,10 +77,40 @@ The panel shows:
 
 ![User Details panel for an External user](./images/user-details-external.png)
 
+### Platform Roles
+
+The **Platform Roles** block is visible to Platform Admins and Maintainers in the User
+Details panel. It displays toggles for the three elevated flags: **Admin**, **Maintainer**,
+and **Auditor**.
+
+![User Details panel — Platform Roles block with Auditor, Admin, and Maintainer toggles](./images/user-details-platform-roles.png)
+
+To assign the Auditor flag to a user:
+
+1. Open the **User Details** panel for the target user.
+2. In the **Platform Roles** block, toggle the **Auditor** switch on.
+3. Click **Save**.
+
+![Auditor switch toggled on for a regular user](./images/user-details-auditor-enabled.png)
+
+To remove the flag, toggle the switch off and save.
+
+:::note
+If the user already holds Admin or Maintainer status, the Auditor switch is shown disabled.
+The tooltip reads: _"Admin and Maintainer already include full platform access — the Auditor
+flag has no effect for this user."_
+
+![Auditor switch shown disabled with an explanatory tooltip when the user is already Admin or Maintainer](./images/user-details-auditor-disabled-tooltip.png)
+
+The stored flag value is not modified.
+:::
+
 ### Budget Spending
 
 The **Budget Spending** widget is displayed at the bottom of the User Details panel and shows
 the current budget consumption for the selected user across all three budget categories.
+
+![User Details panel as seen by an Auditor — read-only, no Platform Roles block or edit controls](./images/auditor-user-details-readonly.png)
 
 | Column               | Description                                                          |
 | -------------------- | -------------------------------------------------------------------- |
