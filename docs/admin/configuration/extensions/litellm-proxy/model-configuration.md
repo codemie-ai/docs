@@ -342,8 +342,6 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5.4-2026-03-05`](#gpt-54)                             | GPT-5.4                |
 | [`gpt-5.5-2026-04-24`](#gpt-55)                             | GPT-5.5                |
 | [`o1`](#o1)                                                 | o1                     |
-| [`o3-mini`](#o3-mini)                                       | o3 mini                |
-| [`o3-2025-04-16`](#o3)                                      | o3                     |
 | [`o4-mini-2025-04-16`](#o4-mini)                            | o4 mini                |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
@@ -1164,48 +1162,6 @@ model_list:
     id: o1-swedencentral-0-eu
     base_model: azure/eu/o1-2024-12-17
     label: "o1 2024-12-17"
-    supports_native_streaming: false
-```
-
-</details>
-
-#### o3
-
-<details>
-<summary><strong>o3</strong></summary>
-
-```yaml
-- model_name: o3-2025-04-16
-  litellm_params:
-    model: azure/o3-2025-04-16
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o3-2025-04-16-swedencentral-0-eu
-    base_model: azure/o3-2025-04-16
-    label: "o3 2025-04-16"
-    supports_native_streaming: false
-```
-
-</details>
-
-#### o3-Mini
-
-<details>
-<summary><strong>o3-Mini</strong></summary>
-
-```yaml
-- model_name: o3-mini
-  litellm_params:
-    model: azure/o3-mini-2025-01-31
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o3-mini-swedencentral-0-eu
-    base_model: azure/eu/o3-mini-2025-01-31
-    label: "o3 Mini 2025-01-31"
     supports_native_streaming: false
 ```
 
