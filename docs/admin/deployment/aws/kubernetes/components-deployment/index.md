@@ -13,7 +13,7 @@ pagination_next: admin/deployment/aws/kubernetes/components-deployment/component
 
 This section guides you through deploying the AI/Run CodeMie application stack on your EKS cluster. After completing infrastructure deployment, this phase installs all necessary Kubernetes components including:
 
-- **Core AI/Run CodeMie services** (API, UI, MCP Connect, NATS Auth)
+- **Core AI/Run CodeMie services** (API, UI, MCP Connect)
 - **Data layer** (Elasticsearch)
 - **Security & Identity** (Keycloak, OAuth2 Proxy)
 - **Infrastructure services** (Ingress controller, storage)
@@ -36,13 +36,12 @@ The AI/Run CodeMie application consists of multiple integrated components organi
 
 Proprietary services that provide the main AI/Run CodeMie functionality:
 
-| Component             | Container Registry                                                  | Description                                                                           |
-| --------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **CodeMie API**       | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations          |
-| **CodeMie UI**        | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                                 |
-| **NATS Auth Callout** | `europe-west3-docker.pkg.dev/.../codemie-nats-auth-callout:x.y.z`   | Authentication and authorization service for NATS messaging (Plugin Engine component) |
-| **MCP Connect**       | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                               |
-| **Mermaid Server**    | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                                 |
+| Component          | Container Registry                                                  | Description                                                                  |
+| ------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **CodeMie API**    | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations |
+| **CodeMie UI**     | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                        |
+| **MCP Connect**    | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                      |
+| **Mermaid Server** | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                        |
 
 :::info Version Information
 To find the latest release versions for CodeMie components:
@@ -87,14 +86,6 @@ Essential Kubernetes infrastructure components:
 | **Nginx Ingress Controller** | `registry.k8s.io/ingress-nginx/controller:x.y.z` | Routes external traffic to internal services        |
 | **Storage Class**            | AWS EBS CSI Driver                               | Provides persistent volumes for stateful components |
 
-#### Messaging & Integration
-
-Message broker for Plugin Engine:
-
-| Component | Container Registry | Description                                                       |
-| --------- | ------------------ | ----------------------------------------------------------------- |
-| **NATS**  | `nats:x.y.z`       | High-performance messaging system for Plugin Engine communication |
-
 #### Observability
 
 Logging and monitoring components:
@@ -119,10 +110,9 @@ Components must be deployed in the following order due to dependencies:
 2. **Operators** → Keycloak Operator
 3. **Data Layer** → Elasticsearch
 4. **Security** → Keycloak (with database credentials), OAuth2 Proxy
-5. **Messaging** → NATS
-6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
-7. **Observability** → Fluent Bit, Kibana
-8. **Optional** → LLM Proxy (if needed)
+5. **Core Services** → CodeMie API, UI, MCP Connect
+6. **Observability** → Fluent Bit, Kibana
+7. **Optional** → LLM Proxy (if needed)
 
 ## Prerequisites
 
@@ -195,7 +185,7 @@ kubectl get secret gcp-artifact-registry -n codemie
 ```
 
 :::info Pull Secret Usage
-The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-mcp-connect-service`, and `mermaid-server`.
 
 This is configured automatically in the values files:
 
