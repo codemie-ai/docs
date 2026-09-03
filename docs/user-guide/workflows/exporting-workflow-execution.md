@@ -3,7 +3,7 @@ id: exporting-workflow-execution
 title: Exporting Workflow Execution
 sidebar_label: Export Execution
 pagination_prev: user-guide/workflows/share-workflow-execution
-pagination_next: user-guide/workflows/configuration/workflow-configuration-overview
+pagination_next: user-guide/workflows/assistant-panel-in-executions
 sidebar_position: 7
 ---
 

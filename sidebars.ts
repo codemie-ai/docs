@@ -109,6 +109,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/workflows/create-workflow-from-template',
             'user-guide/workflows/share-workflow-execution',
             'user-guide/workflows/exporting-workflow-execution',
+            'user-guide/workflows/assistant-panel-in-executions',
             'user-guide/workflows/marketplace-overview',
             'user-guide/workflows/marketplace-publishing',
             'user-guide/workflows/clone-workflow-from-marketplace',
