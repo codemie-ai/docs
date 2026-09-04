@@ -139,6 +139,10 @@ A configured connection between the CodeMie platform and an external service or 
 
 See [Default Integration](#default-integration) for how CodeMie selects one automatically when none is explicitly chosen.
 
+### Invoker
+
+The least-privileged platform role, identified by the `is_invoker` flag on the user account. An Invoker can chat with assistants and run workflows shared with their projects, clone Marketplace assistants into their personal project, and manage personal integrations, but cannot view or edit any assistant or workflow configuration, change the LLM model, author anything, or open administration screens. The role is assigned in Users Management, is mutually exclusive with Admin, Maintainer, Auditor, and Project Admin, and requires activity events to be enabled because every Invoker action is audited. See [Invoker Role](../project-user-management/invoker-role.md).
+
 ---
 
 ## J

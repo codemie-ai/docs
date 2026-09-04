@@ -358,6 +358,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/project-user-management/projects',
             'user-guide/project-user-management/users',
+            'user-guide/project-user-management/invoker-role',
           ],
         },
         {

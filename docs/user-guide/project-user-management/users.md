@@ -52,7 +52,7 @@ Use the filter bar at the top of the list to narrow results:
 
 - **Search** — filter by name
 - **Project** — show only users assigned to a specific project
-- **Platform Role** — filter by `User`, `Project Admin`, or `Super Admin`
+- **Platform Role** — filter by `User`, `Project Admin`, `Super Admin`, `Auditor`, or `Invoker`
 
 Click **Clear All** to reset all active filters.
 
@@ -72,6 +72,37 @@ The panel shows:
 ![User Details panel for a Regular user](./images/user-details-regular.png)
 
 ![User Details panel for an External user](./images/user-details-external.png)
+
+### Assign the Invoker Role
+
+The **User Details** panel contains the platform role switches: **Auditor**, **Admin**,
+**Maintainer**, and **Invoker**. The **Invoker** switch turns the selected user into a run-only
+user who can chat with shared assistants, run shared workflows, clone Marketplace assistants,
+and manage personal integrations, but cannot view or change any AI configuration. See
+[Invoker Role](./invoker-role.md) for the full list of permissions and restrictions.
+
+To assign the role:
+
+1. Open the **User Details** panel for the user.
+2. Turn on the **Invoker** switch. The change is saved immediately.
+
+The following rules apply:
+
+- Invoker is mutually exclusive with **Admin**, **Maintainer**, and **Auditor**. Turning on
+  **Invoker** clears those switches for the user.
+- Invoker cannot be combined with the **Project Admin** role. If the user is a Project Admin in
+  any project, the switch is rejected and an error is shown under the switches. Change the
+  user's role to **User** in every project first, then assign Invoker.
+- A user cannot change their own platform roles.
+
+:::info Prerequisites
+The Invoker role requires **activity events** to be enabled on the platform
+(`ACTIVITY_EVENTS_ENABLED=True`), because every Invoker action is written to the audit trail.
+When auditing is disabled, the switch is rejected with the message **Invoker role unavailable**.
+:::
+
+To revoke the role, turn the **Invoker** switch off. The user immediately regains the regular
+user interface and permissions.
 
 ### Budget Spending
 
