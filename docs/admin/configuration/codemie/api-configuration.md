@@ -286,13 +286,22 @@ Configure where and how CodeMie stores uploaded files, attachments, and generate
 
 ### General Storage Settings
 
-| Parameter                       | Type    | Default               | Description                                                                                                 |
-| ------------------------------- | ------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `FILES_STORAGE_TYPE`            | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket)                    |
-| `FILES_STORAGE_DIR`             | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                                   |
-| `FILES_STORAGE_MAX_UPLOAD_SIZE` | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing                         |
-| `REPOS_LOCAL_DIR`               | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                                                  |
-| `IMAGE_INDEXING_MAX_SIZE_BYTES` | integer | `10485760`            | Maximum image file size in bytes (10 MB) during datasource indexing; files exceeding this limit are skipped |
+| Parameter                               | Type    | Default               | Description                                                                                                                                                                                                                             |
+| --------------------------------------- | ------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FILES_STORAGE_TYPE`                    | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket)                                                                                                                                                |
+| `FILES_STORAGE_DIR`                     | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                                                                                                                                                               |
+| `FILES_STORAGE_MAX_UPLOAD_SIZE`         | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing                                                                                                                                                     |
+| `FILE_DATASOURCE_MAX_UPLOAD_COUNT`      | integer | `10`                  | Maximum number of files in a File data source; checked on creation and, on update, against retained plus newly uploaded files combined. Must be greater than `0`                                                                        |
+| `FILE_DATASOURCE_MAX_UPLOAD_TOTAL_SIZE` | integer | `1073741824`          | Maximum combined size in bytes of all files in one File data source create or update request (1 GB default). Does not scale automatically; raise it together with `FILES_STORAGE_MAX_UPLOAD_SIZE` or `FILE_DATASOURCE_MAX_UPLOAD_COUNT` |
+| `FILE_DATASOURCE_UPLOAD_MAX_WORKERS`    | integer | `3`                   | Concurrent workers that write uploaded File data source files to storage. Each worker holds one full file in memory, so higher values trade peak memory for upload throughput. Must be greater than `0`                                 |
+| `REPOS_LOCAL_DIR`                       | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                                                                                                                                                                              |
+| `IMAGE_INDEXING_MAX_SIZE_BYTES`         | integer | `10485760`            | Maximum image file size in bytes (10 MB) during datasource indexing; files exceeding this limit are skipped                                                                                                                             |
+
+:::info File data source upload limits
+`FILE_DATASOURCE_MAX_UPLOAD_COUNT` and `FILE_DATASOURCE_MAX_UPLOAD_TOTAL_SIZE` are enforced on `POST /v1/index/knowledge_base/file` and `PUT /v1/index/knowledge_base/file`. Requests that exceed either limit are rejected with HTTP 422 (`Too many files` or `Total upload size too large`) before any file is stored. Accepted files are written to storage concurrently by `FILE_DATASOURCE_UPLOAD_MAX_WORKERS` workers, so raising the file count to hundreds of files does not slow the request down proportionally.
+
+The configured file count is advertised as `fileDatasourceMaxUploadCount` in `GET /v1/info`. The CodeMie UI reads it to size the upload area of the File data source form, so no UI configuration is needed; when the field is missing the UI falls back to `10`.
+:::
 
 ### Cloud Storage - AWS S3
 
