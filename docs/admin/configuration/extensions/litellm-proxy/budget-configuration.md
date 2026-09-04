@@ -216,7 +216,7 @@ Configure rate limits to control usage:
 
 ## Premium Models Budget
 
-For costly models such as Claude Opus or OpenAI o1, you can configure a separate budget to track and enforce spending independently from the default end-user budget. When configured, CodeMie automatically attributes premium model requests to a derived LiteLLM customer identity (`{user_email}_codemie_premium_models`), allowing you to apply stricter limits to expensive models without affecting the standard budget.
+For costly models such as Claude Opus, you can configure a separate budget to track and enforce spending independently from the default end-user budget. When configured, CodeMie automatically attributes premium model requests to a derived LiteLLM customer identity (`{user_email}_codemie_premium_models`), allowing you to apply stricter limits to expensive models without affecting the standard budget.
 
 :::info Feature Toggle
 This feature activates when a budget with `budget_category: premium_models` is present in `budgets-config.yaml` and `LITELLM_PREMIUM_MODELS_ALIASES` is set. If neither is configured, all requests use standard budget behavior.
@@ -241,7 +241,7 @@ Add a `premium_models` budget entry to your `budgets-config.yaml` (via [Helm cus
 Set the `LITELLM_PREMIUM_MODELS_ALIASES` environment variable to a JSON array of model name substrings that qualify as premium:
 
 ```bash
-LITELLM_PREMIUM_MODELS_ALIASES='["opus", "o1"]'
+LITELLM_PREMIUM_MODELS_ALIASES='["opus"]'
 ```
 
 **In AI/Run CodeMie Backend values** (`values.yaml`):
@@ -249,7 +249,7 @@ LITELLM_PREMIUM_MODELS_ALIASES='["opus", "o1"]'
 ```yaml
 extraEnv:
   - name: LITELLM_PREMIUM_MODELS_ALIASES
-    value: '["opus", "o1"]'
+    value: '["opus"]'
 ```
 
 To disable premium model tracking, remove the variable or set it to an empty array:

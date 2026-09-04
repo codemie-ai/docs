@@ -614,11 +614,11 @@ No third-party component updates in this release.
    ```yaml
    # Before
    - name: LITELLM_PREMIUM_MODELS_ALIASES
-     value: "opus,o1"
+     value: "opus"
 
    # After
    - name: LITELLM_PREMIUM_MODELS_ALIASES
-     value: '["opus", "o1"]'
+     value: '["opus"]'
    ```
 
    :::
