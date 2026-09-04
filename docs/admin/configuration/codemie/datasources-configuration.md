@@ -527,3 +527,60 @@ extraObjects:
 ```
 
 </details>
+
+## Datasource Lifecycle Management
+
+AI/Run CodeMie includes an automatic nightly job that detects and marks stale datasources — those that have not been used or updated for a configurable period. Stale datasources are marked in the database and their Elasticsearch indexes can be cleaned up to reclaim storage.
+
+### Lifecycle States
+
+| State      | Description                                                |
+| ---------- | ---------------------------------------------------------- |
+| `ACTIVE`   | Default state. Datasource is in use.                       |
+| `STALE`    | Unused beyond the configured threshold. Marked for review. |
+| `ARCHIVED` | Marked for deletion. Elasticsearch index will be removed.  |
+
+### How Detection Works
+
+Each night the scheduler evaluates all active datasources against two criteria:
+
+1. **No usage metrics** — no Elasticsearch usage events recorded for `STALE_DATASOURCE_NO_USAGE_DAYS` days.
+2. **No update** — no DB update recorded for `STALE_DATASOURCE_NO_UPDATE_DAYS` days (fallback for datasources without metrics).
+
+Newly created datasources are always skipped for `STALE_DATASOURCE_GRACE_DAYS` days.
+
+### Configuration
+
+Add the following environment variables to your `values.yaml`:
+
+```yaml
+extraEnv:
+  # Stale Datasource Lifecycle
+  - name: STALE_DATASOURCE_ENABLED
+    value: "true"
+  - name: STALE_DATASOURCE_SCHEDULE
+    value: "0 3 * * *"
+  - name: STALE_DATASOURCE_NO_USAGE_DAYS
+    value: "90"
+  - name: STALE_DATASOURCE_NO_UPDATE_DAYS
+    value: "120"
+  - name: STALE_DATASOURCE_GRACE_DAYS
+    value: "7"
+  - name: STALE_DATASOURCE_BATCH_SIZE
+    value: "100"
+```
+
+**Parameters:**
+
+| Variable                          | Default     | Description                                               |
+| --------------------------------- | ----------- | --------------------------------------------------------- |
+| `STALE_DATASOURCE_ENABLED`        | `false`     | Enable the nightly detection job.                         |
+| `STALE_DATASOURCE_SCHEDULE`       | `0 3 * * *` | Cron schedule (UTC). Default: 3 AM daily.                 |
+| `STALE_DATASOURCE_NO_USAGE_DAYS`  | `90`        | Days without ES usage metrics before marking stale.       |
+| `STALE_DATASOURCE_NO_UPDATE_DAYS` | `120`       | Days without a DB update before marking stale (fallback). |
+| `STALE_DATASOURCE_GRACE_DAYS`     | `7`         | Newly created datasources are immune for this many days.  |
+| `STALE_DATASOURCE_BATCH_SIZE`     | `100`       | Elasticsearch query batch size for metrics aggregation.   |
+
+:::note
+The feature is disabled by default (`STALE_DATASOURCE_ENABLED=false`). Enable it only after reviewing the thresholds for your organization's usage patterns.
+:::
