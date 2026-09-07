@@ -286,7 +286,8 @@ If you need direct control over the workflow configuration, you can switch to YA
 
 1. Click the **YAML** button in the upper right corner
 2. Edit the YAML configuration directly
-3. Check YAML history and restore previous versions if needed
+
+When editing an existing workflow, use **Version History** in the YAML header to browse prior versions, compare changes, and restore a previous configuration. See [Workflow Version History](./workflow-version-history.md) for details.
 
 :::info Configuration Sync
 The Visual Editor and YAML editor are synchronized. Changes made in one view are automatically reflected in the other.

@@ -21,7 +21,7 @@ Core assistant management tasks:
 - [Create Assistant](./create-assistant.md) - Build assistants from scratch
 - [Share Assistants](./sharing-assistants.md) - Share assistants with team members
 - [Edit Assistants](./edit-assistants.md) - Modify assistant configurations
-- [Restore System Instructions](./restore-system-instructions.md) - Revert to previous instruction versions
+- [Assistant Version History](./assistant-version-history.md) - Browse, compare, and restore previous system instruction versions
 - [Delete Assistants and Chats](./delete-assistants-and-chats.md) - Remove unused assistants and conversations
 
 ## Templates
