@@ -9,7 +9,7 @@ pagination_next: null
 
 # Scaling and Availability Configuration
 
-When CodeMie API is deployed on Kubernetes, the platform provides two built-in mechanisms to control how many pods run and how disruptions to those pods are handled:
+When CodeMie API is deployed on Kubernetes, the Helm charts provide two built-in mechanisms to control how many pods run and how disruptions to those pods are handled:
 
 - **Horizontal Pod Autoscaler (HPA)** — automatically adjusts the number of running pods up or down based on observed CPU utilization. Use it to handle variable load without manually changing replica counts.
 - **Pod Disruption Budget (PDB)** — limits how many pods can be taken down at the same time during voluntary disruptions, such as node draining, cluster upgrades, etc. Use it to keep a minimum level of service available while the underlying infrastructure changes.
