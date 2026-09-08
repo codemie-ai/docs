@@ -484,11 +484,11 @@ model_list:
 
 ### Claude Fable
 
-#### Claude Fable 5
-
 :::warning AWS data retention requirement
-Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data retention mode is set to `aws_review` (this mode replaces the legacy `provider_data_share` mode). With this mode, your prompts and completions may be retained for human review carried out by AWS within the AWS boundary — Anthropic does not review your content, and your content is **not** shared with Anthropic. Some model providers require Amazon to conduct this review as a condition of access to their models, and Claude Fable 5 requires it. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests to `claude-fable-5` fail with `data retention mode 'default' is not available for this model`. See [Amazon Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) for the full mode reference.
+Every Claude Fable model on Amazon Bedrock is only available when the AWS account's data retention mode is set to `aws_review` (this mode replaces the legacy `provider_data_share` mode). With this mode, your prompts and completions may be retained for human review carried out by AWS within the AWS boundary — Anthropic does not review your content, and your content is **not** shared with Anthropic. Some model providers require Amazon to conduct this review as a condition of access to their models, and the Claude Fable family requires it. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests fail with `data retention mode 'default' is not available for this model`. See [Amazon Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) for the full mode reference.
 :::
+
+#### Claude Fable 5
 
 <details>
 <summary><strong>Claude Fable 5</strong></summary>
@@ -521,9 +521,7 @@ Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data r
 
 #### Claude Fable 5.1
 
-:::warning AWS data retention requirement
-Claude Fable 5.1 on Amazon Bedrock is only available when the AWS account's data retention mode is set to `aws_review`. With this mode, your prompts and completions may be retained for human review carried out by AWS within the AWS boundary — Anthropic does not review your content, and your content is **not** shared with Anthropic. Some model providers require Amazon to conduct this review as a condition of access to their models, and Claude Fable 5.1 requires it. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests to `claude-fable-5-1` fail with `data retention mode 'default' is not available for this model`. See [Amazon Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) for the full mode reference.
-:::
+See the [AWS data retention requirement](#claude-fable) above — it applies to Claude Fable 5.1 as well.
 
 <details>
 <summary><strong>Claude Fable 5.1</strong></summary>
