@@ -788,6 +788,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
+                'admin/configuration/codemie/scaling-configuration',
                 {
                   type: 'category',
                   label: 'AI Models Integration',
