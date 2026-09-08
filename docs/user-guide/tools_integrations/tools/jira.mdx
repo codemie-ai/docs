@@ -151,6 +151,38 @@ Example: You can ask the assistant to create tasks with natural language command
 
 The assistant will create the tasks in Jira and provide you with links to view them directly in your Jira workspace.
 
+## 5. Create Bug from Support Request
+
+When you ask your Jira assistant to create a bug from an existing support request ticket, CodeMie automatically transfers all attachments from the source ticket to the newly created bug. For image attachments, the system extracts visible text and appends it to the bug description, giving your team immediate context without manual copy-paste.
+
+### How it works
+
+1. **Attachment copy** — all files attached to the source support request (screenshots, logs, documents) are copied to the new bug ticket. The files are identical to the originals.
+2. **Image text extraction** — for each image attachment, CodeMie extracts the visible text content and appends it to the bug description as a dedicated section, making the information searchable and readable without opening the image.
+3. **No attachments** — if the source support request has no attachments, the bug is created normally with no files or extracted content.
+
+### Example usage
+
+Ask your assistant:
+
+> "Create a bug from support request PROJ-123"
+
+The assistant will:
+
+- Create a new bug ticket in your configured Jira project
+- Copy all attachments from PROJ-123 to the new bug
+- Append extracted text from any image attachments into the bug description
+
+:::tip
+You can also specify the target project explicitly:
+
+> "Create a bug in project BUG from support request PROJ-123"
+> :::
+
+:::note
+Attachment transfer requires that the Jira integration has **read** access to the source project and **write** access to the target project.
+:::
+
 ## Use Cases
 
 ### Project Management
@@ -170,6 +202,17 @@ Streamline issue management by:
 - Creating detailed bug reports
 - Assigning tasks to team members
 - Monitoring issue resolution progress
+
+### Support Request Triage
+
+Accelerate bug triage from support requests by:
+
+- Creating bugs directly from support request tickets with a single prompt
+- Automatically transferring all attachments to the new bug — no manual downloads or uploads
+- Extracting text from image attachments into the bug description for instant context
+- Keeping full traceability between the original support request and the resulting bug
+
+See [Create Bug from Support Request](#5-create-bug-from-support-request) for details.
 
 ### Workflow Automation
 
