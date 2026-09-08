@@ -20,8 +20,8 @@ governance policies. No Anthropic subscription is required.
 
 ## Prerequisites
 
-- CodeMie CLI installed: `npm install -g @codemie-ai/cli`
-- Logged in with an SSO-backed CodeMie profile: `codemie login`
+- CodeMie CLI installed: `npm install -g @codemieai/code`
+- Logged in with an SSO-backed CodeMie profile: `codemie profile login`
 - Claude Desktop installed
 
 ## Setup
