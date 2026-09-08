@@ -11,8 +11,8 @@ pagination_next: null
 
 CodeMie API runs on Kubernetes, which provides two built-in mechanisms to control how many pods run and how disruptions to those pods are handled:
 
-- **Horizontal Pod Autoscaler (HPA)** — automatically adjusts the number of running pods up or down based on observed resource usage (for example, CPU utilization). Use it to handle variable load without manually changing replica counts.
-- **Pod Disruption Budget (PDB)** — limits how many pods can be taken down at the same time during voluntary disruptions, such as node draining, cluster upgrades, or `kubectl evict`. Use it to keep a minimum level of service available while the underlying infrastructure changes.
+- **Horizontal Pod Autoscaler (HPA)** — automatically adjusts the number of running pods up or down based on observed CPU utilization. Use it to handle variable load without manually changing replica counts.
+- **Pod Disruption Budget (PDB)** — limits how many pods can be taken down at the same time during voluntary disruptions, such as node draining, cluster upgrades, etc. Use it to keep a minimum level of service available while the underlying infrastructure changes.
 
 Both are disabled by default and can be enabled and tuned through the CodeMie API Helm chart values.
 
@@ -45,10 +45,6 @@ hpa:
 
 :::info
 CPU utilization is measured against the CPU **request** set for the CodeMie API container (see `resources.requests.cpu`), not the limit. Set an appropriate CPU request before enabling the HPA, since it directly determines when scaling triggers.
-:::
-
-:::tip
-Raise `scaleDownStabilizationWindowSeconds` if you see pods being removed and re-added repeatedly under fluctuating load. Lower it if you want the deployment to scale down faster after a load spike ends.
 :::
 
 ## Pod Disruption Budget (PDB)
