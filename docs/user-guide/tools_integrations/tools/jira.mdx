@@ -151,36 +151,40 @@ Example: You can ask the assistant to create tasks with natural language command
 
 The assistant will create the tasks in Jira and provide you with links to view them directly in your Jira workspace.
 
-## 5. Create Bug from Support Request
+## 5. Create Issue with Attachment Transfer
 
-When you ask your Jira assistant to create a bug from an existing support request ticket, CodeMie automatically transfers all attachments from the source ticket to the newly created bug. For image attachments, the system extracts visible text and appends it to the bug description, giving your team immediate context without manual copy-paste.
-
-### How it works
-
-1. **Attachment copy** — all files attached to the source support request (screenshots, logs, documents) are copied to the new bug ticket. The files are identical to the originals.
-2. **Image text extraction** — for each image attachment, CodeMie extracts the visible text content and appends it to the bug description as a dedicated section, making the information searchable and readable without opening the image.
-3. **No attachments** — if the source support request has no attachments, the bug is created normally with no files or extracted content.
-
-### Example usage
-
-Ask your assistant:
-
-> "Create a bug from support request PROJ-123"
-
-The assistant will:
-
-- Create a new bug ticket in your configured Jira project
-- Copy all attachments from PROJ-123 to the new bug
-- Append extracted text from any image attachments into the bug description
-
-:::tip
-You can also specify the target project explicitly:
-
-> "Create a bug in project BUG from support request PROJ-123"
-> :::
+When creating a new Jira issue from an existing one, you can ask the assistant to copy attachments across tickets. Both attachment transfer and image text extraction are **opt-in** — the tool never copies files or runs image recognition unless you explicitly request it.
 
 :::note
-Attachment transfer requires that the Jira integration has **read** access to the source project and **write** access to the target project.
+Attachment transfer requires that the Jira integration has **read** access to the source ticket's project and **write** access to the target project.
+:::
+
+### Copy attachments
+
+To copy all attachments from an existing ticket into a newly created one, include the request in your prompt:
+
+> "Create a bug in project BUG from PROJ-123 and copy its attachments"
+
+The assistant will create the new issue and transfer all files (screenshots, logs, documents) from the source ticket. The files are identical to the originals.
+
+### Extract text from image attachments (OCR)
+
+If you also want text extracted from image attachments, ask for it explicitly:
+
+> "Create a bug in project BUG from PROJ-123, copy its attachments, and extract text from any images"
+
+The assistant runs image recognition on every image attachment and posts a single comment on the new issue containing the extracted content. This is a separate step from attachment copy — you can request one without the other.
+
+:::tip
+Both options can be combined or used independently:
+
+- Copy attachments only: `"... copy attachments from ORIG-123"`
+- Extract image text only (without copying files): `"... extract text from images in ORIG-123"`
+- Both: `"... copy attachments and extract text from images in ORIG-123"`
+  :::
+
+:::warning
+Image text extraction uses a vision model and incurs additional processing cost. Only request it when you need the extracted content.
 :::
 
 ## Use Cases
@@ -203,16 +207,15 @@ Streamline issue management by:
 - Assigning tasks to team members
 - Monitoring issue resolution progress
 
-### Support Request Triage
+### Issue Cloning with Attachment Transfer
 
-Accelerate bug triage from support requests by:
+Speed up ticket creation workflows by:
 
-- Creating bugs directly from support request tickets with a single prompt
-- Automatically transferring all attachments to the new bug — no manual downloads or uploads
-- Extracting text from image attachments into the bug description for instant context
-- Keeping full traceability between the original support request and the resulting bug
+- Creating a new issue from an existing one with attachments copied across on request
+- Optionally extracting text from image attachments via OCR — posted as a comment on the new issue
+- Keeping full traceability between source and target tickets
 
-See [Create Bug from Support Request](#5-create-bug-from-support-request) for details.
+Both attachment copy and image OCR are opt-in. See [Create Issue with Attachment Transfer](#5-create-issue-with-attachment-transfer) for details.
 
 ### Workflow Automation
 
