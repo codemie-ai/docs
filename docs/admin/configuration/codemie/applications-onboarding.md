@@ -14,6 +14,8 @@ pagination_next: null
 
 **Status:** developer-facing guideline, self-contained: everything you need is in this file, no other document required.
 
+**Terms:** "You" is your team, the one building the integration. CodeMie is the platform.
+
 ---
 
 ## 1. What an application is, and how registration works
@@ -89,8 +91,6 @@ All three follow the same path through the rest of this guide. Only the gate con
 
 ## 3. Which type?
 
-_("You" is your team, the one building the integration; CodeMie is the platform.)_
-
 |                                              | `link`                     | `iframe`                                                                            | `module`                                             |
 | -------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | **What happens**                             | Opens in a new tab         | Your page, framed in ours                                                           | Your JS runs in our page                             |
@@ -117,9 +117,9 @@ Choose the **lightest type that meets the need**. `module` is not a better `ifra
 
 ### Worked example
 
-A preview of the whole path, using the build-status panel from the typical examples above; every other journey and type follows the same shape, with different gates. It references terms and sections that come later, on purpose, so you know what's coming before you hit the detail.
+A preview of the whole path, using the build-status panel from the typical examples above; every other journey and type follows the same shape, with different gates.
 
-1. **Journey.** It can run outside the operator's environment (D1), and it should feel like part of the CodeMie UI (D2). That's J2: weeks, sign-off from the app team plus frontend, the same journey `technology-copilot` is in today.
+1. **Journey.** It can run outside the operator's environment (D1), and it should feel like part of the CodeMie UI (D2). That's J2, the same journey `technology-copilot` is in today.
 2. **Type.** `module`. An `iframe` would mean a scrollbar inside a scrollbar; a `link` would leave CodeMie entirely, and this panel needs to feel native.
 3. **What you provide**, per §4's `module` contract:
    ```yaml
@@ -135,8 +135,8 @@ A preview of the whole path, using the build-status panel from the typical examp
        arguments:
          apiUrl: 'https://build-status-api.example.com'
    ```
-   Plus the `module` contract below: an ESM build exposing `./CodemieEntryComponent`, a `mount`/`unmount` pair, no `shared` modules. Don't worry if those terms are new; §4 defines every one of them.
-4. **Review.** The 🔴 `module` tier in §5, and every tier above it too: a named owner, an HTTPS and version-pinned `entry`, no secrets in `arguments`.
+   Plus the `module` contract below: an ESM build exposing `CodemieEntryComponent`, a `mount`/`unmount` pair, no `shared` modules. §4 defines each of these.
+4. **Review.** The 🟢 All types tier in §5 plus the 🔴 `module` tier: a named owner, an HTTPS and version-pinned `entry`, no secrets in `arguments`.
 5. **Testing.** Faster iteration through the dev-override mechanism mentioned in §6 if your deployment has it, then §6's five steps in order, with particular attention on step 4: navigate away and back twice, watching for duplicated DOM or leaked listeners.
 6. **Sign-off.** Frontend and architecture review recorded, per the journey table above.
 
@@ -247,7 +247,7 @@ Partial excerpt: `arguments` nests under `settings:`, alongside the fields from 
 
 ## 5. Review checklist
 
-Run through this as a **self-review** before submitting. If you're an operator reviewing your own team's tile, this checklist doubles as the actual review — there's no separate step. Each tier includes the ones above it.
+Run through this as a **self-review** before submitting. If you're an operator reviewing your own team's tile, this checklist doubles as the actual review — there's no separate step. Everyone does 🟢 All types. Add the tier for your type, and J3's additions if the operator deploys it. The `iframe` and `module` tiers are alternatives, not cumulative.
 
 ### 🟢 All types
 
@@ -274,7 +274,7 @@ _E.g. AICE._
 
 _E.g. `technology-copilot`._
 
-- [ ] Builds ESM and exposes `./CodemieEntryComponent`
+- [ ] Builds ESM and exposes `CodemieEntryComponent`, with no leading `./`
 - [ ] `mount(el, args)` returns `{ unmount() }`, and `unmount` releases **everything**
 - [ ] No `shared` modules declared; the framework runtime is bundled
 - [ ] CORS + `text/javascript` verified on the entry **and every chunk**
