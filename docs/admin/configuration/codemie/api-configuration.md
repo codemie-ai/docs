@@ -286,13 +286,22 @@ Configure where and how CodeMie stores uploaded files, attachments, and generate
 
 ### General Storage Settings
 
-| Parameter                       | Type    | Default               | Description                                                                                                 |
-| ------------------------------- | ------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `FILES_STORAGE_TYPE`            | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket)                    |
-| `FILES_STORAGE_DIR`             | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                                   |
-| `FILES_STORAGE_MAX_UPLOAD_SIZE` | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing                         |
-| `REPOS_LOCAL_DIR`               | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                                                  |
-| `IMAGE_INDEXING_MAX_SIZE_BYTES` | integer | `10485760`            | Maximum image file size in bytes (10 MB) during datasource indexing; files exceeding this limit are skipped |
+| Parameter                               | Type    | Default               | Description                                                                                                                                                                                                                             |
+| --------------------------------------- | ------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FILES_STORAGE_TYPE`                    | string  | `"filesystem"`        | Storage backend: `filesystem` (local on pod), `aws` (S3), `azure` (blob), `gcp` (bucket)                                                                                                                                                |
+| `FILES_STORAGE_DIR`                     | string  | `"./codemie-storage"` | Local directory path when using `filesystem` storage type                                                                                                                                                                               |
+| `FILES_STORAGE_MAX_UPLOAD_SIZE`         | integer | `104857600`           | Maximum file size in bytes (100 MB default); increase for large document processing                                                                                                                                                     |
+| `FILE_DATASOURCE_MAX_UPLOAD_COUNT`      | integer | `10`                  | Maximum number of files in a File data source; checked on creation and, on update, against retained plus newly uploaded files combined. Must be greater than `0`                                                                        |
+| `FILE_DATASOURCE_MAX_UPLOAD_TOTAL_SIZE` | integer | `1073741824`          | Maximum combined size in bytes of all files in one File data source create or update request (1 GB default). Does not scale automatically; raise it together with `FILES_STORAGE_MAX_UPLOAD_SIZE` or `FILE_DATASOURCE_MAX_UPLOAD_COUNT` |
+| `FILE_DATASOURCE_UPLOAD_MAX_WORKERS`    | integer | `3`                   | Concurrent workers that write uploaded File data source files to storage. Each worker holds one full file in memory, so higher values trade peak memory for upload throughput. Must be greater than `0`                                 |
+| `REPOS_LOCAL_DIR`                       | string  | `"./codemie-repos"`   | Directory for cloned Git repositories during code indexing                                                                                                                                                                              |
+| `IMAGE_INDEXING_MAX_SIZE_BYTES`         | integer | `10485760`            | Maximum image file size in bytes (10 MB) during datasource indexing; files exceeding this limit are skipped                                                                                                                             |
+
+:::info File data source upload limits
+`FILE_DATASOURCE_MAX_UPLOAD_COUNT` and `FILE_DATASOURCE_MAX_UPLOAD_TOTAL_SIZE` are enforced on `POST /v1/index/knowledge_base/file` and `PUT /v1/index/knowledge_base/file`. Requests that exceed either limit are rejected with HTTP 422 (`Too many files` or `Total upload size too large`) before any file is stored. Accepted files are written to storage concurrently by `FILE_DATASOURCE_UPLOAD_MAX_WORKERS` workers, so raising the file count to hundreds of files does not slow the request down proportionally.
+
+The configured file count is advertised as `fileDatasourceMaxUploadCount` in `GET /v1/info`. The CodeMie UI reads it to size the upload area of the File data source form, so no UI configuration is needed; when the field is missing the UI falls back to `10`.
+:::
 
 ### Cloud Storage - AWS S3
 
@@ -955,6 +964,21 @@ Automatically compress long conversation histories when token usage exceeds a th
 | `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                    |
 | `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                        |
 | `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty |
+
+### Sub-workflows
+
+The customer configuration feature gate `features:subWorkflow` controls whether Sub-workflows are available. When the gate is disabled, the visual editor hides Sub-workflow controls and the API and runtime reject Sub-workflow use, independently of the backend defaults below.
+
+| Parameter                                  | Type    | Default | Description                                                                                         |
+| ------------------------------------------ | ------- | ------- | --------------------------------------------------------------------------------------------------- |
+| `SUBWORKFLOW_MAX_NESTING_DEPTH`            | integer | `1`     | Default nesting limit when the selected child workflow does not define `max_nesting_level`          |
+| `SUBWORKFLOW_POOL_ENABLED`                 | boolean | `false` | Globally permits workflow pooling; the selected child must also set `pool_config.enabled` to `true` |
+| `SUBWORKFLOW_POOL_MAX_SIZE`                | integer | `5`     | Global cap applied to the number of pooled instances for each workflow                              |
+| `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS` | integer | `60`    | Interval in seconds used by the background watcher to discover and refill eligible workflow pools   |
+
+Pooling is active for a workflow only when `SUBWORKFLOW_POOL_ENABLED` and that workflow's `pool_config.enabled` are both enabled. The effective pool size cannot exceed `SUBWORKFLOW_POOL_MAX_SIZE`, even when the workflow defines a larger `pool_config.max_size`. The watcher cadence is controlled by `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS`, not by the workflow's `pool_config.refill_interval_seconds` value.
+
+For authoring instructions, see [Sub-workflows](../../../user-guide/workflows/subworkflows.md). For per-workflow YAML settings and supported ranges, see [Sub-workflow Node](../../../user-guide/workflows/configuration/specialized-nodes.md#85-sub-workflow-node).
 
 ### Background Jobs
 

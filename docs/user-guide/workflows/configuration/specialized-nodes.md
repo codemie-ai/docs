@@ -7,6 +7,8 @@ pagination_next: user-guide/workflows/configuration/integration-capabilities
 sidebar_position: 8
 ---
 
+<!-- cspell:words SUBWORKFLOW -->
+
 # Specialized Node Types
 
 ## 8. Specialized Node Types
@@ -439,5 +441,63 @@ default_output:
 # Return partial results (skip failed mappings)
 on_error: "partial"
 ```
+
+### 8.5 Sub-workflow Node
+
+A Sub-workflow node invokes another workflow as a child execution. See [Sub-workflows](../subworkflows.md) for the visual-editor procedure and execution behavior.
+
+```yaml
+states:
+  - id: invoke-child
+    workflow_id: child-workflow-id
+    interrupt_before: true
+    next: process-child-output
+```
+
+#### State Parameters
+
+| Parameter          | Type    | Required | Default | Description                                                          |
+| ------------------ | ------- | -------- | ------- | -------------------------------------------------------------------- |
+| `id`               | string  | Yes      | -       | Unique ID of the Sub-workflow state                                  |
+| `workflow_id`      | string  | Yes      | -       | ID of the child workflow to invoke                                   |
+| `next`             | string  | Yes      | -       | ID of the next state in the parent workflow                          |
+| `interrupt_before` | boolean | No       | `false` | Pause the parent before this state runs and require it to be resumed |
+
+Child input is implicit: the first executable state after START receives the parent's original user input; otherwise, the child receives the preceding persisted node output, with the original input as a fallback. Only the child execution's last state output is returned to the parent. A child with no output returns an empty string.
+
+#### Workflow-Level Nesting Configuration
+
+Set the nesting limit at the workflow configuration's top level:
+
+```yaml
+max_nesting_level: 3
+```
+
+| Parameter           | Type    | Required | Default                               | Valid Range                                            |
+| ------------------- | ------- | -------- | ------------------------------------- | ------------------------------------------------------ |
+| `max_nesting_level` | integer | No       | `SUBWORKFLOW_MAX_NESTING_DEPTH` (`1`) | Minimum `1`; the visual editor accepts values `1`–`10` |
+
+The **selected child workflow's** `max_nesting_level` determines whether an invocation is allowed. YAML validation requires a minimum of 1 but does not impose the visual editor's maximum of 10.
+
+#### Workflow Pool Configuration
+
+Pooling keeps precompiled, user-agnostic workflow graphs ready for execution. Configure it at the child workflow's top level:
+
+```yaml
+pool_config:
+  enabled: true
+  min_size: 2
+  max_size: 5
+  refill_interval_seconds: 30
+```
+
+| Parameter                 | Type    | Required | Default | Valid Range | Description                                                |
+| ------------------------- | ------- | -------- | ------- | ----------- | ---------------------------------------------------------- |
+| `enabled`                 | boolean | No       | `false` | -           | Enables pooling for this workflow                          |
+| `min_size`                | integer | No       | `2`     | `1`–`20`    | Target minimum number of ready instances                   |
+| `max_size`                | integer | No       | `5`     | `1`–`50`    | Per-workflow maximum before the global size cap is applied |
+| `refill_interval_seconds` | integer | No       | `30`    | Minimum `5` | Stored per-workflow refill interval                        |
+
+Pool use requires both this `enabled` value and the global `SUBWORKFLOW_POOL_ENABLED` setting. Effective pool size is capped by `SUBWORKFLOW_POOL_MAX_SIZE`. The current background watcher runs according to `SUBWORKFLOW_POOL_WARMUP_INTERVAL_SECONDS`; `refill_interval_seconds` does not control its cadence. See [CodeMie API Configuration](../../../admin/configuration/codemie/api-configuration.md#sub-workflows) for global settings.
 
 ---

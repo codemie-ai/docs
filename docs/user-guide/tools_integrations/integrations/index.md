@@ -44,27 +44,49 @@ If no matching integration is found at any level, the action requiring it will f
 
 ## Automatic Credentials Lookup
 
-When adding a tool to an assistant, each tool that has at least one configured integration displays an **Automatic Credentials Lookup** toggle.
+When adding a tool to an assistant, each tool that has at least one configured integration displays an **Automatic Credentials Lookup** toggle. The toggle and the integration dropdown together record the assistant author's decision for that **integration slot** — a slot being any place where a tool, a toolkit, or an MCP server takes an integration.
 
-| Toggle state     | Behavior                                                                                                                                                                |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **On** (default) | CodeMie selects the integration automatically using the priority order above. Each user of the assistant uses their own integration. Recommended for shared assistants. |
-| **Off**          | A specific integration must be selected from the dropdown. Other users of the assistant may not have access to that integration. Not recommended for shared assistants. |
+The decision is stored per slot and has three distinct states:
+
+| Author's decision                    | How the slot resolves at run time                                                                          | Offered for personal selection |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| **Lookup on** (default)              | Resolved per user, using the priority order above — everyone runs under their own integration of that type | Yes                            |
+| **Lookup off, integration selected** | The author's integration is pinned and applied on behalf of everyone using the assistant                   | No                             |
+| **Lookup off, no integration**       | Nothing is resolved automatically — the slot has **No integration**                                        | Yes                            |
 
 When the toggle is **On**, the integration dropdown is hidden — no manual selection is needed:
 
 ![Automatic Credentials Lookup toggle enabled](./images/automatic-credentials-lookup-on.png)
 
-When the toggle is **Off**, the dropdown becomes visible and a specific integration can be chosen:
+When the toggle is **Off**, the dropdown becomes visible and a specific integration can be pinned:
 
 ![Automatic Credentials Lookup toggle disabled with integration dropdown](./images/automatic-credentials-lookup-off.png)
+
+### Lookup off with nothing pinned
+
+Turning the toggle off and leaving the dropdown empty is a deliberate state, not an unfinished one: it means the slot carries no credentials at all. Nothing is looked up automatically, the assistant shows **No integration** for the slot, and the tool reports the missing integration when it is called — the tool is not silently dropped from the assistant. A user of the assistant can still pick an integration for such a slot themselves.
+
+### Personal selection by users of the assistant
+
+Every slot the author did not pin is offered to each user of a shared assistant in its **Your Integration Settings** section — on the assistant page, and in the [assistant panel on the workflow executions page](../../workflows/assistant-panel-in-executions.md). Personal selection is available on any shared assistant, not only on assistants published to the marketplace.
+
+A user's own decision always wins over automatic lookup, including an explicit **No integration**: the choice is remembered and is not replaced by an automatically resolved integration the next time the assistant is opened or run.
+
+How widely the choice is remembered depends on where it is made:
+
+| Saved from                        | Applies to                                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| The assistant page                | The assistant everywhere for that user — chat, the assistant page, and every workflow using the assistant     |
+| The assistant panel of a workflow | That workflow only, unless **Apply to the whole assistant, not just this workflow** is selected before saving |
+
+A workflow-scoped selection takes precedence over the assistant-scoped one when that workflow runs, and leaves the same assistant untouched in chat and in other workflows. Both scopes are personal and never affect other users. See [Assistant Panel on the Executions Page](../../workflows/assistant-panel-in-executions.md#where-the-selection-applies) for the full behavior.
 
 :::tip
 Leave **Automatic Credentials Lookup** on for shared assistants. This ensures each team member uses their own credentials automatically, without requiring the assistant owner to share their personal integration.
 :::
 
 :::warning
-If **Automatic Credentials Lookup** is turned off and a specific integration is selected, other users who do not have access to that integration will not be able to use the tool.
+Pinning a specific integration applies the author's credentials to every user of the assistant. The secret values are not exposed to other users, but everyone works through the same account, and no one can substitute their own. Pin a slot only when a single shared account is intended.
 :::
 
 ## Setting Up Integrations

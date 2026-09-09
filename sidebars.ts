@@ -69,6 +69,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/share-assistant-chat-with-other-users',
                 'user-guide/assistants/export-assistant-chat-messages-to-word-and-pdf-formats',
                 'user-guide/assistants/html-preview',
+                'user-guide/assistants/copy-table',
                 'user-guide/assistants/chat-input-settings',
               ],
             },
@@ -103,11 +104,13 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/workflows/workflows-overview',
             'user-guide/workflows/create-workflow',
+            'user-guide/workflows/subworkflows',
             'user-guide/workflows/llm-model-name-in-workflow',
             'user-guide/workflows/workflow-templates',
             'user-guide/workflows/create-workflow-from-template',
             'user-guide/workflows/share-workflow-execution',
             'user-guide/workflows/exporting-workflow-execution',
+            'user-guide/workflows/assistant-panel-in-executions',
             'user-guide/workflows/marketplace-overview',
             'user-guide/workflows/marketplace-publishing',
             'user-guide/workflows/clone-workflow-from-marketplace',
@@ -270,16 +273,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Applications',
-          link: {
-            type: 'doc',
-            id: 'user-guide/applications/index',
-          },
-          collapsed: true,
-          items: ['user-guide/applications/ai-testmate'],
-        },
-        {
-          type: 'category',
           label: 'AI Katas',
           link: {
             type: 'doc',
@@ -306,6 +299,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/codemie-cli/skills-integration',
             'user-guide/codemie-cli/codemie-claude-skills',
             'user-guide/codemie-cli/sdk-cli-reference',
+            'user-guide/codemie-cli/claude-desktop',
           ],
         },
         {
@@ -795,6 +789,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
+                'admin/configuration/codemie/scaling-configuration',
                 {
                   type: 'category',
                   label: 'AI Models Integration',

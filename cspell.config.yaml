@@ -214,6 +214,7 @@ words:
   - phpt
   - rhtml
   # Shell commands, utilities and variables
+  - LOCALAPPDATA
   - PGPASSWORD
   - PGSSLMODE
   - orbstack
@@ -308,7 +309,6 @@ words:
   - roadmaps
   - wireframing
   - Presales
-  - testmate
   - agentic
   - keycloakx
   - backchannel

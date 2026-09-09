@@ -1,6 +1,6 @@
 ---
 id: clone-workflow-from-marketplace
-sidebar_position: 10
+sidebar_position: 11
 title: Clone Workflow from Marketplace
 sidebar_label: Clone from Marketplace
 pagination_prev: user-guide/workflows/marketplace-publishing

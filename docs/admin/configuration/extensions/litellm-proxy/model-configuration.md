@@ -319,6 +319,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
 | [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5         |
 | [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5          |
+| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1        |
 | [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
 | [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
 | [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
@@ -366,6 +367,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.5-flash`](#gemini-35-flash)             | Gemini 3.5 Flash                       |
 | [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
+| [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -482,11 +484,11 @@ model_list:
 
 ### Claude Fable
 
-#### Claude Fable 5
-
 :::warning AWS data retention requirement
-Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data retention mode is set to `provider_data_share`. With this mode, prompts and completions sent to the model leave AWS's data boundary and are shared with Anthropic for model improvement purposes, unlike the default retention mode where data stays within AWS. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests to `claude-fable-5` fail with `data retention mode 'default' is not available for this model`.
+Every Claude Fable model on Amazon Bedrock is only available when the AWS account's data retention mode is set to `aws_review` (this mode replaces the legacy `provider_data_share` mode). With this mode, your prompts and completions may be retained for human review carried out by AWS within the AWS boundary — Anthropic does not review your content, and your content is **not** shared with Anthropic. Some model providers require Amazon to conduct this review as a condition of access to their models, and the Claude Fable family requires it. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests fail with `data retention mode 'default' is not available for this model`. See [Amazon Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) for the full mode reference.
 :::
+
+#### Claude Fable 5
 
 <details>
 <summary><strong>Claude Fable 5</strong></summary>
@@ -513,6 +515,39 @@ Claude Fable 5 on Amazon Bedrock is only available when the AWS account's data r
     id: claude-fable-5-eu-central-1
     base_model: global.anthropic.claude-fable-5
     label: "Bedrock Claude Fable 5"
+```
+
+</details>
+
+#### Claude Fable 5.1
+
+See the [AWS data retention requirement](#claude-fable) above — it applies to Claude Fable 5.1 as well.
+
+<details>
+<summary><strong>Claude Fable 5.1</strong></summary>
+
+```yaml
+# US Region
+- model_name: claude-fable-5-1
+  litellm_params:
+    model: bedrock/us.anthropic.claude-fable-5-1
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-fable-5-1-us-west-2
+    base_model: us.anthropic.claude-fable-5-1
+    label: "Bedrock Claude Fable 5.1"
+
+# Global routing
+- model_name: claude-fable-5-1
+  litellm_params:
+    model: bedrock/global.anthropic.claude-fable-5-1
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-fable-5-1-eu-central-1
+    base_model: global.anthropic.claude-fable-5-1
+    label: "Bedrock Claude Fable 5.1"
 ```
 
 </details>
@@ -1490,6 +1525,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.7-flash-global
     base_model: vertex_ai/gemini-3.7-flash
     label: "Gemini 3.7 Flash"
+```
+
+</details>
+
+#### Gemini 3.8 Flash
+
+<details>
+<summary><strong>Gemini 3.8 Flash</strong></summary>
+
+```yaml
+- model_name: gemini-3.8-flash
+  litellm_params:
+    model: vertex_ai/gemini-3.8-flash
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.8-flash-global
+    base_model: vertex_ai/gemini-3.8-flash
+    label: "Gemini 3.8 Flash"
 ```
 
 </details>
