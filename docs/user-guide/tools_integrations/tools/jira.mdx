@@ -153,7 +153,7 @@ The assistant will create the tasks in Jira and provide you with links to view t
 
 ## 5. Create Issue with Attachment Transfer
 
-When creating a new Jira issue from an existing one, you can ask the assistant to copy attachments across tickets. Both attachment transfer and image text extraction are **opt-in** — the tool never copies files or runs image recognition unless you explicitly request it.
+When creating a new Jira issue from an existing one, the assistant can copy attachments across tickets on request. Both attachment transfer and image text extraction are **opt-in** — the tool never copies files or runs image recognition unless explicitly asked.
 
 :::note
 Attachment transfer requires that the Jira integration has **read** access to the source ticket's project and **write** access to the target project.
@@ -161,19 +161,19 @@ Attachment transfer requires that the Jira integration has **read** access to th
 
 ### Copy attachments
 
-To copy all attachments from an existing ticket into a newly created one, include the request in your prompt:
+To copy all attachments from an existing ticket into a newly created one, include the request in the prompt:
 
 > "Create a bug in project BUG from PROJ-123 and copy its attachments"
 
-The assistant will create the new issue and transfer all files (screenshots, logs, documents) from the source ticket. The files are identical to the originals.
+The assistant creates the new issue and transfers all files (screenshots, logs, documents) from the source ticket. The files are identical to the originals.
 
 ### Extract text from image attachments (OCR)
 
-If you also want text extracted from image attachments, ask for it explicitly:
+To extract text from image attachments, request it explicitly:
 
 > "Create a bug in project BUG from PROJ-123, copy its attachments, and extract text from any images"
 
-The assistant runs image recognition on every image attachment and posts a single comment on the new issue containing the extracted content. This is a separate step from attachment copy — you can request one without the other.
+The assistant runs image recognition on every image attachment and posts a single comment on the new issue containing the extracted content. This is a separate step from attachment copy — either option can be requested independently.
 
 :::tip
 Both options can be combined or used independently:
@@ -184,7 +184,7 @@ Both options can be combined or used independently:
   :::
 
 :::warning
-Image text extraction uses a vision model and incurs additional processing cost. Only request it when you need the extracted content.
+Image text extraction uses a vision model and incurs additional processing cost. Only request it when the extracted content is needed.
 :::
 
 ## Use Cases
