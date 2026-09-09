@@ -162,7 +162,7 @@ AICE follows the same path but lands in J3 instead: unlike a build-status panel,
     created_by: 'Your Team'
 ```
 
-> **The field is `url` in YAML and `entry` in the API.** The backend renames it. Writing `entry:` in YAML does **not** fail loudly: the unknown key is silently accepted while `url` stays `None`, and the required `entry` then fails validation while building the response. That returns **500 from `/v1/applications`, which blanks the Applications page and hides the sidebar item for every user**, not just yours. The single most expensive typo available here.
+> **The field is `url` in YAML and `entry` in the API.** The backend renames it. Writing `entry:` in YAML does **not** fail loudly: the unknown key is silently accepted while `url` stays `None`, and the required `entry` then fails validation while building the response. That returns **500 from `/v1/applications`, which blanks the Applications page and hides the sidebar item for every user**, not just yours. Several other omissions in the same block fail exactly the same way, and a missing `enabled` stops the backend from starting at all.
 
 `url` must be a **stable, network-reachable URL from the user's browser**, not from the CodeMie backend, which only echoes the string; all fetching is client-side. It must be **HTTPS** on any real deployment (`http://localhost:*` is exempt, and is how local dev works), and should be **version-pinned**: a mutable URL means the code can change after it was reviewed. There is **no integrity check on the loaded content** — no SRI pinning today — so a changed URL is trusted verbatim.
 
@@ -180,7 +180,7 @@ Three requirements, not recommendations. Today, nothing on the platform side enf
 2. **Make session cookies work in a third-party context.** `SameSite=None; Secure`, or move to token-based auth entirely. This applies even in the same cluster: same cluster is not same origin.
 3. **Handle the logged-out path explicitly.** If your IdP refuses to be framed, the default is a blank rectangle. Detect it and render an "open in a new tab" link instead.
 
-CodeMie can append a `?path=` deep link to your `entry` on the iframe route.
+On the iframe route, CodeMie reads a `path` query parameter from its own URL and appends that value to your `entry` verbatim, with no separator inserted. So `…/applications/your-slug?path=/reports/42` loads `<your entry>/reports/42`, and the value must carry its own leading `/` or `?`.
 
 > **Treat this as a convenience, not a hardened feature.** The value is concatenated without validation today, so don't rely on it for anything security-sensitive until that's fixed.
 
@@ -202,7 +202,7 @@ The full contract:
 
 That is the whole contract. Everything else is your application's business.
 
-> **The component name has two possible forms — only one is confirmed to work.** You could write your `exposes` key as either `./CodemieEntryComponent` or `CodemieEntryComponent`; the host asks for it as `CodemieEntryComponent`, without the leading `./`. For the reference toolchain (`@originjs/vite-plugin-federation`), confirmed by reading its source directly: **no normalization happens between the two forms** — the key must match the host's request exactly, or `remote.get(...)` rejects. If you're on different federation tooling, don't assume it normalizes either; confirm empirically before you ship. If the host's remote-get call rejects, check this first.
+> **The `exposes` key must not have a leading `./`.** The host asks for `CodemieEntryComponent`, and `@originjs/vite-plugin-federation` (verified at 1.4.1, the pinned version) does a literal `moduleMap[componentName]` lookup with no normalization between the two forms. A `./`-prefixed key therefore throws `Can not find remote module CodemieEntryComponent`. Conventional Module Federation examples use the `./` form, which is exactly why this catches people. If you are on different federation tooling, do not assume it normalizes either; confirm before you ship.
 
 <!-- -->
 
@@ -221,7 +221,7 @@ That is the whole contract. Everything else is your application's business.
 
 You do **not** need to modify the host's `vite.config.ts`: remotes are registered at runtime via `setRemote`, which accepts any slug.
 
-**Styling.** CodeMie clones `<style>`/`<link rel="stylesheet">` elements added to `document.head` after your mount into your shadow root. A standard build that injects CSS into `document.head` at runtime works out of the box. Two gaps to know about: **`adoptedStyleSheets` / constructable stylesheets are not picked up** (the observer only sees element nodes), and `styled-components` output is re-created as a fresh `<style>` rather than cloned, so dynamic updates after mount may not propagate. If your CSS doesn't appear, this is the first place to look.
+**Styling.** CodeMie copies `<style>` and `<link rel="stylesheet">` elements added to `document.head` into your shadow root, and this works on first open. The second open is what catches people out: your remote is imported once per page load, so navigating away and back gives you a fresh shadow root with no new injection to copy. Only stylesheet links whose URL matches `/assets/style-*.css` are cached and restored; CSS delivered as an injected `<style>`, or as a link named anything else, is gone. **If you want CSS that survives navigation today, emit it as a stylesheet link at `assets/style-<hash>.css`.** Two smaller gaps: `adoptedStyleSheets` and constructable stylesheets are never picked up (the observer watches only direct element children of `document.head`), and `styled-components` output is re-created as a fresh `<style>` rather than cloned, so updates after mount may not propagate.
 
 ### `arguments`: public, by design
 
