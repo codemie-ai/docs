@@ -26,7 +26,11 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **`CODE_EXECUTOR_SANDBOX_MODE` now defaults to `sandbox-jobs`** — `sandbox-shared` will be deprecated. See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md) for details.
+1. **Code Executor** — changes:
+   - `CODE_EXECUTOR_SANDBOX_MODE` now defaults to `sandbox-jobs` — `sandbox-shared` will be deprecated.
+   - `CODE_EXECUTOR_NAMESPACE` default value changed to `codemie-code-executor` (previously `codemie-runtime`).
+
+   See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md) for details.
 
 </details>
 
