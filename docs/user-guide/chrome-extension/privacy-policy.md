@@ -134,12 +134,12 @@ MCP configuration remain in local storage.
 
 ## 4. Where your data goes
 
-| Destination                                     | What may be sent                                                                                                                                                                          | When                                                                                |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| Your configured CodeMie instance                | Prompts, conversation messages and tool traces, current-page/selection/PDF context, attached-tab content, approved screenshots, saved Knowledge snippets selected for the request, MCP and web-tool inputs/results, and usage analytics | According to the features used for a request; analytics is sent for tracked turns    |
-| The model provider behind your CodeMie instance | The model conversation assembled for the request, which may include prompts, prior messages, page/PDF/tab context, approved screenshots, Knowledge snippets, and MCP/web-tool results       | Whenever CodeMie invokes the configured model                                        |
-| MCP servers attached to your assistant           | Tool name, tool arguments, and MCP protocol/session messages                                                                                                                                 | Only when the assistant calls one of that server's tools                             |
-| CodeMie web search and scraping tools            | Your search query, or the URL to fetch                                                                                                                                                       | Only when those CodeMie platform tools are invoked                                   |
+| Destination                                     | What may be sent                                                                                                                                                                                                                        | When                                                                              |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Your configured CodeMie instance                | Prompts, conversation messages and tool traces, current-page/selection/PDF context, attached-tab content, approved screenshots, saved Knowledge snippets selected for the request, MCP and web-tool inputs/results, and usage analytics | According to the features used for a request; analytics is sent for tracked turns |
+| The model provider behind your CodeMie instance | The model conversation assembled for the request, which may include prompts, prior messages, page/PDF/tab context, approved screenshots, Knowledge snippets, and MCP/web-tool results                                                   | Whenever CodeMie invokes the configured model                                     |
+| MCP servers attached to your assistant          | Tool name, tool arguments, and MCP protocol/session messages                                                                                                                                                                            | Only when the assistant calls one of that server's tools                          |
+| CodeMie web search and scraping tools           | Your search query, or the URL to fetch                                                                                                                                                                                                  | Only when those CodeMie platform tools are invoked                                |
 
 Results returned by MCP, web search, and scraping tools may be added to the model conversation and
 therefore sent through your CodeMie instance to its model provider.
@@ -161,16 +161,16 @@ one of those servers is governed by that server operator's terms, not by this po
 
 ## 5. Browser permissions and why they are needed
 
-| Permission             | Why it is needed                                                                                                                                         |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sidePanel`            | Renders the assistant panel, which is the Extension's main interface                                                                                     |
-| `storage`              | Stores persistent preferences, saved content, recorded flows, and queued analytics in local storage; stores authentication data and the current panel message cache in session storage |
-| `scripting`            | Injects the page-analysis script that builds the structural snapshot the assistant acts on                                                               |
-| `activeTab`            | Reads the tab you invoked the assistant on                                                                                                               |
-| `tabs`                 | Completes sign-in by detecting the fixed local callback address, and lets you attach other open tabs as context                                          |
-| `contextMenus`         | Adds the right-click "Explain selection with CodeMie" and "Remember selection (CodeMie)" actions on selected text                                        |
-| `alarms`               | Runs the periodic timer that uploads queued analytics                                                                                                    |
-| `webRequest`           | Observation only. Counts in-flight requests on the active tab so automation can wait for a page to settle. It cannot block, redirect, or modify requests |
+| Permission             | Why it is needed                                                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sidePanel`            | Renders the assistant panel, which is the Extension's main interface                                                                                                                              |
+| `storage`              | Stores persistent preferences, saved content, recorded flows, and queued analytics in local storage; stores authentication data and the current panel message cache in session storage            |
+| `scripting`            | Injects the page-analysis script that builds the structural snapshot the assistant acts on                                                                                                        |
+| `activeTab`            | Reads the tab you invoked the assistant on                                                                                                                                                        |
+| `tabs`                 | Completes sign-in by detecting the fixed local callback address, and lets you attach other open tabs as context                                                                                   |
+| `contextMenus`         | Adds the right-click "Explain selection with CodeMie" and "Remember selection (CodeMie)" actions on selected text                                                                                 |
+| `alarms`               | Runs the periodic timer that uploads queued analytics                                                                                                                                             |
+| `webRequest`           | Observation only. Counts in-flight requests on the active tab so automation can wait for a page to settle. It cannot block, redirect, or modify requests                                          |
 | Access to all websites | Lets the Extension read supported HTTP(S) pages, fetch direct HTTP(S) PDFs, and perform user-requested actions. Chrome still blocks restricted pages such as `chrome://` and the Chrome Web Store |
 
 :::note

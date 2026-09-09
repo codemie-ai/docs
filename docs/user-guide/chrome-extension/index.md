@@ -19,16 +19,16 @@ account, so there's nothing extra to set up — no separate password, no API key
 
 ## What you can do
 
-| You can...              | Like this                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------------------- |
-| Ask about the page you're on | Get a summary, ask a question, or pull out details — answers are based on what's actually on the page |
-| Ask about a PDF          | Open a PDF from a web link and ask questions about it                                          |
-| Ask about text you select | Highlight text on a page, then ask the assistant about it from the right-click menu or the floating **Ask CodeMie** button |
-| Let it act for you       | The assistant can click, type, and fill things in for you. By default it asks before doing anything that changes the page |
-| Record and replay        | Record a set of actions once, then replay them later with one click                            |
-| Bring in more context    | Add web search results or other open tabs when one page isn't enough                           |
-| Use connected tools      | Some assistants come with extra tools built in — the panel can use them for you automatically   |
-| Keep your conversations  | Chats with a chosen assistant are saved to your account and follow you across your devices      |
+| You can...                   | Like this                                                                                                                  |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Ask about the page you're on | Get a summary, ask a question, or pull out details — answers are based on what's actually on the page                      |
+| Ask about a PDF              | Open a PDF from a web link and ask questions about it                                                                      |
+| Ask about text you select    | Highlight text on a page, then ask the assistant about it from the right-click menu or the floating **Ask CodeMie** button |
+| Let it act for you           | The assistant can click, type, and fill things in for you. By default it asks before doing anything that changes the page  |
+| Record and replay            | Record a set of actions once, then replay them later with one click                                                        |
+| Bring in more context        | Add web search results or other open tabs when one page isn't enough                                                       |
+| Use connected tools          | Some assistants come with extra tools built in — the panel can use them for you automatically                              |
+| Keep your conversations      | Chats with a chosen assistant are saved to your account and follow you across your devices                                 |
 
 :::info
 Works on regular web pages and on PDFs opened from a web link. It can't read internal Chrome pages, the
@@ -64,12 +64,12 @@ separate dropdown inside the input box itself.
 
 ![The CodeMie panel showing the context toggles, model picker, and input bar](./images/codemie-panel-empty.png)
 
-| Toggle       | What it does                                                                |
-| ------------ | ---------------------------------------------------------------------------- |
-| Use page     | Lets the assistant see the page you're on                                    |
-| Smart search | Finds the most relevant parts of a long page instead of reading all of it    |
+| Toggle       | What it does                                                                         |
+| ------------ | ------------------------------------------------------------------------------------ |
+| Use page     | Lets the assistant see the page you're on                                            |
+| Smart search | Finds the most relevant parts of a long page instead of reading all of it            |
 | Knowledge    | Searches your own saved pages and notes, and adds anything relevant to your question |
-| Tabs         | Lets the assistant also look at your other open tabs                         |
+| Tabs         | Lets the assistant also look at your other open tabs                                 |
 
 :::note
 Anything you save to Knowledge stays on your own computer until you delete it or remove the extension.

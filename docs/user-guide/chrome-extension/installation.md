@@ -95,13 +95,13 @@ The settings page also lets you control:
 
 ## Troubleshooting
 
-| Problem                                | What to try                                                                                                                                              |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The panel does nothing on this page     | The assistant only works on regular web pages and PDFs opened from a link. It can't open internal Chrome pages, the Chrome Web Store, or PDFs saved on your computer. If a PDF doesn't seem to work, reload the page or open the PDF's original link |
-| Sign-in sends me back to the login screen | Your sign-in has probably expired, or Chrome restarted. Just sign in again                                                                              |
-| Sign-in fails right away                | Check the **CodeMie address** for typos, and ask your administrator to confirm your account is active                                                   |
-| The keyboard shortcut doesn't work      | Another extension is probably using it. Change it at `chrome://extensions/shortcuts`                                                                    |
-| Answers don't seem to use the page      | Click the sources button above the input box and make sure **Use page** is switched on                                                                  |
+| Problem                                   | What to try                                                                                                                                                                                                                                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The panel does nothing on this page       | The assistant only works on regular web pages and PDFs opened from a link. It can't open internal Chrome pages, the Chrome Web Store, or PDFs saved on your computer. If a PDF doesn't seem to work, reload the page or open the PDF's original link |
+| Sign-in sends me back to the login screen | Your sign-in has probably expired, or Chrome restarted. Just sign in again                                                                                                                                                                           |
+| Sign-in fails right away                  | Check the **CodeMie address** for typos, and ask your administrator to confirm your account is active                                                                                                                                                |
+| The keyboard shortcut doesn't work        | Another extension is probably using it. Change it at `chrome://extensions/shortcuts`                                                                                                                                                                 |
+| Answers don't seem to use the page        | Click the sources button above the input box and make sure **Use page** is switched on                                                                                                                                                               |
 
 ---
 
