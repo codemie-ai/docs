@@ -231,6 +231,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Applications',
+          link: {
+            type: 'doc',
+            id: 'user-guide/applications/index',
+          },
+          collapsed: true,
+          items: [],
+        },
+        {
+          type: 'category',
           label: 'Data Sources',
           link: {
             type: 'doc',
@@ -788,6 +798,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/applications-onboarding',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {

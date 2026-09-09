@@ -491,7 +491,7 @@ settings:
 
 ### Integrated Applications
 
-Applications and extensions that expand platform functionality.
+Applications and extensions that expand platform functionality. For the decision process behind registering a new application (which type to choose, the Module Federation contract for `module`, the review checklist, and known platform gaps), see the [Application Onboarding Guide](./applications-onboarding.md).
 
 **Where it appears:** Main navigation → "Applications" menu (shows all enabled applications)
 
