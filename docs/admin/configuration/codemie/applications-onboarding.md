@@ -16,22 +16,29 @@ pagination_next: null
 
 ---
 
-## 1. Do you want an application at all?
+## 1. What an application is, and how registration works
 
-An **application** is a tile in the left navigation that opens your product's UI, for a human to use. If your need is on the _assistant_ side instead — calling your API, packaging a repeatable procedure, or chaining steps into an automation — pick a cheaper mechanism:
+An **application** is a tile in the left navigation that opens your product's UI, for a human to use. If what you need is a capability that gets called rather than a UI a person opens, such as calling your API, packaging a repeatable procedure, or chaining steps into an automation, pick a cheaper mechanism:
 
-| You want…                                                 | Mechanism          | Not this       |
-| --------------------------------------------------------- | ------------------ | -------------- |
-| An assistant to call your API or run your logic           | **MCP server**     | An application |
-| To package a repeatable procedure for assistants          | **Skill**          | An application |
-| To chain steps into an automation                         | **Workflow**       | An application |
-| Your product's own UI, inside CodeMie, for a human to use | **Application** ✅ | n/a            |
+| You want…                                                 | Mechanism          |
+| --------------------------------------------------------- | ------------------ |
+| An assistant to call your API or run your logic           | **MCP server**     |
+| To package a repeatable procedure for assistants          | **Skill**          |
+| To chain steps into an automation                         | **Workflow**       |
+| Your product's own UI, inside CodeMie, for a human to use | **Application** ✅ |
 
-Only the last row continues here. If two rows apply, build the MCP server first: days of work, ships independently, no platform team needed.
+Only the last row continues here. If one of the other rows also applies, build that first: days of work, ships independently, no platform team needed.
 
-CodeMie's Applications page is a **launcher, not a hosting platform**. CodeMie does not build, deploy, run, or scale your app. You deploy and operate it yourself; CodeMie stores a pointer to it and renders a card that opens it. There is **no self-service UI, no API, and no database record** for this today; registration is a pull request, and a config change requires a **backend restart** (the YAML is parsed once at process start and cached in a singleton).
+CodeMie's Applications page is a **launcher, not a hosting platform**. CodeMie does not build, deploy, run, or scale your app. You deploy and operate it yourself; CodeMie stores a pointer to it and renders a card that opens it. There is no self-service UI, no registration API, and no database record for this today; registration is a pull request, and a config change requires a backend restart (the YAML is parsed once at process start and cached in a singleton).
 
-**Which deployment does this apply to, and which file actually wins?** CodeMie's registration mechanism is a YAML file, but **two different things can supply it**, and they don't always agree. The repository's `config/customer/customer-config.yaml` is baked into the image at build time. On many deployments, the Helm chart separately mounts a `codemie-customer-config` ConfigMap over that same path, and wherever it's mounted, it wins; a pull request to the in-repo file then has **no effect at all**. Which one governs has already been inconsistent across cloud providers in practice: the ConfigMap mount has failed to apply on at least one major cloud provider and wasn't mounted by default on another. **Before you submit anything, confirm with whoever operates your target deployment which mechanism is actually live there**; this guide's steps work the same either way, but only one of them will actually take effect.
+**Which deployment does this apply to, and which file actually wins?** CodeMie's registration mechanism is a YAML file, but two different things can supply it, and they don't always agree.
+
+- **`config/customer/customer-config.yaml` in the repository.** Baked into the image at build time. Governs only when no ConfigMap is mounted.
+- **The `codemie-customer-config` ConfigMap.** Mounted over the same path by the Helm chart on many deployments. Wins wherever it is mounted; a pull request to the repository file then has no effect at all.
+
+Which one governs has already been inconsistent across cloud providers in practice: the volume definition was invalid on GCP, and on Azure the volume was not mounted by default.
+
+**Before you submit anything, confirm with whoever operates your target deployment which mechanism is actually live there.** This guide's steps work the same either way, but only one will take effect.
 
 ---
 
