@@ -18,7 +18,7 @@ pagination_next: null
 
 ## 1. Do you want an application at all?
 
-An **application** is a tile in the left navigation that opens your product's UI. If you need CodeMie's assistants to _use_ your thing instead, pick a cheaper mechanism:
+An **application** is a tile in the left navigation that opens your product's UI, for a human to use. If your need is on the _assistant_ side instead — calling your API, packaging a repeatable procedure, or chaining steps into an automation — pick a cheaper mechanism:
 
 | You want…                                                 | Mechanism          | Not this       |
 | --------------------------------------------------------- | ------------------ | -------------- |
@@ -160,7 +160,7 @@ That's the whole path. §1 through §7 cover every other journey and type combin
 
 > **The field is `url` in YAML and `entry` in the API.** The backend renames it. Writing `entry:` in YAML does **not** fail loudly: the unknown key is silently accepted while `url` stays `None`, and the required `entry` then fails validation while building the response. That returns **500 from `/v1/applications`, which blanks the Applications page and hides the sidebar item for every user**, not just yours. The single most expensive typo available here.
 
-`url` must be a **stable, network-reachable URL from the user's browser**, not from the CodeMie backend, which only echoes the string; all fetching is client-side. It must be **HTTPS** on any real deployment (`http://localhost:*` is exempt, and is how local dev works), and should be **version-pinned**: a mutable URL means the code can change after it was reviewed, with **no integrity check on the loaded content**: there is no SRI pinning today, so a changed URL is trusted verbatim.
+`url` must be a **stable, network-reachable URL from the user's browser**, not from the CodeMie backend, which only echoes the string; all fetching is client-side. It must be **HTTPS** on any real deployment (`http://localhost:*` is exempt, and is how local dev works), and should be **version-pinned**: a mutable URL means the code can change after it was reviewed. There is **no integrity check on the loaded content** — no SRI pinning today — so a changed URL is trusted verbatim.
 
 A **slug** (lowercase, hyphenated, unique) becomes both the URL path and, for `module`, the Module Federation remote name (the standard your bundler uses to load one app's JS into another's).
 
@@ -184,21 +184,21 @@ CodeMie can append a `?path=` deep link to your `entry` on the iframe route.
 
 The full contract:
 
-| Obligation                                                                                                     | Where it's enforced                                            | If you get it wrong                                                          |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **ESM** Module Federation build, loadable via bare `import()`                                                  | your bundler's federation config (Vite/Webpack settings below) | `TypeError: lib.init is not a function`                                      |
-| Expose `./CodemieEntryComponent`                                                                               | your federation config's `exposes` map                         | `remote.get(...)` rejects                                                    |
-| Default export with `mount(el, args)` returning `{ unmount() }` (not a React component, never rendered as JSX) | your entry module                                              | `mount is not a function`; or a leak with no teardown                        |
-| `init(shareScope)` tolerates being called twice                                                                | your entry module (container init)                             | double-initialisation errors                                                 |
-| `unmount()` releases **everything** (timers, listeners, subscriptions, nodes)                                  | your entry module                                              | leaks across navigations                                                     |
-| **Your own bundled framework runtime** (the host shares nothing)                                               | your federation config's `shared` list (leave it empty)        | silent breakage if you mark deps external expecting the host to provide them |
-| No assumption of `document` ownership (you're in a `ShadowRoot`)                                               | your entry module                                              | visual/behavioural bleed into the host, or vice versa                        |
-| CORS (`Access-Control-Allow-Origin`) on the entry **and every lazy chunk**                                     | your static server / CDN config                                | CORS error on load                                                           |
-| `Content-Type: text/javascript` on the entry and every chunk                                                   | your static server / CDN config                                | CORS error on load                                                           |
+| Obligation                                                                                                     | Where it's enforced                                            | If you get it wrong                                                                  |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **ESM** Module Federation build, loadable via bare `import()`                                                  | your bundler's federation config (Vite/Webpack settings below) | `TypeError: lib.init is not a function`                                              |
+| Expose `CodemieEntryComponent` (no leading `./`)                                                               | your federation config's `exposes` map                         | `remote.get(...)` rejects                                                            |
+| Default export with `mount(el, args)` returning `{ unmount() }` (not a React component, never rendered as JSX) | your entry module                                              | `mount is not a function`; or a leak with no teardown                                |
+| `init(shareScope)` tolerates being called twice                                                                | your entry module (container init)                             | double-initialisation errors                                                         |
+| `unmount()` releases **everything** (timers, listeners, subscriptions, nodes)                                  | your entry module                                              | leaks across navigations                                                             |
+| **Your own bundled framework runtime** (the host shares nothing)                                               | your federation config's `shared` list (leave it empty)        | silent breakage if you mark dependencies external expecting the host to provide them |
+| No assumption of `document` ownership (you're in a `ShadowRoot`)                                               | your entry module                                              | visual/behavioural bleed into the host, or vice versa                                |
+| CORS (`Access-Control-Allow-Origin`) on the entry **and every lazy chunk**                                     | your static server / CDN config                                | CORS error on load                                                                   |
+| `Content-Type: text/javascript` on the entry and every chunk                                                   | your static server / CDN config                                | CORS error on load                                                                   |
 
 That is the whole contract. Everything else is your application's business.
 
-> **The component name has two forms.** Your `exposes` key is `./CodemieEntryComponent`, with the leading `./`. The host asks for it as `CodemieEntryComponent`, without. Most federation tooling normalises between the two forms, but that normalisation has varied across tool versions: **confirm empirically that your build's emitted key resolves**. If the host's remote-get call rejects, check this first.
+> **The component name has two possible forms — only one is confirmed to work.** You could write your `exposes` key as either `./CodemieEntryComponent` or `CodemieEntryComponent`; the host asks for it as `CodemieEntryComponent`, without the leading `./`. For the reference toolchain (`@originjs/vite-plugin-federation`), confirmed by reading its source directly: **no normalization happens between the two forms** — the key must match the host's request exactly, or `remote.get(...)` rejects. If you're on different federation tooling, don't assume it normalizes either; confirm empirically before you ship. If the host's remote-get call rejects, check this first.
 
 <!-- -->
 
@@ -237,13 +237,13 @@ Partial excerpt: `arguments` nests under `settings:`, alongside the fields from 
 
 **Test the logged-out path, not just the happy path.** Silent SSO inside a cross-origin frame depends on third-party cookie behaviour and on your IdP allowing its login page to be framed at all; many block it.
 
-**Authorization is entirely yours.** Every CodeMie user who can see the Applications page sees every enabled card; there is no per-project, per-role, or per-user visibility filter today. If your app must be restricted, enforce it inside your app.
+**Authorisation is entirely yours.** Every CodeMie user who can see the Applications page sees every enabled card; there is no per-project, per-role, or per-user visibility filter today. If your app must be restricted, enforce it inside your app.
 
 ---
 
 ## 5. Review checklist
 
-A **self-review** before submitting; for an operator reviewing their own team's tile, it is the review itself. Each tier includes the ones above it.
+Run through this as a **self-review** before submitting. If you're an operator reviewing your own team's tile, this checklist doubles as the actual review — there's no separate step. Each tier includes the ones above it.
 
 ### 🟢 All types
 
@@ -293,7 +293,7 @@ _E.g. `AICE` again: it also runs inside the operator's own cluster, on top of it
 
 ## 6. Local testing
 
-1. Run a local CodeMie backend with your entry added to `config/customer/customer-config.yaml`, pointing `url` at your dev server. Or, faster: some CodeMie deployments offer a dev-override mechanism that registers your remote via a query parameter and a browser reload instead of a YAML edit and a backend restart; ask whoever operates your target deployment whether it's available to you.
+1. Run a local CodeMie backend with your entry added to `config/customer/customer-config.yaml`, pointing `url` at your dev server. A faster, query-parameter-based dev-override (no YAML edit, no backend restart) is planned but not yet shipped on any deployment; check with the CodeMie team on its status before assuming it's available.
 2. If editing YAML directly: restart the backend, then confirm `GET /v1/applications` lists your app with the fields you expect.
 3. Open `/applications` in the UI and launch your card.
 4. For `module`: navigate away and back at least twice, watching for duplicated DOM, leaked listeners, or missing styles: this is what `unmount()` correctness looks like in practice.
