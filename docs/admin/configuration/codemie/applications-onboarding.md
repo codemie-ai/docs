@@ -136,7 +136,7 @@ A preview of the whole path, using the build-status panel from the typical examp
          apiUrl: 'https://build-status-api.example.com'
    ```
    Plus the `module` contract below: an ESM build exposing `CodemieEntryComponent`, a `mount`/`unmount` pair, no `shared` modules. §4 defines each of these.
-4. **Review.** The 🟢 All types tier in §5 plus the 🔴 `module` tier: a named owner, an HTTPS and version-pinned `entry`, no secrets in `arguments`.
+4. **Review.** The ⚪ All types tier in §5 plus the 🔴 `module` tier: a named owner, an HTTPS and version-pinned `entry`, no secrets in `arguments`.
 5. **Testing.** Faster iteration through the dev-override mechanism mentioned in §6 if your deployment has it, then §6's five steps in order, with particular attention on step 4: navigate away and back twice, watching for duplicated DOM or leaked listeners.
 6. **Sign-off.** Frontend and architecture review recorded, per the journey table above.
 
@@ -180,7 +180,7 @@ Three requirements, not recommendations. Today, nothing on the platform side enf
 2. **Make session cookies work in a third-party context.** `SameSite=None; Secure`, or move to token-based auth entirely. This applies even in the same cluster: same cluster is not same origin.
 3. **Handle the logged-out path explicitly.** If your IdP refuses to be framed, the default is a blank rectangle. Detect it and render an "open in a new tab" link instead.
 
-On the iframe route, CodeMie reads a `path` query parameter from its own URL and appends that value to your `entry` verbatim, with no separator inserted. So `…/applications/your-slug?path=/reports/42` loads `<your entry>/reports/42`, and the value must carry its own leading `/` or `?`.
+On the iframe route, CodeMie reads a `path` query parameter from its own URL and appends that value to your `entry` verbatim, with no separator inserted, so the value must carry its own leading `/` or `?`.
 
 > **Treat this as a convenience, not a hardened feature.** The value is concatenated without validation today, so don't rely on it for anything security-sensitive until that's fixed.
 
@@ -247,14 +247,14 @@ Partial excerpt: `arguments` nests under `settings:`, alongside the fields from 
 
 ## 5. Review checklist
 
-Run through this as a **self-review** before submitting. If you're an operator reviewing your own team's tile, this checklist doubles as the actual review — there's no separate step. Everyone does 🟢 All types. Add the tier for your type, and J3's additions if the operator deploys it. The `iframe` and `module` tiers are alternatives, not cumulative.
+Run through this as a **self-review** before submitting. If you're an operator reviewing your own team's tile, this checklist doubles as the actual review — there's no separate step. Everyone does ⚪ All types. Add the tier for your type, and J3's additions if the operator deploys it. The `iframe` and `module` tiers are alternatives, not cumulative.
 
-### 🟢 All types
+### ⚪ All types
 
 _Applies to every submission, regardless of type._
 
 - [ ] A named owner who will still be reachable in a year
-- [ ] `entry` is HTTPS, and resolves from the operator's network
+- [ ] `entry` is HTTPS, and resolves from a user's browser
 - [ ] `entry` is version-pinned, not a mutable "latest"
 - [ ] `icon_url` is HTTPS and on a host you control
 - [ ] `arguments` contains no secret, token, or key
@@ -298,7 +298,7 @@ _E.g. AICE again: it also runs inside the operator's own cluster, on top of its 
 ## 6. Local testing
 
 1. Run a local CodeMie backend with your entry added to `config/customer/customer-config.yaml`, pointing `url` at your dev server. A faster, query-parameter-based dev-override (no YAML edit, no backend restart) is planned but not yet shipped on any deployment; check with the CodeMie team on its status before assuming it's available.
-2. If editing YAML directly: restart the backend, then confirm `GET /v1/applications` lists your app with the fields you expect.
+2. If editing YAML directly: restart the backend, then confirm `GET /v1/applications` lists your app with the fields you expect. No auth required, so `curl` works.
 3. Open `/applications` in the UI and launch your card.
 4. For `module`: navigate away and back at least twice, watching for duplicated DOM, leaked listeners, or missing styles: this is what `unmount()` correctness looks like in practice.
 5. For `iframe`: test logged out, and with third-party cookies blocked.
@@ -309,19 +309,21 @@ _E.g. AICE again: it also runs inside the operator's own cluster, on top of its 
 
 Not developer to-dos: platform limitations to plan around, and candidates to raise with the CodeMie team.
 
-| Gap                                   | Impact                                                                                                                                           |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| No visibility control                 | Every enabled app is shown to every user; there is no per-project or per-role filter.                                                            |
-| No identity propagation               | Every integration re-authenticates the user independently; the platform defines no token or context handshake.                                   |
-| No versioning or rollback             | `entry` points at a live URL; you ship breakage to all users the moment you deploy.                                                              |
-| No health checks                      | A dead app keeps its card until someone edits YAML and redeploys.                                                                                |
-| Restart required                      | No hot reload of the config file.                                                                                                                |
-| One bad entry breaks the page         | See the callout in [§4](#4-what-you-provide). Highest priority; not yet shipped.                                                                 |
-| No published CSP for framed apps      | The exact `frame-ancestors` value to allow must be confirmed per environment.                                                                    |
-| No `sandbox` on the `iframe`          | Full browser privileges (popups, downloads, fullscreen, top-navigation) instead of what `sandbox` would restrict. Not deliberate; a planned fix. |
-| No SRI / integrity pinning on `entry` | A changed URL is trusted verbatim; version-pinning is the only practical mitigation today.                                                       |
-| Style bridge has known edges          | See the callout in [§4](#4-what-you-provide).                                                                                                    |
-| A type mismatch still renders         | An app registered as one type but opened at another type's route renders anyway, after an error toast, rather than being blocked outright.       |
+| Gap                                   | Impact                                                                                                                                                                                               |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No visibility control                 | Every enabled app is shown to every user; there is no per-project or per-role filter.                                                                                                                |
+| No identity propagation               | Every integration re-authenticates the user independently; the platform defines no token or context handshake.                                                                                       |
+| No versioning or rollback             | `entry` points at a live URL; you ship breakage to all users the moment you deploy.                                                                                                                  |
+| No health checks                      | A dead app keeps its card until someone edits YAML and redeploys.                                                                                                                                    |
+| Restart required                      | No hot reload of the config file.                                                                                                                                                                    |
+| One bad entry breaks the page         | See the callout in [§4](#4-what-you-provide). Highest priority; not yet shipped.                                                                                                                     |
+| No published CSP for framed apps      | The exact `frame-ancestors` value to allow must be confirmed per environment.                                                                                                                        |
+| No `sandbox` on the `iframe`          | Full browser privileges (popups, downloads, fullscreen, top-navigation) instead of what `sandbox` would restrict. Not deliberate; a planned fix.                                                     |
+| No SRI / integrity pinning on `entry` | A changed URL is trusted verbatim; version-pinning is the only practical mitigation today.                                                                                                           |
+| Style bridge has known edges          | See the callout in [§4](#4-what-you-provide).                                                                                                                                                        |
+| A type mismatch still renders         | An app registered as one type but opened at another type's route renders anyway, after an error toast, rather than being blocked outright.                                                           |
+| No `noopener` on `link` dispatch      | A `link` opens via `window.open(entry, '_blank')` with no `noopener`, so the opened page can navigate the CodeMie tab back to a URL of its choosing (reverse tabnabbing). Ticketed, not yet shipped. |
+| `?path=` is not origin-checked        | The value is concatenated onto `entry` unvalidated, so a crafted CodeMie URL can point the frame at another origin. Ticketed with the item above.                                                    |
 
 ---
 
