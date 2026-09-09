@@ -33,7 +33,7 @@ extraEnv:
 CodeMie API discovers and reuses long-lived pods from a pool, or creates a new one on demand up to `CODE_EXECUTOR_MAX_POD_POOL_SIZE`. The same pod can be reused across many executions.
 
 :::warning Will be deprecated
-`sandbox-shared` will be deprecated and is not secured. Switch to `sandbox-jobs`.
+`sandbox-shared` is no longer supported and not recommended to use in production environments. Switch to `sandbox-jobs`.
 :::
 
 ```yaml
@@ -61,10 +61,10 @@ While disabled, the tool is neither listed in the tools catalog nor executed at 
 
 ## Namespace Configuration
 
-By default, code executor run in a separate namespace from CodeMie API: `codemie-runtime`. Create it before enabling RBAC:
+By default, code executor run in a separate namespace from CodeMie API: `codemie-code-executor`. Create it before enabling RBAC:
 
 ```bash
-kubectl create namespace codemie-runtime
+kubectl create namespace codemie-code-executor
 ```
 
 Then set:
@@ -75,16 +75,16 @@ features:
     code_executor:
       rbac:
         enabled: true
-        namespace: "codemie-runtime"
+        namespace: "codemie-code-executor"
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie-runtime"
+    value: "codemie-code-executor"
 ```
 
 `features.tools.code_executor.rbac.namespace` (Helm value) and `CODE_EXECUTOR_NAMESPACE` (env var) **must be set to the same namespace**.
 
-A different namespace than `codemie-runtime` can also be used — just create it and set both values to match it.
+A different namespace than `codemie-code-executor` can also be used — just create it and set both values to match it.
 
 ## Applying CodeMie API Settings
 
@@ -123,7 +123,7 @@ extraVolumes: |
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie-runtime"
+    value: "codemie-code-executor"
   - name: CODE_EXECUTOR_KUBECONFIG_PATH
     value: "/secrets/kubeconfig"
 ```
@@ -135,17 +135,17 @@ extraEnv:
 
 Pre-warming only applies to the deprecated `sandbox-shared` mode. `sandbox-jobs` always creates a fresh Job pod per execution, so there is no pool to pre-warm.
 
-In `sandbox-shared` mode, CodeMie API creates executor pods on demand by default, and the first execution request waits for a pod to start. To avoid this, deploy the `codemie-runtime` chart to keep pods running and ready for discovery, into the **same namespace** as `CODE_EXECUTOR_NAMESPACE`:
+In `sandbox-shared` mode, CodeMie API creates executor pods on demand by default, and the first execution request waits for a pod to start. To avoid this, deploy the `codemie-code-executor` chart to keep pods running and ready for discovery, into the **same namespace** as `CODE_EXECUTOR_NAMESPACE`:
 
 ```bash
-helm upgrade --install codemie-runtime \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
+helm upgrade --install codemie-code-executor \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-code-executor \
   --version <version> \
-  -f codemie-runtime/values.yaml \
+  -f codemie-code-executor/values.yaml \
   --namespace <executor-namespace>
 ```
 
-To control how many pods are kept ready, set `replicaCount` in your `codemie-runtime/values.yaml`:
+To control how many pods are kept ready, set `replicaCount` in your `codemie-code-executor/values.yaml`:
 
 ```yaml
 replicaCount: 5
