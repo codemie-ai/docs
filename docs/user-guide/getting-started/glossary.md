@@ -29,6 +29,10 @@ Deployable AI-powered solutions that extend or complement CodeMie capabilities. 
 
 An AI-powered agent in the CodeMie platform configured to perform specific tasks or roles. Assistants can be created from templates or customized with specific tools, data sources, and system instructions to help with various development and project management tasks.
 
+### Auditor
+
+A boolean flag on a user account that grants read-only, platform-wide visibility across Analytics, Projects, Users, and Budgets. It is not a separate platform role: it is additive and can be combined with any base role, and all write actions (create, edit, delete, deactivate, assign, sync) remain unavailable. For users who are already Platform Admins or Maintainers the flag has no effect, since those roles already include full platform access. The flag is off by default and is assigned by Platform Admins or Maintainers in **Settings → Administration → Users Management**. [Learn more about roles and access control](../../admin/security/roles-rbac.md).
+
 ### Template
 
 A predefined configuration for creating assistants or workflows in the CodeMie platform:
