@@ -9,9 +9,9 @@ sidebar_position: 8
 
 # Chrome Extension
 
-EPAM AI/Run CodeMie for the browser puts an AI assistant in a Chrome side panel — one that can read the
-page you are working on and act on it when you ask. It connects to your organization's CodeMie instance
-through your normal work sign-in, so there is no separate account to create and no API key to paste.
+EPAM AI/Run CodeMie for the browser adds an AI assistant to Chrome. It opens in a side panel, can read
+the page you're looking at, and can act on it when you ask. It signs you in with your normal work
+account, so there's nothing extra to set up — no separate password, no API key.
 
 ![The CodeMie side panel open beside a web page, answering a question about that page](./images/codemie-panel-answering.png)
 
@@ -19,80 +19,91 @@ through your normal work sign-in, so there is no separate account to create and 
 
 ## What you can do
 
-| Capability                 | What it means in practice                                                                                            |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Ask about the current page | Summarize it, explain a section, pull out structured data, or ask questions answered from what is actually on screen |
-| Ask about a selection      | Select text on any page and send it straight to the assistant from the right-click menu                              |
-| Act on the page            | Let the assistant click buttons, fill forms, and step through multi-page flows on your behalf                        |
-| Record and replay          | Capture a sequence of actions once, then replay it later                                                             |
-| Bring in more context      | Add web search results or other open tabs when one page is not enough                                                |
-| Use your own tools         | Connect MCP servers and call their tools from the panel                                                              |
-| Keep your conversations    | Chats sync with your CodeMie account across devices, or stay local if you choose a temporary chat                    |
+| You can...              | Like this                                                                                    |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Ask about the page you're on | Get a summary, ask a question, or pull out details — answers are based on what's actually on the page |
+| Ask about a PDF          | Open a PDF from a web link and ask questions about it                                          |
+| Ask about text you select | Highlight text on a page, then ask the assistant about it from the right-click menu or the floating **Ask CodeMie** button |
+| Let it act for you       | The assistant can click, type, and fill things in for you. By default it asks before doing anything that changes the page |
+| Record and replay        | Record a set of actions once, then replay them later with one click                            |
+| Bring in more context    | Add web search results or other open tabs when one page isn't enough                           |
+| Use connected tools      | Some assistants come with extra tools built in — the panel can use them for you automatically   |
+| Keep your conversations  | Chats with a chosen assistant are saved to your account and follow you across your devices      |
 
 :::info
-The assistant works on ordinary `http` and `https` pages. Chrome blocks extensions from running on
-browser-internal pages, so the panel will not read `chrome://` pages, the New Tab page, the PDF viewer, or
-the Chrome Web Store.
+Works on regular web pages and on PDFs opened from a web link. It can't read internal Chrome pages, the
+New Tab page, or the Chrome Web Store page — and it can't open PDF files saved on your own computer.
+:::
+
+:::note
+By default, the assistant asks before it clicks or types anything on a page. Turning on **Auto-approve**
+skips that check, so only turn it on for pages you trust.
 :::
 
 ---
 
 ## Choosing an assistant
 
-The panel can run against any assistant you have access to — your own, or one shared through the
-marketplace. Switch assistants from the name at the top-left of the panel.
+Switch between assistants using the name at the top-left of the panel — pick one of your own, or one
+shared by your team.
 
 ![The assistant picker open in the panel, listing personal assistants and marketplace assistants](./images/codemie-assistant-picker.png)
 
-Chats started without an assistant selected work, but stay local to the browser — they are not saved to
-CodeMie. Pick an assistant to save conversations and unlock the extra tools attached to it. A default
-assistant can be set in the extension settings.
+Chats with a chosen assistant are saved and follow you across devices. Chats with no assistant chosen only
+last for your current browser session — they aren't saved anywhere. A temporary chat is never saved, even
+for that session. Pick an assistant if you want your chat history to stick around and to unlock any extra
+tools that assistant comes with. You can set a default assistant in settings.
 
 ---
 
 ## Controls
 
-Everything the assistant uses as background material is controlled from the row of toggles above the
-input bar.
+Above the input box is a button showing how many sources are in use (for example "2 sources"). Click it to
+open the sources panel and control what the assistant knows about when it answers. The model picker is a
+separate dropdown inside the input box itself.
 
 ![The CodeMie panel showing the context toggles, model picker, and input bar](./images/codemie-panel-empty.png)
 
-| Control      | Effect                                                                        |
-| ------------ | ----------------------------------------------------------------------------- |
-| Use page     | Sends the current page as context for the question                            |
-| Smart search | Searches long pages for the most relevant parts instead of sending everything |
-| Knowledge    | Draws on indexed knowledge from your CodeMie data sources                     |
-| Tabs         | Adds other open browser tabs as extra context                                 |
-| Model picker | Chooses which model answers this turn                                         |
+| Toggle       | What it does                                                                |
+| ------------ | ---------------------------------------------------------------------------- |
+| Use page     | Lets the assistant see the page you're on                                    |
+| Smart search | Finds the most relevant parts of a long page instead of reading all of it    |
+| Knowledge    | Searches your own saved pages and notes, and adds anything relevant to your question |
+| Tabs         | Lets the assistant also look at your other open tabs                         |
+
+:::note
+Anything you save to Knowledge stays on your own computer until you delete it or remove the extension.
+Turning Knowledge on may send matching notes to your CodeMie instance as part of your question.
+:::
 
 ---
 
 ## Built-in guides
 
-The extension ships with its own walkthroughs, covering every feature in short steps — getting started,
-chat and quick tools, acting on the page, knowledge and speech, tabs and cost, and settings. Open them
-from the **More** menu in the panel header, under **Guide & tutorials**.
+The extension has its own step-by-step guides covering every feature — getting started, chatting, acting
+on a page, knowledge and speech, tabs, and settings. Click your avatar in the top-right of the panel and
+open **Guide & tutorials**.
 
-![The extension's built-in Guides and Tutorials page, with the More menu open in the panel](./images/codemie-guides.png)
+![The extension's built-in Guides and Tutorials page, with the account menu open in the panel](./images/codemie-guides.png)
 
 :::tip
-The in-app guides are the most detailed reference for day-to-day use and are always in step with the
-version you have installed. This section covers installation and privacy; the guides cover the features.
+These in-app guides always match the version you have installed, so they're the best day-to-day
+reference. This page just covers installing the extension and how your data is handled.
 :::
 
 ---
 
 ## Requirements
 
-- Google Chrome 114 or newer — the extension uses Chrome's side panel API
-- An account on your organization's CodeMie instance
-- The URL of that instance, which your CodeMie administrator can provide
+- Google Chrome 114 or newer
+- An account on your organization's CodeMie
+- The address of that CodeMie instance — ask your CodeMie administrator if you don't have it
 
 ---
 
 ## Next steps
 
-- [Installation and setup](./installation.md) - install the extension, connect it to your CodeMie
+- [Installation and setup](./installation.md) — install the extension, connect it to your CodeMie
   instance, and sign in
-- [Privacy policy](./privacy-policy.md) - what the extension reads, what it sends, and where that data
+- [Privacy policy](./privacy-policy.md) — what the extension reads, what it sends, and where that data
   goes
