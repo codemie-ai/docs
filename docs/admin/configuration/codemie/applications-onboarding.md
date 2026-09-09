@@ -146,7 +146,7 @@ A preview of the whole path, using the build-status panel from the typical examp
          apiUrl: 'https://build-status-api.example.com'
    ```
    Plus the `module` contract: an ESM build exposing `./CodemieEntryComponent`, a `mount`/`unmount` pair, no `shared` modules. Section 4 defines every one of these terms.
-4. **Review.** The 🔴 `module` tier in [Section 5](#5-review-checklist), and every tier above it too: a named owner, an HTTPS and version-pinned `entry`, no secrets in `arguments`.
+4. **Review.** The 🔴 `module` tier in [Section 5](#5-review-checklist), and every tier above it too: a named owner, an HTTPS and version-pinned `url`, no secrets in `arguments`.
 5. **Testing.** Faster iteration is available through the dev-override mechanism mentioned in [Section 6](#6-local-testing) where the deployment supports it, then the five steps in that section, with particular attention on step 4: navigate away and back twice, watching for duplicated DOM or leaked listeners.
 6. **Sign-off.** Frontend and architecture review recorded, per the journey table above.
 
@@ -260,8 +260,8 @@ A **self-review** before submitting; for an operator reviewing their own team's 
 _Applies to every submission, regardless of type._
 
 - [ ] A named owner who will still be reachable in a year
-- [ ] `entry` is HTTPS, and resolves from the operator's network
-- [ ] `entry` is version-pinned, not a mutable "latest"
+- [ ] `url` is HTTPS, and resolves from the operator's network
+- [ ] `url` is version-pinned, not a mutable "latest"
 - [ ] `icon_url` is HTTPS and on a host under the application team's control
 - [ ] `arguments` contains no secret, token, or key
 - [ ] `description` says what the application does (this is the tile subtitle)
@@ -319,13 +319,13 @@ Not action items for the integrating team — platform limitations to plan aroun
 | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | No visibility control                              | Every enabled application is shown to every user; there is no per-project or per-role filter.                                                              |
 | No identity propagation                            | Every integration re-authenticates the user independently; the platform defines no token or context handshake.                                             |
-| No versioning or rollback                          | `entry` points at a live URL, so breakage ships to all users the moment a new version deploys.                                                             |
+| No versioning or rollback                          | `url` points at a live location, so breakage ships to all users the moment a new version deploys.                                                          |
 | No health checks                                   | A dead application keeps its card until someone edits YAML and redeploys.                                                                                  |
 | Restart required                                   | No hot reload of the config file.                                                                                                                          |
 | One bad entry breaks the page                      | See the callout in [Section 4](#4-what-must-be-provided). Highest priority; not yet shipped.                                                               |
 | No published CSP for framed applications           | The exact `frame-ancestors` value to allow must be confirmed per environment.                                                                              |
 | No `sandbox` on the `iframe`                       | Full browser privileges (popups, downloads, fullscreen, top-navigation) instead of what `sandbox` would restrict. Not deliberate; a planned fix.           |
-| No SRI / integrity pinning on `entry`              | A changed URL is trusted verbatim; version-pinning is the only practical mitigation today.                                                                 |
+| No SRI / integrity pinning on `url`                | A changed URL is trusted verbatim; version-pinning is the only practical mitigation today.                                                                 |
 | Style bridge has known edges                       | See the callout in [Section 4](#4-what-must-be-provided).                                                                                                  |
 | A type mismatch still renders, on the iframe route | An application registered as `link` or `module` but opened at the `iframe` route renders anyway, after an error toast, rather than being blocked outright. |
 

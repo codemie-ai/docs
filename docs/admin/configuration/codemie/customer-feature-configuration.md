@@ -514,7 +514,7 @@ settings:
   url: "https://..."         # Entry point URL or JavaScript bundle path
   type: "module|iframe|link" # Integration type (see above)
   icon_url: "https://..."    # Optional — app icon displayed in the menu
-  arguments: {}              # Optional — app-specific JSON config for extensions using Module Federation
+  arguments: {}              # Optional — app-specific config (string values) for extensions using Module Federation
   created_by: "Team Name"    # Optional — attribution shown in the app card
   availableForExternal: true # Optional — false hides from external users
 ```

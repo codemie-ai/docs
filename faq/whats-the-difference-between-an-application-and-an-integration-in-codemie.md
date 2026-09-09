@@ -9,4 +9,4 @@ If the goal is for an assistant to call an API or run logic, that's an MCP serve
 ## Sources
 
 - [Application Onboarding Guide](https://docs.codemie.ai/admin/configuration/codemie/applications-onboarding/)
-- [Integrations](https://docs.codemie.ai/user-guide/tools_integrations/integrations/)
+- [Integrations](https://docs.codemie.ai/user-guide/tools_integrations/integrations/integrations/)
