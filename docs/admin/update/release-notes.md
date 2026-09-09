@@ -13,6 +13,23 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.49.0 {#v2-49-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.49.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **`CODE_EXECUTOR_SANDBOX_MODE` now defaults to `sandbox-jobs`** — `sandbox-shared` will be deprecated. See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md) for details.
+
+</details>
+
 ### CodeMie 2.48.0 {#v2-48-0}
 
 <details>
