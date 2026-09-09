@@ -52,39 +52,36 @@ Two independent questions decide it. Answer them in this order.
 flowchart TD
     D1{"<b>D1</b><br/>Must it be deployed into<br/>the operator's environment?"}
     D2{"<b>D2</b><br/>How deeply<br/>should it embed?"}
-    J1["<b>J1 · Storefront</b><br/>link or iframe<br/>days · app team"]
-    J2["<b>J2 · Embedded UI</b><br/>module<br/>weeks · app team + frontend review"]
-    J3["<b>J3 · Co-deployment</b><br/>any type<br/>months · platform / DevOps"]
+    J1["<b>J1 · Storefront</b><br/>link or iframe"]
+    J2["<b>J2 · Embedded UI</b><br/>module"]
+    J3["<b>J3 · Co-deployment</b><br/>any type"]
 
     D1 -->|"No, it already runs<br/>somewhere reachable"| D2
     D1 -->|"Yes, it must run<br/>in their cluster"| J3
     D2 -->|"Its own page,<br/>or a new tab"| J1
     D2 -->|"Part of the<br/>CodeMie UI"| J2
-
-    classDef journey fill:#26344d,stroke:#5b9dd9,stroke-width:2px,color:#e8eef7
-    class D1,D2,J1,J2,J3 journey
 ```
 
-> **D1 sets your cost, owner, and timeline; D2 sets your security review.** Neither follows from the other: a co-deployed product can still be a `link`, and a `module` can run entirely outside the operator's environment.
+> **D1 sets your cost, owner, and timeline; D2 sets your security review.** Neither follows from the other: a co-deployed product can still be a `link`, and a `module` can run entirely outside the operator's environment. **Landing on J3 does not excuse you from D2**: you still answer it in §3 to pick your type.
 
 ### The three journeys
 
-|                               | **J1 · Storefront** | **J2 · Embedded UI**      | **J3 · Co-deployment**         |
-| ----------------------------- | ------------------- | ------------------------- | ------------------------------ |
-| **Deployed by the operator?** | no                  | no                        | **yes**                        |
-| **Type**                      | `link` · `iframe`   | `module`                  | any                            |
-| **You own**                   | a config entry      | + a hosted remote bundle  | + images, chart, data, CI/CD   |
-| **Also needs**                | n/a                 | frontend review           | infra + security + DB review   |
-| **Realistic time**            | days                | weeks                     | months                         |
-| **Sign-off**                  | application owner   | + frontend / architecture | + platform / DevOps / security |
+|                               | **J1 · Storefront** | **J2 · Embedded UI**      | **J3 · Co-deployment**                                                                              |
+| ----------------------------- | ------------------- | ------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Deployed by the operator?** | no                  | no                        | **yes**                                                                                             |
+| **Type**                      | `link` · `iframe`   | `module`                  | any                                                                                                 |
+| **You own**                   | a config entry      | + a hosted remote bundle  | a config entry, images, chart, data, CI/CD, and a remote bundle if you chose `module`               |
+| **Also needs**                | n/a                 | frontend review           | infra + security + DB review, plus frontend review if you chose `module`                            |
+| **Realistic time**            | days                | weeks                     | months                                                                                              |
+| **Sign-off**                  | application owner   | + frontend / architecture | application owner, platform / DevOps / security, plus frontend / architecture if you chose `module` |
 
 **Typical examples.**
 
 - **J1:** an internal wiki or support desk you already run elsewhere.
-- **J2:** a build-status panel, the shape `technology-copilot` runs today.
-- **J3:** a vendor product that needs data residency, the shape `AICE` runs today.
+- **J2:** a build-status panel, as `technology-copilot` does today.
+- **J3:** a vendor product that needs data residency, as AICE does today.
 
-All three run the same six stages: **choose · agree · build · test · review · publish**. Only the gate content and sign-off differ.
+All three follow the same path through the rest of this guide. Only the gate content and sign-off differ.
 
 > **J3 is a delivery answer, not a security answer.** It tells you who deploys the thing; your embedding type still decides how hard the security review is. A co-deployed `module` maxes out both.
 
@@ -145,7 +142,7 @@ A preview of the whole path, using the build-status panel from the typical examp
 
 That's the whole path. §1 through §7 cover every other journey and type combination.
 
-`AICE` follows the same six stages but lands in J3 instead: unlike a build-status panel, it has to run inside the operator's environment.
+AICE follows the same path but lands in J3 instead: unlike a build-status panel, it has to run inside the operator's environment.
 
 ---
 
@@ -266,7 +263,7 @@ _Applies to every submission, regardless of type._
 
 ### 🟡 `iframe`
 
-_E.g. `AICE`._
+_E.g. AICE._
 
 - [ ] `frame-ancestors` permits the CodeMie origin; no conflicting `X-Frame-Options`
 - [ ] Cookies work in a third-party context, or auth does not need them
@@ -287,7 +284,7 @@ _E.g. `technology-copilot`._
 
 ### 🔴 J3 · co-deployment, additionally
 
-_E.g. `AICE` again: it also runs inside the operator's own cluster, on top of its `iframe` requirements above._
+_E.g. AICE again: it also runs inside the operator's own cluster, on top of its `iframe` requirements above._
 
 - [ ] Images from a scanned registry, pinned by digest
 - [ ] Helm chart, resource limits, and a non-root `securityContext`
