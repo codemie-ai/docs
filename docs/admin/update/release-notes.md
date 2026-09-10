@@ -26,12 +26,12 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **[BREAKING] Code Executor** — changes:
-   - `CODE_EXECUTOR_SANDBOX_MODE` now defaults to `sandbox-jobs` — `sandbox-shared` will be deprecated.
-   - `CODE_EXECUTOR_NAMESPACE` default value changed to `codemie-code-executor` (previously `codemie-runtime`).
+1. **[BREAKING] Code Executor** — changes in `codemie-api`:
+   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be deprecated.
+   - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
 
    :::warning
-   If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled — otherwise the executor now defaults to the `codemie-code-executor` namespace.
+   If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled in codemie-api helm chart — otherwise the executor now defaults to the `codemie-code-executor` namespace.
    :::
 
    See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md) for details.
