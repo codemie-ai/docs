@@ -16,6 +16,16 @@ instead of describing the question in prose and parsing a free-text reply.
 The answer returns to the assistant as structured data, so the values arrive already separated into
 named fields rather than needing to be extracted from a sentence.
 
+:::info Built on A2UI
+This feature is an implementation of [A2UI](https://a2ui.org/introduction/what-is-a2ui/), an open
+protocol for agents that describe user interfaces instead of returning plain text. CodeMie
+implements protocol version **0.9.1** and renders the standard
+[Basic Catalog](https://a2ui.org/specification/v0.9.1-basic-catalog-implementation-guide/) of
+components — so the element vocabulary and its behavior come from the specification rather than
+from CodeMie. The full protocol reference is the
+[A2UI v0.9.1 specification](https://a2ui.org/specification/v0.9.1-a2ui/).
+:::
+
 ## When interactive elements help
 
 Interactive elements suit questions with a bounded set of answers:
@@ -93,8 +103,9 @@ leaves one answer in the conversation, not two.
 
 ## Available elements
 
-Interactive elements are drawn from the A2UI v0.9 Basic Catalog. All 18 components of the catalog
-are rendered:
+Interactive elements are drawn from the
+[A2UI v0.9 Basic Catalog](https://a2ui.org/specification/v0.9.1-basic-catalog-implementation-guide/).
+All 18 components of the catalog are rendered:
 
 | Group  | Components                                                                   |
 | ------ | ---------------------------------------------------------------------------- |
@@ -142,3 +153,10 @@ URL fails validation, a placeholder is rendered and no request is made at all.
 - [Create an Assistant](./create-assistant.md)
 - [Chat Input Settings](./chat-input-settings.md)
 - [Customer Feature Configuration](../../admin/configuration/codemie/customer-feature-configuration.md)
+
+External, for the protocol itself:
+
+- [What is A2UI](https://a2ui.org/introduction/what-is-a2ui/) — protocol overview
+- [A2UI v0.9.1 specification](https://a2ui.org/specification/v0.9.1-a2ui/) — the version implemented here
+- [Basic Catalog implementation guide](https://a2ui.org/specification/v0.9.1-basic-catalog-implementation-guide/) — the component vocabulary
+- [a2ui-project/a2ui](https://github.com/a2ui-project/a2ui) — protocol repository
