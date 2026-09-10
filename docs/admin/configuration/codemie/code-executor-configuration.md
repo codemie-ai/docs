@@ -10,9 +10,37 @@ import TabItem from '@theme/TabItem';
 
 # Code Executor Configuration
 
-The Code Executor runs Python code in isolated Kubernetes sandbox pods with enforced resource limits and security policies. Every execution request is dispatched to a dedicated sandbox pod, keeping user-supplied code isolated from the CodeMie API.
+The Code Executor runs Python code in isolated Kubernetes sandbox pods with enforced resource limits and security policies. Every execution request is dispatched to a sandbox pod, keeping user-supplied code isolated from the CodeMie API.
 
-You choose where those sandbox pods run: in the same cluster as CodeMie API sharing its namespace, in the same cluster in a dedicated namespace, or in a separate dedicated cluster.
+There are two sandbox modes selected with `CODE_EXECUTOR_SANDBOX_MODE`:
+
+- **jobs** (`sandbox-jobs`, default and recommended)
+- **shared** (`sandbox-shared`, deprecated).
+
+## Sandbox Modes
+
+<Tabs>
+<TabItem value="jobs" label="sandbox-jobs (default)" default>
+
+Each execution is submitted as a Kubernetes `Job`. A fresh pod runs the user code and is torn down afterwards.
+
+</TabItem>
+<TabItem value="shared" label="sandbox-shared">
+
+CodeMie API discovers and reuses long-lived pods from a pool, or creates a new one on demand up to `CODE_EXECUTOR_MAX_POD_POOL_SIZE`. The same pod can be reused across many executions.
+
+:::warning Will be deprecated
+`sandbox-shared` is no longer supported and not recommended to use in production environments. Switch to `sandbox-jobs`.
+:::
+
+```yaml
+extraEnv:
+  - name: CODE_EXECUTOR_SANDBOX_MODE
+    value: "sandbox-shared"
+```
+
+</TabItem>
+</Tabs>
 
 ## Enabling the Code Executor
 
@@ -26,26 +54,19 @@ extraEnv:
 
 While disabled, the tool is neither listed in the tools catalog nor executed at runtime.
 
-## Choosing a Deployment Topology
+## Setting the Executor Image
 
-| Topology                              | When to use                           | Isolation                        | RBAC required         |
-| ------------------------------------- | ------------------------------------- | -------------------------------- | --------------------- |
-| **Same cluster, shared namespace**    | Standard production setup             | Separate pod                     | Yes                   |
-| **Same cluster, dedicated namespace** | Namespace-level workload isolation    | Separate pod, separate namespace | Yes (cross-namespace) |
-| **Dedicated cluster**                 | Compliance, multi-tenant environments | Full cluster isolation           | No (kubeconfig)       |
+Set `CODE_EXECUTOR_DOCKER_IMAGE` to the image matching your CodeMie version:
 
-## Deployment Topologies
+```yaml
+extraEnv:
+  - name: CODE_EXECUTOR_DOCKER_IMAGE
+    value: "codemie/codemie-python:<codemie-version>"
+```
 
-### Same Cluster as CodeMie API
+## RBAC Configuration
 
-Executor pods run in the same Kubernetes cluster as CodeMie API.
-
-<Tabs>
-<TabItem value="shared" label="Shared namespace" default>
-
-Executor pods are deployed in the same namespace as CodeMie API (e.g. `codemie`).
-
-**Set in CodeMie API values:**
+Enable RBAC so the CodeMie API service account can manage pods/Jobs in the executor namespace:
 
 ```yaml
 features:
@@ -53,57 +74,58 @@ features:
     code_executor:
       rbac:
         enabled: true
-        namespace: ""  # defaults to the CodeMie release namespace
-
-extraEnv:
-  - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie"
 ```
 
-</TabItem>
-<TabItem value="dedicated" label="Dedicated namespace">
+## Namespace Configuration
 
-Executor pods are deployed in a separate namespace (e.g. `codemie-runtime`).
+By default, code executor runs in its own namespace, `codemie-code-executor`, which the chart creates automatically and which already matches the `CODE_EXECUTOR_NAMESPACE` default — nothing to configure.
 
-**Set in CodeMie API values:**
+To use a different namespace, set the name and `CODE_EXECUTOR_NAMESPACE` to match:
 
 ```yaml
 features:
   tools:
     code_executor:
-      rbac:
-        enabled: true
-        namespace: "codemie-runtime"
+      namespace:
+        name: "<namespace>"
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie-runtime"
+    value: "<namespace>"
 ```
 
-</TabItem>
-</Tabs>
+If the namespace already exists and is managed elsewhere, skip chart-managed creation:
 
-:::info
-If you cannot manage the existing service account, or need to use a separate one instead of the CodeMie API service account, consider configuring `kubeconfig` credentials as described in the [Dedicated Cluster](#dedicated-cluster) section.
-:::
-
-### Dedicated Cluster
-
-**1. Create the executor namespace in the dedicated cluster:**
-
-```bash
-kubectl create namespace codemie-runtime
+```yaml
+features:
+  tools:
+    code_executor:
+      namespace:
+        create: false
 ```
 
-**2. Create a kubeconfig secret in the CodeMie API namespace:**
+## Applying CodeMie API Settings
 
 ```bash
-kubectl create secret generic codemie-executor-kubeconfig \
-  --from-file=kubeconfig=<path-to-kubeconfig> \
+helm upgrade codemie-api \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
+  --version <version> \
+  -f codemie-api/values-<cloud>.yaml \
   --namespace codemie
 ```
 
-**3. Set in CodeMie API values:**
+## Environment Variables Reference
+
+For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration.md#code-executor--python-sandbox).
+
+## Legacy Topics
+
+The topics below only apply to niche or deprecated setups. Most deployments can skip this section.
+
+<details>
+<summary>Dedicated Cluster via kubeconfig (will be deprecated)</summary>
+
+It is also possible to point Code Executor at a namespace in a different cluster by mounting a `kubeconfig` secret instead of relying on in-cluster RBAC:
 
 ```yaml
 extraVolumeMounts: |
@@ -119,53 +141,32 @@ extraVolumes: |
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie-runtime"
+    value: "codemie-code-executor"
   - name: CODE_EXECUTOR_KUBECONFIG_PATH
     value: "/secrets/kubeconfig"
 ```
 
-## Applying CodeMie API Settings
+</details>
 
-The Code Executor is disabled by default, so `CODE_EXECUTOR_ENABLED` must be set to `true` to make the tool available. Tune the remaining Code Executor settings as needed and apply the chart:
+<details>
+<summary>Pre-warming the Pod Pool (sandbox-shared only)</summary>
 
-```yaml
-extraEnv:
-  - name: CODE_EXECUTOR_ENABLED
-    value: "true"
-  - name: CODE_EXECUTOR_MAX_POD_POOL_SIZE
-    value: "5"
-  - name: CODE_EXECUTOR_DOCKER_IMAGE
-    value: "codemie/codemie-python:<version>"
-```
+Pre-warming only applies to the deprecated `sandbox-shared` mode. `sandbox-jobs` always creates a fresh Job pod per execution, so there is no pool to pre-warm.
+
+In `sandbox-shared` mode, CodeMie API creates executor pods on demand by default, and the first execution request waits for a pod to start. To avoid this, deploy the `codemie-code-executor` chart to keep pods running and ready for discovery, into the **same namespace** as `CODE_EXECUTOR_NAMESPACE`:
 
 ```bash
-helm upgrade codemie-api \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
+helm upgrade --install codemie-code-executor \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-code-executor \
   --version <version> \
-  -f codemie-api/values-<cloud>.yaml \
-  --namespace codemie
-```
-
-## Pre-warming the Pod Pool (Optional)
-
-By default, CodeMie API creates executor pods on demand.
-The first execution request waits for a pod to start.
-To avoid this, deploy the `codemie-runtime` chart to keep pods running and ready:
-
-```bash
-helm upgrade --install codemie-runtime \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
-  --version <version> \
-  -f codemie-runtime/values.yaml \
+  -f codemie-code-executor/values.yaml \
   --namespace <executor-namespace>
 ```
 
-To control how many pods are kept ready, set `replicaCount` in your `codemie-runtime/values.yaml`:
+To control how many pods are kept ready, set `replicaCount` in your `codemie-code-executor/values.yaml`:
 
 ```yaml
 replicaCount: 5
 ```
 
-## Environment Variables Reference
-
-For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration.md#code-executor--python-sandbox).
+</details>
