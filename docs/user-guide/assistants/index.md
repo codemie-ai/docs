@@ -87,3 +87,4 @@ Manage conversations and organize your workspace:
 - [Export Assistant Chat Messages](./export-assistant-chat-messages-to-word-and-pdf-formats.md) - Export chats to various formats
 - [HTML Preview](./html-preview.md) - Preview and interact with HTML content in chat
 - [Chat Input Settings](./chat-input-settings.md) - Control Web Search, Code Interpreter, and LLM model per conversation from the chat toolbar
+- [Interactive Chat Elements](./interactive-elements.md) - Let an assistant collect input through buttons, choices, and short forms in chat

@@ -444,6 +444,10 @@ The optional `catalog` block restricts which already-registered element types ea
 feature exposes to agents, without a code change. Omitting it keeps the built-in registry defaults.
 Adding a new element _type_ still requires a change in the platform registry.
 
+For the feature itself — how it is enabled per assistant, what it renders in chat, and how to
+troubleshoot it — see
+[Interactive Chat Elements](../../../user-guide/assistants/interactive-elements.md).
+
 ### MCP Auth Configuration
 
 Controls the timeout for MCP OAuth flows.

@@ -223,6 +223,16 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
+## Interactive Features
+
+The **Interactive features** block lets the assistant ask for input with buttons, choices,
+dropdowns, short forms and date pickers rendered directly in chat, instead of asking in prose and
+parsing a free-text reply. The block is present only when the feature is enabled for the
+deployment.
+
+For what the switch changes, how to instruct an assistant to use forms, and what the reader sees in
+chat, see [Interactive Chat Elements](./interactive-elements.md).
+
 ## Managing Your Assistant
 
 4. Once created, your assistant appears in the **My Assistants** menu:
