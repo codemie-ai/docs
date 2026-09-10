@@ -19,13 +19,7 @@ There are two sandbox modes: **jobs** and **shared**, selected with `CODE_EXECUT
 <Tabs>
 <TabItem value="jobs" label="sandbox-jobs (default)" default>
 
-Each execution is submitted as a Kubernetes `Job`. A fresh pod runs the user code and is torn down afterwards.
-
-```yaml
-extraEnv:
-  - name: CODE_EXECUTOR_SANDBOX_MODE
-    value: "sandbox-jobs"
-```
+Each execution is submitted as a Kubernetes `Job`. A fresh pod runs the user code and is torn down afterwards. This is the default — no need to set `CODE_EXECUTOR_SANDBOX_MODE` explicitly.
 
 </TabItem>
 <TabItem value="shared" label="sandbox-shared">
@@ -47,7 +41,7 @@ extraEnv:
 
 ## Enabling the Code Executor
 
-The Code Executor is disabled by default. To make it available, set `CODE_EXECUTOR_ENABLED=true` in the CodeMie API environment:
+The Code Executor is disabled by default. To make it available, set `CODE_EXECUTOR_ENABLED=true` and `CODE_EXECUTOR_DOCKER_IMAGE` in the CodeMie API environment:
 
 ```yaml
 extraEnv:
@@ -61,13 +55,13 @@ While disabled, the tool is neither listed in the tools catalog nor executed at 
 
 ## Namespace Configuration
 
-By default, code executor run in a separate namespace from CodeMie API: `codemie-code-executor`. Create it before enabling RBAC:
+By default, code executor runs in a separate namespace from CodeMie API: `codemie-code-executor`. Both `CODE_EXECUTOR_NAMESPACE` (env var) and `features.tools.code_executor.rbac.namespace` (Helm value) already default to `codemie-code-executor`, so you don't need to set them.
+
+You still need to create the namespace and enable RBAC:
 
 ```bash
 kubectl create namespace codemie-code-executor
 ```
-
-Then set:
 
 ```yaml
 features:
@@ -75,16 +69,22 @@ features:
     code_executor:
       rbac:
         enabled: true
-        namespace: "codemie-code-executor"
+```
+
+To use a different namespace, create it and set both `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.rbac.namespace` to that namespace — they **must always match**:
+
+```yaml
+features:
+  tools:
+    code_executor:
+      rbac:
+        enabled: true
+        namespace: "<namespace>"
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
-    value: "codemie-code-executor"
+    value: "<namespace>"
 ```
-
-`features.tools.code_executor.rbac.namespace` (Helm value) and `CODE_EXECUTOR_NAMESPACE` (env var) **must be set to the same namespace**.
-
-A different namespace than `codemie-code-executor` can also be used — just create it and set both values to match it.
 
 ## Applying CodeMie API Settings
 
