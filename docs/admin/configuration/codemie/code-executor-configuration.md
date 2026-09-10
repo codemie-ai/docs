@@ -53,37 +53,44 @@ extraEnv:
 
 While disabled, the tool is neither listed in the tools catalog nor executed at runtime.
 
+## RBAC Configuration
+
+Enable RBAC so the CodeMie API service account can manage pods/Jobs in the executor namespace:
+
+```yaml
+features:
+  tools:
+    code_executor:
+      rbac:
+        enabled: true
+```
+
 ## Namespace Configuration
 
-By default, code executor runs in a separate namespace from CodeMie API: `codemie-code-executor`. Both `CODE_EXECUTOR_NAMESPACE` (env var) and `features.tools.code_executor.rbac.namespace` (Helm value) already default to `codemie-code-executor`, so you don't need to set them.
+By default, code executor runs in its own namespace, `codemie-code-executor`, which the chart creates automatically and which already matches the `CODE_EXECUTOR_NAMESPACE` default — nothing to configure.
 
-You still need to create the namespace and enable RBAC:
-
-```bash
-kubectl create namespace codemie-code-executor
-```
+To use a different namespace, set the name and `CODE_EXECUTOR_NAMESPACE` to match:
 
 ```yaml
 features:
   tools:
     code_executor:
-      rbac:
-        enabled: true
-```
-
-To use a different namespace, create it and set both `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.rbac.namespace` to that namespace — they **must always match**:
-
-```yaml
-features:
-  tools:
-    code_executor:
-      rbac:
-        enabled: true
-        namespace: "<namespace>"
+      namespace:
+        name: "<namespace>"
 
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
     value: "<namespace>"
+```
+
+If the namespace already exists and is managed elsewhere, skip chart-managed creation:
+
+```yaml
+features:
+  tools:
+    code_executor:
+      namespace:
+        create: false
 ```
 
 ## Applying CodeMie API Settings
