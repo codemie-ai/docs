@@ -110,6 +110,8 @@ jobs:
 
             **Preview URL:** ${previewUrl}
 
+            > **Note:** This preview URL is accessible only while connected to the company VPN.
+
             ---
 
             *This preview will be automatically updated when you push new commits to this PR.*
