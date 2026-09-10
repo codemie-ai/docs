@@ -106,6 +106,7 @@ Enable or disable experimental features and beta functionality.
 | `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                        |
 | `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the marketplace; disable to skip validation and allow any assistant to be published without review |
 | `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                |
+| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                               |
 
 ### Support & Help
 
