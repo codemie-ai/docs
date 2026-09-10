@@ -53,15 +53,16 @@ A rule of thumb for choosing:
 - **Have a web app, and want it to look embedded without changing much?** Use **iframe**.
 - **Need it to genuinely feel like a native part of CodeMie** (shared navigation, no "scrollbar inside a scrollbar")? Use **Module**. This is the heaviest option for both sides and comes with the strictest review, so only reach for it when the surface truly needs to feel native.
 
-**Reusing CodeMie's own capabilities.** A **module** runs inside CodeMie's page, on CodeMie's origin, so it can call CodeMie's API (assistants, workflows, LLMs) as the signed-in user without being handed a token. An **iframe** or **link** is a separate origin and cannot; those call the CodeMie API like any external backend, using their own service-account credentials. Confirm this with the operator before you depend on it: it follows from how modules are mounted, not from a documented contract.
+**Reusing CodeMie's own capabilities.** The shipped pattern is server-side: a co-deployed product gets its own API key for CodeMie's LiteLLM proxy and calls the same LLM gateway CodeMie uses. MF Lens does this. Ask the operator for a key. A **module** additionally runs on CodeMie's origin and can reach CodeMie's API on the signed-in user's session, but nothing registered today relies on that and it isn't a documented contract, so confirm before you depend on it.
 
 **One more question, independent of the three above: does your product have to run inside the operator's own cluster** (for example, because of data residency requirements)? If yes, that's a co-deployment: beyond registering the tile, you also own the deployment images, the Helm chart, and an infrastructure/security review, on top of whichever of the three types above fits how the product actually renders once it's running there.
 
 ### Real-world examples
 
-- **"We already have a support desk, wiki, or vendor tool running somewhere, and just want a shortcut to it."** That's a **Link**. No integration work beyond registering the tile; the product keeps running exactly where it already does, opening in its own tab.
-- **"We have a working web app with its own frontend, and want it to look embedded without a rebuild."** That's an **iframe**. A monitoring dashboard or an internal ticketing tool with its own UI is a typical case: it should look native without deep integration work.
-- **"We're building a small panel that needs to feel truly native, sharing layout and navigation with CodeMie itself, like a live build-status widget."** That's a **Module**. Heavier to build and review, but it disappears into the rest of the CodeMie UI instead of looking like a guest.
+- **link (hypothetical).** A team already runs an internal incident dashboard on its own host with its own sign-on. They want it one click from CodeMie, not embedded. A link tile pointing at the dashboard's sign-on entry point opens it in a new tab, with no integration work beyond registering the tile.
+- **iframe.** AI Code Explorer (AICE), from the AICE Team, is a code analysis and exploration product. It runs in the operator's cluster and is framed from a path on CodeMie's own host, so it needs no third-party-cookie or framing work.
+- **iframe, co-deployed.** MF Lens, from the AIMF Team, does the same for mainframe code. It deploys its own backend, frontend and graph database into the cluster, making it a co-deployment as well as a tile.
+- **module.** Technology Copilot ships its UI as a module and brings its own identity-provider client config through `arguments`.
 
 ---
 
@@ -91,7 +92,7 @@ A few things worth knowing before you write this file, because they're easy to g
 
 **Nothing under `arguments` (if you add any) is private.** Anyone, logged in or not, can read the full application list including `arguments`. Put endpoints and configuration paths there, never tokens, keys, or secrets.
 
-**Your product handles its own login.** CodeMie passes it no identity or session at all. Whether your login completes silently depends on your product and that deployment sharing an identity provider, which you must confirm per deployment. Test the logged-out case and the cookies-blocked case: the default there is a blank screen.
+**Your product authenticates its own users.** CodeMie runs no handshake with it: no token, no session, no `postMessage`. To get single sign-on, register your product as a client with the same identity provider that deployment uses, so your own login completes silently against the session the user already has. Ask the operator for that; the provider differs per deployment. For an `iframe`, silent login also depends on third-party cookies and on whether your identity provider tolerates being framed, unless it is served from a path on CodeMie's own host, as AICE and MF Lens are.
 
 ---
 
