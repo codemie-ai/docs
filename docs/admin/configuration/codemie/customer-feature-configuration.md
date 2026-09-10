@@ -58,6 +58,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:favorites`                      | Assistants list, Skills list, Workflows list                        | Favorite/Unfavorite action buttons                                             | Favorite actions hidden                                                             |                                                                                    |
 | `features:pinnedAssistants`               | Assistants list, Navigation sidebar                                 | Pin/Unpin actions and Pinned Assistants sidebar section                        | Pin actions and sidebar section hidden                                              |                                                                                    |
 | `features:favoritesPage`                  | Main navigation                                                     | Favorites page and navigation link                                             | Favorites page and nav link hidden                                                  | Default: disabled                                                                  |
+| `features:interactiveElements`            | Assistant configuration → Interactive Features                      | Interactive Features section in the assistant form                             | Interactive Features section; assistants ask for input as plain text                | Platform-level gate only; also gated per assistant and by chat client capability   |
 | **DATASOURCE FEATURES**                   |                                                                     |                                                                                |                                                                                     |                                                                                    |
 | `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                                | "Sign in with Microsoft (CodeMie Project)" authentication option               | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`                                            |
 | **INTEGRATED APPLICATIONS**               |                                                                     |                                                                                |                                                                                     |                                                                                    |
@@ -392,6 +393,25 @@ components:
       name: "Favorites Page"
       description: "Enable the dedicated Favorites page and its navigation link"
 
+  # WHERE: Assistant configuration → Interactive Features
+  # ENABLED: Shows the Interactive Features section in the assistant form, so an assistant
+  #          can be allowed to request structured input through interactive chat elements
+  # DISABLED: Hides the section and never registers the interactive input tool; assistants
+  #           ask for the same information as plain text
+  # NOTE: Enabled by default. This is the platform-level gate only — see the gating order below
+  - id: "features:interactiveElements"
+    settings:
+      enabled: true
+      name: "Interactive Chat Elements"
+      description: "Allow assistants to request structured user input via interactive chat elements"
+      # Optional catalog override — omit to use the built-in registry defaults:
+      # catalog:
+      #   layout: [text, column, row]
+      #   features:
+      #     action_buttons: [button]
+      #     choice: [multiple_choice, dropdown]
+      #     short_forms: [text_field, checkbox, date_picker, button]
+
   # WHERE: Data Sources → SharePoint setup form
   # ENABLED: Shows "Sign in with Microsoft (CodeMie Project)" authentication option
   # DISABLED: Hides SharePoint PKCE auth option
@@ -402,6 +422,27 @@ components:
       name: "SharePoint CodeMie OAuth"
       description: "Show Sign in with Microsoft (CodeMie Project) authentication option for SharePoint datasource"
 ```
+
+#### Gating order for `features:interactiveElements`
+
+This flag is one of four conditions. Interactive chat elements appear only when all four hold, so
+enabling the flag alone is not sufficient:
+
+1. `features:interactiveElements` is enabled in `customer-config.yaml`.
+2. The individual assistant has Interactive Features switched on.
+3. The request runs on a streaming execution path.
+4. The chat client declares support for the active element catalog.
+
+:::note
+Condition 4 is the most common reason the feature stays invisible while the flag is enabled. Clients
+that cannot render interactive elements — a browser tab left open across an upgrade, or an IDE
+integration — receive no interactive tool at all, and the assistant asks for the same information as
+plain text. Reloading the client resolves the stale-tab case.
+:::
+
+The optional `catalog` block restricts which already-registered element types each interactive
+feature exposes to agents, without a code change. Omitting it keeps the built-in registry defaults.
+Adding a new element _type_ still requires a change in the platform registry.
 
 ### MCP Auth Configuration
 
@@ -1192,6 +1233,12 @@ extraObjects:
               enabled: false
               name: "Favorites Page"
               description: "Enable the dedicated Favorites page and its navigation link"
+
+          - id: "features:interactiveElements"
+            settings:
+              enabled: true
+              name: "Interactive Chat Elements"
+              description: "Allow assistants to request structured user input via interactive chat elements"
 
           # Integrated Applications
           - id: "applications:angular-upgrade-app"
