@@ -12,14 +12,15 @@ import TabItem from '@theme/TabItem';
 
 The Code Executor runs Python code in isolated Kubernetes sandbox pods with enforced resource limits and security policies. Every execution request is dispatched to a sandbox pod, keeping user-supplied code isolated from the CodeMie API.
 
-There are two sandbox modes: **jobs** and **shared**, selected with `CODE_EXECUTOR_SANDBOX_MODE`.
+There are two sandbox modes selected with `CODE_EXECUTOR_SANDBOX_MODE`:
+**jobs** (`sandbox-jobs`, default and recommended) and **shared** (`sandbox-shared`, deprecated).
 
 ## Sandbox Modes
 
 <Tabs>
 <TabItem value="jobs" label="sandbox-jobs (default)" default>
 
-Each execution is submitted as a Kubernetes `Job`. A fresh pod runs the user code and is torn down afterwards. This is the default — no need to set `CODE_EXECUTOR_SANDBOX_MODE` explicitly.
+Each execution is submitted as a Kubernetes `Job`. A fresh pod runs the user code and is torn down afterwards.
 
 </TabItem>
 <TabItem value="shared" label="sandbox-shared">
@@ -41,17 +42,25 @@ extraEnv:
 
 ## Enabling the Code Executor
 
-The Code Executor is disabled by default. To make it available, set `CODE_EXECUTOR_ENABLED=true` and `CODE_EXECUTOR_DOCKER_IMAGE` in the CodeMie API environment:
+The Code Executor is disabled by default. To make it available, set `CODE_EXECUTOR_ENABLED=true` in the CodeMie API environment:
 
 ```yaml
 extraEnv:
   - name: CODE_EXECUTOR_ENABLED
     value: "true"
-  - name: CODE_EXECUTOR_DOCKER_IMAGE
-    value: "codemie/codemie-python:<codemie-version>"  # must match codemie version
 ```
 
 While disabled, the tool is neither listed in the tools catalog nor executed at runtime.
+
+## Setting the Executor Image
+
+Set `CODE_EXECUTOR_DOCKER_IMAGE` to the image matching your CodeMie version:
+
+```yaml
+extraEnv:
+  - name: CODE_EXECUTOR_DOCKER_IMAGE
+    value: "codemie/codemie-python:<codemie-version>"
+```
 
 ## RBAC Configuration
 
