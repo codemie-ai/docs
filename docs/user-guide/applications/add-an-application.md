@@ -37,7 +37,7 @@ Only the last row is covered here, and it's the most expensive of the four. If a
 
 ---
 
-## Picking how it shows up: three options
+## Picking how it shows up
 
 There are three ways your tile can open your product. Pick the lightest one that actually meets the need, don't reach for the most "integrated" option by default.
 
@@ -55,9 +55,11 @@ A rule of thumb for choosing:
 
 **Reusing CodeMie's own capabilities.** The shipped pattern is server-side: a co-deployed product gets its own API key for CodeMie's LiteLLM proxy and calls the same LLM gateway CodeMie uses. MF Lens does this. Ask the operator for a key. A **module** additionally runs on CodeMie's origin and can reach CodeMie's API on the signed-in user's session, but nothing registered today relies on that and it isn't a documented contract, so confirm before you depend on it.
 
-**One more question, independent of the three above: does your product have to run inside the operator's own cluster** (for example, because of data residency requirements)? If yes, that's a co-deployment: beyond registering the tile, you also own the deployment images, the Helm chart, and an infrastructure/security review, on top of whichever of the three types above fits how the product actually renders once it's running there.
+### Co-deployment: a separate question
 
-### Real-world examples
+Does your product have to run inside the operator's own cluster, for example because of data residency requirements? If yes, that's a **co-deployment**. It's independent of the three types above: you still pick one of them for how the tile renders, and you additionally own the deployment images, the Helm chart, and an infrastructure and security review.
+
+### Examples
 
 - **link (hypothetical).** A team already runs an internal incident dashboard on its own host with its own sign-on. They want it one click from CodeMie, not embedded. A link tile pointing at the dashboard's sign-on entry point opens it in a new tab, with no integration work beyond registering the tile.
 - **iframe.** AI Code Explorer (AICE), from the AICE Team, is a code analysis and exploration product. It runs in the operator's cluster and is framed from a path on CodeMie's own host, so it needs no third-party-cookie or framing work.
