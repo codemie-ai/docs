@@ -13,7 +13,9 @@ import TabItem from '@theme/TabItem';
 The Code Executor runs Python code in isolated Kubernetes sandbox pods with enforced resource limits and security policies. Every execution request is dispatched to a sandbox pod, keeping user-supplied code isolated from the CodeMie API.
 
 There are two sandbox modes selected with `CODE_EXECUTOR_SANDBOX_MODE`:
-**jobs** (`sandbox-jobs`, default and recommended) and **shared** (`sandbox-shared`, deprecated).
+
+- **jobs** (`sandbox-jobs`, default and recommended)
+- **shared** (`sandbox-shared`, deprecated).
 
 ## Sandbox Modes
 
