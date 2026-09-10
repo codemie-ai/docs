@@ -3,14 +3,14 @@ id: add-an-application
 title: Bringing an Application to CodeMie
 sidebar_label: Add an Application
 sidebar_position: 1
-description: A plain-language guide for teams who already have their own product and want it to show up in CodeMie.
+description: A plain-language guide for teams who want their own product to show up in CodeMie, whether it already exists or is being built for it.
 pagination_prev: user-guide/applications/index
 pagination_next: null
 ---
 
 # Bringing an application to CodeMie
 
-**Who this is for:** a team that already built its own product (a web app, a dashboard, an internal tool) and wants it to show up inside CodeMie, next to the built-in features.
+**Who this is for:** a team that wants its own product to show up inside CodeMie, next to the built-in features. It applies whether the product already runs somewhere (a web app, a dashboard, an internal tool) or you're building it specifically to live inside CodeMie.
 
 **Terms:** "you" means your team, the one that owns the product being added. "The operator" means whoever runs the CodeMie deployment you're targeting: EPAM for EPAM's own instance, or a client's own team for an on-premises deployment.
 
