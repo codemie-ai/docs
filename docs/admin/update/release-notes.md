@@ -22,7 +22,9 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>CodeMie Keycloak Theme 2.50.0</h4>
+
+Updated from 2.15.2. This update addresses security vulnerabilities in the base Alpine Linux image.
 
 <h3>Configuration Changes</h3>
 
