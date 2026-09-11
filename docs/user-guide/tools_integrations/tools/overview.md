@@ -151,7 +151,16 @@ The table below shows which tools require integration setup and the integration 
 | **Research => Web Scraper**                           |        ❌ No         |       ---        |         ❌ No          |
 | **Scheduler**                                         |        ✅ Yes        |    Scheduler     |         ✅ Yes         |
 
-:::note \* For these Codebase tools, Git data source should be added as additional context.
+::: note \* For these Codebase tools, Git data source should be added as additional context.
+:::
+
+:::info OAuth 2.0 authentication
+The **Jira**, **Confluence**, and **Git** (GitLab) integrations support an optional
+**OAuth 2.0 per-user sign-in** in addition to Personal Access Tokens. When OAuth is
+enabled by an administrator, members authorize under their own account — no shared token.
+See the individual tool guides for setup instructions and the
+[OAuth Integration Setup](../../../admin/configuration/codemie/api-configuration.md#gitlab-oauth) admin guide
+for platform configuration.
 :::
 
 :::info Git vs VCS
