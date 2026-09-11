@@ -658,7 +658,7 @@ states:
       state_id: end
 ```
 
-**Example 5: Custom Plugin Integration via NATS**
+**Example 5: Custom Plugin Integration via NATS** _(deprecated)_
 
 ```yaml
 assistants:

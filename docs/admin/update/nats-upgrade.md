@@ -15,7 +15,7 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 :::warning Deprecated
 
-NATS is currently deprecated as part of the NATS retirement direction.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 

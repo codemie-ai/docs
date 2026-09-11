@@ -101,6 +101,12 @@ Components must be installed in the following order to satisfy dependencies:
 
 ### 4. [Plugin Engine](./plugin-engine.mdx)
 
+:::warning Deprecated
+
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
+
+:::
+
 **Purpose**: Inter-service messaging and plugin communication infrastructure
 
 **Components**:

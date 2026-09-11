@@ -11,7 +11,7 @@ sidebar_position: 19
 
 :::warning Deprecated
 
-The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 
@@ -168,6 +168,12 @@ This template includes generic instructions and predefined tools for Plugins. Ho
 - Any other specific details about your project
 
 ## Running AI/Run Development Plugin
+
+:::warning Deprecated
+
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
+
+:::
 
 To allow your AI Assistant to use pre-built external tools, run the AI/Run Development Plugin:
 
