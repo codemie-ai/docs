@@ -393,6 +393,8 @@ Integration between CodeMie and LangFuse is handled entirely via internal Kubern
 
 Chat history and user profile retention are not configurable in CodeMie. No retention period, purge schedule, or data lifecycle controls are exposed by default.
 
+Conversations can be marked finished through the API so they no longer accept new messages. Finishing does not delete history and is not an automatic time-based purge. See [Finish Conversations](../user-guide/api/finish-conversations.md).
+
 </details>
 
 <details>

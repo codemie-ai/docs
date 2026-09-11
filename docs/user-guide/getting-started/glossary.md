@@ -119,6 +119,14 @@ Integration with external services and systems that extend assistant capabilitie
 
 ---
 
+## F
+
+### Finished Conversation
+
+A conversation that has been closed through the API so it no longer accepts new or edited messages. History remains readable. Pin, rename, share, feedback, and delete still work. See [Finish Conversations](../api/finish-conversations.md).
+
+---
+
 ## I
 
 ### IDE

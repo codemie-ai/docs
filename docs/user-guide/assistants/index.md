@@ -84,6 +84,7 @@ Manage conversations and organize your workspace:
 - [Folders Overview](./folders-overview.md) - Organize chat history by assistant
 - [Supported File Formats](./supported-file-formats-and-csv-handling-in-chat-assistant.md) - Upload and analyze files in chats
 - [Share Chat Conversations](./share-assistant-chat-with-other-users.md) - Share conversations with team members
+- [Finish Conversations](../api/finish-conversations.md) - Close a conversation through the API so it no longer accepts new messages
 - [Export Assistant Chat Messages](./export-assistant-chat-messages-to-word-and-pdf-formats.md) - Export chats to various formats
 - [HTML Preview](./html-preview.md) - Preview and interact with HTML content in chat
 - [Chat Input Settings](./chat-input-settings.md) - Control Web Search, Code Interpreter, and LLM model per conversation from the chat toolbar
