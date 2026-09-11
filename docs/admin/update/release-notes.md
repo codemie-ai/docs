@@ -13,6 +13,25 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.50.0 {#v2-50-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** September 11, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.50.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>CodeMie Keycloak Theme 2.50.0</h4>
+
+Updated from 2.15.2. This update addresses security vulnerabilities in the base Alpine Linux image.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ### CodeMie 2.49.0 {#v2-49-0}
 
 <details>
