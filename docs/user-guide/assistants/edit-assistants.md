@@ -3,7 +3,7 @@ id: edit-assistants
 sidebar_position: 3
 title: Edit Assistants
 pagination_prev: user-guide/assistants/sharing-assistants
-pagination_next: user-guide/assistants/restore-system-instructions
+pagination_next: user-guide/assistants/assistant-version-history
 description: Modify assistant configuration and settings
 ---
 
