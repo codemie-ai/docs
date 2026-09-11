@@ -30,6 +30,7 @@ words:
   - docusaurus
   - easyops
   - AICE
+  - AIMF
   - EPAM
   - epmd
   - cdme
@@ -193,6 +194,7 @@ words:
   - SSL
   - HTTPS
   - HTTP
+  - SAMEORIGIN
   - DNS
   - IP
   - CIDR
