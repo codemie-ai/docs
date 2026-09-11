@@ -34,7 +34,7 @@ No third-party component updates in this release.
    If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled in codemie-api helm chart — otherwise the executor now defaults to the `codemie-code-executor` namespace.
    :::
 
-   See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md) for details.
+   See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md#namespace-configuration) for details.
 
 </details>
 
