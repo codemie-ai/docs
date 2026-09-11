@@ -232,26 +232,6 @@ llm_models:
       output: 0.0000044
       cache_read_input_token_cost: 0.00000055
 
-  - base_name: "o1"
-    deployment_name: "o1-2024-12-17"
-    label: "o1 2024-12-17"
-    multimodal: false
-    react_agent: false
-    enabled: true
-    provider: "azure_openai"
-    max_output_tokens: 100000
-    features:
-      streaming: false
-      tools: true
-      temperature: false
-      parallel_tool_calls: false
-      system_prompt: false
-      max_tokens: false
-    cost:
-      input: 0.000015
-      output: 0.00006
-      cache_read_input_token_cost: 0.0000075
-
   - base_name: "o3-2025-04-16"
     deployment_name: "o3-2025-04-16"
     label: "o3 2025-04-16"
@@ -312,7 +292,7 @@ embeddings_models:
 Standard models (`gpt-4.1`, Claude, Gemini) support parallel tool calls — the agent can
 issue multiple tool calls in one inference round and stream their results concurrently.
 
-Reasoning models (`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** support the
+Reasoning models (`o3`, `o3-mini`, `o4-mini`, and similar) do **not** support the
 `parallel_tool_calls` OpenAI parameter. Sending it causes an API error. Always set
 `parallel_tool_calls: false` in the `features` block for these models, as shown in the
 Azure examples above. When this flag is `false`, the platform automatically strips the
