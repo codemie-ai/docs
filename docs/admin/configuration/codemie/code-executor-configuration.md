@@ -78,7 +78,15 @@ features:
 
 ## Namespace Configuration
 
-By default, code executor runs in its own namespace, `codemie-code-executor`, which the chart creates automatically and which already matches the `CODE_EXECUTOR_NAMESPACE` default — nothing to configure.
+Code executor runs in the `codemie-code-executor` namespace by default, matching the `CODE_EXECUTOR_NAMESPACE` default. Set `namespace.create` to `true` to have the chart manage it:
+
+```yaml
+features:
+  tools:
+    code_executor:
+      namespace:
+        create: true
+```
 
 To use a different namespace, set the name and `CODE_EXECUTOR_NAMESPACE` to match:
 
@@ -92,16 +100,6 @@ features:
 extraEnv:
   - name: CODE_EXECUTOR_NAMESPACE
     value: "<namespace>"
-```
-
-If the namespace already exists and is managed elsewhere, skip chart-managed creation:
-
-```yaml
-features:
-  tools:
-    code_executor:
-      namespace:
-        create: false
 ```
 
 ## Applying CodeMie API Settings
