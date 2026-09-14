@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 
 Connect and index Git repositories as data sources.
 
-Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. Git data sources index both source code and binary document types — including PDFs, MS Office files, and images — making them suitable for Talk-to-your-Data scenarios where a repository serves as a document store. This guide walks you through the process of adding and indexing Git repositories, including the specialized **Git FAQ** type for Markdown-based FAQ content (see [Git FAQ Data Source](#git-faq-data-source) below).
+Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. Git data sources index both source code and binary document types — including PDFs, MS Office files, and images — making them suitable for Talk-to-your-Data scenarios where a repository serves as a document store. This guide walks you through the process of adding and indexing Git repositories, including the **Git FAQ** processing mode for Markdown-based FAQ content (see [Git FAQ Data Source](#git-faq-data-source) below).
 
 ## Supported File Types
 
@@ -183,7 +183,20 @@ Initial indexing may take 15-60 minutes depending on repository size. You can cl
 
 ## Git FAQ Data Source
 
-**Git FAQ** is a version of the Git data source built specifically for FAQ-style content. It is selected from the same **Choose Datasource Type** dropdown as **Git**, but instead of indexing code, it reads each Markdown file in the repository as one question-and-answer article.
+**Git FAQ** is not a separate entry in the **Choose Datasource Type** dropdown — it is a processing mode of the **Git** data source, built specifically for FAQ-style content. Instead of indexing code, it reads each Markdown file in the repository as one question-and-answer article.
+
+### Turning On FAQ Processing
+
+To create a Git FAQ data source:
+
+1. Choose **Git** as the **Datasource Type** (there is no separate "Git FAQ" type to pick).
+2. A **Content Processing Strategy** field appears, with two options: **Default** (regular code indexing — the existing behavior described earlier on this page) and **FAQ**. Select **FAQ**.
+
+Selecting FAQ replaces the usual **Summarization Method** field (Whole codebase / Summarization per file / Summarization per chunks) with a smaller set of fields specific to FAQ content — there is no summarization method to choose, no summary-generation model, and no option to push generated documentation back to the repository.
+
+:::warning Content Processing Strategy Can't Be Changed Later
+The **Content Processing Strategy** field only appears while creating a new data source — it is not shown, and cannot be changed, when editing an existing one. Switching an existing data source between **Default** and **FAQ** processing is not possible; a new data source must be created instead.
+:::
 
 ### Which Files Get Indexed
 
@@ -191,7 +204,7 @@ Git FAQ only looks at files ending in `.md`. Files ending in `.mdx` are not pick
 
 Every folder in the repository is checked, including hidden or tooling folders such as `.github` or `.claude` — nothing is excluded automatically. Use the **Files Filter** field to narrow this down, for example `faq/**/*.md` to index only a `faq` folder, or `!archive/**` to leave out an archive folder.
 
-The other setup fields (Repository Link, Branch, Files Filter, Git integration, embedding model, reindex schedule) work the same as for a regular Git data source. There is no separate "FAQ folder" field — use Files Filter for that.
+The remaining fields (Repository Link, Branch, Files Filter, Git integration, embedding model, reindex schedule) work the same as for the Default processing mode. There is no separate "FAQ folder" field — use Files Filter for that.
 
 ### How a FAQ File Should Be Written
 
@@ -262,6 +275,7 @@ If **every** file in scope gets skipped or fails, the whole data source fails to
 
 ### Things to Know Before Using Git FAQ
 
+- **Processing mode can't be changed after creation.** A Git data source created with Default processing can't later be switched to FAQ, or the other way around — a new data source is needed.
 - **Every reindex is a full reindex.** There is no partial or "resume" update — each time the data source is reindexed, all files are read again from scratch.
 - **No file size limit.** Unlike the File data source (capped at 100 MB per file), a Git FAQ file of any size is read fully into memory, so extremely large Markdown files can slow things down.
 - **Changing the source requires a full reindex.** Editing the Repository Link, Branch, Files Filter, or Git integration on an existing Git FAQ data source is only allowed together with a full reindex — a plain save without it is rejected. Changing just the name, description, or sharing settings does not require this.
