@@ -1,4 +1,4 @@
----
+﻿---
 id: add-git-data-sources
 title: Add and Index Git Data Sources
 sidebar_label: Add and Index Git Data Sources
@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 
 Connect and index Git repositories as data sources.
 
-Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. Git data sources index both source code and binary document types — including PDFs, MS Office files, and images — making them suitable for Talk-to-your-Data scenarios where a repository serves as a document store. This guide walks you through the process of adding and indexing Git repositories.
+Git repositories are one of the most powerful data sources in AI/Run CodeMie, enabling assistants to analyze code, understand repository structure, and work with your codebase directly. Git data sources index both source code and binary document types — including PDFs, MS Office files, and images — making them suitable for Talk-to-your-Data scenarios where a repository serves as a document store. This guide walks you through the process of adding and indexing Git repositories, including the specialized **Git FAQ** type for Markdown-based FAQ content (see [Git FAQ Data Source](#git-faq-data-source) below).
 
 ## Supported File Types
 
@@ -180,6 +180,92 @@ Initial indexing may take 15-60 minutes depending on repository size. You can cl
 2. Connection to repository is established
 3. Indexing process begins automatically
 4. Progress can be monitored in the data source list
+
+## Git FAQ Data Source
+
+**Git FAQ** is a version of the Git data source built specifically for FAQ-style content. It is selected from the same **Choose Datasource Type** dropdown as **Git**, but instead of indexing code, it reads each Markdown file in the repository as one question-and-answer article.
+
+### Which Files Get Indexed
+
+Git FAQ only looks at files ending in `.md`. Files ending in `.mdx` are not picked up, even if the Files Filter would otherwise match them.
+
+Every folder in the repository is checked, including hidden or tooling folders such as `.github` or `.claude` — nothing is excluded automatically. Use the **Files Filter** field to narrow this down, for example `faq/**/*.md` to index only a `faq` folder, or `!archive/**` to leave out an archive folder.
+
+The other setup fields (Repository Link, Branch, Files Filter, Git integration, embedding model, reindex schedule) work the same as for a regular Git data source. There is no separate "FAQ folder" field — use Files Filter for that.
+
+### How a FAQ File Should Be Written
+
+The simplest FAQ file is just a heading and an answer:
+
+```markdown
+# How do I reset my password?
+
+Navigate to account settings and select **Reset Password**. A confirmation link is sent to the registered email address.
+```
+
+That is enough — nothing else is required. A file can optionally start with a short settings block, wrapped between two lines of `---`, to set a custom title or reference path:
+
+```markdown
+---
+title: 'How do I reset my password?'
+reference: 'user-guide/account/password-reset'
+---
+
+Navigate to account settings and select **Reset Password**. A confirmation link is sent to the registered email address.
+```
+
+This settings block must be the very first thing in the file — a line of `---` appearing later in the text is just treated as a divider, not as settings. If the block is left out entirely, the title is taken from the first heading in the file, or from the file name.
+
+:::warning Keep the Settings Block Simple
+The settings block follows strict formatting rules (it uses the same format as many static-site tools). A single mistake — most commonly a colon followed by a space inside a sentence — makes the whole file invalid and it gets skipped. See below for the exact case and how to avoid it.
+:::
+
+### Why a FAQ File Might Get Skipped
+
+CodeMie checks each `.md` file before indexing it. If a file does not pass the check, only **that one file** is skipped — the rest of the repository still gets indexed normally. A skipped file shows up as a warning in the system logs and counts toward the datasource's "skipped files" total.
+
+A file gets skipped when:
+
+- The optional settings block at the top of the file is not written correctly (see example below).
+- The settings block is written correctly, but as a list instead of individual settings.
+- The file has nothing left in it once the settings block is removed (an empty file).
+- The file's content can't be read as text at all (very rare — usually a corrupted or non-text file).
+
+**The most common reason a file is skipped**: a description or instructions field in the settings block contains a colon followed by a space, without being wrapped in quotes. For example:
+
+```yaml
+---
+title: 'CodeMie FAQ Assistant'
+description: This is a FAQ file with working links. Examples: See the integration guide at https://docs.codemie.ai/integrations for setup steps.
+---
+```
+
+The second colon (after "Examples") breaks the formatting rules of the settings block, so the whole file is rejected with an error along the lines of "invalid structure" / "mapping values are not allowed here" in the system logs.
+
+**Fix**: wrap the value in quotes whenever it contains a colon or reads like a full sentence:
+
+```yaml
+---
+title: 'CodeMie FAQ Assistant'
+description: 'This is a FAQ file with working links. Examples: See the integration guide at https://docs.codemie.ai/integrations for setup steps.'
+---
+```
+
+:::tip Avoiding This Problem
+
+- Put quotes around any settings value that contains a colon, or that is a full sentence rather than a short label.
+- Keep longer explanations in the main body of the file instead of the settings block — only `title`, `instructions`, `reference`, and `references` are ever read from it.
+- When unsure, skip the settings block entirely — the file's first heading becomes the title automatically.
+  :::
+
+If **every** file in scope gets skipped or fails, the whole data source fails to create, with a message saying no content could be imported. That is a sign to check the Files Filter, branch, or repository content — not an individual file's formatting.
+
+### Things to Know Before Using Git FAQ
+
+- **Every reindex is a full reindex.** There is no partial or "resume" update — each time the data source is reindexed, all files are read again from scratch.
+- **No file size limit.** Unlike the File data source (capped at 100 MB per file), a Git FAQ file of any size is read fully into memory, so extremely large Markdown files can slow things down.
+- **Changing the source requires a full reindex.** Editing the Repository Link, Branch, Files Filter, or Git integration on an existing Git FAQ data source is only allowed together with a full reindex — a plain save without it is rejected. Changing just the name, description, or sharing settings does not require this.
+- **The repository is checked before indexing starts.** When creating or updating a Git FAQ data source with a new Repository Link, CodeMie first confirms the repository can be reached. For a repository with no Git integration selected, it must be publicly accessible, or the setup fails immediately with an error.
 
 ## Error Handling for Git Data Sources
 

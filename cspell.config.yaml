@@ -15,6 +15,7 @@ ignorePaths:
   - .png
   - '*.svg'
   - .vscode
+  - .vs
   - cspell.config.yaml
   - CLAUDE.md
   - scripts/
@@ -178,6 +179,8 @@ words:
   - yaml
   - YAML
   - JSON
+  - frontmatter
+  - Frontmatter
   - SDLC
   - env
   - envs

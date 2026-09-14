@@ -17,6 +17,7 @@ The Data Source functionality in AI/Run CodeMie platform serves to incorporate v
 You can add various types of Data Sources to AI/Run CodeMie platform, such as:
 
 - **Code (Git)**: Git repositories for code analysis and development tasks
+- **Git FAQ**: Markdown-based FAQ content from a Git repository, indexed as individual FAQ articles — see [Git FAQ Data Source](../datasources-types/add-git-data-sources.md#git-faq-data-source)
 - **Confluence**: Confluence pages for documentation and knowledge base
 - **Jira**: Jira spaces for project management and issue tracking
 - **X-ray**: Xray test cases for test management and QA workflows
@@ -81,6 +82,7 @@ Decide whether you want your project team members to use the data source or not.
 Specify data source type. It can be:
 
 - Git repository
+- Git FAQ repository
 - Confluence page
 - Jira space
 - X-ray test cases
@@ -96,7 +98,7 @@ The **Data Source Type** dropdown is sorted alphabetically and includes a scroll
 As you work with CodeMie, the number of data sources will increase. To simplify navigation between data sources, use the **filters**. You can filter datasources by:
 
 - **NAME**: Filter by data source name
-- **TYPE**: Filter by data source type (Git, Confluence, Jira, X-ray, File, Google Docs)
+- **TYPE**: Filter by data source type (Git, Git FAQ, Confluence, Jira, X-ray, File, Google Docs)
 - **PROJECT**: Filter by project
 - **CREATED BY**: Filter by creator
 - **STATUS**: Filter by indexing status
