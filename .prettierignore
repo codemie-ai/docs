@@ -1,9 +1,6 @@
 node_modules
 build
 .docusaurus
-.vs
-.idea
-.vscode
 package-lock.json
 *.png
 *.jpg

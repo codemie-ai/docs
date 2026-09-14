@@ -15,7 +15,6 @@ ignorePaths:
   - .png
   - '*.svg'
   - .vscode
-  - .vs
   - cspell.config.yaml
   - CLAUDE.md
   - scripts/
