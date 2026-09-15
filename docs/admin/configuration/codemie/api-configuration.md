@@ -100,13 +100,14 @@ Configure data migration, backup, and state import/export capabilities.
 
 Enable or disable experimental features and beta functionality.
 
-| Parameter                                       | Type    | Default | Description                                                                                                                                                         |
-| ----------------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                         |
-| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                        |
-| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the marketplace; disable to skip validation and allow any assistant to be published without review |
-| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                |
-| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                               |
+| Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                                |
+| ----------------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                                                                                                |
+| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                                                                                               |
+| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the marketplace; disable to skip validation and allow any assistant to be published without review                                                                        |
+| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                                                                                       |
+| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                                                                                                      |
+| `ADMIN_LOG_LOOKUP_ENABLED`                      | boolean | `true`  | Enable `POST /v1/logs`, which queries Elasticsearch for log entries by conversation, execution, or request ID. Set `false` in deployments without Elasticsearch (see `RETRIEVAL_BACKEND` below); the endpoint returns `503` when disabled. |
 
 ### Support & Help
 
@@ -138,6 +139,10 @@ These parameters define paths to configuration files and directories. Typically 
 ## AI Providers Configuration
 
 Configure connections to AI model providers. At least one provider must be configured for CodeMie to function.
+
+:::tip Provider readiness check
+`GET /v1/healthcheck` reports a `model_provider` field (`status`, `provider`, `missing`) indicating whether a supported provider was detected at startup. `status` is one of `configured`, `not_configured`, or `not_checked`. This check is informational only — it does not block startup or gate requests.
+:::
 
 ### OpenAI / Azure OpenAI
 
@@ -241,9 +246,21 @@ Primary relational database for structured data and transactional operations.
 | `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
 | `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
 
+### Retrieval Backend
+
+Controls whether Elasticsearch-dependent capabilities (Data Sources, Knowledge Bases, code indexing, and related search/retrieval features) are active.
+
+| Parameter           | Type   | Default           | Description                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------- | ------ | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RETRIEVAL_BACKEND` | string | `"elasticsearch"` | Backend for retrieval-dependent features: `elasticsearch` (default) or `none`. Setting `none` disables datasource indexing, knowledge base and code-context tools, and related API endpoints; the corresponding UI (Data Sources, Providers admin pages, assistant context selector) is hidden. Elasticsearch connectivity is not required when set to `none`. |
+
+:::info Standalone deployments
+Setting `RETRIEVAL_BACKEND=none` removes the Elasticsearch requirement entirely, enabling deployment as a single self-contained container. See [Standalone Deployment](../../deployment/standalone/overview.md) for a full walkthrough and the complete list of features this disables.
+:::
+
 ### Elasticsearch
 
-Document store for full-text search, analytics, and unstructured data.
+Document store for full-text search, analytics, and unstructured data. Required only when `RETRIEVAL_BACKEND=elasticsearch` (the default).
 
 | Parameter                     | Type    | Default                   | Description                                                                                                                                                                          |
 | ----------------------------- | ------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
