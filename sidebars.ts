@@ -915,6 +915,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'admin/security/data-processing-storage',
             'admin/security/roles-rbac',
+            'admin/security/llm-output-image-allow-list',
             {
               type: 'category',
               label: 'Network Policies',
