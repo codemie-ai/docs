@@ -347,6 +347,7 @@ words:
   - PYROSCOPE
   - ONCPU
   - LOOKBACK
+  - vbscript
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:

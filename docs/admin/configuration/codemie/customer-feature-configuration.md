@@ -11,6 +11,10 @@ pagination_prev: admin/configuration/index
 
 Control which features, UI elements, and integrations are available to users in your CodeMie deployment through the `customer-config.yaml` configuration file.
 
+:::tip Runtime changes
+Some components — `banner`, `chatDisclaimer`, `features:webSearch`, and `releaseNotesRecentCount` — can also be changed at runtime from **Settings → Administration → Customer Configuration** without a redeploy. The values in `customer-config.yaml` serve as their deployment defaults. See [Dynamic Customer Configuration](./dynamic-customer-configuration.md).
+:::
+
 ## Component Overview
 
 Use this table to quickly find where each component appears in the UI.
@@ -32,12 +36,12 @@ Use this table to quickly find where each component appears in the UI.
 | **PLATFORM-MANAGED MODE**                 |                                                                     |                                                                                |                                                                                     |                                                                                    |
 | `features:budgetManagement`               | Project detail pages, Settings → Administration                     | Budget columns and budget management section                                   | Budget tracking UI                                                                  |                                                                                    |
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                |                                                                                     |                                                                                    |
-| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                            | Web search option                                                                   | If both disabled, entire section hidden                                            |
+| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                            | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                       |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                      | Code interpreter option                                                             | If both disabled, entire section hidden                                            |
-| **BANNER CONFIGURATION**                  |                                                                     |                                                                                |                                                                                     |                                                                                    |
-| `bannerMessage`                           | All pages (top banner)                                              | Banner text displayed across the app                                           | No banner shown                                                                     | String, default: `""` — configurable via `customer-config.yaml`                    |
-| `bannerLinkLabel`                         | All pages (top banner)                                              | Label for the optional banner link                                             | No link label shown                                                                 | String, default: `""` — set alongside `bannerLinkRoute`                            |
-| `bannerLinkRoute`                         | All pages (top banner)                                              | Route for the optional banner link                                             | No link route                                                                       | String, default: `""` — set alongside `bannerLinkLabel`                            |
+| **BANNER, DISCLAIMER AND RELEASE NOTES**  |                                                                     |                                                                                |                                                                                     |                                                                                    |
+| `banner`                                  | All pages (top banner)                                              | Banner message with an optional link                                           | No banner shown                                                                     | Default: disabled. Editable at runtime                                             |
+| `chatDisclaimer`                          | Chat → below the message input                                      | Non-dismissible disclaimer text with clickable links                           | No disclaimer shown                                                                 | Default: disabled. Editable at runtime                                             |
+| `releaseNotesRecentCount`                 | Release Notes page                                                  | Number of recent releases listed before older ones are grouped                 | —                                                                                   | Default: `"10"`. Editable at runtime                                               |
 | **MCP CONFIGURATION**                     |                                                                     |                                                                                |                                                                                     |                                                                                    |
 | `mcpAuthTimeoutSeconds`                   | MCP OAuth flow                                                      | MCP OAuth timeout duration                                                     | Uses default timeout                                                                | Integer, default: `60` — configurable via `customer-config.yaml`                   |
 | **TOOL PERMISSIONS**                      |                                                                     |                                                                                |                                                                                     |                                                                                    |
@@ -348,6 +352,7 @@ components:
   # ENABLED: Shows "Web Search" toggle, enables Google Search, Tavily Search, Web Scraper
   # DISABLED: Hides web search option from dynamic tools
   # NOTE: If both webSearch and dynamicCodeInterpreter are disabled, entire tools section is hidden
+  # NOTE: Can be overridden at runtime in Settings → Administration → Customer Configuration
   - id: "features:webSearch"
     settings:
       enabled: true
@@ -1121,21 +1126,23 @@ extraObjects:
             settings:
               enabled: true
 
-          # Banner Configuration
-          - id: "bannerMessage"
+          # Banner, Chat Disclaimer and Release Notes
+          - id: "banner"
             settings:
               enabled: true
-              value: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+              message: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+              linkLabel: "Learn more"
+              linkRoute: "/help"
 
-          - id: "bannerLinkLabel"
+          - id: "chatDisclaimer"
             settings:
               enabled: true
-              value: "Learn more"
+              text: "AI responses may be inaccurate. See the [usage policy](https://example.com/policy)."
 
-          - id: "bannerLinkRoute"
+          - id: "releaseNotesRecentCount"
             settings:
               enabled: true
-              value: "/help"
+              recentReleaseCount: "10"
 
           # MCP Auth Configuration
           - id: "mcpAuthTimeoutSeconds"
