@@ -1242,6 +1242,22 @@ Nightly background job that identifies datasources with no recent usage or updat
 | ----------------------------- | ------- | ------- | ------------------------------------------------------------------- |
 | `ANALYTICS_DEFAULT_PAGE_SIZE` | integer | `20`    | Default number of rows returned per page by analytics API endpoints |
 
+### CLI Analytics
+
+<EnterpriseFeature />
+
+Read API for per-session coding-agent cost, tooling, repository, and efficiency analytics, backed by ClickHouse. Enable the feature through `features:cliAnalytics` in `customer-config.yaml` — see [Customer Feature Configuration](./customer-feature-configuration.md#advanced-features).
+
+| Parameter                             | Type    | Default                 | Description                                                                                                                                                                        |
+| ------------------------------------- | ------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CLICKHOUSE_HOST`                     | string  | `"localhost"`           | ClickHouse HTTP host used by the analytics read API                                                                                                                                |
+| `CLICKHOUSE_PORT`                     | integer | `8123`                  | ClickHouse HTTP port                                                                                                                                                               |
+| `CLICKHOUSE_USER`                     | string  | `"default"`             | ClickHouse user for the analytics read API                                                                                                                                         |
+| `CLICKHOUSE_PASSWORD`                 | string  | `""`                    | ClickHouse password for the analytics read API                                                                                                                                     |
+| `CLICKHOUSE_QUERY_TIMEOUT_SECONDS`    | integer | `30`                    | Timeout for ClickHouse queries issued by the analytics read API                                                                                                                    |
+| `ANALYTICS_INGEST_OTLP_HTTP_ENDPOINT` | string  | `"http://otelcol:4318"` | OTLP HTTP endpoint the backend forwards incoming analytics payloads to; override with the host-mapped port (e.g. `http://localhost:14318`) when running outside the Docker network |
+| `ANALYTICS_INGEST_MAX_BODY_BYTES`     | integer | `5242880`               | Maximum accepted request body size, in bytes, for analytics ingest endpoints                                                                                                       |
+
 ---
 
 ## Environment-Specific Configuration
