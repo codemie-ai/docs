@@ -491,7 +491,7 @@ settings:
 
 ### Integrated Applications
 
-Applications and extensions that expand platform functionality.
+Applications and extensions that expand platform functionality. For the decision process behind registering a new application (which type to choose, the Module Federation contract for `module`, the review checklist, and known platform gaps), see the [Application Onboarding Guide](./applications-onboarding.md).
 
 **Where it appears:** Main navigation → "Applications" menu (shows all enabled applications)
 
@@ -514,7 +514,7 @@ settings:
   url: "https://..."         # Entry point URL or JavaScript bundle path
   type: "module|iframe|link" # Integration type (see above)
   icon_url: "https://..."    # Optional — app icon displayed in the menu
-  arguments: {}              # Optional — app-specific JSON config for extensions using Module Federation
+  arguments: {}              # Optional — app-specific config (string values) for extensions using Module Federation
   created_by: "Team Name"    # Optional — attribution shown in the app card
   availableForExternal: true # Optional — false hides from external users
 ```

@@ -195,6 +195,7 @@ words:
   - SSL
   - HTTPS
   - HTTP
+  - SAMEORIGIN
   - DNS
   - IP
   - CIDR

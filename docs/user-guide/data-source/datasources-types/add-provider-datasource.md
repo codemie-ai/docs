@@ -27,6 +27,12 @@ Provider capabilities depend on their configuration. External providers might en
 - Extract insights from indexed data
 - Perform advanced code understanding tasks
 
+## Building a Provider
+
+If you're building the service itself, not just registering an existing one: an official Python SDK exists for this, `ai-run-service-provider-sdk`. It builds a FastAPI application, lets you define Toolkits and Tools, and auto-generates the Service Provider Descriptor that the JSON config below expects, instead of you hand-authoring that JSON.
+
+**Unconfirmed:** whether this SDK and its package registry are accessible to teams outside EPAM, or EPAM-internal only. Confirm with the platform team before pointing an external team at it.
+
 ## How It Works
 
 ### 1. Manage Provider Configurations

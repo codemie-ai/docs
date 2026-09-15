@@ -231,6 +231,19 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Applications',
+          link: {
+            type: 'doc',
+            id: 'user-guide/applications/index',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/applications/add-an-application',
+            'admin/configuration/codemie/applications-onboarding',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Data Sources',
           link: {
             type: 'doc',

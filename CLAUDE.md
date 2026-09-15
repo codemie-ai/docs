@@ -353,6 +353,8 @@ Critical warning!
 :::
 ```
 
+**`.md` files only: skip admonitions, use bold text instead.** `:::note`/`:::tip`/etc. render correctly on the built site, but not in GitHub's file/PR view or VS Code's Markdown preview — the tools people actually review and edit in. Reserve admonitions for `.mdx` files; in `.md` files, use `**Bold callout text.**` as a plain paragraph instead.
+
 ### CRITICAL: Props Variables in Code Blocks
 
 MDX cannot interpolate `{props.*}` variables inside standard markdown code blocks or inline backticks. Use JSX alternatives.
