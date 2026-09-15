@@ -216,6 +216,14 @@ Tags appear in the Langfuse **Traces** view and can be used to filter and group 
 
 ---
 
+## Finish Conversations
+
+Conversations can be marked finished so they no longer accept new or edited messages. History remains readable. Use this when an application or scheduler needs to close stale chats.
+
+See [Finish Conversations](./finish-conversations.md) for owner finish, admin bulk finish, listing unfinished conversations, and HTTP 409 behavior.
+
+---
+
 ## Success Response
 
 **Status code:** `200`
@@ -239,10 +247,11 @@ When `stream: true`, the response is sent as Server-Sent Events (SSE). Each chun
 
 ## Error Responses
 
-| Status Code | Description                                        |
-| ----------- | -------------------------------------------------- |
-| **400**     | Bad Request                                        |
-| **401**     | Request is not authorized                          |
-| **403**     | Consumer does not have permissions to make request |
-| **404**     | Resource does not exist                            |
-| **500**     | Server error                                       |
+| Status Code | Description                                         |
+| ----------- | --------------------------------------------------- |
+| **400**     | Bad Request                                         |
+| **401**     | Request is not authorized                           |
+| **403**     | Consumer does not have permissions to make request  |
+| **404**     | Resource does not exist                             |
+| **409**     | Conversation is finished and cannot accept messages |
+| **500**     | Server error                                        |

@@ -41,6 +41,10 @@ When you delete an assistant, existing chats with that assistant will no longer 
 
    ![Confirm chat deletion](../images/image19.png)
 
+:::note Finish versus delete
+Deleting a chat removes it. To keep history but block further messages, finish the conversation through the API. See [Finish Conversations](../api/finish-conversations.md).
+:::
+
 :::tip Bulk Cleanup
 Consider regularly reviewing and removing unused assistants and chats to maintain a clean workspace.
 :::
