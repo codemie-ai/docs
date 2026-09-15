@@ -151,6 +151,42 @@ Example: You can ask the assistant to create tasks with natural language command
 
 The assistant will create the tasks in Jira and provide you with links to view them directly in your Jira workspace.
 
+## 5. Create Issue with Attachment Transfer
+
+When creating a new Jira issue from an existing one, the assistant can copy attachments across tickets on request. Both attachment transfer and image text extraction are **opt-in** — the tool never copies files or runs image recognition unless explicitly asked.
+
+:::note
+Attachment transfer requires that the Jira integration has **read** access to the source ticket's project and **write** access to the target project.
+:::
+
+### Copy attachments
+
+To copy all attachments from an existing ticket into a newly created one, include the request in the prompt:
+
+> "Create a bug in project BUG from PROJ-123 and copy its attachments"
+
+The assistant creates the new issue and transfers all files (screenshots, logs, documents) from the source ticket. The files are identical to the originals.
+
+### Extract text from image attachments (OCR)
+
+To extract text from image attachments, request it explicitly:
+
+> "Create a bug in project BUG from PROJ-123, copy its attachments, and extract text from any images"
+
+The assistant runs image recognition on every image attachment and posts a single comment on the new issue containing the extracted content. This is a separate step from attachment copy — either option can be requested independently.
+
+:::tip
+Both options can be combined or used independently:
+
+- Copy attachments only: `"... copy attachments from ORIG-123"`
+- Extract image text only (without copying files): `"... extract text from images in ORIG-123"`
+- Both: `"... copy attachments and extract text from images in ORIG-123"`
+  :::
+
+:::warning
+Image text extraction uses a vision model and incurs additional processing cost. Only request it when the extracted content is needed.
+:::
+
 ## Use Cases
 
 ### Project Management
@@ -170,6 +206,16 @@ Streamline issue management by:
 - Creating detailed bug reports
 - Assigning tasks to team members
 - Monitoring issue resolution progress
+
+### Issue Cloning with Attachment Transfer
+
+Speed up ticket creation workflows by:
+
+- Creating a new issue from an existing one with attachments copied across on request
+- Optionally extracting text from image attachments via OCR — posted as a comment on the new issue
+- Keeping full traceability between source and target tickets
+
+Both attachment copy and image OCR are opt-in. See [Create Issue with Attachment Transfer](#5-create-issue-with-attachment-transfer) for details.
 
 ### Workflow Automation
 
