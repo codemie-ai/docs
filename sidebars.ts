@@ -800,6 +800,8 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'admin/configuration/codemie/ai-models-integration/codemie-native-llm-config',
+                    'admin/configuration/codemie/ai-models-integration/switchyard-model-routing',
+                    'admin/configuration/codemie/ai-models-integration/litellm-native-auto-routing',
                     {
                       type: 'category',
                       label: 'Enable LLM Models in Cloud accounts',
