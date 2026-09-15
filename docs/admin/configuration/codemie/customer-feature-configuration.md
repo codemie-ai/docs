@@ -469,10 +469,16 @@ The following fields appear in the `/v1/config` API response but are **not confi
 These values are served automatically from the backend configuration. No `customer-config.yaml` action is required.
 :::
 
-| Field           | Backend env var         | Default    | Description                        |
-| --------------- | ----------------------- | ---------- | ---------------------------------- |
-| `idpProvider`   | `IDP_PROVIDER`          | `keycloak` | Identity provider in use           |
-| `mcpAuthOrigin` | `CALLBACK_API_BASE_URL` | _(none)_   | Origin URL for MCP OAuth callbacks |
+| Field                       | Backend env var              | Default    | Description                                                                                                                                                                     |
+| --------------------------- | ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `idpProvider`               | `IDP_PROVIDER`               | `keycloak` | Identity provider in use                                                                                                                                                        |
+| `mcpAuthOrigin`             | `CALLBACK_API_BASE_URL`      | _(none)_   | Origin URL for MCP OAuth callbacks                                                                                                                                              |
+| `features:knowledgeBases`   | `RETRIEVAL_BACKEND`          | computed   | `true` unless `RETRIEVAL_BACKEND=none`. Controls availability of the Knowledge Bases surface.                                                                                   |
+| `features:datasources`      | `RETRIEVAL_BACKEND`          | computed   | `true` unless `RETRIEVAL_BACKEND=none`. Hides the Data Sources nav item, routes, and related admin pages.                                                                       |
+| `features:codeIndexing`     | `RETRIEVAL_BACKEND`          | computed   | `true` unless `RETRIEVAL_BACKEND=none`. Controls availability of code-context tools and workflow code search.                                                                   |
+| `features:metricsAnalytics` | `codemie-enterprise` package | computed   | `true` only when the `codemie-enterprise` package is installed. Independent of `RETRIEVAL_BACKEND` — controls Analytics Insights/CLI Insights tabs and dashboard customization. |
+
+See [Standalone Deployment](../../deployment/standalone/overview.md) for the full list of capabilities affected by `RETRIEVAL_BACKEND=none`.
 
 ### Datasource Features
 
