@@ -34,8 +34,8 @@ If the widget shows no data, your administrator has not configured a budget limi
 account via LiteLLM. Contact your administrator to set up budget tracking.
 :::
 
-:::info Platform Admins: viewing another user's spending
-Platform Admins can view the budget spending for any individual user directly from the
+:::info Platform Admins and Auditors: viewing another user's spending
+Platform Admins and Auditors can view the budget spending for any individual user directly from the
 [Users Management](../project-user-management/users.md#budget-spending) page. Open the
 User Details panel for the target user to see their spending across all budget categories.
 :::
@@ -98,9 +98,19 @@ Project Admins have limited access to analytics data scoped to their managed pro
 - Monitor usage and costs specific to your projects
 - Access project-level metrics for assistants and workflows
 
+### Auditor
+
+Users with the Auditor flag have the same analytics visibility as Platform Admins:
+
+- Access all dashboard tabs: **Insights**, **CLI Insights**, **AI/Run Adoption**, and **Leaderboard**
+- View statistics for **all projects** in the organization
+- View statistics for **all users** using CodeMie
+- Access the full **Summary Metrics** panel
+- Use the **User filter** to search and filter data across all platform users
+
 :::info
-To view analytics for projects or other users, you need either Platform Admin or Project Admin
-access. Contact your administrator if you need broader access to analytics data.
+To view analytics for projects or other users, Platform Admin, Project Admin, or Auditor
+access is required. Contact an administrator to obtain broader access to analytics data.
 :::
 
 ## Global Filtering System
@@ -145,7 +155,7 @@ their overall AI platform engagement score. Scores are calculated across six dim
 from daily platform usage to CLI-based agentic engineering — and users are grouped into
 tiers from Newcomer to Pioneer.
 
-Platform admins can browse the full ranked leaderboard with filters and drill into individual
-user profiles. Regular users can view their own score and tier.
+Platform admins and Auditors can browse the full ranked leaderboard with filters and drill into
+individual user profiles. Regular users can view their own score and tier.
 
 See [AI Champions Leaderboard](./ai-champions-leaderboard.md) for the full overview.

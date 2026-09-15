@@ -32,13 +32,32 @@ installation.
 
 ### Log Storage — Elasticsearch
 
-Application logs and conversation metrics are stored in Elasticsearch under two indexes
-controlled by environment variables in your CodeMie API deployment:
+Application logs and conversation metrics are stored in Elasticsearch. Application and
+conversation indexes are controlled by environment variables in your CodeMie API
+deployment:
 
 | Variable                      | Default                 | Description                          |
 | ----------------------------- | ----------------------- | ------------------------------------ |
 | `ELASTIC_LOGS_INDEX`          | `logs-codemie-infra*`   | Index for application and API logs   |
 | `CONVERSATIONS_METRICS_INDEX` | `codemie-conversations` | Index for conversation-level metrics |
+
+### Quarterly User Metrics Indexes
+
+When metrics index rotation is enabled, user and usage metrics are written through the
+`codemie_metrics_logs_write` alias. The alias points to one quarterly index at a time:
+
+```text
+codemie_metrics_logs-YYYY-qN
+```
+
+For example, `codemie_metrics_logs-2026-q3` stores metrics for the third quarter of 2026. Analytics queries use `codemie_metrics_logs*`, which includes the legacy
+`codemie_metrics_logs` index and all quarterly indexes.
+
+Rotation is disabled by default. To enable it, bootstrap the write alias, configure
+Fluent Bit to use the alias, and set `METRICS_ROTATION_ENABLED=true`. See
+[Metrics Index Rotation](./metrics-index-rotation) for the complete configuration
+procedure and [Metrics Index Rotation Update](../../update/metrics-index-rotation) for
+migrating an existing deployment.
 
 ### Log Visualization — Kibana
 

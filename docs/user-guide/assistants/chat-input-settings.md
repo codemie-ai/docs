@@ -97,6 +97,15 @@ The **paperclip icon** in the chat input toolbar lets you attach files to your m
 Uploaded files remain accessible throughout the conversation and can be referenced in
 subsequent messages without re-uploading.
 
+![Chat input toolbar without the file attachment icon when disabled](./images/chat-file-attachments-disabled.png)
+
+:::note
+The paperclip icon is only shown when file attachments are enabled for the assistant. If the
+icon is not visible, the assistant's creator has disabled file uploads in the assistant
+configuration. See [File Attachments](./create-assistant.md#file-attachments) in the
+assistant configuration guide.
+:::
+
 See [Supported File Formats](./supported-file-formats-and-csv-handling-in-chat-assistant.md)
 for the full list of supported formats, size limits, and CSV handling capabilities.
 

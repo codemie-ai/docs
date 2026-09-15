@@ -214,6 +214,7 @@ words:
   - phpt
   - rhtml
   # Shell commands, utilities and variables
+  - LOCALAPPDATA
   - PGPASSWORD
   - PGSSLMODE
   - orbstack
