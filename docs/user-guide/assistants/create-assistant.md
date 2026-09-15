@@ -223,6 +223,26 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
+## File Attachments
+
+The **File attachments** section controls whether users can attach files when chatting with
+the assistant.
+
+![File attachments toggle in the assistant configuration form](./images/assistant-file-attachments-toggle.png)
+
+The section contains a single **Enable file attachments** toggle:
+
+| State        | Behavior                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| **Enabled**  | The paperclip icon appears in the chat input toolbar; users can attach files to messages |
+| **Disabled** | The paperclip icon is hidden; file uploads are not available for this assistant          |
+
+:::info
+File attachments are enabled by default for new assistants. Disable this setting when the
+assistant's use case does not involve file analysis, or when file uploads should be
+restricted for compliance or security reasons.
+:::
+
 ## Managing Your Assistant
 
 4. Once created, your assistant appears in the **My Assistants** menu:
