@@ -26,6 +26,10 @@ This page provides information about updated third-party components and configur
 
 Updated from 2.15.2. This update addresses security vulnerabilities in the base Alpine Linux image.
 
+<h4>LiteLLM 1.96.2</h4>
+
+Updated from 1.93.0. For details, see the [LiteLLM 1.96.2 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.96.2).
+
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
