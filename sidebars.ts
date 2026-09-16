@@ -938,7 +938,16 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             'admin/update/release-notes',
-            'admin/update/codemie/update-version',
+            {
+              type: 'category',
+              label: 'CodeMie Platform',
+              link: {
+                type: 'doc',
+                id: 'admin/update/codemie/update-version',
+              },
+              collapsed: true,
+              items: ['admin/update/codemie/update-image-pull-secret'],
+            },
             {
               type: 'category',
               label: 'Keycloak',

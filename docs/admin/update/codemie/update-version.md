@@ -294,7 +294,7 @@ kubectl get pods -n codemie
 
 ## Troubleshooting
 
-If you encounter issues during or after the update, use these troubleshooting steps:
+Use these troubleshooting steps if issues arise during or after the update:
 
 ### Image Pull Errors
 
@@ -306,17 +306,15 @@ If you encounter issues during or after the update, use these troubleshooting st
 
 **Resolution:**
 
-Request a new service account key
-
 :::warning Service Account Key Expiration
-Service account keys have a **90-day retention period** and expire automatically after this time. If authentication continues to fail after re-authentication attempts, your `key.json` service account key has likely expired.
+Service account keys have a **90-day retention period** and expire automatically after this time. If authentication continues to fail after re-authentication attempts, the `key.json` service account key has likely expired.
 
 **To resolve expired keys:**
 
 1. Request a new service account key from your administrator or support team
 2. Replace the expired `key.json` file with the newly provided key
 3. Re-authenticate using the new credentials
-4. Update the image pull secret in your Kubernetes cluster
+4. [Update the image pull secret](./update-image-pull-secret.md) in the Kubernetes cluster
 
 Contact your support team to obtain a new service account key for registry access.
 :::
