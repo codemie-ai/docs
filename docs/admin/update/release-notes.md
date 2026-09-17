@@ -13,6 +13,42 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.51.0 {#v2-51-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.51.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **[BREAKING] Code Executor** — changes in `codemie-api`:
+   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be deprecated.
+   - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
+
+   :::warning
+   If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled in codemie-api helm chart — otherwise the executor now defaults to the `codemie-code-executor` namespace.
+
+   The old `rbac.namespace` key is removed; migrate to `namespace.name`:
+
+   ```yaml
+   features:
+     tools:
+       code_executor:
+         namespace:
+           name: "<namespace>"
+   ```
+
+   :::
+
+   See [Code Executor Configuration](../configuration/codemie/code-executor-configuration.md#namespace-configuration) for details.
+
+</details>
+
 ### CodeMie 2.50.0 {#v2-50-0}
 
 <details>
