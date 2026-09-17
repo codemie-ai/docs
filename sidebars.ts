@@ -332,6 +332,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'MS Teams Bot',
+          link: {
+            type: 'doc',
+            id: 'user-guide/ms-teams-bot/index',
+          },
+          collapsed: true,
+          items: ['user-guide/ms-teams-bot/integration'],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',

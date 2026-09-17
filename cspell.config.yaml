@@ -168,6 +168,9 @@ words:
   - endpoints
   - webhook
   - webhooks
+  - sideload
+  - sideloaded
+  - sideloading
   - ITSM
   - CMDB
   - cloudapp
