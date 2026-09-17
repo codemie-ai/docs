@@ -39,7 +39,7 @@ Watch tutorials and product guides on our YouTube channel. Click **Explore** to 
 
 ### Release Notes
 
-View the latest changes, fixes, and enhancements. Click **See What's New** to view the latest updates.
+View the latest changes, fixes, and enhancements. Click **See What's New** to view the latest updates. For a detailed description of what each release contains, see [Release Notes](./release-notes.md).
 
 ![Release Notes](./images/release-notes.png)
 

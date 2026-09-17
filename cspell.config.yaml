@@ -178,6 +178,8 @@ words:
   - yaml
   - YAML
   - JSON
+  - frontmatter
+  - Frontmatter
   - SDLC
   - env
   - envs
