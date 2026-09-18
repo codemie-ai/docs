@@ -1,10 +1,10 @@
 ---
 id: terraform-upgrade
 title: Terraform Version Upgrade (1.5.7 → 1.13.5)
-sidebar_label: Terraform Upgrade (1.5.7 → 1.13.5)
+sidebar_label: Terraform
 sidebar_position: 1
 pagination_next: null
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/3rd-party-components
 ---
 
 import Tabs from '@theme/Tabs';

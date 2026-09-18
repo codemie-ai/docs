@@ -4,7 +4,7 @@ sidebar_position: 1
 title: Keycloak Operator Upgrade
 description: Keycloak Operator upgrade guide
 pagination_next: null
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/keycloak/keycloak
 ---
 
 # Keycloak Operator Upgrade

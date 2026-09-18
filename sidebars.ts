@@ -947,34 +947,83 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'admin/update/release-notes',
-            'admin/update/codemie/update-version',
             {
               type: 'category',
-              label: 'Keycloak',
+              label: 'Release Notes',
+              link: {
+                type: 'doc',
+                id: 'admin/update/release-notes/release-notes',
+              },
+              collapsed: true,
+              items: [],
+            },
+            {
+              type: 'category',
+              label: 'CodeMie Platform',
+              link: {
+                type: 'doc',
+                id: 'admin/update/codemie-platform/codemie-platform',
+              },
+              collapsed: true,
+              items: [
+                'admin/update/codemie-platform/update-core-components',
+                'admin/update/codemie-platform/update-image-pull-secret',
+              ],
+            },
+            {
+              type: 'category',
+              label: '3rd-Party Components',
+              link: {
+                type: 'doc',
+                id: 'admin/update/3rd-party-components/3rd-party-components',
+              },
               collapsed: true,
               items: [
                 {
                   type: 'category',
-                  label: 'Keycloak Upgrade',
+                  label: 'Keycloak',
                   link: {
                     type: 'doc',
-                    id: 'admin/update/keycloak/keycloak-upgrade/keycloak-upgrade',
+                    id: 'admin/update/3rd-party-components/keycloak/keycloak',
                   },
                   collapsed: true,
-                  items: ['admin/update/keycloak/keycloak-upgrade/keycloak-24-to-26'],
+                  items: [
+                    {
+                      type: 'category',
+                      label: 'Keycloak Upgrade',
+                      link: {
+                        type: 'doc',
+                        id: 'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-upgrade',
+                      },
+                      collapsed: true,
+                      items: [
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-24-to-26',
+                      ],
+                    },
+                    'admin/update/3rd-party-components/keycloak/keycloak-operator-upgrade',
+                    'admin/update/3rd-party-components/keycloak/keycloak-database-migration',
+                    'admin/update/3rd-party-components/keycloak/keycloak-theme-setup',
+                  ],
                 },
-                'admin/update/keycloak/keycloak-operator-upgrade',
-                'admin/update/keycloak/keycloak-database-migration',
-                'admin/update/keycloak/keycloak-theme-setup',
+                'admin/update/3rd-party-components/terraform/terraform-upgrade',
+                {
+                  type: 'category',
+                  label: 'Elasticsearch',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/update/3rd-party-components/elasticsearch/elasticsearch',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/update/3rd-party-components/elasticsearch/elasticsearch-kibana-upgrade',
+                    'admin/update/3rd-party-components/elasticsearch/metrics-index-rotation',
+                  ],
+                },
+                'admin/update/3rd-party-components/fluent-bit/fluent-bit-upgrade',
+                'admin/update/3rd-party-components/nats/nats-upgrade',
+                'admin/update/3rd-party-components/oauth2-proxy/oauth2-proxy-upgrade',
               ],
             },
-            'admin/update/terraform-upgrade/terraform-upgrade',
-            'admin/update/oauth2-proxy-upgrade',
-            'admin/update/elasticsearch-kibana-upgrade',
-            'admin/update/fluent-bit-upgrade',
-            'admin/update/metrics-index-rotation',
-            'admin/update/nats-upgrade',
           ],
         },
         {

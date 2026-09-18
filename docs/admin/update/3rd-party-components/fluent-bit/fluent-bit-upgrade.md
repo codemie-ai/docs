@@ -1,8 +1,9 @@
 ---
 id: fluent-bit-upgrade
 title: Fluent Bit Upgrade
+sidebar_label: Fluent Bit
 description: Fluent Bit upgrade guide
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/3rd-party-components
 pagination_next: null
 ---
 

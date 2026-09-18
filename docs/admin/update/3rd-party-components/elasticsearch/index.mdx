@@ -1,0 +1,34 @@
+---
+id: elasticsearch
+title: Elasticsearch Updates
+sidebar_label: Elasticsearch
+sidebar_position: 1
+pagination_prev: admin/update/3rd-party-components/3rd-party-components
+pagination_next: null
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Elasticsearch Updates
+
+Upgrade and migration guides for the Elasticsearch and Kibana observability components.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/tools/elasticsearch.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Elasticsearch &amp; Kibana Upgrade"
+    description="Upgrade Elasticsearch and Kibana components for logging, monitoring, and analytics capabilities."
+    link="/admin/update/3rd-party-components/elasticsearch/elasticsearch-kibana-upgrade"
+  />
+  <FeatureCard
+    icon="/img/tools/elasticsearch.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Metrics Index Rotation"
+    description="Migrate existing deployments to quarterly Elasticsearch indexes for user and usage metrics."
+    link="/admin/update/3rd-party-components/elasticsearch/metrics-index-rotation"
+  />
+</FeatureGrid>

@@ -59,4 +59,4 @@ Release history is limited to the versions deployed in the current environment. 
 
 ## Admin Release Notes
 
-For information about third-party component updates and configuration changes affecting administrators, see the [Admin Release Notes](../../admin/update/release-notes.md).
+For information about third-party component updates and configuration changes affecting administrators, see the [Admin Release Notes](../../admin/update/release-notes/release-notes.md).

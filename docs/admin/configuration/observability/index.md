@@ -56,7 +56,7 @@ For example, `codemie_metrics_logs-2026-q3` stores metrics for the third quarter
 Rotation is disabled by default. To enable it, bootstrap the write alias, configure
 Fluent Bit to use the alias, and set `METRICS_ROTATION_ENABLED=true`. See
 [Metrics Index Rotation](./metrics-index-rotation) for the complete configuration
-procedure and [Metrics Index Rotation Update](../../update/metrics-index-rotation) for
+procedure and [Metrics Index Rotation Update](../../update/3rd-party-components/elasticsearch/metrics-index-rotation) for
 migrating an existing deployment.
 
 ### Log Visualization — Kibana

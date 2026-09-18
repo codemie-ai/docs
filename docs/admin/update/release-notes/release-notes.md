@@ -163,8 +163,8 @@ No third-party component updates in this release.
         ```bash
         aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
         ```
-   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../deployment/aws/kubernetes/infrastructure-deployment/manual-deployment.md#phase-2-terraform-backend-resources-deployment).
-   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
+   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../../deployment/aws/kubernetes/infrastructure-deployment/manual-deployment.md#phase-2-terraform-backend-resources-deployment).
+   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
 
 <h3>Hotfixes</h3>
 
@@ -243,7 +243,7 @@ No third-party component updates in this release.
    | `viteMcpAuthOrigin`          | —       | Computed from `CALLBACK_API_BASE_URL` backend env var  |
    | `viteBannerMessage`          | —       | `bannerMessage` entry in `customer-config.yaml`        |
 
-   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for full deployment instructions.
+   See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for full deployment instructions.
 
 2. **New YAML-configurable entries added to `customer-config.yaml`**:
 
@@ -254,7 +254,7 @@ No third-party component updates in this release.
    | `bannerLinkLabel`       | Label for the banner link (default: disabled)          |
    | `bannerLinkRoute`       | Route/URL for the banner link (default: disabled)      |
 
-   See [Customer Feature Configuration](../configuration/codemie/customer-feature-configuration.md) for configuration details.
+   See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for configuration details.
 
 </details>
 
@@ -317,7 +317,7 @@ No third-party component updates in this release.
    | `GOOGLE_OAUTH_CLIENT_SECRET` | OAuth 2.0 Client Secret from Google Cloud Console                                                                                           |
    | `CALLBACK_API_BASE_URL`      | Public HTTPS hostname of your deployment (defaults to `http://host.docker.internal:8080` — must be overridden in all non-local deployments) |
 
-   See [Google OAuth](../configuration/codemie/api-configuration.md#google-oauth) in the API Configuration guide for the full Google Cloud Console setup steps. See also [Add and Index Google Data Source](../../user-guide/data-source/datasources-types/add-google-data-source.md) for datasource setup instructions.
+   See [Google OAuth](../../configuration/codemie/api-configuration.md#google-oauth) in the API Configuration guide for the full Google Cloud Console setup steps. See also [Add and Index Google Data Source](../../../user-guide/data-source/datasources-types/add-google-data-source.md) for datasource setup instructions.
 
    :::warning Action required
    Existing Google Docs datasources that relied on the service account sharing approach will need to be updated.
@@ -472,7 +472,7 @@ No third-party component updates in this release.
    :::tip Network isolation hardening
    Applying Kubernetes `NetworkPolicy` to the `codemie-mcp-connect-service` namespace is
    recommended to enforce least-privilege traffic controls. See
-   [Network Policies for MCP Connect Service](../security/network-policies/mcp-connect-service.mdx) for
+   [Network Policies for MCP Connect Service](../../security/network-policies/mcp-connect-service.mdx) for
    cloud-specific configurations and helper scripts.
    :::
 
@@ -644,7 +644,7 @@ No third-party component updates in this release.
    If the `AI/Run CodeMie UI` Helm chart values still contain `viteEnableAnalytics`, it can be safely removed.
    :::
 
-2. **Infrastructure logs index renamed** — the default value of `ELASTIC_LOGS_INDEX` changed from `codemie_infra_logs*` to `logs-codemie-infra*`. If this value is set explicitly in the deployment, update it accordingly. See [Logs Retention](../configuration/observability/logs-retention.md) for cleanup and retention configuration.
+2. **Infrastructure logs index renamed** — the default value of `ELASTIC_LOGS_INDEX` changed from `codemie_infra_logs*` to `logs-codemie-infra*`. If this value is set explicitly in the deployment, update it accordingly. See [Logs Retention](../../configuration/observability/logs-retention.md) for cleanup and retention configuration.
 
 3. **Upcoming change: ingress annotations** — the following oauth2-proxy ingress annotations will be removed from the **AI/Run CodeMie Backend** and **AI/Run CodeMie UI** Helm charts in a future release:
 
@@ -694,7 +694,7 @@ No third-party component updates in this release.
    - `KEYCLOAK_ADMIN_CLIENT_ID`
    - `KEYCLOAK_ADMIN_CLIENT_SECRET`
 
-   See [Disable migration after the first run](../configuration/access-control/platform-managed-mode-configuration.md#22-disable-migration-after-the-first-run) for the full cleanup steps.
+   See [Disable migration after the first run](../../configuration/access-control/platform-managed-mode-configuration.md#22-disable-migration-after-the-first-run) for the full cleanup steps.
    :::
 
 3. **`LITELLM_PREMIUM_MODELS_ALIASES` format changed to JSON array** — if this variable is in use, update its value from a comma-separated string to a JSON array.
@@ -735,7 +735,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **Update LiteLLM budget env vars** — remove `LITELLM_SPEND_COLLECTOR_SCHEDULE` and set `LLM_PROXY_BUDGET_BACKFILL_ENABLED: "true"`. See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md).
+1. **Update LiteLLM budget env vars** — remove `LITELLM_SPEND_COLLECTOR_SCHEDULE` and set `LLM_PROXY_BUDGET_BACKFILL_ENABLED: "true"`. See [Budget Configuration](../../configuration/extensions/litellm-proxy/budget-configuration.md).
 
 2. **One-time reconciliation via `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`**
 
@@ -822,7 +822,7 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
 
    The CodeMie login theme (`codemie`) is now automatically applied to the `codemie-prod` realm via the `oauth2-proxy` Helm chart.
 
-   **Upgrade instructions:** [Keycloak Theme Setup](./keycloak/keycloak-theme-setup.md)
+   **Upgrade instructions:** [Keycloak Theme Setup](../3rd-party-components/keycloak/keycloak-theme-setup.md)
 
 3. **New Environment Variable:** `INTERNAL_BIND_KEY`
 
@@ -845,7 +845,7 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
    Set `INTERNAL_BIND_KEY` to the same strong random value across all workers and pods.
    Generate with: `openssl rand -hex 32`. Store in a secrets manager or Kubernetes Secret.
 
-   See [API Configuration](../configuration/codemie/api-configuration.md) for full details.
+   See [API Configuration](../../configuration/codemie/api-configuration.md) for full details.
 
 <h3>Hotfixes</h3>
 
@@ -878,7 +878,7 @@ Three new environment variables have been introduced to control LLM budget enfor
 | `LLM_PROXY_BUDGET_SYNC_ENABLED`     | `false` | Syncs predefined budgets from `budgets-config.yaml` into the database on startup |
 | `LLM_PROXY_BUDGET_BACKFILL_ENABLED` | `false` | Backfills user budget assignments from LiteLLM on startup for existing users     |
 
-See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md) and [API Configuration](../configuration/codemie/api-configuration.md) for details.
+See [Budget Configuration](../../configuration/extensions/litellm-proxy/budget-configuration.md) and [API Configuration](../../configuration/codemie/api-configuration.md) for details.
 
 #### Deprecated Budget Environment Variables
 
@@ -893,7 +893,7 @@ The following environment variables are deprecated and will be removed in a futu
 | `LITELLM_PREMIUM_MODELS_BUDGET_NAME` | string | `""`        | `premium_models` category entry      |
 | `LITELLM_CLI_BUDGET_NAME`            | string | `""`        | `cli` category entry                 |
 
-See [Budget Configuration](../configuration/extensions/litellm-proxy/budget-configuration.md) for migration details.
+See [Budget Configuration](../../configuration/extensions/litellm-proxy/budget-configuration.md) for migration details.
 
 <h3>Hotfixes</h3>
 
@@ -961,7 +961,7 @@ No breaking configuration changes were introduced in this release.
 
 Updated from 8.18.4. For details, see the [Elastic 8.19.12 Release Notes ↗](https://www.elastic.co/guide/en/security/8.19/release-notes-header-8.19.0.html#release-notes-8.19.12).
 
-**Upgrade instructions:** [ElasticSearch and Kibana Upgrade Guide](./elasticsearch-kibana-upgrade.md)
+**Upgrade instructions:** [ElasticSearch and Kibana Upgrade Guide](../3rd-party-components/elasticsearch/elasticsearch-kibana-upgrade.md)
 
 ---
 
@@ -969,7 +969,7 @@ Updated from 8.18.4. For details, see the [Elastic 8.19.12 Release Notes ↗](ht
 
 Updated NATS Helm chart from 1.2.6 to 1.3.0, which includes NATS server 2.11.0 (up from 2.10.22) and NATS Reloader 0.22.3 (up from 0.16.0).
 
-**Upgrade instructions:** [NATS Upgrade Guide](./nats-upgrade.md)
+**Upgrade instructions:** [NATS Upgrade Guide](../3rd-party-components/nats/nats-upgrade.md)
 
 ---
 
@@ -977,7 +977,7 @@ Updated NATS Helm chart from 1.2.6 to 1.3.0, which includes NATS server 2.11.0 (
 
 Updated Keycloak to 26.5.6 (up from 26.4.5) and keycloakx chart to 7.1.9 (up from 7.1.5). For details, see the [Keycloak 26.5 Release Notes ↗](https://www.keycloak.org/docs/latest/release_notes/).
 
-**Upgrade instructions:** [Keycloak Upgrade Guide](./keycloak/keycloak-upgrade/index.md)
+**Upgrade instructions:** [Keycloak Upgrade Guide](../3rd-party-components/keycloak/keycloak-upgrade/index.md)
 
 ---
 
@@ -1007,7 +1007,7 @@ CodeMie 2.19.0 removes the `postgres-operator` Helm chart (PGO 5.4.3) used for K
 - **Dedicated database instance** — a separate, Terraform-provisioned database instance for Keycloak (default for Terraform deployments)
 - **Shared CodeMie database** — Keycloak reuses the existing CodeMie database instance; a Helm hook Job automatically creates the required database and user on first install
 
-See the [Keycloak Database Migration Guide](./keycloak/database-migration.md) for upgrade instructions.
+See the [Keycloak Database Migration Guide](../3rd-party-components/keycloak/database-migration.md) for upgrade instructions.
 
 :::note
 Migration to an external database is optional. If you prefer to continue using the in-cluster PostgreSQL, no migration is required when upgrading to 2.19.0.
@@ -1089,7 +1089,7 @@ For detailed information about changes, improvements, and bug fixes, see the [Fl
 
 **Upgrade instructions:**
 
-To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](./fluent-bit-upgrade.md).
+To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md).
 
 <h3>Configuration Changes</h3>
 

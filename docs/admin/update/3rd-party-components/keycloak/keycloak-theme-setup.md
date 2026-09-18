@@ -3,7 +3,7 @@ id: keycloak-theme-setup
 sidebar_position: 9
 title: Keycloak Theme Setup
 description: Apply the CodeMie login theme to an existing Keycloak deployment
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/keycloak/keycloak
 pagination_next: null
 ---
 
