@@ -23,8 +23,8 @@ Use this table to quickly find where each component appears in the UI.
 | `mcpConnect`                              | Assistant/Workflow config → Tools                                   | "MCP Servers" option in dropdown                                                                | MCP integration option                                                              |                                                                                                |
 | `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                             | Catalog-referenced and custom MCP servers                                                       | Possibility to configure custom MCP servers                                         |                                                                                                |
 | `skills`                                  | Navigation, Chat config, Assistant config                           | Skills menu, skill selector, management pages                                                   | Entire Skills subsystem                                                             | Major feature gate                                                                             |
-| `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise Edition only                                                                        |
-| `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise Edition only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS` |
+| `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise package only                                                                        |
+| `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS` |
 | `features:showAllProjects`                | Settings → Administration → project selector                        | All projects returned by admin project picker (no limit or search minimum)                      | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                |
 | `defaultConversationAssistant`            | New chat creation                                                   | Pre-selects specified assistant                                                                 | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                                                      |
 | `features:personalLiteLLMIntegrations`    | Integrations → User tab                                             | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                            |
@@ -333,11 +333,11 @@ components:
 
   # WHERE: 1) Analytics page → AI Adoption dashboard
   #        2) Settings → Administration → AI Adoption Config
-  #        3) Main navigation (Enterprise Edition only)
+  #        3) Main navigation (Enterprise package only)
   # ENABLED: Shows analytics dashboard with maturity tracking across 4 dimensions:
   #          user engagement, asset reusability, expertise distribution, feature adoption
   # DISABLED: Hides analytics dashboard and adoption configuration pages
-  # NOTE: Enterprise Edition feature only
+  # NOTE: Enterprise package feature only
   - id: "aiAdoption"
     settings:
       enabled: true
@@ -348,7 +348,7 @@ components:
   # WHERE: Analytics page → CLI Analytics tab
   # ENABLED: Shows per-session coding-agent cost, tooling, repository, and efficiency analytics
   # DISABLED: Hides the CLI Analytics tab
-  # NOTE: Enterprise Edition feature only. Requires the backend ClickHouse and OTel Collector
+  # NOTE: Enterprise package feature only. Requires the backend ClickHouse and OTel Collector
   #       environment variables — see CodeMie API Configuration Reference (CLI Analytics section).
   #       Can also be toggled at runtime with FEATURE_CLI_ANALYTICS=true, which overrides `enabled`.
   #       `deliveryFramework` classifies sessions by the prefix of the coding-agent skill/framework
