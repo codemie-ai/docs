@@ -366,13 +366,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Budget Management',
+          label: '✨ Budget Management',
           link: {
             type: 'doc',
             id: 'user-guide/budget-management/budget-management',
           },
           collapsed: true,
-          items: [],
+          items: [
+            'user-guide/budget-management/project-budgets',
+            'user-guide/budget-management/chargeback-cost-centers',
+          ],
         },
       ],
     },

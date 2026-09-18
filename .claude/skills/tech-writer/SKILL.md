@@ -106,7 +106,11 @@ this prompt:
 > 1. Existing pages in docs/user-guide/ and docs/admin/ covering this topic
 > 2. Related sidebar entries in sidebars.ts
 > 3. Existing FAQ files in faq/ directory matching this topic
-> 4. Terminology and section names used for this feature area"
+> 4. Terminology and section names used for this feature area
+> 5. Whether sibling pages in the target section are marked as Enterprise features — check for
+>    `<EnterpriseFeature />` in the page body, a `✨` prefix in `sidebar_label` or the sidebars.ts
+>    label, and whether the feature already appears in
+>    `docs/user-guide/getting-started/enterprise-features.md`"
 
 **Docs directory guide:**
 
@@ -190,11 +194,16 @@ After the user confirms the approach, ask targeted questions.
 2. **Depth**: "How detailed should this be — quick reference, step-by-step tutorial, or
    comprehensive guide with examples?"
 
-**Ask if relevant (3–5):**
+**Ask if relevant (3–6):**
 
 3. **Screenshots**: "Are screenshots available, or should I write text-only for now?"
 4. **Prerequisites**: "What must users have set up before following this guide?"
 5. **Related docs**: "Should this link to any specific related documentation?"
+6. **Packaging**: "Is this part of the Enterprise package?" — ask whenever it is not already clear from
+   the ticket, the source material, or sibling pages in the target section. The answer determines
+   whether the content needs the Enterprise markers and a row in the Enterprise Features catalog
+   (see [Enterprise Features](#enterprise-features-always-check)). Getting this wrong ships a guide
+   to readers who cannot use the feature, so do not guess silently — if unsure, ask.
 
 Collect all answers before proceeding to Phase 5.
 
@@ -255,6 +264,62 @@ pagination_prev: section/overview
 pagination_next: section/next-step  # null for terminal/standalone pages
 ---
 ```
+
+#### Enterprise Features (ALWAYS Check)
+
+Features in the Enterprise package must be marked, or readers on a deployment without it follow a
+guide for something they cannot use. **Determine whether the feature is Enterprise-only before
+writing**, and if the answer is not obvious from the source material, ask the user during Phase 4.
+
+Call the offering the **Enterprise package** — not "Enterprise Edition", and not a "license".
+
+Signals the feature is Enterprise-only: it lives behind a platform extension (LiteLLM Proxy,
+Langfuse, AICE, MF Lens), it is an admin/governance capability (budgets, analytics, audit, SSO), a
+sibling page in the same section already carries the marker, or the Jira ticket or MR labels it so.
+
+Marking has **two independent parts — apply both**:
+
+**1. In-page badge — on every page, parent and child alike:**
+
+```mdx
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
+# Page Title
+
+<EnterpriseFeature />
+```
+
+**2. Navigation marker (`✨`) — on the SECTION entry only, in three places:**
+
+```yaml
+# a) Section page front matter (the index.md / overview page)
+sidebar_label: ✨ Feature Name
+```
+
+```typescript
+// b) sidebars.ts — the category label
+label: '✨ Feature Name',
+```
+
+```mdx
+{/* c) The landing FeatureCard, if the section has one in docs/user-guide/index.mdx */}
+<FeatureCard title="✨ Feature Name" ... />
+```
+
+:::warning
+Do NOT put `✨` on child pages. The established pattern (see `docs/user-guide/codemie-cli/`) is that
+only the section index carries the marker; child pages use plain `sidebar_label` values and rely on
+the in-page `<EnterpriseFeature />` badge. Marking every child clutters the sidebar.
+:::
+
+**3. Register it in the Enterprise Features list.**
+
+`docs/user-guide/getting-started/enterprise-features.md` is the canonical catalog of Enterprise
+features. Add a row to the table in the matching section (CLI & Developer Experience, Platform
+Extensions, AWS AgentCore, or Analytics & Governance), or extend an existing row if the new content
+expands a feature already listed. Each row needs a **Feature** name, a **Description** stating what
+it does and any prerequisite, and **Documentation** links. A new Enterprise page that is not
+reachable from this catalog is effectively undiscoverable.
 
 #### MDX Syntax (CRITICAL — Violations Break the Build)
 
@@ -482,6 +547,10 @@ For each pending screenshot:
 - [ ] Admonitions use Docusaurus syntax (`:::type`)
 - [ ] Pagination configured appropriately
 - [ ] Sidebar updated in sidebars.ts if new page created
+- [ ] Enterprise status determined (not assumed) — and if Enterprise: `<EnterpriseFeature />` on every
+      new page, `✨` on the section entry in all three places (front matter, sidebars.ts, landing
+      FeatureCard), and a row added or updated in `docs/user-guide/getting-started/enterprise-features.md`
+- [ ] If Enterprise: no `✨` on child pages — section index only
 - [ ] No "you" or "your" in the documentation — use impersonal constructions throughout
 - [ ] Self-review: read through as target reader, verify all steps logical and complete
 
