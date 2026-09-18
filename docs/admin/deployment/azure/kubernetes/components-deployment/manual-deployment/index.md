@@ -33,7 +33,6 @@ This guide covers all components required for a fully functional AI/Run CodeMie 
 - **Infrastructure services** - Storage provisioning and ingress routing
 - **Data layer** - Document storage and relational databases
 - **Security components** - Identity management and authentication proxies
-- **Messaging system** - Inter-service communication infrastructure
 - **Core CodeMie services** - Main application components
 - **Observability stack** - Logging and monitoring dashboards
 
@@ -101,18 +100,7 @@ Components must be installed in the following order to satisfy dependencies:
 
 **Dependencies**: Requires PostgreSQL from infrastructure deployment
 
-### 4. [Plugin Engine](./plugin-engine)
-
-**Purpose**: Inter-service messaging and plugin communication infrastructure
-
-**Components**:
-
-- NATS (message broker)
-- NATS Auth Callout (authentication service for NATS)
-
-**Dependencies**: None (standalone messaging layer)
-
-### 5. [AI/Run CodeMie Core](./core-components)
+### 4. [AI/Run CodeMie Core](./core-components)
 
 **Purpose**: Main application services providing CodeMie functionality
 
@@ -123,9 +111,9 @@ Components must be installed in the following order to satisfy dependencies:
 - MCP Connect (Model Context Protocol connector)
 - Mermaid Server (diagram rendering service)
 
-**Dependencies**: Requires all previous components (data layer, security, messaging)
+**Dependencies**: Requires all previous components (data layer, security)
 
-### 6. [Observability](./observability.md)
+### 5. [Observability](./observability.md)
 
 **Purpose**: System monitoring, logging aggregation, and operational insights
 

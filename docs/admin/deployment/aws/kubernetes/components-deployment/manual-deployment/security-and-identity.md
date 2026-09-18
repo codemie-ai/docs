@@ -4,7 +4,7 @@ sidebar_position: 4
 title: Security and Identity
 sidebar_label: Security and Identity
 pagination_prev: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/manual-deployment-overview
-pagination_next: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/plugin-engine
+pagination_next: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/core-components
 ---
 
 import SecurityOverview from '../../../../common/deployment/components-deployment/manual-deployment/security/\_security-overview.mdx';

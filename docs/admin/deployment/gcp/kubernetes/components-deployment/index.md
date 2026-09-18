@@ -13,7 +13,7 @@ pagination_next: admin/deployment/gcp/kubernetes/components-deployment/component
 
 This section guides you through deploying the AI/Run CodeMie application stack on your GKE cluster. After completing infrastructure deployment, this phase installs all necessary Kubernetes components including:
 
-- **Core AI/Run CodeMie services** (API, UI, MCP Connect, NATS Auth)
+- **Core AI/Run CodeMie services** (API, UI, MCP Connect)
 - **Data layer** (Elasticsearch)
 - **Security & Identity** (Keycloak, OAuth2 Proxy)
 - **Infrastructure services** (Ingress controller, storage)
@@ -40,7 +40,6 @@ Proprietary services that provide the main AI/Run CodeMie functionality:
 | --------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | **CodeMie API**       | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations          |
 | **CodeMie UI**        | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                                 |
-| **NATS Auth Callout** | `europe-west3-docker.pkg.dev/.../codemie-nats-auth-callout:x.y.z`   | Authentication and authorization service for NATS messaging (Plugin Engine component) |
 | **MCP Connect**       | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                               |
 | **Mermaid Server**    | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                                 |
 
@@ -87,14 +86,6 @@ Foundational services for networking and storage:
 | **Nginx Ingress Controller** | `registry.k8s.io/ingress-nginx/controller:x.y.z` | HTTP/HTTPS load balancer and reverse proxy for cluster traffic routing |
 | **GCP Storage Class**        | –                                                | StorageClass for dynamic provisioning of GCP Persistent Disks          |
 
-#### Messaging Infrastructure (Plugin Engine)
-
-Message broker for inter-service communication and plugin system:
-
-| Component | Container Image | Description                                                                    |
-| --------- | --------------- | ------------------------------------------------------------------------------ |
-| **NATS**  | `nats:x.y.z`    | Lightweight, high-performance messaging system for microservices communication |
-
 #### Observability Components
 
 Logging, monitoring, and troubleshooting tools:
@@ -120,10 +111,9 @@ Components must be installed in the following sequence to satisfy dependencies:
 2. **Operators** → Keycloak Operator
 3. **Data Layer** → Elasticsearch
 4. **Security** → Keycloak (with database credentials), OAuth2 Proxy
-5. **Messaging** → NATS
-6. **Core Services** → CodeMie API, UI, MCP Connect, NATS Auth
-7. **Observability** → Fluent Bit, Kibana
-8. **Optional** → LLM Proxy (if needed)
+5. **Core Services** → CodeMie API, UI, MCP Connect
+6. **Observability** → Fluent Bit, Kibana
+7. **Optional** → LLM Proxy (if needed)
 
 ## Prerequisites
 
@@ -216,7 +206,7 @@ kubectl get secret gcp-artifact-registry -n codemie
 ```
 
 :::info Pull Secret Usage
-The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-mcp-connect-service`, and `mermaid-server`.
 
 This is configured automatically in the values files:
 
