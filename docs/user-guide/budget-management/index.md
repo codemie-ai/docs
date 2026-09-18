@@ -27,7 +27,7 @@ The budgeting system requires LiteLLM Proxy to be deployed. For platform configu
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Default**  | A pre-configured budget created automatically at platform startup from [YAML configuration](../../admin/configuration/codemie/project-budget-management). Applied to every user who has no personal budget assigned — each user gets their own independent spending counter. Can be created separately for each category: Platform, CLI, and Premium Models |
 | **Personal** | Assigned to a specific user manually. Overrides the default budget for that user                                                                                                                                                                                                                                                                            |
-| **Project**  | Limits spending within a specific project. Automatically distributed among project members                                                                                                                                                                                                                                                                  |
+| **Project**  | Limits spending within a specific project, split across all three categories from a single total. Automatically distributed among project members. See [Project Budgets](./project-budgets.md)                                                                                                                                                              |
 
 :::info
 The default budget is not a shared pool for all users. When the default budget is set to $100 — each employee has their own independent $100.
@@ -60,6 +60,11 @@ For details on how project membership affects category resolution, see [Budget P
 | **Reset period** | Yes      | How often spend counters reset (e.g., `Monthly (30d)`, `Weekly (7d)`)                   |
 | **Soft limit**   | No       | Warning threshold in USD. Requests are not blocked at this threshold.                   |
 | **Hard limit**   | Yes      | Enforcement cap in USD. Requests are blocked once this amount is reached. Must be `> 0` |
+
+:::note
+Project budgets are created from a single total that is distributed across all three categories at
+once, rather than one category at a time. See [Budget Fields](./project-budgets.md#budget-fields).
+:::
 
 ## Pre-configured Budgets
 
@@ -141,110 +146,21 @@ Each user can be assigned a separate personal budget for each category (Platform
 
 ### Project Budgets
 
-Path: **Profile → Settings → Administration → Projects → select a project → Budgets tab**
+Path: **Profile → Settings → Administration → Projects Management → select a project**
 
-#### Creating a Project Budget
+A project budget caps spending for a whole project and splits that cap across the three categories.
+A single **Create Budget** dialog sets a total, distributes it across Platform, CLI, and Premium
+Models, and assigns a hard and soft limit to each. Spend is then reported per category and per
+member on the project page, where individual allocations can be overridden.
 
-Only Maintainers can create project budgets.
+For the full workflow — creating the budget, tracking spend, distributing it among members, and
+overriding individual allocations — see [Project Budgets](./project-budgets.md).
 
-1. Click your **Profile** icon in the bottom-left corner and select **Settings**.
-2. Go to **Administration → Projects Management** and select the project.
-3. In the **Budgets** section, locate the category card that shows **— not assigned —** and click **Add Budget**.
-4. Fill in the budget form (see [Budget Parameters](#budget-parameters) for field descriptions):
-
-![Create Project Budget form](./images/create-project-budget-form.png)
-
-5. Click **Create**.
-
-The budget is provisioned and synchronized with LiteLLM. The category card updates to show the configured limits, reset schedule, and the number of members with allocations.
+To bill a project's spend back to the team that incurred it, or to roll several projects up to a
+single departmental bill, see [Chargeback and Cost Centers](./chargeback-cost-centers.md).
 
 :::warning
 No more than one budget per category per project.
-:::
-
-#### Viewing Project Budgets and Member Allocations
-
-After a budget is created, the project page shows up to three category cards and a **Project members** table.
-
-![Project budget overview with member allocations](./images/project-budget-overview.png)
-
-Each budget card displays:
-
-- **Hard limit** and **Soft limit** in USD
-- **Reset period** and next **Resets** date/time
-- **Members X / $Y.YY** — the number of members with this budget and each member's current allocation
-
-The **Project members** table includes a **Budget Allocations** column showing each member's category and allocated amount.
-
-#### Budget Distribution: Enforce Member Spend Limits
-
-This is the key parameter that controls how the budget is distributed among members.
-
-**Enforce member spend limits = Disabled** (default)
-
-The budget acts as a shared team pool. Individual shares are calculated and stored in CodeMie, but no per-user hard limit is enforced in LiteLLM:
-
-- One member may spend $5, another $50 — nobody is blocked until the team collectively exhausts the full limit
-- If a member has a personal budget (e.g. $20), it is still irrelevant — the shared project limit applies to the whole team
-
-**Enforce member spend limits = Enabled**
-
-Each member receives a hard individual limit in LiteLLM:
-
-- Spending beyond one's quota is not possible — LiteLLM blocks requests
-- With a $100 budget for 10 members → each member gets $10
-- If one member has an Override of $20 → the remaining 9 members split the remainder: ($100 − $20) / 9 ≈ $8.89 each
-
-#### Override: Individual Limit for a Member
-
-Allows setting a fixed limit for a member, different from the equal distribution.
-
-1. In the **Project members** table, click the budget allocation badge next to the member's name.
-2. The **Budget Override** popup opens.
-
-![Budget Override popup for a project member](./images/project-budget-member-override.png)
-
-3. Set the member's **Hard limit** and **Soft limit** values.
-4. Optionally enter an **Override reason** for audit purposes.
-5. Click **Save Override**.
-
-The member is switched to fixed allocation mode. Their amount is locked, and the remaining project budget is re-divided equally among all members still in equal mode.
-
-| Enforce member spend limits state | Override behavior                                                                                                                               |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Enabled**                       | Override sets a hard personal limit in LiteLLM. The remaining budget is recalculated and redistributed among members without an override        |
-| **Disabled**                      | Override records the calculated share in CodeMie DB, but no real per-user restriction exists — all members work through the shared project pool |
-
-To remove an override — click **Clear Override** → the member returns to equal distribution and the remaining budget is recalculated.
-
-#### Rebalance: Recalculating Distribution
-
-Rebalance recalculates the budget distribution among project members and syncs the result with LiteLLM.
-
-:::warning
-When a new member is added to a project, they receive a copy of the current equal share of existing members. The total allocated amount increases, and no automatic redistribution across all members occurs.
-
-Example: a project with 3 members and a $100 budget → each member has $33. When a 4th member is added — they receive $33, bringing the total allocated to $132 against a $100 limit. A manual Rebalance is required for a correct redistribution ($25 each).
-:::
-
-Rebalance is triggered **automatically** when:
-
-- An Override is set or removed
-- The **Enforce member spend limits** setting is changed
-- A member is removed from the project
-
-:::info
-When the Reset period expires, spending counters in LiteLLM reset automatically. However, Rebalance of quota distribution among members is not triggered — member shares are not recalculated as part of the reset.
-:::
-
-Manual Rebalance is required:
-
-- After adding new members to the project
-- After changing the total project budget size
-- When accumulated uneven distribution needs to be corrected
-
-:::warning
-When a project budget is modified (recreated), LiteLLM creates a new key with a new spending counter. The spending counter for the previous key in LiteLLM is reset; however, all historical spending is preserved in the platform analytics (Elasticsearch). Total expenditure will not exceed the combined sum of both keys.
 :::
 
 ### Viewing User Budget Spend (Administrators)
@@ -409,6 +325,8 @@ The following summarizes known constraints in the current version of the budgeti
 
 ## See Also
 
-- [Project Budget Management](../../admin/configuration/codemie/project-budget-management) — platform configuration, environment variables, and Helm setup
-- [LiteLLM Budget Configuration](../../admin/configuration/extensions/litellm-proxy/budget-configuration) — predefined global budgets and enforcement flags
-- [Roles & RBAC](../../admin/security/roles-rbac) — role definitions and access control
+- [Project Budgets](./project-budgets.md) — creating project budgets, tracking spend, and member allocations
+- [Chargeback and Cost Centers](./chargeback-cost-centers.md) — internal billing and rolling spend up across projects
+- [Project Budget Management](../../admin/configuration/codemie/project-budget-management.md) — platform configuration, environment variables, and Helm setup
+- [LiteLLM Budget Configuration](../../admin/configuration/extensions/litellm-proxy/budget-configuration.md) — predefined global budgets and enforcement flags
+- [Roles & RBAC](../../admin/security/roles-rbac.md) — role definitions and access control
