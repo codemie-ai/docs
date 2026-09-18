@@ -1574,4 +1574,4 @@ extraVolumeMounts: |
 
 ## Deployment
 
-To apply customer configuration changes, follow the [Update Guide](../../update/codemie/update-version.md).
+To apply customer configuration changes, follow the [Update Guide](../../update/codemie-platform/update-core-components.md).

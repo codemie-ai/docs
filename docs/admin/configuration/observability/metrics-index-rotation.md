@@ -44,7 +44,7 @@ Before enabling the scheduler:
 4. Keep the JSON types and object/array shapes of existing metric fields stable.
    New fields are handled by Elasticsearch dynamic mappings.
 
-For an existing deployment, follow the [Metrics Index Rotation Update](../../../update/metrics-index-rotation)
+For an existing deployment, follow the [Metrics Index Rotation Update](../../../update/3rd-party-components/elasticsearch/metrics-index-rotation)
 procedure to complete the migration.
 
 ## Bootstrap the write alias
@@ -156,6 +156,6 @@ retention or cleanup process separately.
 
 ## Related documentation
 
-- [Metrics Index Rotation Update](../../../update/metrics-index-rotation) — migrate an existing deployment
+- [Metrics Index Rotation Update](../../../update/3rd-party-components/elasticsearch/metrics-index-rotation) — migrate an existing deployment
 - [Observability Overview](..) — overview of Elasticsearch, Fluent Bit, Kibana, and Langfuse
 - [API Configuration Reference](../../codemie/api-configuration) — environment variable reference

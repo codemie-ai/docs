@@ -3,7 +3,7 @@ id: metrics-index-rotation
 title: Metrics Index Rotation Update
 sidebar_label: Metrics Index Rotation
 sidebar_position: 8
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/elasticsearch/elasticsearch
 pagination_next: null
 ---
 
@@ -107,9 +107,9 @@ Change only the metrics output. Keep the infrastructure-log output and its
 `logs-codemie-infra` index configuration unchanged.
 
 The cloud-specific deployment guides provide more information about the two output
-types: [AWS](../../deployment/aws/kubernetes/components-deployment/manual-deployment/observability),
-[Azure](../../deployment/azure/kubernetes/components-deployment/manual-deployment/observability), or
-[GCP](../../deployment/gcp/kubernetes/components-deployment/manual-deployment/observability).
+types: [AWS](../../../../deployment/aws/kubernetes/components-deployment/manual-deployment/observability),
+[Azure](../../../../deployment/azure/kubernetes/components-deployment/manual-deployment/observability), or
+[GCP](../../../../deployment/gcp/kubernetes/components-deployment/manual-deployment/observability).
 
 ## Step 4: Enable the rotation scheduler
 
@@ -160,4 +160,4 @@ Existing quarterly indexes are not deleted automatically. Plan retention and cle
 separately if the Elasticsearch cluster requires it.
 
 For scheduler behavior, validation rules, and troubleshooting, see
-[Metrics Index Rotation](../../configuration/observability/metrics-index-rotation).
+[Metrics Index Rotation](../../../../configuration/observability/metrics-index-rotation).

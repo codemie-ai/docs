@@ -2,9 +2,10 @@
 id: nats-upgrade
 sidebar_position: 1
 title: NATS Upgrade
+sidebar_label: NATS
 description: NATS upgrade guide
 pagination_next: null
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/3rd-party-components
 ---
 
 import EnterpriseFeature from '@site/src/components/EnterpriseFeature';

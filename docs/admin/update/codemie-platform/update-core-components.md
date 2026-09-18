@@ -1,16 +1,16 @@
 ---
-id: update-version
+id: update-core-components
 sidebar_position: 1
-title: Update AI/Run CodeMie
-sidebar_label: CodeMie Platform
+title: Update AI/Run CodeMie Core Components
+sidebar_label: Update Core Components
 description: Step-by-step guide for updating AI/Run CodeMie components across AWS, Azure, and GCP deployments
+pagination_prev: admin/update/codemie-platform/codemie-platform
 pagination_next: null
-pagination_prev: admin/update/update-overview
 ---
 
 # Update AI/Run CodeMie Core Components
 
-This guide provides comprehensive instructions for updating your AI/Run CodeMie deployment to the latest version. The update process is streamlined and supports all major cloud providers.
+This guide provides comprehensive instructions for updating an AI/Run CodeMie deployment to the latest version. The update process is streamlined and supports all major cloud providers.
 
 :::tip Best Practice
 Regular updates ensure optimal performance, security patches, and access to the latest features.
@@ -28,12 +28,12 @@ This update process will upgrade the following AI/Run CodeMie components:
 
 ## Prerequisites
 
-Before beginning the update process, ensure you have the following:
+Before beginning the update process, ensure the following are in place:
 
 ### Required Access and Tools
 
 - Access to the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository
-- `kubectl` configured with access to your Kubernetes cluster (EKS/AKS/GKE)
+- `kubectl` configured with access to the Kubernetes cluster (EKS/AKS/GKE)
 - Helm 3.16.0 or higher installed
 - Local copy of `codemie-helm-charts` repository with values from initial deployment
 
@@ -54,12 +54,27 @@ gcloud auth application-default print-access-token | helm registry login -u oaut
 ```
 
 :::warning Authentication Required
-All update operations require valid Helm registry authentication. Ensure your credentials are current before proceeding.
+All update operations require valid Helm registry authentication. Ensure credentials are current before proceeding.
+:::
+
+:::tip Recommended: Use a Client-Owned Container Registry
+Mirroring CodeMie container images to a client-owned private registry isolates the
+Kubernetes cluster from GCP Artifact Registry credential issues. The cluster pulls images
+from the client registry, so an expired `gcp-artifact-registry` secret does not cause
+`ImagePullBackOff` errors in pods.
+
+The GCP service account key still requires rotation on the same 90-day cycle. However,
+the rotation applies to the image mirroring pipeline — the process responsible for
+pulling images from the CodeMie registry and pushing them to the client registry — rather
+than to the Kubernetes cluster itself.
+
+A private registry can be provisioned using the Terraform automation included in the
+deployment repository, or an existing self-hosted registry can be used.
 :::
 
 ## Update Methods
 
-Choose the update method that best suits your operational requirements:
+Choose the update method that best suits the operational requirements:
 
 - **Automated Update**: Recommended for most deployments. Uses a script to update all components in the correct sequence.
 - **Manual Update**: Provides granular control over the update process. Useful for troubleshooting or staged rollouts.
@@ -70,7 +85,7 @@ The automated update script ensures all components are updated in the correct or
 
 #### Update Command
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -129,7 +144,7 @@ For advanced users requiring granular control over the update process or perform
 
 Update the Model Context Protocol integration service.
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 ```bash
 helm upgrade --install codemie-mcp-connect-service \
@@ -144,7 +159,7 @@ helm upgrade --install codemie-mcp-connect-service \
 
 Update the diagram rendering service.
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 ```bash
 helm upgrade --install mermaid-server \
@@ -159,7 +174,7 @@ helm upgrade --install mermaid-server \
 
 Update the message bus authentication service with cloud-specific configuration.
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS" default>
@@ -198,7 +213,7 @@ Replace `x.y.z` with your target version (e.g., `2.2.5`):
 
 Update the frontend application with cloud-specific configuration.
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS" default>
@@ -237,7 +252,7 @@ Replace `x.y.z` with your target version (e.g., `2.2.5`):
 
 Update the backend services and APIs with cloud-specific configuration.
 
-Replace `x.y.z` with your target version (e.g., `2.2.5`):
+Replace `x.y.z` with the target version (e.g., `2.2.5`):
 
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS" default>
@@ -311,19 +326,19 @@ Service account keys have a **90-day retention period** and expire automatically
 
 **To resolve expired keys:**
 
-1. Request a new service account key from your administrator or support team
+1. Request a new service account key from the administrator or support team
 2. Replace the expired `key.json` file with the newly provided key
 3. Re-authenticate using the new credentials
-4. [Update the image pull secret](./update-image-pull-secret.md) in the Kubernetes cluster
+4. [Update the image pull secret](../update-image-pull-secret) in the Kubernetes cluster
 
-Contact your support team to obtain a new service account key for registry access.
+Contact the support team to obtain a new service account key for registry access.
 :::
 
 ## Support
 
-If you need assistance with the update process:
+For assistance with the update process:
 
 1. Review this documentation thoroughly
 2. Check the troubleshooting section for common issues
-3. Consult the [FAQ](../../faq.md) for known issues
+3. Consult the [FAQ](../../../faq) for known issues
 4. Contact your support team with detailed error messages and logs

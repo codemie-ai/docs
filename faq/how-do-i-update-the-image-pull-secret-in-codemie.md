@@ -18,4 +18,4 @@ file itself.
 
 ## Sources
 
-- [Update Image Pull Secret](https://docs.codemie.ai/admin/update/codemie/update-image-pull-secret)
+- [Update Image Pull Secret](https://docs.codemie.ai/admin/update/codemie-platform/update-image-pull-secret)

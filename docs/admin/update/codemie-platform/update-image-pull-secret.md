@@ -3,7 +3,7 @@ id: update-image-pull-secret
 title: Update Image Pull Secret
 sidebar_label: Update Image Pull Secret
 sidebar_position: 2
-pagination_prev: admin/update/codemie/update-version
+pagination_prev: admin/update/codemie-platform/codemie-platform
 pagination_next: null
 ---
 

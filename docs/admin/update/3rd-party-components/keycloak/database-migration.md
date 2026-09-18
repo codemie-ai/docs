@@ -3,7 +3,7 @@ id: keycloak-database-migration
 title: Keycloak Database Migration
 sidebar_label: Keycloak Database Migration
 description: Migrate Keycloak from in-cluster PostgreSQL (PGO) to a cloud-managed PostgreSQL instance.
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/keycloak/keycloak
 pagination_next: null
 ---
 

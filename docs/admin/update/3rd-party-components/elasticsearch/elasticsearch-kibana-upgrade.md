@@ -4,7 +4,7 @@ sidebar_position: 8
 title: Elasticsearch and Kibana Upgrade (8.14.2 → 8.18.4)
 description: Upgrade Elasticsearch and Kibana from 8.14.2 to 8.18.4
 pagination_next: null
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/elasticsearch/elasticsearch
 ---
 
 # Elasticsearch and Kibana Upgrade Guide (8.14.2 → 8.18.4)

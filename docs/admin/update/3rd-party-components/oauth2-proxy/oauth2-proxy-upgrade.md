@@ -2,9 +2,10 @@
 id: oauth2-proxy-upgrade
 sidebar_position: 1
 title: OAuth2 Proxy Upgrade
+sidebar_label: OAuth2 Proxy
 description: OAuth2 Proxy upgrade guide
 pagination_next: null
-pagination_prev: admin/update/update-overview
+pagination_prev: admin/update/3rd-party-components/3rd-party-components
 ---
 
 # OAuth2 Proxy Upgrade
