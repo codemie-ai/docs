@@ -5,7 +5,7 @@ sidebar_label: Enterprise Features
 sidebar_position: 4
 pagination_prev: null
 pagination_next: null
-description: Overview of all Enterprise Edition features in AI/Run CodeMie, with links to documentation.
+description: Overview of all Enterprise package features in AI/Run CodeMie, with links to documentation.
 ---
 
 # ✨ Enterprise Features
