@@ -11,7 +11,13 @@ sidebar_position: 19
 
 :::warning Deprecated
 
-The CodeMie Plugin Engine (NATS-based) is currently deprecated as part of the NATS retirement direction.
+The CodeMie Plugin Engine (NATS-based) has been retired as part of the NATS decommission.
+
+**For local coding and in-editor work**, use [CodeMie CLI](../../codemie-cli/index.md).
+
+**For tool access in assistants**, add [MCP servers](./mcp/index.md). MCP servers configured in the platform run inside the platform's MCP Connect bridge — not on your own machine. To give an assistant access to tools on your machine, self-host an MCP Connect bridge and supply its URL, or use CodeMie CLI.
+
+The Plugin key-plus-CLI-session flow ("generate a key, run one CLI command, chat") has no equivalent in the current platform.
 
 :::
 

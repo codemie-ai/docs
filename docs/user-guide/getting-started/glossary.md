@@ -219,7 +219,7 @@ Third-party provider configurations that enable integration of external data sou
 
 ### Plugin
 
-An extensible component that adds functionality to the CodeMie platform. Plugins can provide additional tools, integrations, or capabilities for assistants to use. Available at [codemie-plugins](https://pypi.org/project/codemie-plugins/).
+_(Deprecated)_ An extensible component that previously added tools to the CodeMie platform via the NATS-based Plugin Engine ([codemie-plugins](https://pypi.org/project/codemie-plugins/)). The Plugin Engine has been retired. Use [MCP servers](../tools_integrations/tools/mcp/index.md) to integrate external tools, or [CodeMie CLI](../codemie-cli/index.md) for local development work.
 
 ---
 
