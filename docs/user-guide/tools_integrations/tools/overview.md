@@ -43,6 +43,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[FileSystem](./filesystem.md)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
 | **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
 | **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
+| **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels              |
 
 | **[MCP](./mcp/index.md)** | Model Context Protocol: add servers, configure credentials, and use MCP tools in assistants |
 

@@ -61,7 +61,7 @@ samp,
 }
 
 .markdown img:not(.no-zoom) {
-  @apply bg-white;
+  background-color: var(--ifm-background-color);
 }
 
 h1 {

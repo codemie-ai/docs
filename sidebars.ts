@@ -186,6 +186,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/xray',
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
+                'user-guide/tools_integrations/tools/ms-teams-bot',
                 {
                   type: 'category',
                   label: 'Git',
@@ -329,16 +330,6 @@ const sidebars: SidebarsConfig = {
             'user-guide/chrome-extension/installation',
             'user-guide/chrome-extension/privacy-policy',
           ],
-        },
-        {
-          type: 'category',
-          label: 'MS Teams Bot',
-          link: {
-            type: 'doc',
-            id: 'user-guide/ms-teams-bot/index',
-          },
-          collapsed: true,
-          items: ['user-guide/ms-teams-bot/integration'],
         },
         {
           type: 'category',

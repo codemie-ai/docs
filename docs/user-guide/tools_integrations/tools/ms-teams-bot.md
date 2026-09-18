@@ -1,17 +1,55 @@
 ---
-id: index
+id: ms-teams-bot
 title: Microsoft Teams Bot
 sidebar_label: MS Teams Bot
-sidebar_position: 9
-pagination_prev: user-guide/index
+pagination_prev: user-guide/tools_integrations/tools/overview
 pagination_next: null
+sidebar_position: 27
 ---
 
 # Microsoft Teams Bot
 
 The CodeMie Bot is a Microsoft Teams app that connects AI/Run CodeMie assistants directly into Teams conversations. Once installed and configured, an assistant can be reached from a personal chat, a group chat, or a channel — with streamed responses, Teams conversation history passed in as context, and file attachments in personal chats.
 
-Setting it up has two parts: installing the app in Teams, and exposing assistants to it through a [MS Teams Bot integration](./integration.md) in CodeMie.
+Setting it up has two parts: exposing assistants to the bot through an **MS Teams Bot** integration in CodeMie, and installing the app in Teams.
+
+## Expose Assistants to the Bot
+
+Before an assistant can be used from Teams, it needs to be exposed to the bot through an **MS Teams Bot** integration in CodeMie — this determines which assistants are offered when running `/setup` inside Teams. The integration does not add a capability to an assistant the way a tool does — it only tells the bot which assistants it is allowed to expose.
+
+### Create the Integration
+
+1. In AI/Run CodeMie, open the **Integrations** tab, choose **User** or **Project**, and click **+ Create**:
+
+![Integrations list with the Create menu open](./images/ms-teams-bot-integrations-list.png)
+
+2. Set **Credential Type** to **MS Teams Bot**, then select the assistants to expose in the **Assistants** field:
+
+![New integration form with Credential Type set to MS Teams Bot and the Assistants multiselect](./images/ms-teams-bot-integration-form.png)
+
+3. Click **Save**.
+
+### Fields
+
+| Field               | Description                                                                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Project**         | The project the integration belongs to.                                                                                                          |
+| **Credential Type** | `MS Teams Bot`.                                                                                                                                  |
+| **Alias**           | Name for the integration, shown in the integrations list.                                                                                        |
+| **Assistants**      | Multiselect of the assistants exposed to the bot for this integration's scope, searchable across **All**, **Project**, and **Marketplace** tabs. |
+
+### User vs. Project Scope
+
+| Integration scope | Created under                                                           | Exposed to                                            |
+| ----------------- | ----------------------------------------------------------------------- | ----------------------------------------------------- |
+| **User**          | **Integrations → User**                                                 | The Teams user who created it, in personal chats only |
+| **Project**       | **Integrations → Project** (requires `isAdmin` or `applications_admin`) | Any group chat or channel where `/setup` is run       |
+
+See [Integrations](../integrations/index.md) for the full explanation of integration scopes, priority, and how a default is picked when more than one exists.
+
+:::note
+A group chat or channel can only use assistants that are shared with the project or marked global — a private personal assistant is not offered there even if it is selected in a User integration.
+:::
 
 ## Install the Bot in Microsoft Teams
 
@@ -51,10 +89,6 @@ The bot supports three scopes:
 - **Personal** — a 1:1 chat with the bot. File attachments are only supported here.
 - **Group chat** — added to an existing group chat; the bot only responds when @mentioned.
 - **Team/channel** — added to a channel; the bot only responds when @mentioned.
-
-## Expose Assistants to the Bot
-
-Before an assistant can be used from Teams, it needs to be exposed to the bot through an **MS Teams Bot** integration in CodeMie — this determines which assistants are offered when running `/setup` inside Teams. See [MS Teams Bot Integration](./integration.md) for the full setup steps and the difference between User and Project scope.
 
 ## Sign In from Teams
 
@@ -128,5 +162,4 @@ A group chat or channel can only use assistants that are shared with the project
 
 ## See Also
 
-- [MS Teams Bot Integration](./integration.md) — configuring which assistants the bot can use
-- [Integrations](../tools_integrations/integrations/index.md) — integration scopes and default selection
+- [Integrations](../integrations/index.md) — integration scopes and default selection
