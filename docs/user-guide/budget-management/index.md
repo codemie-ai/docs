@@ -1,7 +1,7 @@
 ---
 id: budget-management
 title: Budget Management
-sidebar_label: Budget Management
+sidebar_label: ✨ Budget Management
 sidebar_position: 9
 pagination_prev: user-guide/index
 pagination_next: null
