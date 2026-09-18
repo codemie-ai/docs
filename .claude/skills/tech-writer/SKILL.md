@@ -199,7 +199,7 @@ After the user confirms the approach, ask targeted questions.
 3. **Screenshots**: "Are screenshots available, or should I write text-only for now?"
 4. **Prerequisites**: "What must users have set up before following this guide?"
 5. **Related docs**: "Should this link to any specific related documentation?"
-6. **Edition**: "Is this an Enterprise Edition feature?" — ask whenever it is not already clear from
+6. **Packaging**: "Is this part of the Enterprise package?" — ask whenever it is not already clear from
    the ticket, the source material, or sibling pages in the target section. The answer determines
    whether the content needs the Enterprise markers and a row in the Enterprise Features catalog
    (see [Enterprise Features](#enterprise-features-always-check)). Getting this wrong ships a guide
@@ -267,9 +267,11 @@ pagination_next: section/next-step  # null for terminal/standalone pages
 
 #### Enterprise Features (ALWAYS Check)
 
-Enterprise Edition features must be marked, or readers on Community Edition follow a guide for
-something they cannot use. **Determine whether the feature is Enterprise-only before writing**, and
-if the answer is not obvious from the source material, ask the user during Phase 4.
+Features in the Enterprise package must be marked, or readers on a deployment without it follow a
+guide for something they cannot use. **Determine whether the feature is Enterprise-only before
+writing**, and if the answer is not obvious from the source material, ask the user during Phase 4.
+
+Call the offering the **Enterprise package** — not "Enterprise Edition", and not a "license".
 
 Signals the feature is Enterprise-only: it lives behind a platform extension (LiteLLM Proxy,
 Langfuse, AICE, MF Lens), it is an admin/governance capability (budgets, analytics, audit, SSO), a
