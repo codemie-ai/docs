@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from '@docusaurus/Link';
 
 export default function EnterpriseFeature(): React.ReactElement {
   return (
@@ -7,7 +8,18 @@ export default function EnterpriseFeature(): React.ReactElement {
         <span className="text-xl leading-none">✨</span>
         <span className="font-semibold text-base tracking-wide">Enterprise Feature</span>
       </div>
-      <p className="m-0 opacity-95 text-[0.95rem]">This is an enterprise feature.</p>
+      <p className="m-0 opacity-95 text-[0.95rem]">
+        Requires an Enterprise Edition license and may not be enabled on every deployment. If this
+        capability is missing from the UI described below, contact the CodeMie platform
+        administrator.{' '}
+        <Link
+          to="/user-guide/getting-started/enterprise-features"
+          className="text-white underline underline-offset-2 hover:text-white hover:opacity-80"
+        >
+          See all Enterprise features
+        </Link>
+        .
+      </p>
     </div>
   );
 }
