@@ -179,6 +179,29 @@ The column shows:
 
 Use the **Budget** filter and **Search** field to quickly locate users by budget assignment.
 
+### Soft-Limit Notifications
+
+When the soft-limit notification feature is enabled by a platform administrator, each budget can be configured to send an email to a designated owner the first time spending crosses the soft limit in a budget period.
+
+:::info Platform configuration required
+Soft-limit notifications are controlled by platform-level flags. See [Budget Soft-Limit Notifications](../../admin/configuration/codemie/project-budget-management.md#budget-soft-limit-notifications) for the environment variables and SMTP setup.
+:::
+
+#### Configuring Notifications on a Budget
+
+The notification owner email and the opt-in toggle appear in the budget form when `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED=true` is set on the platform.
+
+1. Open the budget for editing (Platform administration → **Budgets**, or the project **Budgets** tab).
+2. In the **Soft-Limit Notifications** section, enter the **Notification owner email** — the address that receives the alert.
+3. Enable the **Notify on soft limit** toggle.
+4. Save the budget.
+
+#### Behavior
+
+- A notification is sent **once per budget period** — only when spending first crosses the soft limit. No further emails are sent until the period resets.
+- If no soft limit is set on a budget, no notification is triggered regardless of the toggle state.
+- If the platform's email dispatch flag (`BUDGET_SOFT_LIMIT_EMAIL_ENABLED`) is off, the fields remain visible and editable but no email is sent. This mode allows per-budget configuration to be prepared before SMTP is operational.
+
 ## Usage Scenarios
 
 ### How Requests Are Routed to Budgets: Configuration Examples
