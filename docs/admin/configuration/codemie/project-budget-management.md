@@ -74,6 +74,75 @@ extraEnv:
 Without `LITELLM_SPEND_COLLECTOR_ENABLED=true`, spend data will not be collected and budget consumption will not be visible in the UI.
 :::
 
+## Budget Soft-Limit Notifications
+
+When a budget's spending crosses its soft limit, the platform can send an email notification to a designated owner. Two independent flags control this behavior, making it possible to expose the configuration UI without enabling actual email dispatch.
+
+### Configuration Flags
+
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` | `false` | Enables the soft-limit notification system and exposes the notification owner email and toggle fields in the UI |
+| `BUDGET_SOFT_LIMIT_EMAIL_ENABLED` | `false` | Enables actual email dispatch when the soft limit is reached. Has no effect if `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` is `false` |
+
+**Deployment modes**:
+
+- **UI-only mode** — `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED=true`, `BUDGET_SOFT_LIMIT_EMAIL_ENABLED=false`: per-budget notification owner email and toggle fields are visible and editable in the UI, but no email is sent. Use this mode to prepare per-budget configuration before SMTP is ready.
+- **Full email mode** — both flags set to `true`: an email is dispatched to the configured owner address the first time spending crosses the soft limit in a budget period.
+
+:::warning
+Setting `BUDGET_SOFT_LIMIT_EMAIL_ENABLED=true` while `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED=false` has no effect — the dispatch is skipped and a warning is logged recommending that `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` be enabled.
+:::
+
+### SMTP Configuration
+
+Full email mode requires SMTP to be configured on the API deployment:
+
+| Variable | Description |
+| -------- | ----------- |
+| `EMAIL_SMTP_HOST` | SMTP server hostname |
+| `EMAIL_SMTP_PORT` | SMTP server port |
+| `EMAIL_SMTP_USERNAME` | SMTP authentication username |
+| `EMAIL_SMTP_PASSWORD` | SMTP authentication password |
+| `EMAIL_FROM_ADDRESS` | Sender email address |
+| `EMAIL_FROM_NAME` | Sender display name |
+| `EMAIL_USE_TLS` | Set to `true` to enable TLS |
+
+In the `codemie-api` Helm chart, add to the `extraEnv` list:
+
+```yaml
+extraEnv:
+  - name: BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED
+    value: 'true'
+  - name: BUDGET_SOFT_LIMIT_EMAIL_ENABLED
+    value: 'true'
+  - name: EMAIL_SMTP_HOST
+    value: 'smtp.example.com'
+  - name: EMAIL_SMTP_PORT
+    value: '587'
+  - name: EMAIL_SMTP_USERNAME
+    value: 'notifications@example.com'
+  - name: EMAIL_SMTP_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: smtp-credentials
+        key: password
+  - name: EMAIL_FROM_ADDRESS
+    value: 'notifications@example.com'
+  - name: EMAIL_FROM_NAME
+    value: 'CodeMie Platform'
+  - name: EMAIL_USE_TLS
+    value: 'true'
+```
+
+### Notification Deduplication
+
+A notification is sent once per budget period — triggered the first time spending crosses the soft limit. No further emails are dispatched until the budget period resets.
+
+### Per-Budget Configuration
+
+After the feature flags are enabled, each budget can be independently configured with a notification owner email and an opt-in toggle. This is done via the budget management UI or API. For the user-facing configuration steps, see [Soft-Limit Notifications](../../../user-guide/budget-management/index.md#soft-limit-notifications).
+
 ## Spend Tracking
 
 CodeMie tracks project and member spend through a background polling job that reads usage data from LiteLLM and records it in the `project_spend_tracking` table.
