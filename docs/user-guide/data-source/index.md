@@ -12,6 +12,10 @@ pagination_next: user-guide/data-source/data-source-overview/data-source-overvie
 
 This section covers how to connect, index, and manage data sources in AI/Run CodeMie. Data sources enable assistants to access and utilize external information from various platforms.
 
+:::info Availability
+Data Sources require a deployment with a retrieval backend (Elasticsearch) enabled. Standalone deployments without Elasticsearch do not include this feature — see [Standalone Deployment](../../admin/deployment/standalone/overview.md) for details.
+:::
+
 ---
 
 ## Understanding Data Sources

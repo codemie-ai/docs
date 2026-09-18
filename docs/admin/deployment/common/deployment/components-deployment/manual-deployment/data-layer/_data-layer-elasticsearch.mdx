@@ -4,6 +4,10 @@ import CodeBlock from '@theme/CodeBlock';
 
 Elasticsearch provides document storage and full-text search capabilities for AI/Run CodeMie. It stores conversation history, embeddings, logs, and provides search functionality.
 
+:::tip Not needed for standalone deployments
+Deployments that set `RETRIEVAL_BACKEND=none` (see [Standalone Deployment](../../../../../standalone/overview.md)) do not require Elasticsearch. This section applies to the Kubernetes deployment path, where Elasticsearch remains required.
+:::
+
 ### Step 1: Create Elasticsearch Namespace
 
 Create a dedicated namespace for Elasticsearch:

@@ -699,6 +699,7 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
+            'admin/deployment/standalone/overview',
             {
               type: 'category',
               label: 'Extensions',
