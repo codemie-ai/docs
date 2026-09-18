@@ -84,6 +84,13 @@ Clicking it opens a searchable panel with the following options:
 The selected model applies to all subsequent messages in the current conversation until
 you change it or select **Assistant Default** to revert.
 
+:::note Auto-routing model entries
+Some entries in the model list represent an auto-routing pair rather than a single fixed
+model — for example, one labeled with an `SY` prefix. Selecting one of these lets CodeMie
+route each call in the conversation to either a higher-quality or a lower-cost model from the
+same family, depending on the request, instead of always using the same model.
+:::
+
 ## File Attachments
 
 The **paperclip icon** in the chat input toolbar lets you attach files to your message.
