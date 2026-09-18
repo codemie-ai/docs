@@ -16,6 +16,6 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 :::warning Deprecated
 
-NATS has been retired from AI/Run CodeMie as part of the Plugin Engine decommission. No upgrade is required or supported. See the [release notes](../release-notes) for migration guidance.
+NATS has been retired from AI/Run CodeMie as part of the Plugin Engine decommission. No upgrade is required or supported. See the [release notes](../../../release-notes) for migration guidance.
 
 :::
