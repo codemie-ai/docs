@@ -45,5 +45,5 @@ description: Overview of all Enterprise Edition features in AI/Run CodeMie, with
 | **AI Adoption Analytics**     | Analytics dashboard tracking LLM usage, costs, and AI adoption across the organization. Includes the AI Champions Leaderboard — ranking users by engagement score across six dimensions. Requires [LiteLLM Proxy](../../../admin/deployment/extensions/litellm-proxy/) for spending data.                                                                                                                                 | [Analytics](../../analytics/)                                                                                                                                                                              |
 
 :::info Access Requirements
-All features listed on this page require an Enterprise Edition license. Contact your CodeMie platform administrator to enable these features in your deployment.
+All features listed on this page are part of the CodeMie Enterprise package. Contact the CodeMie platform administrator to enable them for a given deployment.
 :::

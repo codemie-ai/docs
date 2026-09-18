@@ -9,7 +9,7 @@ export default function EnterpriseFeature(): React.ReactElement {
         <span className="font-semibold text-base tracking-wide">Enterprise Feature</span>
       </div>
       <p className="m-0 opacity-95 text-[0.95rem]">
-        Requires an Enterprise Edition license and may not be enabled on every deployment. If this
+        Part of the CodeMie Enterprise package, and may not be enabled on every deployment. If this
         capability is missing from the UI described below, contact the CodeMie platform
         administrator.{' '}
         <Link
