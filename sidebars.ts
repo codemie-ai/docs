@@ -789,6 +789,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {
