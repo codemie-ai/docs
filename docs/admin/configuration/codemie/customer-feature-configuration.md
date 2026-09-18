@@ -958,10 +958,6 @@ preconfigured_assistants:
     settings:
       enabled: true
 
-  - id: "amna-template-developer-via-plugin-engine-assistant"
-    settings:
-      enabled: true
-
   - id: "amna-template-qa-checklist-assistant"
     settings:
       enabled: true
@@ -1541,10 +1537,6 @@ extraObjects:
               enabled: true
 
           - id: "amna-template-gitlab-cicd-assistant"
-            settings:
-              enabled: true
-
-          - id: "amna-template-developer-via-plugin-engine-assistant"
             settings:
               enabled: true
 

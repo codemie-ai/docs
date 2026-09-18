@@ -702,6 +702,10 @@ Optimize NATS performance with connection pooling for high-throughput scenarios.
 
 ### Plugin Configuration
 
+:::warning Deprecated
+These environment variables are retired as part of the NATS decommission (Plugin Engine removal). They no longer configure any active component and should be removed from your deployment configuration.
+:::
+
 Configure NATS-based plugin system for extending CodeMie capabilities.
 
 | Parameter                             | Type    | Default | Description                                                   |
