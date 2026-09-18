@@ -11,6 +11,10 @@ sidebar_position: 8
 
 Below are the instructions for integrating with the CodeMie API/SDK. This guide demonstrates the process for authenticating and calling the API.
 
+If instead you want your product's own screen to appear as a clickable tile inside CodeMie, see [Bringing an Application to CodeMie](../applications/add-an-application.md) — that's a different, heavier path.
+
+Already calling this API and wondering about LLM costs? See the [LiteLLM reuse note](../../admin/configuration/codemie/applications-onboarding.md#1-what-an-application-is-and-how-registration-works) in the Application Onboarding Guide.
+
 ---
 
 ## Authentication Methods

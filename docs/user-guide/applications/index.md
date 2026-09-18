@@ -9,4 +9,8 @@ sidebar_position: 6
 
 # Applications
 
-Applications extend AI/Run CodeMie functionality by integrating third-party tools and custom solutions. These applications leverage CodeMie's capabilities to implement additional features and bring innovative ideas to life.
+Applications extend AI/Run CodeMie functionality by integrating third-party tools and custom solutions. An application appears as a tile on the Applications page that opens the product's own UI, alongside CodeMie's built-in features.
+
+Teams that want their own product to appear as an application tile should start with [Bringing an Application to CodeMie](./add-an-application.md), a plain-language guide to the available integration types, the registration process, and the review checklist. For the exhaustive schema reference and the current list of known platform limitations, see the [Application Onboarding Guide](../../admin/configuration/codemie/applications-onboarding.md).
+
+If you want an AI assistant to call your product programmatically instead of showing a person a UI tile, use the [CodeMie API](../api/index.md) instead — it's usually cheaper to build.
