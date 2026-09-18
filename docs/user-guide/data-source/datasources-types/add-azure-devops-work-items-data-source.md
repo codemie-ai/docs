@@ -3,7 +3,7 @@ id: add-azure-devops-work-items-data-source
 title: Add and Index Azure DevOps Work Items Data Source
 sidebar_label: Add and Index Azure DevOps Work Items Data Source
 pagination_prev: user-guide/data-source/datasources-types/add-azure-devops-wiki-data-source
-pagination_next: user-guide/data-source/datasources-types/add-provider-datasource
+pagination_next: user-guide/data-source/datasources-types/add-xwiki-data-source
 ---
 
 # Add and Index Azure DevOps Work Items Data Source

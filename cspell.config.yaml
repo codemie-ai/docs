@@ -256,6 +256,9 @@ words:
   # codemie terms
   - kata
   - katas
+  - xwiki
+  - xWiki
+  - unindexed
   - gvisor
   - codemieai
   # Other
