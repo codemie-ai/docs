@@ -36,12 +36,12 @@ The AI/Run CodeMie application consists of multiple integrated components organi
 
 Proprietary services that provide the main AI/Run CodeMie functionality:
 
-| Component             | Container Registry                                                  | Description                                                                           |
-| --------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **CodeMie API**       | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations          |
-| **CodeMie UI**        | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                                 |
-| **MCP Connect**       | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                               |
-| **Mermaid Server**    | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                                 |
+| Component          | Container Registry                                                  | Description                                                                  |
+| ------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **CodeMie API**    | `europe-west3-docker.pkg.dev/.../codemie:x.y.z`                     | Backend service handling business logic, data processing, and API operations |
+| **CodeMie UI**     | `europe-west3-docker.pkg.dev/.../codemie-ui:x.y.z`                  | Frontend web application providing the user interface                        |
+| **MCP Connect**    | `europe-west3-docker.pkg.dev/.../codemie-mcp-connect-service:x.y.z` | Bridge enabling CodeMie to communicate with MCP servers                      |
+| **Mermaid Server** | `europe-west3-docker.pkg.dev/.../mermaid-server:x.y.z`              | Diagram generation service for visualization in chats                        |
 
 :::info Version Information
 To find the latest release versions for CodeMie components:

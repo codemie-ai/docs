@@ -79,19 +79,19 @@ The core platform infrastructure provisions all AWS resources needed to run AI/R
 
 ### Networking
 
-| Resource                      | Purpose                                                             |
-| ----------------------------- | ------------------------------------------------------------------- |
-| **VPC**                       | Isolated virtual network for AI/Run CodeMie resources               |
-| **Public Subnets**            | Subnets for load balancers and NAT gateways                         |
-| **Private Subnets**           | Subnets for EKS nodes and pods (application workloads)              |
-| **Database Subnets**          | Isolated subnets for RDS PostgreSQL instances                       |
-| **Internet Gateway**          | Enables internet connectivity for public subnets                    |
-| **NAT Gateway**               | Provides consistent outbound public IP for private subnet resources |
-| **Route Tables**              | Controls routing between subnets and internet                       |
-| **Application Load Balancer** | Distributes incoming HTTPS traffic to application services          |
+| Resource                      | Purpose                                                                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **VPC**                       | Isolated virtual network for AI/Run CodeMie resources                                                                   |
+| **Public Subnets**            | Subnets for load balancers and NAT gateways                                                                             |
+| **Private Subnets**           | Subnets for EKS nodes and pods (application workloads)                                                                  |
+| **Database Subnets**          | Isolated subnets for RDS PostgreSQL instances                                                                           |
+| **Internet Gateway**          | Enables internet connectivity for public subnets                                                                        |
+| **NAT Gateway**               | Provides consistent outbound public IP for private subnet resources                                                     |
+| **Route Tables**              | Controls routing between subnets and internet                                                                           |
+| **Application Load Balancer** | Distributes incoming HTTPS traffic to application services                                                              |
 | **Network Load Balancer**     | Handles TCP traffic; provisioned for NATS messaging system, purpose under review pending broker removal (EPMCDME-14448) |
-| **Route 53 DNS Records**      | Automated DNS record creation for CodeMie services                  |
-| **Network Security Groups**   | Firewall rules controlling traffic flow                             |
+| **Route 53 DNS Records**      | Automated DNS record creation for CodeMie services                                                                      |
+| **Network Security Groups**   | Firewall rules controlling traffic flow                                                                                 |
 
 ### Data & Storage
 
