@@ -377,7 +377,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Budget Management',
+          label: '✨ Budget Management',
           link: {
             type: 'doc',
             id: 'user-guide/budget-management/budget-management',
