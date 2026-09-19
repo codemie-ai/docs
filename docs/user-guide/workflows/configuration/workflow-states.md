@@ -37,12 +37,54 @@ states:
 - **task**: Instructions for the assistant
 - **next**: State transition configuration
 - **resolve_dynamic_values_in_prompt**: Enable template variable resolution
-- **output_schema**: JSON schema for structured output (optional)
+- **output_schema**: Structured output definition (optional) — see [Two Modes of `output_schema`](#two-modes-of-output_schema)
 - **interrupt_before**: Pause workflow for user confirmation
 - **retry_policy**: Custom retry configuration
+- **finish_iteration**: Marks the last step of a per-item chain — see [Iteration Properties](./state-transitions.md#iteration-properties)
+- **result_as_human_message**: Add this state's output to the message history as a user message instead of an assistant message (default `false`)
 
 :::note
 `interrupt_before` was previously named `wait_for_user_confirmation`. If you encounter this legacy term in older workflow configurations or documentation, it refers to the same feature.
+:::
+
+#### Two Modes of `output_schema`
+
+`output_schema` accepts a YAML block scalar containing JSON, and its contents decide how strongly
+the output is enforced. Both forms are valid; they give different guarantees.
+
+**Mode 1 — a real JSON Schema: enforced.** When the value parses as a valid JSON Schema, the
+assistant is switched into structured-output mode and the model provider constrains the response
+to match. Fields and types are guaranteed.
+
+```yaml
+output_schema: |
+  {
+    "type": "object",
+    "properties": {
+      "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+      "findings": { "type": "array", "items": { "type": "string" } }
+    },
+    "required": ["severity"]
+  }
+```
+
+**Mode 2 — a shape example: a suggestion only.** When the value is JSON but not a valid schema —
+typically an object whose values describe the fields in prose — it is appended to the system
+prompt as guidance. The model usually follows it, but nothing enforces it, and a downstream
+condition reading a missing field will silently take the `otherwise` branch.
+
+```yaml
+output_schema: |
+  {
+    "severity": "One of: low, medium, high",
+    "findings": "List of issue descriptions"
+  }
+```
+
+:::tip
+Use Mode 2 for readability while drafting, and switch to Mode 1 before any state's output is
+consumed by a condition, a `switch`, or an `iter_key`. Those three read fields positionally and
+have no way to recover when a field is absent.
 :::
 
 #### Agent State Advanced Examples:
@@ -76,9 +118,8 @@ states:
         },
         "required": ["name", "email"]
       }
-    # The LLM output is validated against this schema
-    # If validation fails, the LLM is re-prompted automatically
-    # Output is guaranteed to match the schema structure
+    # A valid JSON Schema puts the assistant into structured-output mode,
+    # so the model provider constrains the response to match it
     next:
       state_id: process-user-data
 

@@ -7,6 +7,8 @@ pagination_next: user-guide/workflows/configuration/context-management
 sidebar_position: 5
 ---
 
+<!-- cspell:words isinstance statuss -->
+
 # State Transitions
 
 ## 5. State Transitions
@@ -48,16 +50,61 @@ Conditional transitions allow branching based on the execution result from the p
 
 1. The previous state's output is parsed (JSON parsing is attempted automatically)
 2. If the output is a dictionary, all keys become variables accessible in the expression
-3. The expression is evaluated using Python's `eval()` with the parsed variables
+3. The expression is evaluated by a restricted expression evaluator using those variables
 4. Based on the boolean result, workflow transitions to `then` or `otherwise` state
+
+:::warning Expressions see only the deciding state's own output
+
+The variables available to a condition come **exclusively from the output of the state that
+declares the condition**. The context store is not in scope, so a value written by an earlier
+state is not visible here unless the deciding state re-emits it in its own output.
+
+```yaml
+states:
+  - id: fetch-user
+    assistant_id: fetcher
+    next:
+      state_id: check-tier
+      output_key: user_record # written to the context store
+
+  - id: check-tier
+    assistant_id: classifier
+    next:
+      condition:
+        # ❌ user_record came from fetch-user, not from check-tier — undefined here
+        expression: "user_record.tier == 'premium'"
+        then: premium-path
+        otherwise: standard-path
+```
+
+To branch on an earlier value, have the deciding state emit it — a [Transform Node](./specialized-nodes.md#84-transform-node)
+is the cheapest way to lift context-store keys into a state output without an LLM call.
+
+:::
 
 #### Conditional Expression Syntax:
 
-- **Comparison operators**: `>`, `<`, `>=`, `<=`, `==`, `!=`
+- **Comparison operators**: `>`, `<`, `>=`, `<=`, `==`, `!=`, `is`, `is not`
 - **Logical operators**: `and`, `or`, `not`
-- **String methods**: `in` operator, `.startswith()`, `.endswith()`, `.contains()`
+- **Membership and attribute access**: `in`, dotted access (`payload.status`), indexing (`items[0]`)
+- **String methods**: any public string method, such as `.lower()`, `.startswith()`, `.endswith()`
+- **Built-in functions**: `len`, `min`, `max`, `sum`, `abs`, `round`, `sorted`, `any`, `all`, `str`, `int`, `float`, `bool`, `list`, `dict`, `set`, `tuple`, `isinstance`, `enumerate`, `zip`, `map`, `filter`, `reversed`
 - **Variable references**: Use variable names directly (no `{{}}` needed in expressions)
 - **Special variable**: `keys` - automatically available, contains all keys from the result dictionary
+
+**Not supported**: list/dict comprehensions, lambdas, assignments, imports, and any attribute
+beginning with an underscore. These are rejected by the evaluator rather than executed.
+
+#### Boolean Literals Must Be Python-Style
+
+Expressions are Python, not YAML. Boolean literals are `True` and `False`, capitalized.
+Lowercase `true`/`false` are normalized to Python booleans when the workflow is saved, but write
+them capitalized so the expression reads the same everywhere it appears:
+
+```yaml
+expression: "is_approved == True" # ✅
+expression: "is_approved == true" # ⚠️ normalized on save — prefer True
+```
 
 #### Examples:
 
@@ -97,8 +144,28 @@ condition:
 
 - Variables are referenced by name only (e.g., `status`, not `{{status}}`)
 - The expression must evaluate to a boolean value
-- If expression evaluation fails, workflow transitions to `otherwise` state
 - String values are automatically converted; `'true'`/`'false'` strings become booleans
+
+#### Every Failure Routes to `otherwise`
+
+A condition that cannot be evaluated does not fail the workflow — it evaluates to `False` and the
+workflow takes the `otherwise` branch. This applies to all of the following:
+
+| What happened                      | Example                                          |
+| ---------------------------------- | ------------------------------------------------ |
+| Variable not in the state's output | `user_record.tier == 'premium'` (see note above) |
+| Misspelled variable name           | `statuss == 'success'`                           |
+| Unsupported construct              | `[x for x in items if x.ok]`                     |
+| Method or attribute does not exist | `'error' in message.contains('x')`               |
+| Type mismatch during comparison    | `count > 10` where `count` is `"ten"`            |
+
+Because the workflow still completes, a misspelling looks like a business-logic outcome rather
+than a bug. When a branch always goes the same way, check the execution logs for
+`Condition expression blocked`, `Condition expression has invalid syntax`, or
+`Error evaluating condition` before assuming the data is at fault.
+
+The same rule applies to switch cases: a case that fails to evaluate is treated as not matching,
+and evaluation continues with the next case, falling through to `default`.
 
 ### 5.4 Switch/Case Transitions
 
@@ -375,6 +442,69 @@ next:
   output_key: processed_items
   append_to_context: true  # Each iteration appends its output; context_store["processed_items"] becomes a list
 ```
+
+**finish_iteration** (boolean, default: `false`) — _state-level, not inside `next`_:
+
+- Marks a state as the **last step of the per-item chain**
+- While `finish_iteration` is `false`, each state in the chain forwards the same item onward, keeping the branch alive
+- Setting it to `true` ends the per-item branch, allowing the workflow to converge (fan-in)
+- Set it on **every terminal state of the chain**. When the chain branches with a condition, each branch needs its own `finish_iteration: true` — the state that evaluates the condition does not get it
+- Pair it with `append_to_context: true` so each branch's result is collected rather than overwritten
+
+```yaml
+states:
+  - id: score-item
+    assistant_id: scorer
+    next:
+      condition:
+        expression: "score >= 7"
+        then: keep-item
+        otherwise: drop-item
+      iter_key: candidates
+      # no finish_iteration here — this state only routes
+
+  - id: keep-item
+    assistant_id: writer
+    finish_iteration: true # terminal branch
+    next:
+      state_id: summarize
+      iter_key: candidates
+      output_key: kept
+      append_to_context: true
+
+  - id: drop-item
+    assistant_id: writer
+    finish_iteration: true # the other terminal branch
+    next:
+      state_id: summarize
+      iter_key: candidates
+      output_key: dropped
+      append_to_context: true
+```
+
+**include_in_iterator_context** (array of strings, default: `["*"]`):
+
+- Whitelist of context store keys copied into **each** parallel branch
+- The default `["*"]` copies the entire context store into every branch — with N items, the store is duplicated N times inside the execution checkpoint
+- Large values (fetched file contents, API responses, document batches) multiplied across many branches can push the checkpoint past the database row size limit and fail the execution
+- Naming only the keys the per-item states actually read keeps branches small. The parent context store is untouched, so keys left out are still available after the fan-in
+
+```yaml
+next:
+  state_id: review-item
+  iter_key: review_batches
+  include_in_iterator_context: ['current_goal', 'channel', 'jira_project_key']
+  # review_batches itself stays in the parent store — branches get only the three small keys
+```
+
+**override_task** (boolean, default: `false`):
+
+- Controls what the **next state in the per-item chain** receives as its item
+- `false` (default): the next state receives the original item, unchanged — every state in the chain sees the same input
+- `true`: the next state receives **this state's output** instead, so the item is progressively rewritten as it moves down the chain
+
+Use `true` for refinement pipelines (draft → edit → polish, where each step consumes the previous
+step's version) and leave it `false` when several states must each inspect the same original item.
 
 #### Multi-Stage Iteration:
 
