@@ -298,6 +298,28 @@ Switch to YAML editing when you need features like Jinja templating, complex con
 For detailed YAML configuration syntax and features, see the [Workflow YAML Configuration Guide](./configuration/introduction.md).
 :::
 
+### Editor layout keys in the YAML
+
+Alongside the execution configuration, the Visual Editor stores the canvas layout in the same
+YAML document:
+
+- **`meta_states`** — a top-level list holding each node's position, size, and editor node type,
+  plus the decision nodes (`switch`, `conditional`) that the editor draws as separate boxes
+- **`next.meta_next_state_id`** — links a transition to the decision node that represents it on
+  the canvas
+
+These keys are read only by the editor. The execution engine ignores them, and they have no
+effect on how a workflow runs.
+
+:::warning Editing YAML outside the editor
+When a workflow is modified through the API, the SDK, the CLI, or an IaC pipeline, the existing
+`meta_states` block must be carried through unchanged. Dropping it discards the arrangement
+someone laid out by hand.
+
+Writing a workflow from scratch without `meta_states` is safe — the editor lays the graph out
+automatically the first time it opens, then saves the resulting positions.
+:::
+
 ## Saving and Running Workflows
 
 ### Save Options

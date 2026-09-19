@@ -58,7 +58,7 @@ assistants:
   [Troubleshooting](./troubleshooting.md#tool-output-token-limit-exceeded) for diagnosis and
   mitigation strategies.
 - **exclude_extra_context_tools**: Disable automatic context tools
-- **skills**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
+- **skill_ids**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
 
 #### Tool Configuration:
@@ -552,15 +552,48 @@ custom_nodes:
 
 #### Custom Node Types:
 
-- **state_processor_node**: Process and aggregate state outputs
-- **bedrock_flow_node**: AWS Bedrock Flows integration
-- **generate_documents_tree**: Generate document tree structure
-- Additional custom implementations
+`custom_node_id` selects the node implementation. The accepted values are:
+
+| `custom_node_id`          | Purpose                                            | Details                                                                      |
+| ------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `transform_node`          | Map and reshape data without an LLM call           | [Transform Node](./specialized-nodes.md#84-transform-node)                   |
+| `state_processor_node`    | Process and aggregate outputs from multiple states | [State Processor Node](./specialized-nodes.md#81-state-processor-node)       |
+| `generate_documents_tree` | Generate a document tree from data sources         | [Document Tree Generator](./specialized-nodes.md#83-document-tree-generator) |
+| `bedrock_flow_node`       | Run an AWS Bedrock Flow                            | [Bedrock Flow Node](./specialized-nodes.md#82-bedrock-flow-node)             |
+
+:::warning `custom_node_id` means two different things
+The name appears at both levels of a custom node and refers to a different thing in each:
+
+- In the **`custom_nodes` list**, `custom_node_id` is the **node type** — one of the values above.
+- In a **state**, `custom_node_id` is a **reference to `custom_nodes[].id`** — the declared
+  instance, not the type.
+
+```yaml
+custom_nodes:
+  - id: extract_pr_fields # ← what states reference
+    custom_node_id: transform_node # ← the implementation
+
+states:
+  - id: parse-webhook
+    custom_node_id: extract_pr_fields # ✅ matches custom_nodes[].id
+    next:
+      state_id: route
+
+  - id: parse-webhook-broken
+    custom_node_id: transform_node # ❌ this is a type, not a declared instance
+    next:
+      state_id: route
+```
+
+Referencing a type from a state fails cross-reference validation when the workflow is saved.
+Misspelling the **type** is not caught at save time — it fails at execution with
+`<name> class not found in codemie.workflows.nodes package`.
+:::
 
 #### Common Properties:
 
-- **id**: Unique identifier
-- **custom_node_id**: Node type identifier
+- **id**: Unique identifier, referenced by states
+- **custom_node_id**: Node type — one of the values in the table above
 - **name**: Display name
 - **model**: LLM model for processing
 - **system_prompt**: Custom instructions
