@@ -25,8 +25,8 @@ states:
     assistant_id: classifier
     next:
       condition:
-        # user_record belongs to fetch-user, not to check-tier — undefined here
-        expression: "user_record.tier == 'premium'"
+        # tier belongs to fetch-user's output, not to check-tier — undefined here
+        expression: "tier == 'premium'"
         then: premium-path
         otherwise: standard-path
 ```
@@ -81,6 +81,8 @@ states:
 Every one of these evaluates to `false` rather than failing:
 
 - A misspelled variable name
+- Dotted access into a nested value, such as `payload.status` — the evaluator rejects it as an
+  unsafe construct; use `payload["status"]` instead
 - Lowercase `true` / `false` instead of Python's `True` / `False`
 - A method that does not exist, such as `.contains()` on a string
 - A type mismatch, such as `count > 10` when `count` is the string `"ten"`

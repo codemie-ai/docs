@@ -71,8 +71,8 @@ states:
     assistant_id: classifier
     next:
       condition:
-        # ❌ user_record came from fetch-user, not from check-tier — undefined here
-        expression: "user_record.tier == 'premium'"
+        # ❌ tier came from fetch-user, not from check-tier — undefined here
+        expression: "tier == 'premium'"
         then: premium-path
         otherwise: standard-path
 ```
@@ -86,7 +86,7 @@ is the cheapest way to lift context-store keys into a state output without an LL
 
 - **Comparison operators**: `>`, `<`, `>=`, `<=`, `==`, `!=`, `is`, `is not`
 - **Logical operators**: `and`, `or`, `not`
-- **Membership and attribute access**: `in`, dotted access (`payload.status`), indexing (`items[0]`)
+- **Membership and indexing**: `in`, subscript access (`payload["status"]`, `items[0]`)
 - **String methods**: any public string method, such as `.lower()`, `.startswith()`, `.endswith()`
 - **Built-in functions**: `len`, `min`, `max`, `sum`, `abs`, `round`, `sorted`, `any`, `all`, `str`, `int`, `float`, `bool`, `list`, `dict`, `set`, `tuple`, `isinstance`, `enumerate`, `zip`, `map`, `filter`, `reversed`
 - **Variable references**: Use variable names directly (no `{{}}` needed in expressions)
@@ -94,6 +94,21 @@ is the cheapest way to lift context-store keys into a state output without an LL
 
 **Not supported**: list/dict comprehensions, lambdas, assignments, imports, and any attribute
 beginning with an underscore. These are rejected by the evaluator rather than executed.
+
+:::warning Dotted access into a nested value does not work
+
+`payload.status` is rejected by the evaluator as an unsafe construct, which — like every other
+evaluation failure — yields `False` and routes to `otherwise`. Only the top-level names from the
+state's own output are variables; reach inside them with a subscript instead:
+
+```yaml
+expression: 'payload["status"] == "ok"' # ✅
+expression: "payload.status == 'ok'" # ❌ blocked, silently takes otherwise
+```
+
+The execution log records `Condition expression blocked - unsafe construct` when this happens.
+
+:::
 
 #### Boolean Literals Must Be Python-Style
 
@@ -151,13 +166,13 @@ condition:
 A condition that cannot be evaluated does not fail the workflow — it evaluates to `False` and the
 workflow takes the `otherwise` branch. This applies to all of the following:
 
-| What happened                      | Example                                          |
-| ---------------------------------- | ------------------------------------------------ |
-| Variable not in the state's output | `user_record.tier == 'premium'` (see note above) |
-| Misspelled variable name           | `statuss == 'success'`                           |
-| Unsupported construct              | `[x for x in items if x.ok]`                     |
-| Method or attribute does not exist | `'error' in message.contains('x')`               |
-| Type mismatch during comparison    | `count > 10` where `count` is `"ten"`            |
+| What happened                      | Example                               |
+| ---------------------------------- | ------------------------------------- |
+| Variable not in the state's output | `tier == 'premium'` (see note above)  |
+| Misspelled variable name           | `statuss == 'success'`                |
+| Unsupported construct              | `[x for x in items if x.ok]`          |
+| Method or attribute does not exist | `'error' in message.contains('x')`    |
+| Type mismatch during comparison    | `count > 10` where `count` is `"ten"` |
 
 Because the workflow still completes, a misspelling looks like a business-logic outcome rather
 than a bug. When a branch always goes the same way, check the execution logs for
@@ -451,24 +466,32 @@ next:
 - Set it on **every terminal state of the chain**. When the chain branches with a condition, each branch needs its own `finish_iteration: true` — the state that evaluates the condition does not get it
 - Pair it with `append_to_context: true` so each branch's result is collected rather than overwritten
 
+`iter_key` belongs on the state that **produces** the collection, not on the branching states.
+The schema rejects `iter_key` in the same `next` block as a `condition` or `switch`.
+
 ```yaml
 states:
+  - id: list-candidates
+    assistant_id: scorer
+    task: List the candidates.
+    next:
+      state_id: score-item
+      iter_key: candidates # the producer starts the fan-out
+
   - id: score-item
     assistant_id: scorer
+    task: Score this candidate.
     next:
-      condition:
+      condition: # the evaluator only routes
         expression: "score >= 7"
         then: keep-item
         otherwise: drop-item
-      iter_key: candidates
-      # no finish_iteration here — this state only routes
 
   - id: keep-item
     assistant_id: writer
     finish_iteration: true # terminal branch
     next:
       state_id: summarize
-      iter_key: candidates
       output_key: kept
       append_to_context: true
 
@@ -477,9 +500,13 @@ states:
     finish_iteration: true # the other terminal branch
     next:
       state_id: summarize
-      iter_key: candidates
       output_key: dropped
       append_to_context: true
+
+  - id: summarize
+    assistant_id: writer
+    next:
+      state_id: end
 ```
 
 **include_in_iterator_context** (array of strings, default: `["*"]`):
