@@ -15,7 +15,7 @@ The Code Executor runs Python code in isolated Kubernetes sandbox pods with enfo
 There are two sandbox modes selected with `CODE_EXECUTOR_SANDBOX_MODE`:
 
 - **jobs** (`sandbox-jobs`, default and recommended)
-- **shared** (`sandbox-shared`, deprecated).
+- **shared** (`sandbox-shared`, deprecated and not recommended for production).
 
 ## Sandbox Modes
 
@@ -154,8 +154,8 @@ Pre-warming only applies to the deprecated `sandbox-shared` mode. `sandbox-jobs`
 In `sandbox-shared` mode, CodeMie API creates executor pods on demand by default, and the first execution request waits for a pod to start. To avoid this, deploy the `codemie-code-executor` chart to keep pods running and ready for discovery, into the **same namespace** as `CODE_EXECUTOR_NAMESPACE`:
 
 ```bash
-helm upgrade --install codemie-code-executor \
-  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-code-executor \
+helm upgrade --install codemie-runtime \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-runtime \
   --version <version> \
   -f codemie-code-executor/values.yaml \
   --namespace <executor-namespace>
