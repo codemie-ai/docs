@@ -327,6 +327,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
 | [`grok-4.6`](#grok-46)                          | Grok 4.6                |
+| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3      |
 
 ### Azure OpenAI Models
 
@@ -729,6 +730,28 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
     id: grok-4.6-us-east-1
     base_model: us.xai.grok-4.6
     label: "Grok 4.6"
+```
+
+</details>
+
+### MoonshotAI
+
+#### MoonshotAI Kimi K3
+
+<details>
+<summary><strong>MoonshotAI Kimi K3</strong></summary>
+
+```yaml
+# Global routing
+- model_name: moonshotai.kimi-k3
+  litellm_params:
+    model: bedrock/global.moonshotai.kimi-k3
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+  model_info:
+    id: moonshotai-kimi-k3-global-us-east-1
+    base_model: bedrock/global.moonshotai.kimi-k3
+    label: "Bedrock MoonshotAI Kimi K3"
 ```
 
 </details>
