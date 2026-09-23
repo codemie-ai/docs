@@ -324,6 +324,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
 | [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
 | [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8         |
+| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5         |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
 | [`grok-4.6`](#grok-46)                          | Grok 4.6                |
@@ -350,6 +351,8 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
+| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
+| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 
 ### Azure AI Models
 
@@ -712,6 +715,37 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
 
 </details>
 
+#### Claude Opus 5.5
+
+<details>
+<summary><strong>Claude Opus 5.5</strong></summary>
+
+```yaml
+# EU Region
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: bedrock/eu.anthropic.claude-opus-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-opus-5-5-eu-central-1
+    base_model: eu.anthropic.claude-opus-5-5
+    label: "Bedrock Claude Opus 5.5"
+
+# US Region
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: bedrock/us.anthropic.claude-opus-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-opus-5-5-us-west-2
+    base_model: us.anthropic.claude-opus-5-5
+    label: "Bedrock Claude Opus 5.5"
+```
+
+</details>
+
 ### Grok
 
 #### Grok 4.6
@@ -748,6 +782,7 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
     model: bedrock/global.moonshotai.kimi-k3
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: us-east-1
+    additional_drop_params: ["temperature", "top_p", "topP"]
   model_info:
     id: moonshotai-kimi-k3-global-us-east-1
     base_model: bedrock/global.moonshotai.kimi-k3
@@ -1124,7 +1159,7 @@ model_list:
 # US Region
 - model_name: gpt-5.5-2026-04-24
   litellm_params:
-    model: azure/codemie-gpt-5.5-2026-04-24
+    model: azure/gpt-5.5-2026-04-24
     api_base: https://api-base-eastus2-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -1135,7 +1170,7 @@ model_list:
 # EU Region
 - model_name: gpt-5.5-2026-04-24
   litellm_params:
-    model: azure/codemie-gpt-5.5-2026-04-24
+    model: azure/gpt-5.5-2026-04-24
     api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -1200,6 +1235,50 @@ model_list:
     id: gpt-5-3-codex-2026-02-24-eastus2-0
     base_model: azure/gpt-5.3-codex
     label: "GPT-5.3 Codex 2026-02-24"
+```
+
+</details>
+
+### GPT-6 series
+
+#### GPT-6 Luna
+
+<details>
+<summary><strong>GPT-6 Luna</strong></summary>
+
+```yaml
+- model_name: gpt-6-luna
+  litellm_params:
+    model: azure/gpt-6-luna-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-luna-polandcentral-0
+    base_model: azure/gpt-6-luna
+    label: "GPT-6 Luna"
+    mode: responses
+```
+
+</details>
+
+#### GPT-6 Sol
+
+<details>
+<summary><strong>GPT-6 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6-sol
+  litellm_params:
+    model: azure/gpt-6-sol-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-sol-polandcentral-0
+    base_model: azure/gpt-6-sol
+    label: "GPT-6 Sol"
+    mode: responses
 ```
 
 </details>
