@@ -19,6 +19,10 @@
   --app-soft: var(--ifm-color-emphasis-100);
 
   margin: 1.25rem 0 1.75rem;
+  font-family: var(--ifm-font-family-base);
+  font-size: var(--ifm-font-size-base);
+  line-height: var(--ifm-line-height-base);
+  color: var(--ifm-font-color-base);
 }
 
 :global([data-theme='dark']) .root {
@@ -58,14 +62,14 @@
 
 .cardTitle {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--ifm-heading-color);
 }
 
 .muted {
-  color: var(--app-muted);
-  font-size: 0.85rem;
+  color: var(--ifm-font-color-base);
+  font-size: 1rem;
   line-height: 1.5;
   margin: 0;
 }
@@ -109,7 +113,7 @@
 .list {
   margin: 0;
   padding-left: 1.1rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
@@ -172,14 +176,14 @@
 
 .item b {
   display: block;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--ifm-heading-color);
 }
 
 .item span {
   display: block;
-  font-size: 0.8rem;
-  color: var(--app-muted);
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
   line-height: 1.45;
   margin-top: 0.1rem;
 }
@@ -292,7 +296,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.15rem;
-  font-size: 0.82rem;
+  font-size: 1rem;
   margin: 0;
   padding-top: 0.75rem;
   border-top: 1px solid var(--app-border);
@@ -355,13 +359,13 @@
 
 .strip b {
   display: block;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--ifm-heading-color);
 }
 
 .strip span {
   display: block;
-  font-size: 0.78rem;
+  font-size: 1rem;
   color: var(--app-muted);
   line-height: 1.4;
   margin-top: 0.2rem;
@@ -471,13 +475,13 @@
 }
 
 .step b {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--ifm-heading-color);
 }
 
 .step p {
-  font-size: 0.78rem;
-  color: var(--app-muted);
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
   line-height: 1.45;
   margin: 0;
   flex: 1;
@@ -513,14 +517,14 @@
   border-radius: 8px;
   border: 1px solid;
   padding: 0.5rem 0.7rem;
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
 .node b {
   display: block;
-  font-size: 0.82rem;
+  font-size: 1rem;
 }
 
 .node span {

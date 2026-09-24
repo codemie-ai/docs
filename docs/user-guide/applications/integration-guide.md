@@ -15,7 +15,7 @@ This guide covers how to put an application on the CodeMie **Applications** tab,
 
 ## Instance values
 
-Every CodeMie instance has its own URLs. The CodeMie team of the target instance provides these values. Keep them in configuration, not in code.
+Every CodeMie instance has its own URLs. The corporate operations team of the target instance provides these values. Keep them in configuration, not in code.
 
 | Placeholder      | Meaning                                                   |
 | ---------------- | --------------------------------------------------------- |
@@ -60,7 +60,7 @@ types={[
 
 ### Register the tile
 
-The CodeMie team adds the tile to CodeMie's customer configuration and restarts CodeMie to apply it. There is no self-service screen. Provide the following entry:
+The corporate operations team adds the tile to CodeMie's customer configuration and restarts CodeMie to apply it. There is no self-service screen. Provide the following entry:
 
 ```yaml
 - id: 'applications:your-slug'
@@ -102,15 +102,15 @@ title: 'B · Own infrastructure, CodeMie address',
 from: { title: 'codemie-host/app', sub: 'CodeMie ingress route', kind: 'cm' },
 via: 'ExternalName',
 to: { title: 'your-app.example.com', sub: 'application infrastructure', kind: 'you' },
-text: 'The CodeMie team adds an ingress route on the CodeMie host that points to a Kubernetes ExternalName service resolving to the application host. The application is served from the CodeMie origin, so an iframe tile behaves as same-site.',
+text: 'The corporate operations team adds an ingress route on the CodeMie host that points to a Kubernetes ExternalName service resolving to the application host. The application is served from the CodeMie origin, so an iframe tile behaves as same-site.',
 },
 {
 tag: 'By agreement',
 tone: 'purple',
 title: 'C · Hosted by CodeMie',
 from: { title: 'codemie-host/app', sub: 'behind the CodeMie sign-in gate', kind: 'gate' },
-to: { title: 'CodeMie cluster', sub: 'operated by the CodeMie team', kind: 'cm' },
-text: 'The application team delivers versioned, scanned images and configuration; the CodeMie team deploys and runs them. The application team gets no direct platform access. Agreed case by case.',
+to: { title: 'CodeMie cluster', sub: 'operated by the corporate operations team', kind: 'cm' },
+text: 'The application team delivers versioned, scanned images and configuration; the corporate operations team deploys and runs them. The application team gets no direct platform access. Agreed case by case.',
 },
 ]}
 />
@@ -142,7 +142,7 @@ For option A, the application runs its own gate and rules. It can use its own id
 ### OIDC client in the CodeMie realm
 
 - Required only when the application calls CodeMie on the user's behalf.
-- Request a client with standard flow and the application's redirect URIs from the CodeMie team.
+- Request a client with standard flow and the application's redirect URIs from the corporate operations team.
 - Before building on it, confirm that the CodeMie API accepts the client's token audience.
 
 ### Service account (no user present)
@@ -246,7 +246,7 @@ Authorized applications register an application with CodeMie as a trusted princi
 sequenceDiagram
   autonumber
   participant App as Application
-  participant CM as CodeMie team
+  participant CM as Corporate operations team
   participant Owner as Resource owner
   participant API as CodeMie API
   App->>App: Publish a public key at an HTTPS URL on an allowlisted domain
@@ -258,7 +258,7 @@ sequenceDiagram
   App->>App: Decrypt with the private key
 ```
 
-The CodeMie team adds an entry like the following:
+The corporate operations team adds an entry like the following:
 
 ```yaml
 authorized_applications:
@@ -269,10 +269,10 @@ authorized_applications:
       # ASSISTANT, WORKFLOW, CONVERSATION, USER, PROJECT
 ```
 
-- Resource types: `datasource`, `ASSISTANT`, `WORKFLOW`, `CONVERSATION`, `USER`, and `PROJECT`. Confirm with the CodeMie team which types the target instance enables.
+- Resource types: `datasource`, `ASSISTANT`, `WORKFLOW`, `CONVERSATION`, `USER`, and `PROJECT`. Confirm with the corporate operations team which types the target instance enables.
 - `public_key_url` must use `https`, must not be an IP address, and must match or be a subdomain of a domain in `AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS`. An empty allowlist rejects every URL-based key.
 - CodeMie validates the URL when the configuration loads and again before each key fetch.
-- Instead of a URL, the CodeMie team can store the key as a local file (`public_key_path`).
+- Instead of a URL, the corporate operations team can store the key as a local file (`public_key_path`).
 
 Configuration reference: [Authorized Applications Configuration](../../admin/configuration/codemie/api-configuration.md#authorized-applications-configuration).
 
@@ -307,7 +307,7 @@ Required for embedded and hosted applications. Scans run on every release and on
 
 **Pipeline and scans**
 
-- [ ] Built by CI from an EPAM repository
+- [ ] Built by CI from a corporate repository
 - [ ] SAST and dependency scan with no open high-severity issues
 - [ ] Container image scan with no Critical or Urgent issues
 - [ ] Secret scan; no tokens in source
