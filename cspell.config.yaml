@@ -25,6 +25,8 @@ words:
   # Project/Brand names
   - HMAC
   - codemie
+  - passwordless
+  - SAMEORIGIN
   - AI/Run
   - airun
   - docusaurus

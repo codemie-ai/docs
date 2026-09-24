@@ -344,6 +344,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Applications',
+          link: {
+            type: 'doc',
+            id: 'user-guide/applications/index',
+          },
+          collapsed: true,
+          items: ['user-guide/applications/integration-guide'],
+        },
+        {
+          type: 'category',
           label: 'API',
           link: {
             type: 'doc',
