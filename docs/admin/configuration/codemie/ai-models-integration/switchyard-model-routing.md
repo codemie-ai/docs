@@ -145,17 +145,13 @@ recognizable prefix (for example `SY`) makes them easy to identify in the model 
 For requests served through the HTTP proxy path, Switchyard exposes routing metadata as
 response headers — useful for cost tracking and observability at the client or gateway level:
 
-| Header                                               | Description                                                                     |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `x-codemie-routed-model`                             | The model that actually served the request (capable or efficient).              |
-| `x-codemie-requested-model`                          | The router `base_name` the client requested.                                    |
-| `x-codemie-routing-tier`                             | The tier selected: `capable` or `efficient`.                                    |
-| `x-codemie-routing-classifier-model`                 | The classifier model used, if `mode: classifier` fired for this request.        |
-| `x-codemie-routing-classifier-input-tokens`          | Input tokens consumed by the classifier call.                                   |
-| `x-codemie-routing-classifier-output-tokens`         | Output tokens produced by the classifier call.                                  |
-| `x-codemie-routing-classifier-cached-tokens`         | Cached input tokens used by the classifier call, if applicable.                 |
-| `x-codemie-routing-classifier-cache-creation-tokens` | Tokens spent creating a new cache entry for the classifier call, if applicable. |
-| `x-codemie-routing-classifier-cost-usd`              | Estimated cost in USD of the classifier call.                                   |
+| Header                                  | Description                                                              |
+| --------------------------------------- | ------------------------------------------------------------------------ |
+| `x-codemie-routed-model`                | The model that actually served the request (capable or efficient).       |
+| `x-codemie-requested-model`             | The router `base_name` the client requested.                             |
+| `x-codemie-routing-tier`                | The tier selected: `capable` or `efficient`.                             |
+| `x-codemie-routing-classifier-model`    | The classifier model used, if `mode: classifier` fired for this request. |
+| `x-codemie-routing-classifier-cost-usd` | Estimated cost in USD of the classifier call.                            |
 
 The `classifier-*` headers are only populated for requests routed by a `classifier`-mode
 router; they are absent for `signal`-mode routing, which makes no extra LLM call.
