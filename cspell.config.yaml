@@ -168,6 +168,9 @@ words:
   - endpoints
   - webhook
   - webhooks
+  - sideload
+  - sideloaded
+  - sideloading
   - ITSM
   - CMDB
   - cloudapp
@@ -178,6 +181,8 @@ words:
   - yaml
   - YAML
   - JSON
+  - frontmatter
+  - Frontmatter
   - SDLC
   - env
   - envs
@@ -269,6 +274,8 @@ words:
   - Mixtral
   - Qwen
   - Moonshot
+  - moonshotai
+  - Kimi
   - DeepSeek
   - deepseek
   - onboarder

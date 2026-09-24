@@ -1,0 +1,33 @@
+---
+id: codemie-platform
+title: Update AI/Run CodeMie
+sidebar_label: CodeMie Platform
+sidebar_position: 2
+pagination_prev: admin/update/update-overview
+pagination_next: admin/update/codemie-platform/update-core-components
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Update AI/Run CodeMie
+
+Procedures for updating and maintaining your AI/Run CodeMie deployment.
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/logo-light.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="Update Core Components"
+    description="Upgrade platform components across AWS, Azure, and GCP using automated or manual Helm updates."
+    link="/admin/update/codemie-platform/update-core-components"
+  />
+  <FeatureCard
+    icon="/img/icons/configuration.svg"
+    iconType="image"
+    title="Update Image Pull Secret"
+    description="Rotate the GCP service account credentials used to pull container images from the Artifact Registry."
+    link="/admin/update/codemie-platform/update-image-pull-secret"
+  />
+</FeatureGrid>

@@ -3,7 +3,7 @@ id: subworkflows
 title: Sub-workflows
 sidebar_label: Sub-workflows
 pagination_prev: user-guide/workflows/create-workflow
-pagination_next: user-guide/workflows/llm-model-name-in-workflow
+pagination_next: user-guide/workflows/workflow-version-history
 sidebar_position: 3
 description: Invoke a child workflow from a parent workflow while keeping their execution contexts separate
 ---
