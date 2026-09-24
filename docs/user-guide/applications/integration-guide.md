@@ -7,6 +7,8 @@ pagination_next: null
 sidebar_position: 1
 ---
 
+import { TileTypeCards, OptionCards, FlowRow } from '@site/src/components/Applications';
+
 # Application Integration Guide
 
 This guide covers how to put an application on the CodeMie **Applications** tab, choose where it runs, sign users in with CodeMie's identity, and call the platform API, AI models, and shared resources. For integration levels, capabilities, and requirements, see the [Applications overview](./index.md).
@@ -24,6 +26,14 @@ Every CodeMie instance has its own URLs. The CodeMie team of the target instance
 ## 1. Choose a tile type
 
 No tile type passes a token, a user, or a project to the application. The type only decides where the application page renders.
+
+<TileTypeCards
+types={[
+{ name: 'link', preview: 'link', caption: 'Opens the application URL in a new tab.' },
+{ name: 'iframe', preview: 'embedded', label: '/applications/iframe/slug', caption: 'The CodeMie page frames the application URL, with no sandbox and no allow attributes.' },
+{ name: 'module', preview: 'module', label: '/applications/slug', caption: 'An ESM remote mounted into a shadow DOM inside the CodeMie page.' },
+]}
+/>
 
 | Type     | User sees                                                                                | Rendering                                                  | Review depth     |
 | -------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------- |
@@ -73,28 +83,37 @@ CodeMie has no per-tile access control, and the whole entry, including `argument
 
 Running the application on the team's own infrastructure is preferred: the team keeps control of builds, scaling, and releases, and CodeMie only needs the URL.
 
-```mermaid
-flowchart LR
-  subgraph A["A · Own domain"]
-    direction TB
-    a1["CodeMie tile<br/>link or iframe"] --> a2["your-app.example.com<br/>own ingress, own login"]
-  end
-  subgraph B["B · CodeMie address"]
-    direction TB
-    b1["codemie-host/app<br/>CodeMie ingress route"] -->|ExternalName| b2["your-app.example.com<br/>own infrastructure"]
-  end
-  subgraph C["C · Hosted by CodeMie"]
-    direction TB
-    c1["codemie-host/app<br/>CodeMie sign-in gate"] --> c2["CodeMie cluster<br/>CodeMie team operates"]
-  end
-  A ~~~ B ~~~ C
-```
-
-| Option                                                  | How it works                                                                                                                                                                                                                                 | Who operates it                                                |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| **A · Own infrastructure, own domain** (preferred)      | The tile points to the application domain. The application team owns sign-in, TLS, deployments, and scans. For an `iframe` tile, confirm that the login works inside a frame                                                                 | Application team                                               |
-| **B · Own infrastructure, CodeMie address** (preferred) | The CodeMie team adds an ingress route on the CodeMie host that points to a Kubernetes `ExternalName` service resolving to the application host. The application is served from the CodeMie origin, so an `iframe` tile behaves as same-site | Application team, behind a route that the CodeMie team manages |
-| **C · Hosted by CodeMie** (by agreement)                | The application team delivers versioned, scanned images and configuration; the CodeMie team deploys and runs them. The application team gets no direct platform access. Agreed case by case                                                  | CodeMie team                                                   |
+<OptionCards
+options={[
+{
+tag: 'Preferred',
+tone: 'green',
+preferred: true,
+title: 'A · Own infrastructure, own domain',
+from: { title: 'CodeMie tile', sub: 'link or iframe', kind: 'cm' },
+to: { title: 'your-app.example.com', sub: 'own ingress, own login', kind: 'you' },
+text: 'The tile points to the application domain. The application team owns sign-in, TLS, deployments, and scans. For an iframe tile, confirm that the login works inside a frame.',
+},
+{
+tag: 'Preferred',
+tone: 'green',
+preferred: true,
+title: 'B · Own infrastructure, CodeMie address',
+from: { title: 'codemie-host/app', sub: 'CodeMie ingress route', kind: 'cm' },
+via: 'ExternalName',
+to: { title: 'your-app.example.com', sub: 'application infrastructure', kind: 'you' },
+text: 'The CodeMie team adds an ingress route on the CodeMie host that points to a Kubernetes ExternalName service resolving to the application host. The application is served from the CodeMie origin, so an iframe tile behaves as same-site.',
+},
+{
+tag: 'By agreement',
+tone: 'purple',
+title: 'C · Hosted by CodeMie',
+from: { title: 'codemie-host/app', sub: 'behind the CodeMie sign-in gate', kind: 'gate' },
+to: { title: 'CodeMie cluster', sub: 'operated by the CodeMie team', kind: 'cm' },
+text: 'The application team delivers versioned, scanned images and configuration; the CodeMie team deploys and runs them. The application team gets no direct platform access. Agreed case by case.',
+},
+]}
+/>
 
 ## 3. Sign users in
 
@@ -150,11 +169,13 @@ Every call made with a service token sees the same data, and AI spend is attribu
 
 Calling the API is optional and separate from sign-in. CORS admits only the CodeMie frontend origin, so calls must come from the application backend, not from a browser on another origin.
 
-```mermaid
-flowchart LR
-  A["Application backend<br/>user token or service token"] -->|Authorization: Bearer JWT| API["CodeMie API<br/>api-base"]
-  API --> R["Acts as that user or service account<br/>within its projects"]
-```
+<FlowRow
+nodes={[
+{ title: 'Application backend', sub: 'user token or service token', kind: 'you' },
+{ title: 'CodeMie API', sub: 'api-base, called with Authorization: Bearer JWT', kind: 'cm' },
+{ title: 'Scoped result', sub: 'acts as that user or service account within its projects', kind: 'neutral' },
+]}
+/>
 
 | Endpoint                         | Purpose                                                        |
 | -------------------------------- | -------------------------------------------------------------- |
@@ -196,11 +217,13 @@ svc_client.assistants.list()
 
 CodeMie exposes an OpenAI-, Anthropic-, and Gemini-compatible gateway that accepts the same Bearer token as the API.
 
-```mermaid
-flowchart LR
-  A["Application backend"] -->|Bearer JWT| G["CodeMie AI gateway<br/>api-base/v1"]
-  G -->|budget check, per-user spend| P["Model providers<br/>Azure OpenAI · AWS Bedrock · Vertex AI"]
-```
+<FlowRow
+nodes={[
+{ title: 'Application backend', sub: 'user or service JWT', kind: 'you' },
+{ title: 'CodeMie AI gateway', sub: 'api-base/v1: budget check, per-user spend', kind: 'gate' },
+{ title: 'Model providers', sub: 'Azure OpenAI · AWS Bedrock · Vertex AI', kind: 'neutral' },
+]}
+/>
 
 - Endpoints: `/v1/chat/completions`, `/v1/responses`, `/v1/messages`, `/v1/embeddings`, `/v1/models`, and Gemini `:generateContent`.
 - `/v1/models` returns the models available to the caller.
