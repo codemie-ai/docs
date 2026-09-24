@@ -31,7 +31,7 @@ provides={[
 { icon: 'model', title: 'AI models', text: 'GPT, Claude, and Gemini through one gateway, with per-user cost tracking and budgets' },
 { icon: 'code', title: 'CodeMie platform API', text: 'Assistants, workflows, indexed project data, and existing Jira, Git, and Confluence connections' },
 { icon: 'share', title: 'A place in CodeMie assistants', text: 'Application features become tools that any CodeMie assistant can call' },
-{ icon: 'server', title: 'Hosting (by agreement)', text: 'Cluster, CodeMie web address, certificates, secret store, database, preview environment, and managed releases' },
+{ icon: 'server', title: 'Hosting (by agreement)', text: 'Cluster, CodeMie web address, certificates, secret store, database, and managed releases' },
 ]}
 expects={[
 { icon: 'owner', title: 'A named owner', text: 'A product owner, a support contact, and an escalation path. Users report problems to CodeMie support first' },
@@ -105,7 +105,6 @@ At any level, an application can expose its features as tools that CodeMie assis
 | Tools inside CodeMie assistants | ✅ Yes                            | ✅ Yes                            | ✅ Yes                                                               |
 | Web address under CodeMie       | ❌ No                             | ❌ No                             | ✅ `/your-app`                                                       |
 | Hosting, database, secrets      | ❌ Application team               | ❌ Application team               | ✅ CodeMie cluster                                                   |
-| Preview environment             | ❌ Application team               | ❌ Application team               | ✅ Included                                                          |
 | Releases                        | ❌ Application team               | ❌ Application team               | ➖ The team's pipeline builds; the corporate operations team deploys |
 
 ✅ provided by CodeMie · ➖ shared work · ❌ not provided
@@ -151,7 +150,7 @@ items: [
 'No credentials in source code or container images',
 "Secrets only in CodeMie's secret store; no personal data in logs",
 'All AI calls go through CodeMie and are tied to the signed-in user',
-'At least one release runs on preview before production',
+'Every release is tested end to end before it reaches production',
 ],
 },
 ]}
@@ -162,7 +161,7 @@ items: [
 <DoAvoid
 dos={[
 'Use the shared sign-in, so users move from CodeMie to the application without a second login',
-'Send every release to preview first, then production, through a reviewed change',
+'Test every release before production and ship it through a reviewed change',
 'Give the application team read-only access to its own logs and status',
 'Expose application features as tools that assistants can use in chat',
 'Keep a separate database per application, with passwordless cloud access',
@@ -185,7 +184,7 @@ Purple steps apply to hosted applications only.
 steps={[
 { title: 'Intake', text: 'Purpose, owner, integration level, users, and the data the application touches.', who: 'application team' },
 { title: 'Access', text: 'Sign-in client, CodeMie project, and AI model access.', who: 'operations team' },
-{ title: 'Preview', text: 'Deployed to the preview environment and tested end to end.', who: 'both', highlight: true },
+{ title: 'Testing', text: 'Deployed to a test environment and tested end to end.', who: 'both', highlight: true },
 { title: 'Security review', text: 'Embedded and hosted applications: scan reports and checklist reviewed against the requirements above.', who: 'application team' },
 { title: 'Go-live', text: 'The tile is added and CodeMie is restarted. Hosted applications also deploy to production.', who: 'operations team' },
 { title: 'Run', text: 'The application team handles incidents and releases, and every release repeats the scans.', who: 'application team' },
