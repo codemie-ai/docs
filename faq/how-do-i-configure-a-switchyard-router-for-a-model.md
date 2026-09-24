@@ -15,9 +15,7 @@ llm_models:
         mode: signal
 ```
 
-`SWITCHYARD_ENABLED` must also be set to `true` — it is the platform-wide master switch and
-overrides any per-model YAML configuration when `false`. Once enabled, the router appears as a
-selectable model in the LLM model dropdown.
+Once configured, the router appears as a selectable model in the LLM model dropdown.
 
 ## Sources
 

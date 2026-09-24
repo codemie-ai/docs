@@ -1352,22 +1352,6 @@ Models can be designated as defaults for specific use cases:
 
 ---
 
-## Switchyard Auto-Routing
-
-<EnterpriseFeature />
-
-CodeMie can route individual LLM calls between a capable and a cost-efficient model per
-request. See
-[Switchyard Auto-Routing](./ai-models-integration/switchyard-model-routing.md) for the full
-YAML router schema, tuning parameters, and response headers reference.
-
-| Parameter                     | Type           | Default                     | Description                                                                                                    |
-| ----------------------------- | -------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `SWITCHYARD_ENABLED`          | boolean        | `false`                     | Master switch for Switchyard routing. When `false`, every router is disabled regardless of YAML configuration. |
-| `SWITCHYARD_CLASSIFIER_MODEL` | string \| null | `"gpt-5.6-luna-2026-07-09"` | Global default classifier model used by routers in `classifier` mode; overridable per router in YAML.          |
-
----
-
 ## Customer Configuration
 
 Customer-specific settings are loaded from `CUSTOMER_CONFIG_DIR/customer-config.yaml`. See [CodeMie Customer Feature Configuration](./customer-feature-configuration.md) for the full reference.

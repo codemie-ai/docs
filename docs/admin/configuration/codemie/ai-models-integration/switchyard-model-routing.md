@@ -34,19 +34,6 @@ model is declared through
 [CodeMie Native LLM Config](./codemie-native-llm-config.md) or synced from a LiteLLM proxy —
 the `switchyard` field is recognized on any model entry in the resolved model catalog.
 
-## Enabling Switchyard
-
-Switchyard is disabled platform-wide by default, independent of any per-model YAML
-configuration. `SWITCHYARD_ENABLED` must be set to `true` for any router to take effect.
-
-| Parameter                     | Type           | Default                     | Description                                                                                                                  |
-| ----------------------------- | -------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `SWITCHYARD_ENABLED`          | boolean        | `false`                     | Master switch for Switchyard routing. When `false`, every router is disabled regardless of YAML configuration.               |
-| `SWITCHYARD_CLASSIFIER_MODEL` | string \| null | `"gpt-5.6-luna-2026-07-09"` | Global default classifier model used by routers in `classifier` mode. Overridable per router with `tuning.classifier_model`. |
-
-These parameters are also listed in the
-[CodeMie API Configuration Reference](../api-configuration.md#switchyard-auto-routing).
-
 ## Routing Modes
 
 Each router entry operates in exactly one mode:
@@ -84,6 +71,7 @@ llm_models:
         label: "SY Classifier Sonnet/Haiku"
         efficient: "claude-4-5-haiku"
         mode: classifier
+        classifier_model: "gpt-5.6-luna-2026-07-09"
 
   - base_name: "claude-4-5-haiku"
     deployment_name: "us.anthropic.claude-haiku-4-5-20251001-v1:0"
@@ -94,13 +82,14 @@ llm_models:
 
 ### Router Fields
 
-| Field       | Type                     | Required | Description                                                                                                                       |
-| ----------- | ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `base_name` | string                   | Yes      | Identifier for this router itself. Must be unique across every model and router in the catalog.                                   |
-| `label`     | string \| null           | No       | Display name shown in the model dropdown for this router. Falls back to `base_name` when omitted.                                 |
-| `efficient` | string                   | Yes      | `base_name` of an existing, cheaper model from the same family to route to when the router selects the efficient tier.            |
-| `mode`      | `signal` \| `classifier` | Yes      | Routing mode for this entry (see [Routing Modes](#routing-modes)).                                                                |
-| `tuning`    | object                   | No       | Per-router override of the tuning parameters described in [Tuning Parameters](#tuning-parameters). Falls back to global defaults. |
+| Field              | Type                     | Required                | Description                                                                                                            |
+| ------------------ | ------------------------ | ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `base_name`        | string                   | Yes                     | Identifier for this router itself. Must be unique across every model and router in the catalog.                        |
+| `label`            | string \| null           | No                      | Display name shown in the model dropdown for this router. Falls back to `base_name` when omitted.                      |
+| `efficient`        | string                   | Yes                     | `base_name` of an existing, cheaper model from the same family to route to when the router selects the efficient tier. |
+| `mode`             | `signal` \| `classifier` | Yes                     | Routing mode for this entry (see [Routing Modes](#routing-modes)).                                                     |
+| `classifier_model` | string                   | When `mode: classifier` | Classifier model this router calls to assess request complexity. Not applicable when `mode: signal`.                   |
+| `tuning`           | object                   | No                      | Per-router override of the tuning parameters described in [Tuning Parameters](#tuning-parameters).                     |
 
 Because each entry is fully self-describing, one capable model can have multiple routers —
 for example, one `signal` and one `classifier` router against the same efficient model, as
@@ -126,14 +115,13 @@ is true:
 Each router falls back to a set of default tuning parameters unless overridden with a
 `tuning` block on the entry:
 
-| Parameter                   | Type           | Default | Description                                                                                               |
-| --------------------------- | -------------- | ------- | --------------------------------------------------------------------------------------------------------- |
-| `recent_window`             | integer        | `3`     | Number of recent conversation turns considered when evaluating routing signals.                           |
-| `classifier_base_threshold` | float          | `0.65`  | Baseline confidence threshold used by the classifier's escalation logic.                                  |
-| `classifier_threshold_step` | float          | `0.15`  | Step size by which the classifier's effective threshold is adjusted based on recent conversation history. |
-| `signal_threshold`          | float          | `0.0`   | Confidence threshold applied when `mode: signal`. Ignored for `classifier` routers.                       |
-| `classifier_threshold`      | float          | `0.5`   | Confidence threshold applied when `mode: classifier`. Ignored for `signal` routers.                       |
-| `classifier_model`          | string \| null | `null`  | Overrides `SWITCHYARD_CLASSIFIER_MODEL` for this router. Only relevant when `mode: classifier`.           |
+| Parameter                   | Type    | Default | Description                                                                                               |
+| --------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------- |
+| `recent_window`             | integer | `3`     | Number of recent conversation turns considered when evaluating routing signals.                           |
+| `classifier_base_threshold` | float   | `0.65`  | Baseline confidence threshold used by the classifier's escalation logic.                                  |
+| `classifier_threshold_step` | float   | `0.15`  | Step size by which the classifier's effective threshold is adjusted based on recent conversation history. |
+| `signal_threshold`          | float   | `0.0`   | Confidence threshold applied when `mode: signal`. Ignored for `classifier` routers.                       |
+| `classifier_threshold`      | float   | `0.5`   | Confidence threshold applied when `mode: classifier`. Ignored for `signal` routers.                       |
 
 Only the threshold matching a router's own `mode` is applied — a `signal` router uses
 `signal_threshold`, a `classifier` router uses `classifier_threshold`.
@@ -173,8 +161,8 @@ The `classifier-*` headers are only populated for requests routed by a `classifi
 router; they are absent for `signal`-mode routing, which makes no extra LLM call.
 
 For routing costs, estimated savings, and model distribution in the Analytics Dashboard,
-see [Routing Analytics](../../../../user-guide/analytics/routing-analytics.md). Its
-`routingAnalytics` customer feature flag is separate from `SWITCHYARD_ENABLED`.
+see [Routing Analytics](../../../../user-guide/analytics/routing-analytics.md), gated by its
+own `routingAnalytics` customer feature flag.
 
 ## Related: LiteLLM Native Auto-Routing
 

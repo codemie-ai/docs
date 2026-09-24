@@ -7,8 +7,7 @@ with no extra LLM calls (`signal` mode) or a small classifier call that assesses
 complexity first (`classifier` mode).
 
 Administrators enable it by declaring one or more routers on a capable model's entry in the
-LLM model configuration YAML, and setting `SWITCHYARD_ENABLED=true` (the platform-wide master
-switch, off by default). Each router then appears as a selectable entry in the LLM model
+LLM model configuration YAML. Each router then appears as a selectable entry in the LLM model
 dropdown — commonly labeled with an `SY` prefix — that routes each call in the conversation to
 either tier depending on the request.
 
