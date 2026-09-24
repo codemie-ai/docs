@@ -20,8 +20,10 @@ LiteLLM has its own [auto-routing](https://docs.litellm.ai/docs/proxy/auto_routi
 A LiteLLM router is a model alias that picks a real model for each request, for example a
 cheaper model for simple prompts and a stronger model for complex ones.
 
-This is an alternative to CodeMie's own [Switchyard Auto-Routing](./switchyard-model-routing.md).
-The two mechanisms are independent: a model is routed by LiteLLM or by Switchyard, never both.
+This is an alternative to [Switchyard Auto-Routing](./switchyard-model-routing.md), which
+routes requests on the CodeMie side before they reach LiteLLM. Here, the routing decision is
+made inside the LiteLLM proxy instead. The two mechanisms are independent: a model is routed by
+LiteLLM or by Switchyard, never both.
 
 ### How It Works
 
@@ -174,6 +176,20 @@ it.
 Save the following code as `litellm_custom_callbacks.py`:
 
 ```python
+# Copyright 2026 EPAM Systems, Inc. ("EPAM")
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import contextlib
 import json
 from urllib.parse import quote
@@ -274,12 +290,61 @@ LiteLLM adds `x-litellm-classifier-cost` on its own, so the callback does not se
 
 ## Step 3: Register the Callback
 
-1. Make `litellm_custom_callbacks.py` available to the LiteLLM proxy, in a directory on the
-   proxy's Python import path:
-   - **Kubernetes/Helm:** store the file in a ConfigMap and mount it into the proxy container
-     next to the proxy `config.yaml`.
-   - **Other deployments:** copy the file next to the proxy `config.yaml` or install it in the
-     proxy's Python environment.
+LiteLLM loads `litellm_custom_callbacks` as a Python module from the directory that contains
+the proxy `config.yaml`. Place the file there, then reference it in `litellm_settings.callbacks`.
+
+### Kubernetes/Helm
+
+With the `litellm-helm` chart, the proxy reads its configuration from `/etc/litellm/config.yaml`.
+Store the callback in a ConfigMap and mount it into the same directory. Add the following to
+your `litellm/values-<cloud>.yaml`:
+
+```yaml
+litellm-helm:
+  # ... additional configuration fields
+  proxy_config:
+    litellm_settings:
+      # Keep any callbacks you already have
+      callbacks:
+        - 'litellm_custom_callbacks.autorouter_callback_instance'
+
+  extraResources:
+    - apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: litellm-custom-callbacks
+      data:
+        litellm_custom_callbacks.py: |
+          # Copyright 2026 EPAM Systems, Inc. ("EPAM")
+          # ... paste the full contents of litellm_custom_callbacks.py from Step 2,
+          # indented under this key
+
+  volumes:
+    - name: litellm-custom-callbacks
+      configMap:
+        name: litellm-custom-callbacks
+
+  volumeMounts:
+    - name: litellm-custom-callbacks
+      readOnly: true
+      mountPath: /etc/litellm/litellm_custom_callbacks.py
+      subPath: litellm_custom_callbacks.py
+```
+
+- `extraResources` creates the ConfigMap together with the chart, so the callback is versioned
+  with the rest of the proxy configuration.
+- `subPath` mounts only the single file, so the chart-managed `config.yaml` in `/etc/litellm/`
+  stays in place.
+- If you already define `volumes` or `volumeMounts`, add these entries to the existing lists.
+
+Apply the change with your usual `helm upgrade` command. Because the ConfigMap is mounted with
+`subPath`, Kubernetes does not refresh the file in running pods: restart the LiteLLM deployment
+whenever you change the callback code.
+
+### Other Deployments
+
+1. Copy `litellm_custom_callbacks.py` into the directory that contains the proxy `config.yaml`
+   (for Docker Compose, mount it as a volume next to the mounted `config.yaml`).
 2. Register the callback in the proxy `config.yaml`. Keep any callbacks you already have:
 
    ```yaml
