@@ -85,10 +85,10 @@ The selected model applies to all subsequent messages in the current conversatio
 you change it or select **Assistant Default** to revert.
 
 :::note Auto-routing model entries
-Some entries in the model list represent an auto-routing pair rather than a single fixed
-model — for example, one labeled with an `SY` prefix. Selecting one of these lets CodeMie
-route each call in the conversation to either a higher-quality or a lower-cost model from the
-same family, depending on the request, instead of always using the same model.
+Some entries in the model list are routers rather than a single fixed model — for example,
+one labeled with an `SY` prefix, or a LiteLLM router configured by your administrator.
+Selecting one lets CodeMie route each call in the conversation to either a higher-quality or a
+lower-cost model, depending on the request, instead of always using the same model.
 :::
 
 ## File Attachments

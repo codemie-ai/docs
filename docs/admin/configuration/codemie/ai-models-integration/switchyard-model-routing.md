@@ -172,6 +172,10 @@ response headers — useful for cost tracking and observability at the client or
 The `classifier-*` headers are only populated for requests routed by a `classifier`-mode
 router; they are absent for `signal`-mode routing, which makes no extra LLM call.
 
+For routing costs, estimated savings, and model distribution in the Analytics Dashboard,
+see [Routing Analytics](../../../../user-guide/analytics/routing-analytics.md). Its
+`routingAnalytics` customer feature flag is separate from `SWITCHYARD_ENABLED`.
+
 ## Related: LiteLLM Native Auto-Routing
 
 Switchyard is one of two **separate, alternative** routing mechanisms CodeMie recognizes — the
