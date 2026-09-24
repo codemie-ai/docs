@@ -337,7 +337,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/analytics/analytics-overview',
           },
           collapsed: true,
-          items: ['user-guide/analytics/ai-champions-leaderboard'],
+          items: [
+            'user-guide/analytics/ai-champions-leaderboard',
+            'user-guide/analytics/routing-analytics',
+          ],
         },
         {
           type: 'category',
