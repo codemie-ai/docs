@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 
 # GitHub/GitLab/Bitbucket
 
-AI/Run CodeMie assistants can work with Git repositories. Apart from integrating the Git tool for such purposes, assistants must also know what repository to deal with. To connect an assistant with a repository, it is required to provide the repository link or upload the codebase and specify the target branch to work with.
+AI/Run CodeMie assistants can work with Git repositories. Besides the Git tool itself, an assistant needs to know which repository to work on. It gets that from either an indexed Code data source attached to the assistant, or the repository URL that the user or the assistant instructions name in the conversation. With the second option, no data source is needed. See [Choose Which Repository the Git Tools Use](#3-choose-which-repository-the-git-tools-use).
 
 Integrating Version Control Systems allows assistants to navigate code repositories and perform various actions, whether it is simple code analysis or creating pull requests with code that solves the problem indicated in a Jira task. This integration is required when adding a code repository.
 
@@ -189,10 +189,10 @@ A successful sign-in is required before the integration can be saved. The save b
 - Click **Save** to create the integration
 
 :::note
-The project name for the integration must match the project of the indexed repository.
+When the Git tools work on an indexed Code data source, the project name for the integration must match the project of the indexed repository.
 :::
 
-That's it. Now code repositories can be added to the AI/Run CodeMie account.
+That's it. The Git tools can now work with repositories on that host.
 
 ## 2a. Connect from Chat (GitLab OAuth only)
 
@@ -207,3 +207,30 @@ To connect:
 :::info
 This in-chat connect gate appears only for GitLab OAuth integrations. Members using a Personal Access Token integration do not see this prompt.
 :::
+
+## 3. Choose Which Repository the Git Tools Use
+
+In the assistant form, add the **Git** toolkit under **Tools configuration** and select the tools the assistant needs. The repository the tools work on depends on whether the assistant also has a **Code** data source.
+
+### Without a Code data source
+
+The Git tools work on the repository URL named in the conversation or in the assistant instructions, for example `https://github.com/org/repo`. Every Git tool call passes this URL. If no repository has been named, the assistant asks for one. Each call can also name a **branch**. When no branch is named, the tool uses the branch created or set active earlier in the same response, or the repository's default branch.
+
+The credentials come from your Git integrations:
+
+| Git integration selected on the Git toolkit or its tools | Repositories the tools can use                                                                                                |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| One integration                                          | Only repositories on that integration's host. A URL on any other host is rejected before the integration's token is used.     |
+| None                                                     | Repositories on any host that has a Git integration available to you. Each call uses the integration matching the URL's host. |
+| Different integrations on the toolkit and its tools      | None. The form shows a **Select one Git integration** warning next to **Tools configuration**. Select a single integration.   |
+
+:::note
+
+- Repository URLs must use the same scheme as the integration URL (normally `https`) and must not contain credentials.
+- This mode supports GitHub, GitLab, and Bitbucket. **Azure DevOps Repos** still needs a Code data source. See [Azure DevOps](./git-azuredevops.md).
+
+:::
+
+### With a Code data source
+
+The Git tools work on the indexed repository of the attached Code data source. If a Git integration is also selected on the Git toolkit, the user can name another repository in the conversation. The tools then work on that repository instead, limited to the selected integration's host.
