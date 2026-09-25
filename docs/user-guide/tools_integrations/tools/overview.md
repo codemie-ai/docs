@@ -165,7 +165,7 @@ for platform configuration.
 :::
 
 :::info Git vs VCS
-**By choosing Git tool only:** The operations listed above are available. Git data source must be added as additional context.
+**By choosing Git tool only:** The operations listed above are available. The tools work on a Git data source added as additional context, or, for GitHub, GitLab, and Bitbucket, on a repository URL named in the conversation. See [Choose Which Repository the Git Tools Use](./git-github-gitlab-bitbucket.md#3-choose-which-repository-the-git-tools-use).
 
 **By choosing VCS tool:** All operations are available without needing additional Git data source context.
 :::

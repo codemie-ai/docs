@@ -56,6 +56,7 @@ All Git integrations require:
 - ✅ Integration configuration with credentials
 - ✅ Appropriate access permissions
 - ✅ Repository or project access rights
+- ✅ A repository to work on: an indexed Code data source, or (for GitHub, GitLab, and Bitbucket) a repository URL named in the conversation
 
 For detailed setup instructions, click on the specific Git platform above.
 
