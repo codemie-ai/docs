@@ -299,6 +299,16 @@ Each model entry in the `model_list` array consists of three main sections:
 
   </details>
 
+- **`switchyard`**: (Optional) List of Switchyard auto-routing router declarations for this
+  model. Only meaningful on a capable model's entry. See
+  [Switchyard Auto-Routing](../../codemie/ai-models-integration/switchyard-model-routing.md)
+  for the field schema and a worked example.
+- **`litellm_router`**: (Optional) Declares that this `model_name` is itself a LiteLLM native
+  auto-router rather than a concrete deployment — required for CodeMie to recognize it as
+  such and avoid treating it as a normal deployable model. See
+  [LiteLLM Native Auto-Routing](../../codemie/ai-models-integration/litellm-native-auto-routing.md)
+  for the field schema and a worked example.
+
 ## Model Configuration Examples
 
 This guide provides tested and verified model configurations currently used in AI/Run CodeMie production. While not all steps for adding new models are covered (refer to the [official LiteLLM documentation](https://docs.litellm.ai/) for comprehensive setup instructions), working examples from the production environment are shared and can be adapted for any deployment.
