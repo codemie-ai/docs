@@ -286,7 +286,8 @@ If you need direct control over the workflow configuration, you can switch to YA
 
 1. Click the **YAML** button in the upper right corner
 2. Edit the YAML configuration directly
-3. Check YAML history and restore previous versions if needed
+
+When editing an existing workflow, use **Version History** in the YAML header to browse prior versions, compare changes, and restore a previous configuration. See [Workflow Version History](./workflow-version-history.md) for details.
 
 :::info Configuration Sync
 The Visual Editor and YAML editor are synchronized. Changes made in one view are automatically reflected in the other.
@@ -296,6 +297,28 @@ The Visual Editor and YAML editor are synchronized. Changes made in one view are
 Switch to YAML editing when you need features like Jinja templating, complex conditional expressions, or when you want to copy/paste configuration blocks. For most workflow creation tasks, the Visual Editor is faster and easier.
 
 For detailed YAML configuration syntax and features, see the [Workflow YAML Configuration Guide](./configuration/introduction.md).
+:::
+
+### Editor layout keys in the YAML
+
+Alongside the execution configuration, the Visual Editor stores the canvas layout in the same
+YAML document:
+
+- **`meta_states`** — a top-level list holding each node's position, size, and editor node type,
+  plus the decision nodes (`switch`, `conditional`) that the editor draws as separate boxes
+- **`next.meta_next_state_id`** — links a transition to the decision node that represents it on
+  the canvas
+
+These keys are read only by the editor. The execution engine ignores them, and they have no
+effect on how a workflow runs.
+
+:::warning Editing YAML outside the editor
+When a workflow is modified through the API, the SDK, the CLI, or an IaC pipeline, the existing
+`meta_states` block must be carried through unchanged. Dropping it discards the arrangement
+someone laid out by hand.
+
+Writing a workflow from scratch without `meta_states` is safe — the editor lays the graph out
+automatically the first time it opens, then saves the resulting positions.
 :::
 
 ## Saving and Running Workflows

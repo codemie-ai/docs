@@ -143,6 +143,7 @@ custom_nodes:
 | `mappings`       | array  | Yes      | -               | List of transformation mappings                                                 |
 | `output_schema`  | object | No       | -               | JSON Schema for output validation                                               |
 | `on_error`       | string | No       | `fail`          | Error strategy: `fail`, `skip`, `default`, `partial`                            |
+| `default_output` | object | No       | `{}`            | Output returned when `on_error` is `default`                                    |
 | `default_output` | object | No       | `{}`            | Default output when `on_error: default`                                         |
 
 #### Input Key Path Extraction

@@ -25,6 +25,8 @@ words:
   # Project/Brand names
   - HMAC
   - codemie
+  - passwordless
+  - SAMEORIGIN
   - AI/Run
   - airun
   - docusaurus
@@ -173,6 +175,8 @@ words:
   - sideloading
   - ITSM
   - CMDB
+  - chargeback
+  - showback
   - cloudapp
   - newbot
   - repo
@@ -259,6 +263,9 @@ words:
   # codemie terms
   - kata
   - katas
+  - xwiki
+  - xWiki
+  - unindexed
   - gvisor
   - codemieai
   # Other
@@ -274,6 +281,8 @@ words:
   - Mixtral
   - Qwen
   - Moonshot
+  - moonshotai
+  - Kimi
   - DeepSeek
   - deepseek
   - onboarder
@@ -350,6 +359,7 @@ words:
   - PYROSCOPE
   - ONCPU
   - LOOKBACK
+  - vbscript
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
