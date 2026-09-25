@@ -218,10 +218,6 @@ Configure rate limits to control usage:
 
 For costly models such as Claude Opus or OpenAI o1, you can configure a separate budget to track and enforce spending independently from the default end-user budget. When configured, CodeMie automatically attributes premium model requests to a derived LiteLLM customer identity (`{user_email}_codemie_premium_models`), allowing you to apply stricter limits to expensive models without affecting the standard budget.
 
-:::note CLI requests only
-This budget applies only to requests made through the CodeMie Code CLI. UI requests to premium models are tracked against the default platform budget and are not affected by this configuration.
-:::
-
 :::info Feature Toggle
 This feature activates when a budget with `budget_category: premium_models` is present in `budgets-config.yaml` and `LITELLM_PREMIUM_MODELS_ALIASES` is set. If neither is configured, all requests use standard budget behavior.
 :::

@@ -25,6 +25,8 @@ words:
   # Project/Brand names
   - HMAC
   - codemie
+  - passwordless
+  - SAMEORIGIN
   - AI/Run
   - airun
   - docusaurus
@@ -168,8 +170,13 @@ words:
   - endpoints
   - webhook
   - webhooks
+  - sideload
+  - sideloaded
+  - sideloading
   - ITSM
   - CMDB
+  - chargeback
+  - showback
   - cloudapp
   - newbot
   - repo
@@ -178,6 +185,8 @@ words:
   - yaml
   - YAML
   - JSON
+  - frontmatter
+  - Frontmatter
   - SDLC
   - env
   - envs
@@ -214,6 +223,9 @@ words:
   - phpt
   - rhtml
   # Shell commands, utilities and variables
+  - LOCALAPPDATA
+  - PGPASSWORD
+  - PGSSLMODE
   - orbstack
   - pwgen
   - bcrypt
@@ -266,6 +278,8 @@ words:
   - Mixtral
   - Qwen
   - Moonshot
+  - moonshotai
+  - Kimi
   - DeepSeek
   - deepseek
   - onboarder
@@ -306,7 +320,6 @@ words:
   - roadmaps
   - wireframing
   - Presales
-  - testmate
   - agentic
   - keycloakx
   - backchannel

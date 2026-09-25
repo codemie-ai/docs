@@ -9,6 +9,10 @@ sidebar_position: 7
 
 # IDE Extensions
 
+:::warning Retirement notice
+VS Code and JetBrains extensions will be retired by the end of 2026. We recommend switching to [CodeMie CLI](../codemie-cli/index.md) to keep calling your CodeMie assistants from your development environment.
+:::
+
 Integrate CodeMie directly into your development environment for seamless AI-powered assistance while coding.
 
 ---

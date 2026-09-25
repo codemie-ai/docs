@@ -13,7 +13,7 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 <EnterpriseFeature />
 
-This page describes the platform configuration required to enable project budgets in CodeMie. For a guide on working with budgets from the UI, see [Budget Management](../../../../user-guide/budget-management/).
+This page describes the platform configuration required to enable project budgets in CodeMie. For a guide on working with budgets from the UI, see [Budget Management](../../../user-guide/budget-management/index.md) and [Project Budgets](../../../user-guide/budget-management/project-budgets.md).
 
 ## Prerequisites
 
@@ -113,7 +113,9 @@ Spend data updates on the collect schedule (nightly by default). There is typica
 
 ## See Also
 
-- [Budget Management](../../../../user-guide/budget-management/) — user guide for working with budgets in the UI
+- [Budget Management](../../../user-guide/budget-management/index.md) — user guide for working with budgets in the UI
+- [Project Budgets](../../../user-guide/budget-management/project-budgets.md) — creating budgets, tracking spend, and member allocations
+- [Chargeback and Cost Centers](../../../user-guide/budget-management/chargeback-cost-centers.md) — internal billing and cost center rollup
 - [LiteLLM Budget Configuration](../../extensions/litellm-proxy/budget-configuration) — predefined global budgets and enforcement flags
 - [API Configuration Reference](../api-configuration) — full environment variable reference
 - [Platform Administration](../platform-administration) — creating and managing projects

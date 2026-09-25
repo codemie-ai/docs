@@ -69,10 +69,10 @@ The following buttons are available in the page header:
 
 The details page contains two tabs:
 
-| Tab               | Description                                                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **Executions**    | Lists all past and ongoing executions for this workflow. You can open any execution to view its progress, states, and output. |
-| **Configuration** | Shows the workflow graph, YAML configuration, and sidebar with metadata such as Workflow ID and access links.                 |
+| Tab               | Description                                                                                                                                                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Executions**    | Lists all past and ongoing executions for this workflow. You can open any execution to view its progress, states, and output. Clicking an assistant node inside an execution opens the [assistant panel](./assistant-panel-in-executions.md). |
+| **Configuration** | Shows the workflow graph, YAML configuration, and sidebar with metadata such as Workflow ID and access links.                                                                                                                                 |
 
 ### Configuration Tab
 

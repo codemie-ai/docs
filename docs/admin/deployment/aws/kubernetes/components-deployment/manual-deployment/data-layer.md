@@ -10,6 +10,8 @@ pagination_next: admin/deployment/aws/kubernetes/components-deployment/manual-de
 import DataLayerOverview from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-overview.mdx';
 import DataLayerElasticsearch from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-elasticsearch.mdx';
 import DataLayerPostgresConfig from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-config.mdx';
+import DataLayerPostgresIamSetup from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-iam-setup.mdx';
+import DataLayerPostgresSecret from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-postgresql-secret-aws.mdx';
 import DataLayerValidation from '../../../../common/deployment/components-deployment/manual-deployment/data-layer/\_data-layer-validation.mdx';
 
 <DataLayerOverview />
@@ -17,7 +19,15 @@ import DataLayerValidation from '../../../../common/deployment/components-deploy
 <DataLayerElasticsearch cloudProvider="AWS" valuesFileName="values-aws.yaml" />
 
 <DataLayerPostgresConfig
+  cloudProvider="AWS"
   postgresServiceName="AWS RDS PostgreSQL"
+  postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
+/>
+
+<DataLayerPostgresIamSetup />
+
+<DataLayerPostgresSecret
+  cloudProvider="AWS"
   postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
 />
 

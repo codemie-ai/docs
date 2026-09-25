@@ -12,7 +12,11 @@ description: Create, configure, and manage projects in AI/Run CodeMie. Add proje
 
 Projects are isolated workspaces that group your assistants, workflows, data sources, and
 integrations. Every user can create their own projects and manage team membership within them.
-Platform Admins can view and manage all projects across the platform.
+Platform Admins can view and manage all projects across the platform. **Auditors** have
+read-only visibility of all platform projects and their spending data; create, edit, delete,
+and member management controls are not available to them.
+
+![Project details as seen by an Auditor — spending data visible, no create/edit/delete controls](./images/auditor-project-details-readonly.png)
 
 To access Projects Management, click the **Profile** icon in the bottom-left corner → **Settings → Administration → Projects management**.
 

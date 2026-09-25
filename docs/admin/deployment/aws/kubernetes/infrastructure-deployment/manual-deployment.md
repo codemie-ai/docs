@@ -138,11 +138,13 @@ Apply the changes:
 terraform apply tfplan
 ```
 
-Note the output for the S3 bucket (you'll need this for Phase 3):
+Note the outputs for the S3 bucket and its KMS key (you'll need these for Phase 3):
 
 ```bash
 export BACKEND_BUCKET=$(terraform output -raw terraform_states_s3_bucket_name)
+export BACKEND_KMS_KEY_ARN=$(terraform output -raw terraform_state_kms_key_arn)
 echo "Backend bucket: $BACKEND_BUCKET"
+echo "Backend KMS key: $BACKEND_KMS_KEY_ARN"
 ```
 
   </TabItem>
@@ -181,17 +183,30 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-Note the output for the S3 bucket (you'll need this for Phase 3):
+Note the outputs for the S3 bucket and its KMS key (you'll need these for Phase 3):
 
 ```bash
 export BACKEND_BUCKET=$(terraform output -raw terraform_states_s3_bucket_name)
+export BACKEND_KMS_KEY_ARN=$(terraform output -raw terraform_state_kms_key_arn)
 echo "Backend bucket: $BACKEND_BUCKET"
+echo "Backend KMS key: $BACKEND_KMS_KEY_ARN"
 ```
 
   </TabItem>
 </Tabs>
 
 The created S3 bucket will be used for all subsequent infrastructure deployments.
+
+:::warning KMS Key Access
+The backend's KMS key policy restricts `Decrypt`/`GenerateDataKey*` to the `role_arn` deployer role. If you run `terraform init`/`plan`/`apply` for Phase 3 as a different AWS identity (e.g. an SSO admin profile), backend state reads/writes will fail with `AccessDenied`. Either run as the deployer role directly, or add an `assume_role` block to your backend config, e.g. in a `backend.hcl` file passed as `-backend-config=backend.hcl`:
+
+```hcl
+assume_role = {
+  role_arn = "arn:aws:iam::123456789012:role/AIRunDeployerRole"
+}
+```
+
+:::
 
 ## Phase 3: Main AWS Resources Deployment
 
@@ -241,6 +256,7 @@ terraform init \
   -backend-config="region=${TF_VAR_region}" \
   -backend-config="acl=bucket-owner-full-control" \
   -backend-config="encrypt=true" \
+  -backend-config="kms_key_id=${BACKEND_KMS_KEY_ARN}" \
   -backend-config="use_lockfile=true"
 ```
 
@@ -332,6 +348,7 @@ terraform init \
   -backend-config="region=${REGION}" \
   -backend-config="acl=bucket-owner-full-control" \
   -backend-config="encrypt=true" \
+  -backend-config="kms_key_id=${BACKEND_KMS_KEY_ARN}" \
   -backend-config="use_lockfile=true"
 ```
 

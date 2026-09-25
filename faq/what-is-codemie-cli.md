@@ -1,12 +1,12 @@
 # What is CodeMie CLI? How to use CodeMie CLI for AI-assisted development? How to use CodeMie from the command line terminal? How to install Claude Code for command line usage?
 
-CodeMie CLI (`@codemieai/code`) is a unified command-line interface for managing multiple AI coding assistants from a single terminal environment. It serves as an orchestration layer that allows developers to work with various AI agents (Claude Code, Google Gemini, OpenCode) and a built-in LangGraph-based assistant through standardized commands.
+CodeMie CLI (`@codemieai/code`) is a unified command-line interface for managing multiple AI coding assistants from a single terminal environment. It serves as an orchestration layer that allows developers to work with various AI agents (Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode) and a built-in LangGraph-based assistant through standardized commands.
 
 ### Key Capabilities
 
 **Multi-Agent Management:**
 
-- Switch between different AI coding assistants (Claude Code, Gemini, OpenCode, built-in agent)
+- Switch between different AI coding assistants (Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, built-in agent)
 - Install and manage specific versions of external agents
 - Version control for compatibility (automatic update prevention)
 
@@ -34,21 +34,27 @@ The native CodeMie agent includes:
 
 ### Installation
 
-**Global Installation (Recommended):**
+**macOS, Linux, or WSL (Recommended):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/codemie-ai/codemie-code/main/install/macos/install.sh | bash
+```
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/codemie-ai/codemie-code/main/install/windows/install.ps1 | iex
+```
+
+The installer checks Node.js (version 20 or later), npm, and registry access, and tells you what to fix if something is missing.
+
+**Via npm:**
 
 ```bash
 npm install -g @codemieai/code
-codemie --help
 ```
 
-**Project-Specific Installation:**
-
-```bash
-npm install @codemieai/code
-npx @codemieai/code --help
-```
-
-Note: Agent shortcuts (`codemie-claude`, `codemie-code`, `codemie-gemini`) require global installation.
+Note: Agent shortcuts (`codemie-claude`, `codemie-code`, `codemie-gemini`, `codemie-codex`, `codemie-copilot`) require global installation.
 
 ### Basic Usage
 
@@ -110,14 +116,28 @@ Claude Code includes specialized commands when used through CodeMie CLI:
 **Google Gemini:**
 
 ```bash
-codemie install gemini
+codemie install gemini --supported
 codemie-gemini "Implement REST API with error handling"
+```
+
+**OpenAI Codex:**
+
+```bash
+codemie install codex --supported
+codemie-codex "Review my API implementation"
+```
+
+**GitHub Copilot CLI:**
+
+```bash
+codemie install copilot --supported
+codemie-copilot "Explain this function"
 ```
 
 **OpenCode:**
 
 ```bash
-codemie install opencode
+codemie install opencode --supported
 codemie-opencode "Generate integration tests"
 
 # Process session metrics
@@ -140,6 +160,15 @@ codemie install claude
 ```
 
 Auto-updates are disabled by default. The system notifies you when running a version different from the officially supported one.
+
+To check for updates or update immediately:
+
+```bash
+codemie self-update           # Update to the latest version
+codemie self-update --check   # Check without installing
+```
+
+To enable automatic updates, set `CODEMIE_AUTO_UPDATE=true` in your environment.
 
 ### CI/CD Integration
 
@@ -164,14 +193,25 @@ codemie analytics
 # Tool usage patterns
 ```
 
+### MCP Server Management
+
+Register, list, and remove remote MCP servers with OAuth handled automatically:
+
+```bash
+codemie mcp add <name> <url>                        # Register an MCP server
+codemie mcp add <name> <url> --scope project        # Project-scoped registration
+codemie mcp remove <name>                           # Remove a registered server
+codemie mcp list                                    # List all registered servers
+```
+
 ### Comparison with Other CodeMie Tools
 
-| Tool                                 | Purpose                | Interface          | Use Case                                   |
-| ------------------------------------ | ---------------------- | ------------------ | ------------------------------------------ |
-| **CodeMie CLI**                      | AI agent orchestration | Terminal/CLI       | Multi-agent development workflows, CI/CD   |
-| **codemie-plugins**                  | Plugin management      | Python CLI         | MCP server management, development toolkit |
-| **JetBrains Plugin** _(deprecated)_  | IDE integration        | GUI (sidebar)      | In-editor AI assistance                    |
-| **VS Code Extension** _(deprecated)_ | IDE integration        | GUI (Copilot Chat) | In-editor AI assistance                    |
+| Tool                                           | Purpose                | Interface          | Use Case                                   |
+| ---------------------------------------------- | ---------------------- | ------------------ | ------------------------------------------ |
+| **CodeMie CLI**                                | AI agent orchestration | Terminal/CLI       | Multi-agent development workflows, CI/CD   |
+| **codemie-plugins**                            | Plugin management      | Python CLI         | MCP server management, development toolkit |
+| **JetBrains Plugin** _(retiring end of 2026)_  | IDE integration        | GUI (sidebar)      | In-editor AI assistance                    |
+| **VS Code Extension** _(retiring end of 2026)_ | IDE integration        | GUI (Copilot Chat) | In-editor AI assistance                    |
 
 ### When to Use CodeMie CLI
 
@@ -181,13 +221,6 @@ codemie analytics
 - Analyzing AI usage patterns across projects
 - Profile-based configuration for different contexts
 - Scripting and automation scenarios
-
-### When to Use IDE Plugins Instead
-
-- Prefer graphical interface within editor
-- Need direct code highlighting and navigation
-- Working exclusively in JetBrains or VS Code
-- Require sidebar-based conversation history
 
 ### Additional Resources
 

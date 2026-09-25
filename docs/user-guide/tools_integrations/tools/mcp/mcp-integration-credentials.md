@@ -21,6 +21,8 @@ For any MCP server, the credentials a given user runs under come from one of thr
 | **Explicit** | User   | The integration the user selected for themselves                                    |
 | **Default**  | User   | None — the server runs on its clean base configuration (no integration credentials) |
 
+An MCP server is one kind of integration slot, and the author's decision for it follows the same three states as any other slot — pinned, automatic lookup, or no integration. See [Automatic Credentials Lookup](../../integrations/index.md#automatic-credentials-lookup) for the shared model.
+
 The rest of this page explains how to configure each source and what it guarantees.
 
 ## Pinned — one shared integration for everyone
@@ -72,11 +74,11 @@ A user only ever sees and selects **their own** integrations (or integrations th
 
 _The fallback when no integration is pinned and the user has not selected one._
 
-The **Your Integration Settings** dropdown includes an explicit **No integration** option. Selecting it — or leaving the selection untouched — means the MCP server runs on its **base configuration**: the inline configuration defined on the server itself, with no integration credentials applied. The server keeps working; it simply does not carry any per-user credentials.
+The **Your Integration Settings** dropdown includes an explicit **No integration** option. Selecting it means the MCP server runs on its **base configuration**: the inline configuration defined on the server itself, with no integration credentials applied. The server keeps working; it simply does not carry any per-user credentials.
 
 ![The Your Integration Settings dropdown with the No integration option selected](../images/mcp-cred-no-integration.png)
 
-There is no automatic guessing: the platform never silently picks one of the user's other integrations. To run under personal credentials, the integration must be selected explicitly.
+An explicit **No integration** is a decision like any other: it is remembered for that user and is not replaced by an automatically resolved integration the next time the assistant runs. Leaving the selection untouched is different — the slot then follows whatever the author configured for it, which may be automatic credentials lookup.
 
 ## For authors: Credential Review when publishing to the marketplace
 
@@ -106,3 +108,5 @@ Beyond the per-user resolution described above, a few guarantees are enforced at
 ## In workflows
 
 When an assistant is used as a node inside a workflow, the same per-assistant credential source applies: the assistant node runs under the current user with the same pinned, explicit, or "No integration" behavior it would use in a direct chat. Project-scoped integrations resolve against the running user's access just as they do in chat.
+
+An explicit selection can also be made without leaving the workflow: clicking an assistant node on the workflow executions page opens a panel with its **Your Integration Settings** section, where the selection can be saved for that workflow alone instead of for the assistant everywhere. See [Assistant Panel on the Executions Page](../../../workflows/assistant-panel-in-executions.md).

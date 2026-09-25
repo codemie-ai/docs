@@ -101,6 +101,32 @@ When running multiple LiteLLM proxy instances (e.g., multiple Kubernetes pods), 
 
 Learn more: [LiteLLM Load Balancing Documentation](https://docs.litellm.ai/docs/proxy/load_balancing)
 
+### Autoscaling Configuration
+
+The `litellm-helm` chart supports a Kubernetes Horizontal Pod Autoscaler (HPA) that adds or removes LiteLLM Proxy replicas based on CPU utilization, so the proxy can absorb request bursts without permanently running at peak capacity.
+
+Autoscaling is **disabled by default**. Enable it under `litellm-helm.autoscaling` in `litellm/values-<cloud>.yaml`:
+
+```yaml
+litellm-helm:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+```
+
+| Key                              | Description                                                               | Default |
+| -------------------------------- | ------------------------------------------------------------------------- | ------- |
+| `enabled`                        | Enables the HorizontalPodAutoscaler for LiteLLM Proxy pods.               | `false` |
+| `minReplicas`                    | Minimum number of proxy pods to keep running.                             | `1`     |
+| `maxReplicas`                    | Maximum number of proxy pods the autoscaler is allowed to create.         | `100`   |
+| `targetCPUUtilizationPercentage` | Target average CPU utilization, as a percentage of the pod's CPU request. | `60`    |
+
+:::warning
+Autoscaling requires a CPU request on the LiteLLM Proxy container (`litellm-helm.resources.requests.cpu`) — utilization is measured against it. Without a CPU request, the HPA cannot compute utilization and will not scale correctly.
+:::
+
 ## Next Steps
 
 Continue to [Cloud Provider Authentication](./auth-secrets.md).

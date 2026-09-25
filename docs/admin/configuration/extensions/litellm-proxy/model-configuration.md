@@ -318,12 +318,17 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet       |
 | [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
 | [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5         |
+| [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5          |
+| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1        |
 | [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
 | [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
 | [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
 | [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8         |
+| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5         |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
+| [`grok-4.6`](#grok-46)                          | Grok 4.6                |
+| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3      |
 
 ### Azure OpenAI Models
 
@@ -346,6 +351,8 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
+| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
+| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 
 ### Azure AI Models
 
@@ -364,6 +371,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.5-flash`](#gemini-35-flash)             | Gemini 3.5 Flash                       |
 | [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
+| [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -474,6 +482,76 @@ model_list:
     id: claude-sonnet-5-us-east-1
     base_model: us.anthropic.claude-sonnet-5
     label: "Bedrock Claude Sonnet 5"
+```
+
+</details>
+
+### Claude Fable
+
+:::warning AWS data retention requirement
+Every Claude Fable model on Amazon Bedrock is only available when the AWS account's data retention mode is set to `aws_review` (this mode replaces the legacy `provider_data_share` mode). With this mode, your prompts and completions may be retained for human review carried out by AWS within the AWS boundary — Anthropic does not review your content, and your content is **not** shared with Anthropic. Some model providers require Amazon to conduct this review as a condition of access to their models, and the Claude Fable family requires it. Enabling this mode is an account/region-level AWS setting (configured through AWS's Data Retention API or console), not a LiteLLM configuration option. Review your organization's data-sovereignty and compliance requirements before enabling it. Without this setting, requests fail with `data retention mode 'default' is not available for this model`. See [Amazon Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) for the full mode reference.
+:::
+
+#### Claude Fable 5
+
+<details>
+<summary><strong>Claude Fable 5</strong></summary>
+
+```yaml
+# US Region
+- model_name: claude-fable-5
+  litellm_params:
+    model: bedrock/us.anthropic.claude-fable-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-fable-5-us-west-2
+    base_model: us.anthropic.claude-fable-5
+    label: "Bedrock Claude Fable 5"
+
+# Global routing
+- model_name: claude-fable-5
+  litellm_params:
+    model: bedrock/global.anthropic.claude-fable-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-fable-5-eu-central-1
+    base_model: global.anthropic.claude-fable-5
+    label: "Bedrock Claude Fable 5"
+```
+
+</details>
+
+#### Claude Fable 5.1
+
+See the [AWS data retention requirement](#claude-fable) above — it applies to Claude Fable 5.1 as well.
+
+<details>
+<summary><strong>Claude Fable 5.1</strong></summary>
+
+```yaml
+# US Region
+- model_name: claude-fable-5-1
+  litellm_params:
+    model: bedrock/us.anthropic.claude-fable-5-1
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-fable-5-1-us-west-2
+    base_model: us.anthropic.claude-fable-5-1
+    label: "Bedrock Claude Fable 5.1"
+
+# Global routing
+- model_name: claude-fable-5-1
+  litellm_params:
+    model: bedrock/global.anthropic.claude-fable-5-1
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-fable-5-1-eu-central-1
+    base_model: global.anthropic.claude-fable-5-1
+    label: "Bedrock Claude Fable 5.1"
 ```
 
 </details>
@@ -633,6 +711,82 @@ model_list:
     id: claude-opus-4-8-eu-central-1
     base_model: eu.anthropic.claude-opus-4-8
     label: "Bedrock Claude Opus 4.8"
+```
+
+</details>
+
+#### Claude Opus 5.5
+
+<details>
+<summary><strong>Claude Opus 5.5</strong></summary>
+
+```yaml
+# EU Region
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: bedrock/eu.anthropic.claude-opus-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-opus-5-5-eu-central-1
+    base_model: eu.anthropic.claude-opus-5-5
+    label: "Bedrock Claude Opus 5.5"
+
+# US Region
+- model_name: claude-opus-5-5
+  litellm_params:
+    model: bedrock/us.anthropic.claude-opus-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-west-2
+  model_info:
+    id: claude-opus-5-5-us-west-2
+    base_model: us.anthropic.claude-opus-5-5
+    label: "Bedrock Claude Opus 5.5"
+```
+
+</details>
+
+### Grok
+
+#### Grok 4.6
+
+<details>
+<summary><strong>Grok 4.6</strong></summary>
+
+```yaml
+# US Region
+- model_name: grok-4.6
+  litellm_params:
+    model: bedrock/us.xai.grok-4.6
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+  model_info:
+    id: grok-4.6-us-east-1
+    base_model: us.xai.grok-4.6
+    label: "Grok 4.6"
+```
+
+</details>
+
+### MoonshotAI
+
+#### MoonshotAI Kimi K3
+
+<details>
+<summary><strong>MoonshotAI Kimi K3</strong></summary>
+
+```yaml
+# Global routing
+- model_name: moonshotai.kimi-k3
+  litellm_params:
+    model: bedrock/global.moonshotai.kimi-k3
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    additional_drop_params: ["temperature", "top_p", "topP"]
+  model_info:
+    id: moonshotai-kimi-k3-global-us-east-1
+    base_model: bedrock/global.moonshotai.kimi-k3
+    label: "Bedrock MoonshotAI Kimi K3"
 ```
 
 </details>
@@ -1005,7 +1159,7 @@ model_list:
 # US Region
 - model_name: gpt-5.5-2026-04-24
   litellm_params:
-    model: azure/codemie-gpt-5.5-2026-04-24
+    model: azure/gpt-5.5-2026-04-24
     api_base: https://api-base-eastus2-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -1016,7 +1170,7 @@ model_list:
 # EU Region
 - model_name: gpt-5.5-2026-04-24
   litellm_params:
-    model: azure/codemie-gpt-5.5-2026-04-24
+    model: azure/gpt-5.5-2026-04-24
     api_base: https://api-base-swedencentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
   model_info:
@@ -1081,6 +1235,50 @@ model_list:
     id: gpt-5-3-codex-2026-02-24-eastus2-0
     base_model: azure/gpt-5.3-codex
     label: "GPT-5.3 Codex 2026-02-24"
+```
+
+</details>
+
+### GPT-6 series
+
+#### GPT-6 Luna
+
+<details>
+<summary><strong>GPT-6 Luna</strong></summary>
+
+```yaml
+- model_name: gpt-6-luna
+  litellm_params:
+    model: azure/gpt-6-luna-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-luna-polandcentral-0
+    base_model: azure/gpt-6-luna
+    label: "GPT-6 Luna"
+    mode: responses
+```
+
+</details>
+
+#### GPT-6 Sol
+
+<details>
+<summary><strong>GPT-6 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6-sol
+  litellm_params:
+    model: azure/gpt-6-sol-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-sol-polandcentral-0
+    base_model: azure/gpt-6-sol
+    label: "GPT-6 Sol"
+    mode: responses
 ```
 
 </details>
@@ -1429,6 +1627,24 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.7-flash-global
     base_model: vertex_ai/gemini-3.7-flash
     label: "Gemini 3.7 Flash"
+```
+
+</details>
+
+#### Gemini 3.8 Flash
+
+<details>
+<summary><strong>Gemini 3.8 Flash</strong></summary>
+
+```yaml
+- model_name: gemini-3.8-flash
+  litellm_params:
+    model: vertex_ai/gemini-3.8-flash
+    vertex_location: "global"
+  model_info:
+    id: gemini-3.8-flash-global
+    base_model: vertex_ai/gemini-3.8-flash
+    label: "Gemini 3.8 Flash"
 ```
 
 </details>

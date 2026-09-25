@@ -1,9 +1,9 @@
 ---
 id: marketplace-overview
-sidebar_position: 8
+sidebar_position: 9
 title: Workflow Marketplace Overview
 sidebar_label: Marketplace Overview
-pagination_prev: user-guide/workflows/exporting-workflow-execution
+pagination_prev: user-guide/workflows/assistant-panel-in-executions
 pagination_next: user-guide/workflows/marketplace-publishing
 description: Discover and execute community-published workflows in the AI/Run CodeMie Workflow Marketplace
 ---

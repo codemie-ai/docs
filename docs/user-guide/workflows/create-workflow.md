@@ -3,7 +3,7 @@ id: create-workflow
 title: Create Workflow
 sidebar_label: Create Workflow
 pagination_prev: user-guide/workflows/workflows-overview
-pagination_next: user-guide/workflows/llm-model-name-in-workflow
+pagination_next: user-guide/workflows/subworkflows
 sidebar_position: 2
 description: Step-by-step guide to creating custom workflows using the Visual Workflow Editor in AI/Run CodeMie
 ---
@@ -138,6 +138,12 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 The Visual Editor provides intelligent configuration assistance for Tool and Custom nodes. When you configure a node, the editor dynamically displays input fields that match the argument schema and type requirements of the selected tool or custom function. As you fill in the configuration, the editor visually alerts you to any missing required fields or type mismatches, helping you catch errors before execution.
 
 The configuration panel prevents you from saving incomplete or invalid node settings, ensuring that your workflow is ready to run without configuration errors. While the editor generates and updates the YAML configuration automatically in the background, you work primarily with a structured, user-friendly interface that guides you through the setup process. If you need direct control over the configuration, the YAML editor view remains available.
+
+#### Assistant Integrations and Saving
+
+An assistant node may use tools whose integrations are not pinned by the assistant author. Such integration slots belong to whoever runs the workflow — resolved automatically or selected personally — so the workflow author does not have to own an integration for them.
+
+Saving the workflow therefore succeeds even when those slots are empty for the author. The save response lists the affected tools as a **warning**, not an error: it is a reminder that these tools will depend on each user's own setup at run time. See [Automatic Credentials Lookup](../tools_integrations/integrations/index.md#automatic-credentials-lookup) for how a slot is resolved, and [Assistant Panel on the Executions Page](./assistant-panel-in-executions.md) for selecting a personal integration from a workflow.
 
 ### Duplicating Nodes
 
@@ -280,7 +286,8 @@ If you need direct control over the workflow configuration, you can switch to YA
 
 1. Click the **YAML** button in the upper right corner
 2. Edit the YAML configuration directly
-3. Check YAML history and restore previous versions if needed
+
+When editing an existing workflow, use **Version History** in the YAML header to browse prior versions, compare changes, and restore a previous configuration. See [Workflow Version History](./workflow-version-history.md) for details.
 
 :::info Configuration Sync
 The Visual Editor and YAML editor are synchronized. Changes made in one view are automatically reflected in the other.
@@ -290,6 +297,28 @@ The Visual Editor and YAML editor are synchronized. Changes made in one view are
 Switch to YAML editing when you need features like Jinja templating, complex conditional expressions, or when you want to copy/paste configuration blocks. For most workflow creation tasks, the Visual Editor is faster and easier.
 
 For detailed YAML configuration syntax and features, see the [Workflow YAML Configuration Guide](./configuration/introduction.md).
+:::
+
+### Editor layout keys in the YAML
+
+Alongside the execution configuration, the Visual Editor stores the canvas layout in the same
+YAML document:
+
+- **`meta_states`** — a top-level list holding each node's position, size, and editor node type,
+  plus the decision nodes (`switch`, `conditional`) that the editor draws as separate boxes
+- **`next.meta_next_state_id`** — links a transition to the decision node that represents it on
+  the canvas
+
+These keys are read only by the editor. The execution engine ignores them, and they have no
+effect on how a workflow runs.
+
+:::warning Editing YAML outside the editor
+When a workflow is modified through the API, the SDK, the CLI, or an IaC pipeline, the existing
+`meta_states` block must be carried through unchanged. Dropping it discards the arrangement
+someone laid out by hand.
+
+Writing a workflow from scratch without `meta_states` is safe — the editor lays the graph out
+automatically the first time it opens, then saves the resulting positions.
 :::
 
 ## Saving and Running Workflows
@@ -366,6 +395,7 @@ Workflows enable you to build sophisticated automation that adapts to your data,
 Now that you understand the Visual Workflow Editor interface and controls, explore these topics:
 
 - **[Create from Template](./create-workflow-from-template.md)**: Start with pre-built templates and customize them
+- **[Sub-workflows](./subworkflows.md)**: Invoke another workflow with an isolated execution context
 - **[LLM Model Configuration](./llm-model-name-in-workflow.md)**: Configure AI models for workflow states
 - **[Workflow Templates](./workflow-templates.md)**: Browse available templates for common use cases
 - **[YAML Configuration Guide](./configuration/introduction.md)**: Deep dive into advanced YAML features

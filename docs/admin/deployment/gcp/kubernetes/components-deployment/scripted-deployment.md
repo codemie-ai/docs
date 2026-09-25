@@ -267,16 +267,38 @@ bash get-codemie-latest-release-version.sh -c key.json
 # Note the version output (e.g., 1.2.3) for the next step
 ```
 
-### Step 7: Run Deployment Script
+### Step 7: Configure Optional Components (If Required)
+
+**Optional Components:**
+
+- `litellm` - LiteLLM Proxy for unified LLM API interface, multi-model routing, and cost tracking
+- `pgadmin` - PostgreSQL administration interface for database inspection and monitoring
+
+:::warning LiteLLM Configuration Required
+If deploying with the `--optional litellm` flag, configuration must be completed **before** running the deployment script. Follow the [LiteLLM Proxy Installation and Configuration Guide](../../../extensions/litellm-proxy/index.md) to set up values files and credentials.
+:::
+
+Skip this step if not deploying optional components.
+
+### Step 8: Run Deployment Script
 
 Execute the deployment script with your chosen mode:
 
 ```bash
-# For first-time installation (installs all components including Nginx Ingress)
+# Development environment with all core components
 bash helm-charts.sh --cloud gcp --version <version> --mode all
+
+# Staging environment with database management tools
+bash helm-charts.sh --cloud gcp --version <version> --mode all --optional pgadmin
+
+# Test environment with LiteLLM for multi-model AI testing
+bash helm-charts.sh --cloud gcp --version <version> --mode recommended --optional litellm
+
+# Full-featured environment with all optional components
+bash helm-charts.sh --cloud gcp --version <version> --mode all --optional litellm,pgadmin
 ```
 
-Replace `<version>` with the version from Step 5 (e.g., `1.2.3`).
+Replace `<version>` with the version from Step 6 (e.g., `2.2.3`).
 
 :::tip Idempotent Script
 The deployment script is idempotent, meaning you can safely re-run it multiple times. If the script fails or is interrupted, simply run it again with the same parameters to continue or retry the deployment.
@@ -286,13 +308,15 @@ The deployment script is idempotent, meaning you can safely re-run it multiple t
 
 ### Script Parameters
 
-The deployment script accepts three required parameters:
+The deployment script accepts the following parameters:
 
-| Parameter   | Description               | Allowed Values                   |
-| ----------- | ------------------------- | -------------------------------- |
-| `--cloud`   | Target cloud provider     | `gcp`, `aws`, `azure`            |
-| `--version` | CodeMie component version | Semantic version (e.g., `1.2.3`) |
-| `--mode`    | Installation mode         | `all`, `recommended`, `update`   |
+| Parameter       | Description                          | Required | Values                                                               |
+| --------------- | ------------------------------------ | -------- | -------------------------------------------------------------------- |
+| `-h, --help`    | Show help message and usage examples | No       | N/A                                                                  |
+| `-c, --cloud`   | Target cloud provider                | Yes      | `gcp`, `aws`, `azure`                                                |
+| `-v, --version` | CodeMie component version            | Yes      | Semantic version (e.g., `2.2.3`)                                     |
+| `-m, --mode`    | Installation mode                    | Yes      | `all`, `recommended`, `update`                                       |
+| `--optional`    | Optional components to deploy        | No       | Comma-separated list: `litellm`, `pgadmin` (e.g., `litellm,pgadmin`) |
 
 ### Deployment Modes
 

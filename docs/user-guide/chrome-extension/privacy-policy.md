@@ -9,7 +9,7 @@ sidebar_position: 2
 
 # Chrome Extension Privacy Policy
 
-**Last updated: 4 August 2026**
+**Last updated: 8 September 2026**
 
 **Applies to:** the EPAM AI/Run CodeMie browser extension for Google Chrome, version 0.3.2 and later.
 
@@ -50,10 +50,17 @@ When you use a feature that needs page context, the Extension reads the current 
 structure, link and form labels — and sends it to your configured CodeMie instance, which forwards it to
 the large language model that answers you.
 
+Page context can also include text extracted from a direct HTTP(S) PDF, selected text, and content from
+other open tabs you explicitly attach. The Extension fetches supported PDF URLs and extracts text locally
+before including it in the request.
+
 **Screenshots.** When the assistant needs to interpret something visual, such as a chart, an image, or a
-layout the page structure cannot describe, it captures an image of the visible area of the current tab and
-sends it to the model for analysis. A screenshot captures whatever is on screen at that moment, which may
-include content unrelated to your request.
+layout the page structure cannot describe, it can capture an image of the visible area of the current tab.
+A screenshot captures whatever is on screen at that moment, which may include content unrelated to your
+request. With the default approval setting, the Extension shows a preview and asks before sending the
+screenshot to the model. If you enable Auto-approve, screenshots and page actions can proceed without that
+separate review. Captured screenshots are used for the current request and are not written to persistent
+extension storage.
 
 :::warning
 Do not use the assistant on pages showing information you do not want transmitted to your CodeMie instance
@@ -66,19 +73,25 @@ Extension itself; retention on the server is governed by your CodeMie instance's
 
 ### 3.2 Your prompts and conversations
 
-Messages you send, the assistant's replies, and records of tool actions are stored locally in the browser
-and, unless you use a temporary chat, synchronized to your CodeMie instance so conversations are available
-across devices.
+Messages, replies, and tool-action records in chats tied to a selected assistant are synchronized to your
+CodeMie instance so those conversations can be available across devices. The current panel message list is
+also cached in Chrome's session storage for the current browser session.
 
-Choosing a temporary chat keeps that conversation local — it is not created or synchronized server-side.
+A chat without an assistant is not synchronized to CodeMie and is only cached for the current browser
+session. A temporary chat is not saved to history or synchronized server-side, and is not written to the
+panel's session message cache.
 
 ### 3.3 Authentication data
 
-Sign-in uses your organization's single sign-on through the CodeMie platform. The Extension stores the
-resulting session cookies and replays them on requests to your CodeMie instance. Sessions are not
-refreshed; when one expires you sign in again.
+Sign-in uses your organization's single sign-on through the CodeMie platform. The Extension receives the
+resulting CodeMie session data from a fixed loopback callback and stores it in Chrome's session storage. It
+sends that session data only to the configured CodeMie instance for authenticated API requests. Session
+storage is cleared when the browser closes, and sessions are not refreshed automatically — sign in again
+after a browser restart or session expiry.
 
-The Extension does not receive, store, or transmit your password.
+The Extension does not receive or store the password you enter on your organization's SSO page. Text or
+credentials you separately provide in a prompt, or ask the assistant to type into another page, are
+page-action data and are not covered by that statement.
 
 ### 3.4 Usage analytics
 
@@ -92,12 +105,12 @@ Each record contains:
   options were enabled, the model name, iteration limits, and the extension version
 - Counts and outcomes: number of tool calls, successes, failures, turn duration, and whether the turn
   errored
-- Identifiers: a random per-turn session id, a panel session id, conversation and assistant ids, and a
-  project value — your pseudonymous analytics id if one was generated, otherwise your CodeMie project name
+- Identifiers: a random per-turn session id, a panel session id, conversation and assistant ids when
+  present, and a pseudonymous analytics id the Extension generates and stores itself
 - Hostnames of additional browser tabs you attached as context. Only `http` and `https` hosts are included,
   and hosts recognized as internal or private are replaced with a placeholder
-- Names you gave to your own configurations: MCP server names, saved prompt names, recorded flow names, and
-  quick action names, plus counts of each
+- Configuration inventory: counts and the names you gave your saved prompts, recorded flows, and MCP
+  servers
 
 It does **not** contain your prompts, the assistant's replies, page content, screenshots, or your email
 address. However, because the request is authenticated with your session, the receiving CodeMie instance
@@ -108,57 +121,76 @@ days.
 
 ### 3.5 Settings and local data
 
-Your settings, saved prompts, recorded flows, quick actions, and MCP server configurations — including any
-authentication headers you enter for them — are stored locally in the browser on your device.
+Your preferences, the last successful login address, saved prompts, recorded flows, per-site rules, saved
+Knowledge pages and notes, and MCP server configurations are stored in the Extension's local browser
+storage. Saved Knowledge is not sent anywhere merely because it is stored; when you enable **Knowledge**,
+matching snippets may be included in requests to CodeMie and its model provider.
+
+Sensitive MCP header values are encrypted at rest. The encryption key is session-scoped, so those values
+cannot be recovered after the browser closes and must be re-entered. Header names and other non-sensitive
+MCP configuration remain in local storage.
 
 ---
 
 ## 4. Where your data goes
 
-| Destination                                     | What is sent                                                                | When                                                                   |
-| ----------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Your configured CodeMie instance                | Page content, screenshots, prompts, replies, conversations, usage analytics | Whenever you use the assistant                                         |
-| The model provider behind your CodeMie instance | Page content, screenshots, and prompts, forwarded by CodeMie                | Whenever you use the assistant                                         |
-| MCP servers you configure                       | The tool arguments for tools you invoke on that server                      | Only if you add an MCP server and the assistant calls one of its tools |
-| Web search and scraping tools                   | Your search query, or the URL to fetch                                      | Only when you use those features                                       |
+| Destination                                     | What may be sent                                                                                                                                                                                                                        | When                                                                              |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Your configured CodeMie instance                | Prompts, conversation messages and tool traces, current-page/selection/PDF context, attached-tab content, approved screenshots, saved Knowledge snippets selected for the request, MCP and web-tool inputs/results, and usage analytics | According to the features used for a request; analytics is sent for tracked turns |
+| The model provider behind your CodeMie instance | The model conversation assembled for the request, which may include prompts, prior messages, page/PDF/tab context, approved screenshots, Knowledge snippets, and MCP/web-tool results                                                   | Whenever CodeMie invokes the configured model                                     |
+| MCP servers attached to your assistant          | Tool name, tool arguments, and MCP protocol/session messages                                                                                                                                                                            | Only when the assistant calls one of that server's tools                          |
+| CodeMie web search and scraping tools           | Your search query, or the URL to fetch                                                                                                                                                                                                  | Only when those CodeMie platform tools are invoked                                |
+
+Results returned by MCP, web search, and scraping tools may be added to the model conversation and
+therefore sent through your CodeMie instance to its model provider.
 
 The Extension has no hardcoded third-party endpoint and cannot be pointed at an arbitrary model provider —
 both of its connection modes target a CodeMie instance. The address of that instance is a setting, so which
 server receives your data is determined by the URL you or your administrator configure. Beyond that, it
-talks only to MCP servers you add yourself.
+talks only to MCP servers attached to the assistants you use.
 
 We do not sell your data, share it with data brokers, or use it for advertising. It is not used to determine
 creditworthiness or for lending.
 
 :::note
-MCP servers are third parties you choose. Anything the assistant sends to a server you configured is
-governed by that server operator's terms, not by this policy.
+MCP servers are third parties chosen by whoever configured your assistant. Anything the assistant sends to
+one of those servers is governed by that server operator's terms, not by this policy.
 :::
 
 ---
 
 ## 5. Browser permissions and why they are needed
 
-| Permission             | Why it is needed                                                                                                                                         |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sidePanel`            | Renders the assistant panel, which is the Extension's main interface                                                                                     |
-| `storage`              | Stores settings, conversations, and queued analytics locally                                                                                             |
-| `scripting`            | Injects the page-analysis script that builds the structural snapshot the assistant acts on                                                               |
-| `activeTab`            | Reads the tab you invoked the assistant on                                                                                                               |
-| `tabs`                 | Completes sign-in by detecting the callback address, and lets you attach other open tabs as context                                                      |
-| `cookies`              | Reads the session cookies used to authenticate CodeMie API calls                                                                                         |
-| `contextMenus`         | Adds the right-click "Ask CodeMie" action on selected text                                                                                               |
-| `alarms`               | Runs the periodic timer that uploads queued analytics                                                                                                    |
-| `webRequest`           | Observation only. Counts in-flight requests on the active tab so automation can wait for a page to settle. It cannot block, redirect, or modify requests |
-| Access to all websites | The assistant must be able to read and act on whatever page you invoke it on                                                                             |
+| Permission             | Why it is needed                                                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sidePanel`            | Renders the assistant panel, which is the Extension's main interface                                                                                                                              |
+| `storage`              | Stores persistent preferences, saved content, recorded flows, and queued analytics in local storage; stores authentication data and the current panel message cache in session storage            |
+| `scripting`            | Injects the page-analysis script that builds the structural snapshot the assistant acts on                                                                                                        |
+| `activeTab`            | Reads the tab you invoked the assistant on                                                                                                                                                        |
+| `tabs`                 | Completes sign-in by detecting the fixed local callback address, and lets you attach other open tabs as context                                                                                   |
+| `contextMenus`         | Adds the right-click "Explain selection with CodeMie" and "Remember selection (CodeMie)" actions on selected text                                                                                 |
+| `alarms`               | Runs the periodic timer that uploads queued analytics                                                                                                                                             |
+| `webRequest`           | Observation only. Counts in-flight requests on the active tab so automation can wait for a page to settle. It cannot block, redirect, or modify requests                                          |
+| Access to all websites | Lets the Extension read supported HTTP(S) pages, fetch direct HTTP(S) PDFs, and perform user-requested actions. Chrome still blocks restricted pages such as `chrome://` and the Chrome Web Store |
+
+:::note
+The Extension does not request the `cookies` or `identity` permissions. Your CodeMie session is obtained
+from a fixed local callback during sign-in, not by reading browser cookies.
+:::
 
 ---
 
 ## 6. Data retention
 
-- **On your device:** settings and conversations persist until you clear them or remove the Extension.
-  Queued analytics are deleted after seven days.
-- **On the server:** governed by your CodeMie instance's retention policy. See
+- **Persistent on-device data:** preferences, the last successful login address, saved prompts, saved
+  Knowledge, recorded flows, per-site rules, MCP configuration metadata, and queued analytics remain in
+  local storage until deleted, replaced, or the Extension is removed. Queued analytics are capped at 100
+  entries, and entries older than seven days are discarded.
+- **Session on-device data:** CodeMie authentication data and the current non-temporary panel message
+  cache use Chrome session storage and are cleared when the browser closes. Temporary-chat messages are
+  never written to that cache.
+- **On the server:** conversations tied to an assistant, and other data sent to CodeMie, follow your
+  CodeMie instance's retention policy. See
   [Data Processing and Storage Architecture](../../admin/security/data-processing-storage.md).
 
 Removing the Extension deletes all local data. It does not delete conversations already synchronized to
