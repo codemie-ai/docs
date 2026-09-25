@@ -80,10 +80,10 @@ When a budget's spending crosses its soft limit, the platform can send an email 
 
 ### Configuration Flags
 
-| Variable | Default | Description |
-| -------- | ------- | ----------- |
-| `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` | `false` | Enables the soft-limit notification system and exposes the notification owner email and toggle fields in the UI |
-| `BUDGET_SOFT_LIMIT_EMAIL_ENABLED` | `false` | Enables actual email dispatch when the soft limit is reached. Has no effect if `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` is `false` |
+| Variable                                 | Default | Description                                                                                                                        |
+| ---------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` | `false` | Enables the soft-limit notification system and exposes the notification owner email and toggle fields in the UI                    |
+| `BUDGET_SOFT_LIMIT_EMAIL_ENABLED`        | `false` | Enables actual email dispatch when the soft limit is reached. Has no effect if `BUDGET_SOFT_LIMIT_NOTIFICATION_ENABLED` is `false` |
 
 **Deployment modes**:
 
@@ -98,15 +98,15 @@ Setting `BUDGET_SOFT_LIMIT_EMAIL_ENABLED=true` while `BUDGET_SOFT_LIMIT_NOTIFICA
 
 Full email mode requires SMTP to be configured on the API deployment:
 
-| Variable | Description |
-| -------- | ----------- |
-| `EMAIL_SMTP_HOST` | SMTP server hostname |
-| `EMAIL_SMTP_PORT` | SMTP server port |
+| Variable              | Description                  |
+| --------------------- | ---------------------------- |
+| `EMAIL_SMTP_HOST`     | SMTP server hostname         |
+| `EMAIL_SMTP_PORT`     | SMTP server port             |
 | `EMAIL_SMTP_USERNAME` | SMTP authentication username |
 | `EMAIL_SMTP_PASSWORD` | SMTP authentication password |
-| `EMAIL_FROM_ADDRESS` | Sender email address |
-| `EMAIL_FROM_NAME` | Sender display name |
-| `EMAIL_USE_TLS` | Set to `true` to enable TLS |
+| `EMAIL_FROM_ADDRESS`  | Sender email address         |
+| `EMAIL_FROM_NAME`     | Sender display name          |
+| `EMAIL_USE_TLS`       | Set to `true` to enable TLS  |
 
 In the `codemie-api` Helm chart, add to the `extraEnv` list:
 
