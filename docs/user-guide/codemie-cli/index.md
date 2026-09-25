@@ -18,11 +18,11 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 ## Overview
 
-CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenCode, and a built-in agent powered by LangGraph.
+CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and a built-in agent powered by LangGraph.
 
 ### Key Capabilities
 
-**Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI - Claude Code, Gemini, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
+**Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
 
 **Profile Management**: Maintain separate configurations for different contexts (work, personal, team projects). Each profile can be configured with its own provider (Azure OpenAI, AWS Bedrock, or LiteLLM), enabling seamless switching between environments.
 
@@ -69,7 +69,7 @@ CodeMie CLI operates on a **bring-your-own-infrastructure** model. For enterpris
 
 ### Prerequisites
 
-- **Node.js**: 20.0.0 or higher
+- **Node.js**: 20 or later (the installer checks this automatically)
 - **npm**: Bundled with Node.js
 - **CodeMie Platform**: Deployed instance with LiteLLM Proxy configured (for SSO authentication)
 - **LLM Access**: One of the following:
@@ -77,11 +77,48 @@ CodeMie CLI operates on a **bring-your-own-infrastructure** model. For enterpris
   - Azure OpenAI Service
   - Google Cloud Vertex AI
 
-### Global Installation
+### Install via Script (Recommended)
+
+The installers check Node.js, npm, and registry access and tell you what to fix if something is missing.
+
+**macOS, Linux, or WSL:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/codemie-ai/codemie-code/main/install/macos/install.sh | bash
+```
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/codemie-ai/codemie-code/main/install/windows/install.ps1 | iex
+```
+
+### Install via npm
 
 ```bash
 npm install -g @codemieai/code
 ```
+
+### Quick Start
+
+```bash
+# 1. Sign in and configure authentication
+codemie setup
+
+# 2. Check your setup
+codemie doctor
+
+# 3. Install Claude Code
+codemie install claude --supported
+
+# 4. Register your CodeMie assistants
+codemie setup assistants
+
+# 5. Start Claude Code with CodeMie
+codemie-claude
+```
+
+After `codemie setup assistants`, your CodeMie assistants are available inside Claude Code as subagents (`@assistant-name`) and slash commands (`/assistant-name`).
 
 ### Setup Configuration
 
@@ -109,6 +146,12 @@ codemie install claude --supported
 
 # Install Gemini CLI
 codemie install gemini --supported
+
+# Install OpenAI Codex
+codemie install codex --supported
+
+# Install GitHub Copilot CLI
+codemie install copilot --supported
 
 # Install OpenCode
 codemie install opencode --supported
@@ -140,6 +183,8 @@ codemie profile delete <name>        # Remove a profile
 ```bash
 codemie install claude --supported   # Install Claude Code
 codemie install gemini --supported   # Install Gemini CLI
+codemie install codex --supported    # Install OpenAI Codex
+codemie install copilot --supported  # Install GitHub Copilot CLI
 codemie install opencode --supported # Install OpenCode
 codemie uninstall <agent>            # Remove an agent
 ```
@@ -148,11 +193,40 @@ codemie uninstall <agent>            # Remove an agent
 
 ```bash
 codemie setup                        # Configuration wizard
-codemie setup assistants             # Register CodeMie assistants in Claude Code
+codemie setup assistants             # Register CodeMie assistants in Claude Code as @name subagents and /name slash commands
 codemie setup skills                 # Register CodeMie skills as slash commands
 codemie doctor                       # Health check and diagnostics
+codemie self-update                  # Update CodeMie CLI to the latest version
+codemie self-update --check          # Check for updates without installing
 codemie --version                    # Show version
 codemie --help                       # Show help
+```
+
+**MCP Server Management**
+
+Manage remote MCP servers registered with Claude Code. All MCP traffic is routed through the built-in `codemie-mcp-proxy`, which handles OAuth automatically.
+
+```bash
+codemie mcp add <name> <url>         # Register an MCP server
+codemie mcp add <name> <url> --scope project  # Register for the current project only
+codemie mcp remove <name>            # Remove a registered MCP server
+codemie mcp list                     # List all registered MCP servers
+```
+
+Examples:
+
+```bash
+# Add a remote MCP server for the current user
+codemie mcp add my-server https://mcp.example.com/sse
+
+# Add a project-scoped MCP server
+codemie mcp add my-server https://mcp.example.com/sse --scope project
+
+# List all registered MCP servers
+codemie mcp list
+
+# Remove an MCP server
+codemie mcp remove my-server
 ```
 
 ### Agent Shortcuts
@@ -166,12 +240,16 @@ All agents support two modes:
 codemie-code                         # Built-in CodeMie agent
 codemie-claude                       # Claude Code agent
 codemie-gemini                       # Gemini CLI agent
+codemie-codex                        # OpenAI Codex agent
+codemie-copilot                      # GitHub Copilot CLI agent
 codemie-opencode                     # OpenCode agent
 
 # Single task mode (executes and exits)
 codemie-code --task "<prompt>"       # Built-in CodeMie agent
 codemie-claude --task "<prompt>"     # Claude Code agent
 codemie-gemini --task "<prompt>"     # Gemini CLI agent
+codemie-codex --task "<prompt>"      # OpenAI Codex agent
+codemie-copilot --task "<prompt>"    # GitHub Copilot CLI agent
 codemie-opencode --task "<prompt>"   # OpenCode agent
 ```
 
@@ -238,34 +316,45 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
-### Connect VS Code through CodeMie Proxy
+### Connect Remote MCP Servers
 
-Use the CodeMie proxy to route VS Code chat and agent requests through an SSO-backed CodeMie profile:
+Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
+
+```bash
+codemie mcp add <name> <url>
+codemie mcp add <name> <url> --scope project
+codemie mcp remove <name>
+codemie mcp list
+```
+
+To connect VS Code to the CodeMie model catalog and MCP proxy:
 
 ```bash
 codemie proxy connect vscode
-```
-
-By default, the command uses the active CodeMie profile. Use `--profile <name>` for a one-time profile override, or `--insiders` to configure VS Code Insiders:
-
-```bash
 codemie proxy connect vscode --profile <name>
 codemie proxy connect vscode --insiders
 ```
 
-The command starts or reuses the local proxy and adds the managed CodeMie model catalog to VS Code. Your SSO credentials remain in CodeMie and are not written to VS Code. The `--profile` option does not change the active profile.
-
-On first use, configure the local key in VS Code:
-
-1. Open the Command Palette (`⇧⌘P` on macOS or `Ctrl+Shift+P` on Windows/Linux) and run **Chat: Manage Language Models**.
-2. Right-click any CodeMie model, select **Update API Key**, and enter `codemie-proxy`.
-3. Reload VS Code and select a CodeMie model from the model picker.
+The proxy starts locally and adds the managed CodeMie model catalog and MCP servers to your agent. Your SSO credentials remain in CodeMie and are not written to the agent configuration.
 
 :::note
-
-This integration covers VS Code chat and agent workflows. Inline suggestions continue to use Copilot.
-
+The VS Code proxy integration covers chat and agent workflows. Inline suggestions continue to use Copilot.
 :::
+
+### Updating CodeMie CLI
+
+Check for a new version or update immediately:
+
+```bash
+codemie self-update           # Update to the latest version
+codemie self-update --check   # Check for updates without installing
+```
+
+To enable automatic updates, set the environment variable:
+
+```bash
+CODEMIE_AUTO_UPDATE=true
+```
 
 ## Resources
 

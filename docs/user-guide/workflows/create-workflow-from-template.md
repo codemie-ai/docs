@@ -24,7 +24,17 @@ Creating a workflow from scratch can be complex, especially for first-time users
 
 4. Click the **+** button to create a workflow from the selected template.
 
-5. Configure the workflow settings:
+5. If the template contains placeholder variables (see [Using Placeholder Variables in Templates](#using-placeholder-variables-in-templates) below), a **Configure Template Variables** dialog appears first, prompting for a value for each unique placeholder found in the template:
+
+   ![Configure Template Variables dialog](./images/configure-template-variables-dialog.png)
+
+   Provide a value for every field and click **Apply**. The template's YAML configuration, description, and start hint are filled in automatically with the provided values before the create form opens.
+
+   Clicking **Cancel** on this dialog exits the create-from-template flow and returns to the templates list, without opening a blank workflow form.
+
+   Templates without placeholder variables skip this dialog entirely, and the create form opens pre-filled from the template as before.
+
+6. Configure the workflow settings:
 
 ### Workflow Configuration
 
@@ -37,7 +47,31 @@ Creating a workflow from scratch can be complex, especially for first-time users
 | **Icon URL**            | URL to an icon image for the workflow avatar                                             |
 | **Supervisor Prompt**   | Global context shared across all assistants; can include variables like date, time, etc. |
 
-6. Click **Create** to save your workflow.
+7. Click **Create** to save your workflow.
+
+## Using Placeholder Variables in Templates
+
+Some templates use placeholder variables to mark values that must be provided before the workflow can run — for example, a datasource ID or assistant ID that is specific to each project. Placeholders can appear anywhere in the template's YAML configuration: in assistant IDs, datasource IDs, transform node parameters, titles, and other fields.
+
+A placeholder uses the syntax:
+
+```
+${input:variable_name}
+```
+
+For example, a template might reference a datasource this way:
+
+```yaml
+datasource_ids: [ ${input:git_datasource_id} ]
+```
+
+If the same placeholder name appears multiple times in a template, it is treated as a single variable — a value is requested for it only once, and that value is substituted everywhere the placeholder appears.
+
+When creating a workflow from a template that contains placeholders, the **Configure Template Variables** dialog lists every unique placeholder found in the template and requires a value for each before continuing. All values are substituted into the template's YAML configuration, description, and start hint before the workflow create form opens.
+
+:::note
+Placeholder variables (`${input:variable_name}`) are resolved once, when a workflow is created from a template. This is different from the `{{variable_name}}` syntax described in [Workflow Configuration Introduction](./configuration/introduction.md), which is resolved at workflow execution time.
+:::
 
 ## Customizing Your Workflow Template
 

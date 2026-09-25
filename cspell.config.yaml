@@ -25,6 +25,8 @@ words:
   # Project/Brand names
   - HMAC
   - codemie
+  - passwordless
+  - SAMEORIGIN
   - AI/Run
   - airun
   - docusaurus
@@ -173,6 +175,8 @@ words:
   - sideloading
   - ITSM
   - CMDB
+  - chargeback
+  - showback
   - cloudapp
   - newbot
   - repo
@@ -274,6 +278,8 @@ words:
   - Mixtral
   - Qwen
   - Moonshot
+  - moonshotai
+  - Kimi
   - DeepSeek
   - deepseek
   - onboarder

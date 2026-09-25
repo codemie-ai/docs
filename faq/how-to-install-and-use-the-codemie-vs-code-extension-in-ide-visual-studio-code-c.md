@@ -1,8 +1,8 @@
 # How to Install and Use the CodeMie VS Code Extension in IDE Visual Studio Code copilot? How do I use CodeMie in Visual Studio Code IDE in copilot?
 
-:::warning Deprecated
+:::warning Retirement notice
 
-The CodeMie VS Code GitHub Copilot Extension is currently deprecated. You can use the [CodeMie CLI](https://docs.codemie.ai/user-guide/codemie-cli/) instead.
+The CodeMie VS Code GitHub Copilot Extension will be retired by the end of 2026. We recommend switching to [CodeMie CLI](https://docs.codemie.ai/user-guide/codemie-cli/) to keep calling your CodeMie assistants from your development environment.
 
 :::
 

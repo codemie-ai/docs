@@ -263,6 +263,10 @@ The context system preserves and shares data across workflow execution:
 - Supports dynamic value resolution with `{{variable_name}}` syntax
 - Can be explicitly cleared or partially reset
 
+:::note
+The `{{variable_name}}` syntax above is resolved at workflow execution time. It is different from the `${input:variable_name}` placeholder syntax used in workflow templates, which is resolved once when a workflow is created from a template — see [Using Placeholder Variables in Templates](../create-workflow-from-template.md#using-placeholder-variables-in-templates).
+:::
+
 **Message History**
 
 - Contains all messages exchanged during workflow execution

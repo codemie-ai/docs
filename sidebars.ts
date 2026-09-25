@@ -47,7 +47,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/create-assistant',
             'user-guide/assistants/sharing-assistants',
             'user-guide/assistants/edit-assistants',
-            'user-guide/assistants/restore-system-instructions',
+            'user-guide/assistants/assistant-version-history',
             'user-guide/assistants/delete-assistants-and-chats',
             'user-guide/assistants/assistant-templates',
             'user-guide/assistants/create-assistant-from-a-template',
@@ -106,6 +106,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/workflows/workflows-overview',
             'user-guide/workflows/create-workflow',
             'user-guide/workflows/subworkflows',
+            'user-guide/workflows/workflow-version-history',
             'user-guide/workflows/llm-model-name-in-workflow',
             'user-guide/workflows/workflow-templates',
             'user-guide/workflows/create-workflow-from-template',
@@ -343,6 +344,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Applications',
+          link: {
+            type: 'doc',
+            id: 'user-guide/applications/index',
+          },
+          collapsed: true,
+          items: ['user-guide/applications/integration-guide'],
+        },
+        {
+          type: 'category',
           label: 'API',
           link: {
             type: 'doc',
@@ -366,13 +377,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Budget Management',
+          label: '✨ Budget Management',
           link: {
             type: 'doc',
             id: 'user-guide/budget-management/budget-management',
           },
           collapsed: true,
-          items: [],
+          items: [
+            'user-guide/budget-management/project-budgets',
+            'user-guide/budget-management/chargeback-cost-centers',
+          ],
         },
       ],
     },
