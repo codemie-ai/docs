@@ -22,7 +22,6 @@ The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.c
 - **Infrastructure services** (Nginx Ingress, GCP Storage Class)
 - **Data layer** (Elasticsearch)
 - **Security components** (Keycloak Operator, Keycloak, OAuth2 Proxy)
-- **Messaging system** (NATS, NATS Auth Callout)
 - **Core CodeMie services** (API, UI, MCP Connect, Mermaid Server)
 - **Observability stack** (Fluent Bit, Kibana, Kibana Dashboards)
 
@@ -179,24 +178,7 @@ ingress-nginx:
 Never deploy a public LoadBalancer without `loadBalancerSourceRanges` configured. This would expose your application to the entire internet.
 :::
 
-**2. Modify NATS Service**
-
-Edit `codemie-helm-charts/codemie-nats/values-gcp.yaml`:
-
-```yaml
-service:
-  merge:
-    metadata:
-      # Remove the Internal annotation
-      annotations: {}
-    spec:
-      type: LoadBalancer
-      # Define allowed IP ranges for NATS access
-      loadBalancerSourceRanges:
-        - x.x.x.x/24          # Your office network
-```
-
-**3. Configure TLS Certificates**
+**2. Configure TLS Certificates**
 
 For public access, create and configure TLS certificates:
 
@@ -215,7 +197,7 @@ kubectl get secret custom-tls -n codemie -o yaml | sed '/namespace:/d' | kubectl
 kubectl get secret custom-tls -n codemie -o yaml | sed '/namespace:/d' | kubectl apply -n oauth2-proxy -f -
 ```
 
-**4. Enable TLS in Ingress Configuration**
+**3. Enable TLS in Ingress Configuration**
 
 Uncomment and configure the `ingress.tls` section in these files:
 
@@ -223,7 +205,6 @@ Uncomment and configure the `ingress.tls` section in these files:
 - `codemie-ui/values-gcp.yaml`
 - `kibana/values-gcp.yaml`
 - `keycloak-helm/values-gcp.yaml`
-- `codemie-nats/values-gcp.yaml`
 
 Example configuration:
 
@@ -335,28 +316,10 @@ kubectl get service ingress-nginx-controller -n ingress-nginx \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
-**2. NATS Record for Plugin Engine**
-
-This allows direct access to NATS for the CodeMie Plugin Engine:
-
-| Field     | Value                   |
-| --------- | ----------------------- |
-| **Type**  | A                       |
-| **Name**  | `nats-codemie`          |
-| **Value** | LoadBalancer IP of NATS |
-
-Get the NATS service IP:
-
-```bash
-kubectl get service codemie-nats -n codemie \
-  -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
-
 **Example DNS Configuration:**
 
 ```
 *.airun.example.com           A   x.x.x.x
-nats-codemie.airun.example.com A   x.x.x.x
 ```
 
 ## Next Steps
