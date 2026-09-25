@@ -45,6 +45,8 @@ Use this table to quickly find where each component appears in the UI.
 | `releaseNotesRecentCount`                 | Release Notes page                                                  | Number of recent releases listed before older ones are grouped                                  | —                                                                                   | Default: `"10"`. Editable at runtime                                                           |
 | **MCP CONFIGURATION**                     |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `mcpAuthTimeoutSeconds`                   | MCP OAuth flow                                                      | MCP OAuth timeout duration                                                                      | Uses default timeout                                                                | Integer, default: `60` — configurable via `customer-config.yaml`                               |
+| **CONTENT SECURITY**                      |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
+| `allowedImageDomains`                     | Assistant output (chat messages, agent thoughts, markdown preview)  | Images from listed domains render normally                                                      | Blocked-image badge in place of every external image                                | String, default: `""` — comma-separated hostnames; empty denies all external images            |
 | **TOOL PERMISSIONS**                      |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `tool_permissions`                        | Assistant config → Tools section; Chat prompt (if override allowed) | "Tool Calls" policy dropdown (Manual/Guarded/Auto) and "Allow override" toggle                  | Tool call policy controls — all tool calls auto-approve                             | `min_tool_call_policy` sets a customer-wide floor that clamps the effective policy             |
 | **HELP CENTER LINKS**                     |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
@@ -493,6 +495,46 @@ components:
       enabled: true
       min_tool_call_policy: "guarded"
 ```
+
+### Image Allow-List for LLM Output
+
+Domain allow-list gating every image rendered from LLM or assistant output. Images whose host is not on the list are replaced with a badge and no image element is created, so the browser issues no request to that host.
+
+**Where it appears:** Assistant replies in chat, agent thought segments, the shared markdown renderer, and the markdown editor preview.
+
+**How it works:**
+
+- The value is a comma-separated list of hostnames. A plain entry such as `cdn.example.com` matches that host only; a leading-dot entry such as `.example.com` matches the apex domain and all of its subdomains.
+- Entries left with fewer than two labels after the leading dot is removed are discarded, so values such as `com` have no effect.
+- An empty value denies every external image. This is the shipped default.
+- Images served from the platform origin or the backend API origin — including uploaded attachments — are always allowed and need no entry. Inline `data:image/*` content is also always allowed.
+- Matching happens in the browser. The backend stores the string and returns it unchanged through `GET /v1/config`.
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true
+  value: "cdn.example.com,.assets.example.org" # String — comma-separated hostnames; empty denies all external images
+```
+
+**Example Configuration:**
+
+```yaml
+components:
+  # WHERE: Assistant output — chat messages, agent thoughts, shared markdown renderer, markdown editor preview
+  # ENABLED: Images from listed hostnames render; all others are replaced with a blocked-image badge
+  # DISABLED: Badge shown in place of every external image
+  # NOTE: Default is an empty string (deny all external images). Leading-dot entries match apex plus subdomains.
+  - id: "allowedImageDomains"
+    settings:
+      enabled: true
+      value: "raw.githubusercontent.com,.example.com,cdn.customer.io"
+```
+
+:::warning Default-deny on upgrade
+Until this value is populated, all external images in assistant output stop rendering. Rollout guidance and the full matching order are documented in [Image Allow-List for LLM Output](../../security/llm-output-image-allow-list.md).
+:::
 
 ### Read-Only Runtime Fields
 
@@ -1184,6 +1226,12 @@ extraObjects:
             settings:
               enabled: true
               min_tool_call_policy: "guarded"
+
+          # Image Allow-List for LLM Output
+          - id: "allowedImageDomains"
+            settings:
+              enabled: true
+              value: "raw.githubusercontent.com,.example.com,cdn.customer.io"
 
           # Advanced Features
           - id: "skills"

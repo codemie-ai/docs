@@ -156,6 +156,8 @@ words:
   - valkey
   # Technical terms
   - backend
+  - exfiltration
+  - srcset
   - frontend
   - microservices
   - namespace
