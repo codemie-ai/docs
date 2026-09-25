@@ -276,6 +276,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Schedulers',
+          link: {
+            type: 'doc',
+            id: 'user-guide/schedulers/schedulers',
+          },
+          collapsed: true,
+          items: ['user-guide/schedulers/create-scheduler', 'user-guide/schedulers/monitor-runs'],
+        },
+        {
+          type: 'category',
           label: 'AI Katas',
           link: {
             type: 'doc',
