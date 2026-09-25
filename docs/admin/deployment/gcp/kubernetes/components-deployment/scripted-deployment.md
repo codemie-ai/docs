@@ -270,7 +270,7 @@ bash get-codemie-latest-release-version.sh -c key.json
 - `pgadmin` - PostgreSQL administration interface for database inspection and monitoring
 
 :::warning LiteLLM Configuration Required
-If deploying with the `--optional litellm` flag, configuration must be completed **before** running the deployment script. Follow the LiteLLM Proxy Installation and Configuration Guide (Extensions > LiteLLM Proxy section) to set up values files and credentials.
+If deploying with the `--optional litellm` flag, configuration must be completed **before** running the deployment script. Follow the [LiteLLM Proxy Installation and Configuration Guide](../../../extensions/litellm-proxy/index.md) to set up values files and credentials.
 :::
 
 Skip this step if not deploying optional components.
