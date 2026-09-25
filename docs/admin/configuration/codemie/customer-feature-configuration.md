@@ -60,6 +60,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:pinnedAssistants`               | Assistants list, Navigation sidebar                                 | Pin/Unpin actions and Pinned Assistants sidebar section                                         | Pin actions and sidebar section hidden                                              |                                                                                                |
 | `features:favoritesPage`                  | Main navigation                                                     | Favorites page and navigation link                                                              | Favorites page and nav link hidden                                                  | Default: disabled                                                                              |
 | **DATASOURCE FEATURES**                   |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
+| `features:schedulersView`                 | Main navigation                                                     | Schedulers navigation item                                                                      | Schedulers navigation item hidden                                                   | Enabled by default; configurable via Customer Configuration UI                                 |
 | `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                                | "Sign in with Microsoft (CodeMie Project)" authentication option                                | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`                                                        |
 | **INTEGRATED APPLICATIONS**               |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `applications:<your-app-id>`              | Applications menu                                                   | Application card with icon                                                                      | Application card                                                                    | Type: `module`, `iframe`, or `link`                                                            |
@@ -421,6 +422,16 @@ components:
       name: "Favorites Page"
       description: "Enable the dedicated Favorites page and its navigation link"
 
+  # WHERE: Main navigation sidebar
+  # ENABLED: Shows Schedulers navigation item
+  # DISABLED: Hides Schedulers navigation item
+  # NOTE: Enabled by default; can be overridden in Customer Configuration UI
+  - id: "features:schedulersView"
+    settings:
+      enabled: true
+      name: "Schedulers"
+      description: "Controls whether the Schedulers navigation item is visible in the UI"
+
   # WHERE: Data Sources → SharePoint setup form
   # ENABLED: Shows "Sign in with Microsoft (CodeMie Project)" authentication option
   # DISABLED: Hides SharePoint PKCE auth option
@@ -504,6 +515,45 @@ These values are served automatically from the backend configuration. No `custom
 | `mcpAuthOrigin` | `CALLBACK_API_BASE_URL` | _(none)_   | Origin URL for MCP OAuth callbacks |
 
 ### Datasource Features
+
+Controls navigation visibility and authentication options for datasource-related features.
+
+**Where it appears:** Main navigation sidebar, Data Sources → creation/edit form
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true         # Required
+  name: "Display Name"  # Label shown in the Customer Configuration UI
+  description: "..."    # Tooltip or helper text in the Customer Configuration UI
+```
+
+#### Schedulers Navigation
+
+Controls whether the **Schedulers** item is visible in the left navigation sidebar.
+
+- **When `enabled: true`** (default) — Schedulers navigation item appears in the sidebar
+- **When `enabled: false`** — Schedulers navigation item is hidden
+
+This flag can be toggled directly in the Customer Configuration UI under **Settings → Administration → Customer Configuration**.
+
+![Schedulers feature flag in Customer Configuration UI](./images/customer-config-schedulers-flag.png)
+
+```yaml
+components:
+  # WHERE: Main navigation sidebar
+  # ENABLED: Shows Schedulers navigation item
+  # DISABLED: Hides Schedulers navigation item
+  # NOTE: Enabled by default; can be overridden in Customer Configuration UI
+  - id: "features:schedulersView"
+    settings:
+      enabled: true
+      name: "Schedulers"
+      description: "Controls whether the Schedulers navigation item is visible in the UI"
+```
+
+#### SharePoint CodeMie OAuth
 
 Controls authentication options available in the datasource setup UI.
 
@@ -1221,6 +1271,12 @@ extraObjects:
               enabled: false
               name: "Favorites Page"
               description: "Enable the dedicated Favorites page and its navigation link"
+
+          - id: "features:schedulersView"
+            settings:
+              enabled: true
+              name: "Schedulers"
+              description: "Controls whether the Schedulers navigation item is visible in the UI"
 
           # Integrated Applications
           - id: "applications:angular-upgrade-app"
