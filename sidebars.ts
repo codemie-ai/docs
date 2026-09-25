@@ -716,6 +716,16 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'category',
+              label: 'Standalone',
+              link: {
+                type: 'doc',
+                id: 'admin/deployment/standalone/overview',
+              },
+              collapsed: true,
+              items: ['admin/deployment/standalone/deployment-guide'],
+            },
+            {
+              type: 'category',
               label: 'Extensions',
               link: {
                 type: 'doc',

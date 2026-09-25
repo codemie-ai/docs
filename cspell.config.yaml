@@ -125,6 +125,7 @@ words:
   - Jaeger
   - OpenTelemetry
   - OTEL
+  - otelcollector
   - Keycloak
   - OIDC
   - OAuth
@@ -141,6 +142,7 @@ words:
   - fluentbit
   - tfstate
   - nslookup
+  - nofile
   # Data
   - PostgreSQL
   - Postgres

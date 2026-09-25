@@ -498,10 +498,17 @@ The following fields appear in the `/v1/config` API response but are **not confi
 These values are served automatically from the backend configuration. No `customer-config.yaml` action is required.
 :::
 
-| Field           | Backend env var         | Default    | Description                        |
-| --------------- | ----------------------- | ---------- | ---------------------------------- |
-| `idpProvider`   | `IDP_PROVIDER`          | `keycloak` | Identity provider in use           |
-| `mcpAuthOrigin` | `CALLBACK_API_BASE_URL` | _(none)_   | Origin URL for MCP OAuth callbacks |
+| Field                     | Backend env var                     | Default    | Description                                                                  |
+| ------------------------- | ----------------------------------- | ---------- | ---------------------------------------------------------------------------- |
+| `idpProvider`             | `IDP_PROVIDER`                      | `keycloak` | Identity provider in use                                                     |
+| `mcpAuthOrigin`           | `CALLBACK_API_BASE_URL`             | _(none)_   | Origin URL for MCP OAuth callbacks                                           |
+| `features:knowledgeBases` | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Enabled only when `RETRIEVAL_BACKEND=elasticsearch` and `ELASTIC_URL` is set |
+| `features:datasources`    | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Same condition as `features:knowledgeBases`                                  |
+| `features:codeIndexing`   | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Same condition as `features:knowledgeBases`                                  |
+
+:::info Standalone deployments
+The [CodeMie Standalone](../../deployment/standalone/overview.md) image sets `RETRIEVAL_BACKEND=none` by default and includes no Elasticsearch container, so `features:knowledgeBases`, `features:datasources`, and `features:codeIndexing` are disabled regardless of `customer-config.yaml`.
+:::
 
 ### Datasource Features
 
