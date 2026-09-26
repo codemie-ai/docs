@@ -22,7 +22,6 @@ The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.c
 - **Infrastructure services** (Nginx Ingress, GCP Storage Class)
 - **Data layer** (Elasticsearch)
 - **Security components** (Keycloak Operator, Keycloak, OAuth2 Proxy)
-- **Messaging system** (NATS, NATS Auth Callout)
 - **Core CodeMie services** (API, UI, MCP Connect, Mermaid Server)
 - **Observability stack** (Fluent Bit, Kibana, Kibana Dashboards)
 
@@ -180,6 +179,12 @@ Never deploy a public LoadBalancer without `loadBalancerSourceRanges` configured
 :::
 
 **2. Modify NATS Service**
+
+:::warning Deprecated
+
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
+
+:::
 
 Edit `codemie-helm-charts/codemie-nats/values-gcp.yaml`:
 
@@ -360,6 +365,12 @@ kubectl get service ingress-nginx-controller -n ingress-nginx \
 ```
 
 **2. NATS Record for Plugin Engine**
+
+:::warning Deprecated
+
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
+
+:::
 
 This allows direct access to NATS for the CodeMie Plugin Engine:
 

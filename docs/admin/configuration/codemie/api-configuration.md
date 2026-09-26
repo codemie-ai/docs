@@ -754,7 +754,7 @@ Jira and Confluence share one Atlassian OAuth 2.0 app — register it once:
 
 :::warning Deprecated
 
-NATS is currently deprecated as part of the NATS retirement direction.
+The Plugin Engine is deprecated, along with the underlying NATS messaging infrastructure it uses.
 
 :::
 
