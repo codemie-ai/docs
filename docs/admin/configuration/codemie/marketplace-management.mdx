@@ -1,0 +1,53 @@
+---
+id: marketplace-management
+sidebar_position: 4
+title: Marketplace Management
+sidebar_label: Marketplace Management
+description: Review, approve, and maintain assistants published to the Marketplace
+pagination_prev: admin/configuration/index
+pagination_next: null
+---
+
+# Marketplace Management
+
+Marketplace management lets platform administrators and maintainers control which assistants appear in the Marketplace. Assistants submitted by users are validated automatically and then wait in a review queue until an administrator approves or rejects them. Administrators can also audit the quality and usage of published assistants and configure the validation thresholds.
+
+For the submitter's side of the flow, see [Publish to Marketplace](../../../user-guide/assistants/marketplace-publishing.md).
+
+## Enabling Marketplace Management
+
+Marketplace management is enabled by default. It can be disabled only in the backend YAML configuration; there is no UI control for it. When it is disabled, assistants are published to the Marketplace without review, and the **Marketplace management** page is not available.
+
+{/* TODO: document the YAML configuration key used to disable Marketplace management. */}
+
+## Accessing Marketplace Management
+
+Marketplace management is available to users with the platform administrator or maintainer role.
+
+1. Click the **Profile** icon in the bottom left corner and select **Settings**.
+2. In the **Administration** section, select **Marketplace management**.
+
+The page contains the following tabs:
+
+| Tab               | Purpose                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| **Overview**      | Marketplace quality audit results and statistics                                             |
+| **Review queue**  | Assistants waiting for an administrator's decision                                           |
+| **Cleanup queue** | Published assistants sorted by quality and usage, with recommendations for removal           |
+| **Config**        | Usage thresholds, validation gates, and similarity settings used by the checks and the audit |
+
+## Overview
+
+{/* TODO: describe the audit (Run audit), Qualified / Community / Flagged for removal buckets, statistics, and the flagged-by-reason and failed-quality-checks tables. Screenshot: ./images/marketplace-management/overview-tab.png */}
+
+## Review Queue
+
+{/* TODO: describe filters, Publish / Reject actions, rejection reason (20-2000 characters), bulk actions, Force-publish, and Withdraw. Screenshots: ./images/marketplace-management/review-queue.png, ./images/marketplace-management/reject-assistant.png */}
+
+## Cleanup Queue
+
+{/* TODO: describe filters, Tier (Hot / Warm / Cold / Dead), Bucket, Decision, and row actions. Screenshot: ./images/marketplace-management/cleanup-queue.png */}
+
+## Configuration
+
+{/* TODO: describe Marketplace Thresholds, Core Gates, Polish Gates, and Similarity settings. Screenshots: ./images/marketplace-management/config-thresholds.png, ./images/marketplace-management/config-gates.png, ./images/marketplace-management/config-similarity.png */}
