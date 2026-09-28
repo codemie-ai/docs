@@ -196,3 +196,4 @@ Click **UNPUBLISH** to confirm.
 - [Skills in Chat](./skills-in-chat.md) - Learn about dynamic skill attachment
 - [Create Skill](./create-skill.md) - Build skills to publish
 - [Attach to Assistants](./attach-skills-to-assistants.md) - Use marketplace skills
+- [Assistant Creator Skill](../assistants/assistant-creator-skill.md) - Use the built-in marketplace skill that creates an assistant through conversation

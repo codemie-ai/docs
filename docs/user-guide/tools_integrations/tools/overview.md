@@ -45,6 +45,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
 
 | **[MCP](./mcp/index.md)** | Model Context Protocol: add servers, configure credentials, and use MCP tools in assistants |
+| **[Platform Tools](./platform-tools.md)** | Built-in tools for platform analytics and for creating and testing assistants directly from a conversation |
 
 ---
 

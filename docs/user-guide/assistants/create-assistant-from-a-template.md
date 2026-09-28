@@ -1,6 +1,6 @@
 ---
 id: create-assistant-from-a-template
-sidebar_position: 7
+sidebar_position: 8
 title: Create Assistant From a Template
 pagination_prev: user-guide/assistants/assistant-templates
 pagination_next: user-guide/assistants/marketplace-overview

@@ -44,6 +44,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             'user-guide/assistants/create-assistant',
+            'user-guide/assistants/assistant-creator-skill',
             'user-guide/assistants/sharing-assistants',
             'user-guide/assistants/edit-assistants',
             'user-guide/assistants/restore-system-instructions',
@@ -182,6 +183,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/xray',
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
+                'user-guide/tools_integrations/tools/platform-tools',
                 {
                   type: 'category',
                   label: 'Git',

@@ -1,6 +1,6 @@
 ---
 id: marketplace-publishing
-sidebar_position: 9
+sidebar_position: 10
 title: Publish to Marketplace
 pagination_prev: user-guide/assistants/marketplace-overview
 pagination_next: user-guide/assistants/assistant-categories-management

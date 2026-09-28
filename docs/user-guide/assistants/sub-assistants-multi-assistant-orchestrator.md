@@ -1,6 +1,6 @@
 ---
 id: sub-assistants-multi-assistant-orchestrator
-sidebar_position: 12
+sidebar_position: 13
 title: Sub-Assistants and Orchestration
 pagination_prev: user-guide/assistants/clone-assistant-from-marketplace
 pagination_next: user-guide/assistants/group-chats

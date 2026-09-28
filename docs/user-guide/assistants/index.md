@@ -19,6 +19,7 @@ This section covers how to create, manage, and collaborate with Assistants in AI
 Core assistant management tasks:
 
 - [Create Assistant](./create-assistant.md) - Build assistants from scratch
+- [Assistant Creator Skill](./assistant-creator-skill.md) - Create an assistant through a guided conversation
 - [Share Assistants](./sharing-assistants.md) - Share assistants with team members
 - [Edit Assistants](./edit-assistants.md) - Modify assistant configurations
 - [Restore System Instructions](./restore-system-instructions.md) - Revert to previous instruction versions
