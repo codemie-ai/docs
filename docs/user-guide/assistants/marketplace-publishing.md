@@ -12,7 +12,7 @@ description: Share your assistants with the community by publishing to the marke
 Share your custom assistants with the AI/Run CodeMie community by publishing them to the Marketplace. Follow the publishing process to ensure your assistant is properly configured and secure.
 
 :::info Marketplace review
-When Marketplace management is enabled, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. Marketplace management is enabled by default and can be disabled only in the backend YAML configuration — it cannot be switched on or off in the UI. When it is disabled, the review statuses, re-validation on edit, and Force-Publish described on this page are not available.
+When Marketplace management is enabled, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. Marketplace management is enabled by default and can be disabled only with the `features:marketplaceManagement` feature flag in the backend YAML configuration — it cannot be switched on or off in the UI. When it is disabled, the review statuses, re-validation on edit, and Force-Publish described on this page are not available.
 :::
 
 ## Publishing Process
@@ -130,7 +130,9 @@ When publishing an assistant, the findings are shown in the **Assistant Quality 
 
 - **Manual Edit**: open the assistant editor to apply the suggested changes.
 - **Cancel**: close the dialog without publishing.
-- **Publish Anyway**: publish the assistant despite the findings. See [Force-Publish for Administrators](#force-publish-for-administrators).
+- **Publish Anyway**: publish the assistant despite the findings. Available only to platform administrators and maintainers. See [Force-Publish for Administrators](#force-publish-for-administrators).
+
+Regular users see the same dialog without the **Publish Anyway** button.
 
 Findings have one of two severity levels:
 
@@ -139,16 +141,30 @@ Findings have one of two severity levels:
 | **CRITICAL** | Blocks submission. The issue must be fixed before the assistant can be sent for review.        |
 | **OPTIONAL** | Recommendation only. Fixing it improves the assistant's quality but does not block submission. |
 
-The checks cover the completeness and quality of the assistant configuration, including:
+The following checks are applied to every assistant:
 
-- **Name**: length and whether the name clearly reflects the assistant's purpose
-- **Description**: length and clarity
-- **System instructions**: length and substance
-- **Categories**: whether categories are assigned
-- **Similarity**: whether a very similar assistant is already published in the Marketplace
+| Check                             | Severity | Rule (default values)                                                                                                        |
+| --------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Name length**                   | CRITICAL | The name must be 5–60 characters long.                                                                                       |
+| **Name not generic**              | CRITICAL | The name must not be a generic name such as "assistant", "bot", "test", "demo", or "untitled".                               |
+| **Description length**            | CRITICAL | The description must be at least 100 characters long.                                                                        |
+| **Description differs from name** | OPTIONAL | The description must not repeat the name.                                                                                    |
+| **System prompt length**          | CRITICAL | The system prompt must be at least 200 characters long.                                                                      |
+| **Category**                      | CRITICAL | At least one category must be assigned.                                                                                      |
+| **Substance**                     | CRITICAL | The assistant must have at least one tool, MCP server, skill, or data source, or a system prompt of at least 500 characters. |
+| **No inline credentials**         | CRITICAL | The system prompt and context must not contain credentials such as AWS keys, GitHub tokens, or Bearer tokens.                |
+
+In addition, the assistant is compared with assistants already published in the Marketplace. The similarity score ranges from 0 to 1:
+
+| Similarity score (default) | Severity | Effect                                                                    |
+| -------------------------- | -------- | ------------------------------------------------------------------------- |
+| **0.70 or higher**         | CRITICAL | The assistant is treated as a near-duplicate of a published assistant.    |
+| **0.55 or higher**         | OPTIONAL | The overlap is flagged for the reviewer but does not block the assistant. |
+
+An AI-based quality analysis also reviews the configuration and suggests improvements, for example a clearer name or description.
 
 :::note
-Platform administrators configure the check thresholds (for example, minimum description length), so the exact limits depend on the deployment.
+Platform administrators can change the default thresholds on the **Config** tab of [Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx#configuration), so the exact limits depend on the deployment.
 :::
 
 ## Review Statuses
@@ -213,11 +229,12 @@ Group several changes into a single edit. Each save of a published assistant rem
 Platform administrators and maintainers follow a shortened publishing flow:
 
 - If their assistant passes the validation checks, it is published directly with the **VERIFIED** status, without waiting in the review queue.
-- If CRITICAL findings block the assistant, the validation dialog includes an additional force-publish option:
-  - When publishing an assistant, click **Publish Anyway** in the **Assistant Quality Validation Failed** dialog.
-  - When saving changes to an assistant in the Marketplace, the **Assistant Verification Failed** dialog includes the **Confirm Force-Publish** button. Enter a justification in the **Why is it safe to publish anyway?** field (at least 20 characters) and click **Confirm Force-Publish**.
-
-  The assistant is published with the **VERIFIED** status.
+- If CRITICAL findings block the assistant, it can be force-published with a justification:
+  1. Open the force-publish form:
+     - When publishing an assistant, click **Publish Anyway** in the **Assistant Quality Validation Failed** dialog. The **Assistant Verification Failed** dialog opens with the justification field.
+     - When saving changes to an assistant in the Marketplace, the **Assistant Verification Failed** dialog shows the justification field directly.
+  2. In the **Why is it safe to publish anyway?** field, describe why the checks should be overridden. The justification must be at least 20 characters long; the **Confirm Force-Publish** button stays disabled until then.
+  3. Click **Confirm Force-Publish**. The assistant is published with the **VERIFIED** status.
 
 ![Force-publish justification in the Assistant Verification Failed dialog](./images/marketplace-force-publish.png)
 

@@ -1,6 +1,6 @@
 # Why can't I publish my assistant to the Marketplace? What do "Assistant Quality Validation Failed" and "Assistant Verification Failed" mean?
 
-Before an assistant is sent for review, the system checks its name, description, system instructions, categories, and similarity to assistants already in the Marketplace. If any check fails, the **Assistant Verification Failed** dialog lists the findings with recommendations:
+Before an assistant is sent for review, the system checks its name, description, system prompt, categories, tools or other substance, inline credentials, and similarity to assistants already in the Marketplace. If any check fails, the **Assistant Verification Failed** dialog lists the findings with recommendations:
 
 - **CRITICAL** findings block submission and must be fixed first.
 - **OPTIONAL** findings are recommendations and do not block submission.

@@ -16,9 +16,7 @@ For the submitter's side of the flow, see [Publish to Marketplace](../../../user
 
 ## Enabling Marketplace Management
 
-Marketplace management is enabled by default. It can be disabled only in the backend YAML configuration; there is no UI control for it. When it is disabled, assistants are published to the Marketplace without review, and the **Marketplace management** page is not available.
-
-{/* TODO: document the YAML configuration key used to disable Marketplace management. */}
+Marketplace management is controlled by the `features:marketplaceManagement` feature flag in the backend YAML configuration. The flag is enabled by default; there is no UI control for it. When the flag is disabled, assistants are published to the Marketplace without review, and the **Marketplace management** page is not available.
 
 ## Accessing Marketplace Management
 
@@ -46,8 +44,58 @@ The page contains the following tabs:
 
 ## Cleanup Queue
 
-{/* TODO: describe filters, Tier (Hot / Warm / Cold / Dead), Bucket, Decision, and row actions. Screenshot: ./images/marketplace-management/cleanup-queue.png */}
+{/* TODO: describe filters, Tier (Hot / Warm / Cold / Dead), Bucket, Decision, and row actions. Tier thresholds are described in the Configuration section. Screenshot: ./images/marketplace-management/cleanup-queue.png */}
 
 ## Configuration
 
-{/* TODO: describe Marketplace Thresholds, Core Gates, Polish Gates, and Similarity settings. Screenshots: ./images/marketplace-management/config-thresholds.png, ./images/marketplace-management/config-gates.png, ./images/marketplace-management/config-similarity.png */}
+The **Config** tab contains the thresholds used by the validation checks and the Marketplace audit. The settings are grouped into sections; each section has its own **Save** button. The values listed below are the defaults and can differ per deployment.
+
+### Marketplace Thresholds
+
+Usage tiers and grace periods used by the audit and the **Cleanup queue**.
+
+![Marketplace Thresholds settings](./images/marketplace-management/config-thresholds.png)
+
+| Setting                      | Default | Description                             |
+| ---------------------------- | ------- | --------------------------------------- |
+| **Hot tier min. users**      | 50      | Minimum active users for the Hot tier.  |
+| **Warm tier min. users**     | 7       | Minimum active users for the Warm tier. |
+| **Cold tier min. users**     | 3       | Minimum active users for the Cold tier. |
+| **Cold grace period (days)** | 60      | Days in the Cold tier before cleanup.   |
+| **Dead grace period (days)** | 30      | Days in the Dead tier before cleanup.   |
+
+### Core Gates
+
+Minimum requirements checked when an assistant is published. Failing a core gate is a CRITICAL finding.
+
+![Core Gates and Polish Gates settings](./images/marketplace-management/config-gates.png)
+
+| Setting                              | Default | Description                                                                                                                     |
+| ------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Description min. length**          | 100     | Minimum number of characters required in the assistant's description.                                                           |
+| **System prompt min. length**        | 200     | Minimum number of characters required in the system prompt.                                                                     |
+| **Substance-prompt alt min. length** | 500     | Minimum number of characters required in the system prompt of an assistant without tools, MCP servers, skills, or data sources. |
+
+### Polish Gates
+
+Additional quality requirements used by the polish check.
+
+| Setting                              | Default | Description                                                                                |
+| ------------------------------------ | ------- | ------------------------------------------------------------------------------------------ |
+| **Description min. length**          | 250     | Minimum number of characters required in the assistant's description for the polish check. |
+| **Categories min. count**            | 2       | Minimum number of categories the assistant must be assigned to.                            |
+| **Require icon**                     | On      | Whether the assistant must have an icon to pass the polish check.                          |
+| **Conversation starters min. count** | 2       | Minimum number of conversation starters the assistant must have.                           |
+
+### Similarity
+
+Settings for comparing assistants with each other. Similarity scores range from 0 to 1.
+
+![Similarity settings](./images/marketplace-management/config-similarity.png)
+
+| Setting                | Default | Description                                                                                                           |
+| ---------------------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Critical threshold** | 0.70    | Similarity score above which two assistants are treated as near-duplicates. Produces a CRITICAL finding.              |
+| **Optional threshold** | 0.55    | Similarity score above which two assistants are flagged as worth reviewing for overlap. Produces an OPTIONAL finding. |
+| **Report threshold**   | 0.40    | Similarity score above which a pair appears in similarity reports.                                                    |
+| **Shortlist size**     | 10      | Maximum number of candidate assistants to compare against each assistant during a similarity check.                   |
