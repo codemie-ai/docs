@@ -318,6 +318,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet       |
 | [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
 | [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5         |
+| [`claude-sonnet-5-5`](#claude-sonnet-55)        | Claude Sonnet 5.5       |
 | [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5          |
 | [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1        |
 | [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
@@ -482,6 +483,26 @@ model_list:
     id: claude-sonnet-5-us-east-1
     base_model: us.anthropic.claude-sonnet-5
     label: "Bedrock Claude Sonnet 5"
+```
+
+</details>
+
+#### Claude Sonnet 5.5
+
+<details>
+<summary><strong>Claude Sonnet 5.5</strong></summary>
+
+```yaml
+# Global routing
+- model_name: claude-sonnet-5-5
+  litellm_params:
+    model: bedrock/global.anthropic.claude-sonnet-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-sonnet-5-5-eu-central-1
+    base_model: global.anthropic.claude-sonnet-5-5
+    label: "Bedrock Claude Sonnet 5.5"
 ```
 
 </details>
