@@ -154,13 +154,6 @@ The following checks are applied to every assistant:
 | **Substance**                     | CRITICAL | The assistant must have at least one tool, MCP server, skill, or data source, or a system prompt of at least 500 characters. |
 | **No inline credentials**         | CRITICAL | The system prompt and context must not contain credentials such as AWS keys, GitHub tokens, or Bearer tokens.                |
 
-In addition, the assistant is compared with assistants already published in the Marketplace. The similarity score ranges from 0 to 1:
-
-| Similarity score (default) | Severity | Effect                                                                    |
-| -------------------------- | -------- | ------------------------------------------------------------------------- |
-| **0.70 or higher**         | CRITICAL | The assistant is treated as a near-duplicate of a published assistant.    |
-| **0.55 or higher**         | OPTIONAL | The overlap is flagged for the reviewer but does not block the assistant. |
-
 An AI-based quality analysis also reviews the configuration and suggests improvements, for example a clearer name or description.
 
 :::note
