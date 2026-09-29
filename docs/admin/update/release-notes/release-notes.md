@@ -22,7 +22,13 @@ This page provides information about updated third-party components and configur
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>LiteLLM 1.99.2</h4>
+
+Updated from 1.96.2 (Helm chart 1.96.2 to 1.99.0). For details, see the [LiteLLM 1.99.2 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.2).
+
+:::note Container-only release
+LiteLLM 1.99.2 is a container-only release and is not published to PyPI.
+:::
 
 <h3>Configuration Changes</h3>
 
