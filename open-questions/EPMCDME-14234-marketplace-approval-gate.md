@@ -9,4 +9,4 @@ Open questions for the Marketplace approval gate documentation. Resolve them bef
 
 ## Open Questions
 
-1. **Outdated Cleanup queue screenshot.** `docs/admin/configuration/codemie/images/marketplace-management/cleanup-queue.png` still shows the **Sort** dropdown, which was replaced by clickable column headers (EPMCDME-15333). Replace the screenshot with a current one.
+No open questions remain.
