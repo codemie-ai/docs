@@ -313,23 +313,28 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### AWS Bedrock Models
 
-| Model Name                                      | Description             |
-| ----------------------------------------------- | ----------------------- |
-| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet       |
-| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
-| [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5         |
-| [`claude-sonnet-5-5`](#claude-sonnet-55)        | Claude Sonnet 5.5       |
-| [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5          |
-| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1        |
-| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
-| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
-| [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
-| [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8         |
-| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5         |
-| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
-| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
-| [`grok-4.6`](#grok-46)                          | Grok 4.6                |
-| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3      |
+| Model Name                                      | Description              |
+| ----------------------------------------------- | ------------------------ |
+| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet        |
+| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6        |
+| [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5          |
+| [`claude-sonnet-5-5`](#claude-sonnet-55)        | Claude Sonnet 5.5        |
+| [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5           |
+| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1         |
+| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5          |
+| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6          |
+| [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7          |
+| [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8          |
+| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5          |
+| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5         |
+| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings  |
+| [`grok-4.6`](#grok-46)                          | Grok 4.6                 |
+| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3       |
+| [`gpt-5.4-2026-03-05`](#gpt-54-bedrock-mantle)  | GPT-5.4 (Bedrock Mantle) |
+| [`gpt-5.5-2026-04-24`](#gpt-55-bedrock-mantle)  | GPT-5.5 (Bedrock Mantle) |
+| [`gpt-5.6-luna-2026-07-09`](#gpt-56-luna)       | GPT-5.6 Luna             |
+| [`gpt-5.6-sol-2026-07-09`](#gpt-56-sol)         | GPT-5.6 Sol              |
+| [`gpt-5.6-terra-2026-07-09`](#gpt-56-terra)     | GPT-5.6 Terra            |
 
 ### Azure OpenAI Models
 
@@ -808,6 +813,131 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
     id: moonshotai-kimi-k3-global-us-east-1
     base_model: bedrock/global.moonshotai.kimi-k3
     label: "Bedrock MoonshotAI Kimi K3"
+```
+
+</details>
+
+### GPT (Bedrock Mantle)
+
+:::info Bedrock Mantle Configuration
+GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mantle/openai.*` model identifier instead of the standard `bedrock/` prefix, and require an `aws_bedrock_project_id` in addition to `litellm_credential_name` and `aws_region_name`.
+:::
+
+:::warning `user` parameter causes upstream errors
+If the model returns an upstream `string_above_max_length` error for the `user` field (the CodeMie user identifier exceeds the provider's 64-character maximum), surfaced by the CodeMie API as an HTTP 500, drop the `user` parameter before it reaches the provider by adding `additional_drop_params: ["user"]` to the model's `litellm_params`.
+:::
+
+#### GPT-5.4 (Bedrock Mantle) {#gpt-54-bedrock-mantle}
+
+<details>
+<summary><strong>GPT-5.4 (Bedrock Mantle)</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.4-2026-03-05
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.4
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.4-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.4
+    label: "GPT-5.4"
+```
+
+</details>
+
+#### GPT-5.5 (Bedrock Mantle) {#gpt-55-bedrock-mantle}
+
+<details>
+<summary><strong>GPT-5.5 (Bedrock Mantle)</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.5-2026-04-24
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.5-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.5
+    label: "GPT-5.5"
+```
+
+</details>
+
+#### GPT-5.6 Luna {#gpt-56-luna}
+
+<details>
+<summary><strong>GPT-5.6 Luna</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-luna-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-luna
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-luna-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-luna
+    label: "GPT-5.6 Luna"
+```
+
+</details>
+
+#### GPT-5.6 Sol {#gpt-56-sol}
+
+<details>
+<summary><strong>GPT-5.6 Sol</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-sol-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-sol
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-sol-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-sol
+    label: "GPT-5.6 Sol"
+```
+
+</details>
+
+#### GPT-5.6 Terra {#gpt-56-terra}
+
+<details>
+<summary><strong>GPT-5.6 Terra</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-terra-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-terra
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-terra-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-terra
+    label: "GPT-5.6 Terra"
 ```
 
 </details>
