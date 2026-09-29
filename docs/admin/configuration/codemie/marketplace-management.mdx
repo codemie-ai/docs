@@ -76,12 +76,15 @@ Usage tiers, polish gaps, and grace periods are defined by the settings describe
 
 The tables below the counters break down the audit results:
 
-- **Assistants flagged, by reason**: the number of assistants flagged for each reason:
+- **Assistants flagged, by reason**: the number of assistants flagged for each reason, for example:
   - **Fails quality checks**: the assistant has two or more CRITICAL findings and is in the Cold or Dead tier.
   - **Unused**: the assistant is in the Dead tier and has not been updated for longer than the Dead grace period.
   - **Duplicate**: the assistant's similarity score with another assistant reaches the Similarity **Critical threshold**.
-- **Failed quality checks**: each failed check with its importance (for example, **Critical**) and the number of assistants that fail it.
-- **Most-used MCP servers** and **Most-used categories**: the MCP servers and categories used by the most Marketplace assistants.
+  - **Duplicate purpose**: the assistant's purpose is very similar to that of a more widely used assistant.
+- **Failed quality checks**: each failed check (for example, **Instructions too short**, **Description just repeats the name**, or **Possible credential in the instructions**) with its importance (**Critical** or **Minor**) and the number of assistants that fail it.
+- **Most-used MCP servers** and **Most-used categories**: the MCP servers and categories used by the most Marketplace assistants, with the number of assistants and their total users.
+
+![Failed quality checks, Most-used MCP servers, and Most-used categories tables](./images/marketplace-management/overview-most-used.png)
 
 Click **Filter →** in any row to open the **Cleanup queue** with the corresponding filter applied.
 
@@ -200,15 +203,15 @@ To sort the table, click a column header:
 
 ### Understanding the Columns
 
-| Column        | Description                                             |
-| ------------- | ------------------------------------------------------- |
-| **Assistant** | Assistant name and categories.                          |
-| **Creator**   | User who created the assistant.                         |
-| **Users**     | Number of unique users of the assistant.                |
-| **Likes**     | Number of likes.                                        |
-| **Tier**      | Usage tier based on the number of unique users.         |
-| **Bucket**    | Marketplace qualification bucket assigned by the audit. |
-| **Decision**  | The audit's recommendation for the assistant.           |
+| Column        | Description                                                                                                           |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Assistant** | Assistant name and categories. For a duplicate, the line **↳ canonical:** shows the original assistant it duplicates. |
+| **Creator**   | User who created the assistant.                                                                                       |
+| **Users**     | Number of unique users of the assistant.                                                                              |
+| **Likes**     | Number of likes.                                                                                                      |
+| **Tier**      | Usage tier based on the number of unique users.                                                                       |
+| **Bucket**    | Marketplace qualification bucket assigned by the audit.                                                               |
+| **Decision**  | The audit's recommendation for the assistant.                                                                         |
 
 Hover over the ⓘ icon next to a column name, or over a tier or bucket chip in a row, to see its description.
 
@@ -243,7 +246,16 @@ The **Reason** filter values explain why an assistant is recommended for removal
 
 To open the **Assistant details** dialog, click the assistant name, or click **⋮** and select **View details**. The dialog is the same as in the [Review Queue](#reviewing-assistant-details), with an additional **Decision** section and an **Unpublish** button.
 
-To score the assistant's quality, click **Assess with AI** in the **AI Assessment** panel, or click **⋮** and select **Assess with AI** to open the dialog and start the assessment right away. The assessment scores the assistant from 0 to 100 across five dimensions (name, description and category; description quality; instruction quality; category fit; uniqueness), calculates an overall score, and suggests improvements. Once a result exists, the button changes to **Re-assess**.
+![Row actions in the Cleanup queue](./images/marketplace-management/cleanup-queue-row-actions.png)
+
+To score the assistant's quality, click **Assess with AI** in the **AI Assessment** panel, or click **⋮** and select **Assess with AI** to open the dialog and start the assessment right away. The assessment shows:
+
+- **Overall**: the overall score and the recommended bucket (for example, **Community**).
+- **Quality scores**: a score from 0 to 100 with an explanation for each of the five dimensions: **Name, description and category**, **Description quality**, **Instruction quality**, **Category fit**, and **Uniqueness**.
+
+Once a result exists, the button changes to **Re-assess**.
+
+![AI Assessment result](./images/marketplace-management/ai-assessment-result.png)
 
 ### Unpublishing Assistants
 
@@ -260,6 +272,8 @@ To unpublish several assistants:
 2. Click **Unpublish selected**.
 3. Confirm the action in the **Unpublish N assistant(s)?** dialog.
 
+![Unpublish selected assistants](./images/marketplace-management/cleanup-queue-bulk-unpublish.png)
+
 ## Configuration
 
 The **Config** tab contains the thresholds used by the validation checks and the Marketplace audit. The settings are grouped into sections; each section has its own **Save** button.
@@ -268,6 +282,8 @@ The label in the top right corner of each section shows where the values come fr
 
 - **Default from config**: the section uses the platform default values listed below.
 - **Overridden**: the values were changed and saved on this tab. Click **Reset to default** next to **Save** to return to the default values.
+
+![Save and Reset to default buttons for an overridden section](./images/marketplace-management/config-reset-to-default.png)
 
 Changes take effect on the next audit run. Existing assistants are not re-evaluated automatically: after changing the settings, click **Run audit** on the [Overview](#running-the-audit) tab.
 
