@@ -40,7 +40,91 @@ The page contains the following tabs:
 
 ## Review Queue
 
-{/* TODO: describe filters, Publish / Reject actions, rejection reason (20-2000 characters), bulk actions, Force-publish, and Withdraw. Screenshots: ./images/marketplace-management/review-queue.png, ./images/marketplace-management/reject-assistant.png */}
+The **Review queue** tab lists assistants that passed the automated validation checks and are waiting for an administrator's decision. The number next to the tab name shows how many assistants are pending review. Assistants in the queue have the **REVIEW** status and are not visible in the Marketplace. Only assistants without CRITICAL findings reach the queue, so the review actions are limited to publishing and rejecting.
+
+![Review queue with row actions](./images/marketplace-management/review-queue.png)
+
+### Finding Assistants in the Queue
+
+Use the controls above the table to narrow down the list:
+
+| Control       | Description                                                                                                                         |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Search**    | Search assistants by name or creator.                                                                                               |
+| **Category**  | Show assistants assigned to a specific category.                                                                                    |
+| **Wait time** | Show assistants by how long they have been waiting: **All Wait Times**, **< 1 day**, **1-7 days**, **7-30 days**, or **> 30 days**. |
+| **Sort**      | Change the order of assistants in the table.                                                                                        |
+
+The table shows the following columns:
+
+| Column           | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| **Assistant**    | Assistant name.                                 |
+| **Submitted by** | User who submitted the assistant for review.    |
+| **Submitted at** | Time elapsed since the assistant was submitted. |
+| **Category**     | Categories assigned to the assistant.           |
+| **Actions**      | Menu (**⋮**) with the review actions.           |
+
+### Reviewing Assistant Details
+
+Click an assistant name in the table to open the **Assistant details** dialog:
+
+![Assistant details dialog](./images/marketplace-management/assistant-details.png)
+
+The dialog contains the following information:
+
+- **Submission**: the assistant name, description, and categories.
+- Submission metadata: **Status**, **Visible in Marketplace**, **Submitted by**, **Submitted at**, **Creator**, **Project**, **Created**, **Updated**, **Decided by**, and **Decided at**.
+- **Quality gates**: the number of **Critical** and **Minor** gate failures found for the assistant.
+- **Capability**: the toolkits and other capabilities of the assistant. Click **Show system prompt** to view the system prompt.
+- **AI Assessment**: click **Assess with AI** to score the assistant across five quality dimensions and get concrete suggestions for improvement:
+  - Name, description and category
+  - Description quality
+  - Instruction quality
+  - Category fit
+  - Uniqueness
+
+Use the **Publish** and **Reject** buttons at the bottom of the dialog to make a decision. They work the same way as the row actions described below.
+
+### Approving an Assistant
+
+1. In the **Actions** column, click **⋮** next to the assistant.
+2. Select **Publish**.
+
+The assistant is published in the Marketplace with the **VERIFIED** status and is removed from the review queue.
+
+### Rejecting an Assistant
+
+1. In the **Actions** column, click **⋮** next to the assistant.
+2. Select **Reject**.
+3. In the **Reject assistant** dialog, enter the reason in the **Reason** field. The reason must be 20–2000 characters long; the dialog shows the current character count.
+4. Click **Reject**.
+
+![Reject assistant dialog](./images/marketplace-management/reject-assistant.png)
+
+The assistant gets the **REJECTED** status and is removed from the review queue. The submitter sees the reason by hovering over the **REJECTED** badge on the assistant card, as described in [Publish to Marketplace](../../../user-guide/assistants/marketplace-publishing.md#review-statuses).
+
+:::tip
+Write the rejection reason for the submitter: state which requirement is not met and what to change, so the assistant can be fixed and submitted again.
+:::
+
+### Reviewing Several Assistants at Once
+
+1. Select the checkboxes next to the assistants. To select all assistants in the table, select the checkbox in the table header.
+2. Above the table, the number of selected assistants and the bulk actions appear:
+   - **Approve selected**: publish all selected assistants.
+   - **Reject selected**: reject all selected assistants with one shared reason.
+3. To clear the selection, click **×** next to the number of selected assistants.
+
+![Bulk actions for selected assistants](./images/marketplace-management/review-queue-bulk-actions.png)
+
+To reject several assistants:
+
+1. Select the assistants and click **Reject selected**.
+2. In the **Reject N assistant(s)** dialog, enter the reason in the **Reason** field. The reason must be 20–2000 characters long and is shared with all submitters of the selected assistants.
+3. Click **Reject**.
+
+![Reject selected assistants dialog](./images/marketplace-management/reject-selected-assistants.png)
 
 ## Cleanup Queue
 
