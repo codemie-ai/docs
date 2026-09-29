@@ -36,7 +36,54 @@ The page contains the following tabs:
 
 ## Overview
 
-{/* TODO: describe the audit (Run audit), Qualified / Community / Flagged for removal buckets, statistics, and the flagged-by-reason and failed-quality-checks tables. Screenshot: ./images/marketplace-management/overview-tab.png */}
+The **Overview** tab shows the results of the latest Marketplace audit. The audit sorts every assistant published to the Marketplace into a bucket based on its usage and quality-gate results. The results are shared across all administrators; the time of the last audit is shown at the top of the tab.
+
+![Overview tab](./images/marketplace-management/overview-tab.png)
+
+### Running the Audit
+
+The audit runs only when it is started manually. Run it after new assistants are published or edited, and after changing the settings on the **Config** tab, so that existing assistants are evaluated again.
+
+1. On the **Overview** tab, click **Run audit**.
+2. Wait for the audit to finish. The audit runs in the background and can take several minutes on a large Marketplace. The page can be left in the meantime; the numbers update once the audit finishes, and all administrators see the same run.
+
+The audit only assigns buckets and recommendations. It never removes assistants from the Marketplace; removal is always a manual action in the [Cleanup Queue](#cleanup-queue).
+
+### Buckets
+
+The three cards at the top show how many assistants are in each bucket:
+
+| Card                    | Assistants in the bucket                                                                                                                                                                                                                                   |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Qualified**           | Passed the core quality gates and are in the Hot or Warm usage tier (Warm with at most one polish gap), or in the Cold tier when fully polished and used by at least 2 users.                                                                              |
+| **Community**           | Remain in the Marketplace but are flagged: gate failures, minor polish gaps, or an assistant within its grace period.                                                                                                                                      |
+| **Flagged for removal** | Recommended for removal: a cleanup verdict (duplicate, invalid, or unused), part of an oversized cluster of similar assistants, a Cold-tier assistant that failed core gates, or a Cold-tier assistant that stalled past its grace period without growing. |
+
+Each card also shows the share of all Marketplace usage that falls on the assistants in the bucket, calculated from the number of unique users of each assistant. If no usage data is available, the card shows **Usage data not available**. Click a card to open the **Cleanup queue** filtered to that bucket.
+
+Usage tiers, polish gaps, and grace periods are defined by the settings described in [Configuration](#configuration).
+
+### Statistics
+
+| Counter                          | Description                                                                                           |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Total Marketplace Assistants** | Number of assistants in the Marketplace.                                                              |
+| **Pending review**               | Number of assistants waiting in the **Review queue**.                                                 |
+| **Failing a critical check**     | Number of assistants with at least one CRITICAL finding.                                              |
+| **Failing a minor check**        | Number of assistants with at least one OPTIONAL finding, such as a description that repeats the name. |
+
+### Flagged Assistants and Failed Checks
+
+The tables below the counters break down the audit results:
+
+- **Assistants flagged, by reason**: the number of assistants flagged for each reason:
+  - **Fails quality checks**: the assistant has two or more CRITICAL findings and is in the Cold or Dead tier.
+  - **Unused**: the assistant is in the Dead tier and has not been updated for longer than the Dead grace period.
+  - **Duplicate**: the assistant's similarity score with another assistant reaches the Similarity **Critical threshold**.
+- **Failed quality checks**: each failed check with its importance (for example, **Critical**) and the number of assistants that fail it.
+- **Most-used MCP servers** and **Most-used categories**: the MCP servers and categories used by the most Marketplace assistants.
+
+Click **Filter →** in any row to open the **Cleanup queue** with the corresponding filter applied.
 
 ## Review Queue
 
@@ -128,15 +175,105 @@ To reject several assistants:
 
 ## Cleanup Queue
 
-{/* TODO: describe filters, Tier (Hot / Warm / Cold / Dead), Bucket, Decision, and row actions. Tier thresholds are described in the Configuration section. Screenshot: ./images/marketplace-management/cleanup-queue.png */}
+The **Cleanup queue** tab lists the assistants published to the Marketplace together with the latest audit results: usage tier, bucket, and decision. Use it to find assistants that are unused, duplicated, or of low quality and to unpublish them. The number next to the tab name shows how many assistants are in the queue.
+
+![Cleanup queue](./images/marketplace-management/cleanup-queue.png)
+
+### Filtering and Sorting
+
+Changing a filter applies it immediately. When any filter is active, **Clear all** appears to reset all filters. Filters opened from the **Overview** tab (for example, a failed check) appear as removable chips above the table.
+
+| Filter       | Options                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Search**   | Search assistants by text.                                                                                                                                                     |
+| **Bucket**   | **All** (default), **Qualified**, **Community**, or **Delete**.                                                                                                                |
+| **Reason**   | **All Reasons**, or one of the reasons that currently have assistants: **Duplicate**, **Duplicate purpose**, **Near-identical copy**, **Fails quality checks**, or **Unused**. |
+| **Tier**     | **All Tiers**, **Hot**, **Warm**, **Cold**, or **Dead**.                                                                                                                       |
+| **Decision** | **All Decisions**, **Keep**, **Review**, or **Cleanup**.                                                                                                                       |
+| **MCP**      | **All MCPs**, or an MCP server name with the number of assistants that use it. Shows only assistants that use the selected MCP server.                                         |
+| **Category** | **All Categories**, or a category with the number of assistants in it.                                                                                                         |
+
+To sort the table, click a column header:
+
+- **Assistant**: A→Z, then Z→A, then unsorted.
+- **Users** and **Likes**: highest first, then lowest first, then unsorted.
+
+### Understanding the Columns
+
+| Column        | Description                                             |
+| ------------- | ------------------------------------------------------- |
+| **Assistant** | Assistant name and categories.                          |
+| **Creator**   | User who created the assistant.                         |
+| **Users**     | Number of unique users of the assistant.                |
+| **Likes**     | Number of likes.                                        |
+| **Tier**      | Usage tier based on the number of unique users.         |
+| **Bucket**    | Marketplace qualification bucket assigned by the audit. |
+| **Decision**  | The audit's recommendation for the assistant.           |
+
+Hover over the ⓘ icon next to a column name, or over a tier or bucket chip in a row, to see its description.
+
+**Tier** is based on the number of unique users of the assistant. With the default [Marketplace Thresholds](#marketplace-thresholds):
+
+| Tier     | Unique users |
+| -------- | ------------ |
+| **Hot**  | 50 or more   |
+| **Warm** | 7–49         |
+| **Cold** | 3–6          |
+| **Dead** | fewer than 3 |
+
+**Bucket** has the same meaning as on the [Overview](#buckets) tab: **Qualified**, **Community**, or **Delete** (shown as **Flagged for removal** on the **Overview** tab).
+
+**Decision** shows the audit's verdict for the assistant:
+
+| Decision    | Meaning                                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------------------------- |
+| **Keep**    | The assistant itself needs no changes. Check **Bucket** for its Marketplace visibility status.           |
+| **Review**  | The assistant requires human review.                                                                     |
+| **Cleanup** | The assistant is recommended for removal. Hover over the ⓘ icon next to the decision to see the details. |
+
+The **Reason** filter values explain why an assistant is recommended for removal:
+
+- **Duplicate**: the similarity score with another assistant reaches the Similarity **Critical threshold**.
+- **Duplicate purpose**: the assistant's purpose is very similar to that of a more widely used assistant.
+- **Near-identical copy**: the assistant is a near-identical copy within a group of similar assistants.
+- **Fails quality checks**: the assistant has two or more CRITICAL findings and is in the Cold or Dead tier.
+- **Unused**: the assistant is in the Dead tier and has not been updated for longer than the Dead grace period.
+
+### Viewing Assistant Details and AI Assessment
+
+To open the **Assistant details** dialog, click the assistant name, or click **⋮** and select **View details**. The dialog is the same as in the [Review Queue](#reviewing-assistant-details), with an additional **Decision** section and an **Unpublish** button.
+
+To score the assistant's quality, click **Assess with AI** in the **AI Assessment** panel, or click **⋮** and select **Assess with AI** to open the dialog and start the assessment right away. The assessment scores the assistant from 0 to 100 across five dimensions (name, description and category; description quality; instruction quality; category fit; uniqueness), calculates an overall score, and suggests improvements. Once a result exists, the button changes to **Re-assess**.
+
+### Unpublishing Assistants
+
+Unpublishing removes an assistant from the Marketplace listing and the search index and returns it to its creator. The assistant is not deleted.
+
+To unpublish one assistant:
+
+1. Click **⋮** next to the assistant and select **Unpublish**, or click **Unpublish** in the **Assistant details** dialog.
+2. Confirm the action.
+
+To unpublish several assistants:
+
+1. Select the checkboxes next to the assistants. The checkbox in the table header selects all assistants on the current page only.
+2. Click **Unpublish selected**.
+3. Confirm the action in the **Unpublish N assistant(s)?** dialog.
 
 ## Configuration
 
-The **Config** tab contains the thresholds used by the validation checks and the Marketplace audit. The settings are grouped into sections; each section has its own **Save** button. The values listed below are the defaults and can differ per deployment.
+The **Config** tab contains the thresholds used by the validation checks and the Marketplace audit. The settings are grouped into sections; each section has its own **Save** button.
+
+The label in the top right corner of each section shows where the values come from:
+
+- **Default from config**: the section uses the platform default values listed below.
+- **Overridden**: the values were changed and saved on this tab. Click **Reset to default** next to **Save** to return to the default values.
+
+Changes take effect on the next audit run. Existing assistants are not re-evaluated automatically: after changing the settings, click **Run audit** on the [Overview](#running-the-audit) tab.
 
 ### Marketplace Thresholds
 
-Usage tiers and grace periods used by the audit and the **Cleanup queue**.
+Usage tiers and grace periods used by the audit and the **Cleanup queue**. Tiers are based on the number of unique users of an assistant: Hot from the Hot tier minimum, Warm from the Warm tier minimum up to the Hot tier minimum, Cold from the Cold tier minimum up to the Warm tier minimum, and Dead below the Cold tier minimum.
 
 ![Marketplace Thresholds settings](./images/marketplace-management/config-thresholds.png)
 
@@ -162,7 +299,7 @@ Minimum requirements checked when an assistant is published. Failing a core gate
 
 ### Polish Gates
 
-Additional quality requirements used by the polish check.
+Additional quality requirements checked only during the audit. Polish gates are not checked when an assistant is published and do not block approval; they affect which bucket a published assistant is placed in (for example, **Qualified** or **Community**).
 
 | Setting                              | Default | Description                                                                                |
 | ------------------------------------ | ------- | ------------------------------------------------------------------------------------------ |
