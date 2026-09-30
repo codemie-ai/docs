@@ -33,4 +33,5 @@ Connect and configure different types of data sources:
 - [Add and Index File DataSource](./datasources-types/add-file-datasource.md) - Upload and index files
 - [Add and Index Google Data Source](./datasources-types/add-google-data-source.md) - Connect Google Docs and Drive
 - [Add AWS Knowledge Bases as Data Sources](./datasources-types/add-aws-knowledge-bases.md) - Integrate AWS Knowledge Bases
+- [Add and Index xWiki Data Source](./datasources-types/add-xwiki-data-source.md) - Connect and index xWiki space pages
 - [Add and Index Provider Data Source](./datasources-types/add-provider-datasource.md) - Connect indexed repositories with external analysis toolkits

@@ -13,6 +13,50 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.54.0 {#v2-54-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** September 29, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.54.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.99.2</h4>
+
+Updated from 1.96.2 (Helm chart 1.96.2 to 1.99.0). For details, see the [LiteLLM 1.99.2 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.2).
+
+:::note Container-only release
+LiteLLM 1.99.2 is a container-only release and is not published to PyPI.
+:::
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+### CodeMie 2.53.0 {#v2-53-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** September 24, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.53.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+<h3>Hotfixes</h3>
+
+- **2.53.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.53.1) – September 25, 2026
+
+</details>
+
 ### CodeMie 2.52.0 {#v2-52-0}
 
 <details>

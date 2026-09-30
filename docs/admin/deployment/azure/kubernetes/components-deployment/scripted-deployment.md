@@ -107,17 +107,41 @@ bash get-codemie-latest-release-version.sh -c key.json
 # Note the version (e.g., 1.2.3) for next step
 ```
 
-### Step 5: Run Deployment Script
+### Step 5: Configure Optional Components (If Required)
+
+**Optional Components:**
+
+- `litellm` - LiteLLM Proxy for unified LLM API interface, multi-model routing, and cost tracking
+- `pgadmin` - PostgreSQL administration interface for database inspection and monitoring
+
+:::warning LiteLLM Configuration Required
+If deploying with the `--optional litellm` flag, configuration must be completed **before** running the deployment script. Follow the [LiteLLM Proxy Installation and Configuration Guide](../../../extensions/litellm-proxy/index.md) to set up values files and credentials.
+:::
+
+Skip this step if not deploying optional components.
+
+### Step 6: Run Deployment Script
 
 Execute the deployment script with your chosen mode:
 
 ```bash
-# For first-time installation (installs all components)
+# Initial installation with all core components
 bash helm-charts.sh --cloud azure --version <version> --mode all
 
-# OR for clusters with existing Nginx Ingress
-bash helm-charts.sh --cloud azure --version <version> --mode recommended
+# Upgrade existing deployment to new version (preserves configuration)
+bash helm-charts.sh --cloud azure --version <version> --mode update
+
+# Add LiteLLM to existing installation for AI model management
+bash helm-charts.sh --cloud azure --version <version> --mode recommended --optional litellm
+
+# Maintenance deployment with database administration tools
+bash helm-charts.sh --cloud azure --version <version> --mode update --optional pgadmin
+
+# Enterprise installation with all optional components
+bash helm-charts.sh --cloud azure --version <version> --mode all --optional litellm,pgadmin
 ```
+
+Replace `<version>` with the version from Step 4 (e.g., `2.2.3`).
 
 :::tip Idempotent Script
 The deployment script is idempotent, meaning you can safely re-run it multiple times. If the script fails or is interrupted, simply run it again with the same parameters to continue or retry the deployment.
@@ -127,13 +151,15 @@ The deployment script is idempotent, meaning you can safely re-run it multiple t
 
 ### Script Parameters
 
-The deployment script accepts three required parameters:
+The deployment script accepts the following parameters:
 
-| Parameter   | Description               | Values                           |
-| ----------- | ------------------------- | -------------------------------- |
-| `--cloud`   | Target cloud provider     | `azure`, `aws`, `gcp`            |
-| `--version` | CodeMie component version | Semantic version (e.g., `1.2.3`) |
-| `--mode`    | Installation mode         | `all`, `recommended`, `update`   |
+| Parameter       | Description                          | Required | Values                                                               |
+| --------------- | ------------------------------------ | -------- | -------------------------------------------------------------------- |
+| `-h, --help`    | Show help message and usage examples | No       | N/A                                                                  |
+| `-c, --cloud`   | Target cloud provider                | Yes      | `azure`, `aws`, `gcp`                                                |
+| `-v, --version` | CodeMie component version            | Yes      | Semantic version (e.g., `2.2.3`)                                     |
+| `-m, --mode`    | Installation mode                    | Yes      | `all`, `recommended`, `update`                                       |
+| `--optional`    | Optional components to deploy        | No       | Comma-separated list: `litellm`, `pgadmin` (e.g., `litellm,pgadmin`) |
 
 ### Deployment Modes
 

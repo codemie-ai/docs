@@ -121,16 +121,38 @@ bash get-codemie-latest-release-version.sh -c key.json
 # Note the version (e.g., 1.2.3) for next step
 ```
 
-### Step 6: Run Deployment Script
+### Step 6: Configure Optional Components (If Required)
+
+**Optional Components:**
+
+- `litellm` - LiteLLM Proxy for unified LLM API interface, multi-model routing, and cost tracking
+- `pgadmin` - PostgreSQL administration interface for database inspection and monitoring
+
+:::warning LiteLLM Configuration Required
+If deploying with the `--optional litellm` flag, configuration must be completed **before** running the deployment script. Follow the [LiteLLM Proxy Installation and Configuration Guide](../../../extensions/litellm-proxy/index.md) to set up values files and credentials.
+:::
+
+Skip this step if not deploying optional components.
+
+### Step 7: Run Deployment Script
 
 Execute the deployment script with your chosen mode:
 
 ```bash
-# For first-time installation (installs all components)
+# Standard installation with all core components
 bash helm-charts.sh --cloud aws --version <version> --mode all
 
-# OR for clusters with existing Nginx Ingress
+# Production deployment with LiteLLM proxy for multi-model routing
+bash helm-charts.sh --cloud aws --version <version> --mode all --optional litellm
+
+# Complete installation with database administration capabilities
+bash helm-charts.sh --cloud aws --version <version> --mode all --optional litellm,pgadmin
+
+# Cluster with existing Nginx Ingress (installs only CodeMie components)
 bash helm-charts.sh --cloud aws --version <version> --mode recommended
+
+# Update existing installation to new version (core components only)
+bash helm-charts.sh --cloud aws --version <version> --mode update
 ```
 
 :::tip Idempotent Script
@@ -141,13 +163,15 @@ The deployment script is idempotent, meaning you can safely re-run it multiple t
 
 ### Script Parameters
 
-The deployment script accepts three required parameters:
+The deployment script accepts the following parameters:
 
-| Parameter   | Description               | Values                           |
-| ----------- | ------------------------- | -------------------------------- |
-| `--cloud`   | Target cloud provider     | `aws`, `azure`, `gcp`            |
-| `--version` | CodeMie component version | Semantic version (e.g., `1.2.3`) |
-| `--mode`    | Installation mode         | `all`, `recommended`, `update`   |
+| Parameter       | Description                          | Required | Values                                                               |
+| --------------- | ------------------------------------ | -------- | -------------------------------------------------------------------- |
+| `-h, --help`    | Show help message and usage examples | No       | N/A                                                                  |
+| `-c, --cloud`   | Target cloud provider                | Yes      | `aws`, `azure`, `gcp`                                                |
+| `-v, --version` | CodeMie component version            | Yes      | Semantic version (e.g., `2.2.3`)                                     |
+| `-m, --mode`    | Installation mode                    | Yes      | `all`, `recommended`, `update`                                       |
+| `--optional`    | Optional components to deploy        | No       | Comma-separated list: `litellm`, `pgadmin` (e.g., `litellm,pgadmin`) |
 
 ### Deployment Modes
 

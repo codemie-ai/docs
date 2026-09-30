@@ -46,6 +46,7 @@ The CodeMie platform is built with security-first principles, implementing indus
 This section describes the fundamental security patterns and practices implemented in the CodeMie platform:
 
 - **[Data Processing & Storage Architecture](./data-processing-storage.md)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
+- **[Image Allow-List for LLM Output](./llm-output-image-allow-list.md)**: Domain allow-list that gates every image rendered from assistant output, closing the prompt-injection exfiltration channel
 
 ### 1. Defense in Depth
 
