@@ -1350,64 +1350,6 @@ model_list:
 
 </details>
 
-### GPT-5-codex
-
-#### GPT-5.3-codex
-
-<details>
-<summary><strong>GPT-5.3 Codex</strong></summary>
-
-```yaml
-# US Region
-- model_name: gpt-5.3-codex-2026-02-24
-  litellm_params:
-    model: azure/gpt-5.3-codex-2026-02-24
-    api_base: https://api-base-eastus2-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-  model_info:
-    id: gpt-5-3-codex-2026-02-24-eastus2-0
-    base_model: azure/gpt-5.3-codex
-    label: "GPT-5.3 Codex 2026-02-24"
-    forbidden_for_web: true
-
-# EU Region
-- model_name: gpt-5.3-codex-2026-02-24
-  litellm_params:
-    model: azure/gpt-5.3-codex-2026-02-24
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-  model_info:
-    id: gpt-5-3-codex-2026-02-24-swedencentral-0
-    base_model: azure/gpt-5.3-codex
-    label: "GPT-5.3 Codex 2026-02-24"
-    forbidden_for_web: true
-```
-
-</details>
-
-#### GPT-5.3 Codex with Chat Compatibility Mode
-
-<details>
-<summary><strong>GPT-5.3 Codex with chat compatibility</strong></summary>
-
-```yaml
-# US Region
-- model_name: gpt-5.3-codex-2026-02-24
-  litellm_params:
-    // highlight-next-line
-    model: azure/responses/gpt-5.3-codex-2026-02-24
-    api_base: https://api-base-eastus2-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    // highlight-next-line
-    api_version: "2025-04-01-preview"
-  model_info:
-    id: gpt-5-3-codex-2026-02-24-eastus2-0
-    base_model: azure/gpt-5.3-codex
-    label: "GPT-5.3 Codex 2026-02-24"
-```
-
-</details>
-
 ### GPT-6 series
 
 #### GPT-6 Luna
@@ -1471,6 +1413,64 @@ model_list:
     base_model: azure/gpt-6.1-sol
     label: "GPT-6.1 Sol"
     mode: responses
+```
+
+</details>
+
+### GPT-5-codex
+
+#### GPT-5.3-codex
+
+<details>
+<summary><strong>GPT-5.3 Codex</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+
+# EU Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    model: azure/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-swedencentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-swedencentral-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
+    forbidden_for_web: true
+```
+
+</details>
+
+#### GPT-5.3 Codex with Chat Compatibility Mode
+
+<details>
+<summary><strong>GPT-5.3 Codex with chat compatibility</strong></summary>
+
+```yaml
+# US Region
+- model_name: gpt-5.3-codex-2026-02-24
+  litellm_params:
+    // highlight-next-line
+    model: azure/responses/gpt-5.3-codex-2026-02-24
+    api_base: https://api-base-eastus2-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    // highlight-next-line
+    api_version: "2025-04-01-preview"
+  model_info:
+    id: gpt-5-3-codex-2026-02-24-eastus2-0
+    base_model: azure/gpt-5.3-codex
+    label: "GPT-5.3 Codex 2026-02-24"
 ```
 
 </details>
