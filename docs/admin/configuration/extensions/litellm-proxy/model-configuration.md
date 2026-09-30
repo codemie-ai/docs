@@ -380,6 +380,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
 | [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
+| [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 
 ### Azure AI Models
 
@@ -1446,6 +1447,30 @@ model_list:
     id: gpt-6-sol-polandcentral-0
     base_model: azure/gpt-6-sol
     label: "GPT-6 Sol"
+    mode: responses
+```
+
+</details>
+
+### GPT-6.1 series
+
+#### GPT-6.1 Sol
+
+<details>
+<summary><strong>GPT-6.1 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6.1-sol
+  litellm_params:
+    model: azure/codemie-gpt-6.1-sol-2026-09-29
+    api_base: https://codemie-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+    tags: ["global"]
+  model_info:
+    id: gpt-6.1-sol-polandcentral-0
+    base_model: azure/gpt-6.1-sol
+    label: "GPT-6.1 Sol"
     mode: responses
 ```
 
