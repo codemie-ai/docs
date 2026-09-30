@@ -371,6 +371,9 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`gpt-5.4-2026-03-05`](#gpt-54)                             | GPT-5.4                |
 | [`gpt-5.5-2026-04-24`](#gpt-55)                             | GPT-5.5                |
+| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
+| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
+| [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -378,9 +381,6 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
-| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
-| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
-| [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 
 ### Azure AI Models
 
