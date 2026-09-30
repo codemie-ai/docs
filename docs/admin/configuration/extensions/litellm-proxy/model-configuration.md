@@ -1466,7 +1466,6 @@ model_list:
     api_base: https://codemie-polandcentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
     additional_drop_params: ["temperature", "top_p"]
-    tags: ["global"]
   model_info:
     id: gpt-6.1-sol-polandcentral-0
     base_model: azure/gpt-6.1-sol
