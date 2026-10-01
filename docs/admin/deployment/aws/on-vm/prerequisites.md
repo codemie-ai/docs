@@ -41,12 +41,6 @@ The following tools must be installed on the machine where you run `./deploy.sh`
 | openssl                                                                                                                                 | latest  | Secret generation           |
 | envsubst                                                                                                                                | latest  | Template rendering          |
 
-**Enterprise profile only:**
-
-| Tool                                  | Version | Purpose             |
-| ------------------------------------- | ------- | ------------------- |
-| [nsc](https://github.com/nats-io/nsc) | latest  | NATS key generation |
-
 ### Verify Installation
 
 ```bash

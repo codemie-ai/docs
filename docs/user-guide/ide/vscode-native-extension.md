@@ -61,6 +61,12 @@ The CodeMie Native VS Code extension provides a dedicated sidebar interface for 
 
 ## Configure Claude Code extension to work through CodeMie plugin integration
 
+:::warning Deprecated
+
+This configuration relies on the CodeMie Plugin Engine (NATS-based), which has been retired. Use [CodeMie CLI](../codemie-cli/index.md) to connect Claude Code to your CodeMie instance.
+
+:::
+
 From version 0.1.22 there is an option to configure Claude Code VSCode extension to use CodeMie plugin integration.
 This allows to use claude without Claude subscription and obtaining Anthropic API Key
 
