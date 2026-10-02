@@ -7,3 +7,7 @@ package-lock.json
 *.jpg
 *.jpeg
 *.svg
+*.bats
+.superpowers/
+.ai-run/
+superpowers/tasks/
