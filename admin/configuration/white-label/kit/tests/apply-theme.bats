@@ -44,6 +44,7 @@ ASSETS_DIR="$BATS_TEST_DIRNAME/fixtures/assets"
   "$SCRIPT" --render-only --output-dir "$tmpdir" \
     "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   grep -q "checksum/brand:" "$tmpdir/values-codemie-ui.brand.yaml"
+  grep -q "checksum/brand:" "$tmpdir/values-codemie.brand.yaml"
 }
 
 @test "render-only: chart version is not set in rendered values" {
