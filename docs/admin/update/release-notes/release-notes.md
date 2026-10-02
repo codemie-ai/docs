@@ -26,7 +26,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **Code Executor** — changes in `codemie-api`:
+1. **Code Executor** — changes in `codemie-api` — only applies if Code Executor tool is enabled:
    - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be removed in next releases.
    - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
 
