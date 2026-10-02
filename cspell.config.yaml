@@ -22,6 +22,9 @@ ignorePaths:
   - superpowers/tasks/
   - .superpowers/
   - .ai-run/
+  - '*.bats'
+  - admin/configuration/white-label/kit/apply-theme
+  - admin/configuration/white-label/kit/tests/stubs/
 
 # Custom dictionary - project-specific words that are correct
 words:
@@ -381,6 +384,17 @@ words:
   - ONCPU
   - LOOKBACK
   - vbscript
+  # White-label theming kit words
+  - Fira
+  - Inter
+  - webmanifest
+  - faviconSvg
+  - favicon
+  - logoLight
+  - logoDark
+  - shortName
+  - brandCss
+  - checksum
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
