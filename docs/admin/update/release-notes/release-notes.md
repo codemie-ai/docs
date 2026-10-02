@@ -26,8 +26,8 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-1. **[BREAKING] Code Executor** — changes in `codemie-api`:
-   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be deprecated.
+1. **Code Executor** — changes in `codemie-api`:
+   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be removed in next releases.
    - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
 
    :::warning
