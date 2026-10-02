@@ -145,14 +145,17 @@ apply_args() {
   ! grep -q -- 'bodyFamily\|codeFamily\|-dark:\|-light:\|!important' "$css"
 }
 
-@test "brand.css: dark values at :root, light values in html.codemieLight" {
+@test "brand.css: every colour is in the single :root block, no html.codemieLight block" {
   run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
+  [ "$(grep -c '^[^ ].*{' "$OUT/brand.css")" -eq 1 ]
+  [ "$(grep -c '^:root {' "$OUT/brand.css")" -eq 1 ]
+  ! grep -q 'codemieLight\|codemieDark' "$OUT/brand.css"
   root=$(sed -n '/^:root {/,/^}/p' "$OUT/brand.css")
-  light=$(sed -n '/^html.codemieLight {/,/^}/p' "$OUT/brand.css")
   [[ "$root" == *"--colors-surface-base-primary: 17 17 17;"* ]]
-  [[ "$light" == *"--colors-surface-base-primary: 255 255 255;"* ]]
-  [[ "$light" == *"--colors-text-specific-navigation-link: 160 176 192;"* ]]
+  [[ "$root" == *"--colors-text-specific-navigation-link: 10 11 12;"* ]]
+  # the light values are not emitted
+  ! grep -q -- '255 255 255\|160 176 192' "$OUT/brand.css"
 }
 
 @test "brand.css: multi-line fontFaceCSS comes first and appears exactly once" {

@@ -25,7 +25,7 @@ The kit is published in the documentation repository at [`docs/admin/configurati
 | `tests/`                            | Automated tests for the script (bats-core)                             |
 
 :::info Kit version and platform releases
-This page describes **kit version 1** (`kitVersion: "1"` in the page metadata), which works with theme packages that declare `version: '1'`. Each AI/Run CodeMie release is published with the kit version it is paired with; check the [Release Notes](../../update/release-notes/release-notes.md) for your target release before you upgrade, and use the kit version that is listed there. See [Kit Versions and Releases](#kit-versions-and-releases) for the pairing.
+This page describes **kit version 1** (`kitVersion: "1"` in the page metadata), which works with theme packages that declare `version: '1'`. Each AI/Run CodeMie release is published with the kit version it is paired with; check the [Release Notes](../../update/release-notes/release-notes.md) for your target release before you upgrade, and use the kit version that is listed there. Release 2.55.0 is paired with kit version 1. See [Kit Versions and Releases](#kit-versions-and-releases) for the pairing.
 :::
 
 :::warning Re-apply the theme after platform upgrades
@@ -206,7 +206,7 @@ Copy the workflow into your own repository, create the `white-label-apply` envir
 
 - **Asset size.** The five asset files are delivered as base64-encoded ConfigMap data. Keep the combined size of the assets below 1 MiB.
 - **No font binaries.** Font files are not delivered through the kit. Reference fonts by URL in `typography.fontFaceCSS`, for example `@font-face { font-family: 'Inter'; src: url('https://fonts.acme.example/inter.woff2'); }`, and make sure the URL is reachable from users' browsers.
-- **Variables only.** `brand.css` sets CSS custom properties: dark values at `:root` and light values under `html.codemieLight`. The kit does not change component styles or class names.
+- **Variables only.** `brand.css` sets CSS custom properties: all color variables are written in a single `:root` block from the `dark` values, so they apply to both themes, and the `light` values are validated but not written. The kit does not change component styles or class names.
 - **Load order.** The UI adds the favicon, manifest, page title and `brand.css` link when the page starts, so the default title may flash briefly before the brand title appears.
 - **Per-user appearance.** The user-level custom appearance settings are not touched by the kit and continue to work as before.
 - **Not covered.** The gradient background images on authentication pages and the default AI avatar image (`ai-avatar.png`) are not part of the theme package and keep their default look. The authentication and error pages do show your logo.
@@ -229,9 +229,9 @@ Copy the workflow into your own repository, create the `white-label-apply` envir
 
 The kit is versioned independently of the platform, and the `kitVersion` in this page's metadata is the version it describes. The package `version` field must match the kit's major version.
 
-| Kit version | Package `version` | Paired platform releases                                                                                                    |
-| ----------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 1           | `'1'`             | Every release whose Release Notes list kit version 1. Earlier releases lack the `brand` chart values and the links overlay. |
+| Kit version | Package `version` | Paired platform releases                                                                                                                                                                            |
+| ----------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1           | `'1'`             | [2.55.0](../../update/release-notes/release-notes.md#v2-55-0) and every later release whose Release Notes list kit version 1. Earlier releases lack the `brand` chart values and the links overlay. |
 
 When a release changes the theme package contract, its Release Notes name the new kit version, and this table gains a row.
 
