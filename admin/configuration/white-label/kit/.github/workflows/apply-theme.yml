@@ -1,0 +1,87 @@
+# Example workflow: validate and apply a white-label theme package.
+# Copy this file to .github/workflows/ in the repository that holds your theme package.
+# Assumes the kit (apply-theme script and schema) is checked in under ./kit.
+name: Apply white-label theme
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: Kubernetes namespace of the CodeMie release
+        required: true
+        default: codemie
+      release_ui:
+        description: Helm release name of the UI chart
+        required: true
+        default: codemie-ui
+      release_codemie:
+        description: Helm release name of the CodeMie API chart
+        required: true
+        default: codemie
+      package_path:
+        description: Path to the theme package file
+        required: true
+        default: theme/theme-package.yaml
+      assets_path:
+        description: Path to the directory with the brand assets
+        required: true
+        default: theme/assets
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate theme package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ajv-cli
+        run: npm install --global ajv-cli@6
+
+      - name: Render theme package without touching the cluster
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          ASSETS_PATH: ${{ inputs.assets_path }}
+        run: ./kit/apply-theme --render-only "$PACKAGE_PATH" "$ASSETS_PATH"
+
+  apply:
+    name: Apply theme to the cluster
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ajv-cli
+        run: npm install --global ajv-cli@6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure cluster access
+        env:
+          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "$KUBECONFIG_DATA" | base64 --decode > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Apply theme package
+        env:
+          NAMESPACE: ${{ inputs.namespace }}
+          RELEASE_UI: ${{ inputs.release_ui }}
+          RELEASE_CODEMIE: ${{ inputs.release_codemie }}
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          ASSETS_PATH: ${{ inputs.assets_path }}
+        run: |
+          ./kit/apply-theme \
+            --namespace "$NAMESPACE" \
+            --release-ui "$RELEASE_UI" \
+            --release-codemie "$RELEASE_CODEMIE" \
+            "$PACKAGE_PATH" "$ASSETS_PATH"

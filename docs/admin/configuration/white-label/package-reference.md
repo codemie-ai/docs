@@ -1,0 +1,115 @@
+---
+id: package-reference
+title: Theme Package Reference
+sidebar_label: Theme Package Reference
+sidebar_position: 2
+description: Field reference for the white-label theme-package.yaml file, derived from theme-package.schema.json
+pagination_prev: admin/configuration/white-label/white-label-overview
+pagination_next: null
+---
+
+# Theme Package Reference
+
+This page lists every field of `theme-package.yaml`. It is derived from `theme-package.schema.json` in the [theming kit](./index.md), which is the authoritative definition. The package may not contain fields that are not listed here.
+
+## Top-Level Fields
+
+| Path         | Type   | Required | Description                                                              |
+| ------------ | ------ | -------- | ------------------------------------------------------------------------ |
+| `version`    | string | Yes      | Theme package format version. Must be exactly `"1"`.                     |
+| `product`    | object | Yes      | Product naming. See [Product](#product).                                 |
+| `colors`     | object | Yes      | Color tokens, each with a dark and a light value. See [Colors](#colors). |
+| `typography` | object | Yes      | Font families and optional font-face CSS. See [Typography](#typography). |
+| `assets`     | object | Yes      | File names of the brand assets. See [Assets](#assets).                   |
+| `links`      | object | Yes      | Help links shown in the UI. See [Links](#links).                         |
+
+## Product
+
+| Path                | Type   | Required | Description                                                      |
+| ------------------- | ------ | -------- | ---------------------------------------------------------------- |
+| `product.name`      | string | Yes      | Product name shown in the browser tab and UI headers. Not empty. |
+| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. Not empty.      |
+
+## Colors
+
+`colors` is a map. Each key is a semantic token path, for example `surface.default`. The dots in the token path become hyphens in the generated CSS custom properties, so `surface.default` produces `--colors-surface-default-dark` and `--colors-surface-default-light`. Tokens that you do not list keep their default values.
+
+| Path                   | Type   | Required | Description                                                                |
+| ---------------------- | ------ | -------- | -------------------------------------------------------------------------- |
+| `colors.<token>`       | object | No       | One semantic color token. Add one entry per token to override.             |
+| `colors.<token>.dark`  | string | Yes      | Value for the dark theme as a six-digit hex color, for example `#111111`.  |
+| `colors.<token>.light` | string | Yes      | Value for the light theme as a six-digit hex color, for example `#ffffff`. |
+
+Only the `dark` and `light` keys are allowed inside a token. The hex pattern is `^#[0-9a-fA-F]{6}$`; shorthand colors such as `#fff` are rejected.
+
+## Typography
+
+| Path                         | Type           | Required | Description                                                                                                         |
+| ---------------------------- | -------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `typography.bodyFamily`      | string         | Yes      | CSS font-family list for UI text, for example `Inter, sans-serif`. Not empty.                                       |
+| `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose. Not empty.                                                                |
+| `typography.codeFamily`      | string         | Yes      | CSS font-family list for code, for example `Fira Code, monospace`. Not empty.                                       |
+| `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the `:root` block. Font files are not delivered by the kit; use URLs in `src`. |
+
+## Assets
+
+All values are file names relative to the assets directory that you pass to `apply-theme`. The combined size of the files must stay below 1 MiB.
+
+| Path                | Type   | Required | Description                          |
+| ------------------- | ------ | -------- | ------------------------------------ |
+| `assets.logoLight`  | string | Yes      | Logo for the light theme. Not empty. |
+| `assets.logoDark`   | string | Yes      | Logo for the dark theme. Not empty.  |
+| `assets.favicon`    | string | Yes      | Legacy `.ico` favicon. Not empty.    |
+| `assets.faviconSvg` | string | Yes      | SVG favicon. Not empty.              |
+| `assets.manifest`   | string | Yes      | Web app manifest file. Not empty.    |
+
+## Links
+
+The `links` object is required, but each link inside it is optional in the schema. In practice, include every link that is enabled in your `customer-config.yaml`: `apply-theme` fails validation when an enabled link is missing from the package. Only the link identifiers below are allowed.
+
+| Path                              | Type   | Required | Description                                                           |
+| --------------------------------- | ------ | -------- | --------------------------------------------------------------------- |
+| `links.userGuide`                 | object | No       | User guide link.                                                      |
+| `links.videoPortal`               | object | No       | Video portal link.                                                    |
+| `links.youtubeChannel`            | object | No       | Video channel link.                                                   |
+| `links.learningCourses`           | object | No       | Learning courses link.                                                |
+| `links.customerSupport`           | object | No       | Customer support link.                                                |
+| `links.userSurvey`                | object | No       | User survey link.                                                     |
+| `links.workflowDocumentation`     | object | No       | Workflow documentation link.                                          |
+| `links.workflowYamlDocumentation` | object | No       | Workflow YAML documentation link.                                     |
+| `links.googleDocsDocumentation`   | object | No       | Google Docs documentation link.                                       |
+| `links.<id>.name`                 | string | Yes      | Display name of the link. Required for every link present. Not empty. |
+| `links.<id>.url`                  | string | Yes      | Target URL of the link. Required for every link present. Not empty.   |
+
+## Complete Example
+
+```yaml
+version: '1'
+
+product:
+  name: 'Acme Corp AI Platform'
+  shortName: 'Acme'
+
+colors:
+  surface.default:
+    dark: '#121826'
+    light: '#ffffff'
+
+typography:
+  bodyFamily: 'Inter, sans-serif'
+  bodyProseFamily: 'Georgia, serif'
+  codeFamily: 'Fira Code, monospace'
+  fontFaceCSS: null
+
+assets:
+  logoLight: 'logo-light.svg'
+  logoDark: 'logo-dark.svg'
+  favicon: 'favicon.ico'
+  faviconSvg: 'favicon.svg'
+  manifest: 'site.webmanifest'
+
+links:
+  userGuide:
+    name: 'Acme Docs'
+    url: 'https://docs.acme.example/'
+```
