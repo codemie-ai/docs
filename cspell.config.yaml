@@ -395,6 +395,7 @@ words:
   - shortName
   - brandCss
   - checksum
+  - rrggbb
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
