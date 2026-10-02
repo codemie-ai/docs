@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "kubectl $*" >> "$BATS_TMPDIR/kubectl-calls"
+exit 0
