@@ -23,8 +23,8 @@ ignorePaths:
   - .superpowers/
   - .ai-run/
   - '*.bats'
-  - admin/configuration/white-label/kit/apply-theme
-  - admin/configuration/white-label/kit/tests/stubs/
+  - docs/admin/configuration/white-label/kit/apply-theme
+  - docs/admin/configuration/white-label/kit/tests/stubs/
 
 # Custom dictionary - project-specific words that are correct
 words:

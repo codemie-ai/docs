@@ -1,19 +1,16 @@
 version: '1'
 
 product:
-  name: 'Acme Corp AI Platform'
+  name: 'Acme Suite'
   shortName: 'Acme'
 
 colors:
-  surface.default:
-    dark: '#121826'
+  surface.base.primary:
+    dark: '#111111'
     light: '#ffffff'
-  text.primary:
-    dark: '#f3f4f6'
-    light: '#111827'
-  accent.primary:
-    dark: '#ff7a1a'
-    light: '#d95f00'
+  text.specific.navigation-link:
+    dark: '#0a0b0c'
+    light: '#A0B0C0'
 
 typography:
   bodyFamily: 'Inter, sans-serif'
@@ -32,18 +29,18 @@ links:
   userGuide:
     name: 'Acme Docs'
     url: 'https://docs.acme.example/'
+  customerSupport:
+    name: 'Acme Help Desk'
+    url: 'https://help.acme.example/'
   videoPortal:
     name: 'Acme Videos'
     url: 'https://videos.acme.example/'
   youtubeChannel:
     name: 'Acme YouTube'
-    url: 'https://youtube.com/@acme-example'
+    url: 'https://youtube.com/acme'
   learningCourses:
     name: 'Acme Learn'
     url: 'https://learn.acme.example/'
-  customerSupport:
-    name: 'Acme Help Desk'
-    url: 'https://help.acme.example/'
   userSurvey:
     name: 'Acme Survey'
     url: 'https://survey.acme.example/'
@@ -51,8 +48,8 @@ links:
     name: 'Acme Workflow Docs'
     url: 'https://docs.acme.example/workflows'
   workflowYamlDocumentation:
-    name: 'Acme Workflow YAML Docs'
-    url: 'https://docs.acme.example/workflows/yaml'
+    name: 'Acme YAML Docs'
+    url: 'https://docs.acme.example/yaml'
   googleDocsDocumentation:
-    name: 'Acme Google Docs Guide'
-    url: 'https://docs.acme.example/google-docs'
+    name: 'Acme Google Docs'
+    url: 'https://docs.acme.example/gdocs'

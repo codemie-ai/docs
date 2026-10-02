@@ -25,14 +25,14 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 ## Product
 
-| Path                | Type   | Required | Description                                                      |
-| ------------------- | ------ | -------- | ---------------------------------------------------------------- |
-| `product.name`      | string | Yes      | Product name shown in the browser tab and UI headers. Not empty. |
-| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. Not empty.      |
+| Path                | Type   | Required | Description                                                                                                                    |
+| ------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `product.name`      | string | Yes      | Product name shown in the browser tab and UI headers. 1 to 100 characters; no `<`, `>`, `"`, backslash, or control characters. |
+| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. 1 to 50 characters; same character rules.                                     |
 
 ## Colors
 
-`colors` is a map. Each key is a semantic token path, for example `surface.default`. The dots in the token path become hyphens in the generated CSS custom properties, so `surface.default` produces `--colors-surface-default-dark` and `--colors-surface-default-light`. Tokens that you do not list keep their default values.
+`colors` is a map. Each key is a semantic token path, for example `surface.base.primary`. Token paths use letters, digits, and hyphens, separated by dots. Every dot becomes a hyphen in the generated CSS custom property, so `surface.base.primary` produces `--colors-surface-base-primary`, the variable the UI reads. The `dark` value is written at `:root` and the `light` value under `html.codemieLight`, as space-separated red, green, and blue channels. Tokens that you do not list keep their default values.
 
 | Path                   | Type   | Required | Description                                                                |
 | ---------------------- | ------ | -------- | -------------------------------------------------------------------------- |
@@ -44,16 +44,16 @@ Only the `dark` and `light` keys are allowed inside a token. The hex pattern is 
 
 ## Typography
 
-| Path                         | Type           | Required | Description                                                                                                         |
-| ---------------------------- | -------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| `typography.bodyFamily`      | string         | Yes      | CSS font-family list for UI text, for example `Inter, sans-serif`. Not empty.                                       |
-| `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose. Not empty.                                                                |
-| `typography.codeFamily`      | string         | Yes      | CSS font-family list for code, for example `Fira Code, monospace`. Not empty.                                       |
-| `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the `:root` block. Font files are not delivered by the kit; use URLs in `src`. |
+| Path                         | Type           | Required | Description                                                                                                                                    |
+| ---------------------------- | -------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `typography.bodyFamily`      | string         | Yes      | CSS font-family list for UI text (`--font-family-body`), for example `Inter, sans-serif`. Not empty; no `; { } < > ( ) !` or backslash.        |
+| `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose (`--font-family-body-prose`). Same character rules.                                                   |
+| `typography.codeFamily`      | string         | Yes      | CSS font-family list for code (`--font-family-code-block`), for example `Fira Code, monospace`. Same character rules.                          |
+| `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the variables. Must not contain `!important`. Font files are not delivered by the kit; use URLs in `src`. |
 
 ## Assets
 
-All values are file names relative to the assets directory that you pass to `apply-theme`. The combined size of the files must stay below 1 MiB.
+All values are plain file names relative to the assets directory that you pass to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files).
 
 | Path                | Type   | Required | Description                          |
 | ------------------- | ------ | -------- | ------------------------------------ |
@@ -67,19 +67,19 @@ All values are file names relative to the assets directory that you pass to `app
 
 The `links` object is required, but each link inside it is optional in the schema. In practice, include every link that is enabled in your `customer-config.yaml`: `apply-theme` fails validation when an enabled link is missing from the package. Only the link identifiers below are allowed.
 
-| Path                              | Type   | Required | Description                                                           |
-| --------------------------------- | ------ | -------- | --------------------------------------------------------------------- |
-| `links.userGuide`                 | object | No       | User guide link.                                                      |
-| `links.videoPortal`               | object | No       | Video portal link.                                                    |
-| `links.youtubeChannel`            | object | No       | Video channel link.                                                   |
-| `links.learningCourses`           | object | No       | Learning courses link.                                                |
-| `links.customerSupport`           | object | No       | Customer support link.                                                |
-| `links.userSurvey`                | object | No       | User survey link.                                                     |
-| `links.workflowDocumentation`     | object | No       | Workflow documentation link.                                          |
-| `links.workflowYamlDocumentation` | object | No       | Workflow YAML documentation link.                                     |
-| `links.googleDocsDocumentation`   | object | No       | Google Docs documentation link.                                       |
-| `links.<id>.name`                 | string | Yes      | Display name of the link. Required for every link present. Not empty. |
-| `links.<id>.url`                  | string | Yes      | Target URL of the link. Required for every link present. Not empty.   |
+| Path                              | Type   | Required | Description                                                                                                     |
+| --------------------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `links.userGuide`                 | object | No       | User guide link.                                                                                                |
+| `links.videoPortal`               | object | No       | Video portal link.                                                                                              |
+| `links.youtubeChannel`            | object | No       | Video channel link.                                                                                             |
+| `links.learningCourses`           | object | No       | Learning courses link.                                                                                          |
+| `links.customerSupport`           | object | No       | Customer support link.                                                                                          |
+| `links.userSurvey`                | object | No       | User survey link.                                                                                               |
+| `links.workflowDocumentation`     | object | No       | Workflow documentation link.                                                                                    |
+| `links.workflowYamlDocumentation` | object | No       | Workflow YAML documentation link.                                                                               |
+| `links.googleDocsDocumentation`   | object | No       | Google Docs documentation link.                                                                                 |
+| `links.<id>.name`                 | string | Yes      | Display name of the link. Required for every link present. Up to 100 characters; must not contain `{{` or `}}`. |
+| `links.<id>.url`                  | string | Yes      | Target URL of the link. Required for every link present. Must start with `http://` or `https://`.               |
 
 ## Complete Example
 
@@ -91,7 +91,7 @@ product:
   shortName: 'Acme'
 
 colors:
-  surface.default:
+  surface.base.primary:
     dark: '#121826'
     light: '#ffffff'
 

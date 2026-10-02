@@ -1,0 +1,325 @@
+#!/usr/bin/env bash
+# apply-theme — validate, render and (optionally) apply a theme package to a cluster
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5, helm >=3.9, kubectl >=1.25
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCHEMA="$SCRIPT_DIR/theme-package.schema.json"
+
+RENDER_ONLY=false
+NAMESPACE="default"
+RELEASE_UI="codemie-ui"
+RELEASE_CODEMIE="codemie"
+CHART_UI=""
+CHART_CODEMIE=""
+OUTPUT_DIR=""
+CUSTOMER_CONFIG_OPT=""
+CODEMIE_VALUES_OPT=""
+
+# Must stay in sync with the mount path the backend reads (BRAND_CONFIG_PATH default).
+BRAND_CONFIGMAP="codemie-brand"
+BRAND_MOUNT_PATH="/etc/codemie/brand.yaml"
+
+usage() {
+  echo "Usage: apply-theme [--render-only] [--namespace <ns>]"
+  echo "         [--release-ui <name>] [--release-codemie <name>]"
+  echo "         [--chart-ui <ref>] [--chart-codemie <ref>]"
+  echo "         [--customer-config <file>] [--codemie-values <file>]"
+  echo "         [--output-dir <dir>]"
+  echo "         <theme-package.yaml> <assets-dir>"
+  echo ""
+  echo "  --chart-ui / --chart-codemie  chart reference of each release (repo/chart or local path);"
+  echo "                                required unless --render-only. The installed chart version is"
+  echo "                                pinned, so applying a theme never changes it."
+  echo "  --customer-config <file>      customer-config.yaml used to cross-check enabled links"
+  echo "                                (default: \$CUSTOMER_CONFIG_PATH, /app/config/customer/..., /etc/codemie/...)"
+  echo "  --codemie-values <file>       current values of the API release (helm get values --all -o yaml),"
+  echo "                                merged into extraVolumes/extraVolumeMounts/extraObjects when"
+  echo "                                rendering only; fetched from the cluster when applying"
+  exit 1
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --render-only) RENDER_ONLY=true; shift ;;
+    --namespace) NAMESPACE="${2:?--namespace needs a value}"; shift 2 ;;
+    --release-ui) RELEASE_UI="${2:?--release-ui needs a value}"; shift 2 ;;
+    --release-codemie) RELEASE_CODEMIE="${2:?--release-codemie needs a value}"; shift 2 ;;
+    --chart-ui) CHART_UI="${2:?--chart-ui needs a value}"; shift 2 ;;
+    --chart-codemie) CHART_CODEMIE="${2:?--chart-codemie needs a value}"; shift 2 ;;
+    --output-dir) OUTPUT_DIR="${2:?--output-dir needs a value}"; shift 2 ;;
+    --customer-config) CUSTOMER_CONFIG_OPT="${2:?--customer-config needs a value}"; shift 2 ;;
+    --codemie-values) CODEMIE_VALUES_OPT="${2:?--codemie-values needs a value}"; shift 2 ;;
+    --help | -h) usage ;;
+    -*) echo "Unknown option: $1"; usage ;;
+    *) break ;;
+  esac
+done
+
+[[ $# -lt 2 ]] && usage
+PACKAGE_FILE="$1"
+ASSETS_DIR="$2"
+
+# Scratch files live in one directory that is removed on exit. The schema input needs a .json
+# extension, which ajv-cli uses to decide how to read it.
+TMP_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/apply-theme-scratch-XXXXXX")
+trap 'rm -rf "$TMP_ROOT"' EXIT
+
+# sha256 of stdin; sha256sum is missing on stock macOS, which ships shasum
+_sha256() {
+  if command -v sha256sum >/dev/null 2>&1; then sha256sum | awk '{print $1}'; else shasum -a 256 | awk '{print $1}'; fi
+}
+
+# base64 without line wrapping: GNU needs -w0, macOS wraps nothing and rejects it
+_b64() { base64 -w0 "$1" 2>/dev/null || base64 <"$1" | tr -d '\n'; }
+
+# ── Phase 1: validate ────────────────────────────────────────────────────────
+ERRORS=()
+WARNINGS=()
+
+ASSET_KEYS=(logoLight logoDark favicon faviconSvg manifest)
+LINK_IDS=(
+  userGuide videoPortal youtubeChannel learningCourses customerSupport
+  userSurvey workflowDocumentation workflowYamlDocumentation googleDocsDocumentation
+)
+ASSET_FILE_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
+MAX_ASSET_BYTES=1048576 # ConfigMap size limit; the base64-encoded assets must fit below it
+
+# 1a. JSON Schema validation (all errors, not just the first)
+_AJV_INPUT="$TMP_ROOT/package.json"
+_AJV_ERR="$TMP_ROOT/ajv.err"
+PARSEABLE=true
+if ! yq eval -o=json "$PACKAGE_FILE" >"$_AJV_INPUT" 2>"$_AJV_ERR"; then
+  PARSEABLE=false
+  ERRORS+=("cannot parse $PACKAGE_FILE: $(tr '\n' ' ' <"$_AJV_ERR")")
+elif ! ajv validate -s "$SCHEMA" --spec draft7 --all-errors --errors=text -d "$_AJV_INPUT" >"$_AJV_ERR" 2>&1; then
+  # ajv prints all errors on one comma-joined line; put one per line and drop its "<file> invalid" summary
+  while IFS= read -r line; do
+    [[ -n "$line" && "$line" != *" invalid" ]] && ERRORS+=("$line")
+  done < <(sed 's/, data\//\
+data\//g' "$_AJV_ERR")
+fi
+
+if [[ "$PARSEABLE" == "true" ]]; then
+  # 1b. Asset checks, independent of the schema result: existence, no symlinks, unique names, size
+  ASSET_NAMES=()
+  TOTAL_BYTES=0
+  for key in "${ASSET_KEYS[@]}"; do
+    fname=$(yq eval ".assets.$key | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true)
+    # an empty or unsafe name is already reported by the schema; never touch the filesystem with it
+    [[ -n "$fname" && "$fname" =~ $ASSET_FILE_RE ]] || continue
+    ASSET_NAMES+=("$fname")
+    asset_path="$ASSETS_DIR/$fname"
+    if [[ -L "$asset_path" ]]; then
+      ERRORS+=("assets.$key: must not be a symbolic link: $asset_path")
+    elif [[ ! -f "$asset_path" ]]; then
+      ERRORS+=("assets.$key: file not found: $asset_path")
+    else
+      TOTAL_BYTES=$((TOTAL_BYTES + $(wc -c <"$asset_path")))
+    fi
+  done
+  if [[ ${#ASSET_NAMES[@]} -gt 0 ]]; then
+    dups=$(printf '%s\n' "${ASSET_NAMES[@]}" | sort | uniq -d | tr '\n' ' ')
+    [[ -z "$dups" ]] || ERRORS+=("assets: file names must be unique, duplicated: $dups")
+  fi
+  # base64 inflates by 4/3
+  if [[ $((TOTAL_BYTES * 4 / 3)) -ge $MAX_ASSET_BYTES ]]; then
+    ERRORS+=("assets: combined size $TOTAL_BYTES bytes exceeds the 1 MiB ConfigMap limit once base64-encoded")
+  fi
+
+  # 1c. Enabled-link cross-check against customer-config.yaml
+  CUSTOMER_CONFIG="${CUSTOMER_CONFIG_OPT:-${CUSTOMER_CONFIG_PATH:-}}"
+  if [[ -z "$CUSTOMER_CONFIG" ]]; then
+    for candidate in /app/config/customer/customer-config.yaml /etc/codemie/customer-config.yaml; do
+      if [[ -f "$candidate" ]]; then CUSTOMER_CONFIG="$candidate"; break; fi
+    done
+  fi
+  if [[ -z "$CUSTOMER_CONFIG" ]]; then
+    WARNINGS+=("customer-config.yaml not found: the enabled-link cross-check is SKIPPED (pass --customer-config <file>)")
+  elif [[ ! -f "$CUSTOMER_CONFIG" ]]; then
+    ERRORS+=("customer config not found: $CUSTOMER_CONFIG")
+  elif ! ENABLED_IDS=$(yq eval '.components[] | select(.settings.enabled == true) | .id' "$CUSTOMER_CONFIG" 2>&1); then
+    ERRORS+=("cannot parse customer config $CUSTOMER_CONFIG: $(echo "$ENABLED_IDS" | tr '\n' ' ')")
+  else
+    for lid in "${LINK_IDS[@]}"; do
+      if echo "$ENABLED_IDS" | grep -qx "$lid"; then
+        present=$(yq eval ".links.$lid | tag" "$PACKAGE_FILE" 2>/dev/null || echo "!!null")
+        [[ "$present" == "!!map" ]] || ERRORS+=("links.$lid: enabled in customer-config but absent from package")
+      fi
+    done
+  fi
+fi
+
+# 1d. Apply mode needs to know which charts to upgrade
+if [[ "$RENDER_ONLY" != "true" ]]; then
+  [[ -n "$CHART_UI" ]] || ERRORS+=("--chart-ui is required unless --render-only is set")
+  [[ -n "$CHART_CODEMIE" ]] || ERRORS+=("--chart-codemie is required unless --render-only is set")
+fi
+
+for w in ${WARNINGS[@]+"${WARNINGS[@]}"}; do echo "apply-theme: warning: $w" >&2; done
+
+if [[ ${#ERRORS[@]} -gt 0 ]]; then
+  echo "apply-theme: validation failed:" >&2
+  for e in "${ERRORS[@]}"; do echo "  - $e" >&2; done
+  exit 1
+fi
+
+# ── Phase 2: render ──────────────────────────────────────────────────────────
+WORK_DIR="${OUTPUT_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/apply-theme-XXXXXX")}"
+mkdir -p "$WORK_DIR"
+
+# The checksum covers the package and the content of every asset, so an asset edited
+# without a YAML change still rolls the pods.
+CHECKSUM=$(
+  {
+    cat "$PACKAGE_FILE"
+    for key in "${ASSET_KEYS[@]}"; do
+      _sha256 <"$ASSETS_DIR/$(yq eval ".assets.$key" "$PACKAGE_FILE")"
+    done
+  } | _sha256
+)
+
+# Render brand.css. The compiled stylesheet defines the dark palette at :root and the light
+# palette at .codemieLight, both as space-separated "r g b" channels read through rgb(var(...)).
+# Dark values therefore go to :root and light values to html.codemieLight, which is one
+# class more specific than the compiled rule; nothing needs !important.
+FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
+_hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
+DARK_VARS=""
+LIGHT_VARS=""
+while read -r token dark light; do
+  [[ -n "$token" ]] || continue
+  var="--colors-${token//./-}"
+  DARK_VARS+="  $var: $(_hex_to_rgb "$dark");"$'\n'
+  LIGHT_VARS+="  $var: $(_hex_to_rgb "$light");"$'\n'
+done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
+
+{
+  [[ -n "$FONT_FACE" ]] && echo "$FONT_FACE"
+  echo ":root {"
+  echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
+  echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
+  echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
+  printf '%s' "$DARK_VARS"
+  echo "}"
+  if [[ -n "$LIGHT_VARS" ]]; then
+    echo "html.codemieLight {"
+    printf '%s' "$LIGHT_VARS"
+    echo "}"
+  fi
+} >"$WORK_DIR/brand.css"
+
+# Values files are built with yq so every package value is encoded, never concatenated.
+PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
+PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
+A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
+A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
+A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
+A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
+A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
+B64_LOGOLIGHT=$(_b64 "$ASSETS_DIR/$A_LOGOLIGHT")
+B64_LOGODARK=$(_b64 "$ASSETS_DIR/$A_LOGODARK")
+B64_FAVICON=$(_b64 "$ASSETS_DIR/$A_FAVICON")
+B64_FAVICONSVG=$(_b64 "$ASSETS_DIR/$A_FAVICONSVG")
+B64_MANIFEST=$(_b64 "$ASSETS_DIR/$A_MANIFEST")
+BRAND_CSS=$(cat "$WORK_DIR/brand.css")
+export PRODUCT_NAME PRODUCT_SHORT A_LOGOLIGHT A_LOGODARK A_FAVICON A_FAVICONSVG A_MANIFEST
+export B64_LOGOLIGHT B64_LOGODARK B64_FAVICON B64_FAVICONSVG B64_MANIFEST BRAND_CSS CHECKSUM
+
+yq -n '
+  .brand.enabled = true |
+  .brand.product.name = strenv(PRODUCT_NAME) |
+  .brand.product.shortName = strenv(PRODUCT_SHORT) |
+  .brand.assets.logoLight = strenv(A_LOGOLIGHT) |
+  .brand.assets.logoDark = strenv(A_LOGODARK) |
+  .brand.assets.favicon = strenv(A_FAVICON) |
+  .brand.assets.faviconSvg = strenv(A_FAVICONSVG) |
+  .brand.assets.manifest = strenv(A_MANIFEST) |
+  .brand.brandCssContent = strenv(BRAND_CSS) |
+  .brand.logoLightData = strenv(B64_LOGOLIGHT) |
+  .brand.logoDarkData = strenv(B64_LOGODARK) |
+  .brand.faviconData = strenv(B64_FAVICON) |
+  .brand.faviconSvgData = strenv(B64_FAVICONSVG) |
+  .brand.manifestData = strenv(B64_MANIFEST) |
+  .brand.podAnnotations."checksum/brand" = strenv(CHECKSUM)
+' >"$WORK_DIR/values-codemie-ui.brand.yaml"
+
+# The API chart takes extraVolumes/extraVolumeMounts as multi-line strings and extraObjects as a
+# list. helm --reuse-values replaces all three wholesale, so the release's current values are
+# read and the brand entries appended rather than the lists being overwritten.
+CODEMIE_BASE="$CODEMIE_VALUES_OPT"
+if [[ -z "$CODEMIE_BASE" && "$RENDER_ONLY" != "true" ]]; then
+  CODEMIE_BASE="$TMP_ROOT/current-values.yaml"
+  helm get values "$RELEASE_CODEMIE" -n "$NAMESPACE" --all -o yaml >"$CODEMIE_BASE"
+fi
+CUR_VOLUMES=""
+CUR_MOUNTS=""
+CUR_OBJECTS="$TMP_ROOT/current-objects.yaml"
+echo "[]" >"$CUR_OBJECTS"
+if [[ -n "$CODEMIE_BASE" ]]; then
+  [[ -f "$CODEMIE_BASE" ]] || { echo "apply-theme: current values file not found: $CODEMIE_BASE" >&2; exit 1; }
+  CUR_VOLUMES=$(yq eval '.extraVolumes // "" | select(tag == "!!str")' "$CODEMIE_BASE")
+  CUR_MOUNTS=$(yq eval '.extraVolumeMounts // "" | select(tag == "!!str")' "$CODEMIE_BASE")
+  yq eval '.extraObjects // []' "$CODEMIE_BASE" >"$CUR_OBJECTS"
+else
+  echo "apply-theme: warning: no current API values given (--codemie-values); extraVolumes, extraVolumeMounts and" >&2
+  echo "  extraObjects in values-codemie.brand.yaml REPLACE the lists of your release, merge them before applying" >&2
+fi
+
+_append_block() { # <current> <block>: append the block unless the brand entry is already there
+  local cur="$1" block="$2"
+  if [[ "$cur" == *"name: $BRAND_CONFIGMAP"* ]]; then printf '%s' "$cur"; return; fi
+  [[ -n "$cur" ]] && cur+=$'\n'
+  printf '%s%s' "$cur" "$block"
+}
+export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP
+NEW_VOLUMES=$(_append_block "$CUR_VOLUMES" "- name: $BRAND_CONFIGMAP
+  configMap:
+    name: $BRAND_CONFIGMAP")
+NEW_MOUNTS=$(_append_block "$CUR_MOUNTS" "- name: $BRAND_CONFIGMAP
+  mountPath: $BRAND_MOUNT_PATH
+  subPath: brand.yaml
+  readOnly: true")
+BRAND_YAML=$(yq eval '{"links": .links}' "$PACKAGE_FILE")
+
+yq -n '
+  .podAnnotations."checksum/brand" = strenv(CHECKSUM) |
+  .extraVolumes = strenv(NEW_VOLUMES) |
+  .extraVolumeMounts = strenv(NEW_MOUNTS) |
+  .extraObjects = (
+    load(strenv(CUR_OBJECTS))
+    | map(select((tag == "!!map" and .kind == "ConfigMap" and .metadata.name == strenv(BRAND_CONFIGMAP)) | not))
+  ) + [{
+    "apiVersion": "v1",
+    "kind": "ConfigMap",
+    "metadata": {"name": strenv(BRAND_CONFIGMAP)},
+    "data": {"brand.yaml": strenv(BRAND_YAML)}
+  }]
+' >"$WORK_DIR/values-codemie.brand.yaml"
+
+echo "apply-theme: rendered files written to $WORK_DIR"
+
+[[ "$RENDER_ONLY" == "true" ]] && exit 0
+
+# ── Phase 3: upgrade ─────────────────────────────────────────────────────────
+# The installed chart version is pinned so the upgrade can never move the platform to a newer
+# chart. Image tag and every other value come from --reuse-values and are never set here.
+_upgrade() { # <release> <chart> <values-file>
+  local release="$1" chart="$2" values="$3" version
+  local -a pin=()
+  version=$(helm get metadata "$release" -n "$NAMESPACE" -o yaml | yq eval '.version // ""' -)
+  [[ -n "$version" ]] || { echo "apply-theme: cannot read the installed chart version of $release (needs helm >= 3.9)" >&2; exit 1; }
+  # a local chart path carries its own version; --version applies to repository references only
+  [[ -e "$chart" ]] || pin=(--version "$version")
+  helm upgrade "$release" "$chart" --reuse-values ${pin[@]+"${pin[@]}"} -f "$values" -n "$NAMESPACE"
+}
+_upgrade "$RELEASE_UI" "$CHART_UI" "$WORK_DIR/values-codemie-ui.brand.yaml"
+_upgrade "$RELEASE_CODEMIE" "$CHART_CODEMIE" "$WORK_DIR/values-codemie.brand.yaml"
+
+# ── Phase 4: restart ─────────────────────────────────────────────────────────
+kubectl rollout restart "deployment/$RELEASE_UI" -n "$NAMESPACE"
+kubectl rollout restart "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE"
+kubectl rollout status "deployment/$RELEASE_UI" -n "$NAMESPACE" --timeout=120s
+kubectl rollout status "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE" --timeout=120s
+
+echo "apply-theme: done"
