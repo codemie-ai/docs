@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codemie-ai.github.io/docs/kit/theme-package.schema.json",
+  "title": "ThemePackage",
+  "type": "object",
+  "required": ["version", "product", "colors", "typography", "assets", "links"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1" },
+    "product": {
+      "type": "object",
+      "required": ["name", "shortName"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "shortName": { "type": "string", "minLength": 1 }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["dark", "light"],
+        "additionalProperties": false,
+        "properties": {
+          "dark": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "light": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["bodyFamily", "bodyProseFamily", "codeFamily"],
+      "additionalProperties": false,
+      "properties": {
+        "bodyFamily": { "type": "string", "minLength": 1 },
+        "bodyProseFamily": { "type": "string", "minLength": 1 },
+        "codeFamily": { "type": "string", "minLength": 1 },
+        "fontFaceCSS": { "type": ["string", "null"] }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logoLight", "logoDark", "favicon", "faviconSvg", "manifest"],
+      "additionalProperties": false,
+      "properties": {
+        "logoLight": { "type": "string", "minLength": 1 },
+        "logoDark": { "type": "string", "minLength": 1 },
+        "favicon": { "type": "string", "minLength": 1 },
+        "faviconSvg": { "type": "string", "minLength": 1 },
+        "manifest": { "type": "string", "minLength": 1 }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "userGuide": { "$ref": "#/definitions/link" },
+        "videoPortal": { "$ref": "#/definitions/link" },
+        "youtubeChannel": { "$ref": "#/definitions/link" },
+        "learningCourses": { "$ref": "#/definitions/link" },
+        "customerSupport": { "$ref": "#/definitions/link" },
+        "userSurvey": { "$ref": "#/definitions/link" },
+        "workflowDocumentation": { "$ref": "#/definitions/link" },
+        "workflowYamlDocumentation": { "$ref": "#/definitions/link" },
+        "googleDocsDocumentation": { "$ref": "#/definitions/link" }
+      }
+    }
+  },
+  "definitions": {
+    "link": {
+      "type": "object",
+      "required": ["name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

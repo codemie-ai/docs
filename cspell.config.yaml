@@ -19,6 +19,9 @@ ignorePaths:
   - CLAUDE.md
   - scripts/
   - codemie/
+  - superpowers/tasks/
+  - .superpowers/
+  - .ai-run/
 
 # Custom dictionary - project-specific words that are correct
 words:
