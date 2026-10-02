@@ -1,0 +1,515 @@
+---
+id: prerequisites
+title: Prerequisites
+sidebar_label: Prerequisites
+sidebar_position: 2
+pagination_prev: admin/deployment/architecture
+pagination_next: admin/deployment/infrastructure-deployment/infrastructure-deployment-overview
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import NetworkRequirements from './common/deployment/prerequisites/_network-requirements.mdx';
+import ClusterRequirements from './common/deployment/prerequisites/_cluster-requirements.mdx';
+import DeploymentMachineTools from './common/deployment/prerequisites/_deployment-machine-tools.mdx';
+import NextSteps from './common/deployment/prerequisites/_next-steps.mdx';
+
+# Prerequisites
+
+This page outlines the requirements and prerequisites necessary for deploying AI/Run CodeMie. A cloud provider can be selected below to view provider-specific requirements. All requirements must be met before proceeding with the installation.
+
+This page covers two prerequisite sets:
+
+- [**Kubernetes Deployment Prerequisites**](#kubernetes-deployment-prerequisites) - Full production deployment on a managed Kubernetes cluster (EKS, AKS, or GKE)
+- [**On-VM Deployment Prerequisites**](#on-vm-deployment-prerequisites) - Lightweight single-VM deployment for PoC and demo environments
+
+## Kubernetes Deployment Prerequisites
+
+### Account Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+### Required Access and Permissions
+
+To deploy AI/Run CodeMie on AWS, you need:
+
+- **Active AWS Account** with preferred region for deployment
+- **Programmatic Access** with credentials that have permissions to create and manage IAM Roles and Policy Documents
+- **Sufficient Quota** for the required resources (EKS, RDS, networking, storage, etc.)
+  :::info Complete Resource List
+  For a detailed list of all AWS resources that will be provisioned, refer to the [Architecture](./architecture.mdx) section or review the Terraform modules in the deployment repository.
+  :::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+### Required Access and Permissions
+
+To deploy AI/Run CodeMie on Azure, you need:
+
+- **Active Azure Subscription** with sufficient quota for the required resources
+- **Contributor Role** for the deployment user with the following permissions:
+  - Access to **Entra ID App Registration** to obtain Application ID and Secret
+  - Ability to create and manage Azure resources (AKS, networking, storage, etc.)
+    :::info Complete Resource List
+    For a detailed list of all Azure resources that will be provisioned, refer to the [Architecture](./architecture.mdx) section or review the Terraform modules in the deployment repository.
+    :::
+- **Entra ID Access** on the Azure portal to retrieve application details such as Tenant ID
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+### Required Access and Permissions
+
+To deploy AI/Run CodeMie on GCP, you need:
+
+- **Active GCP Project** with sufficient quota for the required resources
+- **Project Owner or Editor Role** for the deployment user with the following permissions:
+  - Ability to create and manage IAM Roles and Service Accounts
+  - Access to create and manage GCP resources (GKE, VPC, Cloud SQL, etc.)
+    :::info Complete Resource List
+    For a detailed list of all GCP resources that will be provisioned, refer to the [Architecture](./architecture.mdx) section or review the Terraform modules in the deployment repository.
+    :::
+  - Ability to bind the following IAM roles to service accounts:
+    - `roles/aiplatform.user` - For Vertex AI access
+    - `roles/storage.admin` - For Cloud Storage management
+    - `roles/cloudkms.cryptoKeyEncrypterDecrypter` - For encryption key operations
+
+### Required GCP APIs
+
+The following APIs must be enabled in your GCP project before deployment:
+
+| API                                                                                                                    | Purpose                              |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| [Cloud Identity-Aware Proxy API](https://console.cloud.google.com/marketplace/product/google/iap.googleapis.com)       | Secure identity-based access control |
+| [Service Networking API](https://console.cloud.google.com/marketplace/product/google/servicenetworking.googleapis.com) | Private service connectivity         |
+| [Secret Manager API](https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com)         | Centralized secrets management       |
+| [Vertex AI API](https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com)                 | AI model integration and inference   |
+
+:::info Vertex AI Models
+Make sure you are familiar with Gemini models, their parameters, available regions, and other crucial details in the [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
+:::
+
+</TabItem>
+</Tabs>
+
+### Network Requirements
+
+#### DNS and Certificate Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+AI/Run CodeMie requires proper DNS and TLS certificate configuration:
+
+- **Route 53 Hosted Zone** with available wildcard DNS configuration
+- **Automatic Certificate Management** - AI/Run CodeMie Terraform modules will automatically create:
+  - DNS Records in Route 53
+  - TLS certificates through AWS Certificate Manager for ALB and NLB
+
+:::tip Automatic Setup
+DNS and certificate provisioning is fully automated through Terraform when using AI/Run CodeMie-managed infrastructure. You only need to provide the hosted zone. However, if you're using self-provisioned infrastructure, you will need to handle DNS records and certificates for it.
+:::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+DNS and TLS certificate requirements depend on your access model:
+
+<Tabs>
+<TabItem value="public" label="Public Access" default>
+
+If you require **public internet access** to AI/Run CodeMie:
+
+- Azure DNS Zone must be created and domain delegated there
+- Valid wildcard TLS certificate must be available for HTTPS connections
+
+</TabItem>
+<TabItem value="private" label="Private Access">
+
+If you only require **internal access** within your organization:
+
+- AI/Run CodeMie Terraform modules will automatically create a private DNS zone
+- No external DNS delegation or public certificates are required
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- Registered domain name delegated to Cloud DNS with permissions to create DNS records
+- Valid wildcard TLS certificate must be available for HTTPS connections (see [Ingress NGINX TLS guide](https://kubernetes.github.io/ingress-nginx/user-guide/tls/))
+
+</TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<NetworkRequirements clusterName="EKS" networkSecurityName="Security Groups and Network ACLs" natGatewayName="NAT Gateway" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<NetworkRequirements clusterName="AKS" networkSecurityName="Network Security Group (NSG) or firewall" natGatewayName="NAT Gateway" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<NetworkRequirements clusterName="GKE" networkSecurityName="firewall or VPC firewall rules" natGatewayName="Cloud NAT" />
+</TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<ClusterRequirements clusterName="EKS" networkName="VPC" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<ClusterRequirements clusterName="AKS" networkName="VNet" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<ClusterRequirements clusterName="GKE" networkName="VPC" />
+</TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+_No AWS-specific cluster configuration is required beyond the general Kubernetes cluster requirements above._
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+_No Azure-specific cluster configuration is required beyond the general Kubernetes cluster requirements above._
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+## GKE Cluster Configuration
+
+:::info GCP-Specific Requirement
+This section applies only to GCP deployments.
+:::
+
+### VPC-Native Networking and Container-Native Load Balancing
+
+AI/Run CodeMie requires GKE clusters configured with **VPC-native networking** and **container-native load balancing (NEGs)** for proper Ingress functionality.
+
+**Required Configuration:**
+
+- **Networking Mode:** `VPC_NATIVE` with IP allocation policy (secondary ranges for pods and services)
+- **HTTP Load Balancing Addon:** Enabled (default)
+
+:::warning Network Policy Disables Automatic NEGs
+If your cluster uses **GKE Network Policy** or **Calico**, container-native load balancing will NOT be enabled automatically. This causes Ingress errors:
+
+```
+service "namespace/service" is type "ClusterIP", expected "NodePort" or "LoadBalancer"
+```
+
+**Solution:** Manually enable NEGs by adding this annotation to all Services exposed via Ingress in chart values. For example:
+
+```yaml
+service:
+  type: ClusterIP
+  port: 8080
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+```
+
+:::
+
+</TabItem>
+</Tabs>
+
+<DeploymentMachineTools />
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+**Cloud-Specific Tools:**
+
+| Tool                                                                                     | Version | Purpose                 |
+| ---------------------------------------------------------------------------------------- | ------- | ----------------------- |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | latest  | AWS resource management |
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+**Cloud-Specific Tools:**
+
+| Tool                                                                       | Version | Purpose                   |
+| -------------------------------------------------------------------------- | ------- | ------------------------- |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure resource management |
+| [kubelogin](https://azure.github.io/kubelogin/install.html)                | latest  | AKS authentication plugin |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+:::note gcloud CLI Multi-Purpose
+For GCP deployments, gcloud CLI serves dual purposes: GCP resource management and authentication to AI/Run CodeMie container registry (GCR).
+:::
+
+</TabItem>
+</Tabs>
+
+### Required Repository Access
+
+You will need access to the following repositories to complete the deployment:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+- **Terraform IAM Module:** [codemie-terraform-aws-iam](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam)
+- **Terraform Platform Module:** [codemie-terraform-aws-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform)
+- **Terraform Remote Backend:** [codemie-terraform-aws-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-remote-backend)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+- **Terraform Modules:** [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- **Terraform Platform Modules:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+</Tabs>
+
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
+:::
+
+## On-VM Deployment Prerequisites
+
+This section covers prerequisites for the lightweight [On-VM deployment](./infrastructure-deployment/index.mdx) option, which runs the full AI/Run CodeMie platform on a single virtual machine using Docker Compose.
+
+### Account Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+- **Active AWS Account** with a region that supports [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-regions.html)
+- **IAM permissions** to create an IAM deployer role (one-time setup)
+- **Sufficient quota** for: 1 EC2 instance, 1 VPC, 1 S3 bucket, 1 KMS key, 1 EIP
+- **Network access**: Outbound internet access from EC2 (to pull Docker images, access Bedrock API); optional Route 53 hosted zone (if using a custom domain with ALB + ACM)
+
+:::tip IAM Deployer Role
+The deployment uses a dedicated IAM role with scoped permissions. You only need broad IAM access to create this role once — subsequent deployments use the role.
+:::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+- **Active Azure Subscription** with sufficient quota for the required resources
+- **Contributor role** (or equivalent) on the subscription to create VMs, Storage Accounts, Key Vaults, and DNS zones
+- **AZURE_SUBSCRIPTION_ID** and **AZURE_TENANT_ID** — available in the Azure Portal under **Azure Active Directory → Overview**
+
+**Quota Requirements:**
+
+| Resource         | Count |
+| ---------------- | ----- |
+| Standard_E4s_v5  | 1     |
+| Azure Key Vault  | 1     |
+| Storage Account  | 1     |
+| Private DNS Zone | 1     |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- **Active GCP Project** with sufficient quota for the required resources
+- The operator account must have the following roles or equivalent permissions:
+  - `roles/iap.tunnelResourceAccessor` — SSH access to the VM via IAP
+  - `roles/secretmanager.secretAccessor` — fetch SSH key from Secret Manager
+  - Permissions to create: GCE VM, GCS bucket, Cloud KMS key, Cloud DNS private zone, VPC firewall rules
+
+**Quota Requirements:**
+
+| Resource               | Count        |
+| ---------------------- | ------------ |
+| n2-highmem-4 VM        | 1            |
+| GCS Bucket             | 1            |
+| Cloud KMS Key          | 1            |
+| Cloud DNS Private Zone | 1 (optional) |
+
+</TabItem>
+</Tabs>
+
+### Deployment Machine Tools
+
+The following tools must be installed on the machine where you run `./deploy.sh`:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+| Tool                                                                                                                                    | Version | Purpose                     |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install)                                                                          | 1.15.x  | Infrastructure provisioning |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)                                                | latest  | AWS resource management     |
+| [Session Manager Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html) | latest  | SSH access via AWS SSM      |
+| [jq](https://jqlang.github.io/jq/download/)                                                                                             | latest  | JSON parsing                |
+| openssl                                                                                                                                 | latest  | Secret generation           |
+| envsubst                                                                                                                                | latest  | Template rendering          |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+aws --version        # AWS CLI v2
+session-manager-plugin  # Should print version info
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+| Tool                                                                       | Version | Purpose                             |
+| -------------------------------------------------------------------------- | ------- | ----------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install)             | 1.15.x  | Infrastructure provisioning         |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure authentication and management |
+| [jq](https://jqlang.github.io/jq/download/)                                | latest  | JSON parsing                        |
+| openssl                                                                    | latest  | Secret generation                   |
+| envsubst                                                                   | latest  | Template rendering                  |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+az version           # Azure CLI
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+| Tool                                                           | Version | Purpose                           |
+| -------------------------------------------------------------- | ------- | --------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install) | 1.15.x  | Infrastructure provisioning       |
+| [gcloud CLI](https://cloud.google.com/sdk/docs/install)        | latest  | GCP authentication and management |
+| [jq](https://jqlang.github.io/jq/download/)                    | latest  | JSON parsing                      |
+| openssl                                                        | latest  | Secret generation                 |
+| envsubst                                                       | latest  | Template rendering                |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+gcloud version
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+</Tabs>
+
+:::info Enterprise Profile Only
+If deploying the **Enterprise profile**, [nsc](https://github.com/nats-io/nsc) (latest) is also required on the deployment machine for NATS key generation.
+:::
+
+### GCP Container Registry Access
+
+CodeMie container images are hosted on `europe-west3-docker.pkg.dev`. You need a **GCP service account key file** (`key.json`) with read access to the registry — this applies regardless of the cloud provider you deploy to.
+
+:::info Obtaining key.json
+Contact your CodeMie administrator or EPAM delivery team to obtain the `key.json` file for registry access.
+:::
+
+### Cloud Authentication
+
+Authenticate to your cloud provider before running the deployment:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+```bash
+# If using AWS SSO:
+aws sso login --profile your-profile
+export AWS_PROFILE=your-profile
+
+# Verify credentials:
+aws sts get-caller-identity
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+```bash
+az login
+az account set --subscription "<AZURE_SUBSCRIPTION_ID>"
+
+# Verify active subscription
+az account show
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+```bash
+gcloud auth application-default login
+
+# Verify active project
+gcloud config get-value project
+```
+
+</TabItem>
+</Tabs>
+
+### Repository Access
+
+Clone the deployment repository:
+
+```bash
+git clone https://gitbud.epam.com/epm-cdme/codemie-on-vm.git
+cd codemie-on-vm
+```
+
+The repository structure:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+| Directory                              | Purpose                                        |
+| -------------------------------------- | ---------------------------------------------- |
+| `compose/`                             | Docker Compose files and service configuration |
+| `deploy.sh`                            | Deployment script                              |
+| `terraform/aws/codemie-on-vm-aws-iam/` | IAM deployer role Terraform module             |
+| `terraform/aws/remote-backend/`        | S3 Terraform state bucket                      |
+| `terraform/aws/platform/`              | EC2, VPC, ALB, S3, KMS infrastructure          |
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+| Directory                         | Purpose                                        |
+| --------------------------------- | ---------------------------------------------- |
+| `compose/`                        | Docker Compose files and service configuration |
+| `deploy.sh`                       | Deployment script                              |
+| `destroy.sh`                      | Destroy script                                 |
+| `terraform/azure/remote-backend/` | Azure Storage Terraform state backend          |
+| `terraform/azure/platform/`       | VM, Storage Account, Key Vault, DNS, NSG       |
+| `terraform/azure/ai-models/`      | Azure OpenAI cognitive accounts (optional)     |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+| Directory                       | Purpose                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `compose/`                      | Docker Compose files and service configuration |
+| `deploy.sh`                     | Deployment script                              |
+| `destroy.sh`                    | Destroy script                                 |
+| `terraform/gcp/remote-backend/` | GCS bucket for Terraform state                 |
+| `terraform/gcp/platform/`       | VM, GCS bucket, KMS key, DNS, firewall         |
+
+</TabItem>
+</Tabs>
+
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repository can be provided as a ZIP/TAR archive and transferred through approved channels.
+:::
+
+<NextSteps />

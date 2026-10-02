@@ -1,0 +1,68 @@
+---
+id: data-layer
+title: Data Layer
+sidebar_label: Data Layer
+sidebar_position: 3
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/k8s-components
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/security-and-identity
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import DataLayerOverview from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-overview.mdx';
+import DataLayerElasticsearch from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-elasticsearch.mdx';
+import DataLayerPostgresConfig from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-postgresql-config.mdx';
+import DataLayerPostgresIamSetup from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-postgresql-iam-setup.mdx';
+import DataLayerPostgresSecretAws from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-postgresql-secret-aws.mdx';
+import DataLayerPostgresSecretCommon from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-postgresql-secret-common.mdx';
+import DataLayerValidation from '../../../common/deployment/components-deployment/manual-deployment/data-layer/_data-layer-validation.mdx';
+
+<DataLayerOverview />
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+    <DataLayerElasticsearch cloudProvider="AWS" valuesFileName="values-aws.yaml" />
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+    <DataLayerElasticsearch cloudProvider="Azure" valuesFileName="values-azure.yaml" />
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+    <DataLayerElasticsearch cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
+  </TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+    <DataLayerPostgresConfig
+      cloudProvider="AWS"
+      postgresServiceName="AWS RDS PostgreSQL"
+      postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
+      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
+    />
+    <DataLayerPostgresIamSetup />
+    <DataLayerPostgresSecretAws
+      cloudProvider="AWS"
+      postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
+    />
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+    <DataLayerPostgresConfig
+      postgresServiceName="Azure Database for PostgreSQL"
+      postgresExampleHost="codemie-postgres.postgres.database.azure.com"
+      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
+    />
+    <DataLayerPostgresSecretCommon
+      postgresExampleHost="codemie-postgres.postgres.database.azure.com"
+    />
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+    <DataLayerPostgresConfig
+      postgresServiceName="GCP Cloud SQL PostgreSQL"
+      postgresExampleHost="10.0.0.5:5432"
+      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
+    />
+    <DataLayerPostgresSecretCommon postgresExampleHost="10.0.0.5:5432" />
+  </TabItem>
+</Tabs>
+
+<DataLayerValidation />

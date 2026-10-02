@@ -1,0 +1,49 @@
+---
+id: security-and-identity
+title: Security and Identity
+sidebar_label: Security and Identity
+sidebar_position: 4
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/data-layer
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/plugin-engine
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import SecurityOverview from '../../../common/deployment/components-deployment/manual-deployment/security/_security-overview.mdx';
+import SecurityKeycloakOperator from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-operator.mdx';
+import SecurityKeycloakInstall from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-install.mdx';
+import SecurityOauth2Proxy from '../../../common/deployment/components-deployment/manual-deployment/security/_security-oauth2-proxy.mdx';
+import SecurityValidation from '../../../common/deployment/components-deployment/manual-deployment/security/_security-validation.mdx';
+
+<SecurityOverview />
+
+<SecurityKeycloakOperator />
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+    <SecurityKeycloakInstall
+      cloudProvider="AWS"
+      valuesFileName="values-aws.yaml"
+      keycloakUrl="https://keycloak.airun.example.com/auth/admin"
+    />
+    <SecurityOauth2Proxy cloudProvider="AWS" valuesFileName="values-aws.yaml" />
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+    <SecurityKeycloakInstall
+      cloudProvider="Azure"
+      valuesFileName="values-azure.yaml"
+      keycloakUrl="https://codemie.example.com/keycloak/admin"
+    />
+    <SecurityOauth2Proxy cloudProvider="Azure" valuesFileName="values-azure.yaml" />
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+    <SecurityKeycloakInstall
+      cloudProvider="GCP"
+      valuesFileName="values-gcp.yaml"
+      keycloakUrl="https://keycloak.airun.example.com/auth/admin"
+    />
+    <SecurityOauth2Proxy cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
+  </TabItem>
+</Tabs>
+
+<SecurityValidation />
