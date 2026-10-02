@@ -1,0 +1,52 @@
+version: '1'
+
+product:
+  name: 'Acme Suite'
+  shortName: 'Acme'
+
+colors:
+  surface.default:
+    dark: '#111111'
+    light: '#ffffff'
+
+typography:
+  bodyFamily: 'Inter, sans-serif'
+  bodyProseFamily: 'Georgia, serif'
+  codeFamily: 'Fira Code, monospace'
+  fontFaceCSS: null
+
+assets:
+  logoLight: 'logo-light.svg'
+  logoDark: 'logo-dark.svg'
+  favicon: 'favicon.ico'
+  faviconSvg: 'favicon.svg'
+  manifest: 'site.webmanifest'
+
+links:
+  userGuide:
+    name: 'Acme Docs'
+    url: 'https://docs.acme.example/'
+  customerSupport:
+    name: 'Acme Help Desk'
+    url: 'https://help.acme.example/'
+  videoPortal:
+    name: 'Acme Videos'
+    url: 'https://videos.acme.example/'
+  youtubeChannel:
+    name: 'Acme YouTube'
+    url: 'https://youtube.com/acme'
+  learningCourses:
+    name: 'Acme Learn'
+    url: 'https://learn.acme.example/'
+  userSurvey:
+    name: 'Acme Survey'
+    url: 'https://survey.acme.example/'
+  workflowDocumentation:
+    name: 'Acme Workflow Docs'
+    url: 'https://docs.acme.example/workflows'
+  workflowYamlDocumentation:
+    name: 'Acme YAML Docs'
+    url: 'https://docs.acme.example/yaml'
+  googleDocsDocumentation:
+    name: 'Acme Google Docs'
+    url: 'https://docs.acme.example/gdocs'
