@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-echo "helm $*" >> "$BATS_TMPDIR/helm-calls"
-if [[ "$1" == "get" && "$2" == "metadata" ]]; then
-  echo "chart: fake-chart-0.1.0"
-fi
-exit 0

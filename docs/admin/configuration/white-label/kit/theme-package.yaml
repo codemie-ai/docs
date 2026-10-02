@@ -15,7 +15,7 @@ product:
 colors: {}
 # Example:
 # colors:
-#   surface.default:
+#   surface.base.primary:
 #     dark: '#111111'
 #     light: '#ffffff'
 
