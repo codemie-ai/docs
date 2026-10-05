@@ -234,6 +234,27 @@ Each model entry in the `model_list` array consists of three main sections:
 
   </details>
 
+- **`additional_drop_params`**: (Optional) Array of parameter names to strip from the request before it reaches the backend provider
+
+  :::warning `user` parameter causes upstream errors
+  If a model returns an upstream `string_above_max_length` error for the `user` field (the CodeMie user identifier exceeds the provider's 64-character maximum), surfaced by the CodeMie API as an HTTP 500, drop the `user` parameter before it reaches the provider by adding `additional_drop_params: ["user"]` to the model's `litellm_params`.
+  :::
+
+  <details>
+  <summary><strong>Example: Dropping the `user` Parameter</strong></summary>
+
+  ```yaml
+  model_list:
+    - model_name: claude-opus-4-6-vertex
+      litellm_params:
+        model: vertex_ai/claude-opus-4-6
+        // highlight-next-line
+        additional_drop_params: ["user"]
+      # ... additional configuration fields
+  ```
+
+  </details>
+
 **`model_info`**
 
 - **`id`**: Unique identifier for the specific model instance
@@ -299,6 +320,16 @@ Each model entry in the `model_list` array consists of three main sections:
 
   </details>
 
+- **`switchyard`**: (Optional) List of Switchyard auto-routing router declarations for this
+  model. Only meaningful on a capable model's entry. See
+  [Switchyard Auto-Routing](../../codemie/ai-models-integration/switchyard-model-routing.md)
+  for the field schema and a worked example.
+- **`litellm_router`**: (Optional) Declares that this `model_name` is itself a LiteLLM native
+  auto-router rather than a concrete deployment — required for CodeMie to recognize it as
+  such and avoid treating it as a normal deployable model. See
+  [LiteLLM Native Auto-Routing](../../codemie/ai-models-integration/litellm-native-auto-routing.md)
+  for the field schema and a worked example.
+
 ## Model Configuration Examples
 
 This guide provides tested and verified model configurations currently used in AI/Run CodeMie production. While not all steps for adding new models are covered (refer to the [official LiteLLM documentation](https://docs.litellm.ai/) for comprehensive setup instructions), working examples from the production environment are shared and can be adapted for any deployment.
@@ -313,22 +344,28 @@ Configuration examples for these models can be found in the provider-specific se
 
 ### AWS Bedrock Models
 
-| Model Name                                      | Description             |
-| ----------------------------------------------- | ----------------------- |
-| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet       |
-| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6       |
-| [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5         |
-| [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5          |
-| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1        |
-| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5         |
-| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6         |
-| [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7         |
-| [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8         |
-| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5         |
-| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5        |
-| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings |
-| [`grok-4.6`](#grok-46)                          | Grok 4.6                |
-| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3      |
+| Model Name                                      | Description                    |
+| ----------------------------------------------- | ------------------------------ |
+| [`claude-4-5-sonnet`](#claude-sonnet-45)        | Claude 4.5 Sonnet              |
+| [`claude-sonnet-4-6`](#claude-sonnet-46)        | Claude Sonnet 4.6              |
+| [`claude-sonnet-5`](#claude-sonnet-5)           | Claude Sonnet 5                |
+| [`claude-sonnet-5-5`](#claude-sonnet-55)        | Claude Sonnet 5.5              |
+| [`claude-fable-5`](#claude-fable-5)             | Claude Fable 5                 |
+| [`claude-fable-5-1`](#claude-fable-51)          | Claude Fable 5.1               |
+| [`claude-opus-4-5-20251101`](#claude-opus-45)   | Claude Opus 4.5                |
+| [`claude-opus-4-6-20260205`](#claude-opus-46)   | Claude Opus 4.6                |
+| [`claude-opus-4-7`](#claude-opus-47)            | Claude Opus 4.7                |
+| [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8                |
+| [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5                |
+| [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5               |
+| [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings        |
+| [`grok-4.6`](#grok-46)                          | Grok 4.6                       |
+| [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3             |
+| [`gpt-5.4-2026-03-05`](#gpt-54-bedrock-mantle)  | GPT-5.4 (Bedrock Mantle)       |
+| [`gpt-5.5-2026-04-24`](#gpt-55-bedrock-mantle)  | GPT-5.5 (Bedrock Mantle)       |
+| [`gpt-5.6-luna-2026-07-09`](#gpt-56-luna)       | GPT-5.6 Luna (Bedrock Mantle)  |
+| [`gpt-5.6-sol-2026-07-09`](#gpt-56-sol)         | GPT-5.6 Sol (Bedrock Mantle)   |
+| [`gpt-5.6-terra-2026-07-09`](#gpt-56-terra)     | GPT-5.6 Terra (Bedrock Mantle) |
 
 ### Azure OpenAI Models
 
@@ -344,6 +381,9 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-5.3-codex-2026-02-24`](#gpt-53-codex)                 | GPT-5.3 Codex          |
 | [`gpt-5.4-2026-03-05`](#gpt-54)                             | GPT-5.4                |
 | [`gpt-5.5-2026-04-24`](#gpt-55)                             | GPT-5.5                |
+| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
+| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
+| [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -351,8 +391,6 @@ Configuration examples for these models can be found in the provider-specific se
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
-| [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
-| [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 
 ### Azure AI Models
 
@@ -482,6 +520,26 @@ model_list:
     id: claude-sonnet-5-us-east-1
     base_model: us.anthropic.claude-sonnet-5
     label: "Bedrock Claude Sonnet 5"
+```
+
+</details>
+
+#### Claude Sonnet 5.5
+
+<details>
+<summary><strong>Claude Sonnet 5.5</strong></summary>
+
+```yaml
+# Global routing
+- model_name: claude-sonnet-5-5
+  litellm_params:
+    model: bedrock/global.anthropic.claude-sonnet-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-sonnet-5-5-eu-central-1
+    base_model: global.anthropic.claude-sonnet-5-5
+    label: "Bedrock Claude Sonnet 5.5"
 ```
 
 </details>
@@ -787,6 +845,127 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
     id: moonshotai-kimi-k3-global-us-east-1
     base_model: bedrock/global.moonshotai.kimi-k3
     label: "Bedrock MoonshotAI Kimi K3"
+```
+
+</details>
+
+### GPT (Bedrock Mantle)
+
+:::info Bedrock Mantle Configuration
+GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mantle/openai.*` model identifier instead of the standard `bedrock/` prefix, and require an `aws_bedrock_project_id` in addition to `litellm_credential_name` and `aws_region_name`.
+:::
+
+#### GPT-5.4 (Bedrock Mantle) {#gpt-54-bedrock-mantle}
+
+<details>
+<summary><strong>GPT-5.4 (Bedrock Mantle)</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.4-2026-03-05
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.4
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.4-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.4
+    label: "GPT-5.4"
+```
+
+</details>
+
+#### GPT-5.5 (Bedrock Mantle) {#gpt-55-bedrock-mantle}
+
+<details>
+<summary><strong>GPT-5.5 (Bedrock Mantle)</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.5-2026-04-24
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.5-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.5
+    label: "GPT-5.5"
+```
+
+</details>
+
+#### GPT-5.6 Luna {#gpt-56-luna}
+
+<details>
+<summary><strong>GPT-5.6 Luna</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-luna-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-luna
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-luna-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-luna
+    label: "GPT-5.6 Luna"
+```
+
+</details>
+
+#### GPT-5.6 Sol {#gpt-56-sol}
+
+<details>
+<summary><strong>GPT-5.6 Sol</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-sol-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-sol
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-sol-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-sol
+    label: "GPT-5.6 Sol"
+```
+
+</details>
+
+#### GPT-5.6 Terra {#gpt-56-terra}
+
+<details>
+<summary><strong>GPT-5.6 Terra</strong></summary>
+
+```yaml
+# US Region (us-east-1)
+- model_name: gpt-5.6-terra-2026-07-09
+  litellm_params:
+    model: bedrock_mantle/openai.gpt-5.6-terra
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: us-east-1
+    aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
+    // highlight-next-line
+    additional_drop_params: ["user"]
+  model_info:
+    id: gpt-5.6-terra-2026-07-09-us-east-1
+    base_model: bedrock_mantle/openai.gpt-5.6-terra
+    label: "GPT-5.6 Terra"
 ```
 
 </details>
@@ -1181,6 +1360,73 @@ model_list:
 
 </details>
 
+### GPT-6 series
+
+#### GPT-6 Luna
+
+<details>
+<summary><strong>GPT-6 Luna</strong></summary>
+
+```yaml
+- model_name: gpt-6-luna
+  litellm_params:
+    model: azure/gpt-6-luna-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-luna-polandcentral-0
+    base_model: azure/gpt-6-luna
+    label: "GPT-6 Luna"
+    mode: responses
+```
+
+</details>
+
+#### GPT-6 Sol
+
+<details>
+<summary><strong>GPT-6 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6-sol
+  litellm_params:
+    model: azure/gpt-6-sol-2026-09-22
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6-sol-polandcentral-0
+    base_model: azure/gpt-6-sol
+    label: "GPT-6 Sol"
+    mode: responses
+```
+
+</details>
+
+### GPT-6.1 series
+
+#### GPT-6.1 Sol
+
+<details>
+<summary><strong>GPT-6.1 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6.1-sol
+  litellm_params:
+    model: azure/codemie-gpt-6.1-sol-2026-09-29
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.1-sol-polandcentral-0
+    base_model: azure/gpt-6.1-sol
+    label: "GPT-6.1 Sol"
+    mode: responses
+```
+
+</details>
+
 ### GPT-5-codex
 
 #### GPT-5.3-codex
@@ -1235,50 +1481,6 @@ model_list:
     id: gpt-5-3-codex-2026-02-24-eastus2-0
     base_model: azure/gpt-5.3-codex
     label: "GPT-5.3 Codex 2026-02-24"
-```
-
-</details>
-
-### GPT-6 series
-
-#### GPT-6 Luna
-
-<details>
-<summary><strong>GPT-6 Luna</strong></summary>
-
-```yaml
-- model_name: gpt-6-luna
-  litellm_params:
-    model: azure/gpt-6-luna-2026-09-22
-    api_base: https://api-base-polandcentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    additional_drop_params: ["temperature", "top_p"]
-  model_info:
-    id: gpt-6-luna-polandcentral-0
-    base_model: azure/gpt-6-luna
-    label: "GPT-6 Luna"
-    mode: responses
-```
-
-</details>
-
-#### GPT-6 Sol
-
-<details>
-<summary><strong>GPT-6 Sol</strong></summary>
-
-```yaml
-- model_name: gpt-6-sol
-  litellm_params:
-    model: azure/gpt-6-sol-2026-09-22
-    api_base: https://api-base-polandcentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    additional_drop_params: ["temperature", "top_p"]
-  model_info:
-    id: gpt-6-sol-polandcentral-0
-    base_model: azure/gpt-6-sol
-    label: "GPT-6 Sol"
-    mode: responses
 ```
 
 </details>

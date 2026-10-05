@@ -269,10 +269,21 @@ const sidebars: SidebarsConfig = {
                 'user-guide/data-source/datasources-types/add-aws-knowledge-bases',
                 'user-guide/data-source/datasources-types/add-azure-devops-wiki-data-source',
                 'user-guide/data-source/datasources-types/add-azure-devops-work-items-data-source',
+                'user-guide/data-source/datasources-types/add-xwiki-data-source',
                 'user-guide/data-source/datasources-types/add-provider-datasource',
               ],
             },
           ],
+        },
+        {
+          type: 'category',
+          label: 'Schedulers',
+          link: {
+            type: 'doc',
+            id: 'user-guide/schedulers/schedulers',
+          },
+          collapsed: true,
+          items: ['user-guide/schedulers/create-scheduler', 'user-guide/schedulers/monitor-runs'],
         },
         {
           type: 'category',
@@ -340,7 +351,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/analytics/analytics-overview',
           },
           collapsed: true,
-          items: ['user-guide/analytics/ai-champions-leaderboard'],
+          items: [
+            'user-guide/analytics/ai-champions-leaderboard',
+            'user-guide/analytics/routing-analytics',
+          ],
         },
         {
           type: 'category',
@@ -814,6 +828,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {
@@ -826,6 +841,8 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'admin/configuration/codemie/ai-models-integration/codemie-native-llm-config',
+                    'admin/configuration/codemie/ai-models-integration/switchyard-model-routing',
+                    'admin/configuration/codemie/ai-models-integration/litellm-native-auto-routing',
                     {
                       type: 'category',
                       label: 'Enable LLM Models in Cloud accounts',
@@ -941,6 +958,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'admin/security/data-processing-storage',
             'admin/security/roles-rbac',
+            'admin/security/llm-output-image-allow-list',
             {
               type: 'category',
               label: 'Network Policies',

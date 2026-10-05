@@ -662,6 +662,97 @@ The Google OAuth flow stores PKCE state and tokens in Redis during the authoriza
 3. Enable these APIs under **APIs & Services → Library**: **Google Docs API**.
    :::
 
+### GitLab OAuth
+
+Enable per-user OAuth 2.0 sign-in for GitLab integrations. An administrator registers a
+GitLab OAuth application once; each member then authorizes under their own GitLab account
+so tokens are per-user — calls run as the member who connected.
+
+The `client_id`, `client_secret`, and callback URL are entered by the creator in the
+integration form when creating or editing a Git integration with the OAuth toggle enabled.
+The platform-level flags below control which instances are permitted and whether the
+feature is exposed in the UI.
+
+| Parameter                            | Type    | Default              | Description                                                                                                                                                                                                                                        |
+| ------------------------------------ | ------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GITLAB_OAUTH_ENABLED`               | boolean | `false`              | Enable the GitLab OAuth 2.0 sign-in option in the Git integration form. Exposed to the UI via `GET /v1/config` as `features.gitlabOauth`. Defaults to `false` — the toggle is hidden until this is set to `true`.                                  |
+| `GITLAB_OAUTH_DEFAULT_INSTANCE_URL`  | string  | `https://gitlab.com` | The GitLab instance that is always on the allowlist. Override when the primary instance is self-hosted (e.g., `https://gitlab.example.com`).                                                                                                       |
+| `GITLAB_OAUTH_ALLOWED_INSTANCE_URLS` | string  | `""`                 | Comma-separated list of additional GitLab instance URLs to allow. The backend only forwards OAuth credentials to hosts matching `GITLAB_OAUTH_DEFAULT_INSTANCE_URL` or listed here. Add every self-hosted instance members will authorize against. |
+
+:::warning Allowlist required for self-hosted GitLab
+The backend refuses OAuth for any GitLab instance not on the allowlist, raising:
+`GitLab instance '...' is not in the allowed list`.
+
+For every self-hosted GitLab instance members will use, add its URL to
+`GITLAB_OAUTH_ALLOWED_INSTANCE_URLS`. Multiple instances are comma-separated:
+
+```bash
+GITLAB_OAUTH_ALLOWED_INSTANCE_URLS=https://gitbud.epam.com,https://gitlab.internal.com
+```
+
+`https://gitlab.com` is always allowed regardless of this setting (it is the default
+value of `GITLAB_OAUTH_DEFAULT_INSTANCE_URL`).
+:::
+
+:::warning Redis Required
+The GitLab OAuth flow stores PKCE state and tokens in Redis during the authorization
+handshake. A running Redis instance must be configured (see [Redis Configuration](#redis-configuration))
+before enabling GitLab OAuth.
+:::
+
+:::info GitLab Application Setup
+Register an OAuth application on the GitLab instance members will authorize against:
+
+1. Go to **Admin Area → Applications** (or **User Settings → Applications**).
+2. Set the **Redirect URI** to: `https://<codemie-base-url>/v1/gitlab-oauth/callback`
+3. Select scopes: `api`, `read_user`.
+4. Note the **Application ID** and **Secret** — these are entered in the integration form.
+
+Only the GitLab instance where the application is registered is accepted for authorization.
+:::
+
+### Jira OAuth
+
+Enable per-user OAuth 2.0 (Atlassian 3LO) sign-in for Jira integrations. Jira and
+Confluence share a single Atlassian OAuth application and a single callback URL —
+registering one app in the Atlassian Developer Console covers both providers.
+
+The `client_id`, `client_secret`, and callback URL are entered in the integration form.
+The only platform-level switch is the enable flag below.
+
+| Parameter            | Type    | Default | Description                                                                                                                                                 |
+| -------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `JIRA_OAUTH_ENABLED` | boolean | `false` | Enable the Jira OAuth 2.0 sign-in option in the Jira integration form. Exposed to the UI via `GET /v1/config` as `features.jiraOauth`. Defaults to `false`. |
+
+:::warning Redis Required
+The Atlassian OAuth flow stores state and tokens in Redis. A running Redis instance must
+be configured (see [Redis Configuration](#redis-configuration)) before enabling Jira OAuth.
+:::
+
+### Confluence OAuth
+
+Enable per-user OAuth 2.0 (Atlassian 3LO) sign-in for Confluence integrations. Confluence
+reuses the same Atlassian OAuth application as Jira — the `cloud_id` is resolved
+automatically after authorization.
+
+The `client_id`, `client_secret`, and callback URL are entered in the integration form.
+The only platform-level switch is the enable flag below.
+
+| Parameter                  | Type    | Default | Description                                                                                                                                                                   |
+| -------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CONFLUENCE_OAUTH_ENABLED` | boolean | `false` | Enable the Confluence OAuth 2.0 sign-in option in the Confluence integration form. Exposed to the UI via `GET /v1/config` as `features.confluenceOauth`. Defaults to `false`. |
+
+:::info Atlassian Developer Console Setup
+Jira and Confluence share one Atlassian OAuth 2.0 app — register it once:
+
+1. Go to the [Atlassian Developer Console](https://developer.atlassian.com/console/myapps/) and create an **OAuth 2.0 integration**.
+2. Under **Permissions**, add scopes:
+   - **Jira**: `read:jira-work`, `write:jira-work`, `read:jira-user`
+   - **Confluence**: `read:confluence-content.all`, `write:confluence-content`, `read:confluence-space.summary`
+3. Under **Authorization**, set the **Callback URL** to: `https://<codemie-base-url>/v1/atlassian-oauth/callback`
+4. Note the **Client ID** and **Secret** — these are entered in the Jira and Confluence integration forms.
+   :::
+
 ---
 
 ## NATS Message Broker Configuration
@@ -1053,13 +1144,13 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | ----------------------------------------- | ------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `CODE_EXECUTOR_ENABLED`                   | boolean | `false`                           | Enable the Code Executor tool. When `false`, the tool is neither listed in the tools catalog nor executed. Set `true` to opt in.                                                                                                                                                                                                                                                                                                                                                                                       |
 | `CODE_EXECUTOR_EXECUTION_MODE`            | string  | `"sandbox"`                       | Execution mode. Only `sandbox` is accepted; code always runs in an isolated Kubernetes pod.                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `CODE_EXECUTOR_SANDBOX_MODE`              | string  | `"sandbox-shared"`                | Kubernetes sandbox sub-mode: `sandbox-shared` (reuse a shared pod across sessions — development only) or `sandbox-jobs` (create a dedicated Job pod per execution — recommended for production; requires gVisor or Kata Containers runtime class in the cluster).                                                                                                                                                                                                                                                      |
+| `CODE_EXECUTOR_SANDBOX_MODE`              | string  | `"sandbox-jobs"`                  | Kubernetes sandbox sub-mode: `sandbox-shared` (reuse a shared pod across sessions — development only) or `sandbox-jobs` (create a dedicated Job pod per execution — recommended for production; requires gVisor or Kata Containers runtime class in the cluster).                                                                                                                                                                                                                                                      |
 | `CODE_EXECUTOR_RUNTIME_CLASS_NAME`        | string  | `"gvisor"`                        | Kubernetes `runtimeClassName` applied to Job pods when `CODE_EXECUTOR_SANDBOX_MODE=sandbox-jobs`. Must match an installed runtime class (`gvisor` or `kata-containers`). Set to `none` or leave empty to omit `runtimeClassName` from the Job manifest and fall back to the cluster default runtime. **Security risk:** omitting the runtime class disables sandbox isolation and is not recommended for production; use it only where the cluster default runtime provides equivalent isolation guarantees.           |
 | `CODE_EXECUTOR_TOLERATIONS`               | string  | `""`                              | JSON list of Kubernetes tolerations (e.g. `[{"key":"runtime","operator":"Equal","value":"kata-containers","effect":"NoSchedule"}]` for a dedicated kata-containers node pool) applied to Job pods when `CODE_EXECUTOR_SANDBOX_MODE=sandbox-jobs`, allowing scheduling onto tainted nodes. Leave empty to omit `tolerations` from the Job manifest. Scope: applies only to Code Executor sandbox Job pods — independent of the chart's top-level `tolerations` value, which applies only to the CodeMie API pod itself. |
 | `CODE_EXECUTOR_KUBECONFIG_PATH`           | string  | `""`                              | Path to kubeconfig for Kubernetes authentication (optional, uses in-cluster config if empty). Set to move code execution to a dedicated cluster                                                                                                                                                                                                                                                                                                                                                                        |
 | `CODE_EXECUTOR_WORKDIR_BASE`              | string  | `"/home/codemie"`                 | Base working directory for code execution inside containers                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `CODE_EXECUTOR_NAMESPACE`                 | string  | `"codemie-runtime"`               | Kubernetes namespace for executor pods                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `CODE_EXECUTOR_DOCKER_IMAGE`              | string  | `"codemie/codemie-python:2.41.0"` | Docker image with Python environment and dependencies for code execution                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `CODE_EXECUTOR_NAMESPACE`                 | string  | `"codemie-code-executor"`         | Kubernetes namespace for executor pods                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `CODE_EXECUTOR_DOCKER_IMAGE`              | string  | `"codemie/codemie-python:2.52.0"` | Docker image with Python environment and dependencies for code execution                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `CODE_EXECUTOR_EXECUTION_TIMEOUT`         | float   | `30.0`                            | Max seconds for code execution before timeout (prevents infinite loops)                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `CODE_EXECUTOR_SESSION_TIMEOUT`           | float   | `300.0`                           | Max session lifetime in seconds before automatic cleanup                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `CODE_EXECUTOR_DEFAULT_TIMEOUT`           | float   | `30.0`                            | Default timeout for operations in seconds                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |

@@ -13,6 +13,65 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.55.0 {#v2-55-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** October 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.55.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **Code Executor** — changes in `codemie-api` — only applies if Code Executor tool is enabled:
+   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be removed in next releases.
+   - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
+
+   :::warning
+   If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled in codemie-api helm chart — otherwise the executor now defaults to the `codemie-code-executor` namespace.
+
+   The old `rbac.namespace` key is removed; migrate to `namespace.name`:
+
+   ```yaml
+   features:
+     tools:
+       code_executor:
+         namespace:
+           name: "<namespace>"
+   ```
+
+   :::
+
+   See [Code Executor Configuration](../../configuration/codemie/code-executor-configuration.md#namespace-configuration) for details.
+
+</details>
+
+### CodeMie 2.54.0 {#v2-54-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** September 29, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.54.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.99.2</h4>
+
+Updated from 1.96.2 (Helm chart 1.96.2 to 1.99.0). For details, see the [LiteLLM 1.99.2 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.2).
+
+:::note Container-only release
+LiteLLM 1.99.2 is a container-only release and is not published to PyPI.
+:::
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ### CodeMie 2.53.0 {#v2-53-0}
 
 <details>
@@ -27,6 +86,10 @@ No third-party component updates in this release.
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
+
+<h3>Hotfixes</h3>
+
+- **2.53.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.53.1) – September 25, 2026
 
 </details>
 

@@ -1,121 +1,80 @@
-# How do I automatically generate YAML for workflows? What is the AutoYam Assistant in CodeMie? How to convert workflow requirements into YAML configurations?
+# How do I automatically generate YAML for workflows? How do I generate a workflow with AI in CodeMie? How to convert workflow requirements into YAML configurations?
 
-AutoYaml Assistant: Generate Workflow YAML Configurations Automatically
+CodeMie can draft a workflow configuration from a plain-language description, and can apply
+plain-language changes to a configuration you already have. Two features cover this:
 
-The AutoYaml Assistant is a feature that helps you quickly generate YAML configurations for workflows in CodeMie. This tool significantly speeds up the workflow creation process by providing intelligent suggestions and pre-configured templates based on your requirements.
+- **Generate Workflow with AI** — creates a new workflow from a description
+- **Refine Workflow with AI** — rewrites an existing workflow's YAML from an instruction
 
-## How to Use the AutoYaml Assistant
+Both are available in the workflow editor. If you do not see them, AI workflow generation is not
+enabled on your CodeMie instance — ask your administrator.
 
-## Generating a New Workflow Configuration
+## Generate a New Workflow
 
-1. **Access the AutoYaml Assistant**
-   - Navigate to the workflows section in CodeMie
-   - Click on "Create New Workflow"
-   - Select "Use AutoYaml Assistant" option
+1. Go to **Workflows** and click **+ Create Workflow**
+2. Open the **Generate Workflow with AI** dialog
+3. Describe what the workflow should do, for example:
 
-2. **Define Your Workflow Requirements**
-   - The assistant will prompt you for necessary workflow information:
-     - Number and types of assistants needed
-     - States and transitions between them
-     - Specific tasks for each state
-     - Conditions for state transitions (if required)
-   - Provide detailed responses to get the most accurate YAML configuration
+   > I need a workflow that processes incoming support tickets, categorizes them by priority, and
+   > routes them to the appropriate team
 
-3. **Review and Edit the Generated YAML**
-   - The assistant will generate a complete YAML configuration based on your requirements
-   - Review the generated configuration in the editor
-   - Make adjustments as needed using the built-in YAML editor
-   - The system will validate your configuration for syntax and logical errors
+4. Click **Generate with AI**
+5. The generated configuration opens in the editor — review it in either the visual view or the
+   YAML view before saving
 
-4. **Save and Apply Your Configuration**
-   - Once satisfied with the configuration, click "Save" to apply it
-   - The system will perform final validation to ensure all referenced components exist
-   - Your workflow is now ready to use
+The generated configuration is not saved automatically. Nothing changes on the platform until you
+click **Save**.
 
-## Editing an Existing Workflow Configuration
+## Refine an Existing Workflow
 
-1. **Select an Existing Workflow**
-   - Navigate to the workflows section
-   - Select the workflow you want to modify
+1. Open the workflow and enter edit mode
+2. Open the **Refine Workflow with AI** dialog
+3. Describe the change you want, for example:
 
-2. **Use AutoYaml Assistant for Editing**
-   - Click "Edit with AutoYaml Assistant"
-   - Paste or upload your current YAML configuration
-   - Describe the changes you want to make
+   > Add retry logic to the LLM step and improve error handling throughout the workflow
 
-3. **Review and Apply Changes**
-   - The assistant will update your configuration based on your requirements
-   - Review the changes and make additional edits if needed
-   - Save the updated configuration to apply changes to your workflow
+4. Click **Refine with AI**
+5. The rewritten YAML replaces the editor's current contents — review it, then save or discard
 
-## Examples and Use Cases
+Refinement rewrites the whole configuration rather than patching it, so review the full diff
+rather than just the part you asked about.
 
-Example 1: Creating a Simple Two-State Workflow
+## What AI Generation Produces — and What It Does Not
 
-```
- User input: "I need a workflow with two states. The first state searches for information, the second state summarizes it."
+Both features build workflows out of **assistant states**: each step is an LLM call against an
+assistant, wired together with sequential, conditional, switch, parallel, or iterative
+transitions.
 
- Generated YAML:
-assistants:
-  - id: researcher
-    assistant_id: [your_assistant_id]
-    model: 'gpt-4o'
-  - id: summarizer
-    assistant_id: [your_assistant_id]
-    model: 'gpt-4o'
+They do **not** produce:
 
-states:
-  - id: research_state
-    assistant_id: researcher
-    task: |
-      Search for relevant information on the provided topic.
-    output_schema: |
-      {
-        "research_results": "Research findings and information"
-      }
-    next:
-      state_id: summary_state
-  - id: summary_state
-    assistant_id: summarizer
-    task: |
-      Summarize the research findings into a concise report.
-    output_schema: |
-      {
-        "summary": "Concise summary of the research findings"
-      }
-    next:
-      state_id: end
-```
+- **Tool states** — direct tool calls that run without an LLM
+- **Custom node states** — including Transform Nodes, the standard way to reshape webhook payloads
+  and API responses without an LLM call
+- **Sub-workflow states** — calls into another workflow
 
-Example 2: Adding a Conditional Branch
+Workflows built mostly from tool calls and Transform Nodes — webhook handlers, compliance checks,
+API orchestration — have to be written directly, either in the YAML view or by assembling nodes in
+the [Visual Editor](https://docs.codemie.ai/user-guide/workflows/create-workflow). A good approach
+is to generate the assistant-driven part first, then add the tool and transform steps by hand.
 
-```
- User input: "Add a condition to check if research found sufficient information, if not, repeat research."
+## Tips for Better Results
 
- Assistant adds:
-    output_schema: |
-      {
-        "research_results": "Research findings and information",
-        "sufficient_info": "Boolean indicating if information is sufficient"
-      }
-    next:
-      condition:
-        expression: "sufficient_info == True"
-        then: summary_state
-        otherwise: research_state
-```
-
-## Tips for Effective Use
-
-1. **Be Specific in Your Requirements**: The more detailed your requirements, the more accurate the generated configuration.
-
-2. **Start Simple, Then Expand**: Begin with a simple workflow and use the assistant to add complexity as needed.
-
-3. **Review the Documentation**: Refer to the [Workflow YAML Specification](link-to-existing-docs) to understand all available options.
-
-4. **Validate Your Configuration**: Always use the validation feature to ensure your workflow meets all requirements.
+1. **Be specific about inputs and outputs.** Say what the workflow receives and what each step
+   should produce, not just what it should do.
+2. **Name the branches.** Describe the decision points and what happens on each side, so the
+   generator produces conditions rather than a straight line.
+3. **Start small, then refine.** Generate a three or four step version, check it runs, then use
+   **Refine with AI** to add error handling and edge cases.
+4. **Check conditional expressions.** These are Python expressions evaluated against the deciding
+   state's own output. Verify that every variable a condition references is actually a field of
+   that state's output — see
+   [Conditional Transitions](https://docs.codemie.ai/user-guide/workflows/configuration/state-transitions).
+5. **Set `output_schema` on any state a condition reads.** A real JSON Schema makes the fields
+   guaranteed; a plain example shape does not.
 
 ## Sources
 
 - [Create Workflow](https://docs.codemie.ai/user-guide/workflows/create-workflow)
+- [Configuration Reference](https://docs.codemie.ai/user-guide/workflows/configuration/configuration-reference)
+- [State Transitions](https://docs.codemie.ai/user-guide/workflows/configuration/state-transitions)
 - [Examples](https://docs.codemie.ai/user-guide/workflows/configuration/examples)

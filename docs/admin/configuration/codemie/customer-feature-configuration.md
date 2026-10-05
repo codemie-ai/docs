@@ -11,6 +11,10 @@ pagination_prev: admin/configuration/index
 
 Control which features, UI elements, and integrations are available to users in your CodeMie deployment through the `customer-config.yaml` configuration file.
 
+:::tip Runtime changes
+Some components — `banner`, `chatDisclaimer`, `features:webSearch`, and `releaseNotesRecentCount` — can also be changed at runtime from **Settings → Administration → Customer Configuration** without a redeploy. The values in `customer-config.yaml` serve as their deployment defaults. See [Dynamic Customer Configuration](./dynamic-customer-configuration.md).
+:::
+
 ## Component Overview
 
 Use this table to quickly find where each component appears in the UI.
@@ -33,14 +37,16 @@ Use this table to quickly find where each component appears in the UI.
 | **PLATFORM-MANAGED MODE**                 |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:budgetManagement`               | Project detail pages, Settings → Administration                     | Budget columns and budget management section                                                    | Budget tracking UI                                                                  |                                                                                                |
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
-| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden                                                        |
+| `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                                   |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                                       | Code interpreter option                                                             | If both disabled, entire section hidden                                                        |
-| **BANNER CONFIGURATION**                  |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
-| `bannerMessage`                           | All pages (top banner)                                              | Banner text displayed across the app                                                            | No banner shown                                                                     | String, default: `""` — configurable via `customer-config.yaml`                                |
-| `bannerLinkLabel`                         | All pages (top banner)                                              | Label for the optional banner link                                                              | No link label shown                                                                 | String, default: `""` — set alongside `bannerLinkRoute`                                        |
-| `bannerLinkRoute`                         | All pages (top banner)                                              | Route for the optional banner link                                                              | No link route                                                                       | String, default: `""` — set alongside `bannerLinkLabel`                                        |
+| **BANNER, DISCLAIMER AND RELEASE NOTES**  |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
+| `banner`                                  | All pages (top banner)                                              | Banner message with an optional link                                                            | No banner shown                                                                     | Default: disabled. Editable at runtime                                                         |
+| `chatDisclaimer`                          | Chat → below the message input                                      | Non-dismissible disclaimer text with clickable links                                            | No disclaimer shown                                                                 | Default: disabled. Editable at runtime                                                         |
+| `releaseNotesRecentCount`                 | Release Notes page                                                  | Number of recent releases listed before older ones are grouped                                  | —                                                                                   | Default: `"10"`. Editable at runtime                                                           |
 | **MCP CONFIGURATION**                     |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `mcpAuthTimeoutSeconds`                   | MCP OAuth flow                                                      | MCP OAuth timeout duration                                                                      | Uses default timeout                                                                | Integer, default: `60` — configurable via `customer-config.yaml`                               |
+| **CONTENT SECURITY**                      |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
+| `allowedImageDomains`                     | Assistant output (chat messages, agent thoughts, markdown preview)  | Images from listed domains render normally                                                      | Blocked-image badge in place of every external image                                | String, default: `""` — comma-separated hostnames; empty denies all external images            |
 | **TOOL PERMISSIONS**                      |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `tool_permissions`                        | Assistant config → Tools section; Chat prompt (if override allowed) | "Tool Calls" policy dropdown (Manual/Guarded/Auto) and "Allow override" toggle                  | Tool call policy controls — all tool calls auto-approve                             | `min_tool_call_policy` sets a customer-wide floor that clamps the effective policy             |
 | **HELP CENTER LINKS**                     |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
@@ -60,6 +66,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:pinnedAssistants`               | Assistants list, Navigation sidebar                                 | Pin/Unpin actions and Pinned Assistants sidebar section                                         | Pin actions and sidebar section hidden                                              |                                                                                                |
 | `features:favoritesPage`                  | Main navigation                                                     | Favorites page and navigation link                                                              | Favorites page and nav link hidden                                                  | Default: disabled                                                                              |
 | **DATASOURCE FEATURES**                   |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
+| `features:schedulersView`                 | Main navigation                                                     | Schedulers navigation item                                                                      | Schedulers navigation item hidden                                                   | Enabled by default; configurable via Customer Configuration UI                                 |
 | `features:sharepointCodeMieOAuth`         | Data Sources → SharePoint setup form                                | "Sign in with Microsoft (CodeMie Project)" authentication option                                | SharePoint PKCE auth option hidden                                                  | Requires `SHAREPOINT_PKCE_ENABLED=true`                                                        |
 | **INTEGRATED APPLICATIONS**               |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `applications:<your-app-id>`              | Applications menu                                                   | Application card with icon                                                                      | Application card                                                                    | Type: `module`, `iframe`, or `link`                                                            |
@@ -421,6 +428,16 @@ components:
       name: "Favorites Page"
       description: "Enable the dedicated Favorites page and its navigation link"
 
+  # WHERE: Main navigation sidebar
+  # ENABLED: Shows Schedulers navigation item
+  # DISABLED: Hides Schedulers navigation item
+  # NOTE: Enabled by default; can be overridden in Customer Configuration UI
+  - id: "features:schedulersView"
+    settings:
+      enabled: true
+      name: "Schedulers"
+      description: "Controls whether the Schedulers navigation item is visible in the UI"
+
   # WHERE: Data Sources → SharePoint setup form
   # ENABLED: Shows "Sign in with Microsoft (CodeMie Project)" authentication option
   # DISABLED: Hides SharePoint PKCE auth option
@@ -490,6 +507,46 @@ components:
       min_tool_call_policy: "guarded"
 ```
 
+### Image Allow-List for LLM Output
+
+Domain allow-list gating every image rendered from LLM or assistant output. Images whose host is not on the list are replaced with a badge and no image element is created, so the browser issues no request to that host.
+
+**Where it appears:** Assistant replies in chat, agent thought segments, the shared markdown renderer, and the markdown editor preview.
+
+**How it works:**
+
+- The value is a comma-separated list of hostnames. A plain entry such as `cdn.example.com` matches that host only; a leading-dot entry such as `.example.com` matches the apex domain and all of its subdomains.
+- Entries left with fewer than two labels after the leading dot is removed are discarded, so values such as `com` have no effect.
+- An empty value denies every external image. This is the shipped default.
+- Images served from the platform origin or the backend API origin — including uploaded attachments — are always allowed and need no entry. Inline `data:image/*` content is also always allowed.
+- Matching happens in the browser. The backend stores the string and returns it unchanged through `GET /v1/config`.
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true
+  value: "cdn.example.com,.assets.example.org" # String — comma-separated hostnames; empty denies all external images
+```
+
+**Example Configuration:**
+
+```yaml
+components:
+  # WHERE: Assistant output — chat messages, agent thoughts, shared markdown renderer, markdown editor preview
+  # ENABLED: Images from listed hostnames render; all others are replaced with a blocked-image badge
+  # DISABLED: Badge shown in place of every external image
+  # NOTE: Default is an empty string (deny all external images). Leading-dot entries match apex plus subdomains.
+  - id: "allowedImageDomains"
+    settings:
+      enabled: true
+      value: "raw.githubusercontent.com,.example.com,cdn.customer.io"
+```
+
+:::warning Default-deny on upgrade
+Until this value is populated, all external images in assistant output stop rendering. Rollout guidance and the full matching order are documented in [Image Allow-List for LLM Output](../../security/llm-output-image-allow-list.md).
+:::
+
 ### Read-Only Runtime Fields
 
 The following fields appear in the `/v1/config` API response but are **not configurable** via `customer-config.yaml`. They reflect backend environment variables set in the `codemie-api` Helm chart.
@@ -511,6 +568,45 @@ The [CodeMie Standalone](../../deployment/standalone/overview.md) image sets `RE
 :::
 
 ### Datasource Features
+
+Controls navigation visibility and authentication options for datasource-related features.
+
+**Where it appears:** Main navigation sidebar, Data Sources → creation/edit form
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true         # Required
+  name: "Display Name"  # Label shown in the Customer Configuration UI
+  description: "..."    # Tooltip or helper text in the Customer Configuration UI
+```
+
+#### Schedulers Navigation
+
+Controls whether the **Schedulers** item is visible in the left navigation sidebar.
+
+- **When `enabled: true`** (default) — Schedulers navigation item appears in the sidebar
+- **When `enabled: false`** — Schedulers navigation item is hidden
+
+This flag can be toggled directly in the Customer Configuration UI under **Settings → Administration → Customer Configuration**.
+
+![Schedulers feature flag in Customer Configuration UI](./images/customer-config-schedulers-flag.png)
+
+```yaml
+components:
+  # WHERE: Main navigation sidebar
+  # ENABLED: Shows Schedulers navigation item
+  # DISABLED: Hides Schedulers navigation item
+  # NOTE: Enabled by default; can be overridden in Customer Configuration UI
+  - id: "features:schedulersView"
+    settings:
+      enabled: true
+      name: "Schedulers"
+      description: "Controls whether the Schedulers navigation item is visible in the UI"
+```
+
+#### SharePoint CodeMie OAuth
 
 Controls authentication options available in the datasource setup UI.
 
@@ -1157,21 +1253,24 @@ extraObjects:
             settings:
               enabled: true
 
-          # Banner Configuration
-          - id: "bannerMessage"
+          # Banner, Chat Disclaimer and Release Notes
+          # NOTE: Can be overridden at runtime in Settings → Administration → Customer Configuration
+          - id: "banner"
             settings:
               enabled: true
-              value: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+              message: "Scheduled maintenance on Saturday 00:00–02:00 UTC"
+              linkLabel: "Learn more"
+              linkRoute: "/help"
 
-          - id: "bannerLinkLabel"
+          - id: "chatDisclaimer"
             settings:
               enabled: true
-              value: "Learn more"
+              text: "AI responses may be inaccurate. See the [usage policy](https://example.com/policy)."
 
-          - id: "bannerLinkRoute"
+          - id: "releaseNotesRecentCount"
             settings:
               enabled: true
-              value: "/help"
+              recentReleaseCount: "10"
 
           # MCP Auth Configuration
           - id: "mcpAuthTimeoutSeconds"
@@ -1184,6 +1283,12 @@ extraObjects:
             settings:
               enabled: true
               min_tool_call_policy: "guarded"
+
+          # Image Allow-List for LLM Output
+          - id: "allowedImageDomains"
+            settings:
+              enabled: true
+              value: "raw.githubusercontent.com,.example.com,cdn.customer.io"
 
           # Advanced Features
           - id: "skills"
@@ -1228,6 +1333,12 @@ extraObjects:
               enabled: false
               name: "Favorites Page"
               description: "Enable the dedicated Favorites page and its navigation link"
+
+          - id: "features:schedulersView"
+            settings:
+              enabled: true
+              name: "Schedulers"
+              description: "Controls whether the Schedulers navigation item is visible in the UI"
 
           # Integrated Applications
           - id: "applications:angular-upgrade-app"
