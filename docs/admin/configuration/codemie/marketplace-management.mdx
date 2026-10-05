@@ -16,20 +16,24 @@ For the submitter's side of the flow, see [Publish to Marketplace](../../../user
 
 ## Enabling Marketplace Management
 
-Marketplace management is controlled by three flags that must all be enabled together for the feature to be active. Both backend flags default to `false`; the feature ships disabled and must be deliberately turned on per environment.
+Marketplace management is controlled by two independent environment variables on the `codemie-api` service. Both default to `false`; the feature ships disabled and must be deliberately turned on per environment.
 
-| Flag                                | Type                                     | Default | Description                                                                                                                                                                                                                                                                                     |
-| ----------------------------------- | ---------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `MARKETPLACE_MANAGEMENT_ENABLED`    | Backend (`Config`)                       | `false` | Kill switch for the entire feature. When `false`, the `/v1/marketplace-management` router is not mounted and the **Marketplace management** page is unavailable.                                                                                                                                |
-| `MARKETPLACE_APPROVAL_GATE_ENABLED` | Backend (`Config`)                       | `false` | Approval gate for publishing. When `true`, submitting an assistant sets its status to `PENDING_REVIEW` and keeps it private until an administrator approves it; automated quality gates also run. When `false`, publish self-approves the assistant straight to `APPROVED` / global visibility. |
-| `features:marketplaceManagement`    | Customer config (`customer-config.yaml`) | —       | Frontend-facing feature flag. Must be enabled alongside the two backend flags to expose the feature in the UI. See [Customer Feature Configuration](./customer-feature-configuration.md).                                                                                                       |
+| Flag                                | Default | Description                                                                                                                                                                                                                                                                                     |
+| ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MARKETPLACE_MANAGEMENT_ENABLED`    | `false` | Kill switch for the entire feature. When `false`, the `/v1/marketplace-management` router is not mounted, the **Marketplace management** page is unavailable, and all schedulers related to marketplace management are disabled.                                                                |
+| `MARKETPLACE_APPROVAL_GATE_ENABLED` | `false` | Approval gate for publishing. When `true`, submitting an assistant sets its status to `PENDING_REVIEW` and keeps it private until an administrator approves it; automated quality gates also run. When `false`, publish self-approves the assistant straight to `APPROVED` / global visibility. |
 
-To enable marketplace management, set both backend flags as environment variables on the `codemie-api` service and enable `features:marketplaceManagement` in `customer-config.yaml`. Both flags are plain top-level environment variables with no prefix:
+Both are plain top-level environment variables read by pydantic `BaseSettings` with no prefix or namespace.
 
-```yaml
-MARKETPLACE_MANAGEMENT_ENABLED: "true"
-MARKETPLACE_APPROVAL_GATE_ENABLED: "true"
-```
+The `features:marketplaceManagement` value visible in the frontend configuration is derived automatically from `MARKETPLACE_MANAGEMENT_ENABLED` at request time — it is not a separate flag for operators to set.
+
+### Recommended Rollout Order
+
+Enable the flags in stages rather than all at once:
+
+1. Set `MARKETPLACE_MANAGEMENT_ENABLED=true`. This mounts the router and exposes the **Marketplace management** page, but publishing behavior is unchanged — assistants still self-approve.
+2. Confirm that at least one administrator or maintainer account is available to review submissions.
+3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. From this point, new publish requests enter the review queue instead of self-approving.
 
 :::warning
 Enabling `MARKETPLACE_APPROVAL_GATE_ENABLED` without `MARKETPLACE_MANAGEMENT_ENABLED` has no effect — the router is not mounted when the kill switch is off.
