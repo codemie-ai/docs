@@ -1050,12 +1050,13 @@ Automatically compress long conversation histories when token usage exceeds a th
 
 ### Workflow Configuration
 
-| Parameter                      | Type    | Default | Description                                                                           |
-| ------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------- |
-| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage                        |
-| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                    |
-| `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                        |
-| `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty |
+| Parameter                      | Type    | Default | Description                                                                                                                                                                          |
+| ------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage                                                                                                                       |
+| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                                                                                                                   |
+| `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                                                                                                                       |
+| `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty                                                                                                |
+| `WORKFLOW_RUN_FILES_MAX_COUNT` | integer | `20`    | Max number of files a workflow run can start with; a request with more files is rejected with `400`. The execution request accepts at most 20 files, so a higher value has no effect |
 
 ### Sub-workflows
 

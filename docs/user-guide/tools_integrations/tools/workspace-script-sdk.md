@@ -26,6 +26,16 @@ print(envelope["http"]["status"], envelope["result"])
 
 ---
 
+## Running a Script from a Workflow Step
+
+A workflow can run a script as one of its steps. Add a Tool node that uses the workspace script tool (`execute_workspace_script`), set the path of the script, and attach the script file when you start the workflow.
+
+The execution results show what the script printed and the files it created. The output of the step can be used by the next steps like the output of any other Tool node, and the files stay available to them. If the script is not found or fails, the step is marked as failed and shows the reason or the script's output.
+
+A script in a Tool node can call tools by name with your integrations, see [Which Tools a Script Can Call](#which-tools-a-script-can-call).
+
+---
+
 ## Which Tools a Script Can Call
 
 A script can call only the tools that are available to it in its run. Which tools those are depends on where the script runs:
