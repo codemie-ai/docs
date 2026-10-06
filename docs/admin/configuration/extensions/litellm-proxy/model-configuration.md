@@ -236,31 +236,20 @@ Each model entry in the `model_list` array consists of three main sections:
 
 - **`additional_drop_params`**: (Optional) Array of parameter names to strip from the request before it reaches the backend provider
 
-  :::warning Parameter compatibility errors
-  Some backend models return errors when requests contain parameters that are unsupported or exceed provider constraints:
-  - **`user` parameter**: If a model returns an upstream `string_above_max_length` error for the `user` field (the CodeMie user identifier exceeds the provider's 64-character maximum), surfaced by the CodeMie API as an HTTP 500, drop the `user` parameter by adding `additional_drop_params: ["user"]` to the model's `litellm_params`.
-  - **`top_p` parameter**: Certain models (such as Bedrock Mantle GPT-5.5, GPT-5.6 Luna, and GPT-5.6 Terra) do not support the `top_p` parameter and return an error if it is passed. Drop it by adding `additional_drop_params: ["top_p"]`.
-    :::
+  :::warning `user` parameter causes upstream errors
+  If a model returns an upstream `string_above_max_length` error for the `user` field (the CodeMie user identifier exceeds the provider's 64-character maximum), surfaced by the CodeMie API as an HTTP 500, drop the `user` parameter before it reaches the provider by adding `additional_drop_params: ["user"]` to the model's `litellm_params`.
+  :::
 
   <details>
-  <summary><strong>Example: Dropping Unsupported Parameters</strong></summary>
+  <summary><strong>Example: Dropping the `user` Parameter</strong></summary>
 
   ```yaml
   model_list:
-    # Dropping the user parameter for Vertex AI Claude models
     - model_name: claude-opus-4-6-vertex
       litellm_params:
         model: vertex_ai/claude-opus-4-6
         // highlight-next-line
         additional_drop_params: ["user"]
-      # ... additional configuration fields
-
-    # Dropping user and top_p for Bedrock Mantle GPT models
-    - model_name: gpt-5.5-2026-04-24
-      litellm_params:
-        model: bedrock_mantle/openai.gpt-5.5
-        // highlight-next-line
-        additional_drop_params: ["user", "top_p"]
       # ... additional configuration fields
   ```
 
