@@ -62,6 +62,7 @@ words:
   - CIDRs
   - CGNAT
   - ULA
+  - exchangelib
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
