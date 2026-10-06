@@ -183,34 +183,57 @@ Platform administrators must make sure that:
 
 ### TLS / CA Certificate
 
-:::info Trusting an internal CA (platform administrators)
 The certificate of the Exchange server must chain to a CA that the CodeMie backend trusts. There is no field in the integration to upload a certificate or to turn off certificate verification. If the certificate cannot be verified, the toolkit shows "The TLS certificate of the Exchange service could not be verified. Check the endpoint certificate configuration."
 
-If your Exchange server uses a certificate from an internal or corporate CA, add that CA to the trust bundle of the CodeMie backend container:
+If your Exchange server uses a self-signed certificate or one issued by an internal or corporate CA, the platform administrator adds that CA to the `codemie-api` Helm chart:
 
-- `REQUESTS_CA_BUNDLE` sets the CA bundle used for EWS (NTLM) connections.
-- `SSL_CERT_FILE` sets the CA bundle used for Microsoft Graph (OAuth) connections.
+1. Store the CA certificate (PEM) in a ConfigMap.
+2. Mount it into the container with `extraVolumes` and `extraVolumeMounts`.
+3. Point the HTTP clients at it with `extraEnv`:
+   - `REQUESTS_CA_BUNDLE` is used by `requests`-based clients: EWS (exchangelib), azure-identity and most toolkits.
+   - `SSL_CERT_FILE` is used by `httpx`-based clients: the Microsoft Graph SDK, A2A and the OpenAPI tool.
 
-Both variables replace the default trust store, so the bundle must also contain the public CAs that the backend needs for other services.
-
-Mount the bundle from a Secret or ConfigMap and set the variables through the Helm values `extraEnv`, `extraVolumes` and `extraVolumeMounts`. The [Customer Feature Configuration](../../../admin/configuration/codemie/customer-feature-configuration.md#how-it-works) guide shows the same mount pattern.
-:::
+Add these values to the `values.yaml` of the `codemie-api` chart:
 
 ```yaml
-extraEnv:
-  - name: REQUESTS_CA_BUNDLE
-    value: /etc/ssl/custom/ca-bundle.crt
+# 1. ConfigMap — stores the CA certificate
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: exchange-ca-cert
+    data:
+      exchange-ca.pem: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
 
+# 2. Volume — exposes the ConfigMap as a volume
 extraVolumes: |
-  - name: custom-ca-bundle
+  - name: exchange-ca-cert
     configMap:
-      name: custom-ca-bundle
+      name: exchange-ca-cert
 
+# 3. Volume mount — places the certificate next to the system certificates
 extraVolumeMounts: |
-  - name: custom-ca-bundle
-    mountPath: /etc/ssl/custom
+  - name: exchange-ca-cert
+    mountPath: /etc/ssl/certs/exchange-ca.pem
+    subPath: exchange-ca.pem
     readOnly: true
+
+# 4. Environment variables — make the HTTP clients trust the certificate
+extraEnv:
+  - name: REQUESTS_CA_BUNDLE # requests: exchangelib, azure-identity, most toolkits
+    value: /etc/ssl/certs/exchange-ca.pem
+  - name: SSL_CERT_FILE # httpx: Microsoft Graph SDK, A2A, OpenAPI tool
+    value: /etc/ssl/certs/exchange-ca.pem
 ```
+
+Apply the change with `helm upgrade` and wait for the `codemie-api` pods to restart. The [Customer Feature Configuration](../../../admin/configuration/codemie/customer-feature-configuration.md#how-it-works) guide uses the same ConfigMap and volume pattern.
+
+:::warning The bundle replaces the default trust store
+Both variables replace the CA list that the clients trust by default, so they are not added to it. The file must also contain every public CA that the backend needs for its other outbound HTTPS calls, such as LLM providers, Microsoft Entra ID and other integrations. Otherwise those calls fail TLS verification. Put the internal CA and the public CA bundle into the same PEM file.
+:::
 
 ## Troubleshooting
 
