@@ -55,6 +55,11 @@ words:
   - reportportal
   - berriai
   - Ollama
+  - Entra
+  - NTLM
+  - EWS
+  - Autodiscover
+  - sentitems
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
