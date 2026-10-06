@@ -1334,16 +1334,6 @@ extraObjects:
               description: "Controls whether the Schedulers navigation item is visible in the UI"
 
           # Integrated Applications
-          - id: "applications:angular-upgrade-app"
-            settings:
-              enabled: true
-              name: "Angular Upgrade Assistant"
-              type: "module"
-              url: "https://your-app.com/angular-upgrade.js"
-              description: "Assists with Angular version upgrades"
-              created_by: "Your Team"
-              icon_url: "https://your-cdn.com/angular-icon.svg"
-
           - id: "applications:aice"
             settings:
               enabled: true
