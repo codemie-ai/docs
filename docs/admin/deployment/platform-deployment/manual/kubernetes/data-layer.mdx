@@ -19,50 +19,45 @@ import DataLayerValidation from '../../../common/deployment/components-deploymen
 
 <DataLayerOverview />
 
-<Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <DataLayerElasticsearch cloudProvider="AWS" valuesFileName="values-aws.yaml" />
-  </TabItem>
-  <TabItem value="azure" label="Azure">
-    <DataLayerElasticsearch cloudProvider="Azure" valuesFileName="values-azure.yaml" />
-  </TabItem>
-  <TabItem value="gcp" label="GCP">
-    <DataLayerElasticsearch cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
-  </TabItem>
-</Tabs>
+Elasticsearch installation is identical across cloud providers except for the Helm values file. Substitute `values-<cloud-provider>.yaml` with `values-aws.yaml`, `values-azure.yaml`, or `values-gcp.yaml` for your cloud.
+
+<DataLayerElasticsearch valuesFileName="values-<cloud-provider>.yaml" />
+
+PostgreSQL setup differs on AWS, which uses IAM database authentication instead of a static password. Azure and GCP both connect with a static password and only differ in their managed service name and host.
 
 <Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <DataLayerPostgresConfig
-      cloudProvider="AWS"
-      postgresServiceName="AWS RDS PostgreSQL"
-      postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
-      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
-    />
-    <DataLayerPostgresIamSetup />
-    <DataLayerPostgresSecretAws
-      cloudProvider="AWS"
-      postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
-    />
-  </TabItem>
-  <TabItem value="azure" label="Azure">
-    <DataLayerPostgresConfig
-      postgresServiceName="Azure Database for PostgreSQL"
-      postgresExampleHost="codemie-postgres.postgres.database.azure.com"
-      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
-    />
-    <DataLayerPostgresSecretCommon
-      postgresExampleHost="codemie-postgres.postgres.database.azure.com"
-    />
-  </TabItem>
-  <TabItem value="gcp" label="GCP">
-    <DataLayerPostgresConfig
-      postgresServiceName="GCP Cloud SQL PostgreSQL"
-      postgresExampleHost="10.0.0.5:5432"
-      infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
-    />
-    <DataLayerPostgresSecretCommon postgresExampleHost="10.0.0.5:5432" />
-  </TabItem>
+<TabItem value="aws" label="AWS">
+
+<DataLayerPostgresConfig
+  cloudProvider="AWS"
+  postgresServiceName="AWS RDS PostgreSQL"
+  postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
+  infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
+/>
+<DataLayerPostgresIamSetup />
+<DataLayerPostgresSecretAws
+  cloudProvider="AWS"
+  postgresExampleHost="codemie-postgres.abc123.us-west-2.rds.amazonaws.com"
+/>
+
+</TabItem>
+<TabItem value="azure-gcp" label="Azure / GCP">
+
+Substitute `<postgres-host>` with your managed PostgreSQL service's connection host:
+
+| Cloud Provider | Managed Service               | Example Host                                   |
+| -------------- | ----------------------------- | ---------------------------------------------- |
+| Azure          | Azure Database for PostgreSQL | `codemie-postgres.postgres.database.azure.com` |
+| GCP            | GCP Cloud SQL PostgreSQL      | `10.0.0.5:5432` (private IP)                   |
+
+<DataLayerPostgresConfig
+  postgresServiceName="your cloud's managed PostgreSQL service"
+  postgresExampleHost="<postgres-host>"
+  infrastructureDeploymentLink="../../../../infrastructure-deployment/kubernetes"
+/>
+<DataLayerPostgresSecretCommon postgresExampleHost="<postgres-host>" />
+
+</TabItem>
 </Tabs>
 
 <DataLayerValidation />

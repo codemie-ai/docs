@@ -14,25 +14,16 @@ import StorageIngressNginx from '../../../common/deployment/components-deploymen
 import StorageClassInstallation from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-class-installation.mdx';
 import StorageIngressValidation from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-ingress-validation.mdx';
 
-<Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <StorageIngressOverview storageClassName="AWS gp3" clusterName="EKS" />
-  </TabItem>
-  <TabItem value="azure" label="Azure">
-    <StorageIngressOverview storageClassName="Azure Storage Class" clusterName="AKS" />
-  </TabItem>
-  <TabItem value="gcp" label="GCP">
-    <StorageIngressOverview storageClassName="GCP Storage Class" clusterName="GKE" />
-  </TabItem>
-</Tabs>
+<StorageIngressOverview />
 
-<Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <StorageIngressNginx cloudProvider="AWS" valuesFileName="values-aws.yaml" />
+<StorageIngressNginx />
 
 ### Step 4: Configure DNS Record
 
-Create a DNS record pointing to the ingress controller's load balancer:
+Create a DNS record pointing to the ingress controller's load balancer. The exact steps depend on your cloud provider's DNS service.
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
 
 ```bash
 INGRESS_HOST=$(kubectl get service ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
@@ -76,9 +67,6 @@ nslookup codemie.airun.example.com
 
   </TabItem>
   <TabItem value="azure" label="Azure">
-    <StorageIngressNginx cloudProvider="Azure" valuesFileName="values-azure.yaml" />
-
-### Step 4: Configure DNS Record
 
 Create an A record in your Azure Private DNS zone pointing to the ingress controller's IP:
 
@@ -112,7 +100,6 @@ nslookup codemie.airun.example.com
 
   </TabItem>
   <TabItem value="gcp" label="GCP">
-    <StorageIngressNginx cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
 
 :::info DNS for GCP
 For **private clusters**, DNS is automatically configured by the Terraform infrastructure deployment. No manual DNS step is required here.
@@ -123,34 +110,6 @@ For **public clusters**, refer to the [Automated Deployment DNS guide](../../aut
   </TabItem>
 </Tabs>
 
-<Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <StorageClassInstallation
-      storageClassName="AWS gp3"
-      storageType="Amazon EBS gp3 volumes"
-      existingStorageExamples="`gp2` or `gp3`"
-      cloudProvider="AWS"
-      storageClassFileName="storageclass-aws-gp3.yaml"
-    />
-  </TabItem>
-  <TabItem value="azure" label="Azure">
-    <StorageClassInstallation
-      storageClassName="Azure Storage Class"
-      storageType="Azure Disk volumes"
-      existingStorageExamples="`managed-premium` or similar"
-      cloudProvider="Azure"
-      storageClassFileName="storageclass-azure.yaml"
-    />
-  </TabItem>
-  <TabItem value="gcp" label="GCP">
-    <StorageClassInstallation
-      storageClassName="GCP Storage Class"
-      storageType="GCP Persistent Disks"
-      existingStorageExamples="`standard-rwo` or similar"
-      cloudProvider="GCP"
-      storageClassFileName="storageclass-gcp-pd-balanced.yaml"
-    />
-  </TabItem>
-</Tabs>
+<StorageClassInstallation />
 
 <StorageIngressValidation />

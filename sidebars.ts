@@ -415,6 +415,19 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'category',
+          label: 'Architecture',
+          link: {
+            type: 'doc',
+            id: 'admin/architecture/architecture-overview',
+          },
+          collapsed: true,
+          items: [
+            'admin/architecture/architecture-kubernetes',
+            'admin/architecture/architecture-on-vm',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Deployment',
           link: {
             type: 'doc',
@@ -422,19 +435,6 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            {
-              type: 'category',
-              label: 'Architecture',
-              link: {
-                type: 'doc',
-                id: 'admin/deployment/architecture/architecture-overview',
-              },
-              collapsed: true,
-              items: [
-                'admin/deployment/architecture/architecture-kubernetes',
-                'admin/deployment/architecture/architecture-on-vm',
-              ],
-            },
             {
               type: 'category',
               label: 'Prerequisites',

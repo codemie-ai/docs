@@ -14,18 +14,11 @@ import FeatureGrid from '@site/src/components/FeatureGrid';
 
 # Deployment Guides
 
-Welcome to the AI/Run CodeMie deployment guides. A complete deployment follows three phases: provision infrastructure, deploy the platform, then configure your installation. Use the maintenance section to keep it up to date and secure.
+Welcome to the AI/Run CodeMie deployment guides. A complete deployment follows three phases: review the prerequisites, provision infrastructure, then deploy the platform. See the [Architecture](/admin/architecture/) section first to understand the deployment architecture, infrastructure components, and resource requirements.
 
-## Installation & Configuration
+## Installation
 
 <FeatureGrid>
-  <FeatureCard
-    icon="/img/icons/cloud-data.svg"
-    iconType="image"
-    title="Architecture"
-    description="Understand the AI/Run CodeMie deployment architecture, infrastructure components, and resource requirements."
-    link="/admin/deployment/architecture/"
-  />
   <FeatureCard
     icon="/img/icons/info.svg"
     iconType="image"
@@ -48,42 +41,21 @@ Welcome to the AI/Run CodeMie deployment guides. A complete deployment follows t
     link="/admin/deployment/platform-deployment/"
   />
   <FeatureCard
-    icon="/img/icons/plugin.svg"
+    icon="/img/icons/applications.svg"
     iconType="image"
     title="Accessing Applications"
     description="Find application URLs and next steps for configuration once the platform deployment is complete."
     link="/admin/deployment/accessing-applications/"
   />
   <FeatureCard
-    icon="/img/icons/configure.svg"
+    icon="/img/icons/plugin.svg"
     iconType="image"
-    title="Configuration Guide"
-    description="Configure authentication, integrations, observability, and API settings for your CodeMie installation."
-    link="/admin/configuration/"
-  />
-</FeatureGrid>
-
-## Maintenance
-
-<FeatureGrid>
-  <FeatureCard
-    icon="/img/icons/refresh.svg"
-    iconType="image"
-    title="Update Guide"
-    description="Upgrade CodeMie platform and third-party components following the recommended step-by-step procedure."
-    link="/admin/update/"
-  />
-  <FeatureCard
-    icon="/img/icons/protect.svg"
-    iconType="image"
-    title="Security & Compliance"
-    description="Network policies, RBAC, data processing requirements, and security best practices for CodeMie deployments."
-    link="/admin/security/"
+    title="Extensions"
+    description="Deploy optional extensions including LiteLLM Proxy, Assistants Evaluation, AI Code Explorer, and specialized development tools."
+    link="/admin/deployment/extensions/"
   />
   <div style={{ visibility: 'hidden' }} />
 </FeatureGrid>
-
----
 
 ## Marketplace
 
@@ -93,35 +65,9 @@ Welcome to the AI/Run CodeMie deployment guides. A complete deployment follows t
     iconType="image"
     invertInDarkTheme={false}
     title="AWS Marketplace"
-    description="Deploy AI/Run CodeMie directly from AWS Marketplace."
+    description="Deploy AI/Run CodeMie directly from AWS Marketplace with one-click installation and managed services."
     link="https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1"
   />
   <div style={{ visibility: 'hidden' }} />
   <div style={{ visibility: 'hidden' }} />
-</FeatureGrid>
-
-## Additional Resources
-
-<FeatureGrid>
-  <FeatureCard
-    icon="/img/icons/configure.svg"
-    iconType="image"
-    title="API Configuration"
-    description="Configure and manage CodeMie API settings, authentication, and integration endpoints for your development environment."
-    link="/admin/configuration/codemie/api-configuration"
-  />
-  <FeatureCard
-    icon="/img/icons/info.svg"
-    iconType="image"
-    title="FAQ"
-    description="Find answers to frequently asked questions about deploying and managing AI/Run CodeMie."
-    link="/admin/faq"
-  />
-  <FeatureCard
-    icon="/img/icons/plugin.svg"
-    iconType="image"
-    title="Extensions"
-    description="Enhance CodeMie with optional extensions including LiteLLM Proxy, Langfuse evaluation, AICE, and specialized development assistants."
-    link="/admin/deployment/extensions/"
-  />
 </FeatureGrid>

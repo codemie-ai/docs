@@ -30,7 +30,7 @@ To deploy AI/Run CodeMie on AWS, you need:
 - **Programmatic Access** with credentials that have permissions to create and manage IAM Roles and Policy Documents
 - **Sufficient Quota** for the required resources (EKS, RDS, networking, storage, etc.)
   :::info Complete Resource List
-  For a detailed list of all AWS resources that will be provisioned, refer to the [Architecture](../../architecture/architecture-kubernetes) section or review the Terraform modules in the deployment repository.
+  For a detailed list of all AWS resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
   :::
 
 </TabItem>
@@ -45,7 +45,7 @@ To deploy AI/Run CodeMie on Azure, you need:
   - Access to **Entra ID App Registration** to obtain Application ID and Secret
   - Ability to create and manage Azure resources (AKS, networking, storage, etc.)
     :::info Complete Resource List
-    For a detailed list of all Azure resources that will be provisioned, refer to the [Architecture](../../architecture/architecture-kubernetes) section or review the Terraform modules in the deployment repository.
+    For a detailed list of all Azure resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
     :::
 - **Entra ID Access** on the Azure portal to retrieve application details such as Tenant ID
 
@@ -61,7 +61,7 @@ To deploy AI/Run CodeMie on GCP, you need:
   - Ability to create and manage IAM Roles and Service Accounts
   - Access to create and manage GCP resources (GKE, VPC, Cloud SQL, etc.)
     :::info Complete Resource List
-    For a detailed list of all GCP resources that will be provisioned, refer to the [Architecture](../../architecture/architecture-kubernetes) section or review the Terraform modules in the deployment repository.
+    For a detailed list of all GCP resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
     :::
   - Ability to bind the following IAM roles to service accounts:
     - `roles/aiplatform.user` - For Vertex AI access
@@ -241,6 +241,103 @@ For GCP deployments, gcloud CLI serves dual purposes: GCP resource management an
 
 </TabItem>
 </Tabs>
+
+## Cluster Access
+
+Before proceeding to Platform Deployment, confirm you have `kubectl` access to the cluster provisioned during [Infrastructure Deployment](../infrastructure-deployment/kubernetes.mdx).
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+Obtain kubeconfig credentials for the EKS cluster:
+
+```bash
+aws eks update-kubeconfig --region <REGION> --name <CLUSTER_NAME>
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+Connect to the Jumpbox VM via Bastion, then obtain kubeconfig credentials for the AKS cluster:
+
+```bash
+az login
+az account set --subscription <SUBSCRIPTION_ID>
+az aks get-credentials \
+  --resource-group <RESOURCE_GROUP> \
+  --name <CLUSTER_NAME> \
+  --overwrite-existing
+kubelogin convert-kubeconfig -l azurecli
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+For **private clusters**, connect via the Bastion Host first. Then obtain kubeconfig credentials for the GKE cluster:
+
+```bash
+gcloud container clusters get-credentials <CLUSTER_NAME> --project <PROJECT_ID> --region <REGION>
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+</Tabs>
+
+## Container Registry Access
+
+CodeMie container images are hosted on `europe-west3-docker.pkg.dev` regardless of the cloud provider you deploy to. You need a **GCP service account key file** (`key.json`) with read access to the registry before installing components.
+
+:::info Obtaining key.json
+Contact your CodeMie administrator or EPAM delivery team to obtain the `key.json` file for registry access.
+:::
+
+Create the namespace and pull secret:
+
+```bash
+kubectl create namespace codemie
+
+kubectl create secret docker-registry gcp-artifact-registry \
+  --docker-server=https://europe-west3-docker.pkg.dev \
+  --docker-email=`<client_email from shared with you key>` \
+  --docker-username=_json_key \
+  --docker-password="$(cat key.json)" \
+  -n codemie
+```
+
+Verify the secret:
+
+```bash
+kubectl get secret gcp-artifact-registry -n codemie
+```
+
+:::info Pull Secret Usage
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+This is configured automatically in the values files:
+
+```yaml
+imagePullSecrets:
+  - name: gcp-artifact-registry
+```
+
+:::
 
 ## Required Repository Access
 

@@ -7,8 +7,6 @@ pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/data-lay
 pagination_next: admin/deployment/platform-deployment/manual/kubernetes/plugin-engine
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 import SecurityOverview from '../../../common/deployment/components-deployment/manual-deployment/security/_security-overview.mdx';
 import SecurityKeycloakOperator from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-operator.mdx';
 import SecurityKeycloakInstall from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-install.mdx';
@@ -19,31 +17,18 @@ import SecurityValidation from '../../../common/deployment/components-deployment
 
 <SecurityKeycloakOperator />
 
-<Tabs groupId="cloud-provider">
-  <TabItem value="aws" label="AWS">
-    <SecurityKeycloakInstall
-      cloudProvider="AWS"
-      valuesFileName="values-aws.yaml"
-      keycloakUrl="https://keycloak.airun.example.com/auth/admin"
-    />
-    <SecurityOauth2Proxy cloudProvider="AWS" valuesFileName="values-aws.yaml" />
-  </TabItem>
-  <TabItem value="azure" label="Azure">
-    <SecurityKeycloakInstall
-      cloudProvider="Azure"
-      valuesFileName="values-azure.yaml"
-      keycloakUrl="https://codemie.example.com/keycloak/admin"
-    />
-    <SecurityOauth2Proxy cloudProvider="Azure" valuesFileName="values-azure.yaml" />
-  </TabItem>
-  <TabItem value="gcp" label="GCP">
-    <SecurityKeycloakInstall
-      cloudProvider="GCP"
-      valuesFileName="values-gcp.yaml"
-      keycloakUrl="https://keycloak.airun.example.com/auth/admin"
-    />
-    <SecurityOauth2Proxy cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
-  </TabItem>
-</Tabs>
+The steps below are identical across cloud providers except for the Helm values file and the Keycloak Admin URL. Substitute `values-<cloud-provider>.yaml` and `<keycloak-admin-url>` with the values for your cloud:
+
+| Cloud Provider | Values File         | Keycloak Admin URL                          |
+| -------------- | ------------------- | ------------------------------------------- |
+| AWS            | `values-aws.yaml`   | `https://keycloak.<your-domain>/auth/admin` |
+| Azure          | `values-azure.yaml` | `https://<your-domain>/keycloak/admin`      |
+| GCP            | `values-gcp.yaml`   | `https://keycloak.<your-domain>/auth/admin` |
+
+AWS and GCP expose Keycloak on a dedicated subdomain; Azure exposes it as a path under your main domain.
+
+<SecurityKeycloakInstall valuesFileName="values-<cloud-provider>.yaml" keycloakUrl="<keycloak-admin-url>" />
+
+<SecurityOauth2Proxy valuesFileName="values-<cloud-provider>.yaml" />
 
 <SecurityValidation />

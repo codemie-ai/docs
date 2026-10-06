@@ -45,8 +45,8 @@ Installing components out of order will cause deployment failures. Always follow
 <TabItem value="aws" label="AWS">
 
 - [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../../infrastructure-deployment/kubernetes.mdx) phase
-- [ ] **Cluster Access**: `kubectl` configured for EKS cluster
-- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists
+- [ ] **Cluster Access**: `kubectl` configured for EKS cluster (see [Cluster Access](../../../prerequisites/kubernetes.mdx#cluster-access))
+- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists (see [Container Registry Access](../../../prerequisites/kubernetes.mdx#container-registry-access))
 - [ ] **Helm Installed**: Helm 3.16.0+
 - [ ] **Repository Cloned**: `codemie-helm-charts` available locally
 - [ ] **Deployment Outputs**: Have `deployment_outputs.env` from infrastructure deployment
@@ -56,8 +56,8 @@ Installing components out of order will cause deployment failures. Always follow
 <TabItem value="azure" label="Azure">
 
 - [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../../infrastructure-deployment/kubernetes.mdx) phase
-- [ ] **Cluster Access**: Connected to Jumpbox VM and `kubectl` configured for AKS
-- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists
+- [ ] **Cluster Access**: Connected to Jumpbox VM and `kubectl` configured for AKS (see [Cluster Access](../../../prerequisites/kubernetes.mdx#cluster-access))
+- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists (see [Container Registry Access](../../../prerequisites/kubernetes.mdx#container-registry-access))
 - [ ] **Helm Installed**: Helm 3.16.0+
 - [ ] **Repository Cloned**: `codemie-helm-charts` available locally
 - [ ] **Deployment Outputs**: Have `deployment_outputs.env` from infrastructure deployment
@@ -67,8 +67,8 @@ Installing components out of order will cause deployment failures. Always follow
 <TabItem value="gcp" label="GCP">
 
 - [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../../infrastructure-deployment/kubernetes.mdx) phase
-- [ ] **Cluster Access**: Connected to Bastion Host (private cluster) or `kubectl` configured for GKE
-- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists
+- [ ] **Cluster Access**: Connected to Bastion Host (private cluster) or `kubectl` configured for GKE (see [Cluster Access](../../../prerequisites/kubernetes.mdx#cluster-access))
+- [ ] **Container Registry**: `gcp-artifact-registry` pull secret exists (see [Container Registry Access](../../../prerequisites/kubernetes.mdx#container-registry-access))
 - [ ] **Helm Installed**: Helm 3.16.0+
 - [ ] **Repository Cloned**: `codemie-helm-charts` available locally
 - [ ] **Tools**: `kubectl`, `helm`, `gcloud` CLI

@@ -35,11 +35,3 @@ Scripted deployment is recommended for standard installations as it automates co
   />
   <div style={{ visibility: 'hidden' }} />
 </FeatureGrid>
-
-## Kubernetes Script Modes
-
-| Mode          | Components Installed                                         | Use Case                                 |
-| ------------- | ------------------------------------------------------------ | ---------------------------------------- |
-| `all`         | All components including Nginx Ingress Controller            | Fresh cluster without existing ingress   |
-| `recommended` | All components except Nginx Ingress Controller               | Cluster with existing ingress controller |
-| `update`      | Only CodeMie core components (API, UI, MCP Connect, Mermaid) | Updating existing installation           |

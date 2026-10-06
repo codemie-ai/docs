@@ -7,8 +7,6 @@ pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/core-com
 pagination_next: null
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 import ObservabilityOverview from '../../../common/deployment/components-deployment/manual-deployment/observability/_observability-overview.mdx';
 import ObservabilityFluentBit from '../../../common/deployment/components-deployment/manual-deployment/observability/_observability-fluent-bit.mdx';
 import ObservabilityKibana from '../../../common/deployment/components-deployment/manual-deployment/observability/_observability-kibana.mdx';
@@ -19,20 +17,19 @@ import ObservabilityValidation from '../../../common/deployment/components-deplo
 
 <ObservabilityFluentBit metricsIndexRotationLink="../../../../../configuration/observability/metrics-index-rotation" />
 
-<Tabs groupId="cloud-provider">
-<TabItem value="aws" label="AWS">
-<ObservabilityKibana valuesFileName="values-aws.yaml" kibanaUrl="https://kibana.codemie.example.com" />
-<ObservabilityDashboards kibanaUrl="https://kibana.codemie.example.com" />
-<ObservabilityValidation kibanaUrl="https://kibana.codemie.example.com" accessingApplicationsLink="../../../../accessing-applications" />
-</TabItem>
-<TabItem value="azure" label="Azure">
-<ObservabilityKibana valuesFileName="values-azure.yaml" kibanaUrl="https://codemie.example.com/kibana" />
-<ObservabilityDashboards kibanaUrl="https://codemie.example.com/kibana" />
-<ObservabilityValidation kibanaUrl="https://codemie.example.com/kibana" accessingApplicationsLink="../../../../accessing-applications" />
-</TabItem>
-<TabItem value="gcp" label="GCP">
-<ObservabilityKibana valuesFileName="values-gcp.yaml" kibanaUrl="https://kibana.airun.example.com" />
-<ObservabilityDashboards kibanaUrl="https://kibana.airun.example.com" />
-<ObservabilityValidation kibanaUrl="https://kibana.airun.example.com" accessingApplicationsLink="../../../../accessing-applications" />
-</TabItem>
-</Tabs>
+The steps below are identical across cloud providers except for the Helm values file and the Kibana URL. Substitute `values-<cloud-provider>.yaml` and `<kibana-url>` with the values for your cloud:
+
+| Cloud Provider | Values File         | Kibana URL                     |
+| -------------- | ------------------- | ------------------------------ |
+| AWS            | `values-aws.yaml`   | `https://kibana.<your-domain>` |
+| Azure          | `values-azure.yaml` | `https://<your-domain>/kibana` |
+| GCP            | `values-gcp.yaml`   | `https://kibana.<your-domain>` |
+
+AWS and GCP expose Kibana on a dedicated subdomain; Azure exposes it as a path under your main domain.
+
+<ObservabilityKibana valuesFileName="values-<cloud-provider>.yaml" kibanaUrl="<kibana-url>" />
+<ObservabilityDashboards kibanaUrl="<kibana-url>" />
+<ObservabilityValidation
+  kibanaUrl="<kibana-url>"
+  accessingApplicationsLink="../../../../accessing-applications"
+/>
