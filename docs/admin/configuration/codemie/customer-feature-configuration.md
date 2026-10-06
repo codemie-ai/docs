@@ -39,7 +39,7 @@ Use this table to quickly find where each component appears in the UI.
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                                   |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                                       | Code interpreter option                                                             | If both disabled, entire section hidden                                                        |
-| `features:workspaceScriptBridge`          | No UI element; Settings → Administration → Customer Configuration   | Workspace scripts can call the backend with `codemie_runtime_sdk`                               | SDK calls fail with the `unavailable` error code                                    | Disabled by default; `sandbox-jobs` only. Editable at runtime                                  |
+| `features:workspaceScriptBridge`          | No UI element; Settings → Administration → Customer Configuration   | Workspace scripts can call CodeMie tools with `codemie_runtime_sdk`                             | Tool calls from scripts are not available                                           | Disabled by default; `sandbox-jobs` only. Editable at runtime                                  |
 | **BANNER, DISCLAIMER AND RELEASE NOTES**  |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `banner`                                  | All pages (top banner)                                              | Banner message with an optional link                                                            | No banner shown                                                                     | Default: disabled. Editable at runtime                                                         |
 | `chatDisclaimer`                          | Chat → below the message input                                      | Non-dismissible disclaimer text with clickable links                                            | No disclaimer shown                                                                 | Default: disabled. Editable at runtime                                                         |
@@ -402,17 +402,19 @@ components:
       description: "Enable Python code execution and data analysis capabilities"
 
   # WHERE: No UI element. Settings → Administration → Customer Configuration → Workspace script bridge
-  # ENABLED: Scripts run by the execute workspace script tool can call the backend with codemie_runtime_sdk
-  # DISABLED: SDK calls fail with the `unavailable` error code
+  # ENABLED: Scripts run by the execute workspace script tool can call CodeMie tools with codemie_runtime_sdk
+  # DISABLED: Scripts cannot make tool calls
   # NOTE: Disabled by default. Works in `sandbox-jobs` mode only. `timeoutSeconds` is the time limit for a script
-  #       run with the bridge (default 120, capped at 3600); the Job deadline becomes
+  #       run with the bridge (default 120, capped at 480); the Job deadline becomes
   #       max(CODE_EXECUTOR_EXECUTION_TIMEOUT, timeoutSeconds) + 60 seconds.
+  #       `maxParallelCalls` is how many tool calls of one run are served at once (default 5).
   #       Can also be toggled with FEATURE_WORKSPACE_SCRIPT_BRIDGE=true, which overrides `enabled`.
   #       Editable at runtime. See Code Executor Configuration.
   - id: "features:workspaceScriptBridge"
     settings:
       enabled: false
       timeoutSeconds: 120
+      maxParallelCalls: 5
       name: "Workspace Script Bridge"
       description: "Allow scripts run in the workspace sandbox to call the backend during their run"
 
@@ -1329,6 +1331,7 @@ extraObjects:
             settings:
               enabled: false
               timeoutSeconds: 120
+              maxParallelCalls: 5
               name: "Workspace Script Bridge"
               description: "Allow scripts run in the workspace sandbox to call the backend during their run"
 
