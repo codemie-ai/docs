@@ -42,6 +42,10 @@ An application-level `Mail.Read` permission grants access to **every mailbox in 
 - A service account that has **delegate access** to the target mailbox.
 - Network access from the CodeMie cluster to the Exchange server. See [On-premises Notes (EWS)](#on-premises-notes-ews).
 
+:::note
+If your Exchange server is on an internal network, ask the platform administrator to add its host name or subnet to `EXCHANGE_EWS_ALLOWED_HOSTS`. See [Microsoft Exchange (EWS)](../../../admin/configuration/codemie/api-configuration.md#microsoft-exchange-ews) in the API configuration guide. Until then, the EWS URL is rejected.
+:::
+
 ## Setting Up Integration
 
 ### 1. Navigate to Integrations
@@ -158,15 +162,24 @@ Find unread messages in the Inbox that have attachments and list their subjects.
 
 - Only `https` is supported. If you enter a bare host name, the connection is made over https.
 - URLs that contain embedded credentials are rejected.
-- Use a DNS host name, for example `https://mail.contoso.local/EWS/Exchange.asmx`. IP addresses that are private, loopback, link-local, unspecified, reserved or multicast are rejected, and so is `localhost`, with the message "The configured Exchange EWS endpoint is not usable. Check the endpoint URL." There is no allowlist to override this rule.
-- Host names are not resolved during this check, so a host name that points to a private address is accepted.
+- Example: `https://mail.contoso.local/EWS/Exchange.asmx`.
 - Autodiscover is not used. Enter the direct EWS endpoint. If the endpoint redirects the request, the toolkit stops with the message "The Exchange endpoint redirected the request. Configure the direct EWS endpoint URL."
 - The default placeholder in the form shows the Exchange Online EWS URL. For on-premises Exchange, replace it with your own server's endpoint.
+
+**Address rules.** Before connecting, the toolkit checks where the EWS URL points:
+
+- A host name is resolved (A and AAAA records), and **every** address it resolves to must pass the rules below.
+- Loopback, link-local (including `169.254.169.254`), unspecified and multicast addresses are always rejected, and so is `localhost`. The allowlist does not override this.
+- Private and other non-public addresses (RFC 1918 ranges, IPv6 ULA, CGNAT and reserved ranges) are rejected unless the platform administrator lists the host name or a matching CIDR in `EXCHANGE_EWS_ALLOWED_HOSTS`. This applies to host names and to IP addresses, so an on-premises server entered by IP address works once its address is covered by a listed CIDR.
+- Public addresses are always allowed.
+- A rejected address returns "The configured Exchange EWS endpoint is not usable. Check the endpoint URL."
+- A host name that does not resolve, or a lookup that takes longer than 5 seconds, returns "The Exchange service is unreachable. Try again later."
 
 Platform administrators must make sure that:
 
 - the EWS host name resolves from the CodeMie cluster;
-- egress and firewall rules allow HTTPS (port 443) from the CodeMie backend pods to the Exchange host.
+- egress and firewall rules allow HTTPS (port 443) from the CodeMie backend pods to the Exchange host;
+- an Exchange server on a private address is listed in `EXCHANGE_EWS_ALLOWED_HOSTS`. See [Microsoft Exchange (EWS)](../../../admin/configuration/codemie/api-configuration.md#microsoft-exchange-ews).
 
 ### TLS / CA Certificate
 
@@ -203,19 +216,19 @@ extraVolumeMounts: |
 
 The toolkit and the **Test** button show fixed messages. Error text from Microsoft is never shown.
 
-| Message                                                                                                            | Likely cause                                                                              | Fix                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| The service account credentials were rejected (NTLM)                                                               | Wrong service account username or password                                                | Check **Service Account Username** and **Service Account Password**                          |
-| "Delegate access to the mailbox is denied or the mailbox does not exist."                                          | The service account has no delegate access to the mailbox, or the mailbox is wrong        | Grant delegate access to the service account, or correct **Mailbox**                         |
-| "The configured Exchange EWS endpoint is not usable. Check the endpoint URL."                                      | The **EWS URL** is not https, contains credentials, or uses an internal IP or `localhost` | Enter the https EWS endpoint with a DNS host name. See [EWS URL](#ews-url)                   |
-| "The Exchange endpoint redirected the request. Configure the direct EWS endpoint URL."                             | The URL points to a page that redirects, not to the EWS endpoint                          | Enter the direct EWS endpoint, for example `https://mail.contoso.local/EWS/Exchange.asmx`    |
-| "The TLS certificate of the Exchange service could not be verified. Check the endpoint certificate configuration." | The server certificate does not chain to a CA the backend trusts                          | Ask a platform administrator to add the CA. See [TLS / CA Certificate](#tls--ca-certificate) |
-| Administrator consent is missing or was revoked (OAuth)                                                            | Admin consent was not granted for `Mail.Read`, or it was revoked                          | Grant admin consent for the application permission in Microsoft Entra ID                     |
-| The client secret has expired or is invalid (OAuth)                                                                | The value in **Microsoft Entra ID Application Secret** is expired or wrong                | Create a new client secret and update the integration                                        |
-| Access is denied by an Application Access Policy (OAuth)                                                           | An Exchange Application Access Policy does not include the target mailbox                 | Ask your Exchange administrator to add the mailbox to the policy                             |
-| The Exchange service is unreachable, or the request timed out                                                      | DNS, firewall or egress rules block the connection, or the server is too slow             | Check that the host resolves from the cluster and that HTTPS (443) egress is allowed         |
+| Message                                                                                                            | Likely cause                                                                                                                                                              | Fix                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The service account credentials were rejected (NTLM)                                                               | Wrong service account username or password                                                                                                                                | Check **Service Account Username** and **Service Account Password**                                                                                                         |
+| "Delegate access to the mailbox is denied or the mailbox does not exist."                                          | The service account has no delegate access to the mailbox, or the mailbox is wrong                                                                                        | Grant delegate access to the service account, or correct **Mailbox**                                                                                                        |
+| "The configured Exchange EWS endpoint is not usable. Check the endpoint URL."                                      | The **EWS URL** is not https or contains credentials, points to `localhost` or a loopback or link-local address, or resolves to a private address that is not allowlisted | Enter the https EWS endpoint. For a private address, ask the platform administrator to add the host name or subnet to `EXCHANGE_EWS_ALLOWED_HOSTS`. See [EWS URL](#ews-url) |
+| "The Exchange endpoint redirected the request. Configure the direct EWS endpoint URL."                             | The URL points to a page that redirects, not to the EWS endpoint                                                                                                          | Enter the direct EWS endpoint, for example `https://mail.contoso.local/EWS/Exchange.asmx`                                                                                   |
+| "The TLS certificate of the Exchange service could not be verified. Check the endpoint certificate configuration." | The server certificate does not chain to a CA the backend trusts                                                                                                          | Ask a platform administrator to add the CA. See [TLS / CA Certificate](#tls--ca-certificate)                                                                                |
+| Administrator consent is missing or was revoked (OAuth)                                                            | Admin consent was not granted for `Mail.Read`, or it was revoked                                                                                                          | Grant admin consent for the application permission in Microsoft Entra ID                                                                                                    |
+| The client secret has expired or is invalid (OAuth)                                                                | The value in **Microsoft Entra ID Application Secret** is expired or wrong                                                                                                | Create a new client secret and update the integration                                                                                                                       |
+| Access is denied by an Application Access Policy (OAuth)                                                           | An Exchange Application Access Policy does not include the target mailbox                                                                                                 | Ask your Exchange administrator to add the mailbox to the policy                                                                                                            |
+| "The Exchange service is unreachable. Try again later."                                                            | The host name does not resolve from the cluster, the lookup takes longer than 5 seconds, or DNS, firewall or egress rules block the connection                            | Check that the host resolves from the cluster and that HTTPS (443) egress is allowed                                                                                        |
 
-Other fixed messages cover an unknown tenant or application, a mailbox that is not found or not enabled for REST, rate limiting, temporary server errors, and folders or messages that do not exist.
+Other fixed messages cover an unknown tenant or application, a mailbox that is not found or not enabled for REST, rate limiting, a server that does not respond in time, temporary server errors, and folders or messages that do not exist.
 
 ## Limitations
 

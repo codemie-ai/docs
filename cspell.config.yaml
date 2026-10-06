@@ -60,6 +60,10 @@ words:
   - EWS
   - Autodiscover
   - sentitems
+  - CIDR
+  - CIDRs
+  - CGNAT
+  - ULA
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
