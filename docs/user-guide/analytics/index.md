@@ -148,6 +148,12 @@ The Analytics Dashboard features a powerful filtering system that allows you to 
 - **Persistent Selections**: Filter choices remain active as you navigate between dashboard sections
 - **Clear All**: Reset all filters with a single action using the "Clear all" button
 
+## Routing Analytics
+
+When enabled, the **Routing Analytics** section shows routing costs, estimated savings,
+router distribution, activity by tier, and the paths from routers to served models.
+See [Routing Analytics](./routing-analytics.md) for an explanation of the dashboard.
+
 ## AI Champions Leaderboard
 
 The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by

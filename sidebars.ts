@@ -352,7 +352,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/analytics/analytics-overview',
           },
           collapsed: true,
-          items: ['user-guide/analytics/ai-champions-leaderboard'],
+          items: [
+            'user-guide/analytics/ai-champions-leaderboard',
+            'user-guide/analytics/routing-analytics',
+          ],
         },
         {
           type: 'category',
@@ -829,6 +832,8 @@ const sidebars: SidebarsConfig = {
                   collapsed: true,
                   items: [
                     'admin/configuration/codemie/ai-models-integration/codemie-native-llm-config',
+                    'admin/configuration/codemie/ai-models-integration/switchyard-model-routing',
+                    'admin/configuration/codemie/ai-models-integration/litellm-native-auto-routing',
                     {
                       type: 'category',
                       label: 'Enable LLM Models in Cloud accounts',

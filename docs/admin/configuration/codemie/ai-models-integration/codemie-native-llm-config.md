@@ -540,6 +540,11 @@ kubectl logs -n codemie deployment/codemie-api | grep "LLMConfig initiated"
 
 For detailed parameter descriptions, model categories, features, and embedding model configuration, see the [LLM Model Configuration Reference](../api-configuration.md#llm-model-configuration).
 
+:::tip Auto-Routing Between Model Tiers
+Any model configured here can be enrolled in per-call routing to a cheaper model of the same
+family — see [Switchyard Auto-Routing](./switchyard-model-routing.md).
+:::
+
 ## Useful Resources
 
 ### Model Information and Pricing
