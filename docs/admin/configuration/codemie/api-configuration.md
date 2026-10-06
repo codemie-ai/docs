@@ -753,6 +753,38 @@ Jira and Confluence share one Atlassian OAuth 2.0 app — register it once:
 4. Note the **Client ID** and **Secret** — these are entered in the Jira and Confluence integration forms.
    :::
 
+### Microsoft Exchange (EWS)
+
+An operator setting for `codemie-api` that controls which private addresses the EWS endpoint of a
+Microsoft Exchange integration (NTLM mode) may use. It is never entered in the integration form.
+For the user-side address rules, see [EWS URL](../../../user-guide/tools_integrations/tools/ms-exchange.md#ews-url).
+
+| Parameter                    | Type   | Default | Description                                                                                                                 |
+| ---------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `EXCHANGE_EWS_ALLOWED_HOSTS` | string | `""`    | Comma-separated host names and/or CIDRs whose private addresses an EWS endpoint may use. Empty means public addresses only. |
+
+:::warning Allowlist required for on-premises Exchange
+An on-premises Exchange server on a private address is rejected with
+"The configured Exchange EWS endpoint is not usable. Check the endpoint URL." until its host name
+or a CIDR that covers its address is listed. The host name is resolved, and every address it
+resolves to must pass. Host names and CIDRs can be combined:
+
+```bash
+EXCHANGE_EWS_ALLOWED_HOSTS=mail.corp.local,10.20.0.0/16
+```
+
+Loopback, link-local (including `169.254.169.254`), unspecified and multicast addresses, and
+`localhost`, are always rejected and cannot be allowlisted.
+:::
+
+Set the variable through `extraEnv` in the Helm values of the `codemie-api` chart:
+
+```yaml
+extraEnv:
+  - name: EXCHANGE_EWS_ALLOWED_HOSTS
+    value: 'mail.corp.local,10.20.0.0/16'
+```
+
 ---
 
 ## NATS Message Broker Configuration
