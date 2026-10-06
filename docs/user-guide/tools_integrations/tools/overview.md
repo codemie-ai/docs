@@ -44,6 +44,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
 | **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
 | **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels              |
+| **[Microsoft Exchange](./ms-exchange.md)**                                   | Read-only mailbox access: folders, messages and attachment text via Microsoft Graph or on-premises EWS            |
 
 | **[MCP](./mcp/index.md)** | Model Context Protocol: add servers, configure credentials, and use MCP tools in assistants |
 
@@ -110,47 +111,48 @@ Smart selection prevents LLM context overload and maintains optimal performance 
 
 The table below shows which tools require integration setup and the integration name to use:
 
-| Tool Name                                             | Integration Required | Integration Name | Requires Project Admin |
-| ----------------------------------------------------- | :------------------: | :--------------: | :--------------------: |
-| **Project Management => Jira**                        |        ✅ Yes        |       Jira       |         ❌ No          |
-| **Git**                                               |        ✅ Yes        |       Git        |         ❌ No          |
-| **VCS => GitHub / GitLab / AzureDevOps**              |        ✅ Yes        |       Git        |         ❌ No          |
-| **Project Management => Confluence**                  |        ✅ Yes        |    Confluence    |         ❌ No          |
-| **Cloud => Kubernetes**                               |        ✅ Yes        |    Kubernetes    |         ❌ No          |
-| **Cloud => AWS**                                      |        ✅ Yes        |       AWS        |         ❌ No          |
-| **Cloud => GCP**                                      |        ✅ Yes        |       GCP        |         ❌ No          |
-| **Cloud => Azure**                                    |        ✅ Yes        |      Azure       |         ❌ No          |
-| **Access Management => Keycloak**                     |        ✅ Yes        |     Keycloak     |         ❌ No          |
-| **Cloud => AzureDevOps**                              |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Wiki**                                 |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Work Item**                            |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Test Plan**                            |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Data Management => Elasticsearch**                  |        ✅ Yes        |     Elastic      |         ❌ No          |
-| **OpenAPI**                                           |        ✅ Yes        |     OpenAPI      |         ❌ No          |
-| **Plugin**                                            |        ✅ Yes        |      Plugin      |         ❌ No          |
-| **FileSystem => Code Interpreter**                    |        ❌ No         |       ---        |         ❌ No          |
-| **FileSystem => Code Executor**                       |        ❌ No         |       ---        |         ❌ No          |
-| **FileSystem => Generate Image**                      |        ❌ No         |       ---        |         ❌ No          |
-| **Notification => Email**                             |        ✅ Yes        |      Email       |         ❌ No          |
-| **LiteLLM**                                           |        ✅ Yes        |     LiteLLM      |         ❌ No          |
-| **Report Portal**                                     |        ✅ Yes        |   ReportPortal   |         ❌ No          |
-| **Codebase Tools => Sonar**                           |        ✅ Yes        |      Sonar       |         ❌ No          |
-| **Codebase Tools => Get Repo Tree** (Experimental)    |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Search Code** (Experimental)      |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Read Files Content**              |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Read Files Content with Summary** |        ❌ No         |      --- \*      |         ❌ No          |
-| **Data Management => SQL**                            |        ✅ Yes        |       SQL        |         ❌ No          |
-| **Notification => Telegram**                          |        ✅ Yes        |     Telegram     |         ❌ No          |
-| **Webhook**                                           |        ✅ Yes        |     Webhook      |         ✅ Yes         |
-| **Quality Assurance => ZephyrCloud**                  |        ✅ Yes        |   ZephyrCloud    |         ❌ No          |
-| **Quality Assurance => ZephyrSquad**                  |        ✅ Yes        |   ZephyrSquad    |         ❌ No          |
-| **Quality Assurance => Xray**                         |        ✅ Yes        |       Xray       |         ❌ No          |
-| **Research => Google Search**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Google Places**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Wikipedia**                             |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Tavily Search**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Web Scraper**                           |        ❌ No         |       ---        |         ❌ No          |
-| **Scheduler**                                         |        ✅ Yes        |    Scheduler     |         ✅ Yes         |
+| Tool Name                                             | Integration Required |  Integration Name  | Requires Project Admin |
+| ----------------------------------------------------- | :------------------: | :----------------: | :--------------------: |
+| **Project Management => Jira**                        |        ✅ Yes        |        Jira        |         ❌ No          |
+| **Git**                                               |        ✅ Yes        |        Git         |         ❌ No          |
+| **VCS => GitHub / GitLab / AzureDevOps**              |        ✅ Yes        |        Git         |         ❌ No          |
+| **Project Management => Confluence**                  |        ✅ Yes        |     Confluence     |         ❌ No          |
+| **Cloud => Kubernetes**                               |        ✅ Yes        |     Kubernetes     |         ❌ No          |
+| **Cloud => AWS**                                      |        ✅ Yes        |        AWS         |         ❌ No          |
+| **Cloud => GCP**                                      |        ✅ Yes        |        GCP         |         ❌ No          |
+| **Cloud => Azure**                                    |        ✅ Yes        |       Azure        |         ❌ No          |
+| **Access Management => Keycloak**                     |        ✅ Yes        |      Keycloak      |         ❌ No          |
+| **Cloud => AzureDevOps**                              |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Wiki**                                 |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Work Item**                            |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Test Plan**                            |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Data Management => Elasticsearch**                  |        ✅ Yes        |      Elastic       |         ❌ No          |
+| **OpenAPI**                                           |        ✅ Yes        |      OpenAPI       |         ❌ No          |
+| **Plugin**                                            |        ✅ Yes        |       Plugin       |         ❌ No          |
+| **FileSystem => Code Interpreter**                    |        ❌ No         |        ---         |         ❌ No          |
+| **FileSystem => Code Executor**                       |        ❌ No         |        ---         |         ❌ No          |
+| **FileSystem => Generate Image**                      |        ❌ No         |        ---         |         ❌ No          |
+| **Notification => Email**                             |        ✅ Yes        |       Email        |         ❌ No          |
+| **LiteLLM**                                           |        ✅ Yes        |      LiteLLM       |         ❌ No          |
+| **Report Portal**                                     |        ✅ Yes        |    ReportPortal    |         ❌ No          |
+| **Codebase Tools => Sonar**                           |        ✅ Yes        |       Sonar        |         ❌ No          |
+| **Codebase Tools => Get Repo Tree** (Experimental)    |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Search Code** (Experimental)      |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Read Files Content**              |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Read Files Content with Summary** |        ❌ No         |       --- \*       |         ❌ No          |
+| **Data Management => SQL**                            |        ✅ Yes        |        SQL         |         ❌ No          |
+| **Notification => Telegram**                          |        ✅ Yes        |      Telegram      |         ❌ No          |
+| **Webhook**                                           |        ✅ Yes        |      Webhook       |         ✅ Yes         |
+| **Quality Assurance => ZephyrCloud**                  |        ✅ Yes        |    ZephyrCloud     |         ❌ No          |
+| **Quality Assurance => ZephyrSquad**                  |        ✅ Yes        |    ZephyrSquad     |         ❌ No          |
+| **Quality Assurance => Xray**                         |        ✅ Yes        |        Xray        |         ❌ No          |
+| **Microsoft Exchange**                                |        ✅ Yes        | Microsoft Exchange |         ❌ No          |
+| **Research => Google Search**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Google Places**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Wikipedia**                             |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Tavily Search**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Web Scraper**                           |        ❌ No         |        ---         |         ❌ No          |
+| **Scheduler**                                         |        ✅ Yes        |     Scheduler      |         ✅ Yes         |
 
 ::: note \* For these Codebase tools, Git data source should be added as additional context.
 :::
