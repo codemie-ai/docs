@@ -13,12 +13,16 @@ This page provides information about updated third-party components and configur
 
 ---
 
-### CodeMie 2.57.0 {#v2-57-0}
+{/_ TODO: replace heading and anchor with the actual release version once announced, e.g. ### CodeMie X.Y.Z {#vX-Y-Z} _/}
+
+### Upcoming Release {#upcoming}
 
 <details>
 <summary>Release details</summary>
 
-**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.0)
+{/_ TODO: replace TBD with the actual release date and add the GitHub tag link once the release is published _/}
+
+**Release Date:** TBD
 
 <h3>Third-Party Component Updates</h3>
 

@@ -1180,8 +1180,8 @@ This is independent of the chart's top-level `tolerations` value: that one appli
 - `MEDIUM`: More restrictive, blocks potentially dangerous operations
 - `HIGH` (default): Most restrictive, only allows safe operations
 
-:::note Migration note (2.57.0)
-The semantics of `CODE_EXECUTOR_SECURITY_THRESHOLD` were corrected in 2.57.0. Previously the values behaved inverted — `LOW` enforced the strictest policy and `HIGH` the most permissive — contradicting the parameter name.
+:::note Migration note
+The semantics of `CODE_EXECUTOR_SECURITY_THRESHOLD` were corrected in a recent release. Previously the values behaved inverted — `LOW` enforced the strictest policy and `HIGH` the most permissive — contradicting the parameter name.
 
 The default was also changed from `LOW` to `HIGH`. Under the corrected semantics, `HIGH` enforces exactly what `LOW` enforced before, so deployments that do not set `CODE_EXECUTOR_SECURITY_THRESHOLD` explicitly keep their current enforcement level unchanged.
 
