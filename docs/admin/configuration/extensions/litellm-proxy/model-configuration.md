@@ -892,7 +892,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.5-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.5
@@ -915,7 +915,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.6-luna-2026-07-09-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.6-luna
@@ -961,7 +961,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.6-terra-2026-07-09-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.6-terra
