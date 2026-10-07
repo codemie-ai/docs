@@ -1,0 +1,101 @@
+---
+id: a2a-building-agents
+title: Building A2A-Compatible Agents
+sidebar_label: Building A2A Agents
+sidebar_position: 2
+pagination_prev: user-guide/tools_integrations/tools/a2a
+pagination_next: null
+---
+
+# Building A2A-Compatible Agents
+
+This guide explains how to wrap an existing agent so that CodeMie (or any A2A 1.0 client) can call it. It covers the request-to-response mapping, the Agent Card, and the split between agent logic and protocol handling.
+
+Worked examples reference the demo agents in [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) (`python/agents/text-insights-agent` and `python/agents/howto-guide-agent`). Both use the `a2a-sdk` 1.x and implement the patterns described here.
+
+## Core Pattern: Separate Agent Logic from Protocol
+
+The recommended structure keeps agent logic entirely free of A2A types. All protocol work — receiving the request, dispatching the agent, emitting the result — lives in an _executor_ class. The agent itself knows nothing about A2A.
+
+```
+__main__.py       ← executor: receives A2A request, calls agent, emits events
+agent.py          ← agent logic: no A2A types, no SDK imports
+```
+
+This separation means the same agent logic can be tested independently and adapted to other protocols without modification.
+
+## Request: A2A Message to Agent Input
+
+An incoming A2A request carries a `message` with one or more parts:
+
+- **Text input.** Join the `text` fields from the message's parts and pass the result to the agent. The SDK exposes this as `context.get_user_input()`.
+- **`contextId`.** CodeMie sets this to the chat conversation ID, so all messages in one conversation share it. Use it as a session or thread key if the agent maintains conversation memory. Stateless agents can ignore it.
+- **`taskId`.** Present when the client continues an existing task. Stateless agents can ignore it.
+
+CodeMie sends text parts only. Its own A2A endpoint also accepts text only, so a wrapper has no need to handle other part types for CodeMie calls.
+
+## Response: Agent Result to A2A
+
+### Non-streaming: return a Message
+
+When the answer is short and ready in one step, enqueue a single `message` event. No task is created.
+
+`text-insights-agent` uses this pattern: the executor calls the agent, formats the result as text, and enqueues a `message` with `role: ROLE_AGENT`. See `text-insights-agent/__main__.py` for the implementation.
+
+The Agent Card for a non-streaming agent declares `capabilities.streaming: false`. CodeMie calls it with `SendMessage`.
+
+### Streaming: return a Task and events
+
+For multi-part or long-running work, enqueue events in this order:
+
+1. A task with state `TASK_STATE_SUBMITTED`
+2. One `artifactUpdate` per result part (the answer text)
+3. A final `statusUpdate` carrying a terminal state (`TASK_STATE_COMPLETED`, `TASK_STATE_FAILED`, etc.)
+
+`howto-guide-agent` uses this pattern. See `howto-guide-agent/__main__.py` for the executor code and SDK helper names.
+
+Key rules for streaming:
+
+- **The stream must end in a terminal state.** There is no `final` flag in A2A 1.0; the terminal state is the signal that the stream is complete. A stream that closes without one leaves the client without a verdict.
+- **Artifacts carry the answer; status events carry progress.** Put answer text in `artifactUpdate` parts. Use `statusUpdate` for state transitions and short status messages. CodeMie displays artifact text as the chat response, one chunk per artifact event.
+- **Map errors to a failed task** rather than raising an exception. Enqueue a `statusUpdate` with `TASK_STATE_FAILED` and include the error text.
+- **Declare streaming on the card.** Set `capabilities.streaming: true`. CodeMie then calls `SendStreamingMessage`.
+
+### Message or Task?
+
+| Return type        | When to use                                                           |
+| ------------------ | --------------------------------------------------------------------- |
+| `Message`          | Short answer, no need to track progress or fetch it later             |
+| `Task` + artifacts | Work takes time, has multiple parts, or the client may poll `GetTask` |
+
+## The Agent Card
+
+The Agent Card is served at `/.well-known/agent-card.json` and is how CodeMie discovers and registers the agent.
+
+Fields that matter to CodeMie:
+
+- **`supportedInterfaces[].url`** — the JSON-RPC endpoint CodeMie will send requests to. This address must be reachable **from the CodeMie process**. Build it from a hostname the CodeMie container resolves — never `0.0.0.0`. Pass `--host <container-name>` when running the agent on a Docker network.
+- **`capabilities.streaming`** — `true` or `false`; determines which method CodeMie uses.
+- **Input/output modes** — CodeMie expects `text/plain`.
+- **`skills`** — describes what the agent can do (shown in the UI after registration).
+
+See the demo agents' `__main__.py` files for how to build the card with `AgentCard`, `AgentInterface`, `AgentCapabilities`, and `AgentSkill` from the SDK.
+
+## Cancellation
+
+CodeMie can send `CancelTask`. An agent that does not support cancellation should raise the SDK's unsupported-operation error; the client receives a protocol error (`-32004`) instead of a hang. Both demo agents follow this pattern.
+
+## Checklist
+
+- [ ] Agent logic has no A2A types — all protocol work is in an executor class
+- [ ] Agent Card served at `/.well-known/agent-card.json` with a reachable JSON-RPC `supportedInterfaces[].url`
+- [ ] `A2A-Version: 1.0` enforced on incoming requests (the SDK handles this automatically)
+- [ ] Streaming agents: task first, artifacts next, one terminal status last
+- [ ] Errors produce a failed task or a protocol error — never a silent empty response
+- [ ] `capabilities.streaming` on the card matches the executor's actual behavior
+
+## Learn More
+
+- **[A2A Protocol](./a2a.mdx)** — setup, authentication, supported operations, and known limitations
+- **[ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents)** — complete source for both demo agents
+- **[A2A Protocol Specification](https://google.github.io/A2A/#/documentation)** — official protocol reference

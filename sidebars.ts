@@ -163,7 +163,16 @@ const sidebars: SidebarsConfig = {
               },
               collapsed: true,
               items: [
-                'user-guide/tools_integrations/tools/a2a',
+                {
+                  type: 'category',
+                  label: 'A2A Protocol',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/tools_integrations/tools/a2a',
+                  },
+                  collapsed: true,
+                  items: ['user-guide/tools_integrations/tools/a2a-building-agents'],
+                },
                 'user-guide/tools_integrations/tools/keycloak',
                 'user-guide/tools_integrations/tools/sonarqube',
                 'user-guide/tools_integrations/tools/sql',
