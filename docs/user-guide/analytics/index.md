@@ -11,6 +11,12 @@ pagination_next: null
 
 The Analytics Dashboard provides comprehensive monitoring and management of LLM usage, costs, and activity metrics across the CodeMie platform. Access real-time insights into token consumption, spending patterns, and system utilization with flexible filtering and dual visualization modes.
 
+The Analytics Dashboard is available to every authenticated user; it is not gated behind an
+Enterprise Edition license. On deployments running without Elasticsearch or ClickHouse (for
+example, [CodeMie Standalone](../../admin/deployment/standalone/overview.md) without the
+`standalone-analytics` profile), the dashboard loads normally and shows an empty state instead
+of an error.
+
 ## Personal Spending Widget
 
 The Personal Spending widget gives you a real-time view of your LLM budget consumption
