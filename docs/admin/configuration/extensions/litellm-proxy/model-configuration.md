@@ -358,6 +358,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8                |
 | [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5                |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5               |
+| [`claude-haiku-5-5`](#claude-haiku-55)          | Claude Haiku 5.5               |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings        |
 | [`grok-4.6`](#grok-46)                          | Grok 4.6                       |
 | [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3             |
@@ -643,6 +644,26 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
     id: claude-4-5-haiku-eu-central-1
     base_model: eu.anthropic.claude-haiku-4-5-20251001-v1:0
     label: "Bedrock Claude Haiku 4.5"
+```
+
+</details>
+
+#### Claude Haiku 5.5
+
+<details>
+<summary><strong>Claude Haiku 5.5</strong></summary>
+
+```yaml
+# EU Region
+- model_name: claude-haiku-5-5
+  litellm_params:
+    model: bedrock/eu.anthropic.claude-haiku-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-haiku-5-5-eu-central-1
+    base_model: eu.anthropic.claude-haiku-5-5
+    label: "Bedrock Claude Haiku 5.5"
 ```
 
 </details>
