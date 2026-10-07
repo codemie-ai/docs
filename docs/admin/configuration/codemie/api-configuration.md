@@ -1156,7 +1156,7 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | `CODE_EXECUTOR_RUN_AS_USER`               | integer | `1001`                            | Unix user ID for pod security context (non-root execution)                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `CODE_EXECUTOR_RUN_AS_GROUP`              | integer | `1001`                            | Unix group ID for pod security context                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `CODE_EXECUTOR_FS_GROUP`                  | integer | `1001`                            | Filesystem group ID for pod volume permissions                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `CODE_EXECUTOR_SECURITY_THRESHOLD`        | string  | `"LOW"`                           | Required security policy threshold: `SAFE`, `LOW`, `MEDIUM`, `HIGH`                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `CODE_EXECUTOR_SECURITY_THRESHOLD`        | string  | `"HIGH"`                          | Security policy threshold controlling which operations are permitted in the sandbox: `SAFE` (most permissive), `LOW`, `MEDIUM`, `HIGH` (most restrictive). Higher values block more operations. See Security Considerations below.                                                                                                                                                                                                                                                                                     |
 | `CODE_EXECUTOR_YAML_POLICY_PATH`          | string  | `""`                              | Path to custom YAML security policy file (optional, overrides default policy)                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `CODE_EXECUTOR_VERBOSE`                   | boolean | `false`                           | Enable verbose logging for executor debugging                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `CODE_EXECUTOR_KEEP_TEMPLATE`             | boolean | `true`                            | Persist pod template after execution for performance optimization                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -1173,13 +1173,21 @@ Example: to dedicate a kata-containers node pool to code execution, taint the po
 
 This is independent of the chart's top-level `tolerations` value: that one applies only to the CodeMie API Deployment/Rollout pod and has no effect on Code Executor Job pods, which are created dynamically at runtime and read their own tolerations from `CODE_EXECUTOR_TOLERATIONS`.
 
-**Security Threshold:** The security policy controls what operations are allowed:
+**Security Threshold:** `CODE_EXECUTOR_SECURITY_THRESHOLD` directly represents policy strictness — higher values enforce stricter restrictions:
 
-- `SAFE` (0): Most permissive, blocks almost nothing
-- `LOW` (1): Allows common operations like HTTP requests (recommended default)
-- `MEDIUM` (2): More restrictive, blocks potentially dangerous operations
-- `HIGH` (3): Very restrictive, only allows safe operations
-  :::
+- `SAFE`: Most permissive, blocks almost nothing
+- `LOW`: Allows common operations such as HTTP requests
+- `MEDIUM`: More restrictive, blocks potentially dangerous operations
+- `HIGH` (default): Most restrictive, only allows safe operations
+
+:::note Migration note (2.57.0)
+The semantics of `CODE_EXECUTOR_SECURITY_THRESHOLD` were corrected in 2.57.0. Previously the values behaved inverted — `LOW` enforced the strictest policy and `HIGH` the most permissive — contradicting the parameter name.
+
+The default was also changed from `LOW` to `HIGH`. Under the corrected semantics, `HIGH` enforces exactly what `LOW` enforced before, so deployments that do not set `CODE_EXECUTOR_SECURITY_THRESHOLD` explicitly keep their current enforcement level unchanged.
+
+**Action required:** Any deployment that explicitly sets `CODE_EXECUTOR_SECURITY_THRESHOLD=LOW` to obtain strict enforcement must change it to `HIGH`.
+:::
+:::
 
 ### File Datasource Multiprocessing
 

@@ -13,6 +13,33 @@ This page provides information about updated third-party components and configur
 
 ---
 
+### CodeMie 2.57.0 {#v2-57-0}
+
+<details>
+<summary>Release details</summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **Code Executor** — `CODE_EXECUTOR_SECURITY_THRESHOLD` semantics corrected — only applies if the Code Executor tool is enabled:
+
+   The values of `CODE_EXECUTOR_SECURITY_THRESHOLD` previously behaved inverted (`LOW` enforced the strictest policy, `HIGH` the most permissive). The semantics now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive.
+
+   The default value has also changed from `LOW` to `HIGH`. Under the corrected semantics, `HIGH` enforces exactly what `LOW` enforced before, so deployments that do not set this variable explicitly keep their current enforcement level unchanged.
+
+   :::warning
+   Any deployment that explicitly sets `CODE_EXECUTOR_SECURITY_THRESHOLD=LOW` to obtain strict enforcement must change it to `HIGH`.
+   :::
+
+</details>
+
+---
+
 ### CodeMie 2.56.0 {#v2-56-0}
 
 <details>
