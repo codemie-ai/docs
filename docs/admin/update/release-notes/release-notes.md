@@ -26,7 +26,13 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **LiteLLM Bedrock route for Claude Haiku 4.5**: updated `litellm_params.model` from `bedrock/converse/<model_id>` to `bedrock/<model_id>`. When LiteLLM WebSearch interception is configured, searches on Haiku 4.5 executed successfully under both routes, but the Converse adapter did not return the native Anthropic search metadata blocks expected by Claude Code (`codemie-code`), displaying `WebSearch 0`. Switching to native `bedrock/` delivers the proper `server_tool_use` and `web_search_tool_result` structures, so search events are accurately reflected. CodeMie UI and workflows remain unaffected.
+
+   :::note
+   LiteLLM WebSearch interception is an optional proxy feature that requires [separate setup](https://docs.litellm.ai/docs/integrations/websearch_interception).
+   :::
+
+   See [LiteLLM Model Configuration](../../configuration/extensions/litellm-proxy/model-configuration.md#claude-haiku-45) for details.
 
 </details>
 

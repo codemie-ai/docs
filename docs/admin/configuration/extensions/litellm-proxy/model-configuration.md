@@ -625,7 +625,7 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
 # US Region
 - model_name: claude-haiku-4-5-20251001
   litellm_params:
-    model: bedrock/converse/us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model: bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: us-west-2
   model_info:
@@ -636,7 +636,7 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
 # EU Region
 - model_name: claude-haiku-4-5-20251001
   litellm_params:
-    model: bedrock/converse/eu.anthropic.claude-haiku-4-5-20251001-v1:0
+    model: bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: eu-central-1
   model_info:
