@@ -407,6 +407,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3-flash`](#gemini-3-flash)                | Gemini 3 Flash                         |
 | [`gemini-3.1-pro`](#gemini-31-pro)                 | Gemini 3.1 Pro                         |
 | [`gemini-3.1-flash-image`](#gemini-31-flash-image) | Gemini 3.1 Flash Image (Nano Banana 2) |
+| [`gemini-nano-banana-2.1`](#gemini-nano-banana-21) | Gemini Nano Banana 2.1                 |
 | [`gemini-3.5-flash`](#gemini-35-flash)             | Gemini 3.5 Flash                       |
 | [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
@@ -1794,6 +1795,26 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.1-flash-image-global
     base_model: gemini-3.1-flash-image
     label: "Gemini 3.1 Flash Image"
+    forbidden_for_web: true
+    supports_image_generation: true
+```
+
+</details>
+
+#### Gemini Nano Banana 2.1
+
+<details>
+<summary><strong>Gemini Nano Banana 2.1</strong></summary>
+
+```yaml
+- model_name: gemini-nano-banana-2.1
+  litellm_params:
+    model: vertex_ai/gemini-nano-banana-2.1
+    vertex_location: "global"
+  model_info:
+    id: gemini-nano-banana-2.1-global
+    base_model: vertex_ai/gemini-nano-banana-2.1
+    label: "Gemini Nano Banana 2.1"
     forbidden_for_web: true
     supports_image_generation: true
 ```
