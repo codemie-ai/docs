@@ -3,7 +3,7 @@ id: core-components
 sidebar_position: 6
 title: Core Components
 sidebar_label: Core Components
-pagination_prev: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/manual-deployment-overview
+pagination_prev: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/security-and-identity
 pagination_next: admin/deployment/aws/kubernetes/components-deployment/manual-deployment/observability
 ---
 
