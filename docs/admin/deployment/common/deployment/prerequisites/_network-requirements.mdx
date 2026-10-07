@@ -1,4 +1,4 @@
-### Outbound Connectivity
+**Outbound Connectivity**
 
 Your {props.clusterName} cluster's {props.networkSecurityName} must allow **outbound access** to the following endpoints:
 
@@ -13,7 +13,7 @@ Your {props.clusterName} cluster's {props.networkSecurityName} must allow **outb
 AI/Run CodeMie container images are hosted on Google Container Registry (GCR). You will need **gcloud CLI** installed on your deployment machine to authenticate and pull helm charts from GCR.
 :::
 
-### Inbound Connectivity on Corporate Services
+**Inbound Connectivity on Corporate Services**
 
 If you plan to integrate AI/Run CodeMie with external corporate services (e.g., GitLab, GitHub, internal APIs):
 
@@ -24,7 +24,7 @@ If you plan to integrate AI/Run CodeMie with external corporate services (e.g., 
 The AI/Run CodeMie {props.natGatewayName} public IP address will only be available **after infrastructure deployment**. You will need to configure external service firewalls after the installation is complete.
 :::
 
-### Access Control Network List
+**Access Control Network List**
 
 To restrict access to AI/Run CodeMie and prevent unauthorized access from the public internet, prepare a list of allowed networks:
 

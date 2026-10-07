@@ -374,7 +374,7 @@ After provisioning the infrastructure manually, the application is deployed usin
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS">
 
-### Deployment Phases (AWS)
+**Deployment Phases (AWS)**
 
 | Phase                                | Description                                | Directory                              |
 | ------------------------------------ | ------------------------------------------ | -------------------------------------- |
@@ -382,7 +382,7 @@ After provisioning the infrastructure manually, the application is deployed usin
 | **Phase 2: State Backend**           | Creates S3 bucket for Terraform state      | `terraform/aws/remote-backend/`        |
 | **Phase 3: Platform Infrastructure** | Provisions VPC, EC2, S3, KMS, ALB          | `terraform/aws/platform/`              |
 
-### Phase 1: IAM Deployer Role
+**Phase 1: IAM Deployer Role**
 
 :::info One-Time Setup
 This phase only needs to run once per AWS account.
@@ -409,7 +409,7 @@ terraform apply tfplan
 terraform output deployer_iam_role_arn
 ```
 
-### Phase 2: Terraform State Backend
+**Phase 2: Terraform State Backend**
 
 ```bash
 cd terraform/aws/remote-backend/
@@ -421,7 +421,7 @@ terraform plan -out=tfplan \
 terraform apply tfplan
 ```
 
-### Phase 3: Platform Infrastructure
+**Phase 3: Platform Infrastructure**
 
 ```bash
 cd terraform/aws/platform/
@@ -479,7 +479,7 @@ After completing infrastructure provisioning, proceed to [Application Provisioni
 </TabItem>
 <TabItem value="azure" label="Azure">
 
-### Deployment Phases (Azure)
+**Deployment Phases (Azure)**
 
 | Phase                                | Description                                         | Directory                         |
 | ------------------------------------ | --------------------------------------------------- | --------------------------------- |
@@ -487,7 +487,7 @@ After completing infrastructure provisioning, proceed to [Application Provisioni
 | **Phase 2: Platform Infrastructure** | Provisions VM, Storage Account, Key Vault, DNS, NSG | `terraform/azure/platform/`       |
 | **Phase 3: AI Models** (optional)    | Provisions Azure OpenAI cognitive accounts          | `terraform/azure/ai-models/`      |
 
-### Phase 1: Terraform State Backend
+**Phase 1: Terraform State Backend**
 
 ```bash
 cd terraform/azure/remote-backend/
@@ -509,7 +509,7 @@ terraform output storage_account_name
 terraform output container_name
 ```
 
-### Phase 2: Platform Infrastructure
+**Phase 2: Platform Infrastructure**
 
 ```bash
 cd terraform/azure/platform/
@@ -548,7 +548,7 @@ terraform output resource_group_name
 terraform output vm_resource_id
 ```
 
-### Phase 3: AI Models (Optional)
+**Phase 3: AI Models (Optional)**
 
 Skip this phase if `DEPLOY_AI_MODELS="false"` or you have an existing Azure OpenAI endpoint.
 
@@ -580,14 +580,14 @@ After completing infrastructure provisioning, proceed to [Application Provisioni
 </TabItem>
 <TabItem value="gcp" label="GCP">
 
-### Deployment Phases (GCP)
+**Deployment Phases (GCP)**
 
 | Phase                                | Description                                             | Directory                       |
 | ------------------------------------ | ------------------------------------------------------- | ------------------------------- |
 | **Phase 1: State Backend**           | Creates GCS bucket for Terraform state                  | `terraform/gcp/remote-backend/` |
 | **Phase 2: Platform Infrastructure** | Provisions VM, GCS bucket, Cloud KMS key, DNS, firewall | `terraform/gcp/platform/`       |
 
-### Phase 1: Terraform State Backend
+**Phase 1: Terraform State Backend**
 
 ```bash
 cd terraform/gcp/remote-backend/
@@ -608,7 +608,7 @@ terraform apply tfplan
 # Note the GCS bucket name from outputs
 ```
 
-### Phase 2: Platform Infrastructure
+**Phase 2: Platform Infrastructure**
 
 ```bash
 cd terraform/gcp/platform/

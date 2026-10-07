@@ -36,7 +36,7 @@ Ensure all requirements from the cloud-specific Prerequisites page are met befor
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS">
 
-### Verification Checklist
+**Verification Checklist**
 
 - [ ] **AWS Access**: Programmatic access with IAM permissions
 - [ ] **Tools Installed**: Terraform 1.13.5+, AWS CLI, kubectl, Helm, gcloud CLI, Docker
@@ -52,7 +52,7 @@ You must have configured AWS credentials before running the deployment. Verify w
   </TabItem>
   <TabItem value="azure" label="Azure">
 
-### Verification Checklist
+**Verification Checklist**
 
 - [ ] **Azure Access**: Contributor role with Entra ID App Registration access
 - [ ] **Tools Installed**: Terraform 1.13.5+, Azure CLI, kubectl, Helm, gcloud CLI, Docker
@@ -68,7 +68,7 @@ You must be authenticated to Azure CLI before running the deployment script. Run
   </TabItem>
   <TabItem value="gcp" label="GCP">
 
-### Verification Checklist
+**Verification Checklist**
 
 - [ ] **GCP Access**: Project Owner or Editor role with IAM permissions
 - [ ] **Required APIs Enabled**: Cloud IAP, Service Networking, Secret Manager, Vertex AI APIs
@@ -93,7 +93,7 @@ Scripted deployment runs all Terraform phases automatically in the correct order
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS">
 
-### Deployment Phases (AWS)
+**Deployment Phases (AWS)**
 
 | Phase                                | Description                                                      | Required                              |
 | ------------------------------------ | ---------------------------------------------------------------- | ------------------------------------- |
@@ -101,7 +101,7 @@ Scripted deployment runs all Terraform phases automatically in the correct order
 | **Phase 2: State Backend**           | Creates S3 bucket with native locking for Terraform state files  | Yes                                   |
 | **Phase 3: Platform Infrastructure** | Deploys EKS, networking, storage, databases, security components | Yes                                   |
 
-### Phase 1: Deploy IAM Deployer Role
+**Phase 1: Deploy IAM Deployer Role**
 
 The IAM deployer role provides necessary permissions for all subsequent infrastructure operations. **Skip this phase if the role already exists.**
 
@@ -138,7 +138,7 @@ terraform plan
 terraform apply
 ```
 
-### Phase 2 & 3: Deploy Platform Infrastructure
+**Phase 2 & 3: Deploy Platform Infrastructure**
 
 1. Clone the platform repository:
 
@@ -215,7 +215,7 @@ Ensure that incoming traffic to the Security Group on LoadBalancers is allowed f
 
   <TabItem value="azure" label="Azure">
 
-### Deployment Phases (Azure)
+**Deployment Phases (Azure)**
 
 | Phase                                | Description                                                      | Required |
 | ------------------------------------ | ---------------------------------------------------------------- | -------- |
@@ -227,14 +227,14 @@ Ensure that incoming traffic to the Security Group on LoadBalancers is allowed f
 Set `DEPLOY_AI_MODELS="false"` to skip Phase 3 if using external AI providers.
 :::
 
-### Step 1: Clone Repository
+**Step 1: Clone Repository**
 
 ```bash
 git clone git@gitbud.epam.com:epm-cdme/codemie-terraform-azure.git
 cd codemie-terraform-azure
 ```
 
-### Step 2: Configure Deployment
+**Step 2: Configure Deployment**
 
 Edit `deployment.conf`:
 
@@ -267,7 +267,7 @@ TF_VAR_litellm_db_config='{"enabled":false}'
 When `DEPLOY_AI_MODELS="true"`, configure the `TF_VAR_cognitive_regions` variable to specify which Azure OpenAI models to deploy, in which regions, and with what capacity. See `variables.tf` in the `platform/` directory for the full variable schema.
 :::
 
-### Step 3: Run Deployment Script
+**Step 3: Run Deployment Script**
 
 ```bash
 bash ./azure-terraform.sh
@@ -285,21 +285,21 @@ The script automatically executes:
   </TabItem>
   <TabItem value="gcp" label="GCP">
 
-### Deployment Phases (GCP)
+**Deployment Phases (GCP)**
 
 | Phase                                | Description                                                                        | Required |
 | ------------------------------------ | ---------------------------------------------------------------------------------- | -------- |
 | **Phase 1: State Backend**           | Creates GCS bucket for Terraform state files                                       | Yes      |
 | **Phase 2: Platform Infrastructure** | Deploys GKE, networking, storage, databases, security components, and Bastion Host | Yes      |
 
-### Step 1: Clone Platform Repository
+**Step 1: Clone Platform Repository**
 
 ```bash
 git clone https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform.git
 cd codemie-terraform-gcp-platform
 ```
 
-### Step 2: Configure Deployment
+**Step 2: Configure Deployment**
 
 Edit `deployment.conf`:
 
@@ -334,7 +334,7 @@ TF_VAR_codemie_cache_config='{"enabled":false}'
 For all available configuration options, refer to the `platform/terraform.tfvars.example` file in the repository.
 :::
 
-### Step 3: Run Deployment Script
+**Step 3: Run Deployment Script**
 
 ```bash
 bash ./gcp-terraform.sh
@@ -480,7 +480,7 @@ Review deployment logs:
 cat logs/codemie_azure_deployment_YYYY-MM-DD-HHMMSS.log
 ```
 
-### Access Jumpbox VM via Bastion
+**Access Jumpbox VM via Bastion**
 
 After deployment, access the Jumpbox VM to configure AKS access:
 
@@ -544,7 +544,7 @@ Use manual deployment when you need fine-grained control over each deployment ph
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS">
 
-### Phase 1: IAM Deployer Role
+**Phase 1: IAM Deployer Role**
 
 The `DeployerRole` AWS IAM role will be used for all subsequent infrastructure deployments.
 
@@ -571,7 +571,7 @@ terraform plan
 terraform apply
 ```
 
-### Phase 2: Terraform State Backend
+**Phase 2: Terraform State Backend**
 
 1. Clone the remote backend repository:
 
@@ -599,7 +599,7 @@ export BACKEND_BUCKET=$(terraform output -raw terraform_states_s3_bucket_name)
 export BACKEND_KMS_KEY_ARN=$(terraform output -raw terraform_state_kms_key_arn)
 ```
 
-### Phase 3: Platform Infrastructure
+**Phase 3: Platform Infrastructure**
 
 1. Clone the platform repository:
 
@@ -649,7 +649,7 @@ terraform output
   </TabItem>
   <TabItem value="azure" label="Azure">
 
-### Phase 1: Terraform State Backend
+**Phase 1: Terraform State Backend**
 
 1. Clone the repository:
 
@@ -681,7 +681,7 @@ export BC_STORAGE_ACCOUNT_NAME=$(terraform output -raw terraform_state_storage_a
 export STORAGE_ACCOUNT_KEY=$(terraform output -raw terraform_state_storage_account_key)
 ```
 
-### Phase 2: Platform Infrastructure
+**Phase 2: Platform Infrastructure**
 
 1. Navigate to the platform directory:
 
@@ -728,7 +728,7 @@ terraform output
 export AZURE_RESOURCE_GROUP=$(terraform output -raw codemie_resource_group)
 ```
 
-### Phase 3: AI Models (Optional)
+**Phase 3: AI Models (Optional)**
 
 Skip this phase if you're using external AI providers or already have Azure OpenAI services deployed.
 
@@ -784,7 +784,7 @@ terraform apply tfplan
   </TabItem>
   <TabItem value="gcp" label="GCP">
 
-### Phase 1: Terraform State Backend
+**Phase 1: Terraform State Backend**
 
 1. Clone the platform repository:
 
@@ -811,7 +811,7 @@ terraform apply tfplan
 export BACKEND_BUCKET=$(terraform output -raw terraform_states_storage_bucket_name)
 ```
 
-### Phase 2: Platform Infrastructure
+**Phase 2: Platform Infrastructure**
 
 1. Navigate to the platform directory:
 
@@ -844,7 +844,7 @@ terraform apply tfplan
 terraform output
 ```
 
-### Phase 3: Configure Bastion Host Access (Optional)
+#### Phase 3: Configure Bastion Host Access (Optional)
 
 :::warning Private Cluster Only
 This section is only required if you deployed a **completely private GKE cluster** with private DNS. For public clusters or clusters with authorized networks configured, you can access the GKE API and CodeMie application directly from your workstation.
@@ -852,14 +852,14 @@ This section is only required if you deployed a **completely private GKE cluster
 
 The Bastion Host is a secure jump server that provides access to your private GKE cluster and applications running inside the VPC. This VM enables both command-line management (SSH) and browser-based access (RDP) to internal resources.
 
-#### Connection Methods Overview
+**Connection Methods Overview**
 
 | Connection Type | Use Case                                                      | Access Method         |
 | --------------- | ------------------------------------------------------------- | --------------------- |
 | **SSH**         | Deploy and manage Kubernetes workloads using kubectl and Helm | Terminal/SSH client   |
 | **RDP**         | Access web UIs exposed via private DNS (Kibana, Keycloak)     | Remote Desktop client |
 
-#### Option 1: SSH Connection for Cluster Management
+**Option 1: SSH Connection for Cluster Management**
 
 Use SSH to connect to the Bastion Host for deploying and managing Kubernetes resources.
 
@@ -880,7 +880,7 @@ gcloud compute ssh bastion-vm --project=your-project --zone=europe-west3-a
 Ensure your user account is listed in the `bastion_members` variable from Phase 2 configuration. Only authorized users can SSH into the Bastion Host.
 :::
 
-##### Step 2: Set user password (Required for RDP)
+**Step 2: Set user password (Required for RDP)**
 
 After connecting via SSH, set a password for the `ubuntu` user for later RDP access:
 
@@ -933,7 +933,7 @@ cd ~/codemie-helm-charts
 
 You're now ready to proceed with [Platform Deployment](../platform-deployment/index.mdx).
 
-#### Option 2: RDP Connection for Web UI Access
+**Option 2: RDP Connection for Web UI Access**
 
 Use RDP to access application web interfaces that are only available via private DNS (such as Kibana, Keycloak Admin Console).
 
@@ -968,9 +968,9 @@ gcloud compute start-iap-tunnel bastion-vm 3389 \
 | **Username** | `ubuntu`                   |
 | **Password** | Password set in SSH Step 2 |
 
-#### Tips for Using the Bastion Host
+**Tips for Using the Bastion Host**
 
-##### Pasting Commands into Terminal
+**Pasting Commands into Terminal**
 
 Use the correct keyboard shortcut for pasting in Linux terminal:
 
@@ -980,7 +980,7 @@ Shift + Ctrl + V
 
 (Regular `Ctrl + V` won't work in most Linux terminal applications)
 
-##### File Transfer to/from Bastion
+**File Transfer to/from Bastion**
 
 Transfer files between your local machine and Bastion using `gcloud scp`:
 

@@ -80,7 +80,7 @@ CodeMie On VM runs on a single EC2 instance with supporting AWS services. Terraf
   </TabItem>
 </Tabs>
 
-### AWS Resources
+**AWS Resources**
 
 | Resource                 | Purpose                                                               |
 | ------------------------ | --------------------------------------------------------------------- |
@@ -96,7 +96,7 @@ CodeMie On VM runs on a single EC2 instance with supporting AWS services. Terraf
 | **Security Groups**      | Controls inbound traffic to ALB and EC2                               |
 | **IAM Instance Profile** | Grants EC2 access to Bedrock, S3, KMS, SSM                            |
 
-### Network Modes
+**Network Modes**
 
 | Mode                    | Configuration                               | Access                            |
 | ----------------------- | ------------------------------------------- | --------------------------------- |
@@ -111,7 +111,7 @@ CodeMie On VM runs on a single EC2 instance with supporting AWS services. Terraf
 
 CodeMie On VM runs on a single Azure VM with supporting Azure services. Terraform provisions the following resources:
 
-### Azure Resources
+**Azure Resources**
 
 | Resource                       | Purpose                                                              |
 | ------------------------------ | -------------------------------------------------------------------- |
@@ -123,7 +123,7 @@ CodeMie On VM runs on a single Azure VM with supporting Azure services. Terrafor
 | **Private DNS Zone**           | Custom domain resolution (when `TF_VAR_platform_domain_name` is set) |
 | **Azure Bastion**              | Secure SSH access to the VM without exposing a public IP             |
 
-### Network Modes
+**Network Modes**
 
 | Mode                     | Configuration                                   | Access                                    |
 | ------------------------ | ----------------------------------------------- | ----------------------------------------- |
@@ -137,7 +137,7 @@ CodeMie On VM runs on a single Azure VM with supporting Azure services. Terrafor
 
 CodeMie On VM runs on a single GCE VM with supporting GCP services. Terraform provisions the following resources:
 
-### GCP Resources
+**GCP Resources**
 
 | Resource                       | Purpose                                                              |
 | ------------------------------ | -------------------------------------------------------------------- |
@@ -150,7 +150,7 @@ CodeMie On VM runs on a single GCE VM with supporting GCP services. Terraform pr
 | **IAP (Identity-Aware Proxy)** | Secure SSH access to the VM without exposing a public IP             |
 | **Secret Manager**             | Stores the SSH private key for VM access                             |
 
-### Network Modes
+**Network Modes**
 
 | Mode                     | Configuration                                    | Access                                          |
 | ------------------------ | ------------------------------------------------ | ----------------------------------------------- |

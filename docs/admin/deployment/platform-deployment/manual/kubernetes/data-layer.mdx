@@ -23,6 +23,8 @@ Elasticsearch installation is identical across cloud providers except for the He
 
 <DataLayerElasticsearch valuesFileName="values-<cloud-provider>.yaml" />
 
+## PostgreSQL Configuration
+
 PostgreSQL setup differs on AWS, which uses IAM database authentication instead of a static password. Azure and GCP both connect with a static password and only differ in their managed service name and host.
 
 <Tabs groupId="cloud-provider">

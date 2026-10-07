@@ -1,18 +1,16 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-## Kubernetes Cluster Requirements
-
 Requirements for **{props.clusterName}** cluster deployment.
 
-### Administrative Permissions
+**Administrative Permissions**
 
 The deployment user must have:
 
 - **{props.clusterName} Admin permissions** with the ability to create and manage namespaces
 - Access to configure cluster-level resources (if deploying to an existing cluster)
 
-### Admission Control and Resource Requirements
+**Admission Control and Resource Requirements**
 
 If deploying to an **existing {props.clusterName} cluster**, ensure that admission webhooks allow the creation of the following Kubernetes resources:
 

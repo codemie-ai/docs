@@ -23,6 +23,8 @@ import CoreComponentsValidation from '../../../common/deployment/components-depl
 
 <CoreComponentsMermaid />
 
+## CodeMie UI Installation
+
 <Tabs groupId="cloud-provider">
   <TabItem value="aws" label="AWS">
     <CoreComponentsUi cloudProvider="AWS" valuesFileName="values-aws.yaml" />
@@ -34,6 +36,8 @@ import CoreComponentsValidation from '../../../common/deployment/components-depl
     <CoreComponentsUi cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
   </TabItem>
 </Tabs>
+
+## CodeMie API Installation
 
 <Tabs groupId="cloud-provider">
 <TabItem value="aws" label="AWS">
@@ -48,11 +52,9 @@ import CoreComponentsValidation from '../../../common/deployment/components-depl
 </TabItem>
 <TabItem value="gcp" label="GCP">
 
-## CodeMie API Installation
-
 CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
 
-### Step 1: Configure API Values
+**Step 1: Configure API Values**
 
 Verify the values in `codemie-api/values-gcp.yaml` are correct:
 
@@ -66,7 +68,7 @@ Verify the values in `codemie-api/values-gcp.yaml` are correct:
 If you followed the Getting Started steps, these replacements should already be done.
 :::
 
-### Step 2: Copy Elasticsearch Credentials
+**Step 2: Copy Elasticsearch Credentials**
 
 ```bash
 kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
@@ -74,7 +76,7 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
   kubectl apply -n codemie -f -
 ```
 
-### Step 3: Create Google Service Account Secret
+**Step 3: Create Google Service Account Secret**
 
 ```bash
 kubectl create secret generic google-service-account \
@@ -86,7 +88,7 @@ kubectl create secret generic google-service-account \
 Ensure the `codemie-gsa-key.json` file exists in your current directory. This key grants access to Vertex AI and Cloud KMS.
 :::
 
-### Step 4: Install CodeMie API Helm Chart
+**Step 4: Install CodeMie API Helm Chart**
 
 ```bash
 helm upgrade --install codemie-api \
@@ -98,7 +100,7 @@ helm upgrade --install codemie-api \
   --timeout 600s
 ```
 
-### Step 5: Verify CodeMie API Deployment
+**Step 5: Verify CodeMie API Deployment**
 
 ```bash
 kubectl get pods -n codemie | grep codemie-api

@@ -22,7 +22,7 @@ This page outlines the requirements for deploying AI/Run CodeMie on a managed Ku
 <Tabs groupId="cloud-provider">
 <TabItem value="aws" label="AWS">
 
-### Required Access and Permissions
+**Required Access and Permissions**
 
 To deploy AI/Run CodeMie on AWS, you need:
 
@@ -36,7 +36,7 @@ To deploy AI/Run CodeMie on AWS, you need:
 </TabItem>
 <TabItem value="azure" label="Azure">
 
-### Required Access and Permissions
+**Required Access and Permissions**
 
 To deploy AI/Run CodeMie on Azure, you need:
 
@@ -52,7 +52,7 @@ To deploy AI/Run CodeMie on Azure, you need:
 </TabItem>
 <TabItem value="gcp" label="GCP">
 
-### Required Access and Permissions
+**Required Access and Permissions**
 
 To deploy AI/Run CodeMie on GCP, you need:
 
@@ -68,7 +68,7 @@ To deploy AI/Run CodeMie on GCP, you need:
     - `roles/storage.admin` - For Cloud Storage management
     - `roles/cloudkms.cryptoKeyEncrypterDecrypter` - For encryption key operations
 
-### Required GCP APIs
+**Required GCP APIs**
 
 The following APIs must be enabled in your GCP project before deployment:
 
@@ -149,6 +149,8 @@ If you only require **internal access** within your organization:
 </TabItem>
 </Tabs>
 
+## Kubernetes Cluster Requirements
+
 <Tabs groupId="cloud-provider">
 <TabItem value="aws" label="AWS">
 <ClusterRequirements clusterName="EKS" networkName="VPC" />
@@ -174,13 +176,13 @@ _No Azure-specific cluster configuration is required beyond the general Kubernet
 </TabItem>
 <TabItem value="gcp" label="GCP">
 
-## GKE Cluster Configuration
+**GKE Cluster Configuration**
 
 :::info GCP-Specific Requirement
 This section applies only to GCP deployments.
 :::
 
-### VPC-Native Networking and Container-Native Load Balancing
+**VPC-Native Networking and Container-Native Load Balancing**
 
 AI/Run CodeMie requires GKE clusters configured with **VPC-native networking** and **container-native load balancing (NEGs)** for proper Ingress functionality.
 

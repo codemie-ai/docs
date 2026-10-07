@@ -23,7 +23,7 @@ Complete all infrastructure phases from [On-VM Infrastructure Deployment](../../
 <Tabs groupId="cloud-provider">
 <TabItem value="aws" label="AWS">
 
-### Configure deployment.conf (BYO Mode)
+**Configure deployment.conf (BYO Mode)**
 
 `BYO_EC2_HOST` determines the application URL. Set it based on your network mode:
 
@@ -50,14 +50,14 @@ BYO_AWS_KMS_KEY_ID="<kms-key-id>"
 BYO_PLATFORM_DOMAIN_NAME=""
 ```
 
-### Run BYO Deployment
+**Run BYO Deployment**
 
 ```bash
 cp /path/to/key.json ./key.json
 ./deploy.sh --byo
 ```
 
-### Verify
+**Verify**
 
 ```bash
 curl -k https://<CODEMIE_HOST>/v1/healthcheck
@@ -68,7 +68,7 @@ Expected response: `{"status":"ok"}`
 </TabItem>
 <TabItem value="azure" label="Azure">
 
-### Configure deployment.conf (BYO Mode)
+**Configure deployment.conf (BYO Mode)**
 
 Fill in the values from Terraform outputs (Phase 2 and Phase 3):
 
@@ -95,14 +95,14 @@ BYO_PLATFORM_DOMAIN_NAME=""
 # AZURE_CLIENT_SECRET=""
 ```
 
-### Run BYO Deployment
+**Run BYO Deployment**
 
 ```bash
 cp /path/to/key.json ./key.json
 ./deploy.sh --byo
 ```
 
-### Verify
+**Verify**
 
 ```bash
 curl -k https://<CODEMIE_HOST>/v1/healthcheck
@@ -113,7 +113,7 @@ Expected response: `{"status":"ok"}`
 </TabItem>
 <TabItem value="gcp" label="GCP">
 
-### Configure deployment.conf (BYO Mode)
+**Configure deployment.conf (BYO Mode)**
 
 Fill in the values from Terraform outputs (Phase 2):
 
@@ -134,14 +134,14 @@ BYO_GCP_KMS_KEY_ID="<kms_key_id>"
 BYO_PLATFORM_DOMAIN_NAME=""
 ```
 
-### Run BYO Deployment
+**Run BYO Deployment**
 
 ```bash
 cp /path/to/key.json ./key.json
 ./deploy.sh --byo
 ```
 
-### Verify
+**Verify**
 
 ```bash
 curl -k https://<CODEMIE_HOST>/v1/healthcheck
