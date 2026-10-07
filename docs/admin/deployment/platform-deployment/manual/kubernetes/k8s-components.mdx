@@ -1,0 +1,115 @@
+---
+id: k8s-components
+title: Kubernetes Components
+sidebar_label: Kubernetes Components
+sidebar_position: 2
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/platform-manual-kubernetes-overview
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/data-layer
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import StorageIngressOverview from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-ingress-overview.mdx';
+import StorageIngressNginx from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-ingress-nginx.mdx';
+import StorageClassInstallation from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-class-installation.mdx';
+import StorageIngressValidation from '../../../common/deployment/components-deployment/manual-deployment/k8s/_storage-ingress-validation.mdx';
+
+<StorageIngressOverview />
+
+<StorageIngressNginx />
+
+### Step 4: Configure DNS Record
+
+Create a DNS record pointing to the ingress controller's load balancer. The exact steps depend on your cloud provider's DNS service.
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+
+```bash
+INGRESS_HOST=$(kubectl get service ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo "Ingress Host: ${INGRESS_HOST}"
+```
+
+Using **Route 53**:
+
+```bash
+HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name \
+  --dns-name airun.example.com \
+  --query 'HostedZones[0].Id' \
+  --output text | cut -d'/' -f3)
+
+aws route53 change-resource-record-sets \
+  --hosted-zone-id ${HOSTED_ZONE_ID} \
+  --change-batch '{
+    "Changes": [{
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "codemie.airun.example.com",
+        "Type": "CNAME",
+        "TTL": 300,
+        "ResourceRecords": [{"Value": "'${INGRESS_HOST}'"}]
+      }
+    }]
+  }'
+```
+
+**Parameters to adjust**: replace `airun.example.com` and `codemie.airun.example.com` with your domain values from `deployment_outputs.env`.
+
+**Verification**:
+
+```bash
+aws route53 list-resource-record-sets \
+  --hosted-zone-id ${HOSTED_ZONE_ID} \
+  --query "ResourceRecordSets[?Name=='codemie.airun.example.com.']"
+
+nslookup codemie.airun.example.com
+```
+
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+
+Create an A record in your Azure Private DNS zone pointing to the ingress controller's IP:
+
+```bash
+ingressip=$(kubectl get service ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "Ingress IP: ${ingressip}"
+
+az network private-dns record-set a add-record \
+  -g CodeMieRG \
+  -z airun.example.com \
+  -n codemie \
+  -a ${ingressip}
+```
+
+**Parameters to adjust**:
+
+- `-g CodeMieRG` — replace with your resource group name
+- `-z airun.example.com` — replace with your Private DNS zone name
+- `-n codemie` — replace with your desired hostname (subdomain)
+
+**Verification**:
+
+```bash
+az network private-dns record-set a list \
+  -g CodeMieRG \
+  -z airun.example.com \
+  -o table
+
+nslookup codemie.airun.example.com
+```
+
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+
+:::info DNS for GCP
+For **private clusters**, DNS is automatically configured by the Terraform infrastructure deployment. No manual DNS step is required here.
+
+For **public clusters**, refer to the [Automated Deployment DNS guide](../../automated/kubernetes.mdx#gcp-post-deployment-dns-configuration) for adding the required A records.
+:::
+
+  </TabItem>
+</Tabs>
+
+<StorageClassInstallation />
+
+<StorageIngressValidation />

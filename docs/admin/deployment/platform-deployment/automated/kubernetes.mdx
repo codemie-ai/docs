@@ -1,0 +1,379 @@
+---
+id: platform-automated-kubernetes
+title: Automated Kubernetes Platform Deployment
+sidebar_label: Kubernetes
+sidebar_position: 2
+pagination_prev: admin/deployment/platform-deployment/automated/platform-automated-overview
+pagination_next: null
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Automated Kubernetes Platform Deployment
+
+This guide walks you through deploying all AI/Run CodeMie application components onto a Kubernetes cluster using the `helm-charts.sh` script. The script handles component installation in the correct dependency order for AWS (EKS), GCP (GKE), and Azure (AKS).
+
+:::tip Recommended Approach
+Scripted deployment is recommended for standard installations as it automates component ordering, validates prerequisites, and ensures consistent configuration across all components.
+:::
+
+## Overview
+
+The `helm-charts.sh` script from the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository automates the installation of:
+
+- **Infrastructure services** — Nginx Ingress Controller, cloud-specific Storage Class
+- **Data layer** — Elasticsearch
+- **Security components** — Keycloak Operator, Keycloak, OAuth2 Proxy
+- **Messaging system** — NATS, NATS Auth Callout
+- **Core CodeMie services** — API, UI, MCP Connect, Mermaid Server
+- **Observability stack** — Fluent Bit, Kibana, Kibana Dashboards
+
+## Prerequisites
+
+### Verification Checklist
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../infrastructure-deployment/kubernetes.mdx) phase
+- [ ] **Cluster Access**: `kubectl` configured for EKS cluster
+- [ ] **Container Registry**: Completed [Container Registry Access](../../prerequisites/kubernetes.mdx#container-registry-access) setup (pull secret `gcp-artifact-registry` exists)
+- [ ] **Helm Installed**: Helm 3.16.0+
+- [ ] **Repository Cloned**: `codemie-helm-charts` available locally
+- [ ] **Deployment Outputs**: Have `deployment_outputs.env` from infrastructure deployment
+- [ ] **Tools**: `kubectl`, `helm`, `gcloud` CLI, `aws` CLI
+
+</TabItem>
+
+  <TabItem value="azure" label="Azure">
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../infrastructure-deployment/kubernetes.mdx) phase
+- [ ] **Cluster Access**: Connected to Jumpbox VM and `kubectl` configured for AKS
+- [ ] **Container Registry**: Completed [Container Registry Access](../../prerequisites/kubernetes.mdx#container-registry-access) setup (pull secret `gcp-artifact-registry` exists)
+- [ ] **Helm Installed**: Helm 3.16.0+
+- [ ] **Repository Cloned**: `codemie-helm-charts` available locally
+- [ ] **Deployment Outputs**: Have `deployment_outputs.env` from infrastructure deployment
+- [ ] **Tools**: `kubectl`, `helm`, `gcloud` CLI, `az` CLI
+
+</TabItem>
+
+  <TabItem value="gcp" label="GCP">
+
+- [ ] **Infrastructure Deployed**: Completed [Infrastructure Deployment](../../infrastructure-deployment/kubernetes.mdx) phase
+- [ ] **Cluster Access**: Connected to Bastion Host (for private clusters) or `kubectl` configured for GKE
+- [ ] **Container Registry**: Completed [Container Registry Access](../../prerequisites/kubernetes.mdx#container-registry-access) setup (pull secret `gcp-artifact-registry` exists)
+- [ ] **Helm Installed**: Helm 3.16.0+
+- [ ] **Repository Cloned**: `codemie-helm-charts` available locally
+- [ ] **Tools**: `kubectl`, `helm`, `gcloud` CLI
+
+</TabItem>
+
+  </Tabs>
+
+:::warning Container Registry Access Required
+The `gcp-artifact-registry` pull secret must exist before running the script. Complete [Container Registry Access](../../prerequisites/kubernetes.mdx#container-registry-access) setup before proceeding.
+:::
+
+---
+
+## Quick Start
+
+### Step 1: Clone Repository
+
+```bash
+git clone git@gitbud.epam.com:epm-cdme/codemie-helm-charts.git
+cd codemie-helm-charts
+```
+
+### Step 2: Configure Cloud-Specific Values
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+
+Source the infrastructure outputs and update AWS-specific placeholders in the values files:
+
+```bash
+# Source the deployment outputs
+source deployment_outputs.env
+
+# Update CodeMie API values with AWS-specific configuration
+sed -i "s/%%DOMAIN%%/${CODEMIE_DOMAIN_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_DEFAULT_REGION%%/${AWS_DEFAULT_REGION}/g" codemie-api/values-aws.yaml
+sed -i "s|%%EKS_AWS_ROLE_ARN%%|${EKS_AWS_ROLE_ARN}|g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_KMS_KEY_ID%%/${AWS_KMS_KEY_ID}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_BUCKET_NAME%%/${AWS_S3_BUCKET_NAME}/g" codemie-api/values-aws.yaml
+sed -i "s/%%AWS_S3_REGION%%/${AWS_S3_REGION}/g" codemie-api/values-aws.yaml
+
+# Update domain in all remaining values-aws.yaml files
+CODEMIE_DOMAIN_NAME="airun.example.com"
+find . -name "values-aws.yaml" -exec sed -i "s/%%DOMAIN%%/${CODEMIE_DOMAIN_NAME}/g" {} \;
+```
+
+| Placeholder              | Description       | Source                                           |
+| ------------------------ | ----------------- | ------------------------------------------------ |
+| `%%DOMAIN%%`             | DNS zone name     | `deployment_outputs.env` → `CODEMIE_DOMAIN_NAME` |
+| `%%AWS_DEFAULT_REGION%%` | AWS region        | `deployment_outputs.env` → `AWS_DEFAULT_REGION`  |
+| `%%EKS_AWS_ROLE_ARN%%`   | EKS IRSA role ARN | `deployment_outputs.env` → `EKS_AWS_ROLE_ARN`    |
+| `%%AWS_KMS_KEY_ID%%`     | KMS key ID        | `deployment_outputs.env` → `AWS_KMS_KEY_ID`      |
+| `%%AWS_S3_BUCKET_NAME%%` | S3 bucket name    | `deployment_outputs.env` → `AWS_S3_BUCKET_NAME`  |
+| `%%AWS_S3_REGION%%`      | S3 bucket region  | `deployment_outputs.env` → `AWS_S3_REGION`       |
+
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+
+Update the domain placeholder in all Azure values files:
+
+```bash
+# Use your DNS zone name from deployment_outputs.env
+CODEMIE_DOMAIN_NAME="airun.example.com"
+
+# Update all values-azure.yaml files (default placeholder is private.lab.com)
+find . -name "values-azure.yaml" -exec sed -i "s/private.lab.com/$CODEMIE_DOMAIN_NAME/g" {} \;
+```
+
+| Component        | File                              | Placeholder               |
+| ---------------- | --------------------------------- | ------------------------- |
+| **Kibana**       | `kibana/values-azure.yaml`        | `*.private.lab.com`       |
+| **Keycloak**     | `keycloak-helm/values-azure.yaml` | `*.private.lab.com`       |
+| **OAuth2 Proxy** | `oauth2-proxy/values-azure.yaml`  | `*.private.lab.com`       |
+| **CodeMie UI**   | `codemie-ui/values-azure.yaml`    | `codemie.private.lab.com` |
+| **CodeMie API**  | `codemie-api/values-azure.yaml`   | `*.private.lab.com`       |
+
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+
+Replace domain and GCP-specific placeholders in the values files:
+
+```bash
+# Set your values (from Terraform outputs or deployment_outputs.env)
+DOMAIN="airun.example.com"
+PROJECT_ID="my-gcp-project"
+REGION="europe-west3"
+
+# Replace domain in all GCP values files
+find . -name "values-gcp.yaml" -exec sed -i "s/%%DOMAIN%%/$DOMAIN/g" {} \;
+
+# Replace GCP parameters in CodeMie API
+sed -i "s/%%GOOGLE_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_PROJECT_ID%%/$PROJECT_ID/g" codemie-api/values-gcp.yaml
+sed -i "s/%%GOOGLE_KMS_REGION%%/$REGION/g" codemie-api/values-gcp.yaml
+```
+
+| Placeholder                 | Description             | Source                           |
+| --------------------------- | ----------------------- | -------------------------------- |
+| `%%DOMAIN%%`                | DNS zone name           | Terraform outputs → `dns_name`   |
+| `%%GOOGLE_PROJECT_ID%%`     | GCP project ID          | Terraform outputs → `project_id` |
+| `%%GOOGLE_REGION%%`         | GCP region              | Terraform outputs → `region`     |
+| `%%GOOGLE_KMS_PROJECT_ID%%` | GCP project ID with KMS | Same as `project_id`             |
+| `%%GOOGLE_KMS_REGION%%`     | GCP KMS region          | Same as `region`                 |
+
+**Files requiring domain configuration:**
+`kibana/values-gcp.yaml`, `keycloak-helm/values-gcp.yaml`, `oauth2-proxy/values-gcp.yaml`, `codemie-ui/values-gcp.yaml`, `codemie-api/values-gcp.yaml`
+
+---
+
+**Create Service Account Key**
+
+Create the service account key for Kubernetes to access GCP services (Vertex AI, Cloud KMS):
+
+1. Open **IAM & Admin** in Google Cloud Console
+2. Locate the `codemie-gsa` service account (created by Terraform)
+3. Create a new JSON key
+4. Save it as `codemie-helm-charts/codemie-gsa-key.json`
+
+```bash
+ls -la codemie-gsa-key.json
+```
+
+:::warning Key Security
+This key grants access to Vertex AI and Cloud KMS. Keep it secure and do not commit it to version control.
+:::
+
+---
+
+**Configure LoadBalancer Type** (private vs public)
+
+The default configuration is **private access** (Internal LoadBalancer). No changes are needed for a private cluster.
+
+For **public access**, modify these files before running the deployment script:
+
+Edit `ingress-nginx/values-gcp.yaml`:
+
+```yaml
+ingress-nginx:
+  controller:
+    service:
+      annotations: {}     # Remove the Internal annotation
+      type: LoadBalancer
+      loadBalancerSourceRanges:
+        - x.x.x.x/24     # Your office network (required for security)
+      enableHttp: false
+```
+
+Edit `codemie-nats/values-gcp.yaml`:
+
+```yaml
+service:
+  merge:
+    metadata:
+      annotations: {}     # Remove the Internal annotation
+    spec:
+      type: LoadBalancer
+      loadBalancerSourceRanges:
+        - x.x.x.x/24
+```
+
+:::danger Security Critical
+Never deploy a public LoadBalancer without `loadBalancerSourceRanges` configured.
+:::
+
+  </TabItem>
+</Tabs>
+
+### Step 3: Authenticate to Container Registry
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
+```
+
+### Step 4: Get Latest CodeMie Version
+
+```bash
+bash get-codemie-latest-release-version.sh -c key.json
+# Note the version (e.g., 2.26.0) for the next step
+```
+
+### Step 5: Configure Optional Components (If Required)
+
+| Component | Description                                                         |
+| --------- | ------------------------------------------------------------------- |
+| `litellm` | LiteLLM Proxy — unified LLM API, multi-model routing, cost tracking |
+| `pgadmin` | PostgreSQL admin interface for database inspection                  |
+
+:::warning LiteLLM Configuration Required
+If deploying with `--optional litellm`, complete the [LiteLLM Proxy Installation and Configuration Guide](../../extensions/litellm-proxy/index.md) **before** running the deployment script.
+:::
+
+Skip this step if not deploying optional components.
+
+### Step 6: Run Deployment Script
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+
+```bash
+# Standard installation with all core components
+bash helm-charts.sh --cloud aws --version <version> --mode all
+
+# With LiteLLM proxy for multi-model routing
+bash helm-charts.sh --cloud aws --version <version> --mode all --optional litellm
+
+# With all optional components
+bash helm-charts.sh --cloud aws --version <version> --mode all --optional litellm,pgadmin
+
+# Cluster with existing Nginx Ingress (skip ingress installation)
+bash helm-charts.sh --cloud aws --version <version> --mode recommended
+
+# Update existing installation (core components only)
+bash helm-charts.sh --cloud aws --version <version> --mode update
+```
+
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+
+```bash
+# Initial installation with all core components
+bash helm-charts.sh --cloud azure --version <version> --mode all
+
+# Upgrade existing deployment to new version
+bash helm-charts.sh --cloud azure --version <version> --mode update
+
+# Add LiteLLM to existing installation
+bash helm-charts.sh --cloud azure --version <version> --mode recommended --optional litellm
+
+# Enterprise installation with all optional components
+bash helm-charts.sh --cloud azure --version <version> --mode all --optional litellm,pgadmin
+```
+
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+
+```bash
+# Standard installation with all core components
+bash helm-charts.sh --cloud gcp --version <version> --mode all
+
+# With database management tools
+bash helm-charts.sh --cloud gcp --version <version> --mode all --optional pgadmin
+
+# With LiteLLM for multi-model AI testing
+bash helm-charts.sh --cloud gcp --version <version> --mode recommended --optional litellm
+
+# Full-featured installation with all optional components
+bash helm-charts.sh --cloud gcp --version <version> --mode all --optional litellm,pgadmin
+```
+
+  </TabItem>
+</Tabs>
+
+Replace `<version>` with the version obtained in Step 4 (e.g., `2.26.0`).
+
+:::tip Idempotent Script
+The deployment script is idempotent — you can safely re-run it after a failure. Simply run it again with the same parameters to continue or retry.
+:::
+
+---
+
+## Configuration Reference
+
+### Script Parameters
+
+| Parameter       | Description               | Required | Values                                 |
+| --------------- | ------------------------- | -------- | -------------------------------------- |
+| `-h, --help`    | Show help message         | No       | —                                      |
+| `-c, --cloud`   | Target cloud provider     | Yes      | `aws`, `gcp`, `azure`                  |
+| `-v, --version` | CodeMie component version | Yes      | e.g., `2.26.0`                         |
+| `-m, --mode`    | Installation mode         | Yes      | `all`, `recommended`, `update`         |
+| `--optional`    | Optional components       | No       | `litellm`, `pgadmin` (comma-separated) |
+
+### Deployment Modes
+
+| Mode          | Components Installed                                         | Use Case                               |
+| ------------- | ------------------------------------------------------------ | -------------------------------------- |
+| `all`         | All components including Nginx Ingress Controller            | Fresh cluster without existing ingress |
+| `recommended` | All components except Nginx Ingress Controller               | Cluster with existing ingress          |
+| `update`      | Only CodeMie core components (API, UI, MCP Connect, Mermaid) | Updating an existing installation      |
+
+---
+
+## GCP: Post-Deployment DNS Configuration
+
+For GCP clusters with **public access**, configure DNS records after LoadBalancers are provisioned:
+
+**Wildcard record for Nginx Ingress** (covers all subdomains):
+
+```bash
+kubectl get service ingress-nginx-controller -n ingress-nginx \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+Add an A record: `*.airun.example.com → <nginx-ip>`
+
+**NATS record for Plugin Engine**:
+
+```bash
+kubectl get service codemie-nats -n codemie \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+Add an A record: `nats-codemie.airun.example.com → <nats-ip>`
+
+---
+
+## Next Steps
+
+After successful deployment, proceed to **[Accessing Applications](../../accessing-applications.mdx)** to verify access and complete initial configuration.

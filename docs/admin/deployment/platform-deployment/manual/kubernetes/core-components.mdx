@@ -1,0 +1,117 @@
+---
+id: core-components
+title: Core Components
+sidebar_label: Core Components
+sidebar_position: 6
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/plugin-engine
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/observability
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CoreComponentsOverview from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-overview.mdx';
+import CoreComponentsMcpConnect from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-mcp-connect.mdx';
+import CoreComponentsMermaid from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-mermaid.mdx';
+import CoreComponentsUi from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-ui.mdx';
+import CoreComponentsApi from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-api.mdx';
+import CoreComponentsAccess from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-access.mdx';
+import CoreComponentsValidation from '../../../common/deployment/components-deployment/manual-deployment/core/_core-components-validation.mdx';
+
+<CoreComponentsOverview />
+
+<CoreComponentsMcpConnect />
+
+<CoreComponentsMermaid />
+
+## CodeMie UI Installation
+
+<Tabs groupId="cloud-provider">
+  <TabItem value="aws" label="AWS">
+    <CoreComponentsUi cloudProvider="AWS" valuesFileName="values-aws.yaml" />
+  </TabItem>
+  <TabItem value="azure" label="Azure">
+    <CoreComponentsUi cloudProvider="Azure" valuesFileName="values-azure.yaml" />
+  </TabItem>
+  <TabItem value="gcp" label="GCP">
+    <CoreComponentsUi cloudProvider="GCP" valuesFileName="values-gcp.yaml" />
+  </TabItem>
+</Tabs>
+
+## CodeMie API Installation
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<CoreComponentsApi cloudProvider="AWS" valuesFileName="values-aws.yaml" additionalConfigParams={`- \`%%AWS_DEFAULT_REGION%%\` should be replaced with your AWS region (e.g., \`us-east-1\`)\n\n- \`%%EKS_AWS_ROLE_ARN%%\` should be replaced with your EKS service account IAM role ARN\n- \`%%AWS_KMS_KEY_ID%%\` should be replaced with your KMS key ID for encryption\n- \`%%AWS_S3_BUCKET_NAME%%\` should be replaced with your S3 bucket name\n- \`%%AWS_S3_REGION%%\` should be replaced with your S3 bucket region`} />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<CoreComponentsApi
+  cloudProvider="Azure"
+  valuesFileName="values-azure.yaml"
+  additionalConfigParams=""
+/>
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
+
+**Step 1: Configure API Values**
+
+Verify the values in `codemie-api/values-gcp.yaml` are correct:
+
+- `%%DOMAIN%%` should be replaced with your DNS zone name (e.g., `airun.example.com`)
+- `%%GOOGLE_PROJECT_ID%%` should be replaced with your GCP project ID where Vertex AI is available
+- `%%GOOGLE_KMS_PROJECT_ID%%` should be replaced with your GCP project ID where KMS key is available
+- `%%GOOGLE_REGION%%` should be replaced with your GCP region (e.g., `europe-west3`)
+- `%%GOOGLE_KMS_REGION%%` should be replaced with your GCP KMS region (e.g., `europe-west3`)
+
+:::tip Domain Configuration
+If you followed the Getting Started steps, these replacements should already be done.
+:::
+
+**Step 2: Copy Elasticsearch Credentials**
+
+```bash
+kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
+  sed '/namespace:/d' | \
+  kubectl apply -n codemie -f -
+```
+
+**Step 3: Create Google Service Account Secret**
+
+```bash
+kubectl create secret generic google-service-account \
+  --namespace codemie \
+  --from-file=gcp-service-account.json=codemie-gsa-key.json
+```
+
+:::warning Service Account Key
+Ensure the `codemie-gsa-key.json` file exists in your current directory. This key grants access to Vertex AI and Cloud KMS.
+:::
+
+**Step 4: Install CodeMie API Helm Chart**
+
+```bash
+helm upgrade --install codemie-api \
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie \
+  --version x.y.z \
+  --namespace codemie \
+  -f ./codemie-api/values-gcp.yaml \
+  --wait \
+  --timeout 600s
+```
+
+**Step 5: Verify CodeMie API Deployment**
+
+```bash
+kubectl get pods -n codemie | grep codemie-api
+kubectl get deployment -n codemie codemie-api
+kubectl logs -n codemie deployment/codemie-api --tail=100
+kubectl exec -n codemie deployment/codemie-api -- curl -s http://localhost:8080/health
+```
+
+</TabItem>
+</Tabs>
+
+<CoreComponentsAccess configurationLink="../../../../../configuration/" />
+
+<CoreComponentsValidation />

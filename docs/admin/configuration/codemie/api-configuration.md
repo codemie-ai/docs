@@ -1502,9 +1502,5 @@ AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 
 ## See Also
 
-- [AWS Kubernetes Deployment](../../deployment/aws/kubernetes/overview.md) - Complete AWS Kubernetes deployment walkthrough
-- [AWS On VM Deployment](../../deployment/aws/on-vm/overview.md) - AWS EC2 deployment with Docker Compose
-- [Azure Kubernetes Deployment](../../deployment/azure/kubernetes/overview.md) - Azure Kubernetes setup instructions
-- [Azure On VM Deployment](../../deployment/azure/on-vm/overview.md) - Azure VM deployment with Docker Compose
-- [GCP Kubernetes Deployment](../../deployment/gcp/kubernetes/overview.md) - Google Cloud Kubernetes deployment steps
-- [GCP On VM Deployment](../../deployment/gcp/on-vm/overview.md) - Google Cloud GCE deployment with Docker Compose
+- [Kubernetes Deployment](../../deployment/infrastructure-deployment/kubernetes.mdx) - Complete Kubernetes deployment walkthrough for AWS, Azure, and GCP
+- [On-VM Deployment](../../deployment/infrastructure-deployment/on-vm.mdx) - EC2, Azure VM, or Compute Engine deployment with Docker Compose

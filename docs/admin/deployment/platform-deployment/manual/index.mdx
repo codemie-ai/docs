@@ -1,0 +1,48 @@
+---
+id: platform-manual-overview
+title: Manual Platform Deployment
+sidebar_label: Manual Deployment
+sidebar_position: 1
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Manual Platform Deployment
+
+Manual deployment installs each AI/Run CodeMie component individually using Helm charts, giving you granular control over configuration and installation order.
+
+:::info When to Use Manual Deployment
+Use manual deployment when you need fine-grained control over individual component configuration, want to selectively deploy certain components, or are troubleshooting specific services.
+
+If you prefer automated deployment, see [Automated Deployment](../automated/) instead.
+:::
+
+## Deployment Tracks
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Manually install each component onto an EKS / GKE / AKS cluster using individual Helm chart commands in the correct dependency order."
+    link="/admin/deployment/platform-deployment/manual/kubernetes/"
+  />
+  <div style={{ visibility: 'hidden' }} />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+## Kubernetes Component Installation Order
+
+For Kubernetes, components must be installed in the following order to satisfy dependencies:
+
+1. [Kubernetes Components](./kubernetes/k8s-components.mdx) — Storage Class + Nginx Ingress
+2. [Data Layer](./kubernetes/data-layer.mdx) — Elasticsearch
+3. [Security and Identity](./kubernetes/security-and-identity.mdx) — Keycloak Operator, Keycloak, OAuth2 Proxy
+4. [Plugin Engine](./kubernetes/plugin-engine.mdx) — NATS, NATS Auth Callout
+5. [Core Components](./kubernetes/core-components.mdx) — CodeMie API, UI, MCP Connect, Mermaid
+6. [Observability](./kubernetes/observability.mdx) — Fluent Bit, Kibana, Dashboards
+
+:::warning Respect Installation Order
+Installing components out of order will cause deployment failures. Always follow the numbered sequence.
+:::

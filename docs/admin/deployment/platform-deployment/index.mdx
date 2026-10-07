@@ -1,0 +1,37 @@
+---
+id: platform-deployment-overview
+title: Platform Deployment
+sidebar_label: Platform Deployment
+sidebar_position: 1
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Platform Deployment
+
+This section covers deploying AI/Run CodeMie application components onto a provisioned infrastructure. All guides support AWS, GCP, and Azure in a unified format using cloud tabs.
+
+:::info Prerequisites
+Before proceeding, ensure you have completed [Infrastructure Deployment](../infrastructure-deployment/) and have a running Kubernetes cluster or VM with the `deployment_outputs.env` file from the infrastructure phase.
+:::
+
+## Deployment Methods
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/lightning.svg"
+    iconType="image"
+    title="Automated Deployment"
+    description="Install all components with a single script in the correct dependency order. Recommended for most users."
+    link="/admin/deployment/platform-deployment/automated/"
+  />
+  <FeatureCard
+    icon="/img/icons/configure.svg"
+    iconType="image"
+    title="Manual Deployment"
+    description="Install each component individually with full control over configuration. For advanced use cases and troubleshooting."
+    link="/admin/deployment/platform-deployment/manual/"
+  />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>

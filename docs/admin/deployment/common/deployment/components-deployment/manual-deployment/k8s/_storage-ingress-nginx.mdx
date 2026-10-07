@@ -18,12 +18,12 @@ Check if the namespace already exists before creating: `kubectl get namespace in
 
 ### Step 2: Install Nginx Ingress Helm Chart
 
-Deploy the Nginx Ingress Controller using Helm:
+Deploy the Nginx Ingress Controller using Helm, selecting the values file for your cloud provider (`aws`, `azure`, or `gcp`):
 
 <CodeBlock language="bash">
 {`helm upgrade --install ingress-nginx ingress-nginx/. \\
   -n ingress-nginx \\
-  --values ingress-nginx/${props.valuesFileName} \\
+  --values ingress-nginx/values-<cloud>.yaml \\
   --wait \\
   --timeout 900s \\
   --dependency-update`}
