@@ -244,10 +244,11 @@ After creating the integration:
 
 The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository provides two reference agents that implement A2A protocol 1.0:
 
-| Agent                 | Path                                | Style                                                       |
-| --------------------- | ----------------------------------- | ----------------------------------------------------------- |
-| `text-insights-agent` | `python/agents/text-insights-agent` | Non-streaming — returns a single message                    |
-| `howto-guide-agent`   | `python/agents/howto-guide-agent`   | Streaming — returns a task with incremental artifact events |
+| Agent                  | Path                                 | Style                                                                                |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| `text-insights-agent`  | `python/agents/text-insights-agent`  | Non-streaming — returns a single message                                             |
+| `howto-guide-agent`    | `python/agents/howto-guide-agent`    | Streaming — returns a task with incremental artifact events                          |
+| `codemie-caller-agent` | `python/agents/codemie-caller-agent` | Non-streaming — proxies to a CodeMie assistant via A2A v1.0 and returns a wire trace |
 
 Both agents use the `a2a-sdk` 1.x and serve a v1.0 Agent Card at `/.well-known/agent-card.json`.
 
