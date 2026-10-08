@@ -74,10 +74,10 @@ The diagram below depicts the LiteLLM Proxy deployed on Kubernetes infrastructur
 
 | Component                  | CPU (Limits/Requests) | Memory (Limits/Requests) | Storage   |
 | -------------------------- | --------------------- | ------------------------ | --------- |
-| LiteLLM Proxy x 2 Replicas | 2 / 2 (1 / 1)         | 4Gi / 4Gi (2Gi / 2Gi)    | —         |
+| LiteLLM Proxy x 2 Replicas | 2 / 2 (1 / 1)         | 8Gi / 8Gi (4Gi / 4Gi)    | —         |
 | Redis                      | 0.15 / 0.1            | 192Mi / 128Mi            | 2Gi       |
 | PostgreSQL                 | —                     | —                        | —         |
-| **Total**                  | ~2.15 / ~2.1 vCPU     | ~4 / ~4 GiB RAM          | ~2 Gi PVC |
+| **Total**                  | ~2.15 / ~2.1 vCPU     | ~8 / ~8 GiB RAM          | ~2 Gi PVC |
 
 ## Deployment Workflow
 
