@@ -179,17 +179,20 @@ CHECKSUM=$(
   } | _sha256
 )
 
-# Render brand.css. Every --colors-* assignment goes into one :root block and nothing is scoped
-# to a theme class, so the rules apply to both themes. The value written is the token's dark
-# value, as space-separated "r g b" channels read through rgb(var(...)). The light value is
-# validated but not emitted. Nothing needs !important.
+# Render brand.css. Each token carries a dark and a light value, and both are emitted together: the
+# dark values under html.codemieDark and the light values under html.codemieLight, the same
+# selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
+# space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
+# in :root. Nothing needs !important.
 FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
 _hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
-COLOR_VARS=""
-while read -r token dark; do
+DARK_VARS=""
+LIGHT_VARS=""
+while read -r token dark light; do
   [[ -n "$token" ]] || continue
-  COLOR_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$dark");"$'\n'
-done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark' "$PACKAGE_FILE")
+  DARK_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$dark");"$'\n'
+  LIGHT_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$light");"$'\n'
+done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
 
 {
   [[ -n "$FONT_FACE" ]] && echo "$FONT_FACE"
@@ -197,8 +200,15 @@ done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark' "
   echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
   echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
   echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
-  printf '%s' "$COLOR_VARS"
   echo "}"
+  if [[ -n "$DARK_VARS" ]]; then
+    echo "html.codemieDark {"
+    printf '%s' "$DARK_VARS"
+    echo "}"
+    echo "html.codemieLight {"
+    printf '%s' "$LIGHT_VARS"
+    echo "}"
+  fi
 } >"$WORK_DIR/brand.css"
 
 # Values files are built with yq so every package value is encoded, never concatenated.
