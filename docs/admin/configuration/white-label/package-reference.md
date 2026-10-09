@@ -34,11 +34,11 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 `colors` is a map. Each key is a semantic token path, for example `surface.base.primary`. Token paths use letters, digits, and hyphens, separated by dots. Every dot becomes a hyphen in the generated CSS custom property, so `surface.base.primary` produces `--colors-surface-base-primary`, the variable the UI reads. All color variables are written in a single `:root` block, as space-separated red, green, and blue channels, and no theme-specific block is generated. The generated value is the `dark` value, so it applies to both the dark and the light theme; the `light` value is required and validated but is not written to `brand.css`. Tokens that you do not list keep their default values.
 
-| Path                   | Type   | Required | Description                                                                                                           |
-| ---------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------------- |
-| `colors.<token>`       | object | No       | One semantic color token. Add one entry per token to override.                                                        |
-| `colors.<token>.dark`  | string | Yes      | Value for the dark theme as a six-digit hex color, for example `#111111`.                                             |
-| `colors.<token>.light` | string | Yes      | Value for the light theme as a six-digit hex color, for example `#ffffff`. Validated, but not written to `brand.css`. |
+| Path                   | Type   | Required | Description                                                                                                                                                               |
+| ---------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `colors.<token>`       | object | No       | One semantic color token. Add one entry per token to override.                                                                                                            |
+| `colors.<token>.dark`  | string | Yes      | Value for the dark theme as a six-digit hex color, for example `#111111`.                                                                                                 |
+| `colors.<token>.light` | string | Yes      | Value for the light theme as a six-digit hex color, for example `#ffffff`. Written to `brand.css` together with the `dark` value, so both themes always change as a pair. |
 
 Only the `dark` and `light` keys are allowed inside a token. The hex pattern is `^#[0-9a-fA-F]{6}$`; shorthand colors such as `#fff` are rejected.
 

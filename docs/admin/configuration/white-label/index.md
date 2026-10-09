@@ -206,7 +206,7 @@ Copy the workflow into your own repository, create the `white-label-apply` envir
 
 - **Asset size.** The five asset files are delivered as base64-encoded ConfigMap data. Keep the combined size of the assets below 1 MiB.
 - **No font binaries.** Font files are not delivered through the kit. Reference fonts by URL in `typography.fontFaceCSS`, for example `@font-face { font-family: 'Inter'; src: url('https://fonts.acme.example/inter.woff2'); }`, and make sure the URL is reachable from users' browsers.
-- **Variables only.** `brand.css` sets CSS custom properties: all color variables are written in a single `:root` block from the `dark` values, so they apply to both themes, and the `light` values are validated but not written. The kit does not change component styles or class names.
+- **Variables only.** `brand.css` sets CSS custom properties: every color token is written twice: its `dark` value under `html.codemieDark` and its `light` value under `html.codemieLight`. The two values always travel as a pair, so the brand follows the user's theme switch. Font variables are written in `:root`. The kit does not change component styles or class names.
 - **Load order.** The UI adds the favicon, manifest, page title and `brand.css` link when the page starts, so the default title may flash briefly before the brand title appears.
 - **Per-user appearance.** The user-level custom appearance settings are not touched by the kit and continue to work as before.
 - **Not covered.** The gradient background images on authentication pages and the default AI avatar image (`ai-avatar.png`) are not part of the theme package and keep their default look. The authentication and error pages do show your logo.

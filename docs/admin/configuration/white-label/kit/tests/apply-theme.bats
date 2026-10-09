@@ -145,17 +145,29 @@ apply_args() {
   ! grep -q -- 'bodyFamily\|codeFamily\|-dark:\|-light:\|!important' "$css"
 }
 
-@test "brand.css: every colour is in the single :root block, no html.codemieLight block" {
+@test "brand.css: dark and light values are emitted together, each under its own theme class" {
   run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
-  [ "$(grep -c '^[^ ].*{' "$OUT/brand.css")" -eq 1 ]
-  [ "$(grep -c '^:root {' "$OUT/brand.css")" -eq 1 ]
-  ! grep -q 'codemieLight\|codemieDark' "$OUT/brand.css"
-  root=$(sed -n '/^:root {/,/^}/p' "$OUT/brand.css")
-  [[ "$root" == *"--colors-surface-base-primary: 17 17 17;"* ]]
-  [[ "$root" == *"--colors-text-specific-navigation-link: 10 11 12;"* ]]
-  # the light values are not emitted
-  ! grep -q -- '255 255 255\|160 176 192' "$OUT/brand.css"
+  css="$OUT/brand.css"
+  [ "$(grep -c '^html.codemieDark {' "$css")" -eq 1 ]
+  [ "$(grep -c '^html.codemieLight {' "$css")" -eq 1 ]
+  dark=$(sed -n '/^html.codemieDark {/,/^}/p' "$css")
+  light=$(sed -n '/^html.codemieLight {/,/^}/p' "$css")
+  [[ "$dark" == *"--colors-surface-base-primary: 17 17 17;"* ]]
+  [[ "$light" == *"--colors-surface-base-primary: 255 255 255;"* ]]
+  # the two blocks carry the same variable names, so a token never exists in one theme only
+  [ "$(printf '%s\n' "$dark" | grep -o -- '--colors-[a-z-]*' | sort)" = "$(printf '%s\n' "$light" | grep -o -- '--colors-[a-z-]*' | sort)" ]
+  # colours are never in :root, so the built-in theme selectors cannot outrank them
+  root=$(sed -n '/^:root {/,/^}/p' "$css")
+  ! [[ "$root" == *"--colors-"* ]]
+}
+
+@test "validate: a colour token without its light or dark value is rejected" {
+  pkg=$(mutate 'del(.colors."surface.base.primary".light)')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"light"* ]]
+  [ ! -e "$OUT/brand.css" ]
 }
 
 @test "brand.css: multi-line fontFaceCSS comes first and appears exactly once" {
