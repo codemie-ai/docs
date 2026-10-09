@@ -21,7 +21,7 @@ Badges show what each release requires from administrators:
 | <span className="badge badge--secondary">Hotfixes</span>     | Hotfix releases were published on top of this version           |
 
 :::tip Upgrading across several versions
-Review every release between your current and target version that has a <span className="badge badge--danger">Breaking</span>, <span className="badge badge--warning">Config changes</span>, or <span className="badge badge--info">Component updates</span> badge. Releases marked **No admin action required** can be skipped.
+Review every release between your current and target version that has a **Breaking**, **Config changes**, or **Component updates** badge. Releases marked **No admin action required** can be skipped.
 :::
 
 ## October 2026 {#2026-10}
