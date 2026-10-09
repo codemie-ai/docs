@@ -1181,11 +1181,11 @@ This is independent of the chart's top-level `tolerations` value: that one appli
 - `HIGH` (default): Most restrictive, only allows safe operations
 
 :::note Migration note
-The semantics of `CODE_EXECUTOR_SECURITY_THRESHOLD` were corrected in a recent release. Previously the values behaved inverted — `LOW` enforced the strictest policy and `HIGH` the most permissive — contradicting the parameter name.
+The value-to-enforcement mapping for `CODE_EXECUTOR_SECURITY_THRESHOLD` changed in a recent release. Previously, `LOW` enforced the strictest policy and `HIGH` the most permissive.
 
-The default was also changed from `LOW` to `HIGH`. Under the corrected semantics, `HIGH` enforces exactly what `LOW` enforced before, so deployments that do not set `CODE_EXECUTOR_SECURITY_THRESHOLD` explicitly keep their current enforcement level unchanged.
+The default also changed from `LOW` to `HIGH`. `HIGH` now applies the same enforcement level that `LOW` applied previously, so deployments that do not set `CODE_EXECUTOR_SECURITY_THRESHOLD` explicitly keep their current enforcement level unchanged.
 
-**Action required:** Any deployment that explicitly sets `CODE_EXECUTOR_SECURITY_THRESHOLD=LOW` to obtain strict enforcement must change it to `HIGH`.
+**Action required:** Any deployment that explicitly sets `CODE_EXECUTOR_SECURITY_THRESHOLD=LOW` for strict enforcement must change it to `HIGH`.
 :::
 :::
 

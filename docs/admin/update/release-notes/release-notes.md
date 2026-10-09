@@ -13,14 +13,22 @@ This page provides information about updated third-party components and configur
 
 ---
 
+<!-- markdownlint-disable MD037 -->
+
 {/_ TODO: replace heading and anchor with the actual release version once announced, e.g. ### CodeMie X.Y.Z {#vX-Y-Z} _/}
+
+<!-- markdownlint-enable MD037 -->
 
 ### Upcoming Release {#upcoming}
 
 <details>
 <summary>Release details</summary>
 
+<!-- markdownlint-disable MD037 -->
+
 {/_ TODO: replace TBD with the actual release date and add the GitHub tag link once the release is published _/}
+
+<!-- markdownlint-enable MD037 -->
 
 **Release Date:** TBD
 
