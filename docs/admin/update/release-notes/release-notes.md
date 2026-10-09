@@ -26,7 +26,7 @@ Review every release between your current and target version that has a <span cl
 
 ## October 2026 {#2026-10}
 
-<details className="release" id="v2-57-0" open>
+<details className="release" id="v2-57-0">
 <summary><span className="release__version">CodeMie 2.57.0</span><span className="release__date">Oct 9, 2026</span><span className="badge badge--secondary">2 hotfixes</span></summary>
 
 :::danger Upgrade not recommended
