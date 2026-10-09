@@ -36,7 +36,7 @@ CodeMie API discovers and reuses long-lived pods from a pool, or creates a new o
 ```yaml
 extraEnv:
   - name: CODE_EXECUTOR_SANDBOX_MODE
-    value: "sandbox-shared"
+    value: "sandbox-jobs"
 ```
 
 </TabItem>
@@ -74,6 +74,7 @@ features:
     code_executor:
       rbac:
         enabled: true
+        namespace: "codemie-runtime"
 ```
 
 ## Namespace Configuration
