@@ -213,6 +213,10 @@ When you add a Tool node to your workflow, the configuration panel displays two 
 
 Both connected tools and MCP servers are immediately available in the selection list - no additional configuration needed for already set up integrations.
 
+#### Tools a Script Can Call
+
+A Tool node that runs the workspace script tool shows an extra **Tools the script may call** section. The script calls no tool until tools are selected there, and for each tool the integration can be found automatically or limited to selected integration aliases. See [Choosing the Tools of a Workflow Step](../tools_integrations/tools/workspace-script-sdk.md#choosing-the-tools-of-a-workflow-step).
+
 ### Custom State
 
 Executes custom code, scripts, or specialized logic for complex data processing.

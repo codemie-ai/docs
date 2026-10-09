@@ -1050,12 +1050,13 @@ Automatically compress long conversation histories when token usage exceeds a th
 
 ### Workflow Configuration
 
-| Parameter                      | Type    | Default | Description                                                                           |
-| ------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------- |
-| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage                        |
-| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                    |
-| `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                        |
-| `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty |
+| Parameter                      | Type    | Default | Description                                                                                                                                                                          |
+| ------------------------------ | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `WORKFLOW_MAX_CONCURRENCY`     | integer | `5`     | Max simultaneous workflow executions to control resource usage                                                                                                                       |
+| `WORKFLOW_DEFAULT_CONCURRENCY` | integer | `2`     | Default concurrency when not specified by workflow                                                                                                                                   |
+| `WORKFLOW_GENERATION_ENABLED`  | boolean | `false` | Enable AI-assisted workflow generation feature                                                                                                                                       |
+| `WORKFLOW_GENERATOR_LLM_MODEL` | string  | `""`    | LLM model used for workflow generation; falls back to global default model when empty                                                                                                |
+| `WORKFLOW_RUN_FILES_MAX_COUNT` | integer | `20`    | Max number of files a workflow run can start with; a request with more files is rejected with `400`. The execution request accepts at most 20 files, so a higher value has no effect |
 
 ### Sub-workflows
 
@@ -1161,6 +1162,7 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | `CODE_EXECUTOR_VERBOSE`                   | boolean | `false`                           | Enable verbose logging for executor debugging                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `CODE_EXECUTOR_KEEP_TEMPLATE`             | boolean | `true`                            | Persist pod template after execution for performance optimization                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP`    | boolean | `false`                           | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `FEATURE_WORKSPACE_SCRIPT_BRIDGE`         | boolean | unset                             | Overrides `enabled` of the `features:workspaceScriptBridge` customer configuration component at load time, where the component exists in the loaded `customer-config.yaml`. When `true`, workspace scripts can call CodeMie tools through `codemie_runtime_sdk` (`sandbox-jobs` mode only). Changing it requires a restart. See [Code Executor Configuration](./code-executor-configuration.md#workspace-script-tool-call-bridge).                                                                                     |
 
 :::warning Security Considerations
 **Sandbox Isolation:** `CODE_EXECUTOR_EXECUTION_MODE=sandbox` runs user-supplied code in a dedicated Kubernetes pod, isolated from the CodeMie API. This is the execution model for running untrusted code safely in production.
