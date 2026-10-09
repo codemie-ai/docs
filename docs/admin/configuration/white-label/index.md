@@ -25,7 +25,7 @@ The kit is published in the documentation repository at [`docs/admin/configurati
 | `tests/`                            | Automated tests for the script (bats-core)                             |
 
 :::info Kit version and platform releases
-This page describes **kit version 1** (`kitVersion: "1"` in the page metadata), which works with theme packages that declare `version: '1'`. Each AI/Run CodeMie release is published with the kit version it is paired with; check the [Release Notes](../../update/release-notes/release-notes.md) for your target release before you upgrade, and use the kit version that is listed there. Release 2.55.0 is paired with kit version 1. See [Kit Versions and Releases](#kit-versions-and-releases) for the pairing.
+This page describes **kit version 1** (`kitVersion: "1"` in the page metadata), which works with theme packages that declare `version: '1'`. See [Kit Versions and Releases](#kit-versions-and-releases) for the version this page describes.
 :::
 
 :::warning Re-apply the theme after platform upgrades
@@ -229,11 +229,11 @@ Copy the workflow into your own repository, create the `white-label-apply` envir
 
 The kit is versioned independently of the platform, and the `kitVersion` in this page's metadata is the version it describes. The package `version` field must match the kit's major version.
 
-| Kit version | Package `version` | Paired platform releases                                                                                                                                                                            |
-| ----------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1           | `'1'`             | [2.55.0](../../update/release-notes/release-notes.md#v2-55-0) and every later release whose Release Notes list kit version 1. Earlier releases lack the `brand` chart values and the links overlay. |
+| Kit version | Package `version` | Paired platform releases                                                       |
+| ----------- | ----------------- | ------------------------------------------------------------------------------ |
+| 1           | `'1'`             | Platform releases that include the `brand` chart values and the links overlay. |
 
-When a release changes the theme package contract, its Release Notes name the new kit version, and this table gains a row.
+When the theme package contract changes, this table gains a row.
 
 ## Related Topics
 
