@@ -32,7 +32,51 @@ A workflow can run a script as one of its steps. Add a Tool node that uses the w
 
 The execution results show what the script printed and the files it created. The output of the step can be used by the next steps like the output of any other Tool node, and the files stay available to them. If the script is not found or fails, the step is marked as failed and shows the reason or the script's output.
 
-A script in a Tool node can call tools by name with your integrations, see [Which Tools a Script Can Call](#which-tools-a-script-can-call).
+A script in a Tool node can call only the tools that the author of the step has allowed, see [Choosing the Tools of a Workflow Step](#choosing-the-tools-of-a-workflow-step).
+
+---
+
+## Choosing the Tools of a Workflow Step
+
+A script in a workflow step calls no tools by default. The author of the workflow lists the tools the script may call, and for each tool the integrations it may use. A tool that is not in the list cannot be called, even if it exists in the catalog.
+
+To allow tools:
+
+1. Open the workflow in the editor and select the Tool node that runs the workspace script tool.
+2. In the **Tools the script may call** section, click the configure button.
+3. Search for a tool and select it. Tools are grouped by toolkit, and the number of selected tools is shown next to the toolkit name. Only tools that can be called from a script are listed.
+4. For a tool that needs credentials, choose how the integration is found:
+   - **Automatic Credentials Lookup** on: the script uses the integration of the user who runs the workflow, found in the project of the workflow. The script cannot pass an integration of its own.
+   - **Automatic Credentials Lookup** off: select one or more integrations in **Integration aliases**. The script can use only these integrations.
+5. Click **Apply**, then save the workflow.
+
+![Tool node panel with the Tools the script may call section](./images/script-tool-access-section.png)
+
+![Window for choosing the tools a script may call](./images/script-tool-access-popup.png)
+
+![Integration aliases selected for a tool](./images/script-tool-access-popup-aliases.png)
+
+A step with no tools selected shows **No tools selected**, and its script cannot call any tool.
+
+### How the Integration Is Chosen
+
+| Entry in the step              | What the script can do                                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| The tool is not selected       | The call fails with `tool_unavailable`.                                                                             |
+| Selected, automatic lookup     | The tool runs with the integration of the user who runs the workflow. Passing an integration fails.                 |
+| Selected, one integration      | The tool runs with that integration. The script can leave `integration_alias` out.                                  |
+| Selected, several integrations | The script must pass `integration_alias` with one of them. A missing or any other value fails with `bad_arguments`. |
+
+Whose integration is used for a selected alias depends on the workflow:
+
+- In a **global** workflow, the alias is resolved for the author of the workflow. Everyone who runs the workflow acts under the author's integration for that tool.
+- In a workflow that is **not global**, the alias is resolved for the user who runs the workflow, in the project of the workflow. If that user has no integration with this alias, the call fails with `bad_arguments`.
+
+:::warning Author's integration in a global workflow
+A selected alias in a global workflow gives every user who runs the workflow the access of the author's integration. Select such aliases only when this is intended. When a global workflow like this is saved or validated, a notification lists the tools that run under the author's integration. When the workflow is published to the marketplace, the selected aliases are listed in the credential review, which asks for confirmation. See [Credential Review](../../workflows/marketplace-publishing.md#credential-review).
+:::
+
+When the workflow is saved, each selected tool and alias is checked. The save is refused with the message **Invalid script tool access** and the reason when a tool does not exist or cannot be called from a script, an alias does not exist for the author of the workflow, an alias does not fit the credential type of the tool, or a tool that takes no credentials has an alias.
 
 ---
 
@@ -40,11 +84,11 @@ A script in a Tool node can call tools by name with your integrations, see [Whic
 
 A script can call only the tools that are available to it in its run. Which tools those are depends on where the script runs:
 
-| Where the script runs                                                   | Tools the script can call                                          | Credentials used                               |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------- |
-| A chat, or a workflow step that uses an assistant                       | The tools in that assistant's tool list, including attached skills | The assistant's own settings and credentials   |
-| A workflow tool step                                                    | Tools from the catalog, by name                                    | The running user's integrations in the project |
-| A workspace run without an assistant or workflow (through the REST API) | None. Every call fails with `no_context`                           | Not applicable                                 |
+| Where the script runs                                                   | Tools the script can call                                                                                                | Credentials used                                                                |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| A chat, or a workflow step that uses an assistant                       | The tools in that assistant's tool list, including attached skills                                                       | The assistant's own settings and credentials                                    |
+| A workflow tool step                                                    | Only the tools selected in the step, see [Choosing the Tools of a Workflow Step](#choosing-the-tools-of-a-workflow-step) | By the step's settings: the running user's lookup, or the selected integrations |
+| A workspace run without an assistant or workflow (through the REST API) | None. Every call fails with `no_context`                                                                                 | Not applicable                                                                  |
 
 Not every tool can be called from a script. Some tools, such as the workspace script tool itself, are never callable. Tools that depend on the live chat session are not callable either. Use plain Python for file operations rather than tool calls.
 
@@ -54,10 +98,12 @@ If a script asks for a tool that is not available to its run, the call fails wit
 
 ## Calling a Tool
 
-`call_tool(name, args=None, *, timeout=None)` calls one tool and returns its envelope:
+`call_tool(name, args=None, *, timeout=None, integration_alias=None)` calls one tool and returns its envelope:
 
 - `envelope["result"]` holds the tool's result. A tool that returns an object, a list, or JSON text gives the parsed value. Any other text stays a string.
 - `envelope["http"]` is present only for the Jira, Confluence, GitLab, and xWiki tools. It holds `status` (the HTTP status code) and `reason`. The `result` is then the body of the third party's response. A non-2xx status is returned as data, not raised as an error, so check `status` yourself.
+
+`integration_alias` selects the integration for a tool in a workflow step that lists several integrations for it. It is optional when the step lists one integration for the tool, required when it lists several, and refused when the step uses automatic lookup for the tool. A call in a chat or in a step that uses an assistant always refuses it with `bad_arguments`. Each item of `call_tools` can carry its own `integration_alias`.
 
 The arguments are the ones the tool defines. Call the tool with the names shown in the tool list of the run. An unknown argument is refused with `bad_arguments`, not ignored, so a misspelled filter cannot silently run the tool with its defaults.
 

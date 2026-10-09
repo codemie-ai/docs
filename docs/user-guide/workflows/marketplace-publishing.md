@@ -52,6 +52,10 @@ The warning lists the detected credentials and requires explicit confirmation to
 
 If no inline credentials are detected, the warning step is skipped.
 
+Integration aliases selected for the tools a script step may call are listed in the same way. After publishing, every user who runs the workflow acts under the author's integration for these tools, so only the aliases that are meant to be shared should remain. See [How the Integration Is Chosen](../tools_integrations/tools/workspace-script-sdk.md#how-the-integration-is-chosen).
+
+![Credential review with the integration aliases of a script step](./images/publish-script-step-aliases.png)
+
 ## Selecting Categories
 
 Choose 1 to 3 categories that best describe the workflow's purpose. Categories help users filter and discover relevant workflows in the Marketplace.
