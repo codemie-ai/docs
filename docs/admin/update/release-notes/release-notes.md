@@ -15,6 +15,10 @@ This page provides information about updated third-party components and configur
 
 ### CodeMie 2.57.0 {#v2-57-0}
 
+:::danger Upgrade not recommended
+Versions **2.57.0** and **2.57.1** contain known issues and are not recommended for upgrade. Environments already running either version should move to the latest hotfix release, **2.57.2**.
+:::
+
 <details>
 <summary>Release details</summary>
 
@@ -30,6 +34,7 @@ No breaking configuration changes were introduced in this release.
 
 <h3>Hotfixes</h3>
 
+- **2.57.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.1) – October 9, 2026
 - **2.57.2** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.2) – October 9, 2026
 
 </details>
