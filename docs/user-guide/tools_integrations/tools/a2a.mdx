@@ -18,7 +18,7 @@ A2A provides a common language that breaks down silos and fosters interoperabili
 With A2A integration, CodeMie connects to external AI agents—regardless of their framework or origin—allowing them to communicate and work together on complex tasks.
 
 :::warning Protocol Version 1.0
-CodeMie implements A2A protocol **version 1.0**. Agents built for the earlier v0.3 protocol are not compatible and will fail at registration. This includes agents that serve only a legacy `agent.json` card, agents using v0.3 method names, and Bedrock AgentCore remotes.
+CodeMie implements A2A protocol **version 1.0**. Agents built for the earlier v0.3 protocol are not compatible and are refused at registration. This includes agents that serve only a legacy `agent.json` card and agents whose Agent Card declares a pre-1.0 JSON-RPC interface (for example a v0.3 card with a top-level `url` and `protocolVersion` `0.3.x`). Bedrock AgentCore runtimes are checked the same way: they must serve a v1.0 Agent Card.
 :::
 
 ## Key Features
@@ -242,7 +242,7 @@ After creating the integration:
 
 ## Example: Demo Agents
 
-The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository provides two reference agents that implement A2A protocol 1.0:
+The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository provides three reference agents that implement A2A protocol 1.0:
 
 | Agent                  | Path                                 | Style                                                                                |
 | ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
@@ -250,7 +250,7 @@ The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) 
 | `howto-guide-agent`    | `python/agents/howto-guide-agent`    | Streaming — returns a task with incremental artifact events                          |
 | `codemie-caller-agent` | `python/agents/codemie-caller-agent` | Non-streaming — proxies to a CodeMie assistant via A2A v1.0 and returns a wire trace |
 
-Both agents use the `a2a-sdk` 1.x and serve a v1.0 Agent Card at `/.well-known/agent-card.json`.
+All three agents use the `a2a-sdk` 1.x and serve a v1.0 Agent Card at `/.well-known/agent-card.json`.
 
 ### Run an Agent Locally
 
@@ -267,13 +267,9 @@ Both agents use the `a2a-sdk` 1.x and serve a v1.0 Agent Card at `/.well-known/a
    uv run .
    ```
 
-3. To expose the agent publicly for testing, use ngrok:
+3. Register the agent in CodeMie using its base URL (for example `http://localhost:10800` when CodeMie runs on the same machine).
 
-   ```bash
-   uv run . --ngrok_enabled
-   ```
-
-   Copy the ngrok URL from the output and use it when creating the remote assistant in CodeMie.
+   The demo agents advertise `http://<host>:<port>/` in their Agent Card, where `--host` and `--port` come from the command line. They have no built-in tunnel option, so `--host` must be an address CodeMie can reach.
 
 :::note Docker
 When CodeMie runs in Docker, start the agent on the same Docker network and pass `--host <container-name>` so the Agent Card advertises an address the CodeMie container can reach.
@@ -354,15 +350,17 @@ See [API Configuration](../../../admin/configuration/codemie/api-configuration.m
 
 ## Troubleshooting
 
-| Symptom                                                        | Fix                                                                                                                                                                                                |
-| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Registration fails with `HTTP 404`                             | The base URL is incorrect (do not include `/.well-known/agent-card.json` or any path), or the agent only supports an older protocol version. Verify with `curl <url>/.well-known/agent-card.json`. |
-| Registration succeeds, chat fails with `ConnectError`          | The Agent Card advertises an address the CodeMie container cannot reach (for example `http://0.0.0.0:<port>/`). Restart the agent with `--host <container-name>` on the CodeMie Docker network.    |
-| `-32009` on every JSON-RPC call                                | Add `A2A-Version: 1.0` to the request headers.                                                                                                                                                     |
-| `401 Authentication required`                                  | Token is missing or expired (24-hour lifetime). Log in again to obtain a fresh token. The `user-id` header alone is not accepted in non-local environments.                                        |
-| Slow first response                                            | The remote agent calls an LLM. Raise `A2A_AGENT_REQUEST_TIMEOUT` in the platform configuration.                                                                                                    |
-| Registration fails with `Invalid agent card format`            | The agent's `/.well-known/agent-card.json` is not valid JSON. Fix the agent card format.                                                                                                           |
-| Registration fails with `Agent card has no JSON-RPC interface` | Registration succeeded but chat fails because the card declares no JSON-RPC interface in `supportedInterfaces`. Add a JSON-RPC interface to the agent card.                                        |
+| Symptom                                                                           | Fix                                                                                                                                                                                                |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registration fails with `HTTP 404`                                                | The base URL is incorrect (do not include `/.well-known/agent-card.json` or any path), or the agent only supports an older protocol version. Verify with `curl <url>/.well-known/agent-card.json`. |
+| Registration succeeds, chat fails with `ConnectError`                             | The Agent Card advertises an address the CodeMie container cannot reach (for example `http://0.0.0.0:<port>/`). Restart the agent with `--host <container-name>` on the CodeMie Docker network.    |
+| `-32009` on every JSON-RPC call                                                   | Add `A2A-Version: 1.0` to the request headers.                                                                                                                                                     |
+| `401 Authentication required`                                                     | Token is missing or expired (24-hour lifetime). Log in again to obtain a fresh token. The `user-id` header alone is not accepted in non-local environments.                                        |
+| Slow first response                                                               | The remote agent calls an LLM. Raise `A2A_AGENT_REQUEST_TIMEOUT` in the platform configuration.                                                                                                    |
+| Registration fails with `Invalid agent card format`                               | The agent's `/.well-known/agent-card.json` is not valid JSON. Fix the agent card format.                                                                                                           |
+| Registration fails with `Agent card has no JSON-RPC interface`                    | The card declares no JSON-RPC interface in `supportedInterfaces`. Add one to the agent card.                                                                                                       |
+| Registration fails with `Agent does not support A2A protocol 1.0`                 | The agent's JSON-RPC interface declares a pre-1.0 protocol version (a v0.3 agent). Upgrade the agent to A2A v1.0, for example `a2a-sdk` 1.x.                                                       |
+| Chat fails with `Remote A2A agent does not support the required protocol version` | The Agent Card says 1.0, but the agent rejected the v1.0 requests. Make sure it handles the `A2A-Version: 1.0` header and the v1.0 method names.                                                   |
 
 ## Learn More
 

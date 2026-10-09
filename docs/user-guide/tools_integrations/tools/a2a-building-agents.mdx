@@ -83,7 +83,7 @@ See the demo agents' `__main__.py` files for how to build the card with `AgentCa
 
 ## Cancellation
 
-CodeMie can send `CancelTask`. An agent that does not support cancellation should raise the SDK's unsupported-operation error; the client receives a protocol error (`-32004`) instead of a hang. Both demo agents follow this pattern.
+CodeMie does not cancel a running remote task, but other A2A clients may send `CancelTask` to your agent. An agent that does not support cancellation should raise the SDK's unsupported-operation error; the client receives a protocol error (`-32004`) instead of a hang. The demo agents follow this pattern.
 
 ## Checklist
 
@@ -97,5 +97,5 @@ CodeMie can send `CancelTask`. An agent that does not support cancellation shoul
 ## Learn More
 
 - **[A2A Protocol](./a2a.mdx)** — setup, authentication, supported operations, and known limitations
-- **[ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents)** — complete source for both demo agents
+- **[ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents)** — complete source for the demo agents
 - **[A2A Protocol Specification](https://google.github.io/A2A/#/documentation)** — official protocol reference
