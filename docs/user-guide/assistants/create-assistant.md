@@ -223,32 +223,14 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
-## File Attachments
-
-The **File attachments** section controls whether users can attach files when chatting with
-the assistant.
-
-![File attachments toggle in the assistant configuration form](./images/assistant-file-attachments-toggle.png)
-
-The section contains a single **Enable file attachments** toggle:
-
-| State        | Behavior                                                                                 |
-| ------------ | ---------------------------------------------------------------------------------------- |
-| **Enabled**  | The paperclip icon appears in the chat input toolbar; users can attach files to messages |
-| **Disabled** | The paperclip icon is hidden; file uploads are not available for this assistant          |
-
-:::info
-File attachments are enabled by default for new assistants. Disable this setting when the
-assistant's use case does not involve file analysis, or when file uploads should be
-restricted for compliance or security reasons.
-:::
-
 ## Tool Output Visibility
 
 The **Tool output visibility** section controls whether end users can see tool calls and
-intermediate outputs while chatting with the assistant. The setting is located in the
-**Tools Configuration** area of the assistant configuration form, next to **File
-Attachments**, and is also available from the in-chat assistant editor.
+intermediate outputs while chatting with the assistant. The setting is located inside the
+**Tools Configuration** area of the assistant configuration form, between **Available Tools**
+and **MCP Servers**, and is also available from the in-chat assistant editor.
+
+![Tool output visibility section in the assistant configuration form](./images/tool-output-visibility-section.png)
 
 The section contains a single **Hide tool outputs from end users** toggle:
 
@@ -332,6 +314,26 @@ value.
 The field is also present on the assistant detail response and on the assistant data
 attached to conversation messages, so client code can check whether an assistant hides tool
 outputs before rendering tool-related UI.
+
+## File Attachments
+
+The **File attachments** section controls whether users can attach files when chatting with
+the assistant.
+
+![File attachments toggle in the assistant configuration form](./images/assistant-file-attachments-toggle.png)
+
+The section contains a single **Enable file attachments** toggle:
+
+| State        | Behavior                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| **Enabled**  | The paperclip icon appears in the chat input toolbar; users can attach files to messages |
+| **Disabled** | The paperclip icon is hidden; file uploads are not available for this assistant          |
+
+:::info
+File attachments are enabled by default for new assistants. Disable this setting when the
+assistant's use case does not involve file analysis, or when file uploads should be
+restricted for compliance or security reasons.
+:::
 
 ## Managing Your Assistant
 
