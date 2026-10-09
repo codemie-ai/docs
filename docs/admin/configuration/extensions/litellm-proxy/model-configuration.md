@@ -330,6 +330,34 @@ Each model entry in the `model_list` array consists of three main sections:
   [LiteLLM Native Auto-Routing](../../codemie/ai-models-integration/litellm-native-auto-routing.md)
   for the field schema and a worked example.
 
+## Per-User Model Visibility
+
+**External** users who connect through a LiteLLM integration see only the models assigned to
+their virtual key, not every model in `model_list`. **Regular** users are not affected.
+
+Assignments are controlled by the **Models** setting of the virtual key (see
+[Generate LiteLLM Virtual Key](../../../../user-guide/tools_integrations/tools/litellm.md)):
+
+| Key `models` value                                       | Models shown                                   |
+| -------------------------------------------------------- | ---------------------------------------------- |
+| Specific model names, for example `gpt-4.1`              | Only models whose `model_name` matches exactly |
+| Names with a `*` wildcard, for example `claude-*`        | Models whose `model_name` matches the pattern  |
+| Empty, not set, `all-proxy-models`, or `all-team-models` | All models that LiteLLM lists for the key      |
+| No integration configured                                | Default models of the environment              |
+
+Chat and embedding models follow the same rules. Disabled models stay hidden regardless of the key.
+
+:::info
+
+- Access-group names in the key's `models` list are not resolved — assign models by name or
+  wildcard instead.
+- If CodeMie cannot read the key's assignments, or no chat model matches, the user sees an
+  empty model list.
+- Assignments are cached for `LITELLM_USER_CREDENTIALS_CACHE_TTL` (default: 600 s, see
+  [API Configuration](../../codemie/api-configuration.md)). Changes appear after the cache expires.
+
+:::
+
 ## Model Configuration Examples
 
 This guide provides tested and verified model configurations currently used in AI/Run CodeMie production. While not all steps for adding new models are covered (refer to the [official LiteLLM documentation](https://docs.litellm.ai/) for comprehensive setup instructions), working examples from the production environment are shared and can be adapted for any deployment.

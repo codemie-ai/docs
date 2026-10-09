@@ -84,6 +84,13 @@ Clicking it opens a searchable panel with the following options:
 The selected model applies to all subsequent messages in the current conversation until
 you change it or select **Assistant Default** to revert.
 
+:::note Models available to External users
+**External** [users](../project-user-management/users.md) connecting through a LiteLLM
+integration see only the models assigned to their virtual key. If no chat model is assigned,
+the list is empty. Changes take up to 10 minutes to appear. See
+[Per-User Model Visibility](../../admin/configuration/extensions/litellm-proxy/model-configuration.md#per-user-model-visibility).
+:::
+
 :::note Auto-routing model entries
 Some entries in the model list are routers rather than a single fixed model — for example,
 one labeled with an `SY` prefix, or a LiteLLM router configured by your administrator.
