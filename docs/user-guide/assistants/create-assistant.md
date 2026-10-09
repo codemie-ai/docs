@@ -243,6 +243,96 @@ assistant's use case does not involve file analysis, or when file uploads should
 restricted for compliance or security reasons.
 :::
 
+## Tool Output Visibility
+
+The **Tool output visibility** section controls whether end users can see tool calls and
+intermediate outputs while chatting with the assistant. The setting is located in the
+**Tools Configuration** area of the assistant configuration form, next to **File
+Attachments**, and is also available from the in-chat assistant editor.
+
+The section contains a single **Hide tool outputs from end users** toggle:
+
+| State        | Behavior                                                                                                                                                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Disabled** | Default. Conversation-level tool output settings behave as before; end users can still toggle tool output visibility per chat.                                                                                                |
+| **Enabled**  | End users see only the final assistant response. Tool calls, intermediate outputs, raw payloads, and execution traces stay hidden, and the per-conversation toggle is removed from the chat input toolbar for this assistant. |
+
+When enabled, an info box clarifies that the restriction applies to everyone chatting with
+the assistant, including its creator:
+
+> This applies to everyone chatting with this assistant, including you. Turn it off to
+> inspect tool execution while testing.
+
+:::info
+Enforcement happens on the server, not only in the UI. Hidden tool details are stripped from
+the chat response, conversation history, live replay, shared conversation pages, and
+exported transcripts — the per-conversation client toggle cannot turn them back on for a
+flagged assistant. Full tool outputs are still stored; only what is served to end users is
+filtered.
+:::
+
+:::note
+Tool output passed between a parent assistant and its sub-assistants, or between assistants
+in a workflow, is internal orchestration data and is not affected by this setting.
+:::
+
+### Using with the CodeMie SDK
+
+The flag is exposed on the assistant model as `hide_tool_outputs` (boolean, default `false`)
+in both the Python and Node.js SDKs.
+
+**Python**
+
+```python
+from codemie_sdk.models.assistant import AssistantCreateRequest, AssistantUpdateRequest
+
+# Create an assistant with tool outputs hidden from end users
+client.assistants.create(
+    AssistantCreateRequest(
+        name="Support Agent",
+        description="Customer-facing support assistant",
+        system_prompt="...",
+        project="proj",
+        llm_model_type="gpt-4o",
+        hide_tool_outputs=True,
+    )
+)
+
+# Update only this field on an existing assistant
+client.assistants.update(
+    assistant_id,
+    AssistantUpdateRequest(hide_tool_outputs=True),
+)
+```
+
+**Node.js**
+
+```typescript
+// Create an assistant with tool outputs hidden from end users
+await client.assistants.create({
+  name: 'Support Agent',
+  description: 'Customer-facing support assistant',
+  system_prompt: '...',
+  project: 'proj',
+  llm_model_type: 'gpt-4o',
+  hide_tool_outputs: true,
+});
+
+// Update only this field on an existing assistant
+await client.assistants.update(assistantId, { hide_tool_outputs: true });
+```
+
+:::tip
+On update, omit `hide_tool_outputs` entirely to leave the stored value unchanged. The Python
+SDK only includes the field in the update payload when it was explicitly set on the request
+object; passing `hide_tool_outputs=False` without setting it has no effect on the stored
+value.
+:::
+
+The field is also present on the assistant detail response and on the assistant data
+attached to conversation messages, so client code can check whether an assistant hides tool
+outputs before rendering tool-related UI.
+
 ## Managing Your Assistant
 
 4. Once created, your assistant appears in the **My Assistants** menu:
