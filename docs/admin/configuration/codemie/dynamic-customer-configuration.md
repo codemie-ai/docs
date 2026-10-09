@@ -59,12 +59,13 @@ The deployment default is never copied into the database, so resetting never lea
 
 ## Available Dynamic Settings
 
-| Component ID              | Setting on the page                  | What it is                                                                               |
-| ------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `chatDisclaimer`          | Chat disclaimer                      | Short notice below the chat message input for every user                                 |
-| `banner`                  | Banner                               | Dismissible announcement across the top of the application, with an optional link        |
-| `features:webSearch`      | Web search                           | Web search tools for assistants in chat (Google Search, Tavily Search, Web Scraper)      |
-| `releaseNotesRecentCount` | Release Notes: Recent releases count | Number of latest releases listed on the Release Notes page before older ones are grouped |
+| Component ID               | Setting on the page                  | What it is                                                                                                                                        |
+| -------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `chatDisclaimer`           | Chat disclaimer                      | Short notice below the chat message input for every user                                                                                          |
+| `banner`                   | Banner                               | Dismissible announcement across the top of the application, with an optional link                                                                 |
+| `features:webSearch`       | Web search                           | Web search tools for assistants in chat (Google Search, Tavily Search, Web Scraper)                                                               |
+| `releaseNotesRecentCount`  | Release Notes: Recent releases count | Number of latest releases listed on the Release Notes page before older ones are grouped                                                          |
+| `mcpCustomServersDisabled` | MCP Custom Servers Disabled          | Restricts MCP servers to the admin-managed catalog — see [MCP Catalogue Governance](./customer-feature-configuration.md#mcp-catalogue-governance) |
 
 Deployment defaults for these components are set in `customer-config.yaml` — see the full example in [Customer Feature Configuration](./customer-feature-configuration.md#full-configuration-example).
 
