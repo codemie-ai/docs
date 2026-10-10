@@ -13,12 +13,10 @@ This page lists third-party component updates and configuration changes introduc
 
 Badges show what each release requires from administrators:
 
-| Badge                                                        | Meaning                                                         |
-| ------------------------------------------------------------ | --------------------------------------------------------------- |
-| <span className="badge badge--danger">Breaking</span>        | Configuration changes that break existing setups if not applied |
-| <span className="badge badge--warning">Config changes</span> | Configuration updates to review before upgrading                |
-| <span className="badge badge--info">Component updates</span> | Third-party components were updated                             |
-| <span className="badge badge--secondary">Hotfixes</span>     | Hotfix releases were published on top of this version           |
+- <span className="badge badge--secondary">Hotfixes</span> — Hotfix releases were published on top of this version
+- <span className="badge badge--danger">Breaking</span> — Configuration changes that break existing setups if not applied
+- <span className="badge badge--warning">Config changes</span> — Configuration updates to review before upgrading
+- <span className="badge badge--info">Component updates</span> — Third-party components were updated and upgrading them is recommended as part of this release
 
 :::tip Upgrade regularly
 We highly recommend keeping CodeMie up to date. Regular upgrades deliver the latest security fixes and keep each upgrade small, with fewer configuration changes to review at once.
