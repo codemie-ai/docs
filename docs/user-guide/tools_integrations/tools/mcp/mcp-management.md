@@ -57,11 +57,13 @@ Hovering over a badge shows the asset type in a tooltip.
    - **Workflows** — opens **Workflows** → **All Workflows** with the selected MCP server in the **MCP Servers** filter.
 4. Review the filtered list. Every row is an asset that references the selected MCP server and is visible to the current user.
 
-![Project Skills list filtered by MCP server](./images/mcp-skills-filtered-list.png)
-
 ### Assistants Filtered by MCP Server
 
 The **Assistants** badge opens **Project Assistants** with the **MCP servers** filter pre-selected. An assistant is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Assistants** count. See [Filtering Assistants](../../../assistants/index.md#filtering-assistants).
+
+### Skills Filtered by MCP Server
+
+The **Skills** badge opens **Project Skills** with the **MCP Servers** filter pre-selected. A skill is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Skills** count. See [Managing Skills](../../../skills/manage-skills.md#viewing-skills).
 
 ### Workflows Filtered by MCP Server
 
