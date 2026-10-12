@@ -27,7 +27,7 @@ Review every release between your current and target version that has a **Breaki
 ## October 2026 {#2026-10}
 
 <details className="release" id="v2-57-0">
-<summary><span className="release__version">CodeMie 2.57.0</span><span className="release__date">Oct 9, 2026</span><span className="badge badge--secondary">2 hotfixes</span></summary>
+<summary><span className="release__version">CodeMie 2.57.0</span><span className="release__date">Oct 9, 2026</span><span className="badge badge--info">Component updates</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">2 hotfixes</span></summary>
 
 :::danger Upgrade not recommended
 Versions **2.57.0** and **2.57.1** contain known issues and are not recommended for upgrade. Environments already running either version should move to the latest hotfix release, **2.57.2**.
@@ -37,11 +37,13 @@ Versions **2.57.0** and **2.57.1** contain known issues and are not recommended 
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>CodeMie Code CLI 0.15.8</h4>
+
+The recommended CLI version is updated to [v0.15.8](https://github.com/codemie-ai/codemie-code/releases/tag/v0.15.8).
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` enforces a minimum CLI version of `0.15.6`. Upgrading to `0.15.8` is recommended.
 
 <h3>Hotfixes</h3>
 
