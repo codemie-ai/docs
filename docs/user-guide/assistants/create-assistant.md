@@ -225,25 +225,31 @@ continues to use each tool's own default limit.
 
 ## Tool Output Visibility
 
-The **Tool output visibility** section controls whether end users can see tool calls and
-intermediate outputs while chatting with the assistant. The setting is located inside the
-**Tools Configuration** area of the assistant configuration form, between **Available Tools**
-and **MCP Servers**, and is also available from the in-chat assistant editor.
+The **Hide tool output** toggle controls whether end users can see tool calls and
+intermediate outputs while chatting with the assistant. The toggle is located in the header of
+the **Tools configuration** section of the assistant configuration form, to the right of the
+**Allow to override** toggle, and is also available from the in-chat assistant editor. It is
+shown for all assistants, including those for which the **Tool calls** and **Allow to override**
+controls are not displayed.
 
-![Tool output visibility section in the assistant configuration form](./images/tool-output-visibility-section.png)
+![Hide tool output toggle in the Tools configuration section of the assistant form](./images/tool-output-visibility-section.png)
 
-The section contains a single **Hide tool outputs from end users** toggle:
+The toggle has two states:
 
 | State        | Behavior                                                                                                                                                                                                                      |
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Disabled** | Default. Conversation-level tool output settings behave as before; end users can still toggle tool output visibility per chat.                                                                                                |
 | **Enabled**  | End users see only the final assistant response. Tool calls, intermediate outputs, raw payloads, and execution traces stay hidden, and the per-conversation toggle is removed from the chat input toolbar for this assistant. |
 
-When enabled, an info box clarifies that the restriction applies to everyone chatting with
-the assistant, including its creator:
+Two info icons next to the toggle show tooltips on hover:
 
-> This applies to everyone chatting with this assistant, including you. Turn it off to
-> inspect tool execution while testing.
+- The first icon is always visible and explains that, when enabled, end users see only the
+  final assistant response, and that conversation settings cannot turn tool details back on.
+- The second icon appears only while the toggle is enabled and clarifies that the restriction
+  applies to everyone chatting with the assistant, including its creator:
+
+  > This applies to everyone chatting with this assistant, including you. Turn it off to
+  > inspect tool execution while testing.
 
 :::info
 Enforcement happens on the server, not only in the UI. Hidden tool details are stripped from
