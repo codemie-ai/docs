@@ -176,10 +176,11 @@ for platform configuration.
 
 AI/Run CodeMie supports MCP servers for extending assistant capabilities.
 
-| Topic                                                                   | Description                                                  |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **[Adding an MCP Server](./mcp/adding-an-mcp-server.md)**               | Learn how to add and configure MCP servers                   |
-| **[MCP Integration Credentials](./mcp/mcp-integration-credentials.md)** | Choose whose credentials each user runs the MCP server under |
+| Topic                                                                   | Description                                                           |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **[Adding an MCP Server](./mcp/adding-an-mcp-server.md)**               | Learn how to add and configure MCP servers                            |
+| **[MCP Integration Credentials](./mcp/mcp-integration-credentials.md)** | Choose whose credentials each user runs the MCP server under          |
+| **[MCP Management](./mcp/mcp-management.md)**                           | ✨ Review which Assistants, Skills, and Workflows use each MCP server |
 
 ---
 

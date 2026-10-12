@@ -31,6 +31,34 @@ Workflows are organized into three main categories:
 
 ![Workflow categories view](./images/workflows-overview/workflow-categories-view.png)
 
+## Filtering Workflows
+
+The **All Workflows** and **My Workflows** lists provide a filter panel for narrowing the list. Filters can be combined, and the selected values are kept in the page address.
+
+| Filter               | Description                                                             |
+| -------------------- | ----------------------------------------------------------------------- |
+| **Categories**       | Workflows assigned to the selected categories                           |
+| **Project**          | Workflows that belong to the selected projects                          |
+| **Integration Type** | Workflows that use the selected integration types                       |
+| **MCP Servers**      | Workflows that use the selected MCP servers                             |
+| **Created by**       | Workflows created by a selected user (**All Workflows** only)           |
+| **Shared**           | All workflows, workflows shared with a project, or workflows not shared |
+
+### MCP Servers Filter
+
+The **MCP Servers** filter shows only workflows that use a selected MCP server:
+
+- Multi-select dropdown with a search field. Typing searches the MCP server catalog by name, and results load after a short delay.
+- Shows workflows that use **any** of the selected servers.
+- A workflow uses an MCP server when the server is attached and enabled on an assistant node or on a tool node in the workflow configuration. A server that is attached only to a separate Assistant referenced by the workflow is not taken into account.
+- Only workflows visible to the current user are listed: own, shared, and marketplace workflows.
+- Pre-selected when opened from the **Workflows** count on the **MCPs management** page. See [MCP Management](../tools_integrations/tools/mcp/mcp-management.md#workflows-filtered-by-mcp-server).
+- A server selected through the page address is shown by name even if it is not on the first page of search results.
+
+If the selected MCP server was deleted or is not accessible, the list shows the message `This MCP server could not be found or you no longer have access to it.` instead of the generic `No workflows found.` message.
+
+**Clear all** removes the MCP server together with the other filters. The **MCP Servers** filter is not available in **Templates** and **Marketplace**.
+
 ## Managing Workflows
 
 ### Workflow Actions

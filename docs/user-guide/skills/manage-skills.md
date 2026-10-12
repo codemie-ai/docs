@@ -52,6 +52,16 @@ Filter skills by categories:
 - Multi-select dropdown (select one or multiple categories)
 - Shows only skills matching selected categories
 
+#### MCP SERVERS
+
+Filter skills by the MCP servers they reference:
+
+- Multi-select dropdown with a search field (type to search the MCP catalog by name)
+- Shows skills that reference **any** of the selected servers
+- Counts only enabled MCP references
+- Pre-selected when opened from the Skills count on the **MCPs management** page. See [MCP Management](../tools_integrations/tools/mcp/mcp-management.md)
+- If the selected server was deleted or is not accessible, an empty state is shown instead of the unfiltered list
+
 #### CREATED BY
 
 Filter skills by author:
