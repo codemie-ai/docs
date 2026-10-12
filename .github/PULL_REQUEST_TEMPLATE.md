@@ -39,6 +39,7 @@ Examples:
 - [ ] No raw angle brackets (`<text>` must be `` `<text>` ``)
 - [ ] Sidebar references document IDs (not filenames)
 - [ ] Images stored locally next to content (not in `static/img/`)
+- [ ] Screenshots follow `.claude/skills/tech-writer/references/screenshot-guidelines.md` (full screen, 100% zoom, 16:9 / 16:10 / 4:3, sensitive data blurred, 2px `#f6823d` outlines)
 - [ ] Commit messages follow Conventional Commits
 - [ ] No secrets or credentials in documentation
 

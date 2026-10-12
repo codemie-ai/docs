@@ -146,9 +146,14 @@ If screenshot files are found:
    - What UI element, feature, or step it shows
    - Which section of the platform it relates to
    - Whether it matches the feature/topic being documented
-3. **Build a "pending screenshots" list** — original filename + inferred content description.
+3. **Check each screenshot against the rules in `references/screenshot-guidelines.md`** while the image is open, and note every violation next to the screenshot in the list:
+   - cropped to a fragment instead of the full window
+   - a very wide aspect ratio, or a visibly zoomed browser (not 100%)
+   - readable names, emails, usernames, avatars, hostnames, internal URLs, tokens, or other data that must be blurred
+   - highlight outlines that are not 2px `#f6823d`
+4. **Build a "pending screenshots" list** — original filename + inferred content description + any guideline violations.
 
-This context feeds directly into your approach proposal: you'll know which steps or features have visual coverage, and can plan where each screenshot will appear in the documentation.
+This context feeds directly into your approach proposal: you'll know which steps or features have visual coverage, and can plan where each screenshot will appear in the documentation. Screenshots with violations are reported to the user in the proposal and are not placed until the user decides to retake or accept them; never edit or blur an image yourself.
 
 Do **not** move or rename files yet — that happens in Phase 6.
 
@@ -196,7 +201,7 @@ After the user confirms the approach, ask targeted questions.
 
 **Ask if relevant (3–6):**
 
-3. **Screenshots**: "Are screenshots available, or should I write text-only for now?"
+3. **Screenshots**: "Are screenshots available, or should I write text-only for now?" (screenshots must follow `references/screenshot-guidelines.md`)
 4. **Prerequisites**: "What must users have set up before following this guide?"
 5. **Related docs**: "Should this link to any specific related documentation?"
 6. **Packaging**: "Is this part of the Enterprise package?" — ask whenever it is not already clear from
@@ -540,6 +545,7 @@ For each pending screenshot:
 - [ ] All front matter fields present and correct
 - [ ] Document ID is clean (no numbers), matches sidebars.ts reference
 - [ ] Images stored locally in `images/` with relative paths
+- [ ] Every screenshot follows `references/screenshot-guidelines.md` (full screen, 100% zoom, 16:9 / 16:10 / 4:3, sensitive data blurred, 2px `#f6823d` outlines), or the user accepted the exception
 - [ ] All internal links in regular `.md`/`.mdx` files use **relative paths with file extension** (e.g. `./page.md`, `../section/page.md`)
 - [ ] All internal links in `_*.mdx` partials use **Docusaurus document IDs** (e.g. `admin/deployment/aws/overview`)
 - [ ] Angle brackets wrapped in backticks

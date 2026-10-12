@@ -187,6 +187,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/xray',
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
+                'user-guide/tools_integrations/tools/workspace-script-sdk',
                 'user-guide/tools_integrations/tools/ms-teams-bot',
                 {
                   type: 'category',

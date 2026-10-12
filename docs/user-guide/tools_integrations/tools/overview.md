@@ -41,6 +41,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Scheduler](./scheduler.md)**                                              | Task scheduling and automation (Admin role only)                                                                  |
 | **[Plugin](./plugin.md)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
 | **[FileSystem](./filesystem.md)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
+| **[Workspace Script SDK](./workspace-script-sdk.md)**                        | Call CodeMie tools from scripts that run in a workspace, with `codemie_runtime_sdk`                               |
 | **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
 | **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
 | **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels              |

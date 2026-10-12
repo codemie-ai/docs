@@ -12,7 +12,7 @@ pagination_prev: admin/configuration/index
 Control which features, UI elements, and integrations are available to users in your CodeMie deployment through the `customer-config.yaml` configuration file.
 
 :::tip Runtime changes
-Some components — `banner`, `chatDisclaimer`, `features:webSearch`, and `releaseNotesRecentCount` — can also be changed at runtime from **Settings → Administration → Customer Configuration** without a redeploy. The values in `customer-config.yaml` serve as their deployment defaults. See [Dynamic Customer Configuration](./dynamic-customer-configuration.md).
+Some components — `banner`, `chatDisclaimer`, `features:webSearch`, `features:workspaceScriptBridge`, and `releaseNotesRecentCount` — can also be changed at runtime from **Settings → Administration → Customer Configuration** without a redeploy. The values in `customer-config.yaml` serve as their deployment defaults. See [Dynamic Customer Configuration](./dynamic-customer-configuration.md).
 :::
 
 ## Component Overview
@@ -39,6 +39,7 @@ Use this table to quickly find where each component appears in the UI.
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                                   |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                                       | Code interpreter option                                                             | If both disabled, entire section hidden                                                        |
+| `features:workspaceScriptBridge`          | No UI element; Settings → Administration → Customer Configuration   | Workspace scripts can call CodeMie tools with `codemie_runtime_sdk`                             | Tool calls from scripts are not available                                           | Disabled by default; `sandbox-jobs` only. Editable at runtime                                  |
 | **BANNER, DISCLAIMER AND RELEASE NOTES**  |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `banner`                                  | All pages (top banner)                                              | Banner message with an optional link                                                            | No banner shown                                                                     | Default: disabled. Editable at runtime                                                         |
 | `chatDisclaimer`                          | Chat → below the message input                                      | Non-dismissible disclaimer text with clickable links                                            | No disclaimer shown                                                                 | Default: disabled. Editable at runtime                                                         |
@@ -399,6 +400,23 @@ components:
       enabled: true
       name: "Code Interpreter"
       description: "Enable Python code execution and data analysis capabilities"
+
+  # WHERE: No UI element. Settings → Administration → Customer Configuration → Workspace script bridge
+  # ENABLED: Scripts run by the execute workspace script tool can call CodeMie tools with codemie_runtime_sdk
+  # DISABLED: Scripts cannot make tool calls
+  # NOTE: Disabled by default. Works in `sandbox-jobs` mode only. `timeoutSeconds` is the time limit for a script
+  #       run with the bridge (default 120, capped at 480); the Job deadline becomes
+  #       max(CODE_EXECUTOR_EXECUTION_TIMEOUT, timeoutSeconds) + 60 seconds.
+  #       `maxParallelCalls` is how many tool calls of one run are served at once (default 5).
+  #       Can also be toggled with FEATURE_WORKSPACE_SCRIPT_BRIDGE=true, which overrides `enabled`.
+  #       Editable at runtime. See Code Executor Configuration.
+  - id: "features:workspaceScriptBridge"
+    settings:
+      enabled: false
+      timeoutSeconds: 120
+      maxParallelCalls: 5
+      name: "Workspace Script Bridge"
+      description: "Allow scripts run in the workspace sandbox to call the backend during their run"
 
   # WHERE: Assistants list, Skills list, Workflows list
   # ENABLED: Shows favorite/unfavorite action buttons on items
@@ -1308,6 +1326,14 @@ extraObjects:
               enabled: true
               name: "Code Interpreter"
               description: "Enable Python code execution and data analysis capabilities"
+
+          - id: "features:workspaceScriptBridge"
+            settings:
+              enabled: false
+              timeoutSeconds: 120
+              maxParallelCalls: 5
+              name: "Workspace Script Bridge"
+              description: "Allow scripts run in the workspace sandbox to call the backend during their run"
 
           - id: "features:favorites"
             settings:

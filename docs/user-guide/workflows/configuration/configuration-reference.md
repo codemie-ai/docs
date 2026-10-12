@@ -336,6 +336,9 @@ tools:
     trace: false
     resolve_dynamic_values_in_response: false
     mcp_server: {...}  # See Section 3.6 for MCP Server configuration
+    tool_access:  # only for execute_workspace_script, see below
+      - name: tool-name
+        integration_alias: optional-alias
 ```
 
 #### Tool Properties:
@@ -348,6 +351,7 @@ tools:
 - **trace**: Enable detailed logging
 - **resolve_dynamic_values_in_response**: Process template variables in tool output
 - **mcp_server**: MCP server configuration for MCP tools (see Section 3.6)
+- **tool_access**: Tools a script run by the `execute_workspace_script` tool may call, as a list of `name` and optional `integration_alias` (the same form as the `tools` of an assistant). Each tool is listed once. Without `integration_alias` the tool uses the integration of the user who runs the workflow; with it, that integration is used. A script can call only the listed tools, and none when the list is empty or missing. Allowed only on the workspace script tool. See [Choosing the Tools of a Workflow Step](../../tools_integrations/tools/workspace-script-sdk.md#choosing-the-tools-of-a-workflow-step)
 
 #### Advanced Tools Examples:
 

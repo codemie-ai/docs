@@ -163,6 +163,10 @@ File attached: filename.ext
 
 The full list of file names is also accessible via the `{{file_names}}` context variable in YAML task templates or tool arguments.
 
+Files you attach are also placed in the workspace of the run. A Tool node that runs the workspace script tool can run an attached script, and the next steps see the files the script writes. See [Running a Script from a Workflow Step](../tools_integrations/tools/workspace-script-sdk.md#running-a-script-from-a-workflow-step).
+
+You can attach only files you have access to. If a file belongs to another user or no longer exists, the run does not start and an error message is shown.
+
 :::tip Referencing a specific file
 Mention a file by name (e.g., `@report.pdf`) to direct a step to focus on that specific file rather than processing all attached files.
 :::

@@ -24,6 +24,7 @@ ignorePaths:
 words:
   # Project/Brand names
   - HMAC
+  - retryable
   - codemie
   - passwordless
   - SAMEORIGIN
