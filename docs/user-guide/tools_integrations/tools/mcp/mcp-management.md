@@ -31,7 +31,7 @@ Each row of the MCP catalog contains three badges, one per asset type:
 | Badge      | Counts                                                                     |
 | ---------- | -------------------------------------------------------------------------- |
 | Assistants | Assistants that reference the MCP server, including marketplace assistants |
-| Skills     | Skills that reference the MCP server                                       |
+| Skills     | Skills that reference the MCP server, including marketplace skills         |
 | Workflows  | Workflows whose configuration references the MCP server                    |
 
 Hovering over a badge shows the asset type in a tooltip.
@@ -58,11 +58,11 @@ Hovering over a badge shows the asset type in a tooltip.
 
 ### Assistants Filtered by MCP Server
 
-The **Assistants** badge opens **Project Assistants** with the **MCP servers** filter pre-selected. An assistant is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Assistants** count. See [Filtering Assistants](../../../assistants/index.md#filtering-assistants).
+The **Assistants** badge opens **Project Assistants** with the **MCP servers** filter pre-selected. An assistant is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Assistants** count, which can also include marketplace assistants that are not shown in **Project Assistants**. See [Filtering Assistants](../../../assistants/index.md#filtering-assistants).
 
 ### Skills Filtered by MCP Server
 
-The **Skills** badge opens **Project Skills** with the **MCP Servers** filter pre-selected. A skill is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Skills** count. See [Managing Skills](../../../skills/manage-skills.md#viewing-skills).
+The **Skills** badge opens **Project Skills** with the **MCP Servers** filter pre-selected. A skill is listed when the selected MCP server is attached to it and enabled. The same rule is used for the **Skills** count, which can also include marketplace skills that are not shown in **Project Skills**. See [Managing Skills](../../../skills/manage-skills.md#viewing-skills).
 
 ### Workflows Filtered by MCP Server
 
@@ -71,7 +71,11 @@ The **Workflows** badge opens the **All Workflows** list with the **MCP Servers*
 The **MCP Servers** filter is also available directly in the filter panel of **All Workflows** and **My Workflows**. See [Workflows Overview](../../../workflows/workflows-overview.md#filtering-workflows).
 
 :::info
-The number in the badge and the number of rows in the opened list are expected to match. A difference can appear when assets were changed in the meantime or when the list is limited by other filters, for example **PROJECT** or **VISIBILITY**.
+The **Workflows** badge and the number of rows in the opened **All Workflows** list are expected to match.
+
+The **Assistants** and **Skills** badges can show a larger number than the opened list. The badge counts project and marketplace assets together, while the opened list contains only project assets. There is no combined list of project and marketplace assistants or skills, so the marketplace part of the count cannot be opened from the badge.
+
+A difference can also appear when assets were changed in the meantime or when the list is limited by other filters, for example **PROJECT** or **VISIBILITY**.
 :::
 
 ## Work With the Filtered List
