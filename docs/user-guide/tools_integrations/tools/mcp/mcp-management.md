@@ -9,7 +9,6 @@ description: Review how many Assistants, Skills, and Workflows use each MCP serv
 ---
 
 import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
-import CodeBlock from '@theme/CodeBlock';
 
 # MCP Management
 
@@ -110,110 +109,6 @@ Clear the MCP filter to return to the default list.
 
 1. Click the **Workflows** badge of the MCP server.
 2. Open each workflow from the list and review the MCP server on its assistant and tool nodes. See [Workflows Overview](../../../workflows/workflows-overview.md).
-
-## API Reference
-
-The same data is available through the REST API for scripts and integrations.
-
-### Usage Counts in the MCP Catalog
-
-**GET** `/v1/mcp-configs`
-
-Each item in the list response contains three additional integer fields. They hold the same visibility-aware, enabled-reference-only counts as the **Assignments** column, calculated for the authenticated user:
-
-| Field                     | Description                                                         |
-| ------------------------- | ------------------------------------------------------------------- |
-| `linked_assistants_count` | Assistants (own, shared, and marketplace) that reference the server |
-| `linked_skills_count`     | Skills accessible to the user that reference the server             |
-| `linked_workflows_count`  | Workflows that reference the server on an assistant or a tool node  |
-
-All fields default to `0`. The legacy `usage_count` field is unchanged and is not a combined total of the new fields.
-
-### Filter Assistants by MCP Server
-
-**GET** `/v1/assistants`
-
-The `filters` query parameter (a JSON-encoded object) accepts the same `mcp_config_ids` key:
-
-| Key              | Type            | Behavior                                                                                                    |
-| ---------------- | --------------- | ----------------------------------------------------------------------------------------------------------- |
-| `mcp_config_ids` | array of string | Returns only assistants with an enabled MCP server link to **any** of the listed catalog entries (OR match) |
-
-Rules:
-
-- Absent, `null`, or empty value means no MCP filter.
-- Entries are trimmed, and duplicates and blank entries are removed.
-- Unknown or inaccessible IDs are not rejected; they simply match nothing.
-- A bare string, or an array containing a non-string item, returns `400` with the message `Invalid mcp_config_ids format`.
-- The filter combines with the other filter keys and with the `scope` parameter and visibility rules.
-- The singular `mcp_config_id` key is not recognized.
-- An enabled link is counted when the `enabled` flag of the MCP server is `true` or not set.
-
-<CodeBlock language="bash">
-{`curl -G "https://codemie.example.com/code-assistant-api/v1/assistants" \
-  -H "Authorization: Bearer $TOKEN" \
-  --data-urlencode 'filters={"mcp_config_ids":["<mcp-config-id>"]}'`}
-</CodeBlock>
-
-### Filter Skills by MCP Server
-
-**GET** `/v1/skills`
-
-The `filters` query parameter (a JSON-encoded object) accepts a new `mcp_config_ids` key:
-
-| Key              | Type            | Behavior                                                                                         |
-| ---------------- | --------------- | ------------------------------------------------------------------------------------------------ |
-| `mcp_config_ids` | array of string | Returns only skills with an enabled link to **any** of the listed MCP catalog entries (OR match) |
-
-Rules:
-
-- Absent, `null`, or empty value means no MCP filter.
-- Duplicates and blank entries are removed.
-- Unknown or inaccessible IDs are not rejected; they simply match nothing. The UI performs the existence check separately by requesting the MCP configuration.
-- A bare string, or an array containing a non-string item, returns `400` with the message `Invalid mcp_config_ids format`.
-- The filter combines with the other keys (`scope`, `project`, `categories`, `search`, `created_by`) and with visibility rules.
-- The singular `mcp_config_id` key is not recognized.
-
-<CodeBlock language="bash">
-{`curl -G "https://codemie.example.com/code-assistant-api/v1/skills" \\
-  -H "Authorization: Bearer $TOKEN" \\
-  --data-urlencode 'filters={"scope":"project","project":"demo","mcp_config_ids":["<mcp-config-id>"]}'`}
-</CodeBlock>
-
-Replace `<mcp-config-id>` with the `id` of an entry returned by `GET /v1/mcp-configs`.
-
-### Filter Workflows by MCP Server
-
-**GET** `/v1/workflows`
-
-The `filters` query parameter (a JSON-encoded object) accepts the same `mcp_config_ids` key:
-
-| Key              | Type            | Behavior                                                                                                                                |
-| ---------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `mcp_config_ids` | array of string | Returns only workflows with an enabled MCP link to **any** of the listed catalog entries on an assistant node or a tool node (OR match) |
-
-Rules:
-
-- Absent, `null`, or empty value means no MCP filter.
-- Entries are trimmed, and duplicates and blank entries are removed.
-- Unknown or inaccessible IDs are not rejected; they simply match nothing.
-- A bare string, or an array containing a non-string item, returns `400` with the message `Invalid mcp_config_ids format: mcp_config_ids must be a list of strings`.
-- The filter combines with the other filter keys (for example `project`, `categories`, `integration_type`) and with the `scope` parameter and visibility rules.
-- The singular `mcp_config_id` key is not recognized.
-- An enabled link is counted when the `enabled` flag of the MCP server is `true` or not set.
-- A workflow that uses a separate Assistant record through an `assistant_id` reference is not matched through that Assistant's MCP servers.
-
-<CodeBlock language="bash">
-{`curl -G "https://codemie.example.com/code-assistant-api/v1/workflows" \\
-  -H "Authorization: Bearer $TOKEN" \\
-  --data-urlencode 'filters={"mcp_config_ids":["<mcp-config-id>"]}'`}
-</CodeBlock>
-
-The list returned by this request matches the `linked_workflows_count` value of the same MCP server for the same user.
-
-:::note
-If counting linked assets fails for one asset type on the server, the corresponding `linked_*_count` field falls back to `0` instead of failing the whole `GET /v1/mcp-configs` request.
-:::
 
 ## Related Documentation
 
