@@ -37,11 +37,15 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**Code Executor** — `CODE_EXECUTOR_SECURITY_THRESHOLD` semantics corrected — only applies if the Code Executor tool is enabled:
+**Code Executor** — the meaning of `CODE_EXECUTOR_SECURITY_THRESHOLD` values is corrected. This applies only if the Code Executor tool is enabled.
 
-The values of `CODE_EXECUTOR_SECURITY_THRESHOLD` previously behaved inverted (`LOW` enforced the strictest policy, `HIGH` the most permissive). The semantics now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive.
+Previously the values were inverted: `LOW` enforced the strictest policy and `HIGH` the most permissive. They now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive. The default value changed from `LOW` to `HIGH`, which enforces the same policy the old default did.
 
-The default value has also changed from `LOW` to `HIGH`. Under the corrected semantics, `HIGH` enforces exactly what `LOW` enforced before, so deployments that do not set this variable explicitly keep their current enforcement level unchanged.
+**Action required** — only if `CODE_EXECUTOR_SECURITY_THRESHOLD` is set explicitly:
+
+- Previously set to `LOW`: change it to `HIGH` to keep the same enforcement level.
+- Previously set to `HIGH`: change it to `LOW` to keep the same enforcement level.
+- Not set, or the Code Executor tool is disabled: no action required.
 
 </details>
 
