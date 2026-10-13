@@ -175,6 +175,8 @@ if [[ "$PARSEABLE" == "true" ]]; then
     EMAIL_LOGO_PATH="$ASSETS_DIR/$logo_name"
     if [[ "$logo_name" == */* || "$logo_name" == *\\* || "$logo_name" == *..* ]]; then
       ERRORS+=("email.images.logo: must be a plain file name, got: $logo_name")
+    elif [[ ! "$logo_name" =~ $ASSET_FILE_RE ]]; then
+      ERRORS+=("email.images.logo: invalid file name (letters, digits, . _ - only; at most 100 characters): $logo_name")
     else
       logo_ext=$(printf '%s' "${logo_name##*.}" | tr '[:upper:]' '[:lower:]')
       [[ "$logo_name" == *.* ]] || logo_ext=""
@@ -342,38 +344,38 @@ else
   echo "  extraObjects in values-codemie.brand.yaml REPLACE the lists of your release, merge them before applying" >&2
 fi
 
-# True when <current> already holds the exact line <entry> (surrounding space ignored). Keyed on
-# whole lines, never substrings, so a volume named codemie-brand-assets is not mistaken for codemie-brand.
-_has_entry() { # <current> <entry line>
-  local line
-  while IFS= read -r line; do
-    line="${line#"${line%%[![:space:]]*}"}"
-    line="${line%"${line##*[![:space:]]}"}"
-    [[ "$line" == "$2" ]] && return 0
-  done <<<"$1"
-  return 1
+# True when the YAML list <current> holds an item whose <key> equals <value>. Parsed with yq, so key
+# order, quoting and comments do not matter, and a volume named codemie-brand-assets is never
+# mistaken for codemie-brand.
+_has_item() { # <current> <key> <value>
+  [[ -n "$1" ]] || return 1
+  local n
+  n=$(ITEM_VALUE="$3" yq eval "[.[] | select(.$2 == strenv(ITEM_VALUE))] | length" - <<<"$1") || return 1
+  [[ "$n" != "0" ]]
 }
 
-_append_block() { # <current> <block> <entry line>: append the block unless the entry is already there
-  local cur="$1" block="$2" entry="$3"
-  if _has_entry "$cur" "$entry"; then printf '%s' "$cur"; return; fi
+_append_block() { # <current> <block> <key> <value>: append the block unless an item with key=value exists
+  local cur="$1" block="$2"
+  if _has_item "$cur" "$3" "$4"; then printf '%s' "$cur"; return; fi
   [[ -n "$cur" ]] && cur+=$'\n'
   printf '%s%s' "$cur" "$block"
 }
-export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP EMAIL_LOGO B64_EMAIL_LOGO
+export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP EMAIL_LOGO B64_EMAIL_LOGO_FILE
 NEW_VOLUMES=$(_append_block "$CUR_VOLUMES" "- name: $BRAND_CONFIGMAP
   configMap:
-    name: $BRAND_CONFIGMAP" "- name: $BRAND_CONFIGMAP")
+    name: $BRAND_CONFIGMAP" name "$BRAND_CONFIGMAP")
 NEW_MOUNTS=$(_append_block "$CUR_MOUNTS" "- name: $BRAND_CONFIGMAP
   mountPath: $BRAND_MOUNT_PATH
   subPath: brand.yaml
-  readOnly: true" "mountPath: $BRAND_MOUNT_PATH")
+  readOnly: true" mountPath "$BRAND_MOUNT_PATH")
 # the same volume, whole: the backend reads the email logo from this directory
 NEW_MOUNTS=$(_append_block "$NEW_MOUNTS" "- name: $BRAND_CONFIGMAP
   mountPath: $BRAND_ASSETS_MOUNT_PATH
-  readOnly: true" "mountPath: $BRAND_ASSETS_MOUNT_PATH")
-B64_EMAIL_LOGO=""
-[[ -z "$EMAIL_LOGO" ]] || B64_EMAIL_LOGO=$(_b64 "$EMAIL_LOGO_PATH")
+  readOnly: true" mountPath "$BRAND_ASSETS_MOUNT_PATH")
+# the base64 logo can exceed the per-string environment limit, so it travels in a file, not a variable
+B64_EMAIL_LOGO_FILE="$TMP_ROOT/email-logo.b64"
+: >"$B64_EMAIL_LOGO_FILE"
+[[ -z "$EMAIL_LOGO" ]] || _b64 "$EMAIL_LOGO_PATH" >"$B64_EMAIL_LOGO_FILE"
 # the email block is optional: a package without one renders no email key at all
 BRAND_YAML=$(yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email)' "$PACKAGE_FILE")
 
@@ -389,7 +391,7 @@ yq -n '
     "kind": "ConfigMap",
     "metadata": {"name": strenv(BRAND_CONFIGMAP)},
     "data": {"brand.yaml": strenv(BRAND_YAML)}
-  } | with(select(strenv(EMAIL_LOGO) != ""); .binaryData[strenv(EMAIL_LOGO)] = strenv(B64_EMAIL_LOGO))]
+  } | with(select(strenv(EMAIL_LOGO) != ""); .binaryData[strenv(EMAIL_LOGO)] = load_str(strenv(B64_EMAIL_LOGO_FILE)))]
 ' >"$WORK_DIR/values-codemie.brand.yaml"
 
 echo "apply-theme: rendered files written to $WORK_DIR"
