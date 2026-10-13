@@ -167,7 +167,8 @@ All tools are read-only.
 - Only PDF files with a text layer are extracted. A scanned PDF is not OCR-ed, so it returns little or no text and is listed as "text extraction failed".
 - Other attachment types, such as XLSX, TXT or EML, are skipped as "unsupported attachment type".
 - Limits: at most 10 attachments per message, 10 MB per attachment and 25 MB in total.
-- An optional OCR model can be set. If it is not set, the assistant's chat model performs the OCR. That model must be multimodal. If it is not, images are skipped with "text extraction failed".
+- An optional OCR model can be set with `ocr_model`. If it is not set, an assistant uses a multimodal model from the platform's model list. The assistant's own model is used only when the platform has no multimodal model configured, and then it must be multimodal, otherwise images are skipped with "text extraction failed".
+- In a workflow tool node there is no assistant model, so set `ocr_model` in `tool_args`. Without it, images are listed as "no OCR model provided". See [Using in Workflows](#using-in-workflows).
 - Attachments that are not extracted are listed with a short note that explains why they were skipped.
 
 Each request times out after 60 seconds. Temporary failures are retried automatically up to 3 times, and all retries of one call share a 90-second budget:
@@ -209,6 +210,10 @@ A workflow refers to the tools by their technical names, not by the labels shown
 | `exchange_read`             | `folder` (default `Inbox`), `start` (default `0`), `count` (default `10`, maximum `50`)    |
 | `exchange_retrieve_by_id`   | `message_id` (required)                                                                    |
 | `exchange_enrich_body`      | `message_id` (required), `ocr_model` (optional name of a multimodal model used for images) |
+
+:::note OCR in workflow tool nodes
+When `exchange_enrich_body` runs as a tool node, no assistant model is available. Set `ocr_model` in `tool_args` to the name of a multimodal model. Otherwise every image attachment is skipped and listed as "no OCR model provided". An assistant in a workflow, as in the second example below, uses a multimodal model from the platform's model list.
+:::
 
 Example of a tool that reads the newest messages of a folder:
 
@@ -282,11 +287,12 @@ If your Exchange server uses a self-signed certificate or one issued by an inter
    - `REQUESTS_CA_BUNDLE` is used by `requests`-based clients: EWS (exchangelib), azure-identity and most toolkits.
    - `SSL_CERT_FILE` is used by `httpx`-based clients: the Microsoft Graph SDK, A2A and the OpenAPI tool.
 
-Add these values to the `values.yaml` of the `codemie-api` chart:
+Add these entries to the `values.yaml` of the `codemie-api` chart:
 
 ```yaml
 # 1. ConfigMap — stores the CA certificate
 extraObjects:
+  # keep your existing entries
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -299,12 +305,14 @@ extraObjects:
 
 # 2. Volume — exposes the ConfigMap as a volume
 extraVolumes: |
+  # keep your existing entries, such as google-service-account and codemie-customer-config
   - name: exchange-ca-cert
     configMap:
       name: exchange-ca-cert
 
 # 3. Volume mount — places the certificate next to the system certificates
 extraVolumeMounts: |
+  # keep your existing entries, such as google-service-account and codemie-customer-config
   - name: exchange-ca-cert
     mountPath: /etc/ssl/certs/exchange-ca.pem
     subPath: exchange-ca.pem
@@ -312,11 +320,16 @@ extraVolumeMounts: |
 
 # 4. Environment variables — make the HTTP clients trust the certificate
 extraEnv:
+  # keep your existing entries
   - name: REQUESTS_CA_BUNDLE # requests: exchangelib, azure-identity, most toolkits
     value: /etc/ssl/certs/exchange-ca.pem
   - name: SSL_CERT_FILE # httpx: Microsoft Graph SDK, A2A, OpenAPI tool
     value: /etc/ssl/certs/exchange-ca.pem
 ```
+
+:::warning Append, do not replace
+Helm does not merge `extraObjects`, `extraVolumes`, `extraVolumeMounts` and `extraEnv`: a new value replaces the chart default or the value from another values file. The chart already sets `extraVolumes` and `extraVolumeMounts` (the `google-service-account` secret and the `codemie-customer-config` ConfigMap) and `extraEnv` (the platform environment variables). Append the new entries to the existing lists in your `values.yaml`. If you pass the block above alone, for example as a separate `-f` file, the API pods lose these mounts and variables.
+:::
 
 Apply the change with `helm upgrade` and wait for the `codemie-api` pods to restart. The [Customer Feature Configuration](../../../admin/configuration/codemie/customer-feature-configuration.md#how-it-works) guide uses the same ConfigMap and volume pattern.
 
