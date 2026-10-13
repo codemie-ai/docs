@@ -758,3 +758,233 @@ kc_check() {
   [ "$status" -eq 0 ]
   grep -q "helm upgrade rel-a repo/x" "$BATS_TMPDIR/helm-calls"
 }
+
+# ── keycloak phase-1 validation ──────────────────────────────────────────────
+
+# kcpkg '<yq expression>' -> path of a copy of keycloak.yaml with the change applied
+kcpkg() {
+  yq eval "$1" "$FIXTURES/keycloak.yaml" >"$BATS_TEST_TMPDIR/kc-mutated.yaml"
+  echo "$BATS_TEST_TMPDIR/kc-mutated.yaml"
+}
+
+# kc_render '<yq expression>' [assets dir] -> render-only run of the changed keycloak package
+kc_render() {
+  pkg=$(kcpkg "$1")
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "${2:-$ASSETS_DIR}"
+}
+
+# expects a failed run that names <field> and wrote nothing
+kc_rejected() {
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"$1"* ]]
+  [ ! -e "$OUT" ] || [ -z "$(ls -A "$OUT")" ]
+}
+
+@test "validate: keycloak package with no change passes" {
+  kc_render '.'
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: dollar-brace in product.name rejected" {
+  kc_render '.product.name = "Acme ${env} Suite"'
+  kc_rejected "product.name"
+}
+
+@test "validate: dollar-brace in product.shortName and email.signature rejected" {
+  kc_render '.product.shortName = "A${x}" | .email.signature = "Team ${x}"'
+  kc_rejected "product.shortName"
+  [[ "$output" == *"email.signature"* ]]
+}
+
+@test "validate: dollar-brace is allowed when the keycloak block is absent" {
+  pkg=$(mutate '.product.name = "Acme ${env}"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: angle brackets, quote, backslash and control characters rejected by field" {
+  kc_render '.product.name = "Acme <b>"'
+  kc_rejected "product.name"
+  kc_render '.product.name = "Acme \"x\""'
+  kc_rejected "product.name"
+  kc_render '.product.shortName = "A\\B"'
+  kc_rejected "product.shortName"
+  kc_render '.product.name = "Acme\tSuite"'
+  kc_rejected "product.name"
+  kc_render '.product.name = "Acme\nSuite"'
+  kc_rejected "product.name"
+}
+
+@test "validate: newline is allowed in email.signature only" {
+  kc_render '.email.signature = "Best,\n{productName} team"'
+  [ "$status" -eq 0 ]
+  rm -rf "$OUT"
+  kc_render '.email.signature = "Best,\n\tteam"'
+  kc_rejected "email.signature"
+}
+
+@test "validate: leading or trailing whitespace rejected" {
+  kc_render '.product.name = " Acme"'
+  kc_rejected "product.name"
+  kc_render '.product.shortName = "Acme "'
+  kc_rejected "product.shortName"
+}
+
+@test "validate: reserved theme names rejected" {
+  for n in codemie base keycloak; do
+    kc_render ".keycloak.themeName = \"$n\""
+    kc_rejected "keycloak.themeName"
+  done
+}
+
+@test "validate: theme name outside a-z0-9- rejected" {
+  kc_render '.keycloak.themeName = "Acme_Brand"'
+  kc_rejected "keycloak.themeName"
+  kc_render '.keycloak.themeName = "ab"'
+  kc_rejected "keycloak.themeName"
+}
+
+@test "validate: missing logoLight rejected naming assets.logoLight" {
+  kc_render 'del(.assets.logoLight)'
+  kc_rejected "assets.logoLight"
+}
+
+@test "validate: svg email logo url rejected" {
+  kc_render '.email.images.logoUrl = "https://static.acme.example/logo.svg"'
+  kc_rejected "email.images.logoUrl"
+  kc_render '.email.images.logoUrl = "https://static.acme.example/logo.SVG?v=2"'
+  kc_rejected "email.images.logoUrl"
+}
+
+@test "validate: svg email logo file rejected" {
+  kc_render '.email.images.logo = "logo-light.svg"'
+  kc_rejected "email.images.logo"
+}
+
+@test "validate: smtp host without from rejected" {
+  kc_render 'del(.keycloak.smtp.from)'
+  kc_rejected "keycloak.smtp.from"
+  kc_render 'del(.keycloak.smtp.host)'
+  kc_rejected "keycloak.smtp.host"
+}
+
+@test "validate: literal smtp password rejected, nothing written, value not echoed" {
+  kc_render '.keycloak.smtp.auth.password = "hunter2-literal"'
+  kc_rejected "keycloak.smtp.auth.password"
+  [[ "$output" != *"hunter2-literal"* ]]
+}
+
+@test "validate: literal smtp username rejected, value not echoed" {
+  kc_render '.keycloak.smtp.auth.username = "mailer-literal"'
+  kc_rejected "keycloak.smtp.auth.username"
+  [[ "$output" != *"mailer-literal"* ]]
+}
+
+@test "validate: smtp password with value key rejected" {
+  kc_render '.keycloak.smtp.auth.password = {"value": "hunter2-literal"}'
+  kc_rejected "keycloak.smtp.auth.password"
+  [[ "$output" != *"hunter2-literal"* ]]
+}
+
+# kc_size_assets <target>: asset dir in which the four Keycloak assets plus the rendered brand.css
+# add up to exactly <target> bytes (base64-expanded). Sets KC_ASSETS and KC_PKG (padding sits in a
+# typography value, which no properties file receives).
+kc_size_assets() {
+  KC_ASSETS="$BATS_TEST_TMPDIR/size-assets"
+  rm -rf "$KC_ASSETS"
+  cp -R "$ASSETS_DIR" "$KC_ASSETS"
+  : >"$KC_ASSETS/logo-light.svg"
+  local fixed=0 f n css pad
+  for f in logo-dark.svg favicon.ico favicon.svg; do
+    n=$(wc -c <"$KC_ASSETS/$f")
+    fixed=$((fixed + 4 * ((n + 2) / 3)))
+  done
+  # empty logoLight expands to 0; measure the css once
+  "$SCRIPT" --render-only --output-dir "$BATS_TEST_TMPDIR/size-probe" "$(kcpkg '.')" "$KC_ASSETS" >/dev/null
+  css=$(wc -c <"$BATS_TEST_TMPDIR/size-probe/brand.css" | tr -d ' ')
+  # make the remainder divisible by 4 with trailing spaces in codeFamily
+  pad=$(((fixed + css - $1) % 4))
+  pad=$(((4 - (pad < 0 ? pad + 4 : pad)) % 4))
+  KC_PKG=$(kcpkg ".typography.codeFamily = \"Fira Code, monospace$(printf '%*s' "$pad" '')\"")
+  css=$((css + pad))
+  n=$((($1 - fixed - css) / 4 * 3))
+  head -c "$n" /dev/zero | tr '\0' 'x' >"$KC_ASSETS/logo-light.svg"
+}
+
+@test "validate: keycloak assets of exactly 400000 bytes pass" {
+  kc_size_assets 400000
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$KC_PKG" "$KC_ASSETS"
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: keycloak assets above 400000 bytes rejected, error names the JAR alternative" {
+  kc_size_assets 400004
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$KC_PKG" "$KC_ASSETS"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"400000"* ]]
+  [[ "$output" == *"JAR"* ]]
+  [ ! -e "$OUT" ]
+}
+
+@test "validate: keycloak assets above 300000 bytes warn" {
+  kc_size_assets 350000
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$KC_PKG" "$KC_ASSETS"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"warning"*"300000"* ]]
+}
+
+@test "validate: keycloak assets of exactly 300000 bytes do not warn" {
+  kc_size_assets 300000
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$KC_PKG" "$KC_ASSETS"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"300000"* ]]
+}
+
+@test "validate: size is not checked without the keycloak block" {
+  kc_size_assets 450000
+  pkg=$(mutate '.')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$KC_ASSETS"
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: email.senderName without smtp warns" {
+  kc_render 'del(.keycloak.smtp) | .email.senderName = "Acme Mail"'
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"warning"*"email.senderName"* ]]
+}
+
+@test "validate: email.senderName with a full smtp block does not warn" {
+  kc_render '.email.senderName = "Acme Mail"'
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"email.senderName"* ]]
+}
+
+@test "validate: email.images.logo without logoUrl warns" {
+  mkdir -p "$BATS_TEST_TMPDIR/both"
+  cp "$ASSETS_DIR"/* "$FIXTURES/email-assets/logo.png" "$BATS_TEST_TMPDIR/both/"
+  kc_render '.email.images.logo = "logo.png"' "$BATS_TEST_TMPDIR/both"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"warning"*"logoUrl"* ]]
+}
+
+@test "validate: keycloak errors are collected together" {
+  kc_render '.product.name = " Acme<"| .keycloak.themeName = "base" | del(.assets.logoLight)'
+  kc_rejected "product.name"
+  [[ "$output" == *"keycloak.themeName"* ]]
+  [[ "$output" == *"assets.logoLight"* ]]
+}
+
+@test "validate: --no-keycloak skips the keycloak checks" {
+  pkg=$(kcpkg '.product.name = "Acme ${env}"')
+  run "$SCRIPT" --render-only --no-keycloak --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: apply mode with the keycloak block needs both keycloak charts" {
+  pkg=$(kcpkg '.')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --output-dir "$OUT" --chart-ui repo/ui --chart-codemie repo/api "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"--chart-keycloak"* ]]
+  [[ "$output" == *"--chart-proxy"* ]]
+  [ ! -e "$OUT" ]
+}

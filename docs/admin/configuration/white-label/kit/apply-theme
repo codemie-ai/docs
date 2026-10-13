@@ -15,6 +15,9 @@ CHART_CODEMIE=""
 OUTPUT_DIR=""
 CUSTOMER_CONFIG_OPT=""
 CODEMIE_VALUES_OPT=""
+NO_KEYCLOAK=false
+CHART_KEYCLOAK=""
+CHART_PROXY=""
 
 # Must stay in sync with the mount path the backend reads (BRAND_CONFIG_PATH default).
 BRAND_CONFIGMAP="codemie-brand"
@@ -27,12 +30,16 @@ usage() {
   echo "         [--release-ui <name>] [--release-codemie <name>]"
   echo "         [--chart-ui <ref>] [--chart-codemie <ref>]"
   echo "         [--customer-config <file>] [--codemie-values <file>]"
+  echo "         [--no-keycloak] [--chart-keycloak <ref>] [--chart-proxy <ref>]"
   echo "         [--output-dir <dir>]"
   echo "         <theme-package.yaml> <assets-dir>"
   echo ""
   echo "  --chart-ui / --chart-codemie  chart reference of each release (repo/chart or local path);"
   echo "                                required unless --render-only. The installed chart version is"
   echo "                                pinned, so applying a theme never changes it."
+  echo "  --no-keycloak                 skip the Keycloak theme and realm steps for this run"
+  echo "  --chart-keycloak / --chart-proxy  chart references of the Keycloak and proxy releases;"
+  echo "                                required unless --render-only when the package has a keycloak block"
   echo "  --customer-config <file>      customer-config.yaml used to cross-check enabled links"
   echo "                                (default: \$CUSTOMER_CONFIG_PATH, /app/config/customer/..., /etc/codemie/...)"
   echo "  --codemie-values <file>       current values of the API release (helm get values --all -o yaml),"
@@ -49,6 +56,9 @@ while [[ $# -gt 0 ]]; do
     --release-codemie) RELEASE_CODEMIE="${2:?--release-codemie needs a value}"; shift 2 ;;
     --chart-ui) CHART_UI="${2:?--chart-ui needs a value}"; shift 2 ;;
     --chart-codemie) CHART_CODEMIE="${2:?--chart-codemie needs a value}"; shift 2 ;;
+    --no-keycloak) NO_KEYCLOAK=true; shift ;;
+    --chart-keycloak) CHART_KEYCLOAK="${2:?--chart-keycloak needs a value}"; shift 2 ;;
+    --chart-proxy) CHART_PROXY="${2:?--chart-proxy needs a value}"; shift 2 ;;
     --output-dir) OUTPUT_DIR="${2:?--output-dir needs a value}"; shift 2 ;;
     --customer-config) CUSTOMER_CONFIG_OPT="${2:?--customer-config needs a value}"; shift 2 ;;
     --codemie-values) CODEMIE_VALUES_OPT="${2:?--codemie-values needs a value}"; shift 2 ;;
@@ -75,6 +85,39 @@ _sha256() {
 # base64 without line wrapping: GNU needs -w0, macOS wraps nothing and rejects it
 _b64() { base64 -w0 "$1" 2>/dev/null || base64 <"$1" | tr -d '\n'; }
 
+# Render brand.css. Each token carries a dark and a light value, and both are emitted together: the
+# dark values under html.codemieDark and the light values under html.codemieLight, the same
+# selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
+# space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
+# in :root. Nothing needs !important.
+_render_brand_css() {
+  local FONT_FACE DARK_VARS="" LIGHT_VARS="" token dark light
+  FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
+  _hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
+  while read -r token dark light; do
+    [[ -n "$token" ]] || continue
+    DARK_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$dark");"$'\n'
+    LIGHT_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$light");"$'\n'
+  done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
+
+  {
+    [[ -n "$FONT_FACE" ]] && echo "$FONT_FACE"
+    echo ":root {"
+    echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
+    echo "}"
+    if [[ -n "$DARK_VARS" ]]; then
+      echo "html.codemieDark {"
+      printf '%s' "$DARK_VARS"
+      echo "}"
+      echo "html.codemieLight {"
+      printf '%s' "$LIGHT_VARS"
+      echo "}"
+    fi
+  }
+}
+
 # ── Phase 1: validate ────────────────────────────────────────────────────────
 ERRORS=()
 WARNINGS=()
@@ -89,6 +132,10 @@ MAX_ASSET_BYTES=1048576 # ConfigMap size limit; the base64-encoded assets must f
 MAX_EMAIL_LOGO_BYTES=262144 # same limit the backend loader enforces (MAX_LOGO_BYTES)
 EMAIL_LOGO=""
 EMAIL_LOGO_PATH=""
+KC_ACTIVE=0
+KC_MAX_BYTES=400000  # cap of the Keycloak child-theme ConfigMap; must match the Keycloak chart hook
+KC_WARN_BYTES=300000 # the release Secret holds the content twice and is limited to 1 MiB
+KC_RESERVED_THEMES=(codemie base keycloak)
 
 # 1a. JSON Schema validation (all errors, not just the first)
 _AJV_INPUT="$TMP_ROOT/package.json"
@@ -201,6 +248,115 @@ if [[ "$PARSEABLE" == "true" ]]; then
     fi
   fi
 
+  # 1b-kc. Keycloak theme inputs. Only when the package has a keycloak block and --no-keycloak is
+  # not set; a package without the block is validated exactly as before.
+  if [[ "$NO_KEYCLOAK" != "true" && "$(yq eval '.keycloak | tag' "$PACKAGE_FILE" 2>/dev/null || true)" == "!!map" ]]; then
+    KC_ACTIVE=1
+  fi
+
+  # Properties policy: every value that reaches a .properties file. Rejects ${, < > " \, control
+  # characters (newline only when allowed), and leading or trailing whitespace.
+  _check_prop() { # <dotted path> <value> [allow_newline]
+    local path="$1" value="$2" probe="$2"
+    [[ -n "$value" ]] || return 0
+    [[ "${3:-}" == "allow_newline" ]] && probe="${probe//$'\n'/}"
+    case "$value" in
+      *'${'*) ERRORS+=("$path: must not contain \${") ;;
+    esac
+    case "$value" in
+      *'<'* | *'>'* | *'"'* | *'\'*) ERRORS+=("$path: must not contain < > \" or a backslash") ;;
+    esac
+    if [[ "$probe" =~ [[:cntrl:]] ]]; then
+      ERRORS+=("$path: must not contain control characters")
+    fi
+    if [[ "$value" =~ ^[[:space:]] || "$value" =~ [[:space:]]$ ]]; then
+      ERRORS+=("$path: must not start or end with whitespace")
+    fi
+  }
+
+  # Bytes the Keycloak ConfigMap carries: the four assets expanded by base64, plus brand.css.
+  _kc_size() { # <rendered brand.css>
+    local total n key fname
+    total=$(wc -c <"$1" | tr -d ' ')
+    for key in logoLight logoDark favicon faviconSvg; do
+      fname=$(_email_str ".assets.$key")
+      [[ -n "$fname" && "$fname" =~ $ASSET_FILE_RE && -f "$ASSETS_DIR/$fname" ]] || continue
+      n=$(wc -c <"$ASSETS_DIR/$fname" | tr -d ' ')
+      total=$((total + 4 * ((n + 2) / 3)))
+    done
+    echo "$total"
+  }
+
+  if [[ "$KC_ACTIVE" == "1" ]]; then
+    _check_prop "product.name" "$(_email_str '.product.name')"
+    _check_prop "product.shortName" "$(_email_str '.product.shortName')"
+    _check_prop "email.signature" "$(_email_str '.email.signature')" allow_newline
+    for pk in $(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true); do
+      _check_prop "email.palette.$pk" "$(_email_str ".email.palette.\"$pk\"")"
+    done
+
+    kc_theme=$(_email_str '.keycloak.themeName')
+    if [[ -z "$kc_theme" ]]; then
+      ERRORS+=("keycloak.themeName: required when the keycloak block is set")
+    elif [[ ! "$kc_theme" =~ ^[a-z0-9-]{3,40}$ ]]; then
+      ERRORS+=("keycloak.themeName: must be 3 to 40 characters of a-z, 0-9 and -")
+    else
+      for r in "${KC_RESERVED_THEMES[@]}"; do
+        [[ "$kc_theme" != "$r" ]] || ERRORS+=("keycloak.themeName: '$r' is reserved, choose another name")
+      done
+    fi
+
+    for key in logoLight logoDark; do
+      [[ -n "$(_email_str ".assets.$key")" ]] || ERRORS+=("assets.$key: required when the keycloak block is set")
+    done
+
+    kc_logo_url=$(_email_str '.email.images.logoUrl')
+    if [[ -n "$kc_logo_url" ]]; then
+      _check_prop "email.images.logoUrl" "$kc_logo_url"
+      kc_logo_path=$(printf '%s' "${kc_logo_url%%[?#]*}" | tr '[:upper:]' '[:lower:]')
+      [[ "$kc_logo_path" != *.svg ]] || ERRORS+=("email.images.logoUrl: SVG is not supported in email clients, use PNG, JPG or GIF")
+    elif [[ -n "$EMAIL_LOGO" ]]; then
+      WARNINGS+=("email.images.logo is set but email.images.logoUrl is not: Keycloak mails do not use the logo file, the mail shows the product name as text")
+    fi
+
+    # SMTP: host and from together; credentials only as secret references, never as literals.
+    kc_smtp_ok=0
+    if [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE" 2>/dev/null || true)" == "!!map" ]]; then
+      kc_host=$(_email_str '.keycloak.smtp.host')
+      kc_from=$(_email_str '.keycloak.smtp.from')
+      [[ -n "$kc_host" ]] || ERRORS+=("keycloak.smtp.host: required together with keycloak.smtp.from")
+      [[ -n "$kc_from" ]] || ERRORS+=("keycloak.smtp.from: required together with keycloak.smtp.host")
+      [[ -n "$kc_host" && -n "$kc_from" ]] && kc_smtp_ok=1
+      for cred in username password; do
+        ctag=$(yq eval ".keycloak.smtp.auth.$cred | tag" "$PACKAGE_FILE" 2>/dev/null || true)
+        if [[ "$ctag" != "!!null" && "$ctag" != "!!map" ]]; then
+          ERRORS+=("keycloak.smtp.auth.$cred: a literal value is not allowed, use secretKeyRef {name, key}")
+        elif [[ "$ctag" == "!!map" && "$(yq eval ".keycloak.smtp.auth.$cred | has(\"secretKeyRef\")" "$PACKAGE_FILE")" != "true" ]]; then
+          ERRORS+=("keycloak.smtp.auth.$cred: a literal value is not allowed, use secretKeyRef {name, key}")
+        fi
+      done
+    fi
+    if [[ -n "$(_email_str '.email.senderName')" && "$kc_smtp_ok" == "0" ]]; then
+      WARNINGS+=("email.senderName is set but keycloak.smtp is not a full SMTP block (host and from): the sender name needs a full SMTP block and is not used")
+    fi
+
+    # brand.css is rendered here only to check it; phase 2 renders it again into the output
+    # directory. Skipped while earlier errors may have left the colours unusable.
+    if [[ ${#ERRORS[@]} -eq 0 ]]; then
+      _render_brand_css >"$TMP_ROOT/brand.css"
+      if [[ -z "$(tr -d '[:space:]' <"$TMP_ROOT/brand.css")" ]]; then
+        ERRORS+=("brand.css: the rendered stylesheet is empty")
+      else
+        kc_bytes=$(_kc_size "$TMP_ROOT/brand.css")
+        if [[ "$kc_bytes" -gt $KC_MAX_BYTES ]]; then
+          ERRORS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above the limit of $KC_MAX_BYTES bytes; shrink the assets or ship the theme as a JAR instead")
+        elif [[ "$kc_bytes" -gt $KC_WARN_BYTES ]]; then
+          WARNINGS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above $KC_WARN_BYTES; the limit is $KC_MAX_BYTES (the 1 MiB release Secret stores the content twice)")
+        fi
+      fi
+    fi
+  fi
+
   # 1c. Enabled-link cross-check against customer-config.yaml
   CUSTOMER_CONFIG="${CUSTOMER_CONFIG_OPT:-${CUSTOMER_CONFIG_PATH:-}}"
   if [[ -z "$CUSTOMER_CONFIG" ]]; then
@@ -228,6 +384,10 @@ fi
 if [[ "$RENDER_ONLY" != "true" ]]; then
   [[ -n "$CHART_UI" ]] || ERRORS+=("--chart-ui is required unless --render-only is set")
   [[ -n "$CHART_CODEMIE" ]] || ERRORS+=("--chart-codemie is required unless --render-only is set")
+  if [[ "$KC_ACTIVE" == "1" ]]; then
+    [[ -n "$CHART_KEYCLOAK" ]] || ERRORS+=("--chart-keycloak is required unless --render-only or --no-keycloak is set")
+    [[ -n "$CHART_PROXY" ]] || ERRORS+=("--chart-proxy is required unless --render-only or --no-keycloak is set")
+  fi
 fi
 
 for w in ${WARNINGS[@]+"${WARNINGS[@]}"}; do echo "apply-theme: warning: $w" >&2; done
@@ -255,37 +415,7 @@ CHECKSUM=$(
   } | _sha256
 )
 
-# Render brand.css. Each token carries a dark and a light value, and both are emitted together: the
-# dark values under html.codemieDark and the light values under html.codemieLight, the same
-# selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
-# space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
-# in :root. Nothing needs !important.
-FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
-_hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
-DARK_VARS=""
-LIGHT_VARS=""
-while read -r token dark light; do
-  [[ -n "$token" ]] || continue
-  DARK_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$dark");"$'\n'
-  LIGHT_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$light");"$'\n'
-done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
-
-{
-  [[ -n "$FONT_FACE" ]] && echo "$FONT_FACE"
-  echo ":root {"
-  echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
-  echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
-  echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
-  echo "}"
-  if [[ -n "$DARK_VARS" ]]; then
-    echo "html.codemieDark {"
-    printf '%s' "$DARK_VARS"
-    echo "}"
-    echo "html.codemieLight {"
-    printf '%s' "$LIGHT_VARS"
-    echo "}"
-  fi
-} >"$WORK_DIR/brand.css"
+_render_brand_css >"$WORK_DIR/brand.css"
 
 # Values files are built with yq so every package value is encoded, never concatenated.
 PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
