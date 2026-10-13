@@ -216,8 +216,8 @@ apply_args() {
   run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
   f="$OUT/values-codemie.brand.yaml"
-  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '.[] | select(.name == "codemie-brand") | .mountPath' -)" = "/etc/codemie/brand.yaml" ]
-  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '.[] | select(.name == "codemie-brand") | .subPath' -)" = "brand.yaml" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '.[] | select(.name == "codemie-brand" and .subPath == "brand.yaml") | .mountPath' -)" = "/etc/codemie/brand.yaml" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '.[] | select(.name == "codemie-brand" and .mountPath == "/etc/codemie/brand.yaml") | .subPath' -)" = "brand.yaml" ]
   [ "$(yq eval '.extraVolumes' "$f" | yq eval '.[] | select(.name == "codemie-brand") | .configMap.name' -)" = "codemie-brand" ]
   [ "$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .kind' "$f")" = "ConfigMap" ]
   [ "$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .data."brand.yaml"' "$f" | yq eval '.links.userGuide.url' -)" = "https://docs.acme.example/" ]
@@ -247,7 +247,7 @@ YAML
   [ "$status" -eq 0 ]
   f="$OUT/a/values-codemie.brand.yaml"
   [ "$(yq eval '.extraVolumes' "$f" | yq eval 'length' -)" = "2" ]
-  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "2" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "3" ]
   [ "$(yq eval '.extraObjects | length' "$f")" = "2" ]
   [ "$(yq eval '.extraObjects[0] | tag' "$f")" = "!!str" ]
   [ "$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .data."brand.yaml"' "$f" | grep -c stale)" = "0" ]
@@ -480,4 +480,104 @@ expect_email_error() {
   grep -qF -- "email.images.logo" <<<"$output"
   [ ! -f "$BATS_TMPDIR/helm-calls" ]
   [ ! -f "$BATS_TMPDIR/kubectl-calls" ]
+}
+
+# ── email rendering ──────────────────────────────────────────────────────────
+
+# brand_yaml <values-codemie.brand.yaml> -> the ConfigMap's brand.yaml text
+brand_yaml() { yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .data."brand.yaml"' "$1"; }
+
+# b64_decode_file <base64 text> <out file>: GNU uses -d, older macOS -D
+b64_decode_file() { printf '%s' "$1" | base64 -d >"$2" 2>/dev/null || printf '%s' "$1" | base64 -D >"$2"; }
+
+@test "render email: brand.yaml carries identity, email block and links; logo is binaryData" {
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  by="$BATS_TEST_TMPDIR/brand.yaml"
+  brand_yaml "$f" >"$by"
+  [ "$(yq eval '.identity.productName' "$by")" = "Acme Suite" ]
+  [ "$(yq eval '.email.senderName' "$by")" = "Acme Notifications" ]
+  [ "$(yq eval '.email.signature' "$by")" = "The {productName} Team" ]
+  [ "$(yq eval '.email.palette.primary' "$by")" = "#112233" ]
+  [ "$(yq eval '.email.images.logo' "$by")" = "logo.png" ]
+  [ "$(yq eval '.email.messages.verification.subject' "$by")" = "Verify {productName}" ]
+  [ "$(yq eval '.links.userGuide.url' "$by")" = "https://docs.acme.example/" ]
+  b64=$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .binaryData."logo.png"' "$f")
+  b64_decode_file "$b64" "$BATS_TEST_TMPDIR/decoded.png"
+  cmp "$BATS_TEST_TMPDIR/decoded.png" "$FIXTURES/email-assets/logo.png"
+}
+
+@test "render email: a package without an email block renders no email key and no binaryData" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  [ "$(brand_yaml "$f" | yq eval 'has("email")' -)" = "false" ]
+  [ "$(brand_yaml "$f" | yq eval '.identity.productName' -)" = "Acme Suite" ]
+  [ "$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | has("binaryData")' "$f")" = "false" ]
+}
+
+@test "render email: the same volume is mounted whole at the brand-assets directory" {
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  mounts=$(yq eval '.extraVolumeMounts' "$f")
+  [ "$(yq eval 'length' - <<<"$mounts")" = "2" ]
+  [ "$(yq eval '.[] | select(.mountPath == "/etc/codemie/brand.yaml") | .subPath' - <<<"$mounts")" = "brand.yaml" ]
+  [ "$(yq eval '.[] | select(.mountPath == "/etc/codemie/brand-assets") | .name' - <<<"$mounts")" = "codemie-brand" ]
+  [ "$(yq eval '.[] | select(.mountPath == "/etc/codemie/brand-assets") | .readOnly' - <<<"$mounts")" = "true" ]
+  [ "$(yq eval '.[] | select(.mountPath == "/etc/codemie/brand-assets") | has("subPath")' - <<<"$mounts")" = "false" ]
+  [ "$(yq eval '.extraVolumes' "$f" | yq eval 'length' -)" = "1" ]
+}
+
+@test "render email: slice-1 values with only the subPath mount gain the directory mount, and a re-run is identical" {
+  cat >"$BATS_TEST_TMPDIR/slice1.yaml" <<'YAML'
+extraVolumes: |
+  - name: codemie-brand
+    configMap:
+      name: codemie-brand
+extraVolumeMounts: |
+  - name: codemie-brand
+    mountPath: /etc/codemie/brand.yaml
+    subPath: brand.yaml
+    readOnly: true
+YAML
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --codemie-values "$BATS_TEST_TMPDIR/slice1.yaml" --output-dir "$OUT/a" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  f="$OUT/a/values-codemie.brand.yaml"
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "2" ]
+  [ "$(yq eval '.extraVolumes' "$f" | yq eval 'length' -)" = "1" ]
+  run "$SCRIPT" --render-only --codemie-values "$f" --output-dir "$OUT/b" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  diff -r "$OUT/a" "$OUT/b"
+}
+
+@test "render email: entries named codemie-brand-assets do not suppress the codemie-brand entries" {
+  cat >"$BATS_TEST_TMPDIR/similar.yaml" <<'YAML'
+extraVolumes: |
+  - name: codemie-brand-assets
+    configMap:
+      name: codemie-brand-assets
+extraVolumeMounts: |
+  - name: codemie-brand-assets
+    mountPath: /etc/codemie/other
+YAML
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --codemie-values "$BATS_TEST_TMPDIR/similar.yaml" --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  [ "$(yq eval '.extraVolumes' "$f" | yq eval 'length' -)" = "2" ]
+  [ "$(yq eval '.extraVolumes' "$f" | yq eval '[.[] | select(.name == "codemie-brand")] | length' -)" = "1" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "3" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '[.[] | select(.name == "codemie-brand")] | length' -)" = "2" ]
+}
+
+@test "render email: apply mode with an email package restarts the backend deployment" {
+  pkg=$(email_pkg '.')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  grep -q "rollout restart deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
 }
