@@ -33,13 +33,13 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 ## Colors
 
-`colors` is a map. Each key is a semantic token path, for example `surface.base.primary`. Token paths use letters, digits, and hyphens, separated by dots. Every dot becomes a hyphen in the generated CSS custom property, so `surface.base.primary` produces `--colors-surface-base-primary`, the variable the UI reads. All color variables are written in a single `:root` block, as space-separated red, green, and blue channels, and no theme-specific block is generated. The generated value is the `dark` value, so it applies to both the dark and the light theme; the `light` value is required and validated but is not written to `brand.css`. Tokens that you do not list keep their default values.
+`colors` is a map. Each key is a semantic token path, for example `surface.base.primary`. Token paths use letters, digits, and hyphens, separated by dots. Every dot becomes a hyphen in the generated CSS custom property, so `surface.base.primary` produces `--colors-surface-base-primary`, the variable the UI reads. Values are written as space-separated red, green, and blue channels. Each token is written twice in `brand.css`: the `dark` value under `html.codemieDark` and the `light` value under `html.codemieLight`. The brand therefore follows the theme switch of the user. Tokens that are not listed keep their default values.
 
-| Path                   | Type   | Required | Description                                                                                                                                                               |
-| ---------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `colors.<token>`       | object | No       | One semantic color token. Add one entry per token to override.                                                                                                            |
-| `colors.<token>.dark`  | string | Yes      | Value for the dark theme as a six-digit hex color, for example `#111111`.                                                                                                 |
-| `colors.<token>.light` | string | Yes      | Value for the light theme as a six-digit hex color, for example `#ffffff`. Written to `brand.css` together with the `dark` value, so both themes always change as a pair. |
+| Path                   | Type   | Required | Description                                                                                                                                                                                          |
+| ---------------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `colors.<token>`       | object | No       | One semantic color token. Add one entry per token to override.                                                                                                                                       |
+| `colors.<token>.dark`  | string | Yes      | Value for the dark theme as a six-digit hex color, for example `#111111`. Written to `brand.css` under `html.codemieDark`.                                                                           |
+| `colors.<token>.light` | string | Yes      | Value for the light theme as a six-digit hex color, for example `#ffffff`. Written to `brand.css` under `html.codemieLight`, together with the `dark` value, so both themes always change as a pair. |
 
 Only the `dark` and `light` keys are allowed inside a token. The hex pattern is `^#[0-9a-fA-F]{6}$`; shorthand colors such as `#fff` are rejected.
 
@@ -54,7 +54,7 @@ Only the `dark` and `light` keys are allowed inside a token. The hex pattern is 
 
 ## Assets
 
-All values are plain file names relative to the assets directory that you pass to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files).
+All values are plain file names relative to the assets directory that is passed to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files).
 
 | Path                | Type   | Required | Description                          |
 | ------------------- | ------ | -------- | ------------------------------------ |
@@ -66,7 +66,7 @@ All values are plain file names relative to the assets directory that you pass t
 
 ## Links
 
-The `links` object is required, but each link inside it is optional in the schema. In practice, include every link that is enabled in your `customer-config.yaml`: `apply-theme` fails validation when an enabled link is missing from the package. Only the link identifiers below are allowed.
+The `links` object is required, but each link inside it is optional in the schema. In practice, include every link that is enabled in `customer-config.yaml`: `apply-theme` fails validation when an enabled link is missing from the package. Only the link identifiers below are allowed.
 
 | Path                              | Type   | Required | Description                                                                                                     |
 | --------------------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------- |
@@ -104,15 +104,15 @@ The `email` block is optional. A package without it works: the platform sends em
 
 ### Email Palette
 
-The email palette is explicit. It is not derived from `colors`, because the UI colors are semantic tokens with separate dark and light values and an email has one fixed look. Map the roles by hand:
+The email palette is explicit. It is not derived from `colors`, because the UI colors are semantic tokens with separate dark and light values and an email has one fixed look. The roles are mapped by hand:
 
-| Role          | Take it from                                     |
-| ------------- | ------------------------------------------------ |
-| `primary`     | The accent color of your brand (buttons, links). |
-| `primaryText` | The text color used on top of the accent color.  |
-| `text`        | The body text color of your light theme.         |
-| `background`  | The page background color of your light theme.   |
-| `surface`     | The card surface color of your light theme.      |
+| Role          | Source in the brand                             |
+| ------------- | ----------------------------------------------- |
+| `primary`     | The accent color of the brand (buttons, links). |
+| `primaryText` | The text color used on top of the accent color. |
+| `text`        | The body text color of the light theme.         |
+| `background`  | The page background color of the light theme.   |
+| `surface`     | The card surface color of the light theme.      |
 
 Omitted roles use the platform defaults: `primary` `#4F46E5`, `primaryText` `#FFFFFF`, `text` `#333333`, `background` `#F4F4F5`, `surface` `#FFFFFF`.
 
@@ -128,7 +128,7 @@ A token is a name in braces, for example `{productName}`. A string such as `{a b
 
 ### Email Logo
 
-- Give the file name only. A name with `/`, a backslash or `..` is rejected.
+- Use the file name only. A name with `/`, a backslash or `..` is rejected.
 - Allowed extensions: `png`, `jpg`, `jpeg`, `gif`. The extension is not case-sensitive.
 - The file must exist in the assets directory and must not be a symbolic link.
 - Maximum size: 262144 bytes (256 KiB).
