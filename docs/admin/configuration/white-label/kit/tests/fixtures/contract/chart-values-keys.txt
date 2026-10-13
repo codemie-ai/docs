@@ -1,0 +1,20 @@
+# Copied from the Keycloak and proxy chart helpers and values. Update together with the charts.
+# Child theme values
+keycloakx.childTheme
+keycloakx.childTheme.enabled
+keycloakx.childTheme.name
+keycloakx.childTheme.data
+keycloakx.childTheme.binaryData
+# ConfigMap keys
+login.theme.properties
+login.brand.css
+email.theme.properties
+img.
+# Hook marker and size cap
+keycloak-child-theme
+400000
+# Realm values
+realm.displayName
+realm.themes.loginTheme
+realm.themes.emailTheme
+realm.smtp

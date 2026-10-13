@@ -687,3 +687,21 @@ sum_of() { yq eval '.podAnnotations."checksum/brand"' "$1/values-codemie.brand.y
   run "$SCRIPT" --render-only --output-dir "$OUT" "$BATS_TEST_DIRNAME/../theme-package.yaml" "$ASSETS_DIR"
   [ "$status" -eq 1 ]
 }
+
+# ── contract drift ───────────────────────────────────────────────────────────
+
+# contract_keys <file>: print the non-comment, non-empty lines of a contract fixture
+contract_keys() {
+  grep -vE '^[[:space:]]*(#|$)' "$1"
+}
+
+@test "contract: fixture keys are listed in apply-theme" {
+  skip "enabled in T5"
+  missing=""
+  for f in ui-brand-keys.txt chart-values-keys.txt; do
+    while IFS= read -r key; do
+      grep -qF -e "$key" "$SCRIPT" || missing="$missing $key"
+    done < <(contract_keys "$FIXTURES/contract/$f")
+  done
+  [ -z "$missing" ] || { echo "not in apply-theme:$missing"; return 1; }
+}
