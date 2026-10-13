@@ -618,3 +618,30 @@ sum_of() { yq eval '.podAnnotations."checksum/brand"' "$1/values-codemie.brand.y
   [ "$status" -eq 0 ]
   [ "$(yq eval '.brand.podAnnotations."checksum/brand"' "$OUT/n/values-codemie-ui.brand.yaml")" = "$(sum_of "$OUT/n")" ]
 }
+
+# ── template and acme example ────────────────────────────────────────────────
+
+@test "example: acme renders an email block that satisfies the backend rules" {
+  ex="$BATS_TEST_DIRNAME/../examples/acme"
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$ex/theme-package.yaml" "$ex/assets"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  by="$BATS_TEST_TMPDIR/brand.yaml"
+  brand_yaml "$f" >"$by"
+  for role in primary primaryText text background surface; do
+    yq eval ".email.palette.$role" "$by" | grep -Eq '^#[0-9A-Fa-f]{6}$'
+  done
+  # every token in the rendered block is one the backend knows
+  ! yq eval '.email | .. | select(tag == "!!str")' "$by" | grep -oE '\{[A-Za-z0-9_]+\}' | grep -vE '^\{(productName|projectName|costCenterName)\}$'
+  logo=$(yq eval '.email.images.logo' "$by")
+  [ -n "$logo" ] && [ "$logo" != "null" ]
+  b64=$(yq eval ".extraObjects[] | select(.metadata.name == \"codemie-brand\") | .binaryData.\"$logo\"" "$f")
+  b64_decode_file "$b64" "$BATS_TEST_TMPDIR/logo.bin"
+  [ "$(od -An -tx1 -N8 "$BATS_TEST_TMPDIR/logo.bin" | tr -d ' \n')" = "89504e470d0a1a0a" ]
+  [ "$(wc -c <"$BATS_TEST_TMPDIR/logo.bin" | tr -d ' ')" -le 262144 ]
+}
+
+@test "example: the empty template still fails validation" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$BATS_TEST_DIRNAME/../theme-package.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 1 ]
+}
