@@ -139,6 +139,7 @@ The script runs the validation phase and then the render phase:
 2. Every file named in `assets` must exist in the assets directory.
 3. Every link that is enabled in your `customer-config.yaml` must be present in the package. Pass the file with `--customer-config <file>`, or set `CUSTOMER_CONFIG_PATH`; without either, the script looks for `/app/config/customer/customer-config.yaml` and `/etc/codemie/customer-config.yaml`. If no file is found the script prints a warning that this check was **skipped**. To export the file from a running cluster, use `kubectl get configmap codemie-customer-config -n <namespace> -o 'jsonpath={.data.customer-config\.yaml}'`.
 4. Asset file names must be plain file names (letters, digits, `.`, `_`, `-`), unique, not symbolic links, and together smaller than the 1 MiB ConfigMap limit once base64-encoded.
+5. If the package has an `email` block, its palette colors must be `#RRGGBB`, `senderName` and every `subject` must not be blank, only the allowed `{...}` tokens may be used, and `email.images.logo` must be a plain file name with a `png`, `jpg`, `jpeg` or `gif` extension. The file must exist, must not be a symbolic link, must be at most 262144 bytes, and its content must match its extension. See [Email](./package-reference.md#email) for all rules.
 
 If any check fails, the script prints every problem it found and exits with a non-zero code without writing output. Otherwise it writes three files to the output directory (a temporary directory when `--output-dir` is not set):
 
@@ -148,9 +149,9 @@ If any check fails, the script prints every problem it found and exits with a no
 | `values-codemie-ui.brand.yaml` | Helm values overlay for the UI release: product names, base64-encoded assets, `brand.css`  |
 | `values-codemie.brand.yaml`    | Helm values overlay for the API release: the help links shown in the UI and how they mount |
 
-The API overlay adds the `codemie-brand` ConfigMap to `extraObjects` and mounts it at `/etc/codemie/brand.yaml` through `extraVolumes` and `extraVolumeMounts`. Because Helm replaces these three lists wholesale, the script appends to the lists of your running release instead of overwriting them: when applying it reads them with `helm get values --all`. When you only render, pass the current values with `--codemie-values <file>` (`helm get values <release> --all -o yaml > current.yaml`); without that file the script warns that the rendered lists would replace yours.
+The API overlay adds the `codemie-brand` ConfigMap to `extraObjects`. The ConfigMap holds `brand.yaml` (product name, help links and the optional `email` block) and, when the package names an email logo, the logo file as binary data. The same `codemie-brand` volume is mounted twice through `extraVolumes` and `extraVolumeMounts`: the file `brand.yaml` at `/etc/codemie/brand.yaml`, and the whole volume, read-only, at `/etc/codemie/brand-assets`, where the platform reads the email logo. Re-running the kit on values from an earlier kit version adds the second mount; a second run changes nothing. Because Helm replaces these three lists wholesale, the script appends to the lists of your running release instead of overwriting them: when applying it reads them with `helm get values --all`. When you only render, pass the current values with `--codemie-values <file>` (`helm get values <release> --all -o yaml > current.yaml`); without that file the script warns that the rendered lists would replace yours.
 
-Both overlays carry a `checksum/brand` pod annotation computed from the package. A changed package therefore always triggers a new rollout.
+Both overlays carry the same `checksum/brand` pod annotation. It is computed from the package and from the content of every asset file, including the email logo. A changed package or image therefore always triggers a new rollout. Because one checksum serves both releases, a change to the email logo alone also restarts the UI pods.
 
 Review `brand.css` and the two values files before applying, especially when you run the kit for the first time.
 
@@ -171,7 +172,7 @@ After validation and rendering, the script:
 
 1. Runs `helm upgrade --reuse-values` for the UI release with `values-codemie-ui.brand.yaml`.
 2. Runs `helm upgrade --reuse-values` for the API release with `values-codemie.brand.yaml`.
-3. Restarts both deployments and waits for the rollouts to finish.
+3. Restarts both deployments and waits for the rollouts to finish. The API restart is what makes the platform read a changed email block or logo.
 
 The script always reuses the values of the running releases. It never sets the image tag, and it pins `--version` to the chart version that is currently installed (read with `helm get metadata`, which needs Helm 3.9 or later), so applying a theme never changes which version of the platform is running. For a local chart path the chart's own version applies and no `--version` is passed; use the chart that matches your installed release.
 
@@ -202,6 +203,27 @@ The kit ships an example GitHub Actions workflow in `kit/.github/workflows/apply
 
 Copy the workflow into your own repository, create the `white-label-apply` environment with required reviewers, store the base64-encoded kubeconfig of a service account with limited rights as the `KUBECONFIG_DATA` secret, and replace the pinned action versions with the current releases when you adopt the file. For other CI systems, run the same sequence: `apply-theme --render-only` first, then `apply-theme` without the flag, then check that the UI serves `/brand.css`.
 
+## Email Branding and Defaults
+
+The optional `email` block brands the emails that the platform sends: account verification, password reset and the budget notifications. A package without the block is valid, and the platform sends emails with neutral wording. Add the block only for what you want to change.
+
+The platform defaults are:
+
+| Item          | Default                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| `senderName`  | `Platform Notifications`                                                                    |
+| `productName` | `Platform` (the kit sets it to `product.name`)                                              |
+| `signature`   | `The {productName} Team`                                                                    |
+| Message texts | Neutral copy. For example, the verification subject is `Verify your {productName} account`. |
+
+The sender name is chosen in this order: `email.senderName` from the brand, then the `EMAIL_FROM_NAME` environment variable, then `Platform Notifications`.
+
+The email colors are an explicit palette. The kit does not derive them from `colors`. To map them by hand, follow the advice in [Email Palette](./package-reference.md#email-palette). Omitted roles keep the platform defaults.
+
+:::warning Release note
+The default of `EMAIL_FROM_NAME` changes from `CodeMie` to empty, and the email wording is neutral. A deployment that relies on the old default must set `EMAIL_FROM_NAME` or `email.senderName`, or its emails show the sender `Platform Notifications`.
+:::
+
 ## Limits and Out-of-Scope Items
 
 - **Asset size.** The five asset files are delivered as base64-encoded ConfigMap data. Keep the combined size of the assets below 1 MiB.
@@ -215,23 +237,27 @@ Copy the workflow into your own repository, create the `white-label-apply` envir
 
 ## Troubleshooting
 
-| Symptom                                                          | Cause and fix                                                                                                             |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `validation failed` with a list of schema errors                 | A required field is missing or malformed. Compare the package with the [Theme Package Reference](./package-reference.md). |
-| `assets.<name>: file not found`                                  | The file name in `assets` does not match a file in the assets directory.                                                  |
-| `links.<id>: enabled in customer-config but absent from package` | Add the link to the package, or disable the component in `customer-config.yaml`.                                          |
-| `--chart-ui is required`                                         | Pass the chart reference of each release, for example `<repository>/codemie-ui`.                                          |
-| `cannot read the installed chart version`                        | Upgrade Helm to 3.9 or later, and check the release name and namespace.                                                   |
-| Brand disappears after a platform upgrade                        | The upgrade ran without `--reuse-values`. Re-run `apply-theme`.                                                           |
-| Browser still shows the old logo                                 | Hard-reload the page or clear the browser cache; the deployments were restarted but the browser may cache static files.   |
+| Symptom                                                                               | Cause and fix                                                                                                                                                             |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `validation failed` with a list of schema errors                                      | A required field is missing or malformed. Compare the package with the [Theme Package Reference](./package-reference.md).                                                 |
+| `assets.<name>: file not found`                                                       | The file name in `assets` does not match a file in the assets directory.                                                                                                  |
+| `links.<id>: enabled in customer-config but absent from package`                      | Add the link to the package, or disable the component in `customer-config.yaml`.                                                                                          |
+| `--chart-ui is required`                                                              | Pass the chart reference of each release, for example `<repository>/codemie-ui`.                                                                                          |
+| `cannot read the installed chart version`                                             | Upgrade Helm to 3.9 or later, and check the release name and namespace.                                                                                                   |
+| Brand disappears after a platform upgrade                                             | The upgrade ran without `--reuse-values`. Re-run `apply-theme`.                                                                                                           |
+| `email.palette.<role>`, `email.senderName` or another `email.` path in the error list | Fix the named field. The error lists every problem at once; see [Email](./package-reference.md#email).                                                                    |
+| `email.images.logo: ...`                                                              | The logo name, extension, size or content is wrong. Use a plain file name of a PNG, JPEG or GIF file of at most 256 KiB, and make sure the content matches the extension. |
+| Emails still show the old sender or logo                                              | The API deployment was not restarted, or the logo name is unchanged and the file was not replaced in the assets directory. Re-run `apply-theme`.                          |
+| Browser still shows the old logo                                                      | Hard-reload the page or clear the browser cache; the deployments were restarted but the browser may cache static files.                                                   |
 
 ## Kit Versions and Releases
 
 The kit is versioned independently of the platform, and the `kitVersion` in this page's metadata is the version it describes. The package `version` field must match the kit's major version.
 
-| Kit version | Package `version` | Paired platform releases                                                       |
-| ----------- | ----------------- | ------------------------------------------------------------------------------ |
-| 1           | `'1'`             | Platform releases that include the `brand` chart values and the links overlay. |
+| Kit version                         | Package `version` | Paired platform releases                                                                   |
+| ----------------------------------- | ----------------- | ------------------------------------------------------------------------------------------ |
+| 1                                   | `'1'`             | Platform releases that include the `brand` chart values and the links overlay.             |
+| 1 (with the optional `email` block) | `'1'`             | Platform releases whose email service reads `brand.yaml` and the `brand-assets` directory. |
 
 When the theme package contract changes, this table gains a row.
 
