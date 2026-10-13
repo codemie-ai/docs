@@ -69,6 +69,7 @@ email:
     surface: '#FFFFFF'
   images:
     logo: 'email-logo.png'
+    logoUrl: 'https://static.acme.example/logo.png'
   messages:
     verification:
       subject: 'Confirm your {productName} account'
@@ -78,3 +79,22 @@ email:
       intro: 'The budget for project {projectName} ({costCenterName}) has been stopped.'
     budget_restored:
       intro: 'The budget for project {projectName} has been restored.'
+
+# Optional: Keycloak login theme and mail settings.
+keycloak:
+  themeName: 'acme-brand'
+  smtp:
+    host: 'smtp.acme.example'
+    port: 587
+    from: 'no-reply@acme.example'
+    ssl: false
+    starttls: true
+    auth:
+      username:
+        secretKeyRef:
+          name: 'acme-smtp'
+          key: 'username'
+      password:
+        secretKeyRef:
+          name: 'acme-smtp'
+          key: 'password'

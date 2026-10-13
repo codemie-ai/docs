@@ -148,9 +148,87 @@
     },
     "email": {
       "$ref": "#/definitions/email"
+    },
+    "keycloak": {
+      "$ref": "#/definitions/keycloak"
     }
   },
   "definitions": {
+    "secretKeyRef": {
+      "type": "object",
+      "required": ["secretKeyRef"],
+      "additionalProperties": false,
+      "properties": {
+        "secretKeyRef": {
+          "type": "object",
+          "required": ["name", "key"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253
+            }
+          }
+        }
+      }
+    },
+    "keycloak": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "themeName": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,40}$"
+        },
+        "smtp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "host": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253,
+              "pattern": "^[A-Za-z0-9.-]+$"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "from": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 254,
+              "pattern": "^[^\\s<>\"\\\\]+@[^\\s<>\"\\\\]+$"
+            },
+            "ssl": {
+              "type": "boolean"
+            },
+            "starttls": {
+              "type": "boolean"
+            },
+            "auth": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "username": {
+                  "$ref": "#/definitions/secretKeyRef"
+                },
+                "password": {
+                  "$ref": "#/definitions/secretKeyRef"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "link": {
       "type": "object",
       "required": ["name", "url"],
@@ -255,6 +333,10 @@
             "logo": {
               "type": "string",
               "minLength": 1
+            },
+            "logoUrl": {
+              "type": "string",
+              "pattern": "^https://[^\\s${}<>\"\\\\]{1,2000}$"
             }
           }
         },

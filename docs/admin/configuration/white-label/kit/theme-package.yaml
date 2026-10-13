@@ -79,6 +79,7 @@ links:
 #     surface: '' # optional - card background
 #   images:
 #     logo: '' # optional - file name in the assets directory; png, jpg, jpeg or gif, up to 256 KiB
+#     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak
 #   messages: # optional - verification, password_reset, budget_soft_limit, budget_stopped, budget_restored
 #     verification:
 #       subject: '' # optional - must not be blank when set
@@ -90,3 +91,17 @@ links:
 #       subject: '' # optional - may use {productName}, {projectName}, {costCenterName}
 # Tokens: {productName} in every text field; {projectName} in subject and intro of budget_stopped and
 # budget_restored; {costCenterName} in subject and intro of budget_stopped.
+# optional - Keycloak login theme and mail settings. Omit the block to leave Keycloak unchanged.
+# keycloak:
+#   themeName: '' # optional - theme name, 3-40 characters: a-z, 0-9, -
+#   smtp: # optional - SMTP server for Keycloak emails
+#     host: '' # optional - SMTP host name
+#     port: 587 # optional - SMTP port
+#     from: '' # optional - sender address
+#     ssl: false # optional - use SSL
+#     starttls: true # optional - use STARTTLS
+#     auth: # optional - credentials are read from existing Kubernetes secrets, never written here
+#       username:
+#         secretKeyRef: {name: '', key: ''}
+#       password:
+#         secretKeyRef: {name: '', key: ''}

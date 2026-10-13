@@ -705,3 +705,35 @@ contract_keys() {
   done
   [ -z "$missing" ] || { echo "not in apply-theme:$missing"; return 1; }
 }
+
+# kc_check '<yq expression>' -> runs ajv against keycloak.yaml with the change applied
+kc_check() {
+  yq eval "$1" "$FIXTURES/keycloak.yaml" -o=json >"$BATS_TEST_TMPDIR/kc.json"
+  run ajv validate -s "$SCHEMA" --spec draft7 -d "$BATS_TEST_TMPDIR/kc.json"
+}
+
+@test "schema: keycloak block accepted" {
+  kc_check '.'
+  [ "$status" -eq 0 ]
+}
+
+@test "schema: literal smtp password rejected" {
+  kc_check '.keycloak.smtp.auth.password = "hunter2"'
+  [ "$status" -ne 0 ]
+  kc_check '.keycloak.smtp.auth.password.value = "hunter2"'
+  [ "$status" -ne 0 ]
+}
+
+@test "schema: logoUrl http rejected" {
+  kc_check '.email.images.logoUrl = "http://static.acme.example/logo.png"'
+  [ "$status" -ne 0 ]
+  kc_check '.email.images.logoUrl = "https://static.acme.example/logo.png"'
+  [ "$status" -eq 0 ]
+}
+
+@test "schema: unknown keycloak key rejected" {
+  kc_check '.keycloak.extra = "x"'
+  [ "$status" -ne 0 ]
+  kc_check '.keycloak.smtp.extra = "x"'
+  [ "$status" -ne 0 ]
+}
