@@ -737,3 +737,24 @@ kc_check() {
   kc_check '.keycloak.smtp.extra = "x"'
   [ "$status" -ne 0 ]
 }
+
+@test "stub: per-release values with -o json" {
+  mkdir -p "$BATS_TEST_TMPDIR/hs"
+  printf 'global:\n  name: acme\n' >"$BATS_TEST_TMPDIR/hs/rel-a.yaml"
+  run env PATH="$STUBS:$PATH" HELM_STUB_DIR="$BATS_TEST_TMPDIR/hs" helm get values rel-a -n ns -o json
+  [ "$status" -eq 0 ]
+  [ "$(echo "$output" | yq eval -p json '.global.name' -)" = "acme" ]
+  run env PATH="$STUBS:$PATH" HELM_STUB_DIR="$BATS_TEST_TMPDIR/hs" helm get values rel-a -n ns
+  [[ "$output" == *"name: acme"* ]]
+  run env PATH="$STUBS:$PATH" HELM_STUB_DIR="$BATS_TEST_TMPDIR/hs" helm get values rel-none -o json
+  [ "$output" = "{}" ]
+  grep -q "helm get values rel-a -n ns -o json" "$BATS_TMPDIR/helm-calls"
+}
+
+@test "stub: upgrade fail switch" {
+  run env PATH="$STUBS:$PATH" HELM_STUB_FAIL_RELEASE=rel-a helm upgrade rel-a repo/x
+  [ "$status" -eq 1 ]
+  run env PATH="$STUBS:$PATH" HELM_STUB_FAIL_RELEASE=rel-a helm upgrade rel-b repo/x
+  [ "$status" -eq 0 ]
+  grep -q "helm upgrade rel-a repo/x" "$BATS_TMPDIR/helm-calls"
+}
