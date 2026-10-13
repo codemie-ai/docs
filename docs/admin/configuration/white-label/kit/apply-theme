@@ -524,6 +524,108 @@ yq -n '
   } | with(select(strenv(EMAIL_LOGO) != ""); .binaryData[strenv(EMAIL_LOGO)] = load_str(strenv(B64_EMAIL_LOGO_FILE)))]
 ' >"$WORK_DIR/values-codemie.brand.yaml"
 
+# ── Phase 2b: Keycloak child theme and realm values ──────────────────────────
+# Only with an active keycloak block. Contract with the Keycloak and proxy charts:
+#   keycloakx.childTheme.enabled / name / data / binaryData  (chart keycloak-helm)
+#   data: login.theme.properties, login.brand.css, email.theme.properties
+#   binaryData: img.<file> per asset; total size at most 400000 (KC_MAX_BYTES)
+#   the chart hook marker keycloak-child-theme is a chart concern; apply mode checks it
+#   realm.displayName, realm.themes.loginTheme, realm.themes.emailTheme, realm.smtp.*  (chart oauth2-proxy)
+# Text goes through files and yq strenv/load_str, so no value is concatenated into YAML.
+_render_keycloak() {
+  local kc_name key fname lines sig sender pk pv logo_url
+  kc_name=$(yq eval '.keycloak.themeName' "$PACKAGE_FILE")
+  local login_props="$TMP_ROOT/login.theme.properties" email_props="$TMP_ROOT/email.theme.properties"
+  local b64f="$TMP_ROOT/kc-image.b64"
+
+  # one "key=value" line per call; the policy in phase 1 keeps backslash and control characters out
+  _prop() { printf '%s=%s\n' "$1" "$2"; }
+
+  {
+    _prop parent codemie
+    _prop brand.version 1
+    _prop brand.product.name "$PRODUCT_NAME"
+    _prop brand.product.shortName "$PRODUCT_SHORT"
+    _prop brand.logo.light "$A_LOGOLIGHT"
+    _prop brand.logo.dark "$A_LOGODARK"
+    [[ "$A_FAVICON" == "null" ]] || _prop brand.favicon "$A_FAVICON"
+    [[ "$A_FAVICONSVG" == "null" ]] || _prop brand.faviconSvg "$A_FAVICONSVG"
+  } >"$login_props"
+
+  {
+    _prop parent codemie
+    _prop brand.version 1
+    _prop brand.product.name "$PRODUCT_NAME"
+    for pk in primary primaryText text background surface; do
+      pv=$(_email_str ".email.palette.$pk")
+      [[ -z "$pv" ]] && continue
+      case "$pk" in
+        primary) _prop brand.email.color.primary "$pv" ;;
+        primaryText) _prop brand.email.color.primaryText "$pv" ;;
+        text) _prop brand.email.color.text "$pv" ;;
+        background) _prop brand.email.color.background "$pv" ;;
+        surface) _prop brand.email.color.surface "$pv" ;;
+      esac
+    done
+    logo_url=$(_email_str '.email.images.logoUrl')
+    [[ -z "$logo_url" ]] || _prop brand.email.logo "$logo_url"
+    sig=$(_email_str '.email.signature')
+    if [[ -n "$sig" ]]; then
+      sig="${sig//\{productName\}/$PRODUCT_NAME}"
+      sig="${sig//$'\n'/\\n}"
+      _prop brand.email.signature "$sig"
+    fi
+  } >"$email_props"
+
+  export KC_NAME="$kc_name" KC_LOGIN_PROPS="$login_props" KC_EMAIL_PROPS="$email_props" KC_CSS="$WORK_DIR/brand.css"
+  yq -n '
+    .keycloakx.childTheme.enabled = true |
+    .keycloakx.childTheme.name = strenv(KC_NAME) |
+    .keycloakx.childTheme.data."login.theme.properties" = load_str(strenv(KC_LOGIN_PROPS)) |
+    .keycloakx.childTheme.data."login.brand.css" = load_str(strenv(KC_CSS)) |
+    .keycloakx.childTheme.data."email.theme.properties" = load_str(strenv(KC_EMAIL_PROPS))
+  ' >"$WORK_DIR/values-keycloak.theme.yaml"
+
+  for key in logoLight logoDark favicon faviconSvg; do
+    fname=$(_email_str ".assets.$key")
+    [[ -n "$fname" ]] || continue
+    _b64 "$ASSETS_DIR/$fname" >"$b64f"
+    KC_IMG_KEY="img.$fname" KC_IMG_B64="$b64f" yq -i \
+      '.keycloakx.childTheme.binaryData[strenv(KC_IMG_KEY)] = load_str(strenv(KC_IMG_B64))' \
+      "$WORK_DIR/values-keycloak.theme.yaml"
+  done
+
+  # realm: display name and both themes always; smtp only with a connection (host and from)
+  yq -n '
+    .realm.displayName = strenv(PRODUCT_NAME) |
+    .realm.themes.loginTheme = strenv(KC_NAME) |
+    .realm.themes.emailTheme = strenv(KC_NAME)
+  ' >"$WORK_DIR/values-oauth2-proxy.realm.yaml"
+
+  if [[ -n "$(_email_str '.keycloak.smtp.host')" && -n "$(_email_str '.keycloak.smtp.from')" ]]; then
+    sender=$(_email_str '.email.senderName')
+    sender="${sender//\{productName\}/$PRODUCT_NAME}"
+    export KC_SMTP_HOST KC_SMTP_FROM KC_SENDER="$sender"
+    KC_SMTP_HOST=$(_email_str '.keycloak.smtp.host')
+    KC_SMTP_FROM=$(_email_str '.keycloak.smtp.from')
+    # unset optional keys are written as null so --reuse-values drops values from an earlier run
+    yq -i '
+      .realm.smtp.host = strenv(KC_SMTP_HOST) |
+      .realm.smtp.from = strenv(KC_SMTP_FROM) |
+      .realm.smtp.port = load(strenv(PACKAGE_FILE)).keycloak.smtp.port |
+      .realm.smtp.enableSSL = load(strenv(PACKAGE_FILE)).keycloak.smtp.ssl |
+      .realm.smtp.enableStartTLS = load(strenv(PACKAGE_FILE)).keycloak.smtp.starttls |
+      .realm.smtp.fromDisplayName = (strenv(KC_SENDER) | select(. != "")) |
+      .realm.smtp.authentication = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth
+    ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
+  fi
+}
+
+if [[ "$KC_ACTIVE" == "1" ]]; then
+  export PACKAGE_FILE
+  _render_keycloak
+fi
+
 echo "apply-theme: rendered files written to $WORK_DIR"
 
 [[ "$RENDER_ONLY" == "true" ]] && exit 0

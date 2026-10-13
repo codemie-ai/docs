@@ -696,7 +696,6 @@ contract_keys() {
 }
 
 @test "contract: fixture keys are listed in apply-theme" {
-  skip "enabled in T5"
   missing=""
   for f in ui-brand-keys.txt chart-values-keys.txt; do
     while IFS= read -r key; do
@@ -987,4 +986,158 @@ kc_size_assets() {
   [[ "$output" == *"--chart-keycloak"* ]]
   [[ "$output" == *"--chart-proxy"* ]]
   [ ! -e "$OUT" ]
+}
+
+# ── render: keycloak value files ─────────────────────────────────────────────
+
+# kc_files '<yq expression>': render the keycloak package with the change applied into $OUT
+kc_files() {
+  kc_render "${1:-.}"
+  [ "$status" -eq 0 ]
+  THEME="$OUT/values-keycloak.theme.yaml"
+  REALM="$OUT/values-oauth2-proxy.realm.yaml"
+}
+
+# prop <file key> <property>: value of a key in a rendered properties file
+prop() {
+  yq eval ".keycloakx.childTheme.data.\"$1\"" "$THEME" | grep -m1 "^$2=" | cut -d= -f2-
+}
+
+KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" | .email.images.logoUrl = "https://cdn.acme.example/logo.png" | .email.signature = "Best,\nThe {productName} team é"'
+
+@test "render: login.theme.properties has contract keys" {
+  kc_files
+  [ "$(yq eval '.keycloakx.childTheme.enabled' "$THEME")" = "true" ]
+  [ "$(yq eval '.keycloakx.childTheme.name' "$THEME")" = "acme-brand" ]
+  [ "$(prop login.theme.properties parent)" = "codemie" ]
+  [ "$(prop login.theme.properties brand.version)" = "1" ]
+  [ "$(prop login.theme.properties brand.product.name)" = "Acme Suite" ]
+  [ "$(prop login.theme.properties brand.product.shortName)" = "Acme" ]
+  [ "$(prop login.theme.properties brand.logo.light)" = "logo-light.svg" ]
+  [ "$(prop login.theme.properties brand.logo.dark)" = "logo-dark.svg" ]
+  [ "$(prop login.theme.properties brand.favicon)" = "favicon.ico" ]
+  [ "$(prop login.theme.properties brand.faviconSvg)" = "favicon.svg" ]
+}
+
+@test "render: login.brand.css equals brand.css byte for byte" {
+  kc_files
+  # yq prints the scalar plus one newline of its own, so the data is the file when the first
+  # wc -c bytes match and exactly one byte follows
+  yq eval '.keycloakx.childTheme.data."login.brand.css"' "$THEME" >"$BATS_TEST_TMPDIR/css-from-yaml"
+  size=$(wc -c <"$OUT/brand.css" | tr -d ' ')
+  head -c "$size" "$BATS_TEST_TMPDIR/css-from-yaml" >"$BATS_TEST_TMPDIR/css-head"
+  cmp "$BATS_TEST_TMPDIR/css-head" "$OUT/brand.css"
+  [ "$(wc -c <"$BATS_TEST_TMPDIR/css-from-yaml" | tr -d ' ')" = "$((size + 1))" ]
+}
+
+@test "render: images are base64 in binaryData under img.<file>, text stays in data" {
+  kc_files
+  for f in logo-light.svg logo-dark.svg favicon.ico favicon.svg; do
+    [ "$(yq eval ".keycloakx.childTheme.binaryData.\"img.$f\"" "$THEME")" = "$(base64 <"$ASSETS_DIR/$f" | tr -d '\n')" ]
+  done
+  [ "$(yq eval '.keycloakx.childTheme.data | keys | .[]' "$THEME" | sort | tr '\n' ' ')" = "email.theme.properties login.brand.css login.theme.properties " ]
+  [ "$(yq eval '.keycloakx.childTheme.binaryData | keys | .[]' "$THEME" | grep -vc '^img\.')" = "0" ]
+}
+
+@test "render: the theme file never sets extraVolumes or extraVolumeMounts" {
+  kc_files
+  [ "$(yq eval '.. | select(tag == "!!map") | keys | .[]' "$THEME" "$REALM" | grep -c '^extraVolume')" = "0" ]
+  ! grep -q "extraVolume" "$THEME"
+}
+
+@test "render: email.theme.properties has parent, version, name and the email keys" {
+  kc_files "$KC_EMAIL"
+  [ "$(prop email.theme.properties parent)" = "codemie" ]
+  [ "$(prop email.theme.properties brand.version)" = "1" ]
+  [ "$(prop email.theme.properties brand.product.name)" = "Acme Suite" ]
+  [ "$(prop email.theme.properties brand.email.color.primary)" = "#112233" ]
+  [ "$(prop email.theme.properties brand.email.color.text)" = "#223344" ]
+  [ "$(prop email.theme.properties brand.email.logo)" = "https://cdn.acme.example/logo.png" ]
+}
+
+@test "render: unset email keys are absent from email.theme.properties" {
+  kc_files "$KC_EMAIL"
+  props=$(yq eval '.keycloakx.childTheme.data."email.theme.properties"' "$THEME")
+  ! grep -q 'brand.email.color.primaryText' <<<"$props"
+  ! grep -q 'brand.email.color.surface' <<<"$props"
+  kc_files '.'
+  props=$(yq eval '.keycloakx.childTheme.data."email.theme.properties"' "$THEME")
+  ! grep -q 'brand.email' <<<"$props"
+}
+
+@test "render: signature gets the product name and a newline as backslash-n on one line" {
+  kc_files "$KC_EMAIL"
+  props=$(yq eval '.keycloakx.childTheme.data."email.theme.properties"' "$THEME")
+  line=$(grep '^brand.email.signature=' <<<"$props")
+  [ "$(grep -c '^brand.email.signature=' <<<"$props")" = "1" ]
+  [[ "$line" == 'brand.email.signature=Best,\nThe Acme Suite team '* ]]
+  [ "$(printf '%s\n' "$props" | wc -l | tr -d ' ')" = "$(printf '%s\n' "$props" | grep -c '=')" ]
+}
+
+@test "render: non-ASCII text is kept as valid UTF-8" {
+  kc_files "$KC_EMAIL"
+  yq eval '.keycloakx.childTheme.data."email.theme.properties"' "$THEME" >"$BATS_TEST_TMPDIR/email.properties"
+  grep -q 'team é' "$BATS_TEST_TMPDIR/email.properties"
+  iconv -f UTF-8 -t UTF-8 "$BATS_TEST_TMPDIR/email.properties" >/dev/null
+  kc_files '.product.name = "Acme Süite"'
+  [ "$(prop login.theme.properties brand.product.name)" = "Acme Süite" ]
+}
+
+@test "render: realm values have displayName, both themes and the smtp keys" {
+  kc_files "$KC_EMAIL | .email.senderName = \"Acme Mail\""
+  [ "$(yq eval '.realm.displayName' "$REALM")" = "Acme Suite" ]
+  [ "$(yq eval '.realm.themes.loginTheme' "$REALM")" = "acme-brand" ]
+  [ "$(yq eval '.realm.themes.emailTheme' "$REALM")" = "acme-brand" ]
+  [ "$(yq eval '.realm.smtp.host' "$REALM")" = "smtp.acme.example" ]
+  [ "$(yq eval '.realm.smtp.from' "$REALM")" = "no-reply@acme.example" ]
+  [ "$(yq eval '.realm.smtp.port' "$REALM")" = "587" ]
+  [ "$(yq eval '.realm.smtp.enableSSL' "$REALM")" = "false" ]
+  [ "$(yq eval '.realm.smtp.enableStartTLS' "$REALM")" = "true" ]
+  [ "$(yq eval '.realm.smtp.fromDisplayName' "$REALM")" = "Acme Mail" ]
+  [ "$(yq eval '.realm.smtp.authentication.username.secretKeyRef.name' "$REALM")" = "acme-smtp" ]
+  [ "$(yq eval '.realm.smtp.authentication.password.secretKeyRef.key' "$REALM")" = "password" ]
+}
+
+@test "render: realm smtp holds secret references only, never a literal" {
+  kc_files
+  [ "$(yq eval '.realm.smtp.authentication.password | keys | .[]' "$REALM")" = "secretKeyRef" ]
+  [ "$(yq eval '.realm.smtp.authentication.username | keys | .[]' "$REALM")" = "secretKeyRef" ]
+}
+
+@test "render: unset smtp sub-keys are null in the realm file" {
+  kc_files 'del(.keycloak.smtp.port) | del(.keycloak.smtp.ssl) | del(.keycloak.smtp.starttls) | del(.keycloak.smtp.auth)'
+  for k in port enableSSL enableStartTLS fromDisplayName authentication; do
+    [ "$(yq eval ".realm.smtp | has(\"$k\")" "$REALM")" = "true" ]
+    [ "$(yq eval ".realm.smtp.$k | tag" "$REALM")" = "!!null" ]
+  done
+}
+
+@test "render: no smtp block gives a realm file without smtp and fromDisplayName" {
+  kc_files 'del(.keycloak.smtp) | .email.senderName = "Acme Mail"'
+  [ "$(yq eval '.realm | has("smtp")' "$REALM")" = "false" ]
+  ! grep -q 'fromDisplayName' "$REALM"
+  [ "$(yq eval '.realm.themes.loginTheme' "$REALM")" = "acme-brand" ]
+}
+
+@test "render: without a keycloak block the output files equal today's" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ "$(ls "$OUT" | tr '\n' ' ')" = "brand.css values-codemie-ui.brand.yaml values-codemie.brand.yaml " ]
+}
+
+@test "render: --no-keycloak writes no keycloak files" {
+  pkg=$(kcpkg '.')
+  run "$SCRIPT" --render-only --no-keycloak --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ ! -e "$OUT/values-keycloak.theme.yaml" ]
+  [ ! -e "$OUT/values-oauth2-proxy.realm.yaml" ]
+}
+
+@test "render: --render-only with the keycloak block makes no helm or kubectl call" {
+  pkg=$(kcpkg '.')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ -f "$OUT/values-keycloak.theme.yaml" ]
+  [ ! -e "$BATS_TMPDIR/helm-calls" ]
+  [ ! -e "$BATS_TMPDIR/kubectl-calls" ]
 }
