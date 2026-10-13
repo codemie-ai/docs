@@ -11,9 +11,12 @@ sidebar_position: 28
 
 ## Overview
 
-The Microsoft Exchange toolkit gives AI/Run CodeMie assistants **read-only** access to a mailbox. Assistants can list folders, read messages, open a single message and extract text from its attachments. They cannot send, move or delete mail.
+The Microsoft Exchange toolkit gives AI/Run CodeMie assistants and workflows access to a mailbox. The toolkit has two groups of tools:
 
-The toolkit connects to Exchange in one of two ways. You choose the mode explicitly when you create the integration:
+- **Read tools** list folders, read messages, open a single message and extract text from its attachments. They never change the mailbox.
+- **Write tools** send, forward, move, tag and delete messages. They change the mailbox. See [Write Operations](#write-operations).
+
+The toolkit connects to Exchange in one of two ways. The mode is chosen explicitly when the integration is created:
 
 | Authentication type                          | Transport                   | Use it for                                                                                   |
 | -------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------- |
@@ -31,15 +34,24 @@ This tool requires you to have at least one Microsoft Exchange integration confi
 ### OAuth via Microsoft Entra ID Application (Microsoft Graph)
 
 - An app registration in Microsoft Entra ID with a client secret.
-- The **application** permission `Mail.Read` on Microsoft Graph, with admin consent granted.
+- The **application** permissions on Microsoft Graph that match the tools in use, with admin consent granted:
+
+  | Permission       | Needed for                                                                             |
+  | ---------------- | -------------------------------------------------------------------------------------- |
+  | `Mail.Read`      | The read tools                                                                         |
+  | `Mail.ReadWrite` | **Exchange: Move message**, **Exchange: Tag message** and **Exchange: Delete message** |
+  | `Mail.Send`      | **Exchange: Send message** and **Exchange: Forward message**                           |
+
+  `Mail.ReadWrite` includes read access. An integration that only reads mail needs `Mail.Read` alone.
 
 :::warning Mailbox scope
-An application-level `Mail.Read` permission grants access to **every mailbox in the tenant**. To restrict the application to specific mailboxes, your Exchange administrator must configure an Exchange **Application Access Policy**.
+An application-level mail permission grants access to **every mailbox in the tenant**. This is more serious for `Mail.ReadWrite` and `Mail.Send`, because the application can then change mail and send mail as any mailbox. To restrict the application to specific mailboxes, the Exchange administrator must configure an Exchange **Application Access Policy**.
 :::
 
 ### NTLM (Exchange Web Services)
 
-- A service account that has the **Full Access** mailbox permission on the target mailbox. The toolkit lists folders from the mailbox root, so Full Access is what it needs. Folder-level delegate rights in Outlook have not been verified to be enough.
+- A service account that has the **Full Access** mailbox permission on the target mailbox. The toolkit lists folders from the mailbox root, so Full Access is what it needs. Folder-level delegate rights in Outlook have not been verified to be enough. Full Access also covers moving, tagging and deleting messages.
+- For **Exchange: Send message** and **Exchange: Forward message**, the **Send As** permission for the service account on the target mailbox. Full Access does not include Send As. Messages are sent as the target mailbox, not as the service account.
 - EWS enabled for the service account and for the target mailbox.
 - NTLM (Windows authentication) enabled on the EWS virtual directory of the Exchange server.
 - Network access from the CodeMie cluster to the Exchange server. See [On-premises Notes (EWS)](#on-premises-notes-ews).
@@ -49,6 +61,9 @@ Your Exchange administrator can set up the server side in the Exchange Managemen
 ```powershell
 # Full Access for the service account on the target mailbox
 Add-MailboxPermission -Identity <mailbox> -User <service-account> -AccessRights FullAccess -InheritanceType All
+
+# Send As for the service account on the target mailbox (only for the send and forward tools)
+Add-ADPermission -Identity <mailbox> -User <service-account> -ExtendedRights "Send As"
 
 # EWS enabled for the mailbox
 Set-CASMailbox -Identity <mailbox> -EWSEnabled $true
@@ -123,6 +138,10 @@ Use the **Test** button on the integration to check the settings. The test signs
 - If required fields for the selected authentication type are missing or invalid, the message is "The Exchange connection settings are invalid. Check the required fields for the selected authentication type."
 - For any other failure, the test shows one of the fixed messages listed in [Troubleshooting](#troubleshooting).
 
+:::note
+The test only checks read access. It does not check the `Mail.ReadWrite` or `Mail.Send` permissions (OAuth) or the Send As permission (NTLM). Missing write permissions show up when a write tool is first used. See [Write Operation Errors](#write-operation-errors).
+:::
+
 ## Using in Assistants
 
 ### 1. Add the Toolkit
@@ -134,13 +153,15 @@ When creating or editing an assistant:
 - In **Available tools**, add **Microsoft Exchange**
 - Select your Microsoft Exchange integration from the dropdown
 
-The integration is selected once for the whole toolkit. All four tools use it.
+The integration is selected once for the whole toolkit. All tools use it.
 
-![Available Tools panel with the four Microsoft Exchange tools](./images/ms-exchange-assistant-tools.png)
+![Available Tools panel with the nine Microsoft Exchange tools](./images/ms-exchange-assistant-tools.png)
 
 ### 2. Available Tools
 
-All tools are read-only.
+The toolkit has four read tools and five write tools. The write tools are described in [Write Operations](#write-operations).
+
+**Read tools** never change the mailbox:
 
 | Tool                                 | What it does                                                                                                                                                            |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -171,7 +192,7 @@ All tools are read-only.
 - In a workflow tool node there is no assistant model, so set `ocr_model` in `tool_args`. Without it, images are listed as "no OCR model provided". See [Using in Workflows](#using-in-workflows).
 - Attachments that are not extracted are listed with a short note that explains why they were skipped.
 
-Each request times out after 60 seconds. Temporary failures are retried automatically up to 3 times, and all retries of one call share a 90-second budget:
+Each read request times out after 60 seconds. Temporary failures are retried automatically up to 3 times, and all retries of one call share a 90-second budget. Writes follow a stricter policy, described in [Retries and Time Limit](#retries-and-time-limit).
 
 | Mode  | What is retried                                                                                                                                                         |
 | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -196,20 +217,151 @@ Open the latest message from billing@example.com and extract the text of its PDF
 Find unread messages in the Inbox that have attachments and list their subjects.
 ```
 
+```text
+Tag every message from billing@example.com in the Inbox with the category "Invoice", then move it to the folder "Invoices".
+```
+
+```text
+Forward the latest message in the Inbox to support@example.com.
+```
+
+```text
+Move the message with this ID to Deleted Items.
+```
+
 For a request such as "List the folders of this mailbox, then show the newest 5 messages in the Inbox and classify each one.", the assistant calls **Exchange: Retrieve folders** and then **Exchange: Read messages**:
 
 ![Chat with Microsoft Exchange tool calls](./images/ms-exchange-chat-example.png)
 
+## Write Operations
+
+The write tools change the mailbox. They work the same way in both authentication modes, and the result has the same shape on Microsoft Graph and on EWS.
+
+:::warning Write tools change real mail
+Sent messages cannot be recalled, and a permanent delete cannot be undone. Add the write tools to an assistant only when it is meant to change mail, and describe in the assistant instructions when each tool may be used.
+:::
+
+### Tools
+
+| Tool                          | What it does                                                                                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Exchange: Send message**    | Sends a new message **as the target mailbox** and saves a copy in its Sent Items.                                                                      |
+| **Exchange: Forward message** | Forwards an existing message to new recipients, as the target mailbox and without a comment. The subject is prefixed by Exchange, for example `FW: …`. |
+| **Exchange: Move message**    | Moves a message to another folder.                                                                                                                     |
+| **Exchange: Tag message**     | Adds one category to a message and keeps the existing categories.                                                                                      |
+| **Exchange: Delete message**  | Moves a message to Deleted Items (default) or deletes it permanently.                                                                                  |
+
+**Exchange: Send message** parameters:
+
+- **to**: a list of recipient email addresses. Cc, Bcc and attachments are not supported.
+- **subject**: the subject of the message.
+- **body**: the body of the message.
+- **body_type**: `text` (default) or `html`. HTML is sent exactly as given, without sanitization.
+
+**Exchange: Forward message** parameters: **message_id** and **to** (a list of recipient email addresses).
+
+:::info Sending is not delivery
+The result `submitted` means that Exchange accepted the message. It does not mean that the message reached the recipient. The toolkit does not check delivery.
+:::
+
+**Exchange: Move message** parameters:
+
+- **message_id**: the ID of the message.
+- **target_folder**: a well-known folder name, a folder name (matched case-insensitively) or a folder ID. The same lookup rules as for **folder** in **Exchange: Read messages** apply. On EWS, only mail folders can be targets.
+
+A message can get a new ID when it moves. The result contains the new ID, and later steps must use it. The ID can be `null` when it is not known.
+
+**Exchange: Tag message** parameters: **message_id** and **category** (one category name, up to 255 characters, without control characters).
+
+- Categories are handled as a set. Tagging a message that has the category `Finance` with `Processed` results in `Finance` and `Processed`.
+- The comparison ignores letter case. A category that is already present is not written again, and the result contains `already_done`.
+- Removing or replacing categories and creating master categories are not supported.
+- Concurrent changes: on EWS, a conflicting concurrent change to the categories is detected. The message is read again and the tag is applied once more. A second conflict is reported as "Not applied". On Microsoft Graph, protection against a concurrent change is **not guaranteed**: if another process changes the categories of the same message at the same moment, one of the changes can be lost.
+
+**Exchange: Delete message** parameters:
+
+- **message_id**: the ID of the message.
+- **soft**: `true` (default) moves the message to Deleted Items, where it can be recovered. `false` deletes the message permanently.
+
+:::danger Permanent delete
+`soft=false` removes the message from normal access and cannot be undone through the toolkit. A retention policy or a litigation hold can still keep a copy, but immediate physical erasure is not guaranteed. Use it only when permanent deletion is explicitly required.
+:::
+
+A soft delete of a message that is already in Deleted Items does nothing and returns `already_done`. A repeated or retried default delete never turns into a permanent delete.
+
+### Results
+
+Each write tool returns a JSON result.
+
+| Tool                          | Result                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| **Exchange: Send message**    | `status` (`submitted`), `to`, `subject`                                 |
+| **Exchange: Forward message** | `status` (`submitted`), `message_id`, `to`                              |
+| **Exchange: Move message**    | `status` (`moved`), `message_id` (new ID), `target_folder`              |
+| **Exchange: Tag message**     | `status` (`tagged`), `message_id`, `categories` (the resulting set)     |
+| **Exchange: Delete message**  | `status` (`deleted`), `soft`, `message_id` (new ID after a soft delete) |
+
+`already_done` is added to the result of move, tag and soft delete when the mailbox was already in the requested state and nothing was written.
+
+### Not Applied and Unknown
+
+A write that fails always ends in one of two outcomes. The error message starts with the outcome:
+
+| Message starts with | Meaning                                                                                                         | What to do                                                                                              |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `Not applied.`      | The mailbox is unchanged. The request never reached Exchange, or Exchange rejected it before changing anything. | Fix the cause that the message names and repeat the request.                                            |
+| `Unknown.`          | The change may or may not have been made. A timeout, a lost connection or a server error after the submission.  | Check the mailbox first. Repeating the request can send a second message or delete a different message. |
+
+Each individual write on the server either completes fully or changes nothing. A lost response is not a partial change.
+
+For `Unknown.` results:
+
+- **Send** and **forward** are never repeated automatically. The caller must check the Sent Items folder of the mailbox, and must handle duplicate sending, because the toolkit keeps no history of earlier calls.
+- **Move** and **delete** are not repeated blindly. The toolkit first checks whether the message is now in the target folder. If that is confirmed, the call succeeds. If it is not confirmed, for example because the message ID changed during the move, the result stays `Unknown.`.
+- A permanent delete that ends as `Unknown.` is never confirmed automatically, because a missing message does not prove that this call deleted it.
+
+A message that cannot be found when move or delete is sent is `Unknown.` and not `Not applied.`, because the message may already have been moved or deleted.
+
+### Retries and Time Limit
+
+The whole call has one 90-second limit. It includes the sign-in, the reads that precede a change, the request and the waiting between attempts. The limit does not cancel or roll back a change that Exchange has already accepted.
+
+A write is submitted at most 3 times: the first attempt and up to two retries. A retry happens only when the previous attempt provably changed nothing and the cause is temporary:
+
+- OAuth: the request was rejected with rate limiting (HTTP 429).
+- NTLM: Exchange answered that the server is busy and gave a back-off time.
+
+When Exchange gives a wait time, the toolkit waits at least that long. If the wait does not fit into the remaining time, the call stops with "Not applied" and a rate-limit message and does not retry early. Without a wait time from Exchange, the wait is random: between 0 and 1 second before the first retry and between 0 and 2 seconds before the second.
+
+Authentication, permission and input errors are not retried. A timeout or a server error after the submission is not retried either. It ends as `Unknown.`.
+
+### Input Checks
+
+Before anything is submitted, the toolkit checks the input. An invalid value ends as "Not applied" with a message that asks to check the input values. The value itself is never shown in the message.
+
+- Recipient addresses must be a non-empty list of valid email addresses.
+- `body_type` must be exactly `text` or `html`.
+- Message IDs, folder names and categories must not be blank and must not start or end with a space.
+
+### Sender
+
+Messages are sent as the target mailbox, not as the identity that signs in, and appear in the Sent Items of the target mailbox. **Exchange: Send message** is a second way of sending mail, next to the SMTP-based [Email Sender](./email-sender-tool.md) tool. **Exchange: Send message** sends through the Exchange mailbox, while **Email Sender** sends through an SMTP server. The assistant instructions should say which of the two tools to use.
+
 ## Using in Workflows
 
-A workflow refers to the tools by their technical names, not by the labels shown in the assistant form. Set `integration_alias` to the alias of your Microsoft Exchange integration.
+A workflow refers to the tools by their technical names, not by the labels shown in the assistant form. Set `integration_alias` to the alias of the Microsoft Exchange integration.
 
-| Technical name              | Arguments                                                                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| `exchange_retrieve_folders` | None                                                                                       |
-| `exchange_read`             | `folder` (default `Inbox`), `start` (default `0`), `count` (default `10`, maximum `50`)    |
-| `exchange_retrieve_by_id`   | `message_id` (required)                                                                    |
-| `exchange_enrich_body`      | `message_id` (required), `ocr_model` (optional name of a multimodal model used for images) |
+| Technical name              | Arguments                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `exchange_retrieve_folders` | None                                                                                           |
+| `exchange_read`             | `folder` (default `Inbox`), `start` (default `0`), `count` (default `10`, maximum `50`)        |
+| `exchange_retrieve_by_id`   | `message_id` (required)                                                                        |
+| `exchange_enrich_body`      | `message_id` (required), `ocr_model` (optional name of a multimodal model used for images)     |
+| `exchange_send`             | `to` (required, list), `subject` (required), `body` (required), `body_type` (`text` or `html`) |
+| `exchange_forward`          | `message_id` (required), `to` (required, list)                                                 |
+| `exchange_move`             | `message_id` (required), `target_folder` (required)                                            |
+| `exchange_tag`              | `message_id` (required), `category` (required)                                                 |
+| `exchange_delete`           | `message_id` (required), `soft` (default `true`)                                               |
 
 :::note OCR in workflow tool nodes
 When `exchange_enrich_body` runs as a tool node, no assistant model is available. Set `ocr_model` in `tool_args` to the name of a multimodal model. Otherwise every image attachment is skipped and listed as "no OCR model provided". An assistant in a workflow, as in the second example below, uses a multimodal model from the platform's model list.
@@ -247,6 +399,31 @@ assistants:
       - name: exchange_enrich_body
         integration_alias: support-inbox
 ```
+
+Example of tools that mark a processed message and move it to another folder. The `message_id` is taken from the workflow context:
+
+```yaml
+tools:
+  - id: tag-processed
+    tool: exchange_tag
+    tool_args:
+      message_id: '{{message_id}}'
+      category: Processed
+    integration_alias: support-inbox
+
+  - id: move-processed
+    tool: exchange_move
+    tool_args:
+      message_id: '{{message_id}}'
+      target_folder: Processed
+    integration_alias: support-inbox
+```
+
+:::info Write errors in workflows
+A workflow does not run a failed write tool again by itself. A write error ends the tool call once, with its `Not applied.` or `Unknown.` message, so a retry never sends a second message or repeats a delete. A failed tool stops the workflow execution. Checking the mailbox after `Unknown.` and repeating the step remain the responsibility of the workflow author.
+:::
+
+Move and tag are well suited as progress markers in a workflow that processes a mailbox: a message that is moved to a "Processed" folder or tagged with a category is easy to skip in the next run. The toolkit does not prevent two overlapping runs from handling the same message and does not keep a history of earlier calls.
 
 For the full workflow syntax, see the [Workflow Configuration Reference](../../workflows/configuration/configuration-reference.md).
 
@@ -358,9 +535,33 @@ The toolkit and the **Test** button show fixed messages. Error text from Microso
 
 Other fixed messages cover an unknown tenant or application, a mailbox that is not found or not enabled for REST, rate limiting, a server that does not respond in time, temporary server errors, and folders or messages that do not exist.
 
+### Write Operation Errors
+
+The write tools use the same fixed messages, but every message starts with `Not applied.` or `Unknown.`. See [Not Applied and Unknown](#not-applied-and-unknown). Sign-in and connection problems, such as an expired or invalid client secret, rejected service account credentials, a missing administrator consent, a mailbox or folder that is not found, or a certificate that cannot be verified, keep the wording from the table above with `Not applied.` in front. A client secret that has expired fails before anything is sent, so the mailbox is unchanged. The messages below are specific to writes.
+
+| Message starts with                                                                                                                                                             | Likely cause                                                                                                                                                     | Fix                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| "Not applied. Access to send mail from this mailbox was denied…" (OAuth)                                                                                                        | `Mail.Send` is missing or has no administrator consent, or an Application Access Policy blocks the mailbox. The message does not say which of these applies      | Grant the `Mail.Send` application permission with administrator consent, and check the Application Access Policy      |
+| "Not applied. Access to change this mailbox was denied…" (OAuth)                                                                                                                | `Mail.ReadWrite` is missing or has no administrator consent, or an Application Access Policy blocks the mailbox. The message does not say which of these applies | Grant the `Mail.ReadWrite` application permission with administrator consent, and check the Application Access Policy |
+| "Not applied. The Exchange service account was not allowed to send as this mailbox…" (NTLM)                                                                                     | The service account has no **Send As** permission on the mailbox, or mailbox access is restricted                                                                | Grant **Send As** to the service account. See [NTLM (Exchange Web Services)](#ntlm-exchange-web-services)             |
+| "Not applied. The Exchange service account was not allowed to change this mailbox…" (NTLM)                                                                                      | The service account has no write rights on the mailbox, or mailbox access is restricted                                                                          | Grant **Full Access** to the service account. See [NTLM (Exchange Web Services)](#ntlm-exchange-web-services)         |
+| "Not applied. The mail folder was not found, or this account cannot see it…"                                                                                                    | The target folder name or ID is wrong, or (NTLM) the service account cannot see the folder                                                                       | Check the folder name. Use the folder ID from **Exchange: Retrieve folders**                                          |
+| "Not applied. The message was not found…"                                                                                                                                       | The message ID is wrong, or the message was already moved or deleted and its ID changed                                                                          | Read the message list again and use the current ID                                                                    |
+| "Not applied. Exchange rejected the request as invalid…"                                                                                                                        | An input value is invalid, for example an address that is not an email address                                                                                   | Check the input values. See [Input Checks](#input-checks)                                                             |
+| "Not applied. The message categories were changed by someone else at the same time…"                                                                                            | Another process changed the categories of the message during the tag operation (EWS)                                                                             | Repeat the tag operation                                                                                              |
+| "Not applied. The Exchange service is rate limiting requests…"                                                                                                                  | Rate limiting persisted after the allowed attempts, or the wait that Exchange required did not fit into the 90-second limit                                      | Repeat the operation after a while. See [Retries and Time Limit](#retries-and-time-limit)                             |
+| "Not applied. The time limit for this call was used up before the change could be sent…"                                                                                        | Sign-in or the reads before the change took the whole 90-second limit                                                                                            | Repeat the operation                                                                                                  |
+| "Not applied. The mailbox could not be read before the change…"                                                                                                                 | A read that must precede the change failed, so the change was not attempted                                                                                      | Repeat the operation later                                                                                            |
+| "Unknown. The Exchange service did not respond in time…", "Unknown. The Exchange service reported a server error…", "Unknown. The connection to the Exchange service was lost…" | The request may have reached Exchange before the failure                                                                                                         | Check the mailbox before repeating the operation. For send and forward, check Sent Items                              |
+| "Unknown. The message was not found when the change was sent…"                                                                                                                  | The message may already have been moved or deleted by this call                                                                                                  | Check the target folder or Deleted Items before repeating the operation                                               |
+
 ## Limitations
 
-- The toolkit is read-only. It cannot send, move or delete messages.
+- Send and forward support only recipients in the **To** field. Cc, Bcc, attachments, forwarding with a comment and replying are not supported.
+- Tag only adds a category. Removing or replacing categories and managing the master category list are not supported.
+- On Microsoft Graph, protection against concurrent category changes is not guaranteed.
+- Permanent deletion removes the message from normal access, but retention policies or a litigation hold can keep a copy.
+- The toolkit keeps no history of earlier calls and does not prevent a message from being sent twice. Business-level deduplication belongs to the assistant or the workflow.
 - IMAP and POP3 are not supported.
 - Certificate-based authentication for the Entra ID application is not supported. Use a client secret.
 - Autodiscover is not supported. Enter the direct EWS endpoint.
