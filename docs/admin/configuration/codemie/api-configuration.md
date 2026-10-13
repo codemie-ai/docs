@@ -767,7 +767,9 @@ For the user-side address rules, see [EWS URL](../../../user-guide/tools_integra
 An on-premises Exchange server on a private address is rejected with
 "The configured Exchange EWS endpoint is not usable. Check the endpoint URL." until its host name
 or a CIDR that covers its address is listed. The host name is resolved, and every address it
-resolves to must pass. Host names and CIDRs can be combined:
+resolves to must pass. Host names and CIDRs can be combined. A host name entry must match the host
+name in the EWS URL exactly (case-insensitive). Wildcards such as `*.corp.local` are not supported:
+list each host name, or cover the servers with a CIDR:
 
 ```bash
 EXCHANGE_EWS_ALLOWED_HOSTS=mail.corp.local,10.20.0.0/16
