@@ -2,11 +2,13 @@
 # Recording stub: logs every call; answers `get metadata` and `get values` like Helm 3.9+.
 # HELM_STUB_DIR: `get values <rel>` answers from $HELM_STUB_DIR/<rel>.yaml ({} if absent),
 #   as JSON when -o json is present. When unset, HELM_STUB_VALUES is used.
+# HELM_STUB_FAIL_METADATA: `get metadata <rel>` for that release exits 1.
 # HELM_STUB_FAIL_RELEASE: `upgrade <rel>` for that release exits 1.
 echo "helm $*" >> "$BATS_TMPDIR/helm-calls"
 json=0
 for a in "$@"; do [[ "$a" == "json" ]] && json=1; done
 if [[ "$1" == "get" && "$2" == "metadata" ]]; then
+  [[ -n "${HELM_STUB_FAIL_METADATA:-}" && "$3" == "$HELM_STUB_FAIL_METADATA" ]] && exit 1
   printf 'name: %s\nchart: fake-chart\nversion: 1.2.3\nappVersion: 9.9.9\n' "$3"
 elif [[ "$1" == "get" && "$2" == "values" ]]; then
   if [[ -n "${HELM_STUB_DIR:-}" ]]; then

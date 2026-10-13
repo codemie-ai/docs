@@ -93,7 +93,7 @@ links:
 # budget_restored; {costCenterName} in subject and intro of budget_stopped.
 # optional - Keycloak login theme and mail settings. Omit the block to leave Keycloak unchanged.
 # keycloak:
-#   themeName: '' # optional - theme name, 3-40 characters: a-z, 0-9, -
+#   themeName: '' # required - theme name, 3-40 characters: a-z, 0-9, -
 #   smtp: # optional - SMTP server for Keycloak emails
 #     host: '' # optional - SMTP host name
 #     port: 587 # optional - SMTP port
