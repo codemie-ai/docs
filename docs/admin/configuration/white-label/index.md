@@ -240,10 +240,6 @@ The default of `EMAIL_FROM_NAME` changes from `CodeMie` to empty, and the email 
 
 The optional top-level `keycloak` block extends the brand to Keycloak. A package without the block behaves exactly as before: no extra output file, no extra Helm call.
 
-:::note Verification status
-End-to-end verification of the child theme on a running Keycloak instance is still pending. Specifically, it has not yet been confirmed that the child theme properties reach the login page, nor that the Keycloak email renders as expected. The guide may change after that check.
-:::
-
 ### What is delivered
 
 - A Keycloak child theme named by `keycloak.themeName`, with a login part and an email part. It extends the vendor parent theme `codemie`. The login part carries the product name, the light and dark logos, the favicons, and `brand.css` (copied unchanged). The email part carries the product name and the email palette, signature, and logo URL.
@@ -316,15 +312,22 @@ The Keycloak release must already carry the child theme hook, which the normal c
 4. Apply. The Keycloak flags have their own namespace defaults (`security` and `oauth2-proxy`), so `--namespace` is not used for them:
 
    ```bash
-   kit/apply-theme      --namespace codemie      --chart-ui <repository>/codemie-ui --chart-codemie <repository>/codemie      --chart-keycloak <repository>/keycloak-helm --chart-proxy <repository>/oauth2-proxy      --customer-config customer-config.yaml      my-brand/theme-package.yaml my-brand/assets
+   kit/apply-theme \
+     --namespace codemie \
+     --chart-ui <repository>/codemie-ui --chart-codemie <repository>/codemie \
+     --chart-keycloak <repository>/keycloak-helm --chart-proxy <repository>/oauth2-proxy \
+     --customer-config customer-config.yaml \
+     my-brand/theme-package.yaml my-brand/assets
    ```
 
-The script validates everything first, renders, and then runs a read-only preflight. Only then does it upgrade the releases, in this order: UI, API, Keycloak, and oauth2-proxy. The Keycloak upgrade uses `--reuse-values`, the pinned chart version, and `--wait --timeout` (default `10m`). Keys of the stored child theme that the new package no longer has are set to `null` through a second values file (`values-keycloak.stale.yaml`, written in apply mode only), so removed assets leave the ConfigMap.
+The script validates everything first, renders, and then runs a read-only preflight that also reads the chart versions of all four releases. Only then does it upgrade the releases, in this order: UI, API, Keycloak, and oauth2-proxy. The Keycloak upgrade uses `--reuse-values`, the pinned chart version, and `--wait --timeout` (default `10m`). Keys of the stored child theme that the new package no longer has are set to `null` through a second values file (`values-keycloak.stale.yaml`, written in apply mode only), so removed assets leave the ConfigMap.
 
 If the preflight finds no `keycloak-child-theme` entry in the volumes or volume mounts of the Keycloak release, the script stops before any upgrade and prints that the normal chart deployment of the Keycloak release must be run once first. To skip the Keycloak steps for a single run, pass `--no-keycloak`.
 
+If the Keycloak upgrade fails or the `--wait` times out, the UI and API releases are already upgraded and the deployments are not yet restarted. Fix the cause, then run `apply-theme` again: every step is repeatable. The oauth2-proxy upgrade and the restarts run only when the Keycloak upgrade succeeds.
+
 :::warning Sender name
-`email.senderName` reaches Keycloak only as part of a full SMTP block (`host` and `from`). Without the block, the script warns, and Keycloak keeps its own sender. Without the SMTP block, the realm file has no SMTP settings at all.
+`email.senderName` reaches Keycloak only as part of a full SMTP block (`host` and `from`). Without the block, the script warns, and Keycloak keeps its own sender. Without a full SMTP block, the realm file sets every SMTP key to `null`, so settings of an earlier run are removed.
 :::
 
 :::warning A full chart redeploy resets the brand
@@ -349,12 +352,21 @@ When Helm releases are managed by another tool, `--render-only` makes the two Ke
 ```bash
 kit/apply-theme --render-only --output-dir ./rendered my-brand/theme-package.yaml my-brand/assets
 
-helm upgrade keycloak <repository>/keycloak-helm -n security   --reuse-values --version <installed-chart-version>   -f ./rendered/values-keycloak.theme.yaml --wait --timeout 10m
+# read the installed chart version of each release first
+helm get metadata keycloak -n security -o yaml | yq eval '.version' -
 
-helm upgrade oauth2-proxy <repository>/oauth2-proxy -n oauth2-proxy   --reuse-values --version <installed-chart-version>   -f ./rendered/values-oauth2-proxy.realm.yaml
+helm upgrade keycloak <repository>/keycloak-helm -n security \
+  --reuse-values --version <installed-chart-version> \
+  -f ./rendered/values-keycloak.theme.yaml --wait --timeout 10m
+
+helm get metadata oauth2-proxy -n oauth2-proxy -o yaml | yq eval '.version' -
+
+helm upgrade oauth2-proxy <repository>/oauth2-proxy -n oauth2-proxy \
+  --reuse-values --version <installed-chart-version> \
+  -f ./rendered/values-oauth2-proxy.realm.yaml
 ```
 
-The rendered theme file never contains `null` values, so keys of an earlier run are not removed by this call. To remove a key, a pipeline passes one more values file that sets it to `null`, after the theme file:
+The rendered theme file never contains `null` values, so keys of an earlier run are not removed by this call. To remove a key, a pipeline passes one more values file that sets it to `null`, after the theme file. The same applies to keys under `data` and under `binaryData`:
 
 ```yaml
 keycloakx:

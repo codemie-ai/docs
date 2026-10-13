@@ -2,6 +2,8 @@
 # apply-theme — validate, render and (optionally) apply a theme package to a cluster
 # Prerequisites: yq >=4 (mikefarah), ajv-cli >=5, helm >=3.9, kubectl >=1.25
 set -euo pipefail
+# bash 5.2 expands & in a replacement string; product names such as R&D must stay literal
+shopt -u patsub_replacement 2>/dev/null || true
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCHEMA="$SCRIPT_DIR/theme-package.schema.json"
@@ -340,8 +342,11 @@ if [[ "$PARSEABLE" == "true" ]]; then
     if [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE" 2>/dev/null || true)" == "!!map" ]]; then
       kc_host=$(_email_str '.keycloak.smtp.host')
       kc_from=$(_email_str '.keycloak.smtp.from')
-      [[ -n "$kc_host" ]] || ERRORS+=("keycloak.smtp.host: required together with keycloak.smtp.from")
-      [[ -n "$kc_from" ]] || ERRORS+=("keycloak.smtp.from: required together with keycloak.smtp.host")
+      # host and from are set together or not at all; an empty map is a valid opt-out
+      if [[ -n "$kc_host" || -n "$kc_from" ]]; then
+        [[ -n "$kc_host" ]] || ERRORS+=("keycloak.smtp.host: required together with keycloak.smtp.from")
+        [[ -n "$kc_from" ]] || ERRORS+=("keycloak.smtp.from: required together with keycloak.smtp.host")
+      fi
       [[ -n "$kc_host" && -n "$kc_from" ]] && kc_smtp_ok=1
       for cred in username password; do
         ctag=$(yq eval ".keycloak.smtp.auth.$cred | tag" "$PACKAGE_FILE" 2>/dev/null || true)
@@ -357,19 +362,19 @@ if [[ "$PARSEABLE" == "true" ]]; then
     fi
 
     # brand.css is rendered here only to check it; phase 2 renders it again into the output
-    # directory. Skipped while earlier errors may have left the colours unusable.
-    if [[ ${#ERRORS[@]} -eq 0 ]]; then
-      _render_brand_css >"$TMP_ROOT/brand.css"
-      if [[ -z "$(tr -d '[:space:]' <"$TMP_ROOT/brand.css")" ]]; then
-        ERRORS+=("brand.css: the rendered stylesheet is empty")
-      else
-        kc_bytes=$(_kc_size "$TMP_ROOT/brand.css")
-        if [[ "$kc_bytes" -gt $KC_MAX_BYTES ]]; then
-          ERRORS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above the limit of $KC_MAX_BYTES bytes; shrink the assets or ship the theme as a JAR instead")
-        elif [[ "$kc_bytes" -gt $KC_WARN_BYTES ]]; then
-          WARNINGS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above $KC_WARN_BYTES; the limit is $KC_MAX_BYTES (the 1 MiB release Secret stores the content twice)")
-        fi
-      fi
+    # directory. When earlier errors leave the colours unusable the render fails and only the
+    # asset part of the size is checked, so size and css problems are listed with the others.
+    : >"$TMP_ROOT/brand.css"
+    kc_css_ok=1
+    _render_brand_css >"$TMP_ROOT/brand.css" 2>/dev/null || kc_css_ok=0
+    if [[ "$kc_css_ok" == "1" && -z "$(tr -d '[:space:]' <"$TMP_ROOT/brand.css")" ]]; then
+      ERRORS+=("brand.css: the rendered stylesheet is empty")
+    fi
+    kc_bytes=$(_kc_size "$TMP_ROOT/brand.css")
+    if [[ "$kc_bytes" -gt $KC_MAX_BYTES ]]; then
+      ERRORS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above the limit of $KC_MAX_BYTES bytes; shrink the assets or ship the theme as a JAR instead")
+    elif [[ "$kc_bytes" -gt $KC_WARN_BYTES ]]; then
+      WARNINGS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above $KC_WARN_BYTES; the limit is $KC_MAX_BYTES (the 1 MiB release Secret stores the content twice)")
     fi
   fi
 
@@ -632,7 +637,16 @@ _render_keycloak() {
       .realm.smtp.enableSSL = load(strenv(PACKAGE_FILE)).keycloak.smtp.ssl |
       .realm.smtp.enableStartTLS = load(strenv(PACKAGE_FILE)).keycloak.smtp.starttls |
       .realm.smtp.fromDisplayName = (strenv(KC_SENDER) | select(. != "")) |
-      .realm.smtp.authentication = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth
+      .realm.smtp.authentication.username = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.username |
+      .realm.smtp.authentication.password = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.password
+    ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
+  else
+    # no usable SMTP block: null every smtp key so --reuse-values drops settings of an earlier run
+    yq -i '
+      .realm.smtp.host = null | .realm.smtp.from = null | .realm.smtp.port = null |
+      .realm.smtp.enableSSL = null | .realm.smtp.enableStartTLS = null |
+      .realm.smtp.fromDisplayName = null |
+      .realm.smtp.authentication.username = null | .realm.smtp.authentication.password = null
     ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
   fi
 }
@@ -672,10 +686,22 @@ _preflight_keycloak() {
       [[ -n "$key" ]] || continue
       grep -qxF -- "$key" <<<"$new_keys" && continue
       STALE_KEY="$key" yq -i ".keycloakx.childTheme.$map[strenv(STALE_KEY)] = null" "$WORK_DIR/values-keycloak.stale.yaml"
-    done < <(yq eval -p=json ".keycloakx.childTheme.$map // {} | keys | .[]" "$stored")
+    done < <(yq eval -p=json "((.keycloakx.childTheme | select(tag == \"!!map\") | .$map) | select(tag == \"!!map\")) // {} | keys | .[]" "$stored")
   done
 }
-if [[ "$KC_ACTIVE" == "1" ]]; then _preflight_keycloak; fi
+# Chart versions of all four releases are read before the first upgrade, so an unreadable
+# release stops the run with nothing changed.
+_check_versions() {
+  local pair rel ns
+  for pair in "$RELEASE_UI|$NAMESPACE" "$RELEASE_CODEMIE|$NAMESPACE" "$RELEASE_KEYCLOAK|$NAMESPACE_KEYCLOAK" "$RELEASE_PROXY|$NAMESPACE_PROXY"; do
+    rel="${pair%%|*}"; ns="${pair##*|}"
+    helm get metadata "$rel" -n "$ns" -o yaml >/dev/null 2>&1 || {
+      echo "apply-theme: cannot read the metadata of release $rel in namespace $ns; nothing was changed." >&2
+      exit 1
+    }
+  done
+}
+if [[ "$KC_ACTIVE" == "1" ]]; then _check_versions; _preflight_keycloak; fi
 
 # ── Phase 3: upgrade ─────────────────────────────────────────────────────────
 # The installed chart version is pinned so the upgrade can never move the platform to a newer

@@ -180,6 +180,7 @@
     },
     "keycloak": {
       "type": "object",
+      "required": ["themeName"],
       "additionalProperties": false,
       "properties": {
         "themeName": {

@@ -695,14 +695,27 @@ contract_keys() {
   grep -vE '^[[:space:]]*(#|$)' "$1"
 }
 
-@test "contract: fixture keys are listed in apply-theme" {
-  missing=""
-  for f in ui-brand-keys.txt chart-values-keys.txt; do
-    while IFS= read -r key; do
-      grep -qF -e "$key" "$SCRIPT" || missing="$missing $key"
-    done < <(contract_keys "$FIXTURES/contract/$f")
-  done
-  [ -z "$missing" ] || { echo "not in apply-theme:$missing"; return 1; }
+@test "contract: rendered keys, marker and cap equal the fixture lists exactly" {
+  pkg=$(kcpkg '.email.images.logoUrl = "https://static.acme.example/logo.png" | .email.palette = {"primary":"#112233","primaryText":"#ffffff","text":"#000000","background":"#eeeeee","surface":"#dddddd"} | .email.signature = "Team {productName}"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  T="$OUT/values-keycloak.theme.yaml"; R="$OUT/values-oauth2-proxy.realm.yaml"
+  {
+    echo keycloakx.childTheme
+    yq eval '.keycloakx.childTheme | keys | .[]' "$T" | sed 's/^/keycloakx.childTheme./'
+    yq eval '.keycloakx.childTheme.data | keys | .[]' "$T"
+    yq eval '.keycloakx.childTheme.binaryData | keys | .[]' "$T" | sed 's/^\(img\.\).*/\1/'
+    yq eval '.. | select(tag != "!!map") | path | join(".")' "$R" | sed 's/^\(realm\.smtp\)\..*/\1/'
+    sed -n 's/^KC_MARKER="\(.*\)"$/\1/p' "$SCRIPT"
+    sed -n 's/^KC_MAX_BYTES=\([0-9]*\).*/\1/p' "$SCRIPT"
+  } | sort -u >"$BATS_TEST_TMPDIR/actual-chart"
+  contract_keys "$FIXTURES/contract/chart-values-keys.txt" | sort -u >"$BATS_TEST_TMPDIR/expected-chart"
+  diff "$BATS_TEST_TMPDIR/expected-chart" "$BATS_TEST_TMPDIR/actual-chart"
+  for f in login.theme.properties email.theme.properties; do
+    yq eval ".keycloakx.childTheme.data.\"$f\"" "$T" | grep -v '^parent=' | grep . | cut -d= -f1
+  done | sort -u >"$BATS_TEST_TMPDIR/actual-ui"
+  contract_keys "$FIXTURES/contract/ui-brand-keys.txt" | sort -u >"$BATS_TEST_TMPDIR/expected-ui"
+  diff "$BATS_TEST_TMPDIR/expected-ui" "$BATS_TEST_TMPDIR/actual-ui"
 }
 
 # kc_check '<yq expression>' -> runs ajv against keycloak.yaml with the change applied
@@ -988,6 +1001,34 @@ kc_size_assets() {
   [ ! -e "$OUT" ]
 }
 
+@test "validate: empty smtp map is accepted" {
+  kc_render '.keycloak.smtp = {}'
+  [ "$status" -eq 0 ]
+}
+
+@test "validate: themeName missing is rejected by schema and script" {
+  kc_check 'del(.keycloak.themeName)'
+  [ "$status" -ne 0 ]
+  kc_render 'del(.keycloak.themeName)'
+  kc_rejected "keycloak.themeName"
+}
+
+@test "validate: oversize assets are reported together with other errors" {
+  kc_size_assets 400004
+  pkg=$(kcpkg '.product.name = " Acme<"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$KC_ASSETS"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"product.name"* ]]
+  [[ "$output" == *"400000"* ]]
+}
+
+@test "render: ampersand in product name stays literal in signature and sender" {
+  kc_files '.product.name = "R&D Suite" | .email.signature = "Team {productName}" | .email.senderName = "{productName} Mail"'
+  props=$(yq eval '.keycloakx.childTheme.data."email.theme.properties"' "$THEME")
+  [[ "$props" == *"brand.email.signature=Team R&D Suite"* ]]
+  [ "$(yq eval '.realm.smtp.fromDisplayName' "$REALM")" = "R&D Suite Mail" ]
+}
+
 # ── render: keycloak value files ─────────────────────────────────────────────
 
 # kc_files '<yq expression>': render the keycloak package with the change applied into $OUT
@@ -1106,16 +1147,24 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
 
 @test "render: unset smtp sub-keys are null in the realm file" {
   kc_files 'del(.keycloak.smtp.port) | del(.keycloak.smtp.ssl) | del(.keycloak.smtp.starttls) | del(.keycloak.smtp.auth)'
-  for k in port enableSSL enableStartTLS fromDisplayName authentication; do
-    [ "$(yq eval ".realm.smtp | has(\"$k\")" "$REALM")" = "true" ]
+  for k in port enableSSL enableStartTLS fromDisplayName authentication.username authentication.password; do
     [ "$(yq eval ".realm.smtp.$k | tag" "$REALM")" = "!!null" ]
   done
+  [ "$(yq eval '.realm.smtp.host' "$REALM")" = "smtp.acme.example" ]
 }
 
-@test "render: no smtp block gives a realm file without smtp and fromDisplayName" {
+@test "render: username without password nulls the password" {
+  kc_files 'del(.keycloak.smtp.auth.password)'
+  [ "$(yq eval '.realm.smtp.authentication.password | tag' "$REALM")" = "!!null" ]
+  [ "$(yq eval '.realm.smtp.authentication.username | keys | .[]' "$REALM")" = "secretKeyRef" ]
+}
+
+@test "render: no smtp block nulls every realm smtp key and sets no sender name" {
   kc_files 'del(.keycloak.smtp) | .email.senderName = "Acme Mail"'
-  [ "$(yq eval '.realm | has("smtp")' "$REALM")" = "false" ]
-  ! grep -q 'fromDisplayName' "$REALM"
+  for k in host from port enableSSL enableStartTLS fromDisplayName authentication.username authentication.password; do
+    [ "$(yq eval ".realm.smtp.$k | tag" "$REALM")" = "!!null" ]
+  done
+  ! grep -q 'Acme Mail' "$REALM"
   [ "$(yq eval '.realm.themes.loginTheme' "$REALM")" = "acme-brand" ]
 }
 
@@ -1305,4 +1354,30 @@ kc_apply() {
 @test "render-only: no stale file is written" {
   kc_files
   [ ! -e "$OUT/values-keycloak.stale.yaml" ]
+}
+
+@test "apply: unreadable proxy release stops before any upgrade" {
+  kc_stub_dir
+  KC_ENV="HELM_STUB_FAIL_METADATA=oauth2-proxy" kc_apply
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"oauth2-proxy"* ]]
+  run grep "helm upgrade" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+  [ ! -e "$BATS_TMPDIR/kubectl-calls" ]
+}
+
+@test "apply: non-map stored childTheme does not abort the stale scan" {
+  kc_stub_dir '.keycloakx.childTheme = null'
+  kc_apply
+  [ "$status" -eq 0 ]
+  kc_stub_dir '.keycloakx.childTheme.data = "text" | .keycloakx.childTheme.binaryData = null'
+  kc_apply
+  [ "$status" -eq 0 ]
+}
+
+@test "apply: stale data keys are nulled too" {
+  kc_stub_dir '.keycloakx.childTheme.data."old.properties" = "x"'
+  kc_apply
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.keycloakx.childTheme.data."old.properties" | tag' "$OUT/values-keycloak.stale.yaml")" = "!!null" ]
 }
