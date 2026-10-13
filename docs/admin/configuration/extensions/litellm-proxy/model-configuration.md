@@ -412,6 +412,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
 | [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
+| [`gemini-4-argon`](#gemini-4-argon)                | Gemini 4 Argon                         |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -1889,6 +1890,33 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.8-flash-global
     base_model: vertex_ai/gemini-3.8-flash
     label: "Gemini 3.8 Flash"
+```
+
+</details>
+
+#### Gemini 4 Argon
+
+<details>
+<summary><strong>Gemini 4 Argon</strong></summary>
+
+```yaml
+- model_name: gemini-4-argon
+  litellm_params:
+    model: vertex_ai/gemini-4-argon
+    vertex_location: "global"
+  model_info:
+    id: gemini-4-argon-global
+    base_model: vertex_ai/gemini-4-argon
+    label: "Gemini 4 Argon"
+
+- model_name: gemini-4-argon
+  litellm_params:
+    model: vertex_ai/gemini-4-argon
+    vertex_location: "eu"
+  model_info:
+    id: gemini-4-argon-eu
+    base_model: vertex_ai/gemini-4-argon
+    label: "Gemini 4 Argon"
 ```
 
 </details>
