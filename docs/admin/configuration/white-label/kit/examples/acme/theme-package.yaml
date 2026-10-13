@@ -56,3 +56,25 @@ links:
   googleDocsDocumentation:
     name: 'Acme Google Docs Guide'
     url: 'https://docs.acme.example/google-docs'
+
+# Optional: branding of platform emails (verification, password reset, budget notifications).
+email:
+  senderName: 'Acme Notifications'
+  signature: 'The {productName} Team'
+  palette:
+    primary: '#0B5FFF'
+    primaryText: '#FFFFFF'
+    text: '#1F2933'
+    background: '#F5F7FA'
+    surface: '#FFFFFF'
+  images:
+    logo: 'email-logo.png'
+  messages:
+    verification:
+      subject: 'Confirm your {productName} account'
+      heading: 'Welcome to {productName}'
+    budget_stopped:
+      subject: 'Budget stopped for {projectName}'
+      intro: 'The budget for project {projectName} ({costCenterName}) has been stopped.'
+    budget_restored:
+      intro: 'The budget for project {projectName} has been restored.'

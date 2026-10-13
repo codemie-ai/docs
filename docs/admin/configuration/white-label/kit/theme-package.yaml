@@ -66,3 +66,27 @@ links:
   googleDocsDocumentation: # optional
     name: ''
     url: ''
+# optional - branding of platform emails. Every key below is optional; omitted keys use the
+# platform defaults. Uncomment only what you want to change.
+# email:
+#   senderName: '' # optional - sender display name; must not be blank when set
+#   signature: '' # optional - closing line; may use {productName}
+#   palette: # optional - each role is #RRGGBB
+#     primary: '' # optional - button and accent color
+#     primaryText: '' # optional - text on the primary color
+#     text: '' # optional - body text
+#     background: '' # optional - page background
+#     surface: '' # optional - card background
+#   images:
+#     logo: '' # optional - file name in the assets directory; png, jpg, jpeg or gif, up to 256 KiB
+#   messages: # optional - verification, password_reset, budget_soft_limit, budget_stopped, budget_restored
+#     verification:
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+#       buttonLabel: '' # optional
+#       footer: '' # optional
+#     budget_stopped: # budget_stopped and budget_restored take subject, heading and intro only
+#       subject: '' # optional - may use {productName}, {projectName}, {costCenterName}
+# Tokens: {productName} in every text field; {projectName} in subject and intro of budget_stopped and
+# budget_restored; {costCenterName} in subject and intro of budget_stopped.
