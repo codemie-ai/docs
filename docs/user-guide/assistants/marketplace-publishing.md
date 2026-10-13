@@ -12,7 +12,7 @@ description: Share your assistants with the community by publishing to the marke
 Share your custom assistants with the AI/Run CodeMie community by publishing them to the Marketplace. Follow the publishing process to ensure your assistant is properly configured and secure.
 
 :::info Marketplace review
-When Marketplace management is enabled, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. Marketplace management is enabled by default and can be disabled only with the `features:marketplaceManagement` feature flag in the backend YAML configuration — it cannot be switched on or off in the UI. When it is disabled, the review statuses, re-validation on edit, and Force-Publish described on this page are not available.
+The review flow described on this page applies only when a platform administrator has turned on the approval gate (`MARKETPLACE_APPROVAL_GATE_ENABLED`) together with Marketplace management (`MARKETPLACE_MANAGEMENT_ENABLED`). Both are backend environment variables that are off by default and cannot be switched in the UI. With the approval gate on, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. On a deployment where the gate is off, publishing goes straight to the Marketplace, and the review statuses, re-validation on edit, and Force-Publish described on this page are not available. See [Enabling Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx#enabling-marketplace-management).
 :::
 
 ## Publishing Process
@@ -33,7 +33,7 @@ When Marketplace management is enabled, every assistant published to the Marketp
 
    ![Sent for review confirmation](./images/marketplace-sent-for-review.png)
 
-   If any check fails, the **Assistant Quality Validation Failed** dialog lists the issues to fix. See [Validation Checks](#validation-checks).
+   If any check fails, a dialog lists the issues to fix. See [Validation Checks](#validation-checks).
 
 6. Track the review result by the status badge on the assistant card. See [Review Statuses](#review-statuses).
 
@@ -122,24 +122,26 @@ Be mindful that publishing shares your integration configurations. Review integr
 
 ## Validation Checks
 
-Before an assistant is submitted for review, the system analyzes its configuration. If any check fails, the results appear in the **Analysis Summary** section of the validation dialog. Each finding names the affected field (for example, **Name** or **Description**) and includes a recommendation on how to fix it.
+Before an assistant is submitted for review, the system runs two validation steps. Each finding names the affected field (for example, **Name** or **Description**) and includes a recommendation on how to fix it.
 
-When publishing an assistant, the findings are shown in the **Assistant Quality Validation Failed** dialog:
+### Step 1: Deterministic Checks
 
-![Assistant Quality Validation Failed dialog](./images/marketplace-quality-validation-failed.png)
+The checks listed in the table below are applied first. If any of them fails, the **Assistant Verification Failed** dialog lists the findings:
 
-- **Manual Edit**: open the assistant editor to apply the suggested changes.
+![Assistant Verification Failed dialog on publish](./images/marketplace-verification-failed.png)
+
+- **Edit assistant**: open the assistant editor to fix the reported issues.
 - **Cancel**: close the dialog without publishing.
-- **Publish Anyway**: publish the assistant despite the findings. Available only to platform administrators and maintainers. See [Force-Publish for Administrators](#force-publish-for-administrators).
+- **Force-Publish**: override the CRITICAL findings with a justification. Shown only to platform administrators and maintainers. See [Force-Publish for Administrators](#force-publish-for-administrators).
 
-Regular users see the same dialog without the **Publish Anyway** button.
-
-Findings have one of two severity levels:
+Each finding has one of two severity levels:
 
 | Severity     | Effect                                                                                         |
 | ------------ | ---------------------------------------------------------------------------------------------- |
 | **CRITICAL** | Blocks submission. The issue must be fixed before the assistant can be sent for review.        |
 | **OPTIONAL** | Recommendation only. Fixing it improves the assistant's quality but does not block submission. |
+
+OPTIONAL findings open no dialog: the publish continues.
 
 The following checks are applied to every assistant:
 
@@ -154,7 +156,17 @@ The following checks are applied to every assistant:
 | **Substance**                     | CRITICAL | The assistant must have at least one tool, MCP server, skill, or data source, or a system prompt of at least 500 characters. |
 | **No inline credentials**         | CRITICAL | The system prompt and context must not contain credentials such as AWS keys, GitHub tokens, or Bearer tokens.                |
 
-An AI-based quality analysis also reviews the configuration and suggests improvements, for example a clearer name or description.
+### Step 2: AI Quality Check
+
+After the deterministic checks pass, an AI-based quality analysis reviews the configuration and suggests improvements, for example a clearer name or description. If it has recommendations, the **Assistant Quality Validation Failed** dialog lists them in the **Analysis Summary** section:
+
+![Assistant Quality Validation Failed dialog](./images/marketplace-quality-validation-failed.png)
+
+- **Manual Edit**: open the assistant editor to apply the suggested changes.
+- **Cancel**: close the dialog without publishing.
+- **Publish Anyway**: skip the AI recommendations and continue publishing. Available to every user, including for CRITICAL items in the **Analysis Summary**.
+
+**Publish Anyway** skips only the AI check. It does not override failed deterministic checks.
 
 :::note
 Platform administrators can change the default thresholds on the **Config** tab of [Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx#configuration), so the exact limits depend on the deployment.
@@ -184,9 +196,13 @@ After an assistant is submitted, a status badge next to the author name on the a
 
 To resubmit a rejected assistant, update its configuration according to the rejection reason and publish it to the Marketplace again.
 
+### Withdrawing an Assistant from Review
+
+While an assistant is in **REVIEW**, the actions menu shows **Remove from Marketplace review queue** instead of **Publish to Marketplace**. Selecting it opens the **Remove from Review Queue?** dialog. After confirmation, the assistant leaves the review queue and stays in the author's Project Assistants.
+
 ## Editing a Published or In-Review Assistant
 
-Any change to an assistant that is published (**VERIFIED**) or waiting for review (**REVIEW**) must be validated and reviewed again.
+An edit to an assistant that is published (**VERIFIED**) or waiting for review (**REVIEW**) is validated again. A **VERIFIED** assistant whose configuration changed goes back to review.
 
 1. Edit the assistant and click **Save**.
 
@@ -196,7 +212,7 @@ Any change to an assistant that is published (**VERIFIED**) or waiting for revie
    - Click **Cancel** to discard the save. The assistant keeps its current status.
    - Click **Save** to save the changes and run the validation checks.
 
-3. If the updated assistant passes the checks, it is sent for manual review again, and the **Sent for review** dialog appears. The assistant status changes to **REVIEW**.
+3. If the updated assistant passes the checks, the changes are saved and a confirmation message appears. A **VERIFIED** assistant whose configuration changed goes back to **REVIEW** and leaves the Marketplace until it is approved again. An assistant that is already in **REVIEW** stays in the queue. A save without configuration changes keeps the **VERIFIED** status.
 
 4. If the updated assistant fails the checks, the **Assistant Verification Failed** dialog shows the findings, and a banner describes the current Marketplace state of the assistant:
 
@@ -214,7 +230,7 @@ The same flow applies when an assistant is edited from a chat. Clicking **Config
 ![Configure & Test panel in a chat](./images/marketplace-chat-configure-and-test.png)
 
 :::tip
-Group several changes into a single edit. Each save of a published assistant removes it from the Marketplace until an administrator approves it again.
+Group several changes into a single edit. Each save of a published assistant that changes its configuration removes it from the Marketplace until an administrator approves it again.
 :::
 
 ## Force-Publish for Administrators
@@ -223,21 +239,21 @@ Platform administrators and maintainers follow a shortened publishing flow:
 
 - If their assistant passes the validation checks, it is published directly with the **VERIFIED** status, without waiting in the review queue.
 - If CRITICAL findings block the assistant, it can be force-published with a justification:
-  1. Open the force-publish form:
-     - When publishing an assistant, click **Publish Anyway** in the **Assistant Quality Validation Failed** dialog. The **Assistant Verification Failed** dialog opens with the justification field.
-     - When saving changes to an assistant in the Marketplace, the **Assistant Verification Failed** dialog shows the justification field directly.
-  2. In the **Why is it safe to publish anyway?** field, describe why the checks should be overridden. The justification must be at least 20 characters long; the **Confirm Force-Publish** button stays disabled until then.
+  1. When CRITICAL checks fail on publish or on save, the **Assistant Verification Failed** dialog opens. Click **Force-Publish**.
+  2. In the **Why is it safe to publish anyway?** field, describe why the checks should be overridden. The field appears only after **Force-Publish** is clicked, and the button then changes to **Confirm Force-Publish**. The justification must be at least 20 characters long; the button stays disabled until then.
   3. Click **Confirm Force-Publish**. The assistant is published with the **VERIFIED** status.
 
 ![Force-publish justification in the Assistant Verification Failed dialog](./images/marketplace-force-publish.png)
 
 The justification, the administrator who overrode the checks, and the bypassed CRITICAL findings are stored with the publishing decision for audit purposes. The force-publish options are not available to regular users.
 
+Pending assistants whose gate findings became CRITICAL after submission can also be force-published from the review queue. See [Force-Publishing from the Review Queue](../../admin/configuration/codemie/marketplace-management.mdx#force-publishing-from-the-review-queue).
+
 For information about reviewing submitted assistants, see [Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx).
 
 ## After Publishing
 
-Once approved (or published directly when Marketplace management is disabled), your assistant appears in the **Marketplace** tab:
+Once approved (or published directly when the approval gate is off), your assistant appears in the **Marketplace** tab:
 
 ![Published assistant management](../images/image180.png)
 

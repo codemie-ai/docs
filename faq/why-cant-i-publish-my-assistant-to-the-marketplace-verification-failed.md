@@ -1,13 +1,11 @@
 # Why can't I publish my assistant to the Marketplace? What do "Assistant Quality Validation Failed" and "Assistant Verification Failed" mean?
 
-Before an assistant is sent for review, the system checks its name, description, system prompt, categories, tools or other substance, and inline credentials. If any check fails, the **Assistant Verification Failed** dialog lists the findings with recommendations:
+Publishing runs two validation steps, and each opens its own dialog.
 
-- **CRITICAL** findings block submission and must be fixed first.
-- **OPTIONAL** findings are recommendations and do not block submission.
+1. **Deterministic checks** cover the name, description, system prompt, categories, tools or other substance, and inline credentials. If a check fails, the **Assistant Verification Failed** dialog lists the findings with recommendations. **CRITICAL** findings block submission and must be fixed first. **OPTIONAL** findings are recommendations and do not block submission. The dialog offers **Edit assistant** and **Cancel**. When saving changes to an assistant that is already in the Marketplace, it offers **Keep editing**, **Save and remove** (assistant in review), or **Save & Unpublish** (published assistant).
+2. **AI quality check** runs after the deterministic checks pass. Its recommendations appear in the **Assistant Quality Validation Failed** dialog. Click **Manual Edit** to apply the suggestions, or **Publish Anyway** to continue without them. **Publish Anyway** is available to every user, but it skips only the AI check.
 
-When publishing, the findings appear in the **Assistant Quality Validation Failed** dialog: click **Manual Edit** to apply the suggested changes. When saving changes to an assistant that is already in the Marketplace, the **Assistant Verification Failed** dialog appears instead: click **Keep editing** to fix the issues, or save the changes and take the assistant out of the Marketplace with **Save and remove** (assistant in review) or **Save & Unpublish** (published assistant).
-
-Platform administrators and maintainers can additionally bypass CRITICAL findings with **Publish Anyway** or **Confirm Force-Publish** (with a justification of at least 20 characters).
+Platform administrators and maintainers can additionally override CRITICAL findings from the **Assistant Verification Failed** dialog: click **Force-Publish**, enter a justification of at least 20 characters in the field that appears, and click **Confirm Force-Publish**.
 
 ## Sources
 
