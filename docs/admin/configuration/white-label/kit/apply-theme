@@ -84,6 +84,9 @@ LINK_IDS=(
 )
 ASSET_FILE_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
 MAX_ASSET_BYTES=1048576 # ConfigMap size limit; the base64-encoded assets must fit below it
+MAX_EMAIL_LOGO_BYTES=262144 # same limit the backend loader enforces (MAX_LOGO_BYTES)
+EMAIL_LOGO=""
+EMAIL_LOGO_PATH=""
 
 # 1a. JSON Schema validation (all errors, not just the first)
 _AJV_INPUT="$TMP_ROOT/package.json"
@@ -125,6 +128,73 @@ if [[ "$PARSEABLE" == "true" ]]; then
   # base64 inflates by 4/3
   if [[ $((TOTAL_BYTES * 4 / 3)) -ge $MAX_ASSET_BYTES ]]; then
     ERRORS+=("assets: combined size $TOTAL_BYTES bytes exceeds the 1 MiB ConfigMap limit once base64-encoded")
+  fi
+
+  # 1b-email. Email block: tokens, blank values and the logo. The schema already checked structure
+  # and palette hex. Rules mirror the backend loader (email_brand/loader.py); tokens are found with
+  # the backend's TOKEN_RE \{(\w+)\}, so {a b} and {} are not tokens.
+  _check_tokens() { # <dotted path> <value> <allowed tokens, space separated>
+    local path="$1" rest="$2" allowed=" $3 " name
+    while [[ "$rest" =~ \{([[:alnum:]_]+)\} ]]; do
+      name="${BASH_REMATCH[1]}"
+      [[ "$allowed" == *" $name "* ]] || ERRORS+=("$path: token {$name} is not allowed here")
+      rest="${rest#*"${BASH_REMATCH[0]}"}"
+    done
+  }
+  _email_str() { yq eval "$1 | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true; }
+  _check_email_field() { # <dotted path> <yq path> <allowed tokens> <non-blank: yes|no>
+    local value
+    value=$(_email_str "$2")
+    # absent or non-string values are the schema's concern
+    [[ "$(yq eval "$2 | tag" "$PACKAGE_FILE" 2>/dev/null || true)" == "!!str" ]] || return 0
+    if [[ "$4" == "yes" && -z "${value//[[:space:]]/}" ]]; then
+      ERRORS+=("$1: must not be empty")
+    fi
+    _check_tokens "$1" "$value" "$3"
+  }
+  _check_email_field "email.senderName" ".email.senderName" "productName" yes
+  _check_email_field "email.signature" ".email.signature" "productName" no
+  for mid in verification password_reset budget_soft_limit budget_stopped budget_restored; do
+    for mf in subject heading intro buttonLabel footer; do
+      extra=""
+      case "$mid.$mf" in
+        budget_stopped.subject | budget_stopped.intro) extra="projectName costCenterName" ;;
+        budget_restored.subject | budget_restored.intro) extra="projectName" ;;
+      esac
+      nb=no
+      [[ "$mf" == "subject" ]] && nb=yes
+      _check_email_field "email.messages.$mid.$mf" ".email.messages.$mid.$mf" "productName $extra" "$nb"
+    done
+  done
+
+  EMAIL_LOGO=$(_email_str '.email.images.logo')
+  if [[ -n "$EMAIL_LOGO" ]]; then
+    logo_name="$EMAIL_LOGO"
+    EMAIL_LOGO_PATH="$ASSETS_DIR/$logo_name"
+    if [[ "$logo_name" == */* || "$logo_name" == *\\* || "$logo_name" == *..* ]]; then
+      ERRORS+=("email.images.logo: must be a plain file name, got: $logo_name")
+    else
+      logo_ext=$(printf '%s' "${logo_name##*.}" | tr '[:upper:]' '[:lower:]')
+      [[ "$logo_name" == *.* ]] || logo_ext=""
+      if [[ "$logo_ext" != png && "$logo_ext" != jpg && "$logo_ext" != jpeg && "$logo_ext" != gif ]]; then
+        ERRORS+=("email.images.logo: extension must be one of png, jpg, jpeg, gif")
+      elif [[ -L "$EMAIL_LOGO_PATH" ]]; then
+        ERRORS+=("email.images.logo: must not be a symbolic link: $EMAIL_LOGO_PATH")
+      elif [[ ! -f "$EMAIL_LOGO_PATH" ]]; then
+        ERRORS+=("email.images.logo: file not found: $EMAIL_LOGO_PATH")
+      elif [[ $(wc -c <"$EMAIL_LOGO_PATH" | tr -d ' ') -gt $MAX_EMAIL_LOGO_BYTES ]]; then
+        ERRORS+=("email.images.logo: larger than $((MAX_EMAIL_LOGO_BYTES / 1024)) KiB")
+      else
+        logo_head=$(od -An -tx1 -N8 "$EMAIL_LOGO_PATH" | tr -d ' \n')
+        logo_ok=false
+        case "$logo_ext" in
+          png) [[ "$logo_head" == 89504e470d0a1a0a ]] && logo_ok=true ;;
+          jpg | jpeg) [[ "$logo_head" == ffd8ff* ]] && logo_ok=true ;;
+          gif) [[ "$logo_head" == 474946383761* || "$logo_head" == 474946383961* ]] && logo_ok=true ;;
+        esac
+        [[ "$logo_ok" == "true" ]] || ERRORS+=("email.images.logo: content does not match the .$logo_ext extension")
+      fi
+    fi
   fi
 
   # 1c. Enabled-link cross-check against customer-config.yaml
