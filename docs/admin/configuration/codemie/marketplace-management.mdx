@@ -36,7 +36,7 @@ Enable the flags in stages rather than all at once:
 3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. From this point, new publish requests enter the review queue instead of self-approving.
 
 :::warning
-Enabling `MARKETPLACE_APPROVAL_GATE_ENABLED` without `MARKETPLACE_MANAGEMENT_ENABLED` has no effect — the router is not mounted when the kill switch is off.
+Enabling `MARKETPLACE_APPROVAL_GATE_ENABLED` without `MARKETPLACE_MANAGEMENT_ENABLED` sends every publish to a review queue that cannot be reviewed: the approve, reject, and force-publish endpoints are not mounted, and authors see a "published" message although the assistant stays private. Enable `MARKETPLACE_MANAGEMENT_ENABLED` first, as in the rollout steps above.
 :::
 
 ## Accessing Marketplace Management
@@ -111,7 +111,7 @@ Click **Filter →** in any row to open the **Cleanup queue** with the correspon
 
 ## Review Queue
 
-The **Review queue** tab lists assistants that passed the automated validation checks and are waiting for an administrator's decision. The number next to the tab name shows how many assistants are pending review. Assistants in the queue have the **REVIEW** status and are not visible in the Marketplace. Only assistants without CRITICAL findings reach the queue, so the review actions are limited to publishing and rejecting.
+The **Review queue** tab lists assistants that passed the automated validation checks and are waiting for an administrator's decision. The number next to the tab name shows how many assistants are pending review. Assistants in the queue have the **REVIEW** status and are not visible in the Marketplace. Gate findings are recalculated every time the list is opened, so a pending assistant can show CRITICAL findings, for example after the thresholds on the **Config** tab were raised.
 
 ![Review queue with row actions](./images/marketplace-management/review-queue.png)
 
@@ -146,6 +146,7 @@ The dialog contains the following information:
 
 - **Submission**: the assistant name, description, and categories.
 - Submission metadata: **Status**, **Visible in Marketplace**, **Submitted by**, **Submitted at**, **Creator**, **Project**, **Created**, **Updated**, **Decided by**, and **Decided at**.
+- After a decision: **Decision reason** and **Bypassed gate findings**, which show who overrode the gate and which CRITICAL results were bypassed.
 - **Quality gates**: the number of **Critical** and **Minor** gate failures found for the assistant.
 - **Capability**: the toolkits and other capabilities of the assistant. Click **Show system prompt** to view the system prompt.
 - **AI Assessment**: click **Assess with AI** to score the assistant across five quality dimensions and get concrete suggestions for improvement:
@@ -155,7 +156,7 @@ The dialog contains the following information:
   - Category fit
   - Uniqueness
 
-Use the **Publish** and **Reject** buttons at the bottom of the dialog to make a decision. They work the same way as the row actions described below.
+Use the buttons at the bottom of the dialog to make a decision: **Publish** and **Reject**, or **Force-publish** and **Reject** for an assistant with CRITICAL findings. They work the same way as the row actions described below.
 
 ### Approving an Assistant
 
@@ -163,6 +164,16 @@ Use the **Publish** and **Reject** buttons at the bottom of the dialog to make a
 2. Select **Publish**.
 
 The assistant is published in the Marketplace with the **VERIFIED** status and is removed from the review queue.
+
+### Force-Publishing from the Review Queue
+
+For a pending assistant with CRITICAL findings, the row menu and the details dialog offer **Force-publish** and **Reject** instead of **Publish**.
+
+1. In the **Actions** column, click **⋮** next to the assistant and select **Force-publish**.
+2. In the **Force-publish assistant** popup, enter the justification in the **Override notice** field. The notice must be 20–2000 characters long.
+3. Confirm the action.
+
+The assistant is published with the **VERIFIED** status. The notice and the bypassed CRITICAL findings are stored with the decision and shown as **Decision reason** and **Bypassed gate findings** in the details dialog.
 
 ### Rejecting an Assistant
 
@@ -357,3 +368,12 @@ Settings for comparing assistants with each other. Similarity scores range from 
 | **Optional threshold** | 0.55    | Similarity score above which two assistants are flagged as worth reviewing for overlap.             |
 | **Report threshold**   | 0.40    | Similarity score above which a pair appears in similarity reports.                                  |
 | **Shortlist size**     | 10      | Maximum number of candidate assistants to compare against each assistant during a similarity check. |
+
+### Consolidation
+
+Settings for clusters of similar assistants. When a cluster of similar assistants grows beyond the minimum size, only the most widely used ones are kept and the rest are flagged for removal in the audit.
+
+| Setting                    | Default | Description                                                                      |
+| -------------------------- | ------- | -------------------------------------------------------------------------------- |
+| **Big cluster min. size**  | 5       | Minimum number of similar assistants for a group to be treated as a big cluster. |
+| **Keep top N per cluster** | 3       | Number of assistants kept in a big cluster; the others are flagged for removal.  |
