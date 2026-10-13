@@ -581,3 +581,40 @@ YAML
   [ "$status" -eq 0 ]
   grep -q "rollout restart deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
 }
+
+# ── email checksum ───────────────────────────────────────────────────────────
+
+# sum_of <dir> -> checksum/brand of the API values rendered into <dir>
+sum_of() { yq eval '.podAnnotations."checksum/brand"' "$1/values-codemie.brand.yaml"; }
+
+@test "checksum email: same-name logo bytes change rolls the checksum, a no-op re-run keeps it" {
+  a="$(email_assets)"
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --output-dir "$OUT/a" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+  run "$SCRIPT" --render-only --output-dir "$OUT/same" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+  [ "$(sum_of "$OUT/a")" = "$(sum_of "$OUT/same")" ]
+  printf 'x' >>"$a/logo.png"
+  run "$SCRIPT" --render-only --output-dir "$OUT/b" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+  [ "$(sum_of "$OUT/a")" != "$(sum_of "$OUT/b")" ]
+}
+
+@test "checksum email: an email text change and a palette change roll the checksum" {
+  a="$(email_assets)"
+  run "$SCRIPT" --render-only --output-dir "$OUT/a" "$(email_pkg '.')" "$a"
+  run "$SCRIPT" --render-only --output-dir "$OUT/text" "$(email_pkg '.email.senderName = "Other"')" "$a"
+  run "$SCRIPT" --render-only --output-dir "$OUT/pal" "$(email_pkg '.email.palette.primary = "#445566"')" "$a"
+  [ "$(sum_of "$OUT/a")" != "$(sum_of "$OUT/text")" ]
+  [ "$(sum_of "$OUT/a")" != "$(sum_of "$OUT/pal")" ]
+}
+
+@test "checksum email: UI and API annotations stay equal, with and without an email block" {
+  run "$SCRIPT" --render-only --output-dir "$OUT/e" "$(email_pkg '.')" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.brand.podAnnotations."checksum/brand"' "$OUT/e/values-codemie-ui.brand.yaml")" = "$(sum_of "$OUT/e")" ]
+  run "$SCRIPT" --render-only --output-dir "$OUT/n" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.brand.podAnnotations."checksum/brand"' "$OUT/n/values-codemie-ui.brand.yaml")" = "$(sum_of "$OUT/n")" ]
+}

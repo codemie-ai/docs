@@ -240,14 +240,16 @@ fi
 WORK_DIR="${OUTPUT_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/apply-theme-XXXXXX")}"
 mkdir -p "$WORK_DIR"
 
-# The checksum covers the package and the content of every asset, so an asset edited
-# without a YAML change still rolls the pods.
+# The checksum covers the package and the content of every asset, including the email logo, so an
+# asset edited without a YAML change still rolls the pods. One checksum serves both releases, so an
+# image-only change also restarts the UI pods.
 CHECKSUM=$(
   {
     cat "$PACKAGE_FILE"
     for key in "${ASSET_KEYS[@]}"; do
       _sha256 <"$ASSETS_DIR/$(yq eval ".assets.$key" "$PACKAGE_FILE")"
     done
+    if [[ -n "$EMAIL_LOGO" ]]; then _sha256 <"$EMAIL_LOGO_PATH"; fi
   } | _sha256
 )
 
