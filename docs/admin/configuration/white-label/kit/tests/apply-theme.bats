@@ -1141,3 +1141,168 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
   [ ! -e "$BATS_TMPDIR/helm-calls" ]
   [ ! -e "$BATS_TMPDIR/kubectl-calls" ]
 }
+
+# ── apply: keycloak and proxy releases ───────────────────────────────────────
+
+kc_apply_args() {
+  echo --release-ui my-ui --release-codemie my-backend --chart-ui repo/ui --chart-codemie repo/api \
+    --chart-keycloak repo/kc --chart-proxy repo/proxy
+}
+
+# kc_stub_dir [extra yq expression for the stored keycloak values]: HELM_STUB_DIR with a
+# keycloak release that carries the hook marker
+kc_stub_dir() {
+  HS="$BATS_TEST_TMPDIR/hs"
+  mkdir -p "$HS"
+  cat >"$HS/keycloak.yaml" <<'YAML'
+keycloakx:
+  extraVolumes: |
+    - name: keycloak-child-theme
+      configMap:
+        name: keycloak-child-theme
+  extraVolumeMounts: |
+    - name: keycloak-child-theme
+      mountPath: /opt/keycloak/themes/acme-brand
+YAML
+  yq eval -i "${1:-.}" "$HS/keycloak.yaml"
+}
+
+# kc_apply [more args]: apply run of the keycloak package
+kc_apply() {
+  pkg=$(kcpkg '.')
+  run env PATH="$STUBS:$PATH" HELM_STUB_DIR="$HS" ${KC_ENV:-} "$SCRIPT" --output-dir "$OUT" $(kc_apply_args) "$@" "$pkg" "$ASSETS_DIR"
+}
+
+@test "apply: keycloak upgrade runs before proxy with wait" {
+  kc_stub_dir
+  kc_apply
+  [ "$status" -eq 0 ]
+  ui=$(grep -n "^helm upgrade my-ui " "$BATS_TMPDIR/helm-calls" | cut -d: -f1)
+  api=$(grep -n "^helm upgrade my-backend " "$BATS_TMPDIR/helm-calls" | cut -d: -f1)
+  kc=$(grep -n "^helm upgrade keycloak " "$BATS_TMPDIR/helm-calls" | cut -d: -f1)
+  px=$(grep -n "^helm upgrade oauth2-proxy " "$BATS_TMPDIR/helm-calls" | cut -d: -f1)
+  [ "$ui" -lt "$api" ]
+  [ "$api" -lt "$kc" ]
+  [ "$kc" -lt "$px" ]
+  grep -q "^helm upgrade keycloak repo/kc --reuse-values --version 1.2.3 -f $OUT/values-keycloak.theme.yaml -f $OUT/values-keycloak.stale.yaml -n security --wait --timeout 10m$" "$BATS_TMPDIR/helm-calls"
+  grep -q "^helm upgrade oauth2-proxy repo/proxy --reuse-values --version 1.2.3 -f $OUT/values-oauth2-proxy.realm.yaml -n oauth2-proxy$" "$BATS_TMPDIR/helm-calls"
+}
+
+@test "apply: keycloak releases use their own names and namespaces, not --namespace" {
+  kc_stub_dir
+  mkdir -p "$HS"; cp "$HS/keycloak.yaml" "$HS/kc2.yaml"
+  kc_apply --namespace apps --release-keycloak kc2 --release-proxy px2 \
+    --namespace-keycloak sec2 --namespace-proxy px-ns --keycloak-timeout 3m
+  [ "$status" -eq 0 ]
+  grep -q "^helm upgrade my-ui .* -n apps$" "$BATS_TMPDIR/helm-calls"
+  grep -q "^helm upgrade kc2 repo/kc .* -n sec2 --wait --timeout 3m$" "$BATS_TMPDIR/helm-calls"
+  grep -q "^helm upgrade px2 repo/proxy .* -n px-ns$" "$BATS_TMPDIR/helm-calls"
+  grep -q "^helm get values kc2 -n sec2 --all -o json" "$BATS_TMPDIR/helm-calls"
+  run grep -E "(kc2|px2|keycloak|oauth2-proxy).* -n apps" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply: no kubectl rollout for keycloak or the proxy" {
+  kc_stub_dir
+  kc_apply
+  [ "$status" -eq 0 ]
+  run grep -E "keycloak|oauth2-proxy" "$BATS_TMPDIR/kubectl-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply: keycloak upgrades set no value and change no image or chart version" {
+  kc_stub_dir
+  kc_apply
+  [ "$status" -eq 0 ]
+  run grep -E -- "--set|image" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply: no keycloak block, helm calls equal today's" {
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --output-dir "$OUT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c '' "$BATS_TMPDIR/helm-calls")" = "5" ]
+  run grep -E "keycloak|oauth2-proxy" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT/values-keycloak.stale.yaml" ]
+}
+
+@test "apply: --no-keycloak skips preflight, files and upgrades" {
+  pkg=$(kcpkg '.')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --output-dir "$OUT" --no-keycloak $(apply_args) "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  run grep -E "keycloak|oauth2-proxy" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT/values-keycloak.stale.yaml" ]
+}
+
+@test "apply: missing keycloak chart flags fail before any helm call" {
+  pkg=$(kcpkg '.')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --output-dir "$OUT" $(apply_args) --chart-keycloak repo/kc "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"--chart-proxy"* ]]
+  [ ! -e "$BATS_TMPDIR/helm-calls" ]
+}
+
+@test "apply: preflight fails when the hook is missing in extraVolumes" {
+  kc_stub_dir 'del(.keycloakx.extraVolumes)'
+  kc_apply
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"extraVolumes"* ]]
+  [[ "$output" == *"normal chart deploy"* ]]
+  run grep "helm upgrade" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+  [ ! -e "$BATS_TMPDIR/kubectl-calls" ]
+}
+
+@test "apply: preflight fails when the hook is missing in extraVolumeMounts" {
+  kc_stub_dir 'del(.keycloakx.extraVolumeMounts)'
+  kc_apply
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"extraVolumeMounts"* ]]
+  [[ "$output" == *"normal chart deploy"* ]]
+  run grep "helm upgrade" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply: keycloak release not deployed aborts before any upgrade" {
+  HS="$BATS_TEST_TMPDIR/hs"; mkdir -p "$HS"
+  kc_apply
+  [ "$status" -ne 0 ]
+  run grep "helm upgrade" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply: stored image keys missing from the new package are nulled in the stale file" {
+  kc_stub_dir '.keycloakx.childTheme.binaryData."img.old-logo.png" = "QQ==" | .keycloakx.childTheme.data."login.theme.properties" = "x" | .keycloakx.childTheme.binaryData."img.logo-dark.svg" = "QQ=="'
+  kc_apply
+  [ "$status" -eq 0 ]
+  stale="$OUT/values-keycloak.stale.yaml"
+  [ "$(yq eval '.keycloakx.childTheme.binaryData."img.old-logo.png" | tag' "$stale")" = "!!null" ]
+  [ "$(yq eval '.keycloakx.childTheme.binaryData | has("img.old-logo.png")' "$stale")" = "true" ]
+  [ "$(yq eval '.keycloakx.childTheme.binaryData | length' "$stale")" = "1" ]
+  [ "$(yq eval '.keycloakx.childTheme | has("data")' "$stale")" = "false" ]
+  run grep -c ": null" "$OUT/values-keycloak.theme.yaml"
+  [ "$output" = "0" ]
+}
+
+@test "apply: stale file is empty of keys when nothing was removed" {
+  kc_stub_dir
+  kc_apply
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.keycloakx.childTheme.binaryData | length' "$OUT/values-keycloak.stale.yaml")" = "0" ]
+}
+
+@test "apply: a failed keycloak upgrade skips the proxy upgrade" {
+  kc_stub_dir
+  KC_ENV="HELM_STUB_FAIL_RELEASE=keycloak" kc_apply
+  [ "$status" -ne 0 ]
+  grep -q "^helm upgrade keycloak " "$BATS_TMPDIR/helm-calls"
+  run grep "^helm upgrade oauth2-proxy " "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "render-only: no stale file is written" {
+  kc_files
+  [ ! -e "$OUT/values-keycloak.stale.yaml" ]
+}

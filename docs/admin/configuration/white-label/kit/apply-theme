@@ -18,6 +18,11 @@ CODEMIE_VALUES_OPT=""
 NO_KEYCLOAK=false
 CHART_KEYCLOAK=""
 CHART_PROXY=""
+RELEASE_KEYCLOAK="keycloak"
+RELEASE_PROXY="oauth2-proxy"
+NAMESPACE_KEYCLOAK="security"
+NAMESPACE_PROXY="oauth2-proxy"
+KEYCLOAK_TIMEOUT="10m"
 
 # Must stay in sync with the mount path the backend reads (BRAND_CONFIG_PATH default).
 BRAND_CONFIGMAP="codemie-brand"
@@ -31,6 +36,8 @@ usage() {
   echo "         [--chart-ui <ref>] [--chart-codemie <ref>]"
   echo "         [--customer-config <file>] [--codemie-values <file>]"
   echo "         [--no-keycloak] [--chart-keycloak <ref>] [--chart-proxy <ref>]"
+  echo "         [--release-keycloak <name>] [--release-proxy <name>]"
+  echo "         [--namespace-keycloak <ns>] [--namespace-proxy <ns>] [--keycloak-timeout <duration>]"
   echo "         [--output-dir <dir>]"
   echo "         <theme-package.yaml> <assets-dir>"
   echo ""
@@ -40,6 +47,10 @@ usage() {
   echo "  --no-keycloak                 skip the Keycloak theme and realm steps for this run"
   echo "  --chart-keycloak / --chart-proxy  chart references of the Keycloak and proxy releases;"
   echo "                                required unless --render-only when the package has a keycloak block"
+  echo "  --release-keycloak / --release-proxy  release names (defaults: keycloak, oauth2-proxy)"
+  echo "  --namespace-keycloak / --namespace-proxy  namespaces of those releases (defaults: security,"
+  echo "                                oauth2-proxy); --namespace does not apply to them"
+  echo "  --keycloak-timeout <duration> wait time of the Keycloak upgrade (default: 10m)"
   echo "  --customer-config <file>      customer-config.yaml used to cross-check enabled links"
   echo "                                (default: \$CUSTOMER_CONFIG_PATH, /app/config/customer/..., /etc/codemie/...)"
   echo "  --codemie-values <file>       current values of the API release (helm get values --all -o yaml),"
@@ -59,6 +70,11 @@ while [[ $# -gt 0 ]]; do
     --no-keycloak) NO_KEYCLOAK=true; shift ;;
     --chart-keycloak) CHART_KEYCLOAK="${2:?--chart-keycloak needs a value}"; shift 2 ;;
     --chart-proxy) CHART_PROXY="${2:?--chart-proxy needs a value}"; shift 2 ;;
+    --release-keycloak) RELEASE_KEYCLOAK="${2:?--release-keycloak needs a value}"; shift 2 ;;
+    --release-proxy) RELEASE_PROXY="${2:?--release-proxy needs a value}"; shift 2 ;;
+    --namespace-keycloak) NAMESPACE_KEYCLOAK="${2:?--namespace-keycloak needs a value}"; shift 2 ;;
+    --namespace-proxy) NAMESPACE_PROXY="${2:?--namespace-proxy needs a value}"; shift 2 ;;
+    --keycloak-timeout) KEYCLOAK_TIMEOUT="${2:?--keycloak-timeout needs a value}"; shift 2 ;;
     --output-dir) OUTPUT_DIR="${2:?--output-dir needs a value}"; shift 2 ;;
     --customer-config) CUSTOMER_CONFIG_OPT="${2:?--customer-config needs a value}"; shift 2 ;;
     --codemie-values) CODEMIE_VALUES_OPT="${2:?--codemie-values needs a value}"; shift 2 ;;
@@ -630,20 +646,58 @@ echo "apply-theme: rendered files written to $WORK_DIR"
 
 [[ "$RENDER_ONLY" == "true" ]] && exit 0
 
+# ── Phase 2c: Keycloak preflight (read-only) ─────────────────────────────────
+# The Keycloak release must already carry the child-theme hook (volume and mount), or the theme
+# never reaches the pods. Checked before ANY upgrade. The stored child-theme keys are read in the
+# same call: keys the new package no longer has are written as null to a second values file, so
+# --reuse-values drops them. values-keycloak.theme.yaml itself never holds a null.
+KC_MARKER="keycloak-child-theme"
+_preflight_keycloak() {
+  local stored="$TMP_ROOT/keycloak-stored.json" field map key new_keys
+  helm get values "$RELEASE_KEYCLOAK" -n "$NAMESPACE_KEYCLOAK" --all -o json >"$stored" || {
+    echo "apply-theme: cannot read the values of release $RELEASE_KEYCLOAK in namespace $NAMESPACE_KEYCLOAK" >&2
+    exit 1
+  }
+  for field in extraVolumes extraVolumeMounts; do
+    if ! yq eval -p=json "(.keycloakx.$field // .$field // \"\") | tostring" "$stored" | grep -qF -- "$KC_MARKER"; then
+      echo "apply-theme: release $RELEASE_KEYCLOAK has no $KC_MARKER entry in $field; nothing was changed." >&2
+      echo "  Run the normal chart deploy of the Keycloak release once, then run apply-theme again." >&2
+      exit 1
+    fi
+  done
+  yq -n '.keycloakx.childTheme.binaryData = {}' >"$WORK_DIR/values-keycloak.stale.yaml"
+  for map in data binaryData; do
+    new_keys=$(yq eval ".keycloakx.childTheme.$map // {} | keys | .[]" "$WORK_DIR/values-keycloak.theme.yaml")
+    while IFS= read -r key; do
+      [[ -n "$key" ]] || continue
+      grep -qxF -- "$key" <<<"$new_keys" && continue
+      STALE_KEY="$key" yq -i ".keycloakx.childTheme.$map[strenv(STALE_KEY)] = null" "$WORK_DIR/values-keycloak.stale.yaml"
+    done < <(yq eval -p=json ".keycloakx.childTheme.$map // {} | keys | .[]" "$stored")
+  done
+}
+if [[ "$KC_ACTIVE" == "1" ]]; then _preflight_keycloak; fi
+
 # ── Phase 3: upgrade ─────────────────────────────────────────────────────────
 # The installed chart version is pinned so the upgrade can never move the platform to a newer
 # chart. Image tag and every other value come from --reuse-values and are never set here.
-_upgrade() { # <release> <chart> <values-file>
-  local release="$1" chart="$2" values="$3" version
+_upgrade() { # <release> <chart> <namespace> <values-file> [<more helm args>...]
+  local release="$1" chart="$2" ns="$3" values="$4" version
+  shift 4
   local -a pin=()
-  version=$(helm get metadata "$release" -n "$NAMESPACE" -o yaml | yq eval '.version // ""' -)
+  version=$(helm get metadata "$release" -n "$ns" -o yaml | yq eval '.version // ""' -)
   [[ -n "$version" ]] || { echo "apply-theme: cannot read the installed chart version of $release (needs helm >= 3.9)" >&2; exit 1; }
   # a local chart path carries its own version; --version applies to repository references only
   [[ -e "$chart" ]] || pin=(--version "$version")
-  helm upgrade "$release" "$chart" --reuse-values ${pin[@]+"${pin[@]}"} -f "$values" -n "$NAMESPACE"
+  helm upgrade "$release" "$chart" --reuse-values ${pin[@]+"${pin[@]}"} -f "$values" ${1+"$@"}
 }
-_upgrade "$RELEASE_UI" "$CHART_UI" "$WORK_DIR/values-codemie-ui.brand.yaml"
-_upgrade "$RELEASE_CODEMIE" "$CHART_CODEMIE" "$WORK_DIR/values-codemie.brand.yaml"
+_upgrade "$RELEASE_UI" "$CHART_UI" "$NAMESPACE" "$WORK_DIR/values-codemie-ui.brand.yaml" -n "$NAMESPACE"
+_upgrade "$RELEASE_CODEMIE" "$CHART_CODEMIE" "$NAMESPACE" "$WORK_DIR/values-codemie.brand.yaml" -n "$NAMESPACE"
+if [[ "$KC_ACTIVE" == "1" ]]; then
+  # Keycloak is a StatefulSet and the realm reconcile is asynchronous: no rollout restart here
+  _upgrade "$RELEASE_KEYCLOAK" "$CHART_KEYCLOAK" "$NAMESPACE_KEYCLOAK" "$WORK_DIR/values-keycloak.theme.yaml" \
+    -f "$WORK_DIR/values-keycloak.stale.yaml" -n "$NAMESPACE_KEYCLOAK" --wait --timeout "$KEYCLOAK_TIMEOUT"
+  _upgrade "$RELEASE_PROXY" "$CHART_PROXY" "$NAMESPACE_PROXY" "$WORK_DIR/values-oauth2-proxy.realm.yaml" -n "$NAMESPACE_PROXY"
+fi
 
 # ── Phase 4: restart ─────────────────────────────────────────────────────────
 kubectl rollout restart "deployment/$RELEASE_UI" -n "$NAMESPACE"
