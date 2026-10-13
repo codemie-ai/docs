@@ -425,6 +425,16 @@ expect_email_error() {
   expect_email_error '.email.images.logo = "..logo.png"' "email.images.logo"
 }
 
+@test "email: logo names that break the asset name rule are rejected" {
+  a="$(email_assets)"
+  cp "$FIXTURES/email-assets/logo.png" "$a/my logo.png"
+  cp "$FIXTURES/email-assets/logo.png" "$a/.png"
+  cp "$FIXTURES/email-assets/logo.png" "$a/logo@2x.png"
+  expect_email_error '.email.images.logo = "my logo.png"' "email.images.logo"
+  expect_email_error '.email.images.logo = ".png"' "email.images.logo"
+  expect_email_error '.email.images.logo = "logo@2x.png"' "email.images.logo"
+}
+
 @test "email: a logo with the wrong extension is rejected" {
   cp "$FIXTURES/email-assets/logo.png" "$(email_assets)/logo.svg"
   expect_email_error '.email.images.logo = "logo.svg"' "email.images.logo"
@@ -573,6 +583,38 @@ YAML
   [ "$(yq eval '.extraVolumes' "$f" | yq eval '[.[] | select(.name == "codemie-brand")] | length' -)" = "1" ]
   [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "3" ]
   [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval '[.[] | select(.name == "codemie-brand")] | length' -)" = "2" ]
+}
+
+@test "render email: existing entries are found whatever the key order, quoting or comments" {
+  cat >"$BATS_TEST_TMPDIR/odd.yaml" <<'YAML'
+extraVolumes: |
+  - configMap:
+      name: codemie-brand
+    name: "codemie-brand" # brand
+extraVolumeMounts: |
+  - mountPath: '/etc/codemie/brand.yaml' # file
+    name: codemie-brand
+    subPath: brand.yaml
+  - mountPath: "/etc/codemie/brand-assets"
+    name: codemie-brand
+YAML
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --codemie-values "$BATS_TEST_TMPDIR/odd.yaml" --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  f="$OUT/values-codemie.brand.yaml"
+  [ "$(yq eval '.extraVolumes' "$f" | yq eval 'length' -)" = "1" ]
+  [ "$(yq eval '.extraVolumeMounts' "$f" | yq eval 'length' -)" = "2" ]
+}
+
+@test "render email: a logo near the size limit renders intact" {
+  a="$(email_assets)"
+  { cat "$FIXTURES/email-assets/logo.png"; head -c $((262144 - 70)) /dev/zero; } >"$a/edge.png"
+  pkg=$(email_pkg '.email.images.logo = "edge.png"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+  b64=$(yq eval '.extraObjects[] | select(.metadata.name == "codemie-brand") | .binaryData."edge.png"' "$OUT/values-codemie.brand.yaml")
+  b64_decode_file "$b64" "$BATS_TEST_TMPDIR/edge.out"
+  cmp "$BATS_TEST_TMPDIR/edge.out" "$a/edge.png"
 }
 
 @test "render email: apply mode with an email package restarts the backend deployment" {
