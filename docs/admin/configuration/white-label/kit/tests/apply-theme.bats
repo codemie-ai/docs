@@ -326,3 +326,158 @@ YAML
   [ ! -f "$BATS_TMPDIR/helm-calls" ]
   [ ! -f "$BATS_TMPDIR/kubectl-calls" ]
 }
+
+# ── email block ──────────────────────────────────────────────────────────────
+
+# email_assets -> path of a writable copy of the asset fixtures plus the email logo fixtures
+email_assets() {
+  local d="$BATS_TEST_TMPDIR/email-assets"
+  if [ ! -d "$d" ]; then
+    cp -R "$ASSETS_DIR" "$d"
+    cp "$FIXTURES"/email-assets/* "$d/"
+  fi
+  echo "$d"
+}
+
+# email_pkg '<yq expression>' -> valid.yaml with a logo.png email block and the change applied
+email_pkg() {
+  yq eval '.email = {"senderName": "Acme Notifications", "signature": "The {productName} Team", "palette": {"primary": "#112233"}, "images": {"logo": "logo.png"}, "messages": {"verification": {"subject": "Verify {productName}"}}} | '"$1" \
+    "$FIXTURES/valid.yaml" >"$BATS_TEST_TMPDIR/email-mutated.yaml"
+  echo "$BATS_TEST_TMPDIR/email-mutated.yaml"
+}
+
+# expect_email_error '<yq expression>' '<text expected in output>'
+expect_email_error() {
+  pkg=$(email_pkg "$1")
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 1 ]
+  grep -qF -- "$2" <<<"$output"
+  [ ! -e "$OUT/brand.css" ]
+  [ ! -f "$BATS_TMPDIR/helm-calls" ]
+  [ ! -f "$BATS_TMPDIR/kubectl-calls" ]
+}
+
+@test "email: a valid email block passes" {
+  pkg=$(email_pkg '.')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: a package without an email block still passes" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.extraObjects[0].data."brand.yaml"' "$OUT/values-codemie.brand.yaml" | yq eval 'has("email")' -)" = "false" ]
+}
+
+@test "email: a palette colour that is not #RRGGBB is rejected by the schema" {
+  expect_email_error '.email.palette.primary = "red"' "palette/primary"
+}
+
+@test "email: an upper-case and lower-case hex palette is accepted" {
+  pkg=$(email_pkg '.email.palette.primary = "#aabbcc" | .email.palette.text = "#AABBCC"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: unknown keys are rejected at every level" {
+  expect_email_error '.email.foo = "x"' "email"
+  expect_email_error '.email.palette.accent = "#112233"' "palette"
+  expect_email_error '.email.images.banner = "logo.png"' "images"
+  expect_email_error '.email.messages.welcome.subject = "x"' "messages"
+  expect_email_error '.email.messages.verification.title = "x"' "messages/verification"
+}
+
+@test "email: a field not allowed for the message id is rejected" {
+  expect_email_error '.email.messages.budget_stopped.buttonLabel = "x"' "messages/budget_stopped"
+}
+
+@test "email: a blank senderName or subject is rejected" {
+  expect_email_error '.email.senderName = "   "' "email.senderName"
+  expect_email_error '.email.messages.password_reset.subject = ""' "email.messages.password_reset.subject"
+}
+
+@test "email: tokens not allowed for the field are rejected" {
+  expect_email_error '.email.messages.verification.subject = "Hi {projectName}"' "email.messages.verification.subject"
+  expect_email_error '.email.messages.budget_restored.intro = "Cost {costCenterName}"' "email.messages.budget_restored.intro"
+  expect_email_error '.email.messages.budget_soft_limit.footer = "Hi {unknown}"' "{unknown}"
+  expect_email_error '.email.signature = "Hi {projectName}"' "email.signature"
+  expect_email_error '.email.senderName = "{costCenterName}"' "email.senderName"
+}
+
+@test "email: tokens are allowed where the backend allows them" {
+  pkg=$(email_pkg '.email.messages.verification.footer = "{productName}" | .email.messages.budget_stopped.subject = "{productName} {projectName} {costCenterName}" | .email.messages.budget_stopped.intro = "{costCenterName} {projectName}" | .email.messages.budget_restored.subject = "{projectName}" | .email.messages.budget_restored.intro = "{projectName} {productName}" | .email.senderName = "{productName}"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: strings that are not tokens under the backend regex are accepted" {
+  # TOKEN_RE is \{(\w+)\}: {a b}, {} and {a-b} are not tokens
+  pkg=$(email_pkg '.email.messages.verification.footer = "Use {a b}, {} or {a-b} freely"')
+  run "$SCRIPT" --render-only --output-dir "$OUT/ok" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  # a token nested in doubled braces is still found, as in the backend
+  expect_email_error '.email.messages.verification.footer = "{{unknown}}"' "{unknown}"
+}
+
+@test "email: logo names with a path, backslash or .. are rejected" {
+  expect_email_error '.email.images.logo = "sub/logo.png"' "email.images.logo"
+  expect_email_error '.email.images.logo = "sub\\logo.png"' "email.images.logo"
+  expect_email_error '.email.images.logo = "..logo.png"' "email.images.logo"
+}
+
+@test "email: a logo with the wrong extension is rejected" {
+  cp "$FIXTURES/email-assets/logo.png" "$(email_assets)/logo.svg"
+  expect_email_error '.email.images.logo = "logo.svg"' "email.images.logo"
+}
+
+@test "email: a missing logo file is rejected" {
+  expect_email_error '.email.images.logo = "absent.png"' "email.images.logo"
+}
+
+@test "email: a symlinked logo is rejected" {
+  ln -s "$FIXTURES/email-assets/logo.png" "$(email_assets)/link.png"
+  expect_email_error '.email.images.logo = "link.png"' "email.images.logo"
+}
+
+@test "email: a logo whose bytes do not match the extension is rejected" {
+  expect_email_error '.email.images.logo = "bad-magic.png"' "email.images.logo"
+  cp "$FIXTURES/email-assets/logo.png" "$(email_assets)/png-as.jpg"
+  expect_email_error '.email.images.logo = "png-as.jpg"' "email.images.logo"
+}
+
+@test "email: a logo over 262144 bytes is rejected, exactly 262144 is accepted" {
+  a="$(email_assets)"
+  { cat "$FIXTURES/email-assets/logo.png"; head -c $((262145 - 70)) /dev/zero; } >"$a/big.png"
+  [ "$(wc -c <"$a/big.png" | tr -d ' ')" -eq 262145 ]
+  expect_email_error '.email.images.logo = "big.png"' "email.images.logo"
+  { cat "$FIXTURES/email-assets/logo.png"; head -c $((262144 - 70)) /dev/zero; } >"$a/edge.png"
+  pkg=$(email_pkg '.email.images.logo = "edge.png"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: valid logos of each type pass, extension case does not matter" {
+  a="$(email_assets)"
+  cp "$FIXTURES/email-assets/logo.png" "$a/LOGO.PNG"
+  for name in logo.png logo.jpg logo.gif LOGO.PNG; do
+    pkg=$(email_pkg ".email.images.logo = \"$name\"")
+    run "$SCRIPT" --render-only --output-dir "$OUT/$name" "$pkg" "$a"
+    [ "$status" -eq 0 ]
+  done
+  cp "$FIXTURES/email-assets/logo.jpg" "$a/photo.jpeg"
+  pkg=$(email_pkg '.email.images.logo = "photo.jpeg"')
+  run "$SCRIPT" --render-only --output-dir "$OUT/jpeg" "$pkg" "$a"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: every bad email field is listed at once, with no output and no helm or kubectl call" {
+  pkg=$(email_pkg '.email.palette.primary = "red" | .email.senderName = "" | .email.messages.verification.subject = "{projectName}" | .email.images.logo = "bad-magic.png"')
+  run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$pkg" "$(email_assets)"
+  [ "$status" -eq 1 ]
+  grep -qF -- "palette/primary" <<<"$output"
+  grep -qF -- "email.senderName" <<<"$output"
+  grep -qF -- "email.messages.verification.subject" <<<"$output"
+  grep -qF -- "email.images.logo" <<<"$output"
+  [ ! -f "$BATS_TMPDIR/helm-calls" ]
+  [ ! -f "$BATS_TMPDIR/kubectl-calls" ]
+}

@@ -145,6 +145,9 @@
           "$ref": "#/definitions/link"
         }
       }
+    },
+    "email": {
+      "$ref": "#/definitions/email"
     }
   },
   "definitions": {
@@ -164,6 +167,117 @@
           "minLength": 1,
           "maxLength": 2000,
           "pattern": "^https?://[^\\s\\u0000-\\u001f{}]+$"
+        }
+      }
+    },
+    "emailMessageFull": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        },
+        "buttonLabel": {
+          "type": "string"
+        },
+        "footer": {
+          "type": "string"
+        }
+      }
+    },
+    "emailMessageShort": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "senderName": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "palette": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "primaryText": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          }
+        },
+        "images": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "logo": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "messages": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "verification": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "password_reset": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_soft_limit": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_stopped": {
+              "$ref": "#/definitions/emailMessageShort"
+            },
+            "budget_restored": {
+              "$ref": "#/definitions/emailMessageShort"
+            }
+          }
         }
       }
     }
