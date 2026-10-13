@@ -60,6 +60,10 @@ words:
   - EWS
   - Autodiscover
   - sentitems
+  - deleteditems
+  - junkemail
+  - msgfolderroot
+  - subfolders
   - CIDR
   - CIDRs
   - CGNAT
