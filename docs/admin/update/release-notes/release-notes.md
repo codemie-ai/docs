@@ -37,15 +37,22 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**Code Executor** — the meaning of `CODE_EXECUTOR_SECURITY_THRESHOLD` values is corrected. This applies only if the Code Executor tool is enabled.
+**Code Executor**
 
-Previously the values were inverted: `LOW` enforced the strictest policy and `HIGH` the most permissive. They now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive. The default value changed from `LOW` to `HIGH`, which enforces the same policy the old default did.
+These applicable only if the Code Executor tool is enabled:
 
-**Action required** — only if `CODE_EXECUTOR_SECURITY_THRESHOLD` is set explicitly:
+- The meaning of `CODE_EXECUTOR_SECURITY_THRESHOLD` values is corrected. Previously the values were inverted: `LOW` enforced the strictest policy and `HIGH` the most permissive. They now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive. The default value changed from `LOW` to `HIGH`, which enforces the same policy the old default did.
+- CodeExecutor Docker image name has changed from `codemie-python` to `codemie-code-executor`. `codemie-python` image is available but no longer supported in favor to `codemie-code-executor` image.
 
-- Previously set to `LOW`: change it to `HIGH` to keep the same enforcement level.
-- Previously set to `HIGH`: change it to `LOW` to keep the same enforcement level.
-- Not set, or the Code Executor tool is disabled: no action required.
+**Actions required**
+
+- Only if `CODE_EXECUTOR_SECURITY_THRESHOLD` is set explicitly:
+  - Previously set to `LOW`: change it to `HIGH` to keep the same enforcement level.
+  - Previously set to `HIGH`: change it to `LOW` to keep the same enforcement level.
+  - Not set, or the Code Executor tool is disabled: no action required.
+- Only if `CODE_EXECUTOR_DOCKER_IMAGE` is set explicitly:
+  - Update docker image name from `codemie-python` to `codemie-code-executor`. Ensure image tag is set to `2.58.0` or newer.
+  - Not set, or the Code Executor tool is disabled: no action required.
 
 </details>
 
