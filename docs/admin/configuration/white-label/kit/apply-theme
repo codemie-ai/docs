@@ -19,6 +19,8 @@ CODEMIE_VALUES_OPT=""
 # Must stay in sync with the mount path the backend reads (BRAND_CONFIG_PATH default).
 BRAND_CONFIGMAP="codemie-brand"
 BRAND_MOUNT_PATH="/etc/codemie/brand.yaml"
+# Same volume mounted whole; must match BRAND_ASSETS_DIR default in the backend email loader.
+BRAND_ASSETS_MOUNT_PATH="/etc/codemie/brand-assets"
 
 usage() {
   echo "Usage: apply-theme [--render-only] [--namespace <ns>]"
@@ -338,21 +340,40 @@ else
   echo "  extraObjects in values-codemie.brand.yaml REPLACE the lists of your release, merge them before applying" >&2
 fi
 
-_append_block() { # <current> <block>: append the block unless the brand entry is already there
-  local cur="$1" block="$2"
-  if [[ "$cur" == *"name: $BRAND_CONFIGMAP"* ]]; then printf '%s' "$cur"; return; fi
+# True when <current> already holds the exact line <entry> (surrounding space ignored). Keyed on
+# whole lines, never substrings, so a volume named codemie-brand-assets is not mistaken for codemie-brand.
+_has_entry() { # <current> <entry line>
+  local line
+  while IFS= read -r line; do
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+    [[ "$line" == "$2" ]] && return 0
+  done <<<"$1"
+  return 1
+}
+
+_append_block() { # <current> <block> <entry line>: append the block unless the entry is already there
+  local cur="$1" block="$2" entry="$3"
+  if _has_entry "$cur" "$entry"; then printf '%s' "$cur"; return; fi
   [[ -n "$cur" ]] && cur+=$'\n'
   printf '%s%s' "$cur" "$block"
 }
-export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP
+export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP EMAIL_LOGO B64_EMAIL_LOGO
 NEW_VOLUMES=$(_append_block "$CUR_VOLUMES" "- name: $BRAND_CONFIGMAP
   configMap:
-    name: $BRAND_CONFIGMAP")
+    name: $BRAND_CONFIGMAP" "- name: $BRAND_CONFIGMAP")
 NEW_MOUNTS=$(_append_block "$CUR_MOUNTS" "- name: $BRAND_CONFIGMAP
   mountPath: $BRAND_MOUNT_PATH
   subPath: brand.yaml
-  readOnly: true")
-BRAND_YAML=$(yq eval '{"links": .links}' "$PACKAGE_FILE")
+  readOnly: true" "mountPath: $BRAND_MOUNT_PATH")
+# the same volume, whole: the backend reads the email logo from this directory
+NEW_MOUNTS=$(_append_block "$NEW_MOUNTS" "- name: $BRAND_CONFIGMAP
+  mountPath: $BRAND_ASSETS_MOUNT_PATH
+  readOnly: true" "mountPath: $BRAND_ASSETS_MOUNT_PATH")
+B64_EMAIL_LOGO=""
+[[ -z "$EMAIL_LOGO" ]] || B64_EMAIL_LOGO=$(_b64 "$EMAIL_LOGO_PATH")
+# the email block is optional: a package without one renders no email key at all
+BRAND_YAML=$(yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email)' "$PACKAGE_FILE")
 
 yq -n '
   .podAnnotations."checksum/brand" = strenv(CHECKSUM) |
@@ -366,7 +387,7 @@ yq -n '
     "kind": "ConfigMap",
     "metadata": {"name": strenv(BRAND_CONFIGMAP)},
     "data": {"brand.yaml": strenv(BRAND_YAML)}
-  }]
+  } | with(select(strenv(EMAIL_LOGO) != ""); .binaryData[strenv(EMAIL_LOGO)] = strenv(B64_EMAIL_LOGO))]
 ' >"$WORK_DIR/values-codemie.brand.yaml"
 
 echo "apply-theme: rendered files written to $WORK_DIR"
