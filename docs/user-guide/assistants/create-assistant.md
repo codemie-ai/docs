@@ -236,10 +236,10 @@ controls are not displayed.
 
 The toggle has two states:
 
-| State        | Behavior                                                                                                                                                                                                                      |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Disabled** | Default. Conversation-level tool output settings behave as before; end users can still toggle tool output visibility per chat.                                                                                                |
-| **Enabled**  | End users see only the final assistant response. Tool calls, intermediate outputs, raw payloads, and execution traces stay hidden, and the per-conversation toggle is removed from the chat input toolbar for this assistant. |
+| State        | Behavior                                                                                                                                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Disabled** | Default. Conversation-level tool output settings behave as before; end users can still toggle tool output visibility per chat.                                                                                                                                                       |
+| **Enabled**  | End users see only the final assistant response. Tool calls, intermediate outputs, raw payloads, and execution traces stay hidden, and the **Hide tool outputs** switch in the chat configuration panel (**General** > **Tool outputs**) is hidden while a chat uses this assistant. |
 
 Two info icons next to the toggle show tooltips on hover:
 
