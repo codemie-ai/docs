@@ -787,6 +787,84 @@ extraEnv:
     value: 'mail.corp.local,10.20.0.0/16'
 ```
 
+#### CA Certificate for the Exchange Server
+
+The certificate of the Exchange server must chain to a CA that the CodeMie backend trusts. There is
+no field in the integration to upload a certificate or to turn off certificate verification. If the
+certificate cannot be verified, the user sees "The TLS certificate of the Exchange service could not
+be verified. Check the endpoint certificate configuration."
+
+If the server uses a self-signed certificate or one issued by an internal or corporate CA, add that
+CA to the `codemie-api` Helm chart:
+
+1. Store the CA certificate (PEM) in a ConfigMap.
+2. Mount it into the container with `extraVolumes` and `extraVolumeMounts`.
+3. Point the HTTP clients at it with `extraEnv`:
+   - `REQUESTS_CA_BUNDLE` is used by `requests`-based clients: EWS (exchangelib), azure-identity and
+     most toolkits.
+   - `SSL_CERT_FILE` is used by `httpx`-based clients: the Microsoft Graph SDK, A2A and the OpenAPI
+     tool.
+
+Add these entries to the `values.yaml` of the `codemie-api` chart:
+
+```yaml
+# 1. ConfigMap — stores the CA certificate
+extraObjects:
+  # keep your existing entries
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: exchange-ca-cert
+    data:
+      exchange-ca.pem: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
+
+# 2. Volume — exposes the ConfigMap as a volume
+extraVolumes: |
+  # keep your existing entries, such as google-service-account and codemie-customer-config
+  - name: exchange-ca-cert
+    configMap:
+      name: exchange-ca-cert
+
+# 3. Volume mount — places the certificate next to the system certificates
+extraVolumeMounts: |
+  # keep your existing entries, such as google-service-account and codemie-customer-config
+  - name: exchange-ca-cert
+    mountPath: /etc/ssl/certs/exchange-ca.pem
+    subPath: exchange-ca.pem
+    readOnly: true
+
+# 4. Environment variables — make the HTTP clients trust the certificate
+extraEnv:
+  # keep your existing entries
+  - name: REQUESTS_CA_BUNDLE # requests: exchangelib, azure-identity, most toolkits
+    value: /etc/ssl/certs/exchange-ca.pem
+  - name: SSL_CERT_FILE # httpx: Microsoft Graph SDK, A2A, OpenAPI tool
+    value: /etc/ssl/certs/exchange-ca.pem
+```
+
+:::warning Append, do not replace
+Helm does not merge `extraObjects`, `extraVolumes`, `extraVolumeMounts` and `extraEnv`: a new value
+replaces the chart default or the value from another values file. The chart already sets
+`extraVolumes` and `extraVolumeMounts` (the `google-service-account` secret and the
+`codemie-customer-config` ConfigMap) and `extraEnv` (the platform environment variables). Append the
+new entries to the existing lists in your `values.yaml`. If you pass the block above alone, for
+example as a separate `-f` file, the API pods lose these mounts and variables.
+:::
+
+:::warning The bundle replaces the default trust store
+Both variables replace the CA list that the clients trust by default, so they are not added to it.
+The file must also contain every public CA that the backend needs for its other outbound HTTPS
+calls, such as LLM providers, Microsoft Entra ID and other integrations. Otherwise those calls fail
+TLS verification. Put the internal CA and the public CA bundle into the same PEM file.
+:::
+
+Apply the change with `helm upgrade` and wait for the `codemie-api` pods to restart. The
+[Customer Feature Configuration](./customer-feature-configuration.md#how-it-works) guide uses the
+same ConfigMap and volume pattern.
+
 ---
 
 ## NATS Message Broker Configuration
