@@ -7,7 +7,7 @@ The integration needs write permissions:
 1. OAuth via Microsoft Entra ID Application: the application permission `Mail.ReadWrite` for move, tag and delete, and `Mail.Send` for send and forward, both with administrator consent.
 2. NTLM: the **Full Access** permission for the service account on the mailbox, and **Send As** for send and forward.
 
-Messages are sent as the target mailbox. A delete moves the message to Deleted Items unless the permanent delete is explicitly requested.
+A delete moves the message to Deleted Items unless the permanent delete is explicitly requested.
 
 The write tools are never approved automatically. Set the **Guarded** or **Manual** tool-call policy for the assistant, because with **Auto** sends and deletes run without a confirmation.
 
