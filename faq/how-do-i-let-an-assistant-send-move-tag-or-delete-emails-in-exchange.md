@@ -9,6 +9,8 @@ The integration needs write permissions:
 
 Messages are sent as the target mailbox. A delete moves the message to Deleted Items unless the permanent delete is explicitly requested.
 
+The write tools are never approved automatically. Set the **Guarded** or **Manual** tool-call policy for the assistant, because with **Auto** sends and deletes run without a confirmation.
+
 ## Sources
 
 - [Microsoft Exchange](https://docs.codemie.ai/user-guide/tools_integrations/tools/ms-exchange/)
