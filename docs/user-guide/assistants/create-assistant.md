@@ -272,7 +272,7 @@ in both the Python and Node.js SDKs.
 **Python**
 
 ```python
-from codemie_sdk.models.assistant import AssistantCreateRequest, AssistantUpdateRequest
+from codemie_sdk.models.assistant import AssistantCreateRequest
 
 # Create an assistant with tool outputs hidden from end users
 client.assistants.create(
@@ -284,12 +284,6 @@ client.assistants.create(
         llm_model_type="gpt-4o",
         hide_tool_outputs=True,
     )
-)
-
-# Update only this field on an existing assistant
-client.assistants.update(
-    assistant_id,
-    AssistantUpdateRequest(hide_tool_outputs=True),
 )
 ```
 
@@ -303,18 +297,27 @@ await client.assistants.create({
   system_prompt: '...',
   project: 'proj',
   llm_model_type: 'gpt-4o',
+  context: [],
+  toolkits: [],
+  conversation_starters: [],
+  mcp_servers: [],
+  assistant_ids: [],
   hide_tool_outputs: true,
 });
-
-// Update only this field on an existing assistant
-await client.assistants.update(assistantId, { hide_tool_outputs: true });
 ```
 
+:::warning
+The SDK `update` methods replace the whole assistant configuration, so they cannot change
+`hide_tool_outputs` on its own. To change the flag on an existing assistant, use the
+**Hide tool output** toggle in the UI, or load the assistant, change the field, and send the
+full configuration back. Sending only the required fields resets the assistant's tools, data
+sources, and conversation starters.
+:::
+
 :::tip
-On update, omit `hide_tool_outputs` entirely to leave the stored value unchanged. The Python
-SDK only includes the field in the update payload when it was explicitly set on the request
-object; passing `hide_tool_outputs=False` without setting it has no effect on the stored
-value.
+On update, leaving `hide_tool_outputs` out keeps the stored value. In the Python SDK the field
+is sent only when it was set explicitly on the request object, and `hide_tool_outputs=False`
+turns the setting off.
 :::
 
 The field is also present on the assistant detail response and on the assistant data
