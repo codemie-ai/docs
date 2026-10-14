@@ -38,7 +38,6 @@ words:
   - EPMDEDP
   - Tavily
   - SonarQube
-  - DevForce
   - EPMCDME
   - crunchydata
   - DALL-E
@@ -156,6 +155,8 @@ words:
   - valkey
   # Technical terms
   - backend
+  - exfiltration
+  - srcset
   - frontend
   - microservices
   - namespace
@@ -263,6 +264,9 @@ words:
   # codemie terms
   - kata
   - katas
+  - xwiki
+  - xWiki
+  - unindexed
   - gvisor
   - codemieai
   # Other
@@ -356,6 +360,7 @@ words:
   - PYROSCOPE
   - ONCPU
   - LOOKBACK
+  - vbscript
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:

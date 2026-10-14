@@ -1,0 +1,23 @@
+import CodeBlock from '@theme/CodeBlock';
+
+```bash
+# NATS is running
+kubectl get pods -n codemie | grep codemie-nats
+
+# NATS Auth Callout is running
+kubectl get pods -n codemie | grep nats-auth-callout
+
+# NATS service is available
+kubectl get service -n codemie codemie-nats
+
+# NATS secrets exist
+kubectl get secret codemie-nats-secrets -n codemie
+
+# Test NATS connectivity (optional)
+```
+
+<CodeBlock language="bash">
+{`kubectl run -it --rm nats-test --image=natsio/nats-box:latest --restart=Never -n codemie -- nats context create test --server=${props.natsUrl}`}
+</CodeBlock>
+
+All checks should return successful results before proceeding.

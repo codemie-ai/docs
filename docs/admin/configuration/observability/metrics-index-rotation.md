@@ -94,10 +94,7 @@ codemie_metrics_logs_write
 Do not change the output used for infrastructure logs. User metrics must continue to be
 collected for Kibana dashboards and usage analytics.
 
-The cloud-specific deployment guides describe the metrics and infrastructure-log
-outputs: [AWS](../../../deployment/aws/kubernetes/components-deployment/manual-deployment/observability),
-[Azure](../../../deployment/azure/kubernetes/components-deployment/manual-deployment/observability), or
-[GCP](../../../deployment/gcp/kubernetes/components-deployment/manual-deployment/observability).
+The [Observability Components Deployment](../../../deployment/platform-deployment/manual/kubernetes/observability) guide describes the metrics and infrastructure-log outputs for AWS, Azure, and GCP.
 
 ## Enable rotation
 

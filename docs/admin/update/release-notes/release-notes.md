@@ -9,14 +9,159 @@ pagination_next: null
 
 # Release Notes
 
-This page provides information about updated third-party components and configuration changes available in new CodeMie releases.
+This page lists third-party component updates and configuration changes introduced in each CodeMie release. Releases are grouped by month, newest first. Click a release to expand its details. Releases older than two months are collapsed under [Older Releases](#older-releases).
 
----
+Badges show what each release requires from administrators:
 
-### CodeMie 2.53.0 {#v2-53-0}
+- <span className="badge badge--secondary">Hotfixes</span> — Hotfix releases were published on top of this version
+- <span className="badge badge--danger">Breaking</span> — Configuration changes that break existing setups if not applied
+- <span className="badge badge--warning">Config changes</span> — Configuration updates to review before upgrading
+- <span className="badge badge--info">Component updates</span> — Third-party components were updated and upgrading them is recommended as part of this release
 
-<details>
-<summary>Release details</summary>
+:::tip Upgrade regularly
+We highly recommend keeping CodeMie up to date. Regular upgrades deliver the latest security fixes and keep each upgrade small, with fewer configuration changes to review at once.
+
+Review every release between your current and target version that has a **Breaking**, **Config changes**, or **Component updates** badge. Releases marked **No admin action required** can be skipped.
+:::
+
+## October 2026 {#2026-10}
+
+<details className="release" id="v2-58-0">
+<summary><span className="release__version">CodeMie 2.58.0</span><span className="release__date">Oct 12, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.58.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**Code Executor**
+
+These applicable only if the Code Executor tool is enabled:
+
+- The meaning of `CODE_EXECUTOR_SECURITY_THRESHOLD` values is corrected. Previously the values were inverted: `LOW` enforced the strictest policy and `HIGH` the most permissive. They now match the parameter name: `LOW` is permissive and `HIGH` is the most restrictive. The default value changed from `LOW` to `HIGH`, which enforces the same policy the old default did.
+- CodeExecutor Docker image name has changed from `codemie-python` to `codemie-code-executor`. `codemie-python` image is available but no longer supported in favor to `codemie-code-executor` image.
+
+**Actions required**
+
+- Only if `CODE_EXECUTOR_SECURITY_THRESHOLD` is set explicitly:
+  - Previously set to `LOW`: change it to `HIGH` to keep the same enforcement level.
+  - Previously set to `HIGH`: change it to `LOW` to keep the same enforcement level.
+  - Not set, or the Code Executor tool is disabled: no action required.
+- Only if `CODE_EXECUTOR_DOCKER_IMAGE` is set explicitly:
+  - Update docker image name from `codemie-python` to `codemie-code-executor`. Ensure image tag is set to `2.58.0` or newer.
+  - Not set, or the Code Executor tool is disabled: no action required.
+
+</details>
+
+<details className="release" id="v2-57-0">
+<summary><span className="release__version">CodeMie 2.57.0</span><span className="release__date">Oct 9, 2026</span><span className="badge badge--info">Component updates</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">2 hotfixes</span></summary>
+
+:::danger Upgrade not recommended
+Versions **2.57.0** and **2.57.1** contain known issues and are not recommended for upgrade. Environments already running either version should move to the latest hotfix release, **2.57.2**.
+:::
+
+**Release Date:** October 9, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>CodeMie Code CLI 0.15.8</h4>
+
+The recommended CLI version is updated to [v0.15.8](https://github.com/codemie-ai/codemie-code/releases/tag/v0.15.8).
+
+<h3>Configuration Changes</h3>
+
+1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` enforces a minimum CLI version of `0.15.6`. Upgrading to `0.15.8` is recommended.
+
+<h3>Hotfixes</h3>
+
+- **2.57.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.1) – October 9, 2026
+- **2.57.2** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.57.2) – October 9, 2026
+
+</details>
+
+<details className="release" id="v2-56-0">
+<summary><span className="release__version">CodeMie 2.56.0</span><span className="release__date">Oct 5, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 5, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.56.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **LiteLLM Bedrock route for Claude Haiku 4.5**: updated `litellm_params.model` from `bedrock/converse/<model_id>` to `bedrock/<model_id>`. When LiteLLM WebSearch interception is configured, searches on Haiku 4.5 executed successfully under both routes, but the Converse adapter did not return the native Anthropic search metadata blocks expected by Claude Code (`codemie-code`), displaying `WebSearch 0`. Switching to native `bedrock/` delivers the proper `server_tool_use` and `web_search_tool_result` structures, so search events are accurately reflected. CodeMie UI and workflows remain unaffected.
+
+   :::note
+   LiteLLM WebSearch interception is an optional proxy feature that requires [separate setup](https://docs.litellm.ai/docs/integrations/websearch_interception).
+   :::
+
+   See [LiteLLM Model Configuration](../../configuration/extensions/litellm-proxy/model-configuration.md#claude-haiku-45) for details.
+
+</details>
+
+<details className="release" id="v2-55-0">
+<summary><span className="release__version">CodeMie 2.55.0</span><span className="release__date">Oct 1, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.55.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **Code Executor** — changes in `codemie-api` — only applies if Code Executor tool is enabled:
+   - `CODE_EXECUTOR_SANDBOX_MODE` env var now defaults to `sandbox-jobs` — `sandbox-shared` will be removed in next releases.
+   - `CODE_EXECUTOR_NAMESPACE` env var default value changed to `codemie-code-executor` (previously `codemie-runtime`).
+
+   :::warning
+   If you already use the Code Executor with a custom namespace, keep `CODE_EXECUTOR_NAMESPACE` and `features.tools.code_executor.namespace.name` set to that namespace and ensure RBAC stays enabled in codemie-api helm chart — otherwise the executor now defaults to the `codemie-code-executor` namespace.
+
+   The old `rbac.namespace` key is removed; migrate to `namespace.name`:
+
+   ```yaml
+   features:
+     tools:
+       code_executor:
+         namespace:
+           name: "<namespace>"
+   ```
+
+   :::
+
+   See [Code Executor Configuration](../../configuration/codemie/code-executor-configuration.md#namespace-configuration) for details.
+
+</details>
+
+## September 2026 {#2026-09}
+
+<details className="release" id="v2-54-0">
+<summary><span className="release__version">CodeMie 2.54.0</span><span className="release__date">Sep 29, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** September 29, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.54.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.99.2</h4>
+
+Updated from 1.96.2 (Helm chart 1.96.2 to 1.99.0). For details, see the [LiteLLM 1.99.2 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.2).
+
+:::note Container-only release
+LiteLLM 1.99.2 is a container-only release and is not published to PyPI.
+:::
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details className="release" id="v2-53-0">
+<summary><span className="release__version">CodeMie 2.53.0</span><span className="release__date">Sep 24, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** September 24, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.53.0)
 
@@ -28,12 +173,14 @@ No third-party component updates in this release.
 
 No breaking configuration changes were introduced in this release.
 
+<h3>Hotfixes</h3>
+
+- **2.53.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.53.1) – September 25, 2026
+
 </details>
 
-### CodeMie 2.52.0 {#v2-52-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-52-0">
+<summary><span className="release__version">CodeMie 2.52.0</span><span className="release__date">Sep 21, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** September 21, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.52.0)
 
@@ -47,10 +194,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.51.0 {#v2-51-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-51-0">
+<summary><span className="release__version">CodeMie 2.51.0</span><span className="release__date">Sep 17, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** September 17, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.51.0)
 
@@ -68,10 +213,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.50.0 {#v2-50-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-50-0">
+<summary><span className="release__version">CodeMie 2.50.0</span><span className="release__date">Sep 14, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** September 14, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.50.0)
 
@@ -91,10 +234,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.49.0 {#v2-49-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-49-0">
+<summary><span className="release__version">CodeMie 2.49.0</span><span className="release__date">Sep 10, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** September 10, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.49.0)
 
@@ -108,10 +249,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.48.0 {#v2-48-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-48-0">
+<summary><span className="release__version">CodeMie 2.48.0</span><span className="release__date">Sep 8, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** September 8, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.48.0)
 
@@ -125,10 +264,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.47.0 {#v2-47-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-47-0">
+<summary><span className="release__version">CodeMie 2.47.0</span><span className="release__date">Sep 7, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** September 7, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.47.0)
 
@@ -142,10 +279,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.46.0 {#v2-46-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-46-0">
+<summary><span className="release__version">CodeMie 2.46.0</span><span className="release__date">Sep 1, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** September 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.46.0)
 
@@ -159,10 +294,17 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.45.0 {#v2-45-0}
+## Older Releases {#older-releases}
 
-<details>
-<summary>Release details</summary>
+Releases from previous months, grouped by year and month. Expand a month to see its releases.
+
+### 2026 {#older-2026}
+
+<details className="release-archive" id="2026-08">
+<summary><span className="release-archive__month">August</span><span className="release-archive__count">4 releases</span></summary>
+
+<details className="release" id="v2-45-0">
+<summary><span className="release__version">CodeMie 2.45.0</span><span className="release__date">Aug 28, 2026</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** August 28, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.45.0)
 
@@ -182,10 +324,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.44.0 {#v2-44-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-44-0">
+<summary><span className="release__version">CodeMie 2.44.0</span><span className="release__date">Aug 20, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** August 20, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.44.0)
 
@@ -201,8 +341,8 @@ No third-party component updates in this release.
         ```bash
         aws s3 cp s3://<AWS_S3_BUCKET_NAME>/ s3://<AWS_S3_BUCKET_NAME>/ --recursive
         ```
-   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../../deployment/aws/kubernetes/infrastructure-deployment/manual-deployment.md#phase-2-terraform-backend-resources-deployment).
-   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../../deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer.md#upgrading-an-existing-deployment-to-iam-authentication).
+   - **Terraform state bucket encryption switched to SSE-KMS**, restricted to the deployer role. `aws-terraform.sh` migrates existing deployments automatically; for manual deployments, see [updated backend init commands](../../deployment/infrastructure-deployment/kubernetes.mdx#manual-deployment).
+   - **RDS PostgreSQL now uses IAM database authentication** — `codemie-api` on AWS connects to the RDS PostgreSQL instance using short-lived IAM authentication tokens instead of a static password. Existing deployments must be migrated — see [Upgrading an Existing Deployment to IAM Authentication](../../deployment/platform-deployment/manual/kubernetes/data-layer.mdx#upgrading-an-existing-deployment-to-iam-authentication).
 
 <h3>Hotfixes</h3>
 
@@ -210,10 +350,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.43.0 {#v2-43-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-43-0">
+<summary><span className="release__version">CodeMie 2.43.0</span><span className="release__date">Aug 12, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** August 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.43.0)
 
@@ -233,10 +371,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.42.0 {#v2-42-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-42-0">
+<summary><span className="release__version">CodeMie 2.42.0</span><span className="release__date">Aug 4, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** August 4, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.42.0)
 
@@ -256,10 +392,13 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.41.0 {#v2-41-0}
+</details>
 
-<details>
-<summary>Release details</summary>
+<details className="release-archive" id="2026-07">
+<summary><span className="release-archive__month">July</span><span className="release-archive__count">5 releases</span></summary>
+
+<details className="release" id="v2-41-0">
+<summary><span className="release__version">CodeMie 2.41.0</span><span className="release__date">Jul 27, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** July 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.41.0)
 
@@ -296,10 +435,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.40.0 {#v2-40-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-40-0">
+<summary><span className="release__version">CodeMie 2.40.0</span><span className="release__date">Jul 20, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** July 20, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.40.0)
 
@@ -313,10 +450,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.39.0 {#v2-39-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-39-0">
+<summary><span className="release__version">CodeMie 2.39.0</span><span className="release__date">Jul 14, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** July 14, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.39.0)
 
@@ -334,10 +469,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.38.0 {#v2-38-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-38-0">
+<summary><span className="release__version">CodeMie 2.38.0</span><span className="release__date">Jul 9, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** July 9, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.38.0)
 
@@ -373,10 +506,8 @@ This release also delivers a set of security and hardening improvements across t
 
 </details>
 
-### CodeMie 2.37.0 {#v2-37-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-37-0">
+<summary><span className="release__version">CodeMie 2.37.0</span><span className="release__date">Jul 2, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** July 2, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.37.0)
 
@@ -425,10 +556,13 @@ This release also delivers a set of security and hardening improvements across t
 
 </details>
 
-### CodeMie 2.36.0 {#v2-36-0}
+</details>
 
-<details>
-<summary>Release details</summary>
+<details className="release-archive" id="2026-06">
+<summary><span className="release-archive__month">June</span><span className="release-archive__count">6 releases</span></summary>
+
+<details className="release" id="v2-36-0">
+<summary><span className="release__version">CodeMie 2.36.0</span><span className="release__date">Jun 26, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** June 26, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.36.0)
 
@@ -449,10 +583,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.35.0 {#v2-35-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-35-0">
+<summary><span className="release__version">CodeMie 2.35.0</span><span className="release__date">Jun 22, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** June 22, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.35.0)
 
@@ -521,10 +653,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.34.0 {#v2-34-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-34-0">
+<summary><span className="release__version">CodeMie 2.34.0</span><span className="release__date">Jun 15, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** June 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.34.0)
 
@@ -544,10 +674,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.33.0 {#v2-33-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-33-0">
+<summary><span className="release__version">CodeMie 2.33.0</span><span className="release__date">Jun 9, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** June 9, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.33.0)
 
@@ -561,10 +689,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.32.0 {#v2-32-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-32-0">
+<summary><span className="release__version">CodeMie 2.32.0</span><span className="release__date">Jun 4, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** June 4, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.32.0)
 
@@ -584,10 +710,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.31.0 {#v2-31-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-31-0">
+<summary><span className="release__version">CodeMie 2.31.0</span><span className="release__date">Jun 1, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** June 1, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.31.0)
 
@@ -601,10 +725,13 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.30.0 {#v2-30-0}
+</details>
 
-<details>
-<summary>Release details</summary>
+<details className="release-archive" id="2026-05">
+<summary><span className="release-archive__month">May</span><span className="release-archive__count">6 releases</span></summary>
+
+<details className="release" id="v2-30-0">
+<summary><span className="release__version">CodeMie 2.30.0</span><span className="release__date">May 27, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** May 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.30.0)
 
@@ -630,10 +757,8 @@ Starting from v1.33.0, keycloak-operator no longer auto-appends the `/auth` cont
 
 </details>
 
-### CodeMie 2.29.0 {#v2-29-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-29-0">
+<summary><span className="release__version">CodeMie 2.29.0</span><span className="release__date">May 22, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** May 22, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.29.0)
 
@@ -663,10 +788,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.28.0 {#v2-28-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-28-0">
+<summary><span className="release__version">CodeMie 2.28.0</span><span className="release__date">May 21, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** May 21, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.28.0)
 
@@ -703,10 +826,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.27.0 {#v2-27-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-27-0">
+<summary><span className="release__version">CodeMie 2.27.0</span><span className="release__date">May 18, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** May 18, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.27.0)
 
@@ -760,10 +881,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.26.0 {#v2-26-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-26-0">
+<summary><span className="release__version">CodeMie 2.26.0</span><span className="release__date">May 12, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** May 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.26.0)
 
@@ -794,10 +913,8 @@ No third-party component updates in this release.
 
 </details>
 
-### CodeMie 2.25.0 {#v2-25-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-25-0">
+<summary><span className="release__version">CodeMie 2.25.0</span><span className="release__date">May 8, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** May 8, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.25.0)
 
@@ -819,10 +936,13 @@ Version 2.25.0 contains a known issue that causes instability in environments wi
 
 </details>
 
-### CodeMie 2.24.0 {#v2-24-0}
+</details>
 
-<details>
-<summary>Release details</summary>
+<details className="release-archive" id="2026-04">
+<summary><span className="release-archive__month">April</span><span className="release-archive__count">5 releases</span></summary>
+
+<details className="release" id="v2-24-0">
+<summary><span className="release__version">CodeMie 2.24.0</span><span className="release__date">Apr 23, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** April 23, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.24.0)
 
@@ -893,10 +1013,8 @@ Updated from 1.81.0. For details, see the [LiteLLM 1.83.7 Release Notes ↗](htt
 
 </details>
 
-### CodeMie 2.23.0 {#v2-23-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-23-0">
+<summary><span className="release__version">CodeMie 2.23.0</span><span className="release__date">Apr 15, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">4 hotfixes</span></summary>
 
 **Release Date:** April 15, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.23.0)
 
@@ -942,10 +1060,8 @@ See [Budget Configuration](../../configuration/extensions/litellm-proxy/budget-c
 
 </details>
 
-### CodeMie 2.22.0 {#v2-22-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-22-0">
+<summary><span className="release__version">CodeMie 2.22.0</span><span className="release__date">Apr 9, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** April 9, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.22.0)
 
@@ -963,10 +1079,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.21.0 {#v2-21-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-21-0">
+<summary><span className="release__version">CodeMie 2.21.0</span><span className="release__date">Apr 8, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** April 8, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.21.0)
 
@@ -984,10 +1098,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.20.0 {#v2-20-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-20-0">
+<summary><span className="release__version">CodeMie 2.20.0</span><span className="release__date">Apr 2, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** April 2, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.20.0)
 
@@ -1029,10 +1141,13 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.19.0 {#v2-19-0}
+</details>
 
-<details>
-<summary>Release details</summary>
+<details className="release-archive" id="2026-03">
+<summary><span className="release-archive__month">March</span><span className="release-archive__count">5 releases</span></summary>
+
+<details className="release" id="v2-19-0">
+<summary><span className="release__version">CodeMie 2.19.0</span><span className="release__date">Mar 27, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** March 27, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.19.0)
 
@@ -1057,10 +1172,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.18.0 {#v2-18-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-18-0">
+<summary><span className="release__version">CodeMie 2.18.0</span><span className="release__date">Mar 24, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** March 24, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.18.0)
 
@@ -1074,10 +1187,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.17.0 {#v2-17-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-17-0">
+<summary><span className="release__version">CodeMie 2.17.0</span><span className="release__date">Mar 20, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** March 20, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.17.0)
 
@@ -1091,10 +1202,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.16.0 {#v2-16-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-16-0">
+<summary><span className="release__version">CodeMie 2.16.0</span><span className="release__date">Mar 18, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
 **Release Date:** March 18, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.16.0)
 
@@ -1108,10 +1217,8 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-### CodeMie 2.15.0 {#v2-15-0}
-
-<details>
-<summary>Release details</summary>
+<details className="release" id="v2-15-0">
+<summary><span className="release__version">CodeMie 2.15.0</span><span className="release__date">Mar 16, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** March 16, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.15.0)
 
@@ -1132,5 +1239,7 @@ To upgrade Fluent Bit to version 4.2.3.1, follow the [Fluent Bit Upgrade Guide](
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release. All existing Fluent Bit configurations remain compatible.
+
+</details>
 
 </details>

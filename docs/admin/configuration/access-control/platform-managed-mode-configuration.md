@@ -226,7 +226,7 @@ changes during the upgrade and what action, if any, is required from you.
    ```
 
 3. The `codemie-api` pod runs Alembic database migrations automatically on startup — no
-   manual database steps are required. The startup probe allows up to **600 seconds** for
+   manual database steps are required. The startup probe allows up to **2400 seconds** for
    migrations to complete.
 
    :::info Multiple replicas

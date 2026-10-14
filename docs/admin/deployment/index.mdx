@@ -14,64 +14,47 @@ import FeatureGrid from '@site/src/components/FeatureGrid';
 
 # Deployment Guides
 
-Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to get started with deploying CodeMie in your environment.
+Welcome to the AI/Run CodeMie deployment guides. A complete deployment follows three phases: review the prerequisites, provision infrastructure, then deploy the platform. See the [Architecture](/admin/architecture/) section first to understand the deployment architecture, infrastructure components, and resource requirements.
 
-## Kubernetes Deployments
-
-<FeatureGrid>
-  <FeatureCard
-    icon="/img/cloud-providers/aws.svg"
-    iconType="image"
-    invertInDarkTheme={false}
-    title="AWS Deployment Guide"
-    description="Deploy AI/Run CodeMie on AWS with comprehensive guides covering infrastructure setup, components, and configuration."
-    link="/admin/deployment/aws/kubernetes/overview"
-  />
-  <FeatureCard
-    icon="/img/cloud-providers/gcp.svg"
-    iconType="image"
-    invertInDarkTheme={false}
-    title="GCP Deployment Guide"
-    description="Deploy AI/Run CodeMie on Google Cloud Platform using Terraform and Helm with automated or manual installation options."
-    link="/admin/deployment/gcp/kubernetes/overview"
-  />
-  <FeatureCard
-    icon="/img/cloud-providers/azure.svg"
-    iconType="image"
-    invertInDarkTheme={false}
-    title="Azure Deployment Guide"
-    description="Deploy AI/Run CodeMie on Microsoft Azure with step-by-step guidance for infrastructure and application deployment."
-    link="/admin/deployment/azure/kubernetes/overview"
-  />
-</FeatureGrid>
-
-## VM Deployments
+## Installation
 
 <FeatureGrid>
   <FeatureCard
-    icon="/img/cloud-providers/aws.svg"
+    icon="/img/icons/info.svg"
     iconType="image"
-    invertInDarkTheme={false}
-    title="AWS On VM Deployment"
-    description="Deploy AI/Run CodeMie on a single EC2 instance with Docker Compose. Ideal for PoC and demo environments."
-    link="/admin/deployment/aws/on-vm/overview"
+    title="Prerequisites"
+    description="Review account access, network, DNS, and deployment machine requirements for AWS, GCP, or Azure before you begin."
+    link="/admin/deployment/prerequisites/"
   />
   <FeatureCard
-    icon="/img/cloud-providers/gcp.svg"
+    icon="/img/icons/server.svg"
     iconType="image"
-    invertInDarkTheme={false}
-    title="GCP On VM Deployment"
-    description="Deploy AI/Run CodeMie on a single GCE VM with Docker Compose. Ideal for PoC and demo environments."
-    link="/admin/deployment/gcp/on-vm/overview"
+    title="Infrastructure Deployment"
+    description="Provision Kubernetes clusters, VMs, networking, storage, and databases using Terraform for AWS, GCP, or Azure."
+    link="/admin/deployment/infrastructure-deployment/"
   />
   <FeatureCard
-    icon="/img/cloud-providers/azure.svg"
+    icon="/img/icons/cloud-data.svg"
     iconType="image"
-    invertInDarkTheme={false}
-    title="Azure On VM Deployment"
-    description="Deploy AI/Run CodeMie on a single Azure VM with Docker Compose. Ideal for PoC and demo environments."
-    link="/admin/deployment/azure/on-vm/overview"
+    title="Platform Deployment"
+    description="Deploy CodeMie application components using automated Helm scripts or manual chart-by-chart installation."
+    link="/admin/deployment/platform-deployment/"
   />
+  <FeatureCard
+    icon="/img/icons/applications.svg"
+    iconType="image"
+    title="Accessing Applications"
+    description="Find application URLs and next steps for configuration once the platform deployment is complete."
+    link="/admin/deployment/accessing-applications/"
+  />
+  <FeatureCard
+    icon="/img/icons/plugin.svg"
+    iconType="image"
+    title="Extensions"
+    description="Deploy optional extensions including LiteLLM Proxy, Assistants Evaluation, AI Code Explorer, and specialized development tools."
+    link="/admin/deployment/extensions/"
+  />
+  <div style={{ visibility: 'hidden' }} />
 </FeatureGrid>
 
 ## Marketplace
@@ -82,35 +65,9 @@ Welcome to the AI/Run CodeMie deployment guides. Choose your cloud provider to g
     iconType="image"
     invertInDarkTheme={false}
     title="AWS Marketplace"
-    description="Deploy AI/Run CodeMie directly from AWS Marketplace."
+    description="Deploy AI/Run CodeMie directly from AWS Marketplace with one-click installation and managed services."
     link="https://aws.amazon.com/marketplace/pp/prodview-5kkxwllsrb4h2?applicationId=AWSMPContessa&ref_=beagle&sr=0-1"
   />
   <div style={{ visibility: 'hidden' }} />
   <div style={{ visibility: 'hidden' }} />
-</FeatureGrid>
-
-## Additional Resources
-
-<FeatureGrid>
-  <FeatureCard
-    icon="/img/icons/configure.svg"
-    iconType="image"
-    title="API Configuration"
-    description="Configure and manage CodeMie API settings, authentication, and integration endpoints for your development environment."
-    link="/admin/configuration/codemie/api-configuration"
-  />
-  <FeatureCard
-    icon="/img/icons/info.svg"
-    iconType="image"
-    title="FAQ"
-    description="Find answers to frequently asked questions about deploying and managing AI/Run CodeMie."
-    link="/admin/faq"
-  />
-  <FeatureCard
-    icon="/img/icons/plugin.svg"
-    iconType="image"
-    title="Extensions"
-    description="Enhance CodeMie with optional extensions including LiteLLM Proxy, Langfuse evaluation, AICE, and specialized development assistants."
-    link="/admin/deployment/extensions/"
-  />
 </FeatureGrid>

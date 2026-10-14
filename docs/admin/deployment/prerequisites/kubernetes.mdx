@@ -1,0 +1,373 @@
+---
+id: prerequisites-kubernetes
+title: Kubernetes Deployment Prerequisites
+sidebar_label: Kubernetes
+sidebar_position: 3
+pagination_prev: admin/deployment/prerequisites/prerequisites-overview
+pagination_next: admin/deployment/prerequisites/prerequisites-on-vm
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import NetworkRequirements from '../common/deployment/prerequisites/_network-requirements.mdx';
+import ClusterRequirements from '../common/deployment/prerequisites/_cluster-requirements.mdx';
+import DeploymentMachineTools from '../common/deployment/prerequisites/_deployment-machine-tools.mdx';
+
+# Kubernetes Deployment Prerequisites
+
+This page outlines the requirements for deploying AI/Run CodeMie on a managed Kubernetes cluster. A cloud provider can be selected below to view provider-specific requirements.
+
+## Account Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+**Required Access and Permissions**
+
+To deploy AI/Run CodeMie on AWS, you need:
+
+- **Active AWS Account** with preferred region for deployment
+- **Programmatic Access** with credentials that have permissions to create and manage IAM Roles and Policy Documents
+- **Sufficient Quota** for the required resources (EKS, RDS, networking, storage, etc.)
+  :::info Complete Resource List
+  For a detailed list of all AWS resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
+  :::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+**Required Access and Permissions**
+
+To deploy AI/Run CodeMie on Azure, you need:
+
+- **Active Azure Subscription** with sufficient quota for the required resources
+- **Contributor Role** for the deployment user with the following permissions:
+  - Access to **Entra ID App Registration** to obtain Application ID and Secret
+  - Ability to create and manage Azure resources (AKS, networking, storage, etc.)
+    :::info Complete Resource List
+    For a detailed list of all Azure resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
+    :::
+- **Entra ID Access** on the Azure portal to retrieve application details such as Tenant ID
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+**Required Access and Permissions**
+
+To deploy AI/Run CodeMie on GCP, you need:
+
+- **Active GCP Project** with sufficient quota for the required resources
+- **Project Owner or Editor Role** for the deployment user with the following permissions:
+  - Ability to create and manage IAM Roles and Service Accounts
+  - Access to create and manage GCP resources (GKE, VPC, Cloud SQL, etc.)
+    :::info Complete Resource List
+    For a detailed list of all GCP resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.
+    :::
+  - Ability to bind the following IAM roles to service accounts:
+    - `roles/aiplatform.user` - For Vertex AI access
+    - `roles/storage.admin` - For Cloud Storage management
+    - `roles/cloudkms.cryptoKeyEncrypterDecrypter` - For encryption key operations
+
+**Required GCP APIs**
+
+The following APIs must be enabled in your GCP project before deployment:
+
+| API                                                                                                                    | Purpose                              |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| [Cloud Identity-Aware Proxy API](https://console.cloud.google.com/marketplace/product/google/iap.googleapis.com)       | Secure identity-based access control |
+| [Service Networking API](https://console.cloud.google.com/marketplace/product/google/servicenetworking.googleapis.com) | Private service connectivity         |
+| [Secret Manager API](https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com)         | Centralized secrets management       |
+| [Vertex AI API](https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com)                 | AI model integration and inference   |
+
+:::info Vertex AI Models
+Make sure you are familiar with Gemini models, their parameters, available regions, and other crucial details in the [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/models).
+:::
+
+</TabItem>
+</Tabs>
+
+## Network Requirements
+
+### DNS and Certificate Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+AI/Run CodeMie requires proper DNS and TLS certificate configuration:
+
+- **Route 53 Hosted Zone** with available wildcard DNS configuration
+- **Automatic Certificate Management** - AI/Run CodeMie Terraform modules will automatically create:
+  - DNS Records in Route 53
+  - TLS certificates through AWS Certificate Manager for ALB and NLB
+
+:::tip Automatic Setup
+DNS and certificate provisioning is fully automated through Terraform when using AI/Run CodeMie-managed infrastructure. You only need to provide the hosted zone. However, if you're using self-provisioned infrastructure, you will need to handle DNS records and certificates for it.
+:::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+DNS and TLS certificate requirements depend on your access model:
+
+<Tabs>
+<TabItem value="public" label="Public Access" default>
+
+If you require **public internet access** to AI/Run CodeMie:
+
+- Azure DNS Zone must be created and domain delegated there
+- Valid wildcard TLS certificate must be available for HTTPS connections
+
+</TabItem>
+<TabItem value="private" label="Private Access">
+
+If you only require **internal access** within your organization:
+
+- AI/Run CodeMie Terraform modules will automatically create a private DNS zone
+- No external DNS delegation or public certificates are required
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- Registered domain name delegated to Cloud DNS with permissions to create DNS records
+- Valid wildcard TLS certificate must be available for HTTPS connections (see [Ingress NGINX TLS guide](https://kubernetes.github.io/ingress-nginx/user-guide/tls/))
+
+</TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<NetworkRequirements clusterName="EKS" networkSecurityName="Security Groups and Network ACLs" natGatewayName="NAT Gateway" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<NetworkRequirements clusterName="AKS" networkSecurityName="Network Security Group (NSG) or firewall" natGatewayName="NAT Gateway" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<NetworkRequirements clusterName="GKE" networkSecurityName="firewall or VPC firewall rules" natGatewayName="Cloud NAT" />
+</TabItem>
+</Tabs>
+
+## Kubernetes Cluster Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<ClusterRequirements clusterName="EKS" networkName="VPC" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<ClusterRequirements clusterName="AKS" networkName="VNet" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<ClusterRequirements clusterName="GKE" networkName="VPC" />
+</TabItem>
+</Tabs>
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+_No AWS-specific cluster configuration is required beyond the general Kubernetes cluster requirements above._
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+_No Azure-specific cluster configuration is required beyond the general Kubernetes cluster requirements above._
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+**GKE Cluster Configuration**
+
+:::info GCP-Specific Requirement
+This section applies only to GCP deployments.
+:::
+
+**VPC-Native Networking and Container-Native Load Balancing**
+
+AI/Run CodeMie requires GKE clusters configured with **VPC-native networking** and **container-native load balancing (NEGs)** for proper Ingress functionality.
+
+**Required Configuration:**
+
+- **Networking Mode:** `VPC_NATIVE` with IP allocation policy (secondary ranges for pods and services)
+- **HTTP Load Balancing Addon:** Enabled (default)
+
+:::warning Network Policy Disables Automatic NEGs
+If your cluster uses **GKE Network Policy** or **Calico**, container-native load balancing will NOT be enabled automatically. This causes Ingress errors:
+
+```
+service "namespace/service" is type "ClusterIP", expected "NodePort" or "LoadBalancer"
+```
+
+**Solution:** Manually enable NEGs by adding this annotation to all Services exposed via Ingress in chart values. For example:
+
+```yaml
+service:
+  type: ClusterIP
+  port: 8080
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+```
+
+:::
+
+</TabItem>
+</Tabs>
+
+<DeploymentMachineTools />
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+**Cloud-Specific Tools:**
+
+| Tool                                                                                     | Version | Purpose                 |
+| ---------------------------------------------------------------------------------------- | ------- | ----------------------- |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | latest  | AWS resource management |
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+**Cloud-Specific Tools:**
+
+| Tool                                                                       | Version | Purpose                   |
+| -------------------------------------------------------------------------- | ------- | ------------------------- |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure resource management |
+| [kubelogin](https://azure.github.io/kubelogin/install.html)                | latest  | AKS authentication plugin |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+:::note gcloud CLI Multi-Purpose
+For GCP deployments, gcloud CLI serves dual purposes: GCP resource management and authentication to AI/Run CodeMie container registry (GCR).
+:::
+
+</TabItem>
+</Tabs>
+
+## Cluster Access
+
+Before proceeding to Platform Deployment, confirm you have `kubectl` access to the cluster provisioned during [Infrastructure Deployment](../infrastructure-deployment/kubernetes.mdx).
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+Obtain kubeconfig credentials for the EKS cluster:
+
+```bash
+aws eks update-kubeconfig --region <REGION> --name <CLUSTER_NAME>
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+Connect to the Jumpbox VM via Bastion, then obtain kubeconfig credentials for the AKS cluster:
+
+```bash
+az login
+az account set --subscription <SUBSCRIPTION_ID>
+az aks get-credentials \
+  --resource-group <RESOURCE_GROUP> \
+  --name <CLUSTER_NAME> \
+  --overwrite-existing
+kubelogin convert-kubeconfig -l azurecli
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+For **private clusters**, connect via the Bastion Host first. Then obtain kubeconfig credentials for the GKE cluster:
+
+```bash
+gcloud container clusters get-credentials <CLUSTER_NAME> --project <PROJECT_ID> --region <REGION>
+```
+
+Verify access:
+
+```bash
+kubectl get nodes
+```
+
+</TabItem>
+</Tabs>
+
+## Container Registry Access
+
+CodeMie container images are hosted on `europe-west3-docker.pkg.dev` regardless of the cloud provider you deploy to. You need a **GCP service account key file** (`key.json`) with read access to the registry before installing components.
+
+:::info Obtaining key.json
+Contact your CodeMie administrator or EPAM delivery team to obtain the `key.json` file for registry access.
+:::
+
+Create the namespace and pull secret:
+
+```bash
+kubectl create namespace codemie
+
+kubectl create secret docker-registry gcp-artifact-registry \
+  --docker-server=https://europe-west3-docker.pkg.dev \
+  --docker-email=`<client_email from shared with you key>` \
+  --docker-username=_json_key \
+  --docker-password="$(cat key.json)" \
+  -n codemie
+```
+
+Verify the secret:
+
+```bash
+kubectl get secret gcp-artifact-registry -n codemie
+```
+
+:::info Pull Secret Usage
+The `gcp-artifact-registry` secret must be referenced in all AI/Run CodeMie component deployments: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+This is configured automatically in the values files:
+
+```yaml
+imagePullSecrets:
+  - name: gcp-artifact-registry
+```
+
+:::
+
+## Required Repository Access
+
+You will need access to the following repositories to complete the deployment:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+- **Terraform IAM Module:** [codemie-terraform-aws-iam](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-iam)
+- **Terraform Platform Module:** [codemie-terraform-aws-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-platform)
+- **Terraform Remote Backend:** [codemie-terraform-aws-remote-backend](https://gitbud.epam.com/epm-cdme/codemie-terraform-aws-remote-backend)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+- **Terraform Modules:** [codemie-terraform-azure](https://gitbud.epam.com/epm-cdme/codemie-terraform-azure)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- **Terraform Platform Modules:** [codemie-terraform-gcp-platform](https://gitbud.epam.com/epm-cdme/codemie-terraform-gcp-platform)
+- **Helm Charts:** [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts)
+
+</TabItem>
+</Tabs>
+
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repositories can be provided as ZIP/TAR archives and transferred through approved channels.
+:::

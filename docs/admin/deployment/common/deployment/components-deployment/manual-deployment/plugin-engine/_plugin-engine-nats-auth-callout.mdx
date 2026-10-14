@@ -1,0 +1,54 @@
+import CodeBlock from '@theme/CodeBlock';
+
+NATS Auth Callout validates authentication and authorization for NATS connections to CodeMie.
+
+**Step 1: Authenticate to Container Registry**
+
+Before deploying NATS Auth Callout, authenticate to the AI/Run CodeMie container registry:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=key.json
+gcloud auth application-default print-access-token | \
+  helm registry login -u oauth2accesstoken --password-stdin europe-west3-docker.pkg.dev
+```
+
+:::tip Registry Authentication
+This step is required for all AI/Run CodeMie proprietary components: `codemie-ui`, `codemie-api`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, and `mermaid-server`.
+
+If you already authenticated during the Getting Started steps, you can skip this.
+:::
+
+**Step 2: Install NATS Auth Callout Helm Chart**
+
+Deploy the NATS Auth Callout service:
+
+<CodeBlock language="bash">
+{`helm upgrade --install codemie-nats-auth-callout \\
+  oci://europe-west3-docker.pkg.dev/or2-msq-epmd-edp-anthos-t1iylu/helm-charts/codemie-nats-auth-callout \\
+  --version "x.y.z" \\
+  --namespace codemie \\
+  -f ./codemie-nats-auth-callout/${props.valuesFileName} \\
+  --wait \\
+  --timeout 600s`}
+</CodeBlock>
+
+**Step 3: Verify NATS Auth Callout Deployment**
+
+Check that the auth callout service is running:
+
+```bash
+# Check pod status
+kubectl get pods -n codemie | grep nats-auth-callout
+
+# Check deployment
+kubectl get deployment -n codemie codemie-nats-auth-callout
+
+# Check logs
+kubectl logs -n codemie deployment/codemie-nats-auth-callout --tail=50
+```
+
+Expected output:
+
+- Pod should be in `Running` state
+- Deployment should show ready replicas
+- Logs should indicate successful connection to NATS

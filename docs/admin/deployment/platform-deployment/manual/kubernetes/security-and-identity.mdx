@@ -1,0 +1,34 @@
+---
+id: security-and-identity
+title: Security and Identity
+sidebar_label: Security and Identity
+sidebar_position: 4
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/data-layer
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/plugin-engine
+---
+
+import SecurityOverview from '../../../common/deployment/components-deployment/manual-deployment/security/_security-overview.mdx';
+import SecurityKeycloakOperator from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-operator.mdx';
+import SecurityKeycloakInstall from '../../../common/deployment/components-deployment/manual-deployment/security/_security-keycloak-install.mdx';
+import SecurityOauth2Proxy from '../../../common/deployment/components-deployment/manual-deployment/security/_security-oauth2-proxy.mdx';
+import SecurityValidation from '../../../common/deployment/components-deployment/manual-deployment/security/_security-validation.mdx';
+
+<SecurityOverview />
+
+<SecurityKeycloakOperator />
+
+The steps below are identical across cloud providers except for the Helm values file and the Keycloak Admin URL. Substitute `values-<cloud-provider>.yaml` and `<keycloak-admin-url>` with the values for your cloud:
+
+| Cloud Provider | Values File         | Keycloak Admin URL                          |
+| -------------- | ------------------- | ------------------------------------------- |
+| AWS            | `values-aws.yaml`   | `https://keycloak.<your-domain>/auth/admin` |
+| Azure          | `values-azure.yaml` | `https://<your-domain>/keycloak/admin`      |
+| GCP            | `values-gcp.yaml`   | `https://keycloak.<your-domain>/auth/admin` |
+
+AWS and GCP expose Keycloak on a dedicated subdomain; Azure exposes it as a path under your main domain.
+
+<SecurityKeycloakInstall valuesFileName="values-<cloud-provider>.yaml" keycloakUrl="<keycloak-admin-url>" />
+
+<SecurityOauth2Proxy valuesFileName="values-<cloud-provider>.yaml" />
+
+<SecurityValidation />

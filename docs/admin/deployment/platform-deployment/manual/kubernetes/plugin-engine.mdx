@@ -1,0 +1,87 @@
+---
+id: plugin-engine
+title: Plugin Engine
+sidebar_label: Plugin Engine
+sidebar_position: 5
+pagination_prev: admin/deployment/platform-deployment/manual/kubernetes/security-and-identity
+pagination_next: admin/deployment/platform-deployment/manual/kubernetes/core-components
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import PluginEngineOverview from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-overview.mdx';
+import PluginEngineNatsInstallation from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-nats-installation.mdx';
+import PluginEngineNatsAuthCallout from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-nats-auth-callout.mdx';
+import PluginEngineTlsConfiguration from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-tls-configuration.mdx';
+import PluginEnginePostValidation from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-post-validation.mdx';
+import PluginEngineNextSteps from '../../../common/deployment/components-deployment/manual-deployment/plugin-engine/_plugin-engine-next-steps.mdx';
+
+## Overview
+
+<PluginEngineOverview />
+
+## NATS Installation
+
+:::warning Deprecated
+NATS is currently deprecated as part of the NATS retirement direction.
+:::
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<PluginEngineNatsInstallation natsUrl="nats://codemie-nats:4222" valuesFileName="values-aws.yaml" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<PluginEngineNatsInstallation natsUrl="nats://codemie-nats:443" valuesFileName="values-azure.yaml" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<PluginEngineNatsInstallation natsUrl="nats://codemie-nats:4222" valuesFileName="values-gcp.yaml" />
+</TabItem>
+</Tabs>
+
+## NATS Auth Callout Installation
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<PluginEngineNatsAuthCallout valuesFileName="values-aws.yaml" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<PluginEngineNatsAuthCallout valuesFileName="values-azure.yaml" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<PluginEngineNatsAuthCallout valuesFileName="values-gcp.yaml" />
+</TabItem>
+</Tabs>
+
+## TLS Configuration
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<PluginEngineTlsConfiguration valuesFileName="values-aws.yaml" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<PluginEngineTlsConfiguration valuesFileName="values-azure.yaml" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<PluginEngineTlsConfiguration valuesFileName="values-gcp.yaml" />
+</TabItem>
+</Tabs>
+
+## Post-Installation Validation
+
+After completing plugin engine installation, verify the following:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+<PluginEnginePostValidation natsUrl="nats://codemie-nats:4222" />
+</TabItem>
+<TabItem value="azure" label="Azure">
+<PluginEnginePostValidation natsUrl="nats://codemie-nats:443" />
+</TabItem>
+<TabItem value="gcp" label="GCP">
+<PluginEnginePostValidation natsUrl="nats://codemie-nats:4222" />
+</TabItem>
+</Tabs>
+
+## Next Steps
+
+<PluginEngineNextSteps />

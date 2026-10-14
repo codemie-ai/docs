@@ -1,0 +1,242 @@
+---
+id: prerequisites-on-vm
+title: On-VM Deployment Prerequisites
+sidebar_label: On VM
+sidebar_position: 4
+pagination_prev: admin/deployment/prerequisites/prerequisites-kubernetes
+pagination_next: admin/deployment/infrastructure-deployment/infrastructure-deployment-overview
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# On-VM Deployment Prerequisites
+
+This page outlines the requirements for the lightweight [On-VM deployment](../../infrastructure-deployment/) option, which runs the full AI/Run CodeMie platform on a single virtual machine using Docker Compose.
+
+## Account Requirements
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+- **Active AWS Account** with a region that supports [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-regions.html)
+- **IAM permissions** to create an IAM deployer role (one-time setup)
+- **Sufficient quota** for: 1 EC2 instance, 1 VPC, 1 S3 bucket, 1 KMS key, 1 EIP
+- **Network access**: Outbound internet access from EC2 (to pull Docker images, access Bedrock API); optional Route 53 hosted zone (if using a custom domain with ALB + ACM)
+
+:::tip IAM Deployer Role
+The deployment uses a dedicated IAM role with scoped permissions. You only need broad IAM access to create this role once — subsequent deployments use the role.
+:::
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+- **Active Azure Subscription** with sufficient quota for the required resources
+- **Contributor role** (or equivalent) on the subscription to create VMs, Storage Accounts, Key Vaults, and DNS zones
+- **AZURE_SUBSCRIPTION_ID** and **AZURE_TENANT_ID** — available in the Azure Portal under **Azure Active Directory → Overview**
+
+**Quota Requirements:**
+
+| Resource         | Count |
+| ---------------- | ----- |
+| Standard_E4s_v5  | 1     |
+| Azure Key Vault  | 1     |
+| Storage Account  | 1     |
+| Private DNS Zone | 1     |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+- **Active GCP Project** with sufficient quota for the required resources
+- The operator account must have the following roles or equivalent permissions:
+  - `roles/iap.tunnelResourceAccessor` — SSH access to the VM via IAP
+  - `roles/secretmanager.secretAccessor` — fetch SSH key from Secret Manager
+  - Permissions to create: GCE VM, GCS bucket, Cloud KMS key, Cloud DNS private zone, VPC firewall rules
+
+**Quota Requirements:**
+
+| Resource               | Count        |
+| ---------------------- | ------------ |
+| n2-highmem-4 VM        | 1            |
+| GCS Bucket             | 1            |
+| Cloud KMS Key          | 1            |
+| Cloud DNS Private Zone | 1 (optional) |
+
+</TabItem>
+</Tabs>
+
+## Deployment Machine Tools
+
+The following tools must be installed on the machine where you run `./deploy.sh`:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+| Tool                                                                                                                                    | Version | Purpose                     |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install)                                                                          | 1.15.x  | Infrastructure provisioning |
+| [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)                                                | latest  | AWS resource management     |
+| [Session Manager Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html) | latest  | SSH access via AWS SSM      |
+| [jq](https://jqlang.github.io/jq/download/)                                                                                             | latest  | JSON parsing                |
+| openssl                                                                                                                                 | latest  | Secret generation           |
+| envsubst                                                                                                                                | latest  | Template rendering          |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+aws --version        # AWS CLI v2
+session-manager-plugin  # Should print version info
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+| Tool                                                                       | Version | Purpose                             |
+| -------------------------------------------------------------------------- | ------- | ----------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install)             | 1.15.x  | Infrastructure provisioning         |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | latest  | Azure authentication and management |
+| [jq](https://jqlang.github.io/jq/download/)                                | latest  | JSON parsing                        |
+| openssl                                                                    | latest  | Secret generation                   |
+| envsubst                                                                   | latest  | Template rendering                  |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+az version           # Azure CLI
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+| Tool                                                           | Version | Purpose                           |
+| -------------------------------------------------------------- | ------- | --------------------------------- |
+| [Terraform](https://developer.hashicorp.com/terraform/install) | 1.15.x  | Infrastructure provisioning       |
+| [gcloud CLI](https://cloud.google.com/sdk/docs/install)        | latest  | GCP authentication and management |
+| [jq](https://jqlang.github.io/jq/download/)                    | latest  | JSON parsing                      |
+| openssl                                                        | latest  | Secret generation                 |
+| envsubst                                                       | latest  | Template rendering                |
+
+Verify installation:
+
+```bash
+terraform version    # Should show 1.15.x
+gcloud version
+jq --version
+openssl version
+envsubst --version
+```
+
+</TabItem>
+</Tabs>
+
+:::info Enterprise Profile Only
+If deploying the **Enterprise profile**, [nsc](https://github.com/nats-io/nsc) (latest) is also required on the deployment machine for NATS key generation.
+:::
+
+## GCP Container Registry Access
+
+CodeMie container images are hosted on `europe-west3-docker.pkg.dev`. You need a **GCP service account key file** (`key.json`) with read access to the registry — this applies regardless of the cloud provider you deploy to.
+
+:::info Obtaining key.json
+Contact your CodeMie administrator or EPAM delivery team to obtain the `key.json` file for registry access.
+:::
+
+## Cloud Authentication
+
+Authenticate to your cloud provider before running the deployment:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+```bash
+# If using AWS SSO:
+aws sso login --profile your-profile
+export AWS_PROFILE=your-profile
+
+# Verify credentials:
+aws sts get-caller-identity
+```
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+```bash
+az login
+az account set --subscription "<AZURE_SUBSCRIPTION_ID>"
+
+# Verify active subscription
+az account show
+```
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+```bash
+gcloud auth application-default login
+
+# Verify active project
+gcloud config get-value project
+```
+
+</TabItem>
+</Tabs>
+
+## Repository Access
+
+Clone the deployment repository:
+
+```bash
+git clone https://gitbud.epam.com/epm-cdme/codemie-on-vm.git
+cd codemie-on-vm
+```
+
+The repository structure:
+
+<Tabs groupId="cloud-provider">
+<TabItem value="aws" label="AWS">
+
+| Directory                              | Purpose                                        |
+| -------------------------------------- | ---------------------------------------------- |
+| `compose/`                             | Docker Compose files and service configuration |
+| `deploy.sh`                            | Deployment script                              |
+| `terraform/aws/codemie-on-vm-aws-iam/` | IAM deployer role Terraform module             |
+| `terraform/aws/remote-backend/`        | S3 Terraform state bucket                      |
+| `terraform/aws/platform/`              | EC2, VPC, ALB, S3, KMS infrastructure          |
+
+</TabItem>
+<TabItem value="azure" label="Azure">
+
+| Directory                         | Purpose                                        |
+| --------------------------------- | ---------------------------------------------- |
+| `compose/`                        | Docker Compose files and service configuration |
+| `deploy.sh`                       | Deployment script                              |
+| `destroy.sh`                      | Destroy script                                 |
+| `terraform/azure/remote-backend/` | Azure Storage Terraform state backend          |
+| `terraform/azure/platform/`       | VM, Storage Account, Key Vault, DNS, NSG       |
+| `terraform/azure/ai-models/`      | Azure OpenAI cognitive accounts (optional)     |
+
+</TabItem>
+<TabItem value="gcp" label="GCP">
+
+| Directory                       | Purpose                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `compose/`                      | Docker Compose files and service configuration |
+| `deploy.sh`                     | Deployment script                              |
+| `destroy.sh`                    | Destroy script                                 |
+| `terraform/gcp/remote-backend/` | GCS bucket for Terraform state                 |
+| `terraform/gcp/platform/`       | VM, GCS bucket, KMS key, DNS, firewall         |
+
+</TabItem>
+</Tabs>
+
+:::info Air-Gapped Environments
+If your deployment machine operates in an isolated environment without direct internet or repository access, the repository can be provided as a ZIP/TAR archive and transferred through approved channels.
+:::

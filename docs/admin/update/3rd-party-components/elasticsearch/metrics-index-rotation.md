@@ -106,10 +106,7 @@ codemie_metrics_logs_write
 Change only the metrics output. Keep the infrastructure-log output and its
 `logs-codemie-infra` index configuration unchanged.
 
-The cloud-specific deployment guides provide more information about the two output
-types: [AWS](../../../../deployment/aws/kubernetes/components-deployment/manual-deployment/observability),
-[Azure](../../../../deployment/azure/kubernetes/components-deployment/manual-deployment/observability), or
-[GCP](../../../../deployment/gcp/kubernetes/components-deployment/manual-deployment/observability).
+The [Observability Components Deployment](../../../../deployment/platform-deployment/manual/kubernetes/observability) guide provides more information about the two output types for AWS, Azure, and GCP.
 
 ## Step 4: Enable the rotation scheduler
 

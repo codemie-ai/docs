@@ -119,6 +119,12 @@ Connect directly to cloud provider APIs without additional proxy layers. This is
 
 [Learn more about CodeMie Native LLM Config →](./codemie-native-llm-config)
 
+:::tip Auto-Routing Between Model Tiers
+Whichever integration option is used, per-call routing between a capable and a
+cost-efficient model can be layered on top of any model with
+[Switchyard Auto-Routing](./switchyard-model-routing).
+:::
+
 ### Option 3: Third-Party LLM Proxy
 
 **Best for**: Existing proxy infrastructure, OpenAI-compatible proxies, custom routing requirements
