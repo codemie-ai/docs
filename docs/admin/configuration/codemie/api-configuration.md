@@ -1089,6 +1089,10 @@ For authoring instructions, see [Sub-workflows](../../../user-guide/workflows/su
 
 Enable time-based or event-driven workflow automation.
 
+:::warning
+`TRIGGER_ENGINE_ENABLED` must be set to `true` for the [Schedulers](../../../user-guide/schedulers/) feature to work. When it is `false` (default), schedulers can still be created in the UI, but they never run.
+:::
+
 | Parameter                     | Type    | Default | Description                                     |
 | ----------------------------- | ------- | ------- | ----------------------------------------------- |
 | `TRIGGER_ENGINE_ENABLED`      | boolean | `false` | Enable scheduled workflows and event triggers   |
