@@ -19,9 +19,6 @@ ignorePaths:
   - CLAUDE.md
   - scripts/
   - codemie/
-  - superpowers/tasks/
-  - .superpowers/
-  - .ai-run/
   - '*.bats'
   - docs/admin/configuration/white-label/kit/apply-theme
   - docs/admin/configuration/white-label/kit/tests/stubs/
@@ -386,15 +383,6 @@ words:
   - vbscript
   # White-label theming kit words
   - Fira
-  - Inter
-  - webmanifest
-  - faviconSvg
-  - favicon
-  - logoLight
-  - logoDark
-  - shortName
-  - brandCss
-  - checksum
   - rrggbb
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)

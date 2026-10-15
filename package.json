@@ -15,7 +15,7 @@
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:markdown && npm run lint:spelling",
     "lint:eslint": "eslint . --max-warnings 0",
     "lint:prettier": "prettier --check .",
-    "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#build\" \"#superpowers/tasks\" \"#.superpowers\" \"#.ai-run\"",
+    "lint:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#build\"",
     "lint:spelling": "cspell \"**\" --no-progress",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint . --fix",
