@@ -583,7 +583,7 @@ Controls whether the **Schedulers** item is visible in the left navigation sideb
 - **When `enabled: false`** — Schedulers navigation item is hidden
 
 :::note
-This flag only controls the visibility of the navigation item. For schedulers to actually run, the Trigger Engine must be enabled on the API with `TRIGGER_ENGINE_ENABLED=true`. See [API Configuration](./api-configuration#trigger-engine).
+This flag only controls the visibility of the navigation item. For schedulers to actually run, the Trigger Engine must be enabled on the API with `TRIGGER_ENGINE_ENABLED=true`. See [API Configuration](../api-configuration#trigger-engine).
 :::
 
 This flag can be toggled directly in the Customer Configuration UI under **Settings → Administration → Customer Configuration**.
