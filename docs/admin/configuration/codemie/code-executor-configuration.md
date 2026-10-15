@@ -74,7 +74,6 @@ features:
     code_executor:
       rbac:
         enabled: true
-        namespace: "codemie-code-executor"
 ```
 
 ## Namespace Configuration
@@ -95,7 +94,11 @@ To use a different namespace, set the name and `CODE_EXECUTOR_NAMESPACE` to matc
 features:
   tools:
     code_executor:
+      rbac:
+        enabled: true
+        namespace: "<namespace>"
       namespace:
+        create: true
         name: "<namespace>"
 
 extraEnv:
