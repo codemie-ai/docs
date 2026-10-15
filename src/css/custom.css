@@ -256,8 +256,9 @@ p {
 }
 
 /**
- * Release notes: compact release rows and collapsible month archive
+ * Spoilers (details): compact rows shared by all docs, release rows and month archive
  */
+.markdown details,
 details.release,
 details.release-archive {
   --ifm-alert-background-color: transparent;
@@ -273,10 +274,12 @@ details.release-archive {
   padding: 0;
 }
 
+.markdown details,
 details.release {
   margin: 0 0 0.375rem;
 }
 
+.markdown details > summary,
 details.release > summary,
 details.release-archive > summary {
   display: flex;
@@ -287,21 +290,25 @@ details.release-archive > summary {
   border-radius: var(--ifm-global-radius);
 }
 
+.markdown details > summary::before,
 details.release > summary::before,
 details.release-archive > summary::before {
   top: calc(50% - var(--docusaurus-details-summary-arrow-size));
   left: 0.875rem;
 }
 
+.markdown details > summary:hover,
 details.release > summary:hover,
 details.release-archive > summary:hover {
   background: var(--ifm-color-emphasis-100);
 }
 
+.markdown details[data-collapsed='false'],
 details.release[data-collapsed='false'] {
   border-color: var(--ifm-color-primary) !important;
 }
 
+.markdown details > div > div,
 details.release > div > div,
 details.release-archive > div > div {
   margin-top: 0;
@@ -311,6 +318,28 @@ details.release-archive > div > div {
 
 details.release .badge {
   font-size: 0.7rem;
+}
+
+/* Spoilers, release rows and month archive: base primary accent (derived primary shades are purple) */
+.markdown details {
+  --docusaurus-details-decoration-color: var(--ifm-color-primary);
+  border-color: color-mix(in srgb, var(--ifm-color-primary) 45%, transparent) !important;
+  border-left: 4px solid var(--ifm-color-primary) !important;
+  overflow: hidden;
+}
+
+.markdown details[data-collapsed='false'] {
+  border-color: var(--ifm-color-primary) !important;
+}
+
+.markdown details > summary {
+  background: color-mix(in srgb, var(--ifm-color-primary) 10%, transparent);
+  color: var(--ifm-font-color-base);
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+.markdown details > summary:hover {
+  background: color-mix(in srgb, var(--ifm-color-primary) 18%, transparent);
 }
 
 .release__version {
