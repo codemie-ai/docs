@@ -74,7 +74,7 @@ features:
     code_executor:
       rbac:
         enabled: true
-        namespace: "codemie-runtime"
+        namespace: "codemie-code-executor"
 ```
 
 ## Namespace Configuration
