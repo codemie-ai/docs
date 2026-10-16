@@ -188,6 +188,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
                 'user-guide/tools_integrations/tools/ms-teams-bot',
+                'user-guide/tools_integrations/tools/ms-exchange',
                 {
                   type: 'category',
                   label: 'Git',
