@@ -833,6 +833,18 @@ const sidebars: SidebarsConfig = {
                 'admin/update/3rd-party-components/fluent-bit/fluent-bit-upgrade',
                 'admin/update/3rd-party-components/nats/nats-upgrade',
                 'admin/update/3rd-party-components/oauth2-proxy/oauth2-proxy-upgrade',
+                {
+                  type: 'category',
+                  label: 'LiteLLM',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/update/3rd-party-components/litellm/litellm',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/update/3rd-party-components/litellm/litellm-upgrade/litellm-1-99-2-to-1-105-0',
+                  ],
+                },
               ],
             },
           ],

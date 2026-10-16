@@ -227,6 +227,8 @@ words:
   - LOCALAPPDATA
   - PGPASSWORD
   - PGSSLMODE
+  - indisvalid
+  - indisready
   - orbstack
   - pwgen
   - bcrypt

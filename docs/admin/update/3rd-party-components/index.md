@@ -63,4 +63,12 @@ Upgrade guides for infrastructure and observability components used by the AI/Ru
     description="Upgrade OAuth2 Proxy for authentication and authorization functionality."
     link="/admin/update/3rd-party-components/oauth2-proxy/oauth2-proxy-upgrade"
   />
+  <FeatureCard
+    icon="/img/extensions/litellm-logo.svg"
+    iconType="image"
+    invertInDarkTheme={false}
+    title="LiteLLM"
+    description="Upgrade guides and configuration for the LiteLLM proxy component."
+    link="/admin/update/3rd-party-components/litellm/"
+  />
 </FeatureGrid>

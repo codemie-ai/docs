@@ -26,6 +26,25 @@ Review every release between your current and target version that has a **Breaki
 
 ## October 2026 {#2026-10}
 
+<details className="release" id="v2-59-0">
+<summary><span className="release__version">CodeMie 2.59.0</span><span className="release__date">Oct 13, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** October 13, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.59.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.105.0</h4>
+
+LiteLLM proxy is updated from `1.99.2` to `1.105.0`.
+
+For upgrade instructions, see the [LiteLLM Upgrade Guide](../3rd-party-components/litellm/litellm-upgrade/litellm-1-99-2-to-1-105-0.md).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-58-0">
 <summary><span className="release__version">CodeMie 2.58.0</span><span className="release__date">Oct 12, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
