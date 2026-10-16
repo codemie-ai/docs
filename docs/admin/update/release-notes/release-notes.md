@@ -26,6 +26,21 @@ Review every release between your current and target version that has a **Breaki
 
 ## October 2026 {#2026-10}
 
+<details className="release" id="v2-59-0">
+<summary><span className="release__version">CodeMie 2.59.0</span><span className="release__date">Oct 16, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** October 16, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.59.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-58-0">
 <summary><span className="release__version">CodeMie 2.58.0</span><span className="release__date">Oct 12, 2026</span><span className="badge badge--warning">Config changes</span></summary>
 
