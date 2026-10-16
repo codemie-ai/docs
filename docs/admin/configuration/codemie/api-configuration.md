@@ -1035,6 +1035,20 @@ Control how previous conversation turns are replayed to the agent to balance con
 | `AI_AGENT_HISTORY_REPLAY_FULL_TOOL_TURNS`       | integer | `4`     | Number of most-recent tool turns to include in full (uncompressed) form          |
 | `AI_AGENT_HISTORY_REPLAY_SUMMARIZED_TOOL_TURNS` | integer | `6`     | Number of older tool turns to include in summarized form before they are dropped |
 
+### Headroom (Context Compression)
+
+Compress the messages sent to the LLM on each model call to reduce token usage. Compression takes effect only when `HEADROOM_MODE` is `sdk` or `sidecar` and the `features:headroom` customer feature is enabled. See [Headroom Context Compression](./headroom-context-compression.md) for modes, image build arguments, and sidecar requirements.
+
+| Parameter                           | Type    | Default                | Description                                                                                                                                                                  |
+| ----------------------------------- | ------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HEADROOM_MODE`                     | string  | `off`                  | Compression mode: `off`, `sdk` (in-process), or `sidecar` (separate service). Case-insensitive; blank counts as `off`. Read once per process, so a change requires a restart |
+| `HEADROOM_SDK_ALLOW_MODEL_DOWNLOAD` | boolean | `false`                | SDK mode only: allow the SDK to download the Kompress model on first use                                                                                                     |
+| `HEADROOM_SIDECAR_URL`              | string  | `http://headroom:8787` | Base URL of the Headroom sidecar                                                                                                                                             |
+| `HEADROOM_PROXY_TOKEN`              | string  | -                      | Bearer token for the sidecar. Secret: must equal the token configured on the sidecar                                                                                         |
+| `HEADROOM_TIMEOUT_SECONDS`          | integer | `10`                   | Time limit for one compression call; on timeout the original messages are sent                                                                                               |
+| `HEADROOM_MIN_TOKENS`               | integer | `1000`                 | Skip compression for contexts smaller than this number of tokens                                                                                                             |
+| `HEADROOM_AGGRESSIVE_TARGET_RATIO`  | float   | `0.2`                  | Fraction of content kept by the `aggressive` strategy; applies only where the ML compressor runs                                                                             |
+
 ### AI Agent History Compaction
 
 Automatically compress long conversation histories when token usage exceeds a threshold, preserving recent context while summarizing older turns.

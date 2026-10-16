@@ -119,6 +119,17 @@ Fields marked with an asterisk (\*) are required and must be filled in before sa
 - **Summarization Settings**: Token and message limits for automatic summarization
 - **Performance Settings**: Parallel task execution and recursion depth limits
 - **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
+- **Context compression (Headroom)**: Accordion with compression settings for the whole workflow
+  (enable switch, compress options, and strategy). The accordion is shown only when the Headroom
+  feature is enabled. Fields left unset show the effective inherited value. **Reset to defaults**
+  clears the workflow-level settings.
+
+The same **Context compression (Headroom)** accordion appears in each assistant node tab. Node
+settings override the workflow settings field by field, and **Reset to workflow settings** removes
+the node overrides. When the Headroom feature is disabled, the accordion is hidden and an existing
+`headroom` block in the YAML configuration is preserved. See
+[Context Compression (Headroom)](./configuration/configuration-reference.md#context-compression-headroom)
+for the YAML keys and precedence rules.
 
 :::info Configuration Sync
 Changes made in the Visual Editor are automatically reflected in the YAML configuration, and vice versa. Both views stay synchronized in real-time.

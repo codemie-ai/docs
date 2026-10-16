@@ -154,6 +154,13 @@ When enabled, the **Routing Analytics** section shows routing costs, estimated s
 router distribution, activity by tier, and the paths from routers to served models.
 See [Routing Analytics](./routing-analytics.md) for an explanation of the dashboard.
 
+## Context Compression (Headroom) Analytics
+
+When enabled, the **Context Compression** section of the **Insights** tab shows how many tokens
+Headroom context compression saved, how savings develop over time, and which compression
+strategies contributed most. See [Context Compression (Headroom) Analytics](./headroom-analytics.md)
+for an explanation of the dashboard.
+
 ## AI Champions Leaderboard
 
 The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by

@@ -269,6 +269,10 @@ words:
   - unindexed
   - gvisor
   - codemieai
+  # Headroom terms
+  - Kompress
+  - onnxruntime
+  - huggingface
   # Other
   - LFPDPPP
   - SIEM

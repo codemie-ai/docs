@@ -223,6 +223,51 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
+## Context Compression (Headroom)
+
+Long conversations and large tool results increase token usage. The **Context compression (Headroom)**
+section shortens the messages sent to the model on each model call, so that fewer tokens are used.
+The section is shown only when an administrator has enabled the Headroom feature, and it sits in the
+assistant configuration form after the sub-assistants block. For the administrator-side setup, see
+[Headroom Context Compression](../../admin/configuration/codemie/headroom-context-compression.md).
+
+**Settings**
+
+| Setting                        | Behavior                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| **Enable context compression** | Switch that turns compression on for the assistant. Off by default                               |
+| **Compress user input**        | Compresses user messages. Checked when compression is first enabled                              |
+| **Compress tool outputs**      | Compresses tool results and earlier assistant replies. Checked when compression is first enabled |
+| **Strategy**                   | **Lossless**, **Balanced**, or **Aggressive**. **Balanced** when compression is first enabled    |
+
+**Strategies**
+
+- **Lossless** — safest. Predictable results, no loss of detail.
+- **Balanced** — shortens older messages and long tool results. Some detail may be lost.
+- **Aggressive** — shortens more than **Balanced** to save more tokens. More detail may be lost.
+
+**Lossless** keeps provider prompt-cache hits intact. **Balanced** and **Aggressive** rewrite older
+history, which can lower the provider's prompt-cache hit rate.
+
+**Not compressed**
+
+- System prompts.
+- Attached files and images, and messages that contain non-text content.
+- Sub-assistant calls. Sub-assistants do not inherit this setting and use their own saved
+  configuration.
+
+If compression fails, the original messages are sent to the model unchanged.
+
+**Token savings in the chat**
+
+When compression saved tokens, the **Usage details** overlay in the chat header shows a
+**Tokens saved (Headroom)** row. The row contains the number of saved tokens and, in parentheses,
+the percentage of the original token count. The row is not shown when no tokens were saved.
+
+:::note
+Changes to compression settings alone do not create a new assistant version.
+:::
+
 ## File Attachments
 
 The **File attachments** section controls whether users can attach files when chatting with

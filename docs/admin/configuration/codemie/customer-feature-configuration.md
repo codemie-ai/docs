@@ -29,6 +29,7 @@ Use this table to quickly find where each component appears in the UI.
 | `skills`                                  | Navigation, Chat config, Assistant config                           | Skills menu, skill selector, management pages                                                   | Entire Skills subsystem                                                             | Major feature gate                                                                             |
 | `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise package only                                                                        |
 | `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS` |
+| `features:headroom`                       | Assistant form, Workflow editor, Chat, Analytics page               | Context compression controls, **Tokens saved (Headroom)** chat row, Insights analytics section  | Headroom controls, chat savings row, analytics section (API returns 404)            | Disabled by default; needs `HEADROOM_MODE`. See [Headroom](./headroom-context-compression.md)  |
 | `features:showAllProjects`                | Settings → Administration → project selector                        | All projects returned by admin project picker (no limit or search minimum)                      | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                |
 | `defaultConversationAssistant`            | New chat creation                                                   | Pre-selects specified assistant                                                                 | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                                                      |
 | `features:personalLiteLLMIntegrations`    | Integrations → User tab                                             | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                            |
@@ -379,6 +380,21 @@ components:
           - regex: "^speckit\\."
             label: "Spec Kit"
         fallbackLabel: "Pure chat"
+
+  # WHERE: 1) Assistant form → Context compression (Headroom) section
+  #        2) Workflow editor → Context compression (Headroom) accordion (workflow and assistant node tabs)
+  #        3) Chat header → Usage details → Tokens saved (Headroom) row
+  #        4) Analytics page → Insights tab → Context Compression section
+  # ENABLED: Shows Headroom compression controls, the token savings row, and the Headroom analytics
+  # DISABLED: Hides all of the above; stored Headroom settings are kept but ignored at runtime
+  # NOTE: Disabled by default; a missing entry counts as disabled. Compression also requires the
+  #       backend HEADROOM_MODE environment variable set to sdk or sidecar — see Headroom Context
+  #       Compression. A change to HEADROOM_MODE requires a restart of the CodeMie API.
+  - id: "features:headroom"
+    settings:
+      enabled: false
+      name: "Headroom"
+      description: "Compress large tool outputs and context with Headroom (sdk or sidecar) to reduce token usage"
 
   # WHERE: Chat interface → Dynamic tools settings (gear icon in chat input)
   # ENABLED: Shows "Web Search" toggle, enables Google Search, Tavily Search, Web Scraper

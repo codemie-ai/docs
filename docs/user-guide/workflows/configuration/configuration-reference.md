@@ -58,6 +58,10 @@ assistants:
   [Troubleshooting](./troubleshooting.md#tool-output-token-limit-exceeded) for diagnosis and
   mitigation strategies.
 - **exclude_extra_context_tools**: Disable automatic context tools
+- **headroom**: Context compression (Headroom) settings for this assistant node. Overrides the
+  workflow-level `headroom` block field by field. Available only when the Headroom feature is
+  enabled for the instance. See [Context Compression (Headroom)](#context-compression-headroom)
+  in section 3.2.
 - **skill_ids**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
 
@@ -199,6 +203,52 @@ max_concurrency: 10
 - **enable_summarization_node**: Enable automatic result summarization (default: true)
 - **recursion_limit**: Maximum workflow execution steps (default: 50)
 - **max_concurrency**: Maximum concurrent parallel state executions
+
+#### Context Compression (Headroom)
+
+The optional `headroom` block compresses the messages sent to the model on each model call, which
+reduces token usage. The block is available when an administrator has enabled the Headroom feature
+(see [Headroom Context Compression](../../../admin/configuration/codemie/headroom-context-compression.md)).
+At the workflow level it applies to every assistant node. An assistant node can carry its own
+`headroom` block.
+
+```yaml
+headroom: # workflow level, applies to every assistant node
+  enabled: true
+  compress_user_messages: true
+  compress_tool_outputs: true
+  strategy: balanced
+assistants:
+  - id: analyst
+    assistant_id: <uuid>
+    headroom: # node level, wins over the workflow block
+      strategy: aggressive
+  - id: scribe
+    system_prompt: Summarize the findings
+    headroom:
+      enabled: false # opt this node out
+```
+
+Both blocks accept the following keys. Unknown keys inside a `headroom` block are rejected when the
+workflow is validated.
+
+- **enabled**: Turns compression on or off
+- **compress_user_messages**: Compress human messages
+- **compress_tool_outputs**: Compress tool results and earlier assistant replies
+- **strategy**: `lossless`, `balanced`, or `aggressive`. `balanced` is the default when compression
+  is enabled. `lossless` is the only strategy that keeps the provider prompt cache intact.
+
+**Precedence**
+
+- Each field takes the first value that is set, in the order node, workflow, assistant. A node block
+  with only `strategy` keeps the `enabled` value of the workflow.
+- A `strategy` without `enabled` anywhere in the chain resolves to off, because `enabled` defaults to
+  false. Enabling compression with no other keys turns on both compress options and uses
+  `balanced`.
+- A node with `enabled: false` wins over a workflow with `enabled: true`.
+- In a regular chat with an assistant, only the settings saved on the assistant apply.
+- Overrides apply only to the node's own agent. Sub-assistants and toolkit-built agents compress
+  from their saved assistant configuration.
 
 #### Workflow-Level Settings Examples:
 
