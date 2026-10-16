@@ -47,10 +47,10 @@ When editing a category with assigned assistants, a warning displays showing:
 
 ## Delete Category
 
-**Delete is disabled** for categories with any assigned assistants.
+**Delete is disabled** for categories with any assigned assistants or [workflows](../workflows/create-workflow.md#workflow-categories).
 
 To delete:
 
-1. Reassign all assistants to other categories
+1. Reassign all assistants and workflows to other categories
 2. Click **Delete** button (trash icon)
 3. Confirm deletion
