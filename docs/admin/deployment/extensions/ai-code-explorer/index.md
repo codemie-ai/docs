@@ -24,33 +24,26 @@ The diagram below depicts the AICE Platform deployed on Kubernetes infrastructur
 
 ### AICE Container Resource Requirements
 
-| Component Name              | Replicas | Memory | CPU (cores) |
-| --------------------------- | -------- | ------ | ----------- |
-| code-exploration-ui         | 1        | 256Mi  | 0.1         |
-| code-analysis-datasource    | 1        | 4Gi    | 2.0         |
-| code-exploration-api        | 1        | 4Gi    | 2.0         |
-| code-exploration-api-worker | 1        | 4Gi    | 2.0         |
-| neo4j                       | 1        | 16Gi   | 2.0         |
-| elasticsearch               | 1        | 8Gi    | 2.0         |
-| elasticvue                  | 1        | 512Mi  | 0.2         |
-| redis                       | 1        | 1Gi    | 0.5         |
+| Component Name       | Replicas | Memory | CPU (cores) |
+| -------------------- | -------- | ------ | ----------- |
+| code-exploration-ui  | 1        | 256Mi  | 0.1         |
+| code-exploration-api | 1        | 6Gi    | 2.0         |
+| neo4j                | 1        | 16Gi   | 2.0         |
+| elasticsearch        | 1        | 8Gi    | 2.0         |
 
 ### Core AICE Components Overview
 
-| Component name              | Images                                 | Description                                                                                                                                                                                                                                                           |
-| --------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| code-exploration-ui         | `aice/code-exploration-ui:latest`      | Frontend UI application for code exploration, built with React and served via Nginx. Provides the web interface for users to interact with the AICE system.                                                                                                           |
-| code-analysis-datasource    | `aice/code-analysis-datasource:latest` | Service responsible for parsing and analyzing source code. Exposes APIs for code analysis and provides data to the main API service. Uses LSP implementations and ANTLR for code parsing and semantic analysis.                                                       |
-| code-exploration-api        | `aice/code-exploration-api:latest`     | Main backend API service that handles requests from the UI. Manages the code knowledge graph, interacts with Neo4j, Elasticsearch, and LLM providers to deliver code exploration capabilities. Implements hexagonal architecture for maintainability and scalability. |
-| code-exploration-api-worker | `aice/code-exploration-api:latest`     | Background worker process for the API service that handles asynchronous tasks such as LLM processing. Uses the same image as the API service but runs with a different command.                                                                                       |
+| Component name       | Images                             | Description                                                                                                                                                                                                                                                           |
+| -------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| code-exploration-ui  | `aice/code-exploration-ui:latest`  | Frontend UI application for code exploration, built with React and served via Nginx. Provides the web interface for users to interact with the AICE system.                                                                                                           |
+| code-exploration-api | `aice/code-exploration-api:latest` | Main backend API service that handles requests from the UI. Manages the code knowledge graph, interacts with Neo4j, Elasticsearch, and LLM providers to deliver code exploration capabilities. Implements hexagonal architecture for maintainability and scalability. |
+| neo4j                | `aice/neo4j:5.26.3-1`              | Graph database used to store and query the code knowledge graph. Preconfigured with additional plugins for advanced graph operations.                                                                                                                                 |
 
 ### Third-Party AICE Components
 
-| Component name | Images                                                 | Description                                                                                                                                                               |
-| -------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| neo4j          | `neo4j:5.26.3`                                         | Graph database used to store and query the code knowledge graph. Configured with APOC and Graph Data Science plugins for advanced graph operations.                       |
-| elasticsearch  | `docker.elastic.co/elasticsearch/elasticsearch:8.16.1` | Search engine used for full-text searching of code and related metadata. Provides powerful search capabilities across the codebase.                                       |
-| redis          | `redis:8.2.2`                                          | In-memory data store used for caching, session management, and as a message broker for the task queue system. Facilitates communication between API and worker processes. |
+| Component name | Images                                                 | Description                                                                                                                         |
+| -------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| elasticsearch  | `docker.elastic.co/elasticsearch/elasticsearch:8.16.1` | Search engine used for full-text searching of code and related metadata. Provides powerful search capabilities across the codebase. |
 
 ## PostgreSQL Configuration
 
@@ -107,18 +100,6 @@ Install or upgrade AICE using Helm:
 helm upgrade --install aice ./aice \
 --namespace aice \
 --values ./aice/values-<cloud_name>.yaml
-```
-
-## Step 2: Configure Neo4j
-
-Configure Neo4j with required plugins for graph data science and APOC functionality:
-
-```bash
-kubectl cp neo4j-graph-data-science-2.13.4.jar aice-neo4j-0:/plugins/neo4j-graph-data-science-2.13.4.jar -c neo4j -n aice
-kubectl cp apoc-5.26.3-core.jar aice-neo4j-0:/plugins/apoc-5.26.3-core.jar -c neo4j -n aice
-kubectl cp dozerdb-plugin-5.26.3.0.jar aice-neo4j-0:/plugins/dozerdb-plugin-5.26.3.0.jar -c neo4j -n aice
-
-kubectl rollout restart statefulset aice-neo4j -n aice
 ```
 
 ## Next Steps
