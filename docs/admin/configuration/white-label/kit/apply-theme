@@ -1,0 +1,734 @@
+#!/usr/bin/env bash
+# apply-theme — validate, render and (optionally) apply a theme package to a cluster
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5, helm >=3.9, kubectl >=1.25
+set -euo pipefail
+# bash 5.2 expands & in a replacement string; product names such as R&D must stay literal
+shopt -u patsub_replacement 2>/dev/null || true
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCHEMA="$SCRIPT_DIR/theme-package.schema.json"
+
+RENDER_ONLY=false
+NAMESPACE="default"
+RELEASE_UI="codemie-ui"
+RELEASE_CODEMIE="codemie"
+CHART_UI=""
+CHART_CODEMIE=""
+OUTPUT_DIR=""
+CUSTOMER_CONFIG_OPT=""
+CODEMIE_VALUES_OPT=""
+NO_KEYCLOAK=false
+CHART_KEYCLOAK=""
+CHART_PROXY=""
+RELEASE_KEYCLOAK="keycloak"
+RELEASE_PROXY="oauth2-proxy"
+NAMESPACE_KEYCLOAK="security"
+NAMESPACE_PROXY="oauth2-proxy"
+KEYCLOAK_TIMEOUT="10m"
+
+# Must stay in sync with the mount path the backend reads (BRAND_CONFIG_PATH default).
+BRAND_CONFIGMAP="codemie-brand"
+BRAND_MOUNT_PATH="/etc/codemie/brand.yaml"
+# Same volume mounted whole; must match BRAND_ASSETS_DIR default in the backend email loader.
+BRAND_ASSETS_MOUNT_PATH="/etc/codemie/brand-assets"
+
+usage() {
+  echo "Usage: apply-theme [--render-only] [--namespace <ns>]"
+  echo "         [--release-ui <name>] [--release-codemie <name>]"
+  echo "         [--chart-ui <ref>] [--chart-codemie <ref>]"
+  echo "         [--customer-config <file>] [--codemie-values <file>]"
+  echo "         [--no-keycloak] [--chart-keycloak <ref>] [--chart-proxy <ref>]"
+  echo "         [--release-keycloak <name>] [--release-proxy <name>]"
+  echo "         [--namespace-keycloak <ns>] [--namespace-proxy <ns>] [--keycloak-timeout <duration>]"
+  echo "         [--output-dir <dir>]"
+  echo "         <theme-package.yaml> <assets-dir>"
+  echo ""
+  echo "  --chart-ui / --chart-codemie  chart reference of each release (repo/chart or local path);"
+  echo "                                required unless --render-only. The installed chart version is"
+  echo "                                pinned, so applying a theme never changes it."
+  echo "  --no-keycloak                 skip the Keycloak theme and realm steps for this run"
+  echo "  --chart-keycloak / --chart-proxy  chart references of the Keycloak and proxy releases;"
+  echo "                                required unless --render-only when the package has a keycloak block"
+  echo "  --release-keycloak / --release-proxy  release names (defaults: keycloak, oauth2-proxy)"
+  echo "  --namespace-keycloak / --namespace-proxy  namespaces of those releases (defaults: security,"
+  echo "                                oauth2-proxy); --namespace does not apply to them"
+  echo "  --keycloak-timeout <duration> wait time of the Keycloak upgrade (default: 10m)"
+  echo "  --customer-config <file>      customer-config.yaml used to cross-check enabled links"
+  echo "                                (default: \$CUSTOMER_CONFIG_PATH, /app/config/customer/..., /etc/codemie/...)"
+  echo "  --codemie-values <file>       current values of the API release (helm get values --all -o yaml),"
+  echo "                                merged into extraVolumes/extraVolumeMounts/extraObjects when"
+  echo "                                rendering only; fetched from the cluster when applying"
+  exit 1
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --render-only) RENDER_ONLY=true; shift ;;
+    --namespace) NAMESPACE="${2:?--namespace needs a value}"; shift 2 ;;
+    --release-ui) RELEASE_UI="${2:?--release-ui needs a value}"; shift 2 ;;
+    --release-codemie) RELEASE_CODEMIE="${2:?--release-codemie needs a value}"; shift 2 ;;
+    --chart-ui) CHART_UI="${2:?--chart-ui needs a value}"; shift 2 ;;
+    --chart-codemie) CHART_CODEMIE="${2:?--chart-codemie needs a value}"; shift 2 ;;
+    --no-keycloak) NO_KEYCLOAK=true; shift ;;
+    --chart-keycloak) CHART_KEYCLOAK="${2:?--chart-keycloak needs a value}"; shift 2 ;;
+    --chart-proxy) CHART_PROXY="${2:?--chart-proxy needs a value}"; shift 2 ;;
+    --release-keycloak) RELEASE_KEYCLOAK="${2:?--release-keycloak needs a value}"; shift 2 ;;
+    --release-proxy) RELEASE_PROXY="${2:?--release-proxy needs a value}"; shift 2 ;;
+    --namespace-keycloak) NAMESPACE_KEYCLOAK="${2:?--namespace-keycloak needs a value}"; shift 2 ;;
+    --namespace-proxy) NAMESPACE_PROXY="${2:?--namespace-proxy needs a value}"; shift 2 ;;
+    --keycloak-timeout) KEYCLOAK_TIMEOUT="${2:?--keycloak-timeout needs a value}"; shift 2 ;;
+    --output-dir) OUTPUT_DIR="${2:?--output-dir needs a value}"; shift 2 ;;
+    --customer-config) CUSTOMER_CONFIG_OPT="${2:?--customer-config needs a value}"; shift 2 ;;
+    --codemie-values) CODEMIE_VALUES_OPT="${2:?--codemie-values needs a value}"; shift 2 ;;
+    --help | -h) usage ;;
+    -*) echo "Unknown option: $1"; usage ;;
+    *) break ;;
+  esac
+done
+
+[[ $# -lt 2 ]] && usage
+PACKAGE_FILE="$1"
+ASSETS_DIR="$2"
+
+# Scratch files live in one directory that is removed on exit. The schema input needs a .json
+# extension, which ajv-cli uses to decide how to read it.
+TMP_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/apply-theme-scratch-XXXXXX")
+trap 'rm -rf "$TMP_ROOT"' EXIT
+
+# sha256 of stdin; sha256sum is missing on stock macOS, which ships shasum
+_sha256() {
+  if command -v sha256sum >/dev/null 2>&1; then sha256sum | awk '{print $1}'; else shasum -a 256 | awk '{print $1}'; fi
+}
+
+# base64 without line wrapping: GNU needs -w0, macOS wraps nothing and rejects it
+_b64() { base64 -w0 "$1" 2>/dev/null || base64 <"$1" | tr -d '\n'; }
+
+# Render brand.css. Each token carries a dark and a light value, and both are emitted together: the
+# dark values under html.codemieDark and the light values under html.codemieLight, the same
+# selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
+# space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
+# in :root. Nothing needs !important.
+_render_brand_css() {
+  local FONT_FACE DARK_VARS="" LIGHT_VARS="" token dark light
+  FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
+  _hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
+  while read -r token dark light; do
+    [[ -n "$token" ]] || continue
+    DARK_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$dark");"$'\n'
+    LIGHT_VARS+="  --colors-${token//./-}: $(_hex_to_rgb "$light");"$'\n'
+  done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
+
+  {
+    [[ -n "$FONT_FACE" ]] && echo "$FONT_FACE"
+    echo ":root {"
+    echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
+    echo "}"
+    if [[ -n "$DARK_VARS" ]]; then
+      echo "html.codemieDark {"
+      printf '%s' "$DARK_VARS"
+      echo "}"
+      echo "html.codemieLight {"
+      printf '%s' "$LIGHT_VARS"
+      echo "}"
+    fi
+  }
+}
+
+# ── Phase 1: validate ────────────────────────────────────────────────────────
+ERRORS=()
+WARNINGS=()
+
+ASSET_KEYS=(logoLight logoDark favicon faviconSvg manifest)
+LINK_IDS=(
+  userGuide videoPortal youtubeChannel learningCourses customerSupport
+  userSurvey workflowDocumentation workflowYamlDocumentation googleDocsDocumentation
+)
+ASSET_FILE_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
+MAX_ASSET_BYTES=1048576 # ConfigMap size limit; the base64-encoded assets must fit below it
+MAX_EMAIL_LOGO_BYTES=262144 # same limit the backend loader enforces (MAX_LOGO_BYTES)
+EMAIL_LOGO=""
+EMAIL_LOGO_PATH=""
+KC_ACTIVE=0
+KC_MAX_BYTES=400000  # cap of the Keycloak child-theme ConfigMap; must match the Keycloak chart hook
+KC_WARN_BYTES=300000 # the release Secret holds the content twice and is limited to 1 MiB
+KC_RESERVED_THEMES=(codemie base keycloak)
+
+# 1a. JSON Schema validation (all errors, not just the first)
+_AJV_INPUT="$TMP_ROOT/package.json"
+_AJV_ERR="$TMP_ROOT/ajv.err"
+PARSEABLE=true
+if ! yq eval -o=json "$PACKAGE_FILE" >"$_AJV_INPUT" 2>"$_AJV_ERR"; then
+  PARSEABLE=false
+  ERRORS+=("cannot parse $PACKAGE_FILE: $(tr '\n' ' ' <"$_AJV_ERR")")
+elif ! ajv validate -s "$SCHEMA" --spec draft7 --all-errors --errors=text -d "$_AJV_INPUT" >"$_AJV_ERR" 2>&1; then
+  # ajv prints all errors on one comma-joined line; put one per line and drop its "<file> invalid" summary
+  while IFS= read -r line; do
+    [[ -n "$line" && "$line" != *" invalid" ]] && ERRORS+=("$line")
+  done < <(sed 's/, data\//\
+data\//g' "$_AJV_ERR")
+fi
+
+if [[ "$PARSEABLE" == "true" ]]; then
+  # 1b. Asset checks, independent of the schema result: existence, no symlinks, unique names, size
+  ASSET_NAMES=()
+  TOTAL_BYTES=0
+  for key in "${ASSET_KEYS[@]}"; do
+    fname=$(yq eval ".assets.$key | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true)
+    # an empty or unsafe name is already reported by the schema; never touch the filesystem with it
+    [[ -n "$fname" && "$fname" =~ $ASSET_FILE_RE ]] || continue
+    ASSET_NAMES+=("$fname")
+    asset_path="$ASSETS_DIR/$fname"
+    if [[ -L "$asset_path" ]]; then
+      ERRORS+=("assets.$key: must not be a symbolic link: $asset_path")
+    elif [[ ! -f "$asset_path" ]]; then
+      ERRORS+=("assets.$key: file not found: $asset_path")
+    else
+      TOTAL_BYTES=$((TOTAL_BYTES + $(wc -c <"$asset_path")))
+    fi
+  done
+  if [[ ${#ASSET_NAMES[@]} -gt 0 ]]; then
+    dups=$(printf '%s\n' "${ASSET_NAMES[@]}" | sort | uniq -d | tr '\n' ' ')
+    [[ -z "$dups" ]] || ERRORS+=("assets: file names must be unique, duplicated: $dups")
+  fi
+  # base64 inflates by 4/3
+  if [[ $((TOTAL_BYTES * 4 / 3)) -ge $MAX_ASSET_BYTES ]]; then
+    ERRORS+=("assets: combined size $TOTAL_BYTES bytes exceeds the 1 MiB ConfigMap limit once base64-encoded")
+  fi
+
+  # 1b-email. Email block: tokens, blank values and the logo. The schema already checked structure
+  # and palette hex. Rules mirror the backend loader (email_brand/loader.py); tokens are found with
+  # the backend's TOKEN_RE \{(\w+)\}, so {a b} and {} are not tokens.
+  _check_tokens() { # <dotted path> <value> <allowed tokens, space separated>
+    local path="$1" rest="$2" allowed=" $3 " name
+    while [[ "$rest" =~ \{([[:alnum:]_]+)\} ]]; do
+      name="${BASH_REMATCH[1]}"
+      [[ "$allowed" == *" $name "* ]] || ERRORS+=("$path: token {$name} is not allowed here")
+      rest="${rest#*"${BASH_REMATCH[0]}"}"
+    done
+  }
+  _email_str() { yq eval "$1 | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true; }
+  _check_email_field() { # <dotted path> <yq path> <allowed tokens> <non-blank: yes|no>
+    local value
+    value=$(_email_str "$2")
+    # absent or non-string values are the schema's concern
+    [[ "$(yq eval "$2 | tag" "$PACKAGE_FILE" 2>/dev/null || true)" == "!!str" ]] || return 0
+    if [[ "$4" == "yes" && -z "${value//[[:space:]]/}" ]]; then
+      ERRORS+=("$1: must not be empty")
+    fi
+    _check_tokens "$1" "$value" "$3"
+  }
+  _check_email_field "email.senderName" ".email.senderName" "productName" yes
+  _check_email_field "email.signature" ".email.signature" "productName" no
+  for mid in verification password_reset budget_soft_limit budget_stopped budget_restored; do
+    for mf in subject heading intro buttonLabel footer; do
+      extra=""
+      case "$mid.$mf" in
+        budget_stopped.subject | budget_stopped.intro) extra="projectName costCenterName" ;;
+        budget_restored.subject | budget_restored.intro) extra="projectName" ;;
+      esac
+      nb=no
+      [[ "$mf" == "subject" ]] && nb=yes
+      _check_email_field "email.messages.$mid.$mf" ".email.messages.$mid.$mf" "productName $extra" "$nb"
+    done
+  done
+
+  EMAIL_LOGO=$(_email_str '.email.images.logo')
+  if [[ -n "$EMAIL_LOGO" ]]; then
+    logo_name="$EMAIL_LOGO"
+    EMAIL_LOGO_PATH="$ASSETS_DIR/$logo_name"
+    if [[ "$logo_name" == */* || "$logo_name" == *\\* || "$logo_name" == *..* ]]; then
+      ERRORS+=("email.images.logo: must be a plain file name, got: $logo_name")
+    elif [[ ! "$logo_name" =~ $ASSET_FILE_RE ]]; then
+      ERRORS+=("email.images.logo: invalid file name (letters, digits, . _ - only; at most 100 characters): $logo_name")
+    else
+      logo_ext=$(printf '%s' "${logo_name##*.}" | tr '[:upper:]' '[:lower:]')
+      [[ "$logo_name" == *.* ]] || logo_ext=""
+      if [[ "$logo_ext" != png && "$logo_ext" != jpg && "$logo_ext" != jpeg && "$logo_ext" != gif ]]; then
+        ERRORS+=("email.images.logo: extension must be one of png, jpg, jpeg, gif")
+      elif [[ -L "$EMAIL_LOGO_PATH" ]]; then
+        ERRORS+=("email.images.logo: must not be a symbolic link: $EMAIL_LOGO_PATH")
+      elif [[ ! -f "$EMAIL_LOGO_PATH" ]]; then
+        ERRORS+=("email.images.logo: file not found: $EMAIL_LOGO_PATH")
+      elif [[ $(wc -c <"$EMAIL_LOGO_PATH" | tr -d ' ') -gt $MAX_EMAIL_LOGO_BYTES ]]; then
+        ERRORS+=("email.images.logo: larger than $((MAX_EMAIL_LOGO_BYTES / 1024)) KiB")
+      else
+        logo_head=$(od -An -tx1 -N8 "$EMAIL_LOGO_PATH" | tr -d ' \n')
+        logo_ok=false
+        case "$logo_ext" in
+          png) [[ "$logo_head" == 89504e470d0a1a0a ]] && logo_ok=true ;;
+          jpg | jpeg) [[ "$logo_head" == ffd8ff* ]] && logo_ok=true ;;
+          gif) [[ "$logo_head" == 474946383761* || "$logo_head" == 474946383961* ]] && logo_ok=true ;;
+        esac
+        [[ "$logo_ok" == "true" ]] || ERRORS+=("email.images.logo: content does not match the .$logo_ext extension")
+      fi
+    fi
+  fi
+
+  # 1b-kc. Keycloak theme inputs. Only when the package has a keycloak block and --no-keycloak is
+  # not set; a package without the block is validated exactly as before.
+  if [[ "$NO_KEYCLOAK" != "true" && "$(yq eval '.keycloak | tag' "$PACKAGE_FILE" 2>/dev/null || true)" == "!!map" ]]; then
+    KC_ACTIVE=1
+  fi
+
+  # Properties policy: every value that reaches a .properties file. Rejects ${, < > " \, control
+  # characters (newline only when allowed), and leading or trailing whitespace.
+  _check_prop() { # <dotted path> <value> [allow_newline]
+    local path="$1" value="$2" probe="$2"
+    [[ -n "$value" ]] || return 0
+    [[ "${3:-}" == "allow_newline" ]] && probe="${probe//$'\n'/}"
+    case "$value" in
+      *'${'*) ERRORS+=("$path: must not contain \${") ;;
+    esac
+    case "$value" in
+      *'<'* | *'>'* | *'"'* | *'\'*) ERRORS+=("$path: must not contain < > \" or a backslash") ;;
+    esac
+    if [[ "$probe" =~ [[:cntrl:]] ]]; then
+      ERRORS+=("$path: must not contain control characters")
+    fi
+    if [[ "$value" =~ ^[[:space:]] || "$value" =~ [[:space:]]$ ]]; then
+      ERRORS+=("$path: must not start or end with whitespace")
+    fi
+  }
+
+  # Bytes the Keycloak ConfigMap carries: the four assets expanded by base64, plus brand.css.
+  _kc_size() { # <rendered brand.css>
+    local total n key fname
+    total=$(wc -c <"$1" | tr -d ' ')
+    for key in logoLight logoDark favicon faviconSvg; do
+      fname=$(_email_str ".assets.$key")
+      [[ -n "$fname" && "$fname" =~ $ASSET_FILE_RE && -f "$ASSETS_DIR/$fname" ]] || continue
+      n=$(wc -c <"$ASSETS_DIR/$fname" | tr -d ' ')
+      total=$((total + 4 * ((n + 2) / 3)))
+    done
+    echo "$total"
+  }
+
+  if [[ "$KC_ACTIVE" == "1" ]]; then
+    _check_prop "product.name" "$(_email_str '.product.name')"
+    _check_prop "product.shortName" "$(_email_str '.product.shortName')"
+    _check_prop "email.signature" "$(_email_str '.email.signature')" allow_newline
+    for pk in $(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true); do
+      _check_prop "email.palette.$pk" "$(_email_str ".email.palette.\"$pk\"")"
+    done
+
+    kc_theme=$(_email_str '.keycloak.themeName')
+    if [[ -z "$kc_theme" ]]; then
+      ERRORS+=("keycloak.themeName: required when the keycloak block is set")
+    elif [[ ! "$kc_theme" =~ ^[a-z0-9-]{3,40}$ ]]; then
+      ERRORS+=("keycloak.themeName: must be 3 to 40 characters of a-z, 0-9 and -")
+    else
+      for r in "${KC_RESERVED_THEMES[@]}"; do
+        [[ "$kc_theme" != "$r" ]] || ERRORS+=("keycloak.themeName: '$r' is reserved, choose another name")
+      done
+    fi
+
+    for key in logoLight logoDark; do
+      [[ -n "$(_email_str ".assets.$key")" ]] || ERRORS+=("assets.$key: required when the keycloak block is set")
+    done
+
+    kc_logo_url=$(_email_str '.email.images.logoUrl')
+    if [[ -n "$kc_logo_url" ]]; then
+      _check_prop "email.images.logoUrl" "$kc_logo_url"
+      kc_logo_path=$(printf '%s' "${kc_logo_url%%[?#]*}" | tr '[:upper:]' '[:lower:]')
+      [[ "$kc_logo_path" != *.svg ]] || ERRORS+=("email.images.logoUrl: SVG is not supported in email clients, use PNG, JPG or GIF")
+    elif [[ -n "$EMAIL_LOGO" ]]; then
+      WARNINGS+=("email.images.logo is set but email.images.logoUrl is not: Keycloak mails do not use the logo file, the mail shows the product name as text")
+    fi
+
+    # SMTP: host and from together; credentials only as secret references, never as literals.
+    kc_smtp_ok=0
+    if [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE" 2>/dev/null || true)" == "!!map" ]]; then
+      kc_host=$(_email_str '.keycloak.smtp.host')
+      kc_from=$(_email_str '.keycloak.smtp.from')
+      # host and from are set together or not at all; an empty map is a valid opt-out
+      if [[ -n "$kc_host" || -n "$kc_from" ]]; then
+        [[ -n "$kc_host" ]] || ERRORS+=("keycloak.smtp.host: required together with keycloak.smtp.from")
+        [[ -n "$kc_from" ]] || ERRORS+=("keycloak.smtp.from: required together with keycloak.smtp.host")
+      fi
+      [[ -n "$kc_host" && -n "$kc_from" ]] && kc_smtp_ok=1
+      for cred in username password; do
+        ctag=$(yq eval ".keycloak.smtp.auth.$cred | tag" "$PACKAGE_FILE" 2>/dev/null || true)
+        if [[ "$ctag" != "!!null" && "$ctag" != "!!map" ]]; then
+          ERRORS+=("keycloak.smtp.auth.$cred: a literal value is not allowed, use secretKeyRef {name, key}")
+        elif [[ "$ctag" == "!!map" && "$(yq eval ".keycloak.smtp.auth.$cred | has(\"secretKeyRef\")" "$PACKAGE_FILE")" != "true" ]]; then
+          ERRORS+=("keycloak.smtp.auth.$cred: a literal value is not allowed, use secretKeyRef {name, key}")
+        fi
+      done
+    fi
+    if [[ -n "$(_email_str '.email.senderName')" && "$kc_smtp_ok" == "0" ]]; then
+      WARNINGS+=("email.senderName is set but keycloak.smtp is not a full SMTP block (host and from): the sender name needs a full SMTP block and is not used")
+    fi
+
+    # brand.css is rendered here only to check it; phase 2 renders it again into the output
+    # directory. When earlier errors leave the colours unusable the render fails and only the
+    # asset part of the size is checked, so size and css problems are listed with the others.
+    : >"$TMP_ROOT/brand.css"
+    kc_css_ok=1
+    _render_brand_css >"$TMP_ROOT/brand.css" 2>/dev/null || kc_css_ok=0
+    if [[ "$kc_css_ok" == "1" && -z "$(tr -d '[:space:]' <"$TMP_ROOT/brand.css")" ]]; then
+      ERRORS+=("brand.css: the rendered stylesheet is empty")
+    fi
+    kc_bytes=$(_kc_size "$TMP_ROOT/brand.css")
+    if [[ "$kc_bytes" -gt $KC_MAX_BYTES ]]; then
+      ERRORS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above the limit of $KC_MAX_BYTES bytes; shrink the assets or ship the theme as a JAR instead")
+    elif [[ "$kc_bytes" -gt $KC_WARN_BYTES ]]; then
+      WARNINGS+=("keycloak: theme assets and brand.css take $kc_bytes bytes, above $KC_WARN_BYTES; the limit is $KC_MAX_BYTES (the 1 MiB release Secret stores the content twice)")
+    fi
+  fi
+
+  # 1c. Enabled-link cross-check against customer-config.yaml
+  CUSTOMER_CONFIG="${CUSTOMER_CONFIG_OPT:-${CUSTOMER_CONFIG_PATH:-}}"
+  if [[ -z "$CUSTOMER_CONFIG" ]]; then
+    for candidate in /app/config/customer/customer-config.yaml /etc/codemie/customer-config.yaml; do
+      if [[ -f "$candidate" ]]; then CUSTOMER_CONFIG="$candidate"; break; fi
+    done
+  fi
+  if [[ -z "$CUSTOMER_CONFIG" ]]; then
+    WARNINGS+=("customer-config.yaml not found: the enabled-link cross-check is SKIPPED (pass --customer-config <file>)")
+  elif [[ ! -f "$CUSTOMER_CONFIG" ]]; then
+    ERRORS+=("customer config not found: $CUSTOMER_CONFIG")
+  elif ! ENABLED_IDS=$(yq eval '.components[] | select(.settings.enabled == true) | .id' "$CUSTOMER_CONFIG" 2>&1); then
+    ERRORS+=("cannot parse customer config $CUSTOMER_CONFIG: $(echo "$ENABLED_IDS" | tr '\n' ' ')")
+  else
+    for lid in "${LINK_IDS[@]}"; do
+      if echo "$ENABLED_IDS" | grep -qx "$lid"; then
+        present=$(yq eval ".links.$lid | tag" "$PACKAGE_FILE" 2>/dev/null || echo "!!null")
+        [[ "$present" == "!!map" ]] || ERRORS+=("links.$lid: enabled in customer-config but absent from package")
+      fi
+    done
+  fi
+fi
+
+# 1d. Apply mode needs to know which charts to upgrade
+if [[ "$RENDER_ONLY" != "true" ]]; then
+  [[ -n "$CHART_UI" ]] || ERRORS+=("--chart-ui is required unless --render-only is set")
+  [[ -n "$CHART_CODEMIE" ]] || ERRORS+=("--chart-codemie is required unless --render-only is set")
+  if [[ "$KC_ACTIVE" == "1" ]]; then
+    [[ -n "$CHART_KEYCLOAK" ]] || ERRORS+=("--chart-keycloak is required unless --render-only or --no-keycloak is set")
+    [[ -n "$CHART_PROXY" ]] || ERRORS+=("--chart-proxy is required unless --render-only or --no-keycloak is set")
+  fi
+fi
+
+for w in ${WARNINGS[@]+"${WARNINGS[@]}"}; do echo "apply-theme: warning: $w" >&2; done
+
+if [[ ${#ERRORS[@]} -gt 0 ]]; then
+  echo "apply-theme: validation failed:" >&2
+  for e in "${ERRORS[@]}"; do echo "  - $e" >&2; done
+  exit 1
+fi
+
+# ── Phase 2: render ──────────────────────────────────────────────────────────
+WORK_DIR="${OUTPUT_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/apply-theme-XXXXXX")}"
+mkdir -p "$WORK_DIR"
+
+# The checksum covers the package and the content of every asset, including the email logo, so an
+# asset edited without a YAML change still rolls the pods. One checksum serves both releases, so an
+# image-only change also restarts the UI pods.
+CHECKSUM=$(
+  {
+    cat "$PACKAGE_FILE"
+    for key in "${ASSET_KEYS[@]}"; do
+      _sha256 <"$ASSETS_DIR/$(yq eval ".assets.$key" "$PACKAGE_FILE")"
+    done
+    if [[ -n "$EMAIL_LOGO" ]]; then _sha256 <"$EMAIL_LOGO_PATH"; fi
+  } | _sha256
+)
+
+_render_brand_css >"$WORK_DIR/brand.css"
+
+# Values files are built with yq so every package value is encoded, never concatenated.
+PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
+PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
+A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
+A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
+A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
+A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
+A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
+B64_LOGOLIGHT=$(_b64 "$ASSETS_DIR/$A_LOGOLIGHT")
+B64_LOGODARK=$(_b64 "$ASSETS_DIR/$A_LOGODARK")
+B64_FAVICON=$(_b64 "$ASSETS_DIR/$A_FAVICON")
+B64_FAVICONSVG=$(_b64 "$ASSETS_DIR/$A_FAVICONSVG")
+B64_MANIFEST=$(_b64 "$ASSETS_DIR/$A_MANIFEST")
+BRAND_CSS=$(cat "$WORK_DIR/brand.css")
+export PRODUCT_NAME PRODUCT_SHORT A_LOGOLIGHT A_LOGODARK A_FAVICON A_FAVICONSVG A_MANIFEST
+export B64_LOGOLIGHT B64_LOGODARK B64_FAVICON B64_FAVICONSVG B64_MANIFEST BRAND_CSS CHECKSUM
+
+yq -n '
+  .brand.enabled = true |
+  .brand.product.name = strenv(PRODUCT_NAME) |
+  .brand.product.shortName = strenv(PRODUCT_SHORT) |
+  .brand.assets.logoLight = strenv(A_LOGOLIGHT) |
+  .brand.assets.logoDark = strenv(A_LOGODARK) |
+  .brand.assets.favicon = strenv(A_FAVICON) |
+  .brand.assets.faviconSvg = strenv(A_FAVICONSVG) |
+  .brand.assets.manifest = strenv(A_MANIFEST) |
+  .brand.brandCssContent = strenv(BRAND_CSS) |
+  .brand.logoLightData = strenv(B64_LOGOLIGHT) |
+  .brand.logoDarkData = strenv(B64_LOGODARK) |
+  .brand.faviconData = strenv(B64_FAVICON) |
+  .brand.faviconSvgData = strenv(B64_FAVICONSVG) |
+  .brand.manifestData = strenv(B64_MANIFEST) |
+  .brand.podAnnotations."checksum/brand" = strenv(CHECKSUM)
+' >"$WORK_DIR/values-codemie-ui.brand.yaml"
+
+# The API chart takes extraVolumes/extraVolumeMounts as multi-line strings and extraObjects as a
+# list. helm --reuse-values replaces all three wholesale, so the release's current values are
+# read and the brand entries appended rather than the lists being overwritten.
+CODEMIE_BASE="$CODEMIE_VALUES_OPT"
+if [[ -z "$CODEMIE_BASE" && "$RENDER_ONLY" != "true" ]]; then
+  CODEMIE_BASE="$TMP_ROOT/current-values.yaml"
+  helm get values "$RELEASE_CODEMIE" -n "$NAMESPACE" --all -o yaml >"$CODEMIE_BASE"
+fi
+CUR_VOLUMES=""
+CUR_MOUNTS=""
+CUR_OBJECTS="$TMP_ROOT/current-objects.yaml"
+echo "[]" >"$CUR_OBJECTS"
+if [[ -n "$CODEMIE_BASE" ]]; then
+  [[ -f "$CODEMIE_BASE" ]] || { echo "apply-theme: current values file not found: $CODEMIE_BASE" >&2; exit 1; }
+  CUR_VOLUMES=$(yq eval '.extraVolumes // "" | select(tag == "!!str")' "$CODEMIE_BASE")
+  CUR_MOUNTS=$(yq eval '.extraVolumeMounts // "" | select(tag == "!!str")' "$CODEMIE_BASE")
+  yq eval '.extraObjects // []' "$CODEMIE_BASE" >"$CUR_OBJECTS"
+else
+  echo "apply-theme: warning: no current API values given (--codemie-values); extraVolumes, extraVolumeMounts and" >&2
+  echo "  extraObjects in values-codemie.brand.yaml REPLACE the lists of your release, merge them before applying" >&2
+fi
+
+# True when the YAML list <current> holds an item whose <key> equals <value>. Parsed with yq, so key
+# order, quoting and comments do not matter, and a volume named codemie-brand-assets is never
+# mistaken for codemie-brand.
+_has_item() { # <current> <key> <value>
+  [[ -n "$1" ]] || return 1
+  local n
+  n=$(ITEM_VALUE="$3" yq eval "[.[] | select(.$2 == strenv(ITEM_VALUE))] | length" - <<<"$1") || return 1
+  [[ "$n" != "0" ]]
+}
+
+_append_block() { # <current> <block> <key> <value>: append the block unless an item with key=value exists
+  local cur="$1" block="$2"
+  if _has_item "$cur" "$3" "$4"; then printf '%s' "$cur"; return; fi
+  [[ -n "$cur" ]] && cur+=$'\n'
+  printf '%s%s' "$cur" "$block"
+}
+export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP EMAIL_LOGO B64_EMAIL_LOGO_FILE
+NEW_VOLUMES=$(_append_block "$CUR_VOLUMES" "- name: $BRAND_CONFIGMAP
+  configMap:
+    name: $BRAND_CONFIGMAP" name "$BRAND_CONFIGMAP")
+NEW_MOUNTS=$(_append_block "$CUR_MOUNTS" "- name: $BRAND_CONFIGMAP
+  mountPath: $BRAND_MOUNT_PATH
+  subPath: brand.yaml
+  readOnly: true" mountPath "$BRAND_MOUNT_PATH")
+# the same volume, whole: the backend reads the email logo from this directory
+NEW_MOUNTS=$(_append_block "$NEW_MOUNTS" "- name: $BRAND_CONFIGMAP
+  mountPath: $BRAND_ASSETS_MOUNT_PATH
+  readOnly: true" mountPath "$BRAND_ASSETS_MOUNT_PATH")
+# the base64 logo can exceed the per-string environment limit, so it travels in a file, not a variable
+B64_EMAIL_LOGO_FILE="$TMP_ROOT/email-logo.b64"
+: >"$B64_EMAIL_LOGO_FILE"
+[[ -z "$EMAIL_LOGO" ]] || _b64 "$EMAIL_LOGO_PATH" >"$B64_EMAIL_LOGO_FILE"
+# the email block is optional: a package without one renders no email key at all
+BRAND_YAML=$(yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email)' "$PACKAGE_FILE")
+
+yq -n '
+  .podAnnotations."checksum/brand" = strenv(CHECKSUM) |
+  .extraVolumes = strenv(NEW_VOLUMES) |
+  .extraVolumeMounts = strenv(NEW_MOUNTS) |
+  .extraObjects = (
+    load(strenv(CUR_OBJECTS))
+    | map(select((tag == "!!map" and .kind == "ConfigMap" and .metadata.name == strenv(BRAND_CONFIGMAP)) | not))
+  ) + [{
+    "apiVersion": "v1",
+    "kind": "ConfigMap",
+    "metadata": {"name": strenv(BRAND_CONFIGMAP)},
+    "data": {"brand.yaml": strenv(BRAND_YAML)}
+  } | with(select(strenv(EMAIL_LOGO) != ""); .binaryData[strenv(EMAIL_LOGO)] = load_str(strenv(B64_EMAIL_LOGO_FILE)))]
+' >"$WORK_DIR/values-codemie.brand.yaml"
+
+# ── Phase 2b: Keycloak child theme and realm values ──────────────────────────
+# Only with an active keycloak block. Contract with the Keycloak and proxy charts:
+#   keycloakx.childTheme.enabled / name / data / binaryData  (chart keycloak-helm)
+#   data: login.theme.properties, login.brand.css, email.theme.properties
+#   binaryData: img.<file> per asset; total size at most 400000 (KC_MAX_BYTES)
+#   the chart hook marker keycloak-child-theme is a chart concern; apply mode checks it
+#   realm.displayName, realm.themes.loginTheme, realm.themes.emailTheme, realm.smtp.*  (chart oauth2-proxy)
+# Text goes through files and yq strenv/load_str, so no value is concatenated into YAML.
+_render_keycloak() {
+  local kc_name key fname lines sig sender pk pv logo_url
+  kc_name=$(yq eval '.keycloak.themeName' "$PACKAGE_FILE")
+  local login_props="$TMP_ROOT/login.theme.properties" email_props="$TMP_ROOT/email.theme.properties"
+  local b64f="$TMP_ROOT/kc-image.b64"
+
+  # one "key=value" line per call; the policy in phase 1 keeps backslash and control characters out
+  _prop() { printf '%s=%s\n' "$1" "$2"; }
+
+  {
+    _prop parent codemie
+    _prop brand.version 1
+    _prop brand.product.name "$PRODUCT_NAME"
+    _prop brand.product.shortName "$PRODUCT_SHORT"
+    _prop brand.logo.light "$A_LOGOLIGHT"
+    _prop brand.logo.dark "$A_LOGODARK"
+    [[ "$A_FAVICON" == "null" ]] || _prop brand.favicon "$A_FAVICON"
+    [[ "$A_FAVICONSVG" == "null" ]] || _prop brand.faviconSvg "$A_FAVICONSVG"
+  } >"$login_props"
+
+  {
+    _prop parent codemie
+    _prop brand.version 1
+    _prop brand.product.name "$PRODUCT_NAME"
+    for pk in primary primaryText text background surface; do
+      pv=$(_email_str ".email.palette.$pk")
+      [[ -z "$pv" ]] && continue
+      case "$pk" in
+        primary) _prop brand.email.color.primary "$pv" ;;
+        primaryText) _prop brand.email.color.primaryText "$pv" ;;
+        text) _prop brand.email.color.text "$pv" ;;
+        background) _prop brand.email.color.background "$pv" ;;
+        surface) _prop brand.email.color.surface "$pv" ;;
+      esac
+    done
+    logo_url=$(_email_str '.email.images.logoUrl')
+    [[ -z "$logo_url" ]] || _prop brand.email.logo "$logo_url"
+    sig=$(_email_str '.email.signature')
+    if [[ -n "$sig" ]]; then
+      sig="${sig//\{productName\}/$PRODUCT_NAME}"
+      sig="${sig//$'\n'/\\n}"
+      _prop brand.email.signature "$sig"
+    fi
+  } >"$email_props"
+
+  export KC_NAME="$kc_name" KC_LOGIN_PROPS="$login_props" KC_EMAIL_PROPS="$email_props" KC_CSS="$WORK_DIR/brand.css"
+  yq -n '
+    .keycloakx.childTheme.enabled = true |
+    .keycloakx.childTheme.name = strenv(KC_NAME) |
+    .keycloakx.childTheme.data."login.theme.properties" = load_str(strenv(KC_LOGIN_PROPS)) |
+    .keycloakx.childTheme.data."login.brand.css" = load_str(strenv(KC_CSS)) |
+    .keycloakx.childTheme.data."email.theme.properties" = load_str(strenv(KC_EMAIL_PROPS))
+  ' >"$WORK_DIR/values-keycloak.theme.yaml"
+
+  for key in logoLight logoDark favicon faviconSvg; do
+    fname=$(_email_str ".assets.$key")
+    [[ -n "$fname" ]] || continue
+    _b64 "$ASSETS_DIR/$fname" >"$b64f"
+    KC_IMG_KEY="img.$fname" KC_IMG_B64="$b64f" yq -i \
+      '.keycloakx.childTheme.binaryData[strenv(KC_IMG_KEY)] = load_str(strenv(KC_IMG_B64))' \
+      "$WORK_DIR/values-keycloak.theme.yaml"
+  done
+
+  # realm: display name and both themes always; smtp only with a connection (host and from)
+  yq -n '
+    .realm.displayName = strenv(PRODUCT_NAME) |
+    .realm.themes.loginTheme = strenv(KC_NAME) |
+    .realm.themes.emailTheme = strenv(KC_NAME)
+  ' >"$WORK_DIR/values-oauth2-proxy.realm.yaml"
+
+  if [[ -n "$(_email_str '.keycloak.smtp.host')" && -n "$(_email_str '.keycloak.smtp.from')" ]]; then
+    sender=$(_email_str '.email.senderName')
+    sender="${sender//\{productName\}/$PRODUCT_NAME}"
+    export KC_SMTP_HOST KC_SMTP_FROM KC_SENDER="$sender"
+    KC_SMTP_HOST=$(_email_str '.keycloak.smtp.host')
+    KC_SMTP_FROM=$(_email_str '.keycloak.smtp.from')
+    # unset optional keys are written as null so --reuse-values drops values from an earlier run
+    yq -i '
+      .realm.smtp.host = strenv(KC_SMTP_HOST) |
+      .realm.smtp.from = strenv(KC_SMTP_FROM) |
+      .realm.smtp.port = load(strenv(PACKAGE_FILE)).keycloak.smtp.port |
+      .realm.smtp.enableSSL = load(strenv(PACKAGE_FILE)).keycloak.smtp.ssl |
+      .realm.smtp.enableStartTLS = load(strenv(PACKAGE_FILE)).keycloak.smtp.starttls |
+      .realm.smtp.fromDisplayName = (strenv(KC_SENDER) | select(. != "")) |
+      .realm.smtp.authentication.username = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.username |
+      .realm.smtp.authentication.password = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.password
+    ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
+  else
+    # no usable SMTP block: null every smtp key so --reuse-values drops settings of an earlier run
+    yq -i '
+      .realm.smtp.host = null | .realm.smtp.from = null | .realm.smtp.port = null |
+      .realm.smtp.enableSSL = null | .realm.smtp.enableStartTLS = null |
+      .realm.smtp.fromDisplayName = null |
+      .realm.smtp.authentication.username = null | .realm.smtp.authentication.password = null
+    ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
+  fi
+}
+
+if [[ "$KC_ACTIVE" == "1" ]]; then
+  export PACKAGE_FILE
+  _render_keycloak
+fi
+
+echo "apply-theme: rendered files written to $WORK_DIR"
+
+[[ "$RENDER_ONLY" == "true" ]] && exit 0
+
+# ── Phase 2c: Keycloak preflight (read-only) ─────────────────────────────────
+# The Keycloak release must already carry the child-theme hook (volume and mount), or the theme
+# never reaches the pods. Checked before ANY upgrade. The stored child-theme keys are read in the
+# same call: keys the new package no longer has are written as null to a second values file, so
+# --reuse-values drops them. values-keycloak.theme.yaml itself never holds a null.
+KC_MARKER="keycloak-child-theme"
+_preflight_keycloak() {
+  local stored="$TMP_ROOT/keycloak-stored.json" field map key new_keys
+  helm get values "$RELEASE_KEYCLOAK" -n "$NAMESPACE_KEYCLOAK" --all -o json >"$stored" || {
+    echo "apply-theme: cannot read the values of release $RELEASE_KEYCLOAK in namespace $NAMESPACE_KEYCLOAK" >&2
+    exit 1
+  }
+  for field in extraVolumes extraVolumeMounts; do
+    if ! yq eval -p=json "(.keycloakx.$field // .$field // \"\") | tostring" "$stored" | grep -qF -- "$KC_MARKER"; then
+      echo "apply-theme: release $RELEASE_KEYCLOAK has no $KC_MARKER entry in $field; nothing was changed." >&2
+      echo "  Run the normal chart deploy of the Keycloak release once, then run apply-theme again." >&2
+      exit 1
+    fi
+  done
+  yq -n '.keycloakx.childTheme.binaryData = {}' >"$WORK_DIR/values-keycloak.stale.yaml"
+  for map in data binaryData; do
+    new_keys=$(yq eval ".keycloakx.childTheme.$map // {} | keys | .[]" "$WORK_DIR/values-keycloak.theme.yaml")
+    while IFS= read -r key; do
+      [[ -n "$key" ]] || continue
+      grep -qxF -- "$key" <<<"$new_keys" && continue
+      STALE_KEY="$key" yq -i ".keycloakx.childTheme.$map[strenv(STALE_KEY)] = null" "$WORK_DIR/values-keycloak.stale.yaml"
+    done < <(yq eval -p=json "((.keycloakx.childTheme | select(tag == \"!!map\") | .$map) | select(tag == \"!!map\")) // {} | keys | .[]" "$stored")
+  done
+}
+# Chart versions of all four releases are read before the first upgrade, so an unreadable
+# release stops the run with nothing changed.
+_check_versions() {
+  local pair rel ns
+  for pair in "$RELEASE_UI|$NAMESPACE" "$RELEASE_CODEMIE|$NAMESPACE" "$RELEASE_KEYCLOAK|$NAMESPACE_KEYCLOAK" "$RELEASE_PROXY|$NAMESPACE_PROXY"; do
+    rel="${pair%%|*}"; ns="${pair##*|}"
+    helm get metadata "$rel" -n "$ns" -o yaml >/dev/null 2>&1 || {
+      echo "apply-theme: cannot read the metadata of release $rel in namespace $ns; nothing was changed." >&2
+      exit 1
+    }
+  done
+}
+if [[ "$KC_ACTIVE" == "1" ]]; then _check_versions; _preflight_keycloak; fi
+
+# ── Phase 3: upgrade ─────────────────────────────────────────────────────────
+# The installed chart version is pinned so the upgrade can never move the platform to a newer
+# chart. Image tag and every other value come from --reuse-values and are never set here.
+_upgrade() { # <release> <chart> <namespace> <values-file> [<more helm args>...]
+  local release="$1" chart="$2" ns="$3" values="$4" version
+  shift 4
+  local -a pin=()
+  version=$(helm get metadata "$release" -n "$ns" -o yaml | yq eval '.version // ""' -)
+  [[ -n "$version" ]] || { echo "apply-theme: cannot read the installed chart version of $release (needs helm >= 3.9)" >&2; exit 1; }
+  # a local chart path carries its own version; --version applies to repository references only
+  [[ -e "$chart" ]] || pin=(--version "$version")
+  helm upgrade "$release" "$chart" --reuse-values ${pin[@]+"${pin[@]}"} -f "$values" ${1+"$@"}
+}
+_upgrade "$RELEASE_UI" "$CHART_UI" "$NAMESPACE" "$WORK_DIR/values-codemie-ui.brand.yaml" -n "$NAMESPACE"
+_upgrade "$RELEASE_CODEMIE" "$CHART_CODEMIE" "$NAMESPACE" "$WORK_DIR/values-codemie.brand.yaml" -n "$NAMESPACE"
+if [[ "$KC_ACTIVE" == "1" ]]; then
+  # Keycloak is a StatefulSet and the realm reconcile is asynchronous: no rollout restart here
+  _upgrade "$RELEASE_KEYCLOAK" "$CHART_KEYCLOAK" "$NAMESPACE_KEYCLOAK" "$WORK_DIR/values-keycloak.theme.yaml" \
+    -f "$WORK_DIR/values-keycloak.stale.yaml" -n "$NAMESPACE_KEYCLOAK" --wait --timeout "$KEYCLOAK_TIMEOUT"
+  _upgrade "$RELEASE_PROXY" "$CHART_PROXY" "$NAMESPACE_PROXY" "$WORK_DIR/values-oauth2-proxy.realm.yaml" -n "$NAMESPACE_PROXY"
+fi
+
+# ── Phase 4: restart ─────────────────────────────────────────────────────────
+kubectl rollout restart "deployment/$RELEASE_UI" -n "$NAMESPACE"
+kubectl rollout restart "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE"
+kubectl rollout status "deployment/$RELEASE_UI" -n "$NAMESPACE" --timeout=120s
+kubectl rollout status "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE" --timeout=120s
+
+echo "apply-theme: done"
