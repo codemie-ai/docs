@@ -53,6 +53,20 @@ words:
   - reportportal
   - berriai
   - Ollama
+  - Entra
+  - NTLM
+  - EWS
+  - Autodiscover
+  - sentitems
+  - deleteditems
+  - junkemail
+  - msgfolderroot
+  - subfolders
+  - CIDR
+  - CIDRs
+  - CGNAT
+  - ULA
+  - exchangelib
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
