@@ -174,3 +174,7 @@ their role between **User** and **Project Admin**. The change takes effect immed
 
 The user is removed from the project immediately. Their account is not deleted — they simply
 lose access to this project.
+
+If this project was the user's default project, it stops being charged for the user's usage and
+a new default is determined automatically. See
+[Default Project](./users.md#default-project).
