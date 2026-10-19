@@ -355,8 +355,8 @@ components:
   # WHERE: Analytics page → CLI Analytics tab
   # ENABLED: Shows per-session coding-agent cost, tooling, repository, and efficiency analytics
   # DISABLED: Hides the CLI Analytics tab
-  # NOTE: Enterprise package feature only. Requires the backend ClickHouse and OTel Collector
-  #       environment variables — see CodeMie API Configuration Reference (CLI Analytics section).
+  # NOTE: Enterprise package feature only. Telemetry is stored in PostgreSQL (uses the application database
+  #       by default, or a separate database via `CLI_ANALYTICS_PG_URL`) -- see CodeMie API Configuration Reference (CLI Analytics section).
   #       Can also be toggled at runtime with FEATURE_CLI_ANALYTICS=true, which overrides `enabled`.
   #       `deliveryFramework` classifies sessions by the prefix of the coding-agent skill/framework
   #       identifier, falling back to `fallbackLabel` when no rule matches.
