@@ -43,14 +43,6 @@ or automated backups. For production workloads, use the
 | Authentication              | Built-in local auth (`IDP_PROVIDER=local`)                                                                    | Seeded with a superadmin account from `.env.standalone`; no Keycloak required                                                                                                                   |
 | Retrieval (Elasticsearch)   | Disabled by default (`RETRIEVAL_BACKEND=none`)                                                                | Knowledge Bases, Data Sources, and code indexing are unavailable unless a retrieval backend is configured — see [Configuration](../../admin/configuration/codemie/datasources-configuration.md) |
 | Budget Management (LiteLLM) | Not included                                                                                                  | Disable `features:budgetManagement` — see [Deployment Guide](./deployment-guide.md#disabling-budget-management)                                                                                 |
-| CLI Analytics               | Optional `standalone-analytics` Compose profile                                                               | Adds ClickHouse and an OpenTelemetry Collector                                                                                                                                                  |
-
-## Deployment Profiles
-
-| Profile                             | Command                                                                                           | Adds                          |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------- |
-| **Default**                         | `docker compose -f standalone/docker-compose.standalone.yml up -d`                                | `codemie`, `postgres`         |
-| **Standalone Analytics** (optional) | `docker compose -f standalone/docker-compose.standalone.yml --profile standalone-analytics up -d` | `clickhouse`, `otelcollector` |
 
 ## Repository
 

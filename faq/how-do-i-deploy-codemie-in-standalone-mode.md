@@ -21,8 +21,6 @@ using `standalone/build-image.sh`; see the step-by-step deployment guide for bot
 CodeMie Standalone authenticates with the platform's built-in local provider by default — there
 is no Keycloak container in the stack. By default it also runs without Elasticsearch
 (`RETRIEVAL_BACKEND=none`), so Knowledge Bases, Data Sources, and code indexing are unavailable.
-An optional `standalone-analytics` Compose profile adds ClickHouse and an OpenTelemetry Collector
-for CLI Analytics.
 
 ## Sources
 

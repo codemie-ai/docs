@@ -18,9 +18,7 @@ repositories.
 
 - **Docker Compose** or **Podman Compose**
 - The version-matched standalone deployment files supplied with the release, or the same files
-  from the corresponding `codemie` repository tag. Keep their relative directory layout intact:
-  the Compose file mounts the ClickHouse schema and OpenTelemetry Collector configuration from
-  `config/` when the optional Analytics profile is used.
+  from the corresponding `codemie` repository tag. Keep their relative directory layout intact.
 
 ## Using a Published Image
 
@@ -258,61 +256,6 @@ docker run --rm -v ./codemie-repos:/src -v codemie_repos:/dst docker.io/library/
 ```
 
 :::
-
-## Optional: CLI Analytics
-
-ClickHouse and an OpenTelemetry Collector live in the same `docker-compose.standalone.yml`, gated
-behind the `standalone-analytics` Compose profile — running the standalone stack without this
-profile does not start them.
-
-To enable CLI Analytics:
-
-1. CLI Analytics is gated by `features:cliAnalytics` in the customer configuration, not by a
-   dedicated environment variable. Using an [external customer configuration](#external-customer-configuration),
-   set that component's `enabled` to `true`. The generic `FEATURE_<ID>` override mechanism still
-   applies to every `features:*` component, including this one — if `FEATURE_CLI_ANALYTICS` is
-   set in the environment, it overrides whatever the mounted YAML says. Unset it if CLI Analytics
-   does not behave as configured.
-2. `standalone/.env.standalone` must set `CLICKHOUSE_HOST`, `CLICKHOUSE_PORT`, `CLICKHOUSE_USER`,
-   `CLICKHOUSE_PASSWORD`, and `ANALYTICS_INGEST_OTLP_HTTP_ENDPOINT` to match the hardcoded service
-   names in `docker-compose.standalone.yml`. `.env.standalone.example` already sets these to
-   matching values — keep them as-is unless the hardcoded names or ports in the Compose file were
-   changed. The backend's built-in defaults point elsewhere and fail to connect if left unset.
-3. Start the stack with the `standalone-analytics` profile:
-
-   ```bash
-   docker compose -f standalone/docker-compose.standalone.yml --profile standalone-analytics up -d
-   ```
-
-   If the default stack is already running, this command reconciles it in place — `clickhouse`
-   and `otelcollector` are added while `codemie` and `postgres` keep running.
-
-4. Verify the analytics services are running:
-
-   ```bash
-   docker compose -f standalone/docker-compose.standalone.yml --profile standalone-analytics ps
-   curl http://localhost:8123/ping
-   ```
-
-5. To stop only the analytics services, leaving `codemie` and `postgres` running:
-
-   ```bash
-   docker compose -f standalone/docker-compose.standalone.yml --profile standalone-analytics stop clickhouse otelcollector
-   ```
-
-   To stop everything, including the analytics services, add the profile flag to `down`:
-
-   ```bash
-   docker compose -f standalone/docker-compose.standalone.yml --profile standalone-analytics down
-   ```
-
-   A plain `down` without `--profile standalone-analytics` leaves `clickhouse` and
-   `otelcollector` running, since Compose only tears down services from profiles it was told
-   about.
-
-The Analytics navigation item is available to every authenticated user. The CLI Analytics tab is
-displayed only to system administrators and project administrators when `features:cliAnalytics`
-is enabled. Other Analytics tabs retain their existing role and feature-flag visibility rules.
 
 ## Generated Files
 
