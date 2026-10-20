@@ -198,6 +198,36 @@ apply_args() {
   [[ "$output" == *"additional properties"* ]]
 }
 
+@test "brand.css: side panel and gradient tokens map to the variables the UI reads" {
+  # one token per line: path, dark, light. The names are the tokens listed in the Theme Package Reference.
+  pkg=$(mutate '.colors."surface.base.navigation" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.specific.navigation-link" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.navigation-link" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.navigation-link-hover" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.navigation-icon" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.navigation-icon-hover" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.specific.navigation-badge" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.navigation-badge" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.specific.bottom-navigation-label" = {"dark": "#010203", "light": "#040506"}
+    | .colors."text.specific.bottom-navigation-label" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.base.sidebar" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.specific.sidebar-toggle" = {"dark": "#010203", "light": "#040506"}
+    | .colors."border.specific.sidebar" = {"dark": "#010203", "light": "#040506"}
+    | .colors."surface.specific.gradient" = {"dark": "#010203", "light": "#040506"}')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  dark=$(sed -n '/^html.codemieDark {/,/^}/p' "$OUT/brand.css")
+  light=$(sed -n '/^html.codemieLight {/,/^}/p' "$OUT/brand.css")
+  for var in surface-base-navigation surface-specific-navigation-link text-specific-navigation-link \
+    text-specific-navigation-link-hover text-specific-navigation-icon text-specific-navigation-icon-hover \
+    surface-specific-navigation-badge text-specific-navigation-badge surface-specific-bottom-navigation-label \
+    text-specific-bottom-navigation-label surface-base-sidebar surface-specific-sidebar-toggle \
+    border-specific-sidebar surface-specific-gradient; do
+    [[ "$dark" == *"  --colors-$var: 1 2 3;"* ]]
+    [[ "$light" == *"  --colors-$var: 4 5 6;"* ]]
+  done
+}
+
 @test "validate: a colour token without its light or dark value is rejected" {
   pkg=$(mutate 'del(.colors."surface.base.primary".light)')
   run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
