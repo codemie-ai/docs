@@ -345,6 +345,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Standalone',
+          link: {
+            type: 'doc',
+            id: 'user-guide/standalone/index',
+          },
+          collapsed: true,
+          items: ['user-guide/standalone/deployment-guide'],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
