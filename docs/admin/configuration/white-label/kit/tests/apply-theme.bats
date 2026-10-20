@@ -162,6 +162,42 @@ apply_args() {
   ! [[ "$root" == *"--colors-"* ]]
 }
 
+@test "brand.css: effects.gradients none writes the option into :root" {
+  pkg=$(mutate '.effects.gradients = "none"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  root=$(sed -n '/^:root {/,/^}/p' "$OUT/brand.css")
+  [[ "$root" == *"  --brand-gradients: none;"* ]]
+  # the option is theme independent, so it is not in a theme block
+  ! sed -n '/^html.codemie/,/^}/p' "$OUT/brand.css" | grep -q -- '--brand-gradients'
+}
+
+@test "brand.css: no --brand-gradients without effects, or with effects.gradients default" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  ! grep -q -- '--brand-gradients' "$OUT/brand.css"
+  pkg=$(mutate '.effects.gradients = "default"')
+  run "$SCRIPT" --render-only --output-dir "$BATS_TEST_TMPDIR/out2" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  ! grep -q -- '--brand-gradients' "$BATS_TEST_TMPDIR/out2/brand.css"
+}
+
+@test "validate: effects.gradients accepts only default or none" {
+  pkg=$(mutate '.effects.gradients = "hidden"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"gradients"* ]]
+  [ ! -e "$OUT/brand.css" ]
+}
+
+@test "validate: an unknown key under effects is rejected" {
+  pkg=$(mutate '.effects.shadows = "none"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"effects"* ]]
+  [[ "$output" == *"additional properties"* ]]
+}
+
 @test "validate: a colour token without its light or dark value is rejected" {
   pkg=$(mutate 'del(.colors."surface.base.primary".light)')
   run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"

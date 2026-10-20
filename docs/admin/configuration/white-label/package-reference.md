@@ -14,16 +14,17 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 ## Top-Level Fields
 
-| Path         | Type   | Required | Description                                                              |
-| ------------ | ------ | -------- | ------------------------------------------------------------------------ |
-| `version`    | string | Yes      | Theme package format version. Must be exactly `"1"`.                     |
-| `product`    | object | Yes      | Product naming. See [Product](#product).                                 |
-| `colors`     | object | Yes      | Color tokens, each with a dark and a light value. See [Colors](#colors). |
-| `typography` | object | Yes      | Font families and optional font-face CSS. See [Typography](#typography). |
-| `assets`     | object | Yes      | File names of the brand assets. See [Assets](#assets).                   |
-| `links`      | object | Yes      | Help links shown in the UI. See [Links](#links).                         |
-| `email`      | object | No       | Branding of platform emails. See [Email](#email).                        |
-| `keycloak`   | object | No       | Keycloak login page and emails. See [Keycloak](#keycloak).               |
+| Path         | Type   | Required | Description                                                                |
+| ------------ | ------ | -------- | -------------------------------------------------------------------------- |
+| `version`    | string | Yes      | Theme package format version. Must be exactly `"1"`.                       |
+| `product`    | object | Yes      | Product naming. See [Product](#product).                                   |
+| `colors`     | object | Yes      | Color tokens, each with a dark and a light value. See [Colors](#colors).   |
+| `typography` | object | Yes      | Font families and optional font-face CSS. See [Typography](#typography).   |
+| `effects`    | object | No       | Visual effects, for example background gradients. See [Effects](#effects). |
+| `assets`     | object | Yes      | File names of the brand assets. See [Assets](#assets).                     |
+| `links`      | object | Yes      | Help links shown in the UI. See [Links](#links).                           |
+| `email`      | object | No       | Branding of platform emails. See [Email](#email).                          |
+| `keycloak`   | object | No       | Keycloak login page and emails. See [Keycloak](#keycloak).                 |
 
 ## Product
 
@@ -44,6 +45,24 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 Only the `dark` and `light` keys are allowed inside a token. The hex pattern is `^#[0-9a-fA-F]{6}$`; shorthand colors such as `#fff` are rejected.
 
+### Side Panel and Gradient Tokens
+
+The UI has two side panels: the main navigation on the left and a secondary side panel next to it. These tokens set their colors:
+
+| Token                                                                     | Where it applies                                                                                                                                                                           |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `surface.base.navigation`                                                 | Background of the main navigation panel. Applies only when [`effects.gradients`](#effects) is `none`. With the default gradients, the panel shows a fixed gradient and ignores this token. |
+| `surface.specific.navigation-link`                                        | Background of a navigation item.                                                                                                                                                           |
+| `text.specific.navigation-link`, `text.specific.navigation-link-hover`    | Text of a navigation item and its hover state.                                                                                                                                             |
+| `text.specific.navigation-icon`, `text.specific.navigation-icon-hover`    | Icons of navigation items and their hover state.                                                                                                                                           |
+| `text.specific.navigation-badge`, `text.specific.bottom-navigation-label` | Badge text and the labels at the bottom of the navigation panel.                                                                                                                           |
+| `surface.base.sidebar`                                                    | Background of the secondary side panel. The same token also colors the app background behind the panels, the chat settings area, and the assistant form headers.                           |
+| `surface.specific.sidebar-toggle`                                         | Button that opens and closes the side panel.                                                                                                                                               |
+| `border.specific.sidebar`                                                 | Border line of the side panel.                                                                                                                                                             |
+| `surface.specific.gradient`                                               | Color of the glow behind the side panels. Without this token, the UI keeps its default purple glow.                                                                                        |
+
+A navigation panel with a dark background in the light theme needs light values for the navigation text and icon tokens as well. To remove the glow and all other background gradients instead of recoloring them, set [`effects.gradients`](#effects) to `none`.
+
 ## Typography
 
 | Path                         | Type           | Required | Description                                                                                                                                    |
@@ -52,6 +71,24 @@ Only the `dark` and `light` keys are allowed inside a token. The hex pattern is 
 | `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose (`--font-family-body-prose`). Same character rules.                                                   |
 | `typography.codeFamily`      | string         | Yes      | CSS font-family list for code (`--font-family-code-block`), for example `Fira Code, monospace`. Same character rules.                          |
 | `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the variables. Must not contain `!important`. Font files are not delivered by the kit; use URLs in `src`. |
+
+## Effects
+
+The `effects` block is optional. A package without it keeps all default effects.
+
+| Path                | Type   | Required | Description                                                                                                                                        |
+| ------------------- | ------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `effects.gradients` | string | No       | `default` keeps the background gradients. `none` removes all of them. Any other value is rejected. A missing key has the same effect as `default`. |
+
+With `none`, the kit writes `--brand-gradients: none;` into the `:root` block of `brand.css`. The UI then removes these gradients:
+
+- the glow behind the side panels, and the overlay on the secondary side panel;
+- the fixed gradient behind the main navigation panel. The panel then uses the `surface.base.navigation` color;
+- the background image behind the page content and the pagination bar in the light theme;
+- the gradients on cards and workflow cards;
+- the gradients on the standalone pages, including the Keycloak login page.
+
+The option wins over the per-user Custom Appearance setting for gradients. Buttons and other control styles are not background gradients and stay unchanged. When `none` is set, the `surface.specific.gradient` token has no visible effect.
 
 ## Assets
 
