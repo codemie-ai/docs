@@ -91,6 +91,7 @@ Edit the copy of `theme-package.yaml`. Every field is described in the [Theme Pa
 - `product` — the product name and short name shown in the browser tab and UI headers.
 - `colors` — semantic tokens such as `surface.base.primary`, each with a `dark` and a `light` value in `#rrggbb` format. Tokens that are not listed keep the default values.
 - `typography` — CSS font families for UI text, prose, and code. Optionally add `fontFaceCSS` with inline `@font-face` rules.
+- `effects` — optional. Set `gradients: 'none'` to remove all background gradients. Without the block, the default gradients stay.
 - `assets` — the file names from the previous step.
 - `links` — the name and URL of each help link shown in the UI. Include every link that is enabled in the `customer-config.yaml` file of the deployment; see [Customer Feature Configuration](../codemie/customer-feature-configuration.md).
 

@@ -76,6 +76,13 @@
         }
       }
     },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gradients": { "type": "string", "enum": ["default", "none"] }
+      }
+    },
     "assets": {
       "type": "object",
       "required": ["logoLight", "logoDark", "favicon", "faviconSvg", "manifest"],

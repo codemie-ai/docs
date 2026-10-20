@@ -27,6 +27,10 @@ typography:
   # so every src: url(...) must point to a font hosted on a reachable https URL.
   fontFaceCSS: null
 
+# optional - visual effects. Remove the block to keep all defaults.
+effects:
+  gradients: 'default' # optional - 'default' keeps the background gradients, 'none' removes all of them
+
 # All assets are file names resolved against the assets directory passed to apply-theme.
 # The combined size of the five files must stay below 1 MiB.
 assets:
