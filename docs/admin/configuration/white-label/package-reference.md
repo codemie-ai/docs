@@ -47,21 +47,36 @@ Only the `dark` and `light` keys are allowed inside a token. The hex pattern is 
 
 ### Side Panel and Gradient Tokens
 
-The UI has two side panels: the main navigation on the left and a secondary side panel next to it. These tokens set their colors:
+The UI has two side panels: the main navigation on the left and a secondary side panel next to it. Two groups of tokens set their colors.
 
-| Token                                                                     | Where it applies                                                                                                                                                                           |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `surface.base.navigation`                                                 | Background of the main navigation panel. Applies only when [`effects.gradients`](#effects) is `none`. With the default gradients, the panel shows a fixed gradient and ignores this token. |
-| `surface.specific.navigation-link`                                        | Background of a navigation item.                                                                                                                                                           |
-| `text.specific.navigation-link`, `text.specific.navigation-link-hover`    | Text of a navigation item and its hover state.                                                                                                                                             |
-| `text.specific.navigation-icon`, `text.specific.navigation-icon-hover`    | Icons of navigation items and their hover state.                                                                                                                                           |
-| `text.specific.navigation-badge`, `text.specific.bottom-navigation-label` | Badge text and the labels at the bottom of the navigation panel.                                                                                                                           |
-| `surface.base.sidebar`                                                    | Background of the secondary side panel. The same token also colors the app background behind the panels, the chat settings area, and the assistant form headers.                           |
-| `surface.specific.sidebar-toggle`                                         | Button that opens and closes the side panel.                                                                                                                                               |
-| `border.specific.sidebar`                                                 | Border line of the side panel.                                                                                                                                                             |
-| `surface.specific.gradient`                                               | Color of the glow behind the side panels. Without this token, the UI keeps its default purple glow.                                                                                        |
+**Tokens that only the panels use:**
 
-A navigation panel with a dark background in the light theme needs light values for the navigation text and icon tokens as well. To remove the glow and all other background gradients instead of recoloring them, set [`effects.gradients`](#effects) to `none`.
+| Token                                                                               | Where it applies                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `surface.base.navigation`                                                           | Background of the main navigation panel. Applies only when [`effects.gradients`](#effects) is `none`. With the default gradients, the panel shows a fixed gradient and ignores this token.       |
+| `surface.specific.navigation-link`                                                  | Background of a navigation item.                                                                                                                                                                 |
+| `text.specific.navigation-link`, `text.specific.navigation-link-hover`              | Text of a navigation item and its hover state.                                                                                                                                                   |
+| `text.specific.navigation-icon`, `text.specific.navigation-icon-hover`              | Icons of navigation items and their hover state.                                                                                                                                                 |
+| `surface.specific.navigation-badge`, `text.specific.navigation-badge`               | Background and text of the small badge on a navigation item.                                                                                                                                     |
+| `surface.specific.bottom-navigation-label`, `text.specific.bottom-navigation-label` | Background and text of the labels at the bottom of the navigation panel. The default background is a translucent white, which a six-digit hex color cannot express; a hex value makes it opaque. |
+| `surface.base.sidebar`                                                              | Background of the secondary side panel. The same token also colors the app background behind the panels, the chat settings area, and the assistant form headers.                                 |
+| `surface.specific.sidebar-toggle`                                                   | Button that opens and closes the side panel.                                                                                                                                                     |
+| `border.specific.sidebar`                                                           | Border line of the side panel.                                                                                                                                                                   |
+| `surface.specific.gradient`                                                         | Color of the glow behind the side panels. Without this token, the UI keeps its default purple glow.                                                                                              |
+
+**Shared tokens that also change the panel content.** The panels reuse these tokens, and so do the pages. A change shows in both places:
+
+| Token                                                                      | Where it applies in the panels                                       |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `text.primary`, `text.secondary`, `text.quaternary`, `text.accent`         | Section titles, item descriptions, secondary text, and active items. |
+| `icon.primary`                                                             | Icons that do not use the navigation icon tokens.                    |
+| `surface.interactive.hover`, `surface.specific.dropdown-hover`             | Hover background of items and of the "more" menus.                   |
+| `surface.base.primary`, `surface.base.secondary`                           | Background of menus, pinned sections, and the profile area.          |
+| `border.structural`, `border.primary`, `border.secondary`, `border.accent` | Dividers, separators, and the focus ring of items.                   |
+
+A navigation panel whose background contrasts with the page needs matching values in both groups. For example, a dark navigation panel in the light theme needs light values for the navigation text and icon tokens, and for `text.primary` where the shared text appears on the panel. Because `text.primary` also colors the page text, a dark navigation background in the light theme is hard to keep readable. A light or mid-tone panel background avoids the problem.
+
+To remove the glow and all other background gradients instead of recoloring them, set [`effects.gradients`](#effects) to `none`.
 
 ## Typography
 
