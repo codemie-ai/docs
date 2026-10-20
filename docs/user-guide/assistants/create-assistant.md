@@ -225,14 +225,14 @@ continues to use each tool's own default limit.
 
 ## Tool Output Visibility
 
-The **Hide tool output** toggle controls whether end users can see tool calls and
+The **Hide tool outputs from end users** toggle controls whether end users can see tool calls and
 intermediate outputs while chatting with the assistant. The toggle is located in the header of
 the **Tools configuration** section of the assistant configuration form, to the right of the
 **Allow to override** toggle, and is also available from the in-chat assistant editor. It is
 shown for all assistants, including those for which the **Tool calls** and **Allow to override**
 controls are not displayed.
 
-![Hide tool output toggle in the Tools configuration section of the assistant form](./images/tool-output-visibility-section.png)
+![Hide tool outputs from end users toggle in the Tools configuration section of the assistant form](./images/tool-output-visibility-section.png)
 
 The toggle has two states:
 
@@ -309,7 +309,7 @@ await client.assistants.create({
 :::warning
 The SDK `update` methods replace the whole assistant configuration, so they cannot change
 `hide_tool_outputs` on its own. To change the flag on an existing assistant, use the
-**Hide tool output** toggle in the UI, or load the assistant, change the field, and send the
+**Hide tool outputs from end users** toggle in the UI, or load the assistant, change the field, and send the
 full configuration back. Sending only the required fields resets the assistant's tools, data
 sources, and conversation starters.
 :::
