@@ -11,8 +11,8 @@ pagination_next: null
 
 This guide covers pulling the published standalone image from Docker Hub, configuring the
 environment, and starting the CodeMie Standalone stack with Docker Compose. It also explains how
-contributors can build the same image directly from the `codemie` and `codemie-ui` source
-repositories.
+contributors can build the same image directly from the [`codemie`](https://github.com/codemie-ai/codemie) and
+[`codemie-ui`](https://github.com/codemie-ai/codemie-ui) source repositories.
 
 ## Runtime Prerequisites
 
@@ -54,9 +54,9 @@ Building the image locally additionally requires:
 - **Bash**
 - **Git**
 - Local checkouts of both repositories:
-  - `codemie` — backend repository; the packaging assets described in this guide live under
+  - [`codemie`](https://github.com/codemie-ai/codemie) — backend repository; the packaging assets described in this guide live under
     `standalone/` in this repository
-  - `codemie-ui` — frontend repository
+  - [`codemie-ui`](https://github.com/codemie-ai/codemie-ui) — frontend repository
 
 The default paths assume a sibling layout:
 

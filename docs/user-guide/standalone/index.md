@@ -47,8 +47,9 @@ or automated backups. For production workloads, use the
 ## Repository
 
 The packaging assets (`Dockerfile`, `build-image.sh`, Compose file, nginx and entrypoint scripts)
-live under `standalone/` in the `codemie` backend repository. The image bundles the frontend from
-the `codemie-ui` repository at build time — no separate frontend repository checkout is required
+live under `standalone/` in the [`codemie`](https://github.com/codemie-ai/codemie) backend
+repository. The image bundles the frontend from the
+[`codemie-ui`](https://github.com/codemie-ai/codemie-ui) repository at build time — no separate frontend repository checkout is required
 to run the image, only to build it. Consumers of a published release use its version-matched
 standalone deployment files and the image from Docker Hub; they do not need either source
 checkout.
