@@ -157,6 +157,7 @@ minimum, configure:
 | `RETRIEVAL_BACKEND`                        | `none`                          | `elasticsearch` \| `none`. When `none`, Knowledge Bases, Data Sources, and code indexing are disabled — no Elasticsearch container is part of the standalone stack |
 | `ADMIN_LOG_LOOKUP_ENABLED`                 | `false`                         | Must be `false` when `RETRIEVAL_BACKEND=none` — the admin log lookup endpoint depends on the same backend and returns HTTP 503 if enabled without it               |
 | `ENABLE_USER_MANAGEMENT`                   | `true`                          | Enables local user self-management in the built-in auth provider                                                                                                   |
+| `EMAIL_VERIFICATION_ENABLED`               | `false`                         | Set to `false` to auto-verify all accounts; with the platform default (`true`), new users must verify their email before logging in                                |
 | `MODELS_ENV`                               | `azure`                         | Selects the LLM provider profile; set exactly one provider block (Azure OpenAI or AWS Bedrock)                                                                     |
 | `SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD` | `admin@codemie.ai` / `password` | Seeded local superadmin credentials — change before any shared or long-lived deployment                                                                            |
 
