@@ -1,13 +1,13 @@
 ---
-id: deployment-guide
-title: CodeMie Standalone Deployment Guide
-sidebar_label: Deployment Guide
+id: run-guide
+title: Running CodeMie Standalone
+sidebar_label: Run Guide
 sidebar_position: 2
 pagination_prev: user-guide/standalone/index
 pagination_next: null
 ---
 
-# CodeMie Standalone Deployment Guide
+# Running CodeMie Standalone
 
 This guide covers pulling the published standalone image from Docker Hub, configuring the
 environment, and starting the CodeMie Standalone stack with Docker Compose. It also explains how

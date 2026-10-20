@@ -1536,4 +1536,4 @@ AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 
 - [Kubernetes Deployment](../../deployment/infrastructure-deployment/kubernetes.mdx) - Complete Kubernetes deployment walkthrough for AWS, Azure, and GCP
 - [On-VM Deployment](../../deployment/infrastructure-deployment/on-vm.mdx) - EC2, Azure VM, or Compute Engine deployment with Docker Compose
-- [Standalone Deployment](../../../user-guide/standalone/deployment-guide.md) - Single-image deployment without Elasticsearch or Keycloak
+- [Running CodeMie Standalone](../../../user-guide/standalone/run-guide.md) - Single-image setup without Elasticsearch or Keycloak

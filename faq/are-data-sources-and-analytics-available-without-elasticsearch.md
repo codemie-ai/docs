@@ -13,7 +13,7 @@ Elasticsearch, the dashboard still loads and simply shows an empty state instead
 
 ## Sources
 
-- [CodeMie Standalone Deployment Guide](https://docs.codemie.ai/user-guide/standalone/)
+- [AI/Run CodeMie Standalone](https://docs.codemie.ai/user-guide/standalone/)
 - [API Configuration Reference](https://docs.codemie.ai/admin/configuration/codemie/api-configuration)
 - [CodeMie Customer Feature Configuration](https://docs.codemie.ai/admin/configuration/codemie/customer-feature-configuration)
 - [Analytics Dashboard](https://docs.codemie.ai/user-guide/analytics/analytics-overview)

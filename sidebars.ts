@@ -351,7 +351,7 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/standalone/index',
           },
           collapsed: true,
-          items: ['user-guide/standalone/deployment-guide'],
+          items: ['user-guide/standalone/run-guide'],
         },
         {
           type: 'category',

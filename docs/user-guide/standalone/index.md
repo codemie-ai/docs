@@ -42,7 +42,7 @@ or automated backups. For production workloads, use the
 | PostgreSQL                  | `postgres:17` container                                                                                       | Primary application database                                                                                                                                                                    |
 | Authentication              | Built-in local auth (`IDP_PROVIDER=local`)                                                                    | Seeded with a superadmin account from `.env.standalone`; no Keycloak required                                                                                                                   |
 | Retrieval (Elasticsearch)   | Disabled by default (`RETRIEVAL_BACKEND=none`)                                                                | Knowledge Bases, Data Sources, and code indexing are unavailable unless a retrieval backend is configured — see [Configuration](../../admin/configuration/codemie/datasources-configuration.md) |
-| Budget Management (LiteLLM) | Not included                                                                                                  | Disable `features:budgetManagement` — see [Deployment Guide](./deployment-guide.md#disabling-budget-management)                                                                                 |
+| Budget Management (LiteLLM) | Not included                                                                                                  | Disable `features:budgetManagement` — see [Run Guide](./run-guide.md#disabling-budget-management)                                                                                               |
 
 ## Repository
 
@@ -55,5 +55,5 @@ checkout.
 
 ## Next Steps
 
-Proceed to the [Deployment Guide](./deployment-guide.md) to pull the image, configure the
+Proceed to the [Run Guide](./run-guide.md) to pull the image, configure the
 environment, and start the stack.
