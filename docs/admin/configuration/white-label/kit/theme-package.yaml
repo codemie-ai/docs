@@ -18,6 +18,18 @@ colors: {}
 #   surface.base.primary:
 #     dark: '#111111'
 #     light: '#ffffff'
+#
+# Side panel tokens (see "Side Panel and Gradient Tokens" in the Theme Package Reference):
+#   surface.base.navigation:                      main navigation background (only when effects.gradients is 'none')
+#   surface.specific.navigation-link:             navigation item background
+#   text.specific.navigation-link:                navigation item text (also: text.specific.navigation-link-hover)
+#   text.specific.navigation-icon:                navigation item icon (also: text.specific.navigation-icon-hover)
+#   surface.specific.navigation-badge:            navigation badge background (also: text.specific.navigation-badge)
+#   surface.specific.bottom-navigation-label:     bottom label background (also: text.specific.bottom-navigation-label)
+#   surface.base.sidebar:                         secondary side panel background
+#   surface.specific.sidebar-toggle:              side panel toggle button
+#   border.specific.sidebar:                      side panel border
+#   surface.specific.gradient:                    color of the glow behind the panels
 
 typography:
   bodyFamily: '' # REQUIRED - CSS font-family for UI text, for example 'Inter, sans-serif'
