@@ -172,6 +172,31 @@ apply_args() {
   ! sed -n '/^html.codemie/,/^}/p' "$OUT/brand.css" | grep -q -- '--brand-gradients'
 }
 
+@test "brand.css: effects.gradients none makes two-colour gradients single-colour in both themes" {
+  pkg=$(mutate '.effects.gradients = "none"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  for theme in codemieDark codemieLight; do
+    block=$(sed -n "/^html.$theme {/,/^}/p" "$OUT/brand.css")
+    for pair in border-specific-primary-button surface-specific-button-tertiary onboarding-tooltip; do
+      [[ "$block" == *"--colors-$pair-to: var(--colors-$pair-from);"* ]]
+    done
+  done
+}
+
+@test "brand.css: the single-colour rules come after the package colours, and only with gradients none" {
+  pkg=$(mutate '.effects.gradients = "none" | .colors["border.specific.primary-button-to"] = {"dark": "#111111", "light": "#222222"}')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  block=$(sed -n '/^html.codemieDark {/,/^}/p' "$OUT/brand.css")
+  first=$(grep -n -- '--colors-border-specific-primary-button-to: 17 17 17' <<<"$block" | cut -d: -f1)
+  last=$(grep -n -- '--colors-border-specific-primary-button-to: var(' <<<"$block" | cut -d: -f1)
+  [ "$first" -lt "$last" ]
+  run "$SCRIPT" --render-only --output-dir "$BATS_TEST_TMPDIR/out3" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  ! grep -q -- 'primary-button-to: var(' "$BATS_TEST_TMPDIR/out3/brand.css"
+}
+
 @test "brand.css: no --brand-gradients without effects, or with effects.gradients default" {
   run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]

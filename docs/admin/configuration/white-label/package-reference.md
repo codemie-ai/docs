@@ -78,6 +78,20 @@ A navigation panel whose background contrasts with the page needs matching value
 
 To remove the glow and all other background gradients instead of recoloring them, set [`effects.gradients`](#effects) to `none`.
 
+### Button Border and Product Tour Tokens
+
+The default theme draws purple gradient borders on buttons and a purple product tour. Each of these colors has a token. Set the tokens to make the buttons and the tour match your palette. A two-color gradient takes a `from` and a `to` value; use the same value twice for a single color.
+
+| Token                                                                          | Where it applies                                                                                        |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `border.specific.primary-button-from`, `border.specific.primary-button-to`     | Gradient border of primary buttons, for example "Create", "Send" and "New chat".                        |
+| `surface.specific.button-secondary-hover-to`                                   | Fill of the progress bar.                                                                               |
+| `surface.specific.button-tertiary-from`, `surface.specific.button-tertiary-to` | Gradient border of the "Help & Product Tour" button, and its fill on hover.                             |
+| `onboarding.highlight`                                                         | Outline around the page element that a product tour step points to.                                     |
+| `onboarding.tooltip-from`, `onboarding.tooltip-to`                             | Vertical gradient of the product tour popup and its arrow. The popup text is white; choose dark colors. |
+
+With [`effects.gradients`](#effects) set to `none`, the `-to` value of the primary button border, the Help button and the product tour popup follows its `-from` value, and each gradient becomes a single color. The `-from` value stays under your control. If a package does not set a `-from` token, the single color is the default purple, so set the `-from` tokens when you use `none`.
+
 ## Typography
 
 | Path                         | Type           | Required | Description                                                                                                                                    |
@@ -101,9 +115,10 @@ With `none`, the kit writes `--brand-gradients: none;` into the `:root` block of
 - the fixed gradient behind the main navigation panel. The panel then uses the `surface.base.navigation` color;
 - the background image behind the page content and the pagination bar in the light theme;
 - the gradients on cards and workflow cards;
-- the gradients on the standalone pages, including the Keycloak login page.
+- the gradients on the standalone pages, including the Keycloak login page;
+- the two-color gradients of the primary button border, the Help button and the product tour popup. Each becomes a single color (see [Button Border and Product Tour Tokens](#button-border-and-product-tour-tokens)).
 
-The option wins over the per-user Custom Appearance setting for gradients. Buttons and other control styles are not background gradients and stay unchanged. When `none` is set, the `surface.specific.gradient` token has no visible effect.
+The option wins over the per-user Custom Appearance setting for gradients. Button fills are not gradients and stay unchanged. When `none` is set, the `surface.specific.gradient` token has no visible effect.
 
 ## Assets
 
