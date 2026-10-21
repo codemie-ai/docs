@@ -7,8 +7,9 @@ To use it, open the assistant's **Create** or **Edit** page, switch on **Enable 
 While it is on:
 
 - The assistant chooses from all tools available on the platform, not only from the tools picked manually.
+- Narrowing applies only when the assistant has enough tools; with fewer tools, all configured tools are used.
 - Manually picked tools are ignored. They stay visible in **Tools configuration** but cannot be changed.
-- Web search and similar tools still follow their usual rules, and Git tools still require the **Git** toolkit on the assistant.
+- Skills stay available. Web search, code interpreter, and image generation are used only when enabled for the request, and Git tools still require the **Git** toolkit on the assistant.
 - Workflows are not affected and keep using manually selected tools.
 
 Switching the toggle off restores the previous manual selection. Keep it off when precise control over available tools is required.
