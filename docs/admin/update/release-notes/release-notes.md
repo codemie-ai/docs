@@ -27,13 +27,15 @@ Review every release between your current and target version that has a **Breaki
 ## October 2026 {#2026-10}
 
 <details className="release" id="v2-60-0">
-<summary><span className="release__version">CodeMie 2.60.0</span><span className="release__date">Oct 19, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.60.0</span><span className="release__date">Oct 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** October 19, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.60.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Keycloak Operator 1.35.0</h4>
+
+Existing deployments need [CRDs update](../3rd-party-components/keycloak/operator-upgrade.md).
 
 <h3>Configuration Changes</h3>
 
