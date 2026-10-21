@@ -71,8 +71,12 @@ Smart Tool Selection takes effect only when it is enabled on the platform level.
 
 - The assistant chooses tools for each request from all tools available on the platform. Tools are not limited to those picked manually.
 - Tool relevance is based on the request and the recent conversation, so different requests can use different tools.
-- The tools picked manually in **Tools configuration** are ignored. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, and integration selectors are disabled, and an information message explains why.
-- Tools that depend on platform features follow the usual rules. For example, web search tools are available only when web search is enabled for the chat, and Git tools still require the **Git** toolkit to be added to the assistant.
+- Narrowing applies only when the assistant has enough tools; the threshold is a platform setting. With fewer tools, all configured tools are used.
+- Skills attached to the assistant stay available alongside the matched tools. If no relevant tool is found, the assistant falls back to the configured toolkits and skills.
+- The tools picked manually in **Tools configuration** do not decide which tools run. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, and plugin selections are disabled, and an information message explains why. Integration (credential) dropdowns remain editable and are applied to the selected tools when they are used.
+- Web search, code interpreter, and image generation are added only when the matching feature is available and switched on for the request in the chat. Git tools still require the **Git** toolkit to be added to the assistant.
+- A technical maximum on the number of tools sent to the model still applies.
+- Smart Tool Selection does not guarantee a tool call; the model may still answer directly.
 - The **Assistant details** sidebar shows **Smart Tools: ON** under **Tools & Capabilities**.
 
 #### When Smart Tools Is Off
