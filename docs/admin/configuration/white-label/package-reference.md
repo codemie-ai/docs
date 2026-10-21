@@ -62,7 +62,7 @@ The UI has two side panels: the main navigation on the left and a secondary side
 | `surface.base.sidebar`                                                              | Background of the secondary side panel. The same token also colors the app background behind the panels, the chat settings area, and the assistant form headers.                                 |
 | `surface.specific.sidebar-toggle`                                                   | Button that opens and closes the side panel.                                                                                                                                                     |
 | `border.specific.sidebar`                                                           | Border line of the side panel.                                                                                                                                                                   |
-| `surface.specific.gradient`                                                         | Color of the glow behind the side panels. Without this token, the UI keeps its default purple glow.                                                                                              |
+| `surface.specific.gradient`                                                         | Color of the glow behind the side panels and behind the first popup of the product tour. Without this token, the UI keeps its default purple glow.                                               |
 
 **Shared tokens that also change the panel content.** The panels reuse these tokens, and so do the pages. A change shows in both places:
 
@@ -112,6 +112,7 @@ The `effects` block is optional. A package without it keeps all default effects.
 With `none`, the kit writes `--brand-gradients: none;` into the `:root` block of `brand.css`. The UI then removes these gradients:
 
 - the glow behind the side panels, and the overlay on the secondary side panel;
+- the glow behind the first popup of the product tour;
 - the fixed gradient behind the main navigation panel. The panel then uses the `surface.base.navigation` color;
 - the background image behind the page content and the pagination bar in the light theme;
 - the gradients on cards and workflow cards;

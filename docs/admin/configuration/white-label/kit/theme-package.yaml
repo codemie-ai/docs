@@ -29,7 +29,7 @@ colors: {}
 #   surface.base.sidebar:                         secondary side panel background
 #   surface.specific.sidebar-toggle:              side panel toggle button
 #   border.specific.sidebar:                      side panel border
-#   surface.specific.gradient:                    color of the glow behind the panels
+#   surface.specific.gradient:                    color of the glow behind the panels and the first tour popup
 #
 # Button border and product tour tokens (see "Button Border and Product Tour Tokens" in the Theme Package Reference):
 #   border.specific.primary-button-from / -to:    primary button border gradient
