@@ -19,6 +19,10 @@ permissions:
   packages: read
   actions: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   codeql:
     name: CodeQL (${{ matrix.language }})
