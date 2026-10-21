@@ -30,6 +30,13 @@ colors: {}
 #   surface.specific.sidebar-toggle:              side panel toggle button
 #   border.specific.sidebar:                      side panel border
 #   surface.specific.gradient:                    color of the glow behind the panels
+#
+# Button border and product tour tokens (see "Button Border and Product Tour Tokens" in the Theme Package Reference):
+#   border.specific.primary-button-from / -to:    primary button border gradient
+#   surface.specific.button-tertiary-from / -to:  Help & Product Tour button on hover
+#   surface.specific.button-secondary-hover-to:   progress bar fill
+#   onboarding.highlight:                         product tour outline
+#   onboarding.tooltip-from / -to:                product tour popup gradient (white text on it)
 
 typography:
   bodyFamily: '' # REQUIRED - CSS font-family for UI text, for example 'Inter, sans-serif'
