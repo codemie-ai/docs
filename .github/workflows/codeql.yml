@@ -25,7 +25,6 @@ jobs:
       fail-fast: false
       matrix:
         language:
-          - javascript-typescript
           - actions
 
     uses: codemie-ai/ci-workflows/.github/workflows/reusable-codeql.yml@main
