@@ -15,58 +15,51 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare Node.js project
+        id: setup
+        uses: codemie-ai/ci-workflows/actions/setup-node-project@84f121ac899deab768202d4a1f9164322737b8ae # pre-release snapshot
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+          fetch-depth: '1'
 
       - name: Validate last commit message
+        id: commit_message
         run: git log -1 --format='%B' | npx commitlint --verbose
 
       - name: Validate PR title
-        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --verbose
+        id: pr_title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx commitlint --verbose
 
-      - name: Validation summary
-        if: success()
+      - name: Write validation summary
+        if: always()
+        shell: bash
+        env:
+          SETUP_OUTCOME: ${{ steps.setup.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit_message.outcome }}
+          PR_TITLE_OUTCOME: ${{ steps.pr_title.outcome }}
         run: |
-          echo "Conventional commits validation passed!"
-          echo "- Commit message: PASSED"
-          echo "- PR title: PASSED"
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ### Commit & PR Validation
+
+          | Check | Result |
+          | --- | --- |
+          | Project setup | $SETUP_OUTCOME |
+          | Last commit message | $COMMIT_OUTCOME |
+          | PR title | $PR_TITLE_OUTCOME |
+          EOF
 
   secrets-detection:
     name: Secrets Detection
-    runs-on: ubuntu-latest
     needs: commit-and-pr-validation
     if: github.event_name == 'pull_request'
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
+    permissions:
+      contents: read
+      pull-requests: read
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_ENABLE_SUMMARY: true
-          GITLEAKS_VERSION: '8.30.1'
-
-      - name: Secrets detection summary
-        if: success()
-        run: |
-          echo "Secrets detection scan completed successfully!"
-          echo "- Gitleaks: PASSED"
+    uses: codemie-ai/ci-workflows/.github/workflows/reusable-secrets-detection.yml@84f121ac899deab768202d4a1f9164322737b8ae # pre-release snapshot
 
   linters:
     name: Code Quality Checks
@@ -75,42 +68,53 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Prepare Node.js project
+        id: setup
+        uses: codemie-ai/ci-workflows/actions/setup-node-project@84f121ac899deab768202d4a1f9164322737b8ae # pre-release snapshot
 
       - name: Run TypeScript type checking
+        id: typecheck
         run: npm run typecheck
 
       - name: Run ESLint
+        id: eslint
         run: npm run lint:eslint
 
       - name: Run Prettier check
+        id: prettier
         run: npm run lint:prettier
 
       - name: Run Markdown linter
+        id: markdown
         run: npm run lint:markdown
 
       - name: Run spell check
+        id: spelling
         run: npm run lint:spelling
 
-      - name: Linting summary
-        if: success()
+      - name: Write linting summary
+        if: always()
+        shell: bash
+        env:
+          SETUP_OUTCOME: ${{ steps.setup.outcome }}
+          TYPECHECK_OUTCOME: ${{ steps.typecheck.outcome }}
+          ESLINT_OUTCOME: ${{ steps.eslint.outcome }}
+          PRETTIER_OUTCOME: ${{ steps.prettier.outcome }}
+          MARKDOWN_OUTCOME: ${{ steps.markdown.outcome }}
+          SPELLING_OUTCOME: ${{ steps.spelling.outcome }}
         run: |
-          echo "All linting checks passed successfully!"
-          echo "- TypeScript type checking: PASSED"
-          echo "- ESLint: PASSED"
-          echo "- Prettier: PASSED"
-          echo "- Markdown linting: PASSED"
-          echo "- Spell checking: PASSED"
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ### Code Quality Checks
+
+          | Check | Result |
+          | --- | --- |
+          | Project setup | $SETUP_OUTCOME |
+          | TypeScript | $TYPECHECK_OUTCOME |
+          | ESLint | $ESLINT_OUTCOME |
+          | Prettier | $PRETTIER_OUTCOME |
+          | Markdown | $MARKDOWN_OUTCOME |
+          | Spelling | $SPELLING_OUTCOME |
+          EOF
 
   build:
     name: Build Documentation
@@ -118,35 +122,46 @@ jobs:
     needs: [secrets-detection, linters]
     if: github.event_name == 'pull_request'
 
+    permissions:
+      contents: read
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Prepare Node.js project
+        id: setup
+        uses: codemie-ai/ci-workflows/actions/setup-node-project@84f121ac899deab768202d4a1f9164322737b8ae # pre-release snapshot
 
       - name: Build project with PR preview configuration
+        id: build_site
         run: npm run build
         env:
           DOCUSAURUS_URL: https://codemie-docs-pr-previews.s3.eu-central-1.amazonaws.com
           DOCUSAURUS_BASE_URL: /pr-${{ github.event.pull_request.number }}/
 
       - name: Upload build artifacts
+        id: upload_artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: docs-build-pr-${{ github.event.pull_request.number }}
           path: build/
           retention-days: 1
 
-      - name: Build summary
-        if: success()
+      - name: Write build summary
+        if: always()
+        shell: bash
+        env:
+          SETUP_OUTCOME: ${{ steps.setup.outcome }}
+          BUILD_OUTCOME: ${{ steps.build_site.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload_artifact.outcome }}
+          ARTIFACT_NAME: docs-build-pr-${{ github.event.pull_request.number }}
         run: |
-          echo "Documentation build completed successfully!"
-          echo "- Build: PASSED"
-          echo "- Artifacts uploaded for PR #${{ github.event.pull_request.number }}"
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ### Documentation Build
+
+          | Step | Result |
+          | --- | --- |
+          | Project setup | $SETUP_OUTCOME |
+          | Site build | $BUILD_OUTCOME |
+          | Artifact upload | $UPLOAD_OUTCOME |
+
+          Artifact name: $ARTIFACT_NAME
+          EOF
