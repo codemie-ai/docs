@@ -1,63 +1,19 @@
-# How does Smart Tool Selection work for assistants? What is the Smart Tool Selection toggle and how do I use it? Can assistants automatically select tools based on conversation context?
+# How does Smart Tool Selection work for assistants? What is the Enable Smart Tools selection toggle and how do I use it?
 
-Smart Tool Selection is an intelligent feature that automatically selects relevant tools for your assistant based on semantic similarity, configured credentials, and permissions.
+Smart Tool Selection lets an assistant choose the tools to use for each request, based on the meaning of the request and the recent conversation, instead of relying only on tools picked manually.
 
-1. Navigate to your assistant's **Create** or **Edit** page
-2. Locate the **Smart Tool Selection** toggle
-3. Enable or disable based on your needs:
-   - **Disabled**: Uses the traditional manual tool selection approach
-   - **Enabled**: Activates intelligent, automatic tool selection
+To use it, open the assistant's **Create** or **Edit** page, switch on **Enable Smart Tools selection** above the **Tools configuration** section, and click **Save**. The feature also has to be enabled on the platform level; otherwise the toggle has no effect.
 
-When No Tools Are Pre-selected
+While it is on:
 
-- The system performs semantic analysis across all registered tools
-- Tools are automatically selected based on:
-  - **Semantic relevance** to your assistant's purpose and conversations
-  - **Available credentials** and proper authentication
-  - **User permissions** and access rights
-- This ensures your assistant has access to the most relevant tools without manual configuration
+- The assistant chooses from all tools available on the platform, not only from the tools picked manually.
+- Narrowing applies only when the assistant has enough tools; with fewer tools, all configured tools are used.
+- Manually picked tools are ignored. They stay visible in **Tools configuration** but cannot be changed.
+- Skills stay available. Web search, code interpreter, and image generation are used only when enabled for the request, and Git tools still require the **Git** toolkit on the assistant.
+- Workflows are not affected and keep using manually selected tools.
 
-When Tools Are Already Selected
-
-- Smart selection is **limited to your pre-selected tools only**
-- Prevents context overload by maintaining a focused tool set
-- Provides intelligent selection within your curated tool collection
-
-Workflow Operations
-
-- **Workflows always use the legacy/traditional approach**
-- The Smart Tool Selection toggle **does not affect workflow behavior**
-- This ensures workflow consistency and predictable execution
-
-Context Management
-
-- Smart selection prevents LLM context overload
-- Maintains optimal performance by limiting tool scope
-- Balances capability with efficiency
-
-When to Use Smart Tool Selection
-
-**Enable Smart Tool Selection when:**
-
-- You want automatic, intelligent tool discovery
-- Your assistant needs dynamic tool access based on conversation context
-- You prefer minimal manual tool configuration
-
-**Keep it Disabled when:**
-
-- You need precise control over tool availability
-- You're working with sensitive tools requiring explicit selection
-- You prefer the traditional manual approach
-
-## Error Handling
-
-If credential or permission issues occur during smart selection:
-
-- The system provides clear error messages
-- Alternative tools may be suggested when available
-- Manual tool selection remains available as a fallback
+Switching the toggle off restores the previous manual selection. Keep it off when precise control over available tools is required.
 
 ## Sources
 
-- [Overview](https://docs.codemie.ai/user-guide/tools_integrations/tools/overview)
-- [Create Assistant](https://docs.codemie.ai/user-guide/assistants/create-assistant)
+- [Assistant's Tools Overview](https://docs.codemie.ai/user-guide/tools_integrations/tools/overview)
