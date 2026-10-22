@@ -31,6 +31,10 @@ colors: {}
 #   border.specific.sidebar:                      side panel border
 #   surface.specific.gradient:                    color of the glow behind the panels and the first tour popup
 #
+# Link text and badge (see "Link, Accent Text and Badge Tokens" in the Theme Package Reference):
+#   text.accent-status / text.accent-status-hover: links, guided tour card titles on hover, search matches
+#   surface.specific.new-badge:                   background of the "NEW" tag (white text on it)
+#
 # Button border and product tour tokens (see "Button Border and Product Tour Tokens" in the Theme Package Reference):
 #   border.specific.primary-button-from / -to:    primary button border gradient
 #   surface.specific.button-tertiary-from / -to:  Help & Product Tour button on hover
