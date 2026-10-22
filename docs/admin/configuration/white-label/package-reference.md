@@ -78,6 +78,15 @@ A navigation panel whose background contrasts with the page needs matching value
 
 To remove the glow and all other background gradients instead of recoloring them, set [`effects.gradients`](#effects) to `none`.
 
+### Link, Accent Text and Badge Tokens
+
+Links and highlighted text use two tokens that are separate from `text.accent`. Their defaults are purple in the dark theme and blue in the light theme. Set both, or links stay purple. The "NEW" tag on a menu entry or data source type has its own token, purple by default.
+
+| Token                                            | Where it applies                                                                                                                                                                                |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text.accent-status`, `text.accent-status-hover` | Text links and their hover color, for example the links in the "Help & Product Tour" popup and the welcome text. Also the title of a guided tour card on hover, and highlighted search matches. |
+| `surface.specific.new-badge`                     | Background of the "NEW" tag, for example on a data source type. The text on it is white; choose a dark color.                                                                                   |
+
 ### Button Border and Product Tour Tokens
 
 The default theme draws purple gradient borders on buttons and a purple product tour. Each of these colors has a token. Set the tokens to make the buttons and the tour match your palette. A two-color gradient takes a `from` and a `to` value; use the same value twice for a single color.
