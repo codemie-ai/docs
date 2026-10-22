@@ -327,6 +327,13 @@ svn_loader:
 
 Configure how processed data is stored and indexed in Elasticsearch.
 
+:::info Retrieval backend disabled
+When the backend's `RETRIEVAL_BACKEND` setting is `none` (no Elasticsearch), Data Sources,
+Knowledge Bases, and code indexing are unavailable, and the storage settings below have no
+effect. See [API Configuration Reference](./api-configuration.md#elasticsearch) and the
+[CodeMie Standalone](../../../user-guide/standalone/index.md) guide.
+:::
+
 ```yaml
 storage:
   embeddings_max_docs_count: 20                         # Max documents for embedding context

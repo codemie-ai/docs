@@ -26,6 +26,47 @@ Review every release between your current and target version that has a **Breaki
 
 ## October 2026 {#2026-10}
 
+<details className="release" id="v2-61-0">
+<summary><span className="release__version">CodeMie 2.61.0</span><span className="release__date">Oct 22, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 22, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.61.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**LiteLLM graceful drain**
+
+LiteLLM pods now drain in-flight requests through the `/health/drain` endpoint before they stop. This was added so that rollouts and scale-down no longer drop requests that are still being served. The drain call is authorized with a token stored in the new `litellm-drain-token` secret. The `general_settings.enable_drain_endpoint: true` setting and the `preStop` hook are already included in the updated `litellm/config/litellm-<cloud>-config.yaml` and `litellm/values-<cloud>.yaml` files.
+
+**Actions required**
+
+- Only if LiteLLM Proxy is deployed:
+  - Automated deployment: no action required, `helm-charts.sh` creates the `litellm-drain-token` secret.
+  - Manual deployment: create the secret before upgrading, see [Manual Deployment](../../deployment/extensions/litellm-proxy/deployment/manual-deployment.md).
+  - Custom LiteLLM `values.yaml` or config files: copy the `extraEnvVars`, `lifecycle.preStop` and `enable_drain_endpoint` settings from the updated files.
+
+</details>
+
+<details className="release" id="v2-60-0">
+<summary><span className="release__version">CodeMie 2.60.0</span><span className="release__date">Oct 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** October 19, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.60.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Keycloak Operator 1.35.0</h4>
+
+Existing deployments need [CRDs update](../3rd-party-components/keycloak/operator-upgrade.md).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-59-0">
 <summary><span className="release__version">CodeMie 2.59.0</span><span className="release__date">Oct 16, 2026</span><span className="release__no-action">No admin action required</span></summary>
 

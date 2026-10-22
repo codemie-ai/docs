@@ -223,6 +223,107 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
+## Tool Output Visibility
+
+The **Hide tool outputs from end users** toggle controls whether end users can see tool calls and
+intermediate outputs while chatting with the assistant. The toggle is located in the header of
+the **Tools configuration** section of the assistant configuration form, to the right of the
+**Allow to override** toggle, and is also available from the in-chat assistant editor. It is
+shown for all assistants, including those for which the **Tool calls** and **Allow to override**
+controls are not displayed.
+
+![Hide tool outputs from end users toggle in the Tools configuration section of the assistant form](./images/tool-output-visibility-section.png)
+
+The toggle has two states:
+
+| State        | Behavior                                                                                                                                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Disabled** | Default. Conversation-level tool output settings behave as before; end users can still toggle tool output visibility per chat.                                                                                                                                                       |
+| **Enabled**  | End users see only the final assistant response. Tool calls, intermediate outputs, raw payloads, and execution traces stay hidden, and the **Hide tool outputs** switch in the chat configuration panel (**General** > **Tool outputs**) is hidden while a chat uses this assistant. |
+
+Two info icons next to the toggle show tooltips on hover:
+
+- The first icon is always visible and explains that, when enabled, end users see only the
+  final assistant response, and that conversation settings cannot turn tool details back on.
+- The second icon appears only while the toggle is enabled and clarifies that the restriction
+  applies to everyone chatting with the assistant, including its creator:
+
+  > This applies to everyone chatting with this assistant, including you. Turn it off to
+  > inspect tool execution while testing.
+
+:::info
+Enforcement happens on the server, not only in the UI. Hidden tool details are stripped from
+the chat response, conversation history, live replay, shared conversation pages, and
+exported transcripts — the per-conversation client toggle cannot turn them back on for a
+flagged assistant. Full tool outputs are still stored; only what is served to end users is
+filtered.
+:::
+
+:::note
+Tool output passed between a parent assistant and its sub-assistants, or between assistants
+in a workflow, is internal orchestration data and is not affected by this setting.
+:::
+
+### Using with the CodeMie SDK
+
+The flag is exposed on the assistant model as `hide_tool_outputs` (boolean, default `false`)
+in both the Python and Node.js SDKs.
+
+**Python**
+
+```python
+from codemie_sdk.models.assistant import AssistantCreateRequest
+
+# Create an assistant with tool outputs hidden from end users
+client.assistants.create(
+    AssistantCreateRequest(
+        name="Support Agent",
+        description="Customer-facing support assistant",
+        system_prompt="...",
+        project="proj",
+        llm_model_type="gpt-4o",
+        hide_tool_outputs=True,
+    )
+)
+```
+
+**Node.js**
+
+```typescript
+// Create an assistant with tool outputs hidden from end users
+await client.assistants.create({
+  name: 'Support Agent',
+  description: 'Customer-facing support assistant',
+  system_prompt: '...',
+  project: 'proj',
+  llm_model_type: 'gpt-4o',
+  context: [],
+  toolkits: [],
+  conversation_starters: [],
+  mcp_servers: [],
+  assistant_ids: [],
+  hide_tool_outputs: true,
+});
+```
+
+:::warning
+The SDK `update` methods replace the whole assistant configuration, so they cannot change
+`hide_tool_outputs` on its own. To change the flag on an existing assistant, use the
+**Hide tool outputs from end users** toggle in the UI, or load the assistant, change the field, and send the
+full configuration back. Sending only the required fields resets the assistant's tools, data
+sources, and conversation starters.
+:::
+
+:::tip
+On update, leaving `hide_tool_outputs` out keeps the stored value. In the Python SDK the field
+is sent only when it was set explicitly on the request object, and `hide_tool_outputs=False`
+turns the setting off.
+:::
+
+The field is also present on the assistant detail response and on the assistant data
+attached to conversation messages, so client code can check whether an assistant hides tool
+outputs before rendering tool-related UI.
+
 ## File Attachments
 
 The **File attachments** section controls whether users can attach files when chatting with

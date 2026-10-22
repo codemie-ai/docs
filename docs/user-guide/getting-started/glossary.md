@@ -102,6 +102,10 @@ If no matching integration is found at any level, the action requiring it will f
 
 See [How the Default Integration Is Selected](../tools_integrations/integrations/index.md#how-the-default-integration-is-selected).
 
+### Default Project
+
+The one project per user that pays for the user's LLM usage when a request is not tied to a specific project — for example, chatting with a Marketplace assistant from a project the user is not a member of, AI generation of assistants, skills, and workflows, or CLI requests sent without a configured project. Platform Admins and Maintainers assign it in **Users Management**; it must be one of the user's own projects. If none is assigned, the user's [Personal Project](#personal-project) is used, or the first of the user's projects by name. See [Default Project](../project-user-management/users.md#default-project) and [Budget Management — Default Project](../budget-management/index.md#default-project).
+
 ---
 
 ## E
@@ -197,6 +201,10 @@ An industry-standard protocol for integrating external tools with AI assistants.
 A workspace within the CodeMie platform that delineates and isolates working environments, ensuring that users' activities do not interfere with one another. Projects are typically created by team leaders or administrators and facilitate structured project management. All data sources, integrations, and assistants are associated with a specific project.
 
 **Important**: Project names must be in lowercase only. Uppercase characters are not allowed in project names.
+
+### Personal Project
+
+A project created automatically for each user and named after the user's email address. A personal project is the user's private space and is not shared with other users. When a user has no explicitly assigned [Default Project](#default-project), the personal project acts as the default. See [Personal space](../budget-management/index.md#personal-space).
 
 ### Platform Admin
 

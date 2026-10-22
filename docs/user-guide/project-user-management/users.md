@@ -35,19 +35,19 @@ To access Users Management, click the **Profile** icon in the bottom-left corner
 
 The users list displays all platform users in a searchable, filterable table.
 
-![Users Management list](./images/users-list.png)
+![Users Management list — the default project is labeled Default in the Projects column](./images/users-list.png)
 
 ### Columns
 
-| Column            | Description                                                                                                      |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Name**          | Display name                                                                                                     |
-| **Email**         | User's email address                                                                                             |
-| **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary.md#external-user-availableforexternal) |
-| **Project Admin** | Whether the user holds Project Admin role in any project                                                         |
-| **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                        |
-| **Projects**      | Badge list of projects the user is assigned to                                                                   |
-| **Actions**       | Row-level actions (edit, view details)                                                                           |
+| Column            | Description                                                                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**          | Display name                                                                                                                                         |
+| **Email**         | User's email address                                                                                                                                 |
+| **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary.md#external-user-availableforexternal)                                     |
+| **Project Admin** | Whether the user holds Project Admin role in any project                                                                                             |
+| **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                                                            |
+| **Projects**      | Badge list of projects the user is assigned to. The default project is shown first and labeled **Default** — see [Default Project](#default-project) |
+| **Actions**       | Row-level actions (edit, view details)                                                                                                               |
 
 ### Filtering
 
@@ -70,7 +70,7 @@ The panel shows:
 - **User Type**: `Regular` or `External`
 - **Email**: user's email address
 - **Platform Roles** block — Admin, Maintainer, and Auditor toggles (visible to Platform Admins and Maintainers only)
-- **Projects** table — list of projects the user is assigned to, with their role in each
+- **Projects** table — list of projects the user is assigned to, with their role in each and the user's default project
 - **Budget Spending** widget — current budget consumption for the selected user (see below)
 
 ![User Details panel for a Regular user](./images/user-details-regular.png)
@@ -148,11 +148,19 @@ the user record.
 ### Add a Project Assignment
 
 1. In the **User Details** panel, click **Add Project**.
-2. Select a project from the dropdown.
-3. Choose the role: **User** or **Project Admin**.
+2. Select a project from the **Project** dropdown.
+3. Optionally, turn on **Set as default** to make this project the user's
+   [default project](#default-project) in the same step.
 4. Click **Add**.
 
-The new assignment appears in the **Projects** table immediately.
+![Add Project dialog with a project selected and the Set as default switch turned on](./images/add-project-set-default.png)
+
+The new assignment appears in the **Projects** table immediately with the **User** role. To
+grant **Project Admin**, change the role in the **Role** column afterwards.
+
+If the project is added but setting it as default fails, the message _"User added to project,
+but the default project was not changed"_ is shown. The membership is kept and the previous
+default project stays in place.
 
 ### Remove a Project Assignment
 
@@ -160,4 +168,81 @@ The new assignment appears in the **Projects** table immediately.
 2. Click **Unassign** next to that project.
 3. Confirm the removal.
 
-The user loses access to that project immediately. Their account is not affected.
+The user loses access to that project immediately. Their account is not affected. If the
+removed project was the user's default project, a new default is determined automatically —
+see [How the Default Project Is Determined](#how-the-default-project-is-determined).
+
+## Default Project
+
+Each user who belongs to at least one project has exactly one **default project**. The default
+project decides which project budget pays for the user's LLM usage when a request is not tied to
+a specific project — for example, chatting with a Marketplace assistant from a project the user
+is not a member of, or running a CLI agent without a configured project. For the full billing
+rules, see [Default Project in Budget Management](../budget-management/index.md#default-project).
+
+Assigning a default project is useful when a user works across several projects and the
+organization needs that user's spend charged to one predictable project budget — for example,
+the budget of the user's department.
+
+:::note
+The default project described here is unrelated to the Keycloak **Assign Default Project**
+mapper. That mapper only creates a personal project in Keycloak-managed mode.
+:::
+
+### How the Default Project Is Determined
+
+| Priority | Default project                                                                    |
+| -------- | ---------------------------------------------------------------------------------- |
+| 1        | The project an administrator explicitly set as default                             |
+| 2        | If none is set — the user's personal project (the project named after their email) |
+| 3        | If the user has no personal project — the first of the user's projects by name     |
+
+Because of these fallbacks, the **Users** list and the **User Details** panel always mark one
+project as default for every user who has projects, even when no administrator has set one.
+
+A user can have only one default project at a time. Setting a new default replaces the previous
+one; the previous project stays an ordinary membership with the same role.
+
+The default project is always one of the user's own projects. When the membership of the
+default project is removed — individually, through **Bulk Actions**, or from the project's
+members list — the explicit default is cleared and the next rule in the table applies.
+
+### Viewing the Default Project
+
+- **Users list** — in the **Projects** column, the default project is shown as the first badge
+  and is prefixed with the label **Default** (tooltip: _"Default project"_).
+- **User Details** — the **Projects** table has a **Default** column. The radio button of the
+  default project is selected.
+
+![User Details panel — Projects table with the Default column; data-platform is the default project](./images/user-details-default-project.png)
+
+### Set a User's Default Project
+
+1. Open the **User Details** panel for the user.
+2. In the **Projects** table, select the radio button in the **Default** column next to the
+   project that should become the default.
+
+The change is saved immediately — there is no confirmation dialog and no **Save** button. The
+message _"Default project set successfully"_ confirms the change. If the change fails, the
+previous selection is restored and an error message is shown.
+
+A project can also be made the default while adding it to the user — see
+[Add a Project Assignment](#add-a-project-assignment).
+
+The new default applies to the user's subsequent requests within about a minute. Spend already
+recorded is not moved to the new project.
+
+### Permissions
+
+| Role                                | View default project | Change default project |
+| ----------------------------------- | -------------------- | ---------------------- |
+| **Platform Admin** / **Maintainer** | ✅                   | ✅                     |
+| **Auditor**                         | ✅                   | ❌                     |
+| **Project Admin**                   | ❌                   | ❌                     |
+| **User**                            | ❌                   | ❌                     |
+
+Auditors see the **Default** column with all radio buttons disabled. Project Admins cannot set
+the default project for members of their projects, and users cannot choose their own default
+project. Setting a default for many users at once through **Bulk Actions** is not supported.
+
+![User Details panel as seen by an Auditor — the Default column is visible, all radio buttons are disabled](./images/auditor-user-details-readonly.png)

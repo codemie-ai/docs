@@ -5,7 +5,7 @@ sidebar_position: 1
 title: LiteLLM Proxy Installation and Configuration Guide
 description: Load balancing and high availability for LLM requests
 pagination_prev: admin/deployment/extensions/extensions-overview
-pagination_next: null
+pagination_next: admin/deployment/extensions/litellm-proxy/configure-values
 ---
 
 import Tabs from '@theme/Tabs';

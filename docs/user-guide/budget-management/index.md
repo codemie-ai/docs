@@ -117,6 +117,53 @@ If the project has no budgets configured at all, personal and default budgets ap
 The Platform budget acts as the universal fallback within a project. If a project has only a Platform budget, CLI and premium model requests are also charged against it. To track each category independently, configure a dedicated budget for each category on the project.
 :::
 
+The project used in these rules is the project the request is attributed to. For requests that
+are not tied to a specific project, that is the user's default project — see
+[Default Project](#default-project).
+
+### Default Project
+
+Every user who belongs to at least one project has one **default project**. Administrators and
+Maintainers assign it in **Users Management** — see
+[Default Project in Users Management](../project-user-management/users.md#default-project). If
+no default is assigned, the user's personal project is used; a user without a personal project
+falls back to the first of their projects by name.
+
+The default project answers the question "which project pays" whenever a request is not bound
+to a project of its own. Each request is attributed to one project as follows:
+
+| Request                                                                                               | Project the request is attributed to  |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Assistant, workflow, or data source that belongs to a project (not published to the Marketplace)      | That project — the default is ignored |
+| Marketplace assistant, user **is** a member of the assistant's project                                | The assistant's project               |
+| Marketplace assistant, user is **not** a member of the assistant's project                            | The user's default project            |
+| Actions not tied to a project asset — for example, AI generation of assistants, skills, and workflows | The user's default project            |
+| CLI agent or IDE request through the LLM proxy **with** a project configured in the CLI               | The configured project                |
+| CLI agent or IDE request through the LLM proxy **without** a configured project                       | The user's default project            |
+
+After the project is chosen, the regular [Budget Priority](#budget-priority) rules apply. If the
+attributed project has no active budget that covers the request — including the user's member
+allocation and the project's Platform fallback — the request is charged to the user's personal
+or default budget. CodeMie does not search the user's other projects for a budget, and the
+missing project budget does not by itself block the request.
+
+Such requests are marked as a budget fallback in usage analytics: they carry the
+`budget_fallback_from` attribute with the name of the project that had no budget, so they can be
+told apart from ordinary personal usage. The `project` recorded with the spend is the project
+whose budget was actually charged.
+
+#### Changing or Removing the Default Project
+
+- A new default project applies to the user's subsequent requests within about a minute. Spend
+  that was already recorded stays with the project that was charged at the time.
+- When the user is removed from their default project, that project is no longer charged. The
+  next request is attributed using the personal-project and first-project-by-name fallbacks.
+
+:::note
+The default project is controlled by administrators only. Users cannot choose the billing
+project per chat or per conversation, and the charged project is not shown to users in the chat.
+:::
+
 ### Personal Budgets
 
 #### Creating a Budget
@@ -238,6 +285,7 @@ LLM usage triggered by a Webhook or Workflow is charged to the budget of the use
 - Budgets for Platform, CLI, and Premium Models categories are independent. Configuring a Platform budget does not automatically cover CLI or premium model requests — each category must be configured separately.
 - Project budget has the highest priority and overrides personal and default budgets — but only when the project has at least one budget configured. If the project has no budgets at all, personal and default budgets apply normally.
 - When a project budget is active, the user's personal and default budgets are not affected and are not charged.
+- Requests that are not tied to a project — Marketplace assistants used by non-members, AI generation, and CLI requests without a configured project — are charged to the user's [default project](#default-project). If that project has no budget for the request, the personal or default budget is charged instead.
 - ⚠️ **Platform budget is the universal fallback within a project context.** If a project has budgets for some categories but not others, requests to uncovered categories fall back to the project's Platform budget — not to personal or default budgets. The only exception is a Premium-only project (no Platform budget configured): in this case both Platform and CLI requests fall back to personal/default Platform budget, as the system always resolves uncovered categories through the Platform fallback path. To track each category separately within a project, configure Platform, CLI, and Premium Models budgets on the project explicitly.
 
 ## Spending Data Update Frequency
@@ -324,6 +372,7 @@ This is not a bug. Enforcement precision is bounded by `LITELLM_CUSTOMER_CACHE_T
 | Goal                                                  | Recommendation                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Getting started                                       | Create default budgets for all three categories (Platform, CLI, Premium) — otherwise users without a personal budget will be blocked in uncovered categories                                                                                                                                                            |
+| Users working across several projects                 | Assign each user a [default project](#default-project) in **Users Management** — usage that is not tied to a specific project is then charged to that project's budget instead of the personal budget                                                                                                                   |
 | Team cost control without blocking individual members | Create a project budget with **Enforce member spend limits = Disabled** — the overall limit is controlled at the team level without blocking individual members                                                                                                                                                         |
 | Strict per-user control within a project              | Enable **Enforce member spend limits** — each member receives a fixed quota with blocking on overspend                                                                                                                                                                                                                  |
 | Architects / Team leads                               | Use Override with **Enforce member spend limits** enabled to individually increase a specific member's quota                                                                                                                                                                                                            |
