@@ -364,6 +364,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/analytics/ai-champions-leaderboard',
             'user-guide/analytics/routing-analytics',
+            'user-guide/analytics/headroom-analytics',
           ],
         },
         {
@@ -616,6 +617,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/headroom-context-compression',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
