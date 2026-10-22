@@ -178,9 +178,12 @@ apply_args() {
   [ "$status" -eq 0 ]
   for theme in codemieDark codemieLight; do
     block=$(sed -n "/^html.$theme {/,/^}/p" "$OUT/brand.css")
-    for pair in border-specific-primary-button surface-specific-button-tertiary onboarding-tooltip; do
+    for pair in border-specific-primary-button surface-specific-button-tertiary onboarding-tooltip \
+      surface-specific-tint-gradient surface-specific-banner-gradient surface-specific-switch-on \
+      surface-specific-magic-gradient surface-specific-action-accent-hover surface-specific-swatch-gradient; do
       [[ "$block" == *"--colors-$pair-to: var(--colors-$pair-from);"* ]]
     done
+    [[ "$block" == *"--colors-surface-specific-swatch-gradient-via: var(--colors-surface-specific-swatch-gradient-from);"* ]]
   done
 }
 

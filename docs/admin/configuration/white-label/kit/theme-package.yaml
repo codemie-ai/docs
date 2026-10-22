@@ -35,6 +35,14 @@ colors: {}
 #   text.accent-status / text.accent-status-hover: links, guided tour card titles on hover, search matches
 #   surface.specific.new-badge:                   background of the "NEW" tag (white text on it)
 #
+# Gradient fill tokens (see "Gradient Fill Tokens" in the Theme Package Reference; each has -from and -to):
+#   surface.specific.tint-gradient-*:     your chat messages, prompt starters, validation cards (translucent)
+#   surface.specific.banner-gradient-*:   page banner
+#   surface.specific.switch-on-*:         switch that is on
+#   surface.specific.magic-gradient-*:    magical button, Refine panels (white text on them)
+#   surface.specific.swatch-gradient-*:   settings theme swatch (-from, -via, -to)
+#   surface.specific.action-accent-btn, surface.specific.action-accent-hover-*:   accent buttons
+#
 # Button border and product tour tokens (see "Button Border and Product Tour Tokens" in the Theme Package Reference):
 #   border.specific.primary-button-from / -to:    primary button border gradient
 #   surface.specific.button-tertiary-from / -to:  Help & Product Tour button on hover
