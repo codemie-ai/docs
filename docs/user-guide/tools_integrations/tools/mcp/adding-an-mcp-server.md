@@ -10,7 +10,7 @@ sidebar_position: 1
 # Adding an MCP Server
 
 :::note Restricted Mode
-Your administrator may enable the **mcpCustomServersDisabled** component. When active, only MCP servers from the admin-managed catalog are permitted. The **Manual Setup** option will be blocked at save time. Contact your platform administrator if you need to use a server that is not in the catalog.
+Your administrator may enable the **mcpCustomServersDisabled** component. When active, only MCP servers from the admin-managed catalog are permitted. **Manual Setup** is not offered, the configuration of a catalog server is read-only, and saving a server that is not from the catalog is refused with an error message. Contact your platform administrator if you need to use a server that is not in the catalog.
 :::
 
 ## Configuration Steps

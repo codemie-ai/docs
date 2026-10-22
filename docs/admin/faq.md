@@ -301,7 +301,7 @@ For a full description of `customer-config.yaml` components and other available 
 
 **Restrict to catalog-only**
 
-Use the `mcpCustomServersDisabled` component to keep MCP connectivity available while preventing users from configuring custom (inline) MCP servers. Only servers from the admin-managed catalog can be selected.
+Use the `mcpCustomServersDisabled` component to keep MCP connectivity available while preventing users from configuring custom (inline) MCP servers. Only servers from the admin-managed catalog can be selected, and a save with any other server is refused. An administrator can also switch this at runtime from **Settings → Administration → Customer Configuration**. See [MCP Catalogue Governance](./configuration/codemie/customer-feature-configuration.md#mcp-catalogue-governance).
 
 ```yaml
 components:
