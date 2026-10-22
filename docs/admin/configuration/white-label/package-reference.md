@@ -87,6 +87,22 @@ Links and highlighted text use two tokens that are separate from `text.accent`. 
 | `text.accent-status`, `text.accent-status-hover` | Text links and their hover color, for example the links in the "Help & Product Tour" popup and the welcome text. Also the title of a guided tour card on hover, and highlighted search matches. |
 | `surface.specific.new-badge`                     | Background of the "NEW" tag, for example on a data source type. The text on it is white; choose a dark color.                                                                                   |
 
+### Gradient Fill Tokens
+
+Several fills in the UI are gradients with a fixed purple default. Each has a `from` and a `to` token. Use the same value twice for a single color.
+
+| Token                                                                                                                  | Where it applies                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `surface.specific.tint-gradient-from`, `surface.specific.tint-gradient-to`                                             | Background of your chat messages, prompt starters, conversation starters and the validation cards. The UI makes it translucent (30% in the dark theme, 20% in the light theme). |
+| `surface.specific.banner-gradient-from`, `surface.specific.banner-gradient-to`                                         | Background of the banner at the top of the page.                                                                                                                                |
+| `surface.specific.switch-on-from`, `surface.specific.switch-on-to`                                                     | A switch that is on.                                                                                                                                                            |
+| `surface.specific.magic-gradient-from`, `surface.specific.magic-gradient-to`                                           | The "magical" button type and the panels of the Refine assistant and Refine skill windows. The text on them is white.                                                           |
+| `surface.specific.swatch-gradient-from`, `surface.specific.swatch-gradient-via`, `surface.specific.swatch-gradient-to` | The theme preview swatch in the settings.                                                                                                                                       |
+| `surface.specific.action-accent-btn`                                                                                   | Background of accent buttons. The light theme makes it translucent (15%).                                                                                                       |
+| `surface.specific.action-accent-hover-from`, `surface.specific.action-accent-hover-to`                                 | Hover background of accent buttons. The light theme uses `-from` only, at 30% opacity.                                                                                          |
+
+With [`effects.gradients`](#effects) set to `none`, the `-to` value of every pair above follows its `-from` value, and the swatch `-via` value follows `-from`. Set the `-from` tokens when you use `none`; an unset `-from` token keeps the default purple.
+
 ### Button Border and Product Tour Tokens
 
 The default theme draws purple gradient borders on buttons and a purple product tour. Each of these colors has a token. Set the tokens to make the buttons and the tour match your palette. A two-color gradient takes a `from` and a `to` value; use the same value twice for a single color.
@@ -126,7 +142,7 @@ With `none`, the kit writes `--brand-gradients: none;` into the `:root` block of
 - the background image behind the page content and the pagination bar in the light theme;
 - the gradients on cards and workflow cards;
 - the gradients on the standalone pages, including the Keycloak login page;
-- the two-color gradients of the primary button border, the Help button and the product tour popup. Each becomes a single color (see [Button Border and Product Tour Tokens](#button-border-and-product-tour-tokens)).
+- the two-color gradients of the primary button border, the Help button, the product tour popup and the fills in [Gradient Fill Tokens](#gradient-fill-tokens). Each becomes a single color (see [Button Border and Product Tour Tokens](#button-border-and-product-tour-tokens)).
 
 The option wins over the per-user Custom Appearance setting for gradients. Button fills are not gradients and stay unchanged. When `none` is set, the `surface.specific.gradient` token has no visible effect.
 
