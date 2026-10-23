@@ -1,0 +1,15 @@
+# Copied from the login theme contract. Update together with the theme.
+brand.version
+brand.product.name
+brand.product.shortName
+brand.logo.light
+brand.logo.dark
+brand.favicon
+brand.faviconSvg
+brand.email.logo
+brand.email.color.primary
+brand.email.color.primaryText
+brand.email.color.text
+brand.email.color.background
+brand.email.color.surface
+brand.email.signature

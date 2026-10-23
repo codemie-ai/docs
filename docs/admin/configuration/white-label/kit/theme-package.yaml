@@ -1,0 +1,142 @@
+# White-label theme package template (kit version 1).
+# Copy this file, fill in the values, then run:
+#   apply-theme --render-only theme-package.yaml ./assets
+# Fields marked REQUIRED must be filled in; fields marked optional may be omitted.
+# This empty template intentionally does not pass validation until it is filled in.
+
+version: '1' # REQUIRED - must be the string "1"
+
+product:
+  name: '' # REQUIRED - product name shown in the browser tab and UI headers
+  shortName: '' # REQUIRED - abbreviated name for space-constrained surfaces
+
+# REQUIRED - map of semantic token path to a dark and a light hex value (#rrggbb).
+# Add one entry per token you want to override; tokens you omit keep the default theme.
+colors: {}
+# Example:
+# colors:
+#   surface.base.primary:
+#     dark: '#111111'
+#     light: '#ffffff'
+#
+# Side panel tokens (see "Side Panel and Gradient Tokens" in the Theme Package Reference):
+#   surface.base.navigation:                      main navigation background (only when effects.gradients is 'none')
+#   surface.specific.navigation-link:             navigation item background
+#   text.specific.navigation-link:                navigation item text (also: text.specific.navigation-link-hover)
+#   text.specific.navigation-icon:                navigation item icon (also: text.specific.navigation-icon-hover)
+#   surface.specific.navigation-badge:            navigation badge background (also: text.specific.navigation-badge)
+#   surface.specific.bottom-navigation-label:     bottom label background (also: text.specific.bottom-navigation-label)
+#   surface.base.sidebar:                         secondary side panel background
+#   surface.specific.sidebar-toggle:              side panel toggle button
+#   border.specific.sidebar:                      side panel border
+#   surface.specific.gradient:                    color of the glow behind the panels and the first tour popup
+#
+# Link text and badge (see "Link, Accent Text and Badge Tokens" in the Theme Package Reference):
+#   text.accent-status / text.accent-status-hover: links, guided tour card titles on hover, search matches
+#   surface.specific.new-badge:                   background of the "NEW" tag (white text on it)
+#
+# Gradient fill tokens (see "Gradient Fill Tokens" in the Theme Package Reference; each has -from and -to):
+#   surface.specific.tint-gradient-*:     your chat messages, prompt starters, validation cards (translucent)
+#   surface.specific.banner-gradient-*:   page banner
+#   surface.specific.switch-on-*:         switch that is on
+#   surface.specific.magic-gradient-*:    magical button, Refine panels (white text on them)
+#   surface.specific.swatch-gradient-*:   settings theme swatch (-from, -via, -to)
+#   surface.specific.action-accent-btn, surface.specific.action-accent-hover-*:   accent buttons
+#
+# Button border and product tour tokens (see "Button Border and Product Tour Tokens" in the Theme Package Reference):
+#   border.specific.primary-button-from / -to:    primary button border gradient
+#   surface.specific.button-tertiary-from / -to:  Help & Product Tour button on hover
+#   surface.specific.button-secondary-hover-to:   progress bar fill
+#   onboarding.highlight:                         product tour outline
+#   onboarding.tooltip-from / -to:                product tour popup gradient (white text on it)
+
+typography:
+  bodyFamily: '' # REQUIRED - CSS font-family for UI text, for example 'Inter, sans-serif'
+  bodyProseFamily: '' # REQUIRED - CSS font-family for long-form prose, for example 'Georgia, serif'
+  codeFamily: '' # REQUIRED - CSS font-family for code, for example 'Fira Code, monospace'
+  # optional - inline @font-face CSS. Font files cannot be shipped in the asset bundle,
+  # so every src: url(...) must point to a font hosted on a reachable https URL.
+  fontFaceCSS: null
+
+# optional - visual effects. Remove the block to keep all defaults.
+effects:
+  gradients: 'default' # optional - 'default' keeps the background gradients, 'none' removes all of them
+
+# All assets are file names resolved against the assets directory passed to apply-theme.
+# The combined size of the five files must stay below 1 MiB.
+assets:
+  logoLight: '' # REQUIRED - logo for the light theme (SVG)
+  logoDark: '' # REQUIRED - logo for the dark theme (SVG)
+  favicon: '' # REQUIRED - legacy favicon (.ico)
+  faviconSvg: '' # REQUIRED - SVG favicon
+  manifest: '' # REQUIRED - web app manifest (.webmanifest)
+
+# The links block itself is REQUIRED. Each link is optional, but every link that is
+# enabled in customer-config.yaml must be present here with a name and a URL.
+links:
+  userGuide: # optional
+    name: ''
+    url: ''
+  videoPortal: # optional
+    name: ''
+    url: ''
+  youtubeChannel: # optional
+    name: ''
+    url: ''
+  learningCourses: # optional
+    name: ''
+    url: ''
+  customerSupport: # optional
+    name: ''
+    url: ''
+  userSurvey: # optional
+    name: ''
+    url: ''
+  workflowDocumentation: # optional
+    name: ''
+    url: ''
+  workflowYamlDocumentation: # optional
+    name: ''
+    url: ''
+  googleDocsDocumentation: # optional
+    name: ''
+    url: ''
+# optional - branding of platform emails. Every key below is optional; omitted keys use the
+# platform defaults. Uncomment only what you want to change.
+# email:
+#   senderName: '' # optional - sender display name; must not be blank when set
+#   signature: '' # optional - closing line; may use {productName}
+#   palette: # optional - each role is #RRGGBB
+#     primary: '' # optional - button and accent color
+#     primaryText: '' # optional - text on the primary color
+#     text: '' # optional - body text
+#     background: '' # optional - page background
+#     surface: '' # optional - card background
+#   images:
+#     logo: '' # optional - file name in the assets directory; png, jpg, jpeg or gif, up to 256 KiB
+#     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak
+#   messages: # optional - verification, password_reset, budget_soft_limit, budget_stopped, budget_restored
+#     verification:
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+#       buttonLabel: '' # optional
+#       footer: '' # optional
+#     budget_stopped: # budget_stopped and budget_restored take subject, heading and intro only
+#       subject: '' # optional - may use {productName}, {projectName}, {costCenterName}
+# Tokens: {productName} in every text field; {projectName} in subject and intro of budget_stopped and
+# budget_restored; {costCenterName} in subject and intro of budget_stopped.
+# optional - Keycloak login theme and mail settings. Omit the block to leave Keycloak unchanged.
+# keycloak:
+#   themeName: '' # required - theme name, 3-40 characters: a-z, 0-9, -
+#   smtp: # optional - SMTP server for Keycloak emails
+#     host: '' # optional - SMTP host name
+#     port: 587 # optional - SMTP port
+#     from: '' # optional - sender address
+#     ssl: false # optional - use SSL
+#     starttls: true # optional - use STARTTLS
+#     auth: # optional - credentials are read from existing Kubernetes secrets, never written here
+#       username:
+#         secretKeyRef: {name: '', key: ''}
+#       password:
+#         secretKeyRef: {name: '', key: ''}

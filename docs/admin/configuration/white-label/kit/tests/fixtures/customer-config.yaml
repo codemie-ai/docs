@@ -1,0 +1,28 @@
+components:
+  - id: userGuide
+    settings:
+      enabled: true
+  - id: customerSupport
+    settings:
+      enabled: true
+  - id: videoPortal
+    settings:
+      enabled: false
+  - id: youtubeChannel
+    settings:
+      enabled: false
+  - id: learningCourses
+    settings:
+      enabled: false
+  - id: userSurvey
+    settings:
+      enabled: false
+  - id: workflowDocumentation
+    settings:
+      enabled: false
+  - id: workflowYamlDocumentation
+    settings:
+      enabled: false
+  - id: googleDocsDocumentation
+    settings:
+      enabled: false
