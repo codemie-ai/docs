@@ -18,7 +18,7 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 ## Overview
 
-CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and a built-in agent powered by LangGraph.
+CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and a built-in agent powered by LangGraph. CodeMie Connect is the desktop app for CodeMie CLI: it covers setup, tool installation, and health checks from a window instead of the terminal (see [Using CodeMie Connect](#using-codemie-connect)).
 
 ### Key Capabilities
 
@@ -165,6 +165,61 @@ The built-in agent (`codemie-code`) is available immediately after setup without
 :::info Additional Documentation
 For detailed configuration, authentication methods, troubleshooting, and advanced usage, see the [CodeMie CLI GitHub Repository](https://github.com/codemie-ai/codemie-code).
 :::
+
+## Using CodeMie Connect
+
+CodeMie Connect sets up CodeMie CLI, manages the coding tools, and checks that everything works. The sidebar has Home, Tools, Connections, Health, and CLI usage analytics. Tools are run from a terminal; the app only sets them up.
+
+### Set up CodeMie
+
+On first launch, Home shows a checklist of four steps: sign in, choose how CodeMie reaches a model, install a tool, and verify health.
+
+![CodeMie Connect Home checklist](./images/connect-home-checklist.png)
+
+1. Click **Sign in** to start guided setup. The browser opens for sign-in only when CodeMie SSO is chosen in the next step.
+2. Pick how CodeMie reaches a model: CodeMie SSO (recommended), LiteLLM, AWS Bedrock, Anthropic Subscription, Moonshot Subscription, or Ollama. The choice can be changed later.
+
+   ![Choosing how CodeMie reaches a model](./images/connect-setup-provider-choice.png)
+
+3. Answer the questions for the chosen option, such as the Ollama base URL, and click **Continue**. Finished steps are marked with a check mark.
+
+The profile is saved right after the profile name is entered, before the questions about making it active and installing Claude Code.
+
+If a step fails before the profile is saved, setup stops and explains the cause, and nothing is saved. Fix the cause (for example, start Ollama) and click **Try again**. **Show details** displays the technical output.
+
+![Setup stopped because Ollama is not running](./images/connect-setup-failure.png)
+
+### Home
+
+After setup, Home replaces the checklist with four status cards: Profile, Health, Tools, and Connections. The Profile card has a **Set up again** button that re-runs setup.
+
+If the saved profile stops working, Home shows "Your profile is no longer working" and marks the profile as needing attention.
+
+### Install, update, and remove tools
+
+Tools lists every available tool and how many are installed. CodeMie Code is built into the CLI and always shows as installed.
+
+![Tools list](./images/connect-tools-list.png)
+
+- **Install**: click **Install** next to a tool. The button shows **Installing…** until the installation finishes.
+- **Update**: when a newer version of an installed tool is available, click **Update** next to it. The button shows **Updating…** while the update runs.
+- **Remove**: an installed tool shows its version and a **Remove** button.
+
+![Installed tool with a Remove button](./images/connect-tools-installed.png)
+
+### Check health
+
+Health runs the same checks as `codemie doctor`, grouped into the CodeMie account, installed tools, and CodeMie itself. The header shows how many checks passed and when they ran.
+
+![Health screen](./images/connect-health.png)
+
+A failed check shows a **What to do** remedy where one is known, with the command to run and, where possible, a button that performs it, such as **Set up CodeMie** for a missing configuration. **Open today's log** opens today's CodeMie debug log.
+
+### See what CodeMie ran
+
+The **what CodeMie ran** bar at the bottom of every screen lists each command the app ran: time, command, and result (`ok` or `failed` with the exit code). Click the bar to expand or collapse it.
+
+![Command log](./images/connect-command-log.png)
 
 ## Commands
 
