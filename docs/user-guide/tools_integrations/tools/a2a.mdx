@@ -15,7 +15,11 @@ import TabItem from '@theme/TabItem';
 CodeMie supports the **Agent-to-Agent (A2A) Protocol**, an open-standard protocol designed to enable seamless communication and collaboration between AI agents built with different frameworks and by different vendors.
 A2A provides a common language that breaks down silos and fosters interoperability across the AI ecosystem.
 
-With A2A integration, you can connect CodeMie to external AI agents—regardless of their framework or origin—allowing them to communicate effortlessly and work together on complex tasks.
+With A2A integration, CodeMie connects to external AI agents—regardless of their framework or origin—allowing them to communicate and work together on complex tasks.
+
+:::warning Protocol Version 1.0
+CodeMie implements A2A protocol **version 1.0**. Agents built for the earlier v0.3 protocol are not compatible and are refused at registration. This includes agents that serve only a legacy `agent.json` card and agents whose Agent Card declares a pre-1.0 JSON-RPC interface (for example a v0.3 card with a top-level `url` and `protocolVersion` `0.3.x`). Bedrock AgentCore runtimes are checked the same way: they must serve a v1.0 Agent Card.
+:::
 
 ## Key Features
 
@@ -236,72 +240,88 @@ After creating the integration:
 2. When creating a remote assistant, select this integration in the **Integration (Optional)** dropdown.
 3. CodeMie will automatically include the authentication credentials when communicating with the agent.
 
-## Example: Currency Conversion Agent
+## Example: Demo Agents
 
-A sample currency conversion agent built with LangGraph demonstrates A2A capabilities:
+The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository provides three reference agents that implement A2A protocol 1.0:
 
-**Repository**: [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents)
+| Agent                  | Path                                 | Style                                                                                |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| `text-insights-agent`  | `python/agents/text-insights-agent`  | Non-streaming — returns a single message                                             |
+| `howto-guide-agent`    | `python/agents/howto-guide-agent`    | Streaming — returns a task with incremental artifact events                          |
+| `codemie-caller-agent` | `python/agents/codemie-caller-agent` | Non-streaming — proxies to a CodeMie assistant via A2A v1.0 and returns a wire trace |
 
-**Sample Agent**: `/python/agents/currency_converter`
+All three agents use the `a2a-sdk` 1.x and serve a v1.0 Agent Card at `/.well-known/agent-card.json`.
 
-### Agent Capabilities
+### Run an Agent Locally
 
-- Real-time currency conversion using Frankfurter API
-- Multi-turn conversations with follow-up questions
-- Streaming status updates during processing
-- Conversational memory across interactions
-
-### Example Queries
-
-```
-"How much is 100 USD in EUR?"
-"What's the exchange rate for USD to JPY?"
-"Convert 50 EUR to GBP"
-```
-
-### Try It Yourself
-
-1. Clone the [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository:
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/epam-gen-ai-run/ai-run-demo-agents.git
-   cd ai-run-demo-agents/python/agents/currency_converter
+   cd ai-run-demo-agents/python/agents/text-insights-agent
    ```
 
-2. Set up your environment variables:
+2. Start the agent (see the agent's `README.md` for environment variables):
 
    ```bash
-   echo "CHAT_MODEL_PROVIDER=azure" > .env
-   echo "AZURE_OPENAI_API_KEY=your_api_key_here" >> .env
-   echo "AZURE_OPENAI_ENDPOINT=your_endpoint_url" >> .env
-   echo "AZURE_OPENAI_API_VERSION=2024-12-01-preview" >> .env
+   uv run .
    ```
 
-3. Run the agent with ngrok to expose it publicly:
+3. Register the agent in CodeMie using its base URL (for example `http://localhost:10800` when CodeMie runs on the same machine).
 
-   ```bash
-   uv run . --ngrok_enabled
-   ```
+   The demo agents advertise `http://<host>:<port>/` in their Agent Card, where `--host` and `--port` come from the command line. They have no built-in tunnel option, so `--host` must be an address CodeMie can reach.
 
-   The agent will start and ngrok will provide a public URL:
-
-   ![Agent running with ngrok](./images/a2a-agent-running-ngrok.png)
-
-4. Copy the ngrok URL from the terminal output (e.g., `https://easily-trasnocheoic-externally.ngrok-free.dev`)
-
-5. In CodeMie, create a remote assistant using this URL as described in the [Create Remote Assistant](#create-remote-assistant) section
+:::note Docker
+When CodeMie runs in Docker, start the agent on the same Docker network and pass `--host <container-name>` so the Agent Card advertises an address the CodeMie container can reach.
+:::
 
 :::tip Developer Community
-We encourage developers to create their own A2A-compatible agents and share them with the community. Check the [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository for examples and contribution guidelines.
+The [ai-run-demo-agents](https://github.com/epam-gen-ai-run/ai-run-demo-agents) repository provides examples and contribution guidelines for building A2A-compatible agents.
 :::
+
+## Call a CodeMie Assistant from an External Client
+
+Every CodeMie assistant is also published as an A2A agent and can be called by any external A2A 1.0 client or another agent.
+
+| Endpoint          | Path                                                                |
+| ----------------- | ------------------------------------------------------------------- |
+| Agent Card        | `GET /v1/a2a/assistants/{assistant_id}/.well-known/agent-card.json` |
+| JSON-RPC endpoint | `POST /v1/a2a/assistants/{assistant_id}`                            |
+
+Every JSON-RPC request must carry the header `A2A-Version: 1.0` (or the query parameter `A2A-Version=1.0`). Requests without this header are rejected with error `-32009`.
+
+**Authentication:** the JSON-RPC endpoint always requires credentials. A private assistant's card also requires credentials; the card of a global assistant is public.
+
+- With `IDP_PROVIDER=local`: log in via `POST /v1/local-auth/login` and include `Authorization: Bearer <token>`. The token is valid for 24 hours.
+- With other identity providers: use the bearer token issued by that provider.
+
+## Supported Operations
+
+| Method                                             | Support                                       |
+| -------------------------------------------------- | --------------------------------------------- |
+| `SendMessage`                                      | Supported — blocking; result is a task        |
+| `SendStreamingMessage`                             | Supported — server-sent events                |
+| `GetTask`                                          | Supported                                     |
+| `CancelTask`                                       | Supported (a completed task answers `-32002`) |
+| `GetExtendedAgentCard`                             | Supported — returns the agent card            |
+| `ListTasks`, `SubscribeToTask`, push notifications | Not implemented — returns `-32601`            |
+
+## Known Limitations
+
+- **Protocol version 1.0 only.** Pre-1.0 method names and agents without `A2A-Version: 1.0` are rejected.
+- **Text parts only.** The card declares `text/plain` input and output modes. A request with `acceptedOutputModes` that excludes `text/plain` answers `-32005`.
+- **`returnImmediately` is not supported** — returns `-32004`.
+- **`ListTasks`, `SubscribeToTask`, and push notifications are not implemented** — return `-32601`.
+- **Protocol errors are HTTP 200.** JSON-RPC errors (version mismatch, unknown method, invalid params) come back with HTTP 200 and a JSON-RPC `error` object. Authentication and lookup failures are plain HTTP errors (`401`, `403`, `404`).
+- **An exception inside an assistant run** is reported as task state `TASK_STATE_INPUT_REQUIRED`, not `FAILED`.
 
 ## Important Notes
 
 ### Agent Compatibility
 
-- External agents must implement the A2A protocol specification
+- External agents must implement A2A protocol **version 1.0**
 - Supported communication: JSON-RPC 2.0 over HTTP/HTTPS
-- Required endpoints: agent card fetch, task send, task subscribe (for streaming)
+- The Agent Card must be served at `/.well-known/agent-card.json`
 
 ### Network Requirements
 
@@ -328,9 +348,24 @@ Administrators can configure A2A timeout settings in the platform configuration:
 
 See [API Configuration](../../../admin/configuration/codemie/api-configuration.md#agent-to-agent-a2a-communication) for details.
 
+## Troubleshooting
+
+| Symptom                                                                           | Fix                                                                                                                                                                                                |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registration fails with `HTTP 404`                                                | The base URL is incorrect (do not include `/.well-known/agent-card.json` or any path), or the agent only supports an older protocol version. Verify with `curl <url>/.well-known/agent-card.json`. |
+| Registration succeeds, chat fails with `ConnectError`                             | The Agent Card advertises an address the CodeMie container cannot reach (for example `http://0.0.0.0:<port>/`). Restart the agent with `--host <container-name>` on the CodeMie Docker network.    |
+| `-32009` on every JSON-RPC call                                                   | Add `A2A-Version: 1.0` to the request headers.                                                                                                                                                     |
+| `401 Authentication required`                                                     | Token is missing or expired (24-hour lifetime). Log in again to obtain a fresh token. The `user-id` header alone is not accepted in non-local environments.                                        |
+| Slow first response                                                               | The remote agent calls an LLM. Raise `A2A_AGENT_REQUEST_TIMEOUT` in the platform configuration.                                                                                                    |
+| Registration fails with `Invalid agent card format`                               | The agent's `/.well-known/agent-card.json` is not valid JSON. Fix the agent card format.                                                                                                           |
+| Registration fails with `Agent card has no JSON-RPC interface`                    | The card declares no JSON-RPC interface in `supportedInterfaces`. Add one to the agent card.                                                                                                       |
+| Registration fails with `Agent does not support A2A protocol 1.0`                 | The agent's JSON-RPC interface declares a pre-1.0 protocol version (a v0.3 agent). Upgrade the agent to A2A v1.0, for example `a2a-sdk` 1.x.                                                       |
+| Chat fails with `Remote A2A agent does not support the required protocol version` | The Agent Card says 1.0, but the agent rejected the v1.0 requests. Make sure it handles the `A2A-Version: 1.0` header and the v1.0 method names.                                                   |
+
 ## Learn More
 
 - **[A2A Protocol Documentation](https://google.github.io/A2A/#/documentation)** - Official A2A protocol specification
+- **[Building A2A-Compatible Agents](./a2a-building-agents.mdx)** - Guide for wrapping an existing agent with the A2A protocol
 - **[Demo Agents Repository](https://github.com/epam-gen-ai-run/ai-run-demo-agents)** - Example agents and implementation guides
-- **[Sub-Assistants and Orchestration](../../assistants/sub-assistants-multi-assistant-orchestrator.md)** - Learn about agent-to-agent communication within CodeMie
+- **[Sub-Assistants and Orchestration](../../assistants/sub-assistants-multi-assistant-orchestrator.md)** - Agent-to-agent communication within CodeMie
 - **[API Configuration](../../../admin/configuration/codemie/api-configuration.md)** - Platform-level A2A settings
