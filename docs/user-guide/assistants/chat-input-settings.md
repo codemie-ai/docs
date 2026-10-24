@@ -11,7 +11,7 @@ pagination_next: null
 
 The chat input toolbar provides controls for customizing assistant behavior per
 conversation: **file attachments**, the **Tools Settings** panel, the **LLM model
-selector**, and the **Skills** button. Changes take effect immediately and apply to all
+selector**, the **Skills** button, and the **MCP** selector. Changes take effect immediately and apply to all
 subsequent messages in the current chat.
 
 ![Tools Settings and LLM model selector in the chat input toolbar](./images/chat-tools-settings.png)
@@ -117,3 +117,60 @@ on the button shows how many skills are currently active.
 
 See [Skills in Chat](../skills/skills-in-chat.md) for full details on selecting, managing,
 and removing skills from a conversation.
+
+## MCP Servers
+
+The **MCP** selector lets MCP servers be enabled for the current conversation directly from
+the chat input, in the same way tools are toggled in Tools Settings. The selection applies
+to the conversation only and does not modify the assistant's configuration.
+
+The selector lists only the MCP servers that are available to the current user in the
+current chat context and that the user is authorized to use. A badge on the button shows how
+many MCP servers are currently active.
+
+### Select MCP Servers
+
+1. Open a new or existing chat.
+2. Click the **MCP** button in the chat input toolbar.
+3. In the selector, choose one or more MCP servers.
+4. Close the selector. The selected servers are shown as active in the chat.
+
+Tools exposed by the active MCP servers are available to the assistant when it processes
+subsequent requests in the conversation. MCP servers that are not selected are not made
+available through this conversation-level selection.
+
+### Change the Active Selection
+
+The selection can be changed at any point without leaving or restarting the conversation:
+
+- **Add** a server by selecting it in the selector.
+- **Remove** a server by clearing its selection.
+- **Switch** servers by clearing one and selecting another.
+
+The active-server indication updates immediately. The updated selection applies to the next
+message sent in the conversation; responses that were already generated are not affected.
+
+### Unavailable or Unauthorized Servers
+
+If an active MCP server becomes unavailable, or the user no longer has permission to use it,
+the server is not used and the chat shows a status indication for it. The rest of the
+conversation remains usable, and the selection can be adjusted by removing the affected
+server or choosing another one.
+
+### Access Rules and Credentials
+
+Selecting an MCP server in chat does not bypass any existing controls:
+
+- Only servers permitted by the administrator-managed MCP catalog and the user's access
+  rights are offered.
+- Credentials are resolved per user, following the rules described in
+  [MCP Integration Credentials](../tools_integrations/tools/mcp/mcp-integration-credentials.md).
+- The assistant's own configuration, including MCP servers added to it, is unchanged.
+
+:::tip
+The MCP selection is saved per conversation. When returning to a chat, the same servers
+remain active. A new conversation starts without a conversation-level MCP selection.
+:::
+
+For information on adding MCP servers, see
+[Adding an MCP Server](../tools_integrations/tools/mcp/adding-an-mcp-server.md).

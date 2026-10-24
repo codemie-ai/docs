@@ -18,3 +18,9 @@ extending their capabilities beyond built-in tools.
 | ------------------------------------------------------------ | --------------------------------------------------------------- |
 | [Adding an MCP Server](./adding-an-mcp-server)               | Add and configure MCP servers in your assistants                |
 | [MCP Integration Credentials](./mcp-integration-credentials) | Configure whose credentials each user runs the MCP server under |
+
+## Using MCP Servers in Chat
+
+Besides configuring MCP servers on an assistant, MCP servers can be selected for a single
+conversation directly from the chat input. See
+[MCP Servers in Chat Input Settings](../../../assistants/chat-input-settings.md#mcp-servers).

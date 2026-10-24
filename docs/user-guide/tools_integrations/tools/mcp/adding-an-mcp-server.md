@@ -377,3 +377,8 @@ If your assistant cannot reach the MCP server:
 - Check that the MCP server is operational and accessible
 - Ensure network connectivity between CodeMie and the MCP server
 - Review environment variable configurations
+
+## Next Steps
+
+- [MCP Servers in Chat](../../../assistants/chat-input-settings.md#mcp-servers) - Select MCP servers for a single conversation without editing the assistant
+- [MCP Integration Credentials](./mcp-integration-credentials.md) - Configure whose credentials each user runs under
