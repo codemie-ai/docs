@@ -11,6 +11,8 @@ A delete moves the message to Deleted Items unless the permanent delete is expli
 
 The write tools are never approved automatically. Set the **Guarded** or **Manual** tool-call policy for the assistant, because with **Auto** sends and deletes run without a confirmation.
 
+Incoming mail can contain text that tries to steer the assistant, for example to forward messages to an outside address. Give recipient addresses in the assistant instructions or the workflow configuration, not from the content of a message. In a workflow, no one confirms a write.
+
 ## Sources
 
 - [Microsoft Exchange](https://docs.codemie.ai/user-guide/tools_integrations/tools/ms-exchange/)
