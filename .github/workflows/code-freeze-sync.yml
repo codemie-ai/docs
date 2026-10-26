@@ -1,0 +1,58 @@
+name: Sync Code Freeze Status
+
+on:
+  repository_dispatch:
+    types: [code-freeze-update]
+  workflow_dispatch:
+    inputs:
+      code_freeze:
+        description: 'Code freeze active (true/false)'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout status branch
+        uses: actions/checkout@v4
+        with:
+          ref: status
+
+      - name: Update status file
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            IS_FROZEN="${{ github.event.client_payload.code_freeze }}"
+            UPDATED_AT="${{ github.event.client_payload.updated_at }}"
+          else
+            IS_FROZEN="${{ inputs.code_freeze }}"
+            UPDATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          fi
+
+          [ -z "$IS_FROZEN" ] && IS_FROZEN="false"
+          [ -z "$UPDATED_AT" ] && UPDATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          cat << EOF > code_freeze_status.json
+          {
+            "code_freeze": ${IS_FROZEN},
+            "updated_at": "${UPDATED_AT}"
+          }
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add code_freeze_status.json
+
+          if git diff --staged --quiet; then
+            echo "No change in status, skipping commit."
+          else
+            git commit -m "chore: update code freeze status to ${IS_FROZEN} [skip ci]"
+            git push origin status
+          fi
