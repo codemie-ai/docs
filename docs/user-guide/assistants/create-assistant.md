@@ -251,6 +251,8 @@ enabled on the platform level.
   **Select all**, MCP server toggles, and plugin selections stay visible but cannot be changed. Earlier
   selections are kept and become active again when the toggle is switched off.
 - No limit applies to the number of tools that can be added to the assistant in this mode.
+- Tools of the assistant's data sources and MCP servers are always available, even though the
+  MCP server toggles cannot be changed.
 - Integration (credential) dropdowns remain editable, and a credential chosen for a tool is applied
   whenever that tool is selected for a request.
 - A new MCP server added in this mode defaults to using all of its tools.
