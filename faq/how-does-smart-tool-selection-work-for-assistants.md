@@ -9,7 +9,7 @@ While it is on:
 - The assistant chooses from all tools available on the platform, not only from the tools picked manually.
 - Narrowing applies only when enough tools are found; with fewer, all found tools are used. The tools picked in the form are used only when no relevant tool is found.
 - Manually picked tools do not decide which tools run. They stay visible in **Tools configuration** but cannot be changed.
-- The tools required by attached skills are always added next to the matched tools. Web search, code interpreter, and image generation are used only when enabled for the request, and Git tools are added whenever the assistant has a code data source.
+- The tools required by attached skills are always added next to the matched tools, and the tools of the assistant's data sources and MCP servers stay available. Web search, code interpreter, and image generation are used only when enabled for the request, and Git tools are added whenever the assistant has a code data source.
 - Workflows are not affected and keep using manually selected tools.
 
 Switching the toggle off restores the previous manual selection. Keep it off when precise control over available tools is required.
