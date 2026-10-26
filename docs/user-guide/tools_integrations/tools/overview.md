@@ -72,7 +72,7 @@ The toggle and the **Smart Tools** row in the assistant details are shown only w
 - The assistant chooses tools for each request from all tools available on the platform. Tools are not limited to those picked manually.
 - Tool relevance is based on the request and the recent conversation, so different requests can use different tools.
 - The tools used are the ones found relevant to the request. Narrowing to the most relevant ones applies only when enough tools are found; the threshold is a platform setting. With fewer tools, all found tools are used.
-- The tools picked in **Tools configuration** and the skills attached to the assistant are used only when no relevant tool is found, or when the request has no text.
+- The tools picked in **Tools configuration** are used only when no relevant tool is found, or when the request has no text.
 - Tools required by the skills attached to the assistant are always added next to the matched tools.
 - The tools of the assistant's data sources (knowledge base, repository) and MCP servers, and the skill tool, are always available. They are not part of the relevance search and do not depend on the manual selection.
 - The tools picked manually in **Tools configuration** do not decide which tools run. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, and plugin selections are disabled, and an information message explains why. Integration (credential) dropdowns remain editable and are applied to the selected tools when they are used.

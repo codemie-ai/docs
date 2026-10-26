@@ -257,7 +257,7 @@ enabled on the platform level.
   whenever that tool is selected for a request.
 - A new MCP server added in this mode defaults to using all of its tools.
 - If no relevant tool is found, or the request has no text, the assistant falls back to the
-  configured toolkits and skills.
+  configured toolkits.
 
 :::info Tools Requiring Explicit Enablement
 Web search, code interpreter, and image generation are added only when the matching feature is
