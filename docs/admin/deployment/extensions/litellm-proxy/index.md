@@ -34,6 +34,14 @@ LiteLLM Proxy requires AI/Run CodeMie version 2.0.0 or higher. Ensure your CodeM
 
 :::
 
+:::warning Use the verified LiteLLM version
+
+Install and run only the LiteLLM version that has been tested and verified with CodeMie. The current version is listed in the [Release Notes](../../../update/release-notes/release-notes.md).
+
+Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
+
+:::
+
 ### Cloud Provider Prerequisites
 
 Depending on which LLM providers you plan to use, prepare the appropriate credentials:
