@@ -36,6 +36,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:subWorkflow`                    | Workflow editor and execution                                       | Sub-workflow configuration and execution                                                        | Sub-workflow controls; API and runtime access return `403`                          | Disabled by default; enable with `subWorkflowNode`                                             |
 | **PLATFORM-MANAGED MODE**                 |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:budgetManagement`               | Project detail pages, Settings → Administration                     | Budget columns and budget management section                                                    | Budget tracking UI                                                                  |                                                                                                |
+| `features:projectModelOverride`           | Project detail pages → Models tab                                   | Models tab on project detail page; per-project model allow-list and default model selector      | Models tab hidden; all platform models available in every project                   | Disabled by default; requires Project Admin or Platform Admin to configure                     |
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                                   |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                                       | Code interpreter option                                                             | If both disabled, entire section hidden                                                        |
@@ -310,6 +311,58 @@ components:
   - id: "features:showAllProjects"
     settings:
       enabled: true
+
+  # WHERE: Project detail pages → Models tab
+  # ENABLED: Shows the Models tab on project detail pages, allowing Project Admins and Platform
+  #          Admins to restrict which LLM models are available within a project and set a
+  #          project-level default model
+  # DISABLED: Models tab is hidden; all platform models are available in every project
+  # NOTE: Disabled by default. When LiteLLM Proxy is deployed, restrictions are also enforced
+  #       at the API level. Not shown on personal projects.
+  - id: "features:projectModelOverride"
+    settings:
+      enabled: false
+      name: "Project Model Override"
+      description: "Enable Project model override configuration."
+```
+
+#### Project Model Override {#project-model-override}
+
+Controls whether the **Models** tab appears on project detail pages. When enabled, Project Admins
+and Platform Admins can restrict which LLM models are available within a project and set a
+project-level default model. The selection applies to all chats, assistants, and workflows that
+belong to the project.
+
+**Where it appears:** Project detail pages → **Models** tab. Not shown on personal projects.
+
+**How it works:**
+
+- **When `enabled: true`** — The **Models** tab is visible to Project Admins and Platform Admins.
+  Admins can enable or disable specific models for the project and choose a project-level default.
+  Users in the project only see the allowed models in model selectors.
+- **When `enabled: false`** (default) — The **Models** tab is hidden. All platform models are
+  available in every project without restriction.
+
+When [LiteLLM Proxy](../../../admin/deployment/extensions/litellm-proxy/index.md) is deployed,
+saving a project's model configuration regenerates the project's LiteLLM virtual keys to enforce
+restrictions at the API level. Without LiteLLM Proxy, restrictions are enforced in the UI layer
+only.
+
+For full usage instructions, see
+[Model Configuration](../../../user-guide/project-user-management/projects.md#model-configuration)
+in the Project Management guide.
+
+```yaml
+components:
+  # WHERE: Project detail pages → Models tab
+  # ENABLED: Shows Models tab; Project Admins can restrict models and set project default
+  # DISABLED: Models tab hidden; all platform models available in every project
+  # NOTE: Disabled by default
+  - id: "features:projectModelOverride"
+    settings:
+      enabled: false
+      name: "Project Model Override"
+      description: "Enable Project model override configuration."
 ```
 
 ### Advanced Features
@@ -1256,6 +1309,12 @@ extraObjects:
           - id: "features:showAllProjects"
             settings:
               enabled: true
+
+          - id: "features:projectModelOverride"
+            settings:
+              enabled: false
+              name: "Project Model Override"
+              description: "Enable Project model override configuration."
 
           # Banner, Chat Disclaimer and Release Notes
           # NOTE: Can be overridden at runtime in Settings → Administration → Customer Configuration

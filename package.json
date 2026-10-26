@@ -23,6 +23,10 @@
     "typecheck": "tsc --noEmit",
     "secrets:check": "sh scripts/secrets-check.sh",
     "secrets:check-git": "sh scripts/secrets-check.sh --git",
+    "knip": "npx knip@6.41.0 --dependencies --no-config-hints",
+    "knip:development": "npm run knip -- --files",
+    "knip:production": "npm run knip -- --production --strict",
+    "knip:check": "npm run knip:development && npm run knip:production",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
     "commitlint:test": "commitlint --verbose",
@@ -71,13 +75,9 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@docusaurus/plugin-client-redirects": "^3.10.2",
     "@eslint/js": "^9.39.1",
-    "@typescript-eslint/eslint-plugin": "^8.46.3",
-    "@typescript-eslint/parser": "^8.46.3",
     "autoprefixer": "^10.4.23",
-    "baseline-browser-mapping": "^2.9.11",
     "cspell": "^9.3.2",
     "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
@@ -87,6 +87,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^3.4.19",
     "tailwindcss-themer": "^4.1.1",
+    "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.3"
   }
 }

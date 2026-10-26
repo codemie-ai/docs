@@ -27,6 +27,8 @@ Scripted deployment is the recommended method as it handles prerequisite checks,
 
 :::info Existing Infrastructure
 If you already have a provisioned Kubernetes cluster with all required services, skip this page and proceed directly to [Platform Deployment](../platform-deployment/index.mdx).
+
+On AWS, the IAM roles and permissions that must be present in an existing account or cluster are listed in [AWS IAM Roles and Permissions](../prerequisites/kubernetes/aws-iam-roles-and-permissions.md).
 :::
 
 ## Prerequisites
@@ -103,7 +105,7 @@ Scripted deployment runs all Terraform phases automatically in the correct order
 
 **Phase 1: Deploy IAM Deployer Role**
 
-The IAM deployer role provides necessary permissions for all subsequent infrastructure operations. **Skip this phase if the role already exists.**
+The IAM deployer role provides necessary permissions for all subsequent infrastructure operations. **Skip this phase if the role already exists.** An existing role must have the trust policy and permissions described in [AWS IAM Roles and Permissions](../prerequisites/kubernetes/aws-iam-roles-and-permissions.md#deployer-role).
 
 1. Clone the IAM Terraform repository:
 

@@ -24,6 +24,8 @@ ignorePaths:
 words:
   # Project/Brand names
   - HMAC
+  - dbuser
+  - serviceaccount
   - codemie
   - passwordless
   - SAMEORIGIN
