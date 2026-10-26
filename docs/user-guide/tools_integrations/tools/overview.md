@@ -72,11 +72,13 @@ The toggle and the **Smart Tools** row in the assistant details are shown only w
 - The assistant chooses tools for each request from all tools available on the platform. Tools are not limited to those picked manually.
 - Tool relevance is based on the request and the recent conversation, so different requests can use different tools.
 - The tools used are the ones found relevant to the request. Narrowing to the most relevant ones applies only when enough tools are found; the threshold is a platform setting. With fewer tools, all found tools are used.
-- The tools picked in **Tools configuration** are used only when no relevant tool is found, or when the request has no text.
+- The tools picked in **Tools configuration** are used only when no relevant tool is found, the tool lookup fails, or the request has no text.
 - Tools required by the skills attached to the assistant are always added next to the matched tools.
 - The tools of the assistant's data sources (knowledge base, repository) and MCP servers, and the skill tool, are always available. They are not part of the relevance search and do not depend on the manual selection.
-- The tools picked manually in **Tools configuration** do not decide which tools run. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, and plugin selections are disabled, and an information message explains why. Integration (credential) dropdowns remain editable and are applied to the selected tools when they are used.
-- Web search, code interpreter, and image generation are added only when the matching feature is available and switched on for the request in the chat. Git tools are added whenever the assistant has a code data source, without adding the **Git** toolkit. A Git integration pinned to a Git tool picked in the assistant applies to that tool; other Git tools use the integration settings of the user and the project.
+- The tools picked manually in **Tools configuration** do not decide which tools run. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, plugin selections, and **Automatic credentials lookup** switches are disabled, and an information message explains why. Integration (credential) dropdowns remain editable and are applied to the selected tools when they are used.
+- Web search and code interpreter are added only when the matching feature is available and switched on for the request in the chat. Image generation is added only when it is enabled for the assistant and not switched off for the request.
+- Code and Git tools are added whenever the assistant has a code data source, without adding the **Code** or **Git** toolkits.
+- Only the tools picked in **Tools configuration** use the integration pinned to the assistant. All other tools (found by relevance, required by a skill, or added by a feature) use the integration settings of the user running the request, or of the project when the user has none. A tool without a matching integration is skipped.
 - A technical maximum of 128 tools sent to the model still applies.
 - Smart Tool Selection does not guarantee a tool call; the model may still answer directly.
 - When enabled on the platform, the **Assistant details** sidebar shows **Smart Tools: ON** under **Tools & Capabilities**.

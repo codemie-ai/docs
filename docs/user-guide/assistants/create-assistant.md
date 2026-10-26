@@ -248,7 +248,7 @@ enabled on the platform level.
   fewer tools, all found tools are used. The tools picked in the form are used only when no
   relevant tool is found.
 - Tools picked in the form do not decide which tools run. While the toggle is on, tool checkboxes,
-  **Select all**, MCP server toggles, and plugin selections stay visible but cannot be changed. Earlier
+  **Select all**, MCP server toggles, plugin selections, and **Automatic credentials lookup** switches stay visible but cannot be changed. Earlier
   selections are kept and become active again when the toggle is switched off.
 - No limit applies to the number of tools that can be added to the assistant in this mode.
 - Tools of the assistant's data sources and MCP servers are always available, even though the
@@ -256,13 +256,18 @@ enabled on the platform level.
 - Integration (credential) dropdowns remain editable, and a credential chosen for a tool is applied
   whenever that tool is selected for a request.
 - A new MCP server added in this mode defaults to using all of its tools.
-- If no relevant tool is found, or the request has no text, the assistant falls back to the
-  configured toolkits.
+- If no relevant tool is found, the tool lookup fails, or the request has no text, the assistant
+  falls back to the configured toolkits and the tools required by attached skills.
 
 :::info Tools Requiring Explicit Enablement
-Web search, code interpreter, and image generation are added only when the matching feature is
-available and switched on for the request in the chat. Git tools are added whenever the
+Web search and code interpreter are added only when the matching feature is available and
+switched on for the request in the chat. Image generation is added only when it is enabled for
+the assistant and not switched off for the request. Code and Git tools are added whenever the
 assistant has a code data source. See [Chat Input Settings](./chat-input-settings.md).
+
+Only the tools picked in **Tools configuration** use the integration pinned to the assistant.
+All other tools use the integration settings of the user running the request, or of the project
+when the user has none. A tool without a matching integration is skipped.
 :::
 
 :::note
