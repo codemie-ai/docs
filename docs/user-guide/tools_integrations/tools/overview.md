@@ -62,7 +62,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 ![Enable Smart Tools selection toggle on the Edit Assistant page](./images/smart-tools-toggle.png)
 
 :::info Platform Setting Required
-Smart Tool Selection takes effect only when it is enabled on the platform level. If the toggle is on but the assistant still behaves as before, contact the platform administrator. See [Smart Tool Selection](../../../admin/configuration/codemie/api-configuration.md#smart-tool-selection) in the configuration guide.
+The toggle and the **Smart Tools** row in the assistant details are shown only when Smart Tool Selection is enabled on the platform level. If they are missing, contact the platform administrator. See [Smart Tool Selection](../../../admin/configuration/codemie/api-configuration.md#smart-tool-selection) in the configuration guide.
 :::
 
 ### Behavior
@@ -71,13 +71,14 @@ Smart Tool Selection takes effect only when it is enabled on the platform level.
 
 - The assistant chooses tools for each request from all tools available on the platform. Tools are not limited to those picked manually.
 - Tool relevance is based on the request and the recent conversation, so different requests can use different tools.
-- Narrowing applies only when the assistant has enough tools; the threshold is a platform setting. With fewer tools, all configured tools are used.
-- Skills attached to the assistant stay available alongside the matched tools. If no relevant tool is found, the assistant falls back to the configured toolkits and skills.
+- The tools used are the ones found relevant to the request. Narrowing to the most relevant ones applies only when enough tools are found; the threshold is a platform setting. With fewer tools, all found tools are used.
+- The tools picked in **Tools configuration** and the skills attached to the assistant are used only when no relevant tool is found, or when the request has no text.
+- Tools required by the skills attached to the assistant are always added next to the matched tools.
 - The tools picked manually in **Tools configuration** do not decide which tools run. They stay visible but cannot be changed: tool checkboxes, **Select all**, MCP server toggles, and plugin selections are disabled, and an information message explains why. Integration (credential) dropdowns remain editable and are applied to the selected tools when they are used.
-- Web search, code interpreter, and image generation are added only when the matching feature is available and switched on for the request in the chat. Git tools still require the **Git** toolkit to be added to the assistant.
-- A technical maximum on the number of tools sent to the model still applies.
+- Web search, code interpreter, and image generation are added only when the matching feature is available and switched on for the request in the chat. Git tools are added whenever the assistant has a code data source, without adding the **Git** toolkit. A Git integration pinned to a Git tool picked in the assistant applies to that tool; other Git tools use the integration settings of the user and the project.
+- A technical maximum of 128 tools sent to the model still applies.
 - Smart Tool Selection does not guarantee a tool call; the model may still answer directly.
-- The **Assistant details** sidebar shows **Smart Tools: ON** under **Tools & Capabilities**.
+- When enabled on the platform, the **Assistant details** sidebar shows **Smart Tools: ON** under **Tools & Capabilities**.
 
 #### When Smart Tools Is Off
 
@@ -94,7 +95,7 @@ Smart Tool Selection takes effect only when it is enabled on the platform level.
   :::
 
 :::info Skills
-Tools attached to a skill are also treated as manual picks. While Smart Tools is on, the assistant chooses tools for each request regardless of the tools a skill requires.
+While Smart Tools is on, the tools required by a skill attached to the assistant are always added next to the matched tools, so a skill keeps the tools it needs.
 :::
 
 ### When to Use Smart Tool Selection

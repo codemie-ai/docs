@@ -227,7 +227,8 @@ continues to use each tool's own default limit.
 
 The **Enable Smart Tools selection** toggle, located above the **Tools configuration** section,
 lets the assistant choose its tools and skills for each request instead of always offering the
-model every tool configured manually.
+model every tool configured manually. The toggle is shown only when Smart Tool Selection is
+enabled on the platform level.
 
 ![Enable Smart Tools selection toggle in the assistant configuration form](./images/smart-tools-selection.png)
 
@@ -238,13 +239,14 @@ model every tool configured manually.
 
 **Behavior**
 
-| State   | Behavior                                                                                                                                                                     |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **On**  | For each request, the assistant narrows to the tools it finds relevant, based on the request and the conversation history. Skills attached to the assistant remain available |
-| **Off** | The assistant uses only the tools selected in **Tools configuration**, up to the configured tool limit                                                                       |
+| State   | Behavior                                                                                                                                                                |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **On**  | For each request, the assistant uses the tools it finds relevant, based on the request and the conversation history. Tools required by attached skills are always added |
+| **Off** | The assistant uses only the tools selected in **Tools configuration**, up to the configured tool limit                                                                  |
 
-- Narrowing applies only when the assistant has enough tools. The threshold is a platform setting.
-  With fewer tools, all configured tools are used, as when the toggle is off.
+- Narrowing applies only when enough tools are found. The threshold is a platform setting. With
+  fewer tools, all found tools are used. The tools picked in the form are used only when no
+  relevant tool is found.
 - Tools picked in the form do not decide which tools run. While the toggle is on, tool checkboxes,
   **Select all**, MCP server toggles, and plugin selections stay visible but cannot be changed. Earlier
   selections are kept and become active again when the toggle is switched off.
@@ -252,18 +254,18 @@ model every tool configured manually.
 - Integration (credential) dropdowns remain editable, and a credential chosen for a tool is applied
   whenever that tool is selected for a request.
 - A new MCP server added in this mode defaults to using all of its tools.
-- If no relevant tool is found, the assistant falls back to the configured toolkits and skills.
+- If no relevant tool is found, or the request has no text, the assistant falls back to the
+  configured toolkits and skills.
 
 :::info Tools Requiring Explicit Enablement
 Web search, code interpreter, and image generation are added only when the matching feature is
-available and switched on for the request in the chat. Git tools still require the **Git** toolkit to
-be added to the assistant. See [Chat Input Settings](./chat-input-settings.md).
+available and switched on for the request in the chat. Git tools are added whenever the
+assistant has a code data source. See [Chat Input Settings](./chat-input-settings.md).
 :::
 
 :::note
 Smart Tools selection does not guarantee a tool call; the model may still answer directly. The
-feature also takes effect only when it is enabled on the platform level. If the toggle is on but the
-assistant behaves as before, contact the platform administrator. For details, see
+feature is available only when it is enabled on the platform level. For details, see
 [Smart Tool Selection](../tools_integrations/tools/overview.md#smart-tool-selection).
 :::
 
