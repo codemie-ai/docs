@@ -7,6 +7,8 @@ pagination_next: user-guide/tools_integrations/tools/mcp/mcp-integration-credent
 sidebar_position: 1
 ---
 
+import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
+
 # Adding an MCP Server
 
 :::note Restricted Mode
@@ -192,6 +194,101 @@ To ensure your MCP server is correctly configured and accessible, CodeMie provid
 5. The system will perform the verification and display results immediately
 
 This feature helps you quickly confirm that your MCP server connection is working properly without having to test it through actual assistant conversations.
+
+## Testing a Saved MCP Server Configuration (Administrators)
+
+<EnterpriseFeature />
+
+Administrators can verify that a server saved in the MCP catalog connects and exposes tools, without attaching it to an assistant. The test runs against the saved configuration, and the result is shown immediately. The result is not stored: no "last test" status or timestamp is kept on the server.
+
+### Prerequisites
+
+- The **Administrator** role on the AI/Run CodeMie platform
+- The Enterprise package installed on the deployment (the **MCPs management** page is hidden otherwise)
+- The `adminActions` and `mcpConnect` components enabled in the customer configuration. See [Customer Feature Configuration](../../../../admin/configuration/codemie/customer-feature-configuration.md)
+
+### Run a Test
+
+1. Navigate to **Settings** → **Administration** → **MCPs management**
+2. Locate the MCP server in the catalog table
+3. Click the three dots menu (⋮) in the server row and select **Test Integration**
+
+   The same **Test Integration** action is available in the actions of the **View Details** sidebar.
+
+4. While the test is running, the action is disabled for that server to prevent duplicate requests
+5. The outcome is displayed as a notification (see [Test Results](#test-results))
+
+![MCPs management table with the Test Integration action](./images/mcp-test-row-menu.png)
+
+The test works for servers of any status. An **inactive** server can be tested before being activated.
+
+:::note Restricted Mode
+When restricted mode (`mcpCustomServersDisabled`) is active, an inactive or non-public catalog server cannot be tested. The test fails with a message that restricted mode prevents the configuration from being used at runtime. Activate the server and make it public, then repeat the test.
+:::
+
+### Servers That Require Credentials
+
+If the server defines required environment variables, the test cannot run without credentials. In this case the **Integration required** window opens first:
+
+1. Review the list of environment variables that the test needs
+2. Select an existing MCP integration from the list, or click **Add Environment Variables** to create a new integration. The newly created integration is selected automatically
+3. Click **Test Integration**
+
+![Integration required window](./images/mcp-test-integration-required.png)
+
+If **Test Integration** is clicked with no integration selected, the hint **Select an integration to run the test** is displayed. While the test is running, the status of the **Test Integration** button reflects progress, success, warning, or failure. The window stays open, so a different integration can be selected and the test repeated.
+
+:::info
+Credentials from the selected integration are used for this test only. If a required variable is still missing, the test fails with `Missing required credentials: <variable names>` and the MCP server is not contacted.
+:::
+
+### Authentication Prompts
+
+Some servers require sign-in while the test is running. In this case the test pauses and one of the following windows opens:
+
+| Window                          | When it appears                                 | What to do                                                                                                                                    |
+| ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MCP authentication required** | The MCP server requires an OAuth sign-in        | Click **Authenticate** for the listed server and complete the sign-in. After all servers are authenticated, the test is re-run automatically  |
+| **Authentication required**     | The server is protected by the MCP broker login | Click **Login to MCP Server**, which opens the broker login page in a new browser tab. After signing in, close the tab and run the test again |
+
+### Test Results
+
+| Result      | Notification                                               | Meaning                                                                                     |
+| ----------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Success** | `MCP connection test successful (N tools)`                 | The server started, the connection was established, and `N` tools were retrieved            |
+| **Warning** | `Connected to '<server>' but no tools were retrieved. ...` | The connection works, but the server returned no tools. Check that the server exposes tools |
+| **Failure** | An error message followed by a diagnostic hint             | The connection failed. Review the message and the hint shown with it                        |
+
+![Successful and failed test notifications](./images/mcp-test-result.png)
+
+### API
+
+The test is also available through the REST API (administrator access required):
+
+```http
+POST /v1/mcp-configs/{config_id}/test
+```
+
+The request body is optional. `settings_id` selects the MCP integration whose credentials are used for the test.
+
+```json
+{
+  "settings_id": "<integration-id>"
+}
+```
+
+Example response:
+
+```json
+{
+  "status": "success",
+  "message": "Success",
+  "error_category": null,
+  "tools_count": 12
+}
+```
+
+`status` is one of `success`, `warning`, or `failure`. `error_category` and `tools_count` are populated when applicable. Nothing is persisted.
 
 ## Propagating Client Headers to MCP Servers
 
