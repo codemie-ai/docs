@@ -88,7 +88,7 @@ File names in the package are resolved relative to the assets directory passed t
 
 Edit the copy of `theme-package.yaml`. Every field is described in the [Theme Package Reference](./package-reference.md). The main sections are:
 
-- `product` — the product name and short name shown in the browser tab and UI headers.
+- `product` — the product name and short name used in the browser tab, UI texts, chat, emails, and Keycloak pages. See [Where the Product Name Appears](#where-the-product-name-appears).
 - `colors` — semantic tokens such as `surface.base.primary`, each with a `dark` and a `light` value in `#rrggbb` format. Tokens that are not listed keep the default values.
 - `typography` — CSS font families for UI text, prose, and code. Optionally add `fontFaceCSS` with inline `@font-face` rules.
 - `effects` — optional. Set `gradients: 'none'` to remove all background gradients. Without the block, the default gradients stay.
@@ -204,6 +204,37 @@ The script always reuses the values of the running releases. It never sets the i
 ### 5. Verify in the browser
 
 Reload the platform in a private browser window and confirm the product name in the tab, the logos on the light and dark themes, the favicon, and the help links in the UI.
+
+## Where the Product Name Appears
+
+The value of `product.name` replaces "CodeMie" in the texts below. Names that contain `&` or `'`, for example `R&D's Hub`, show as plain text.
+
+**Texts that follow the brand:**
+
+- The first-time welcome message and the release popup.
+- The title of the Help page and of the Help popup.
+- The onboarding tours.
+- The sign-in page, the login-success page, and the terms page.
+- The SharePoint sign-in labels.
+- The thought label in chat, written as `<product name> Thoughts`, for example "Acme Corp AI Platform Thoughts".
+- The five platform emails.
+- The Keycloak login title and heading.
+
+**Texts that do not change:**
+
+- Pre-built assistant templates, katas, and onboarding documents.
+- Release notes.
+- Assistants that users created.
+- The support address `AskCodeMie@epam.com`.
+- The default browser tab title, "EPAM AI/Run CodeMie", when no brand is set.
+- Old chats. A chat keeps the thought label that was stored with it, so old chats show "CodeMie Thoughts" correctly. A chat that was stored under one brand is not re-labelled when the brand changes.
+
+**Fallbacks and restart:**
+
+- With no brand file, or with a blank product name, the thought label stays "CodeMie Thoughts" and UI texts keep "CodeMie".
+- An invalid brand file makes the thought label fall back to "CodeMie Thoughts". Chats show no error.
+- A product name of exactly `Platform`, which is the packaged email default, also gives "CodeMie Thoughts".
+- The API reads the brand file once. A brand change on a running platform needs an API restart.
 
 ## Use in a Pipeline
 
