@@ -456,6 +456,24 @@ database on startup.
 
 ---
 
+### Keycloak Enterprise Settings
+
+<EnterpriseFeature />
+
+Enterprise-only settings for deployments where an upstream OAuth2/OIDC reverse proxy (such as oauth2-proxy or envoy) authenticates requests and injects user context via HTTP headers and cookies before they reach the application.
+
+:::note
+Setting `AUTHORIZATION_HEADER` to `Authorization` is supported — the Bearer scheme is correctly recognized and stripped when this header name is used.
+:::
+
+| Parameter              | Type   | Default                         | Description                                                                                                                                      |
+| ---------------------- | ------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AUTHORIZATION_HEADER` | string | `"x-auth-request-access-token"` | Name of the HTTP header from which the application reads the inbound JWT access token injected by the upstream OAuth2/OIDC reverse proxy         |
+| `SESSION_COOKIE`       | string | `"oidc_session"`                | Name of the cookie holding the OIDC session established by the upstream proxy; used to associate requests with an authenticated session          |
+| `USER_INFO_HEADER`     | string | `"x-userinfo"`                  | Name of the HTTP header carrying base64-encoded user claims in JWT format, injected by the upstream proxy to convey user identity and attributes |
+
+---
+
 ### Admin Bootstrap
 
 Auto-create a SuperAdmin account on startup when none exists. Active only when `IDP_PROVIDER=local` and `ENABLE_USER_MANAGEMENT=true` in non-local environments.
