@@ -1,4 +1,4 @@
-name: Commit & PR Validation
+name: PR Title Validation
 
 on:
   pull_request:
@@ -13,6 +13,6 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  commit-lint:
-    name: PR & Commits
+  pr-title:
+    name: CI
     uses: codemie-ai/ci-workflows/.github/workflows/reusable-commit-lint.yml@main
