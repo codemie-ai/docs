@@ -77,6 +77,11 @@ This masking applies only to OAuth2 client secrets in `auth_config`. Any other c
 Configuration JSON — such as headers, tokens, environment variable values, or credentials embedded
 in URLs — are shown in plain text to the person cloning and are copied to the clone as-is unless
 you change them.
+
+If the source server uses an OAuth2 login flow, the clone always gets a new internal auth
+configuration ID. Existing OAuth sign-ins for the source server do not carry over to the clone —
+anyone using the clone, including you, needs to complete the OAuth login again for it, even though
+the rest of the Configuration JSON is unchanged.
 :::
 
 ## After Cloning
