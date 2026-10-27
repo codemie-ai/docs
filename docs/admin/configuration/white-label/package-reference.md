@@ -28,10 +28,12 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 ## Product
 
-| Path                | Type   | Required | Description                                                                                                                    |
-| ------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `product.name`      | string | Yes      | Product name shown in the browser tab and UI headers. 1 to 100 characters; no `<`, `>`, `"`, backslash, or control characters. |
-| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. 1 to 50 characters; same character rules.                                     |
+| Path                | Type   | Required | Description                                                                                                                                                                                                                           |
+| ------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `product.name`      | string | Yes      | Product name shown across the UI, in chat, in emails and on Keycloak pages. See [Where the Product Name Appears](./index.md#where-the-product-name-appears). 1 to 100 characters; no `<`, `>`, `"`, backslash, or control characters. |
+| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. 1 to 50 characters; same character rules.                                                                                                                                            |
+
+The API reads the brand file once, at start. A change to the product name therefore needs an API restart.
 
 ## Colors
 
