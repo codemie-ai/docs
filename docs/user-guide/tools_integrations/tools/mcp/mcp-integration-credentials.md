@@ -3,7 +3,7 @@ id: mcp-integration-credentials
 title: MCP Integration Credentials
 sidebar_label: MCP Integration Credentials
 pagination_prev: user-guide/tools_integrations/tools/mcp/adding-an-mcp-server
-pagination_next: null
+pagination_next: user-guide/tools_integrations/tools/mcp/clone-mcp-server
 sidebar_position: 2
 ---
 
