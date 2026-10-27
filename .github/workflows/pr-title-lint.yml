@@ -1,4 +1,4 @@
-name: PR Title Validation
+name: PR Checks
 
 on:
   pull_request:
@@ -14,5 +14,5 @@ concurrency:
 
 jobs:
   pr-title:
-    name: CI
+    name: PR Title
     uses: codemie-ai/ci-workflows/.github/workflows/reusable-commit-lint.yml@main
