@@ -242,8 +242,10 @@ The `--render-only` mode is designed for pipelines: it needs no cluster access, 
 
 The kit ships an example GitHub Actions workflow in `kit/.github/workflows/apply-theme.yml`. The workflow is triggered manually (`workflow_dispatch`) and has two jobs:
 
-- `validate` runs `apply-theme --render-only` against the package and assets paths that are provided as inputs and keeps the rendered files as a workflow artifact for review.
+- `validate` first checks the Keycloak inputs, then runs `apply-theme --render-only` against the package and assets paths that are provided as inputs and keeps the rendered files as a workflow artifact for review. When the package has a `keycloak` block, the job fails at once unless the `chart_keycloak` and `chart_proxy` inputs are set or `no_keycloak` is enabled. The enabled-link check against `customer-config.yaml` runs in this job only when the optional `customer_config_path` input points to a committed copy of that file. Without it, the job prints a warning and skips the check, and the check runs only in the `apply` job.
 - `apply` runs only when `validate` succeeds and the reviewers of the `white-label-apply` environment approve it. It writes a kubeconfig from the `KUBECONFIG_DATA` repository secret, exports the running `customer-config.yaml`, runs `apply-theme`, and finishes with a smoke check: both rollouts are complete, `config.js` carries the product name, and `brand.css` and the dark logo are served.
+
+The workflow covers the UI and API releases and, for a package with a `keycloak` block, the Keycloak and oauth2-proxy releases. The inputs `chart_keycloak`, `chart_proxy`, `release_keycloak`, `release_proxy`, `namespace_keycloak`, and `namespace_proxy` map to the script options of the same names, and `no_keycloak` maps to `--no-keycloak`.
 
 Copy the workflow into the target repository, create the `white-label-apply` environment with required reviewers, store the base64-encoded kubeconfig of a service account with limited rights as the `KUBECONFIG_DATA` secret, and replace the pinned action versions with the current releases when the file is adopted. For other CI systems, run the same sequence: `apply-theme --render-only` first, then `apply-theme` without the flag, then check that the UI serves `/brand.css`.
 
