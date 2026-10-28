@@ -1486,3 +1486,82 @@ kc_apply() {
   [ "$status" -eq 0 ]
   [ "$(yq eval '.keycloakx.childTheme.data."old.properties" | tag' "$OUT/values-keycloak.stale.yaml")" = "!!null" ]
 }
+
+# ── example workflow ─────────────────────────────────────────────────────────
+
+WORKFLOW="$BATS_TEST_DIRNAME/../.github/workflows/apply-theme.yml"
+
+# wf_run <job> <step name> [VAR=value ...]: runs the shell script of one workflow step the way a
+# GitHub runner does (bash -e) from a checkout that holds the kit under ./kit and the acme example
+wf_run() {
+  local script
+  script=$(yq eval ".jobs.$1.steps[] | select(.name == \"$2\") | .run" "$WORKFLOW")
+  [ -n "$script" ]
+  [ "$script" != "null" ]
+  shift 2
+  mkdir -p "$BATS_TEST_TMPDIR/repo" "$BATS_TEST_TMPDIR/runner"
+  ln -sfn "$BATS_TEST_DIRNAME/.." "$BATS_TEST_TMPDIR/repo/kit"
+  cd "$BATS_TEST_TMPDIR/repo"
+  run env PATH="$STUBS:$PATH" RUNNER_TEMP="$BATS_TEST_TMPDIR/runner" \
+    PACKAGE_PATH=kit/examples/acme/theme-package.yaml ASSETS_PATH=kit/examples/acme/assets \
+    NAMESPACE=apps RELEASE_UI=codemie-ui RELEASE_CODEMIE=codemie CHART_UI=repo/ui CHART_CODEMIE=repo/api \
+    "$@" bash -e -c "$script"
+}
+
+@test "workflow: dispatch inputs cover the keycloak and proxy releases and an optional customer config" {
+  for i in chart_keycloak chart_proxy no_keycloak release_keycloak release_proxy namespace_keycloak namespace_proxy customer_config_path; do
+    [ "$(yq eval ".on.workflow_dispatch.inputs | has(\"$i\")" "$WORKFLOW")" = "true" ]
+  done
+  [ "$(yq eval '.on.workflow_dispatch.inputs.no_keycloak.type' "$WORKFLOW")" = "boolean" ]
+  [ "$(yq eval '.on.workflow_dispatch.inputs.chart_keycloak.required' "$WORKFLOW")" != "true" ]
+}
+
+@test "workflow: validate stops early when a keycloak package has no keycloak chart" {
+  wf_run validate "Check Keycloak inputs" CHART_KEYCLOAK= CHART_PROXY= NO_KEYCLOAK=false
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"chart_keycloak"* ]]
+  wf_run validate "Check Keycloak inputs" CHART_KEYCLOAK=repo/kc CHART_PROXY= NO_KEYCLOAK=false
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"chart_proxy"* ]]
+}
+
+@test "workflow: validate accepts a keycloak package with both charts or with no_keycloak" {
+  wf_run validate "Check Keycloak inputs" CHART_KEYCLOAK=repo/kc CHART_PROXY=repo/proxy NO_KEYCLOAK=false
+  [ "$status" -eq 0 ]
+  wf_run validate "Check Keycloak inputs" CHART_KEYCLOAK= CHART_PROXY= NO_KEYCLOAK=true
+  [ "$status" -eq 0 ]
+}
+
+@test "workflow: validate passes a given customer config to the render step" {
+  wf_run validate "Render theme package without touching the cluster" NO_KEYCLOAK=false \
+    CUSTOMER_CONFIG_FILE="$BATS_TEST_TMPDIR/absent.yaml"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"customer config not found"* ]]
+}
+
+@test "workflow: validate render of the acme example succeeds" {
+  wf_run validate "Render theme package without touching the cluster" NO_KEYCLOAK=false CUSTOMER_CONFIG_FILE=
+  [ "$status" -eq 0 ]
+  [ -f "$BATS_TEST_TMPDIR/repo/rendered/values-oauth2-proxy.realm.yaml" ]
+}
+
+@test "workflow: apply step applies the acme example including keycloak and the proxy" {
+  kc_stub_dir
+  mkdir -p "$BATS_TEST_TMPDIR/runner"
+  cp "$FIXTURES/customer-config.yaml" "$BATS_TEST_TMPDIR/runner/customer-config.yaml"
+  wf_run apply "Apply theme package" HELM_STUB_DIR="$HS" CHART_KEYCLOAK=repo/kc CHART_PROXY=repo/proxy NO_KEYCLOAK=false \
+    RELEASE_KEYCLOAK=keycloak RELEASE_PROXY=oauth2-proxy NAMESPACE_KEYCLOAK=security NAMESPACE_PROXY=oauth2-proxy
+  [ "$status" -eq 0 ]
+  grep -q "^helm upgrade keycloak repo/kc " "$BATS_TMPDIR/helm-calls"
+  grep -q "^helm upgrade oauth2-proxy repo/proxy " "$BATS_TMPDIR/helm-calls"
+}
+
+@test "workflow: apply step with no_keycloak skips the keycloak releases" {
+  mkdir -p "$BATS_TEST_TMPDIR/runner"
+  cp "$FIXTURES/customer-config.yaml" "$BATS_TEST_TMPDIR/runner/customer-config.yaml"
+  wf_run apply "Apply theme package" CHART_KEYCLOAK= CHART_PROXY= NO_KEYCLOAK=true \
+    RELEASE_KEYCLOAK=keycloak RELEASE_PROXY=oauth2-proxy NAMESPACE_KEYCLOAK=security NAMESPACE_PROXY=oauth2-proxy
+  [ "$status" -eq 0 ]
+  run grep "helm upgrade keycloak" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}

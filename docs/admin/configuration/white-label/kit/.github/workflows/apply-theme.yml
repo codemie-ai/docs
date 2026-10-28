@@ -30,6 +30,36 @@ on:
       chart_codemie:
         description: Chart reference of the API release (repository/chart or local path)
         required: true
+      chart_keycloak:
+        description: Chart reference of the Keycloak release. Required when the package has a keycloak block, unless no_keycloak is set
+        required: false
+      chart_proxy:
+        description: Chart reference of the oauth2-proxy release. Required when the package has a keycloak block, unless no_keycloak is set
+        required: false
+      no_keycloak:
+        description: Skip the Keycloak theme and realm steps for this run
+        type: boolean
+        required: false
+        default: false
+      release_keycloak:
+        description: Helm release name of the Keycloak chart
+        required: false
+        default: keycloak
+      release_proxy:
+        description: Helm release name of the oauth2-proxy chart
+        required: false
+        default: oauth2-proxy
+      namespace_keycloak:
+        description: Kubernetes namespace of the Keycloak release
+        required: false
+        default: security
+      namespace_proxy:
+        description: Kubernetes namespace of the oauth2-proxy release
+        required: false
+        default: oauth2-proxy
+      customer_config_path:
+        description: Optional path to a committed customer-config.yaml. When set, the validate job checks the enabled links against it
+        required: false
       package_path:
         description: Path to the theme package file
         required: true
@@ -56,11 +86,36 @@ jobs:
       - name: Install ajv-cli
         run: npm install --global ajv-cli@5
 
+      - name: Check Keycloak inputs
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          CHART_KEYCLOAK: ${{ inputs.chart_keycloak }}
+          CHART_PROXY: ${{ inputs.chart_proxy }}
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+        run: |
+          # a package with a keycloak block needs both charts in the apply job; fail now, not after the approval
+          if [[ "$NO_KEYCLOAK" != "true" && "$(yq eval '.keycloak | tag' "$PACKAGE_PATH")" == "!!map" ]]; then
+            if [[ -z "$CHART_KEYCLOAK" ]]; then
+              echo "The package has a keycloak block: set the chart_keycloak input, or no_keycloak to skip it." >&2
+              exit 1
+            fi
+            if [[ -z "$CHART_PROXY" ]]; then
+              echo "The package has a keycloak block: set the chart_proxy input, or no_keycloak to skip it." >&2
+              exit 1
+            fi
+          fi
+
       - name: Render theme package without touching the cluster
         env:
           PACKAGE_PATH: ${{ inputs.package_path }}
           ASSETS_PATH: ${{ inputs.assets_path }}
-        run: ./kit/apply-theme --render-only --output-dir rendered "$PACKAGE_PATH" "$ASSETS_PATH"
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+          CUSTOMER_CONFIG_FILE: ${{ inputs.customer_config_path }}
+        run: |
+          args=(--render-only --output-dir rendered)
+          if [[ "$NO_KEYCLOAK" == "true" ]]; then args+=(--no-keycloak); fi
+          if [[ -n "$CUSTOMER_CONFIG_FILE" ]]; then args+=(--customer-config "$CUSTOMER_CONFIG_FILE"); fi
+          ./kit/apply-theme "${args[@]}" "$PACKAGE_PATH" "$ASSETS_PATH"
 
       - name: Keep the rendered files for review
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -110,18 +165,38 @@ jobs:
           RELEASE_CODEMIE: ${{ inputs.release_codemie }}
           CHART_UI: ${{ inputs.chart_ui }}
           CHART_CODEMIE: ${{ inputs.chart_codemie }}
+          CHART_KEYCLOAK: ${{ inputs.chart_keycloak }}
+          CHART_PROXY: ${{ inputs.chart_proxy }}
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+          RELEASE_KEYCLOAK: ${{ inputs.release_keycloak }}
+          RELEASE_PROXY: ${{ inputs.release_proxy }}
+          NAMESPACE_KEYCLOAK: ${{ inputs.namespace_keycloak }}
+          NAMESPACE_PROXY: ${{ inputs.namespace_proxy }}
           PACKAGE_PATH: ${{ inputs.package_path }}
           ASSETS_PATH: ${{ inputs.assets_path }}
         run: |
-          ./kit/apply-theme \
-            --namespace "$NAMESPACE" \
-            --release-ui "$RELEASE_UI" \
-            --release-codemie "$RELEASE_CODEMIE" \
-            --chart-ui "$CHART_UI" \
-            --chart-codemie "$CHART_CODEMIE" \
-            --customer-config "$RUNNER_TEMP/customer-config.yaml" \
-            --output-dir "$RUNNER_TEMP/rendered" \
-            "$PACKAGE_PATH" "$ASSETS_PATH"
+          args=(
+            --namespace "$NAMESPACE"
+            --release-ui "$RELEASE_UI"
+            --release-codemie "$RELEASE_CODEMIE"
+            --chart-ui "$CHART_UI"
+            --chart-codemie "$CHART_CODEMIE"
+            --customer-config "$RUNNER_TEMP/customer-config.yaml"
+            --output-dir "$RUNNER_TEMP/rendered"
+          )
+          if [[ "$NO_KEYCLOAK" == "true" ]]; then
+            args+=(--no-keycloak)
+          else
+            if [[ -n "$CHART_KEYCLOAK" ]]; then args+=(--chart-keycloak "$CHART_KEYCLOAK"); fi
+            if [[ -n "$CHART_PROXY" ]]; then args+=(--chart-proxy "$CHART_PROXY"); fi
+            args+=(
+              --release-keycloak "$RELEASE_KEYCLOAK"
+              --release-proxy "$RELEASE_PROXY"
+              --namespace-keycloak "$NAMESPACE_KEYCLOAK"
+              --namespace-proxy "$NAMESPACE_PROXY"
+            )
+          fi
+          ./kit/apply-theme "${args[@]}" "$PACKAGE_PATH" "$ASSETS_PATH"
 
       - name: Smoke check
         env:
