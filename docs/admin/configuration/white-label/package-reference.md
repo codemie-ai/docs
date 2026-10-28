@@ -121,12 +121,12 @@ With [`effects.gradients`](#effects) set to `none`, the `-to` value of the prima
 
 ## Typography
 
-| Path                         | Type           | Required | Description                                                                                                                                    |
-| ---------------------------- | -------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `typography.bodyFamily`      | string         | Yes      | CSS font-family list for UI text (`--font-family-body`), for example `Inter, sans-serif`. Not empty; no `; { } < > ( ) !` or backslash.        |
-| `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose (`--font-family-body-prose`). Same character rules.                                                   |
-| `typography.codeFamily`      | string         | Yes      | CSS font-family list for code (`--font-family-code-block`), for example `Fira Code, monospace`. Same character rules.                          |
-| `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the variables. Must not contain `!important`. Font files are not delivered by the kit; use URLs in `src`. |
+| Path                         | Type           | Required | Description                                                                                                                                                              |
+| ---------------------------- | -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `typography.bodyFamily`      | string         | Yes      | CSS font-family list for UI text (`--font-family-body`), for example `Inter, sans-serif`. Not empty; no `; { } < > ( ) !` or backslash.                                  |
+| `typography.bodyProseFamily` | string         | Yes      | CSS font-family list for long-form prose (`--font-family-body-prose`). Same character rules.                                                                             |
+| `typography.codeFamily`      | string         | Yes      | CSS font-family list for code (`--font-family-code-block`), for example `Fira Code, monospace`. Same character rules.                                                    |
+| `typography.fontFaceCSS`     | string or null | No       | Inline `@font-face` CSS added before the variables. Must not contain `!important`. At most 20000 characters. Font files are not delivered by the kit; use URLs in `src`. |
 
 ## Effects
 
@@ -150,7 +150,7 @@ The option wins over the per-user Custom Appearance setting for gradients. Butto
 
 ## Assets
 
-All values are plain file names relative to the assets directory that is passed to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files).
+All values are plain file names relative to the assets directory that is passed to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. Two size limits apply. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files), which is the limit of the ConfigMap. The Helm release Secret of the UI release holds the files twice and is also limited to 1 MiB, and the script checks that limit after rendering. Text files such as SVG compress well and reach the first limit. PNG and JPEG data does not compress, so about 350 KB of those files is the practical maximum.
 
 | Path                | Type   | Required | Description                          |
 | ------------------- | ------ | -------- | ------------------------------------ |

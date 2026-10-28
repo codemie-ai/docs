@@ -139,7 +139,7 @@ The script runs the validation phase and then the render phase:
 1. The package is validated against `theme-package.schema.json`.
 2. Every file named in `assets` must exist in the assets directory.
 3. Every link that is enabled in `customer-config.yaml` must be present in the package. Pass the file with `--customer-config <file>`, or set `CUSTOMER_CONFIG_PATH`; without either, the script looks for `/app/config/customer/customer-config.yaml` and `/etc/codemie/customer-config.yaml`. If no file is found the script prints a warning that this check was **skipped**. To export the file from a running cluster, use `kubectl get configmap codemie-customer-config -n <namespace> -o 'jsonpath={.data.customer-config\.yaml}'`.
-4. Asset file names must be plain file names (letters, digits, `.`, `_`, `-`), unique, not symbolic links, and together smaller than the 1 MiB ConfigMap limit once base64-encoded.
+4. Asset file names must be plain file names (letters, digits, `.`, `_`, `-`), unique, not symbolic links, and together smaller than the 1 MiB ConfigMap limit once base64-encoded. The script also estimates the size of the UI release Secret, which holds the assets twice, and stops above 1 MiB. For PNG and JPEG files that happens at about 350 KB combined.
 5. If the package has an `email` block, its palette colors must be `#RRGGBB`, `senderName` and every `subject` must not be blank, only the allowed `{...}` tokens may be used, and `email.images.logo` must be a plain file name with a `png`, `jpg`, `jpeg` or `gif` extension. The file must exist, must not be a symbolic link, must be at most 262144 bytes, and its content must match its extension. See [Email](./package-reference.md#email) for all rules.
 6. If the package has a `keycloak` block and `--no-keycloak` is not set, the Keycloak checks of the [Keycloak section](#keycloak-login-page-and-emails) apply as well.
 
@@ -415,7 +415,7 @@ The same rule applies to optional SMTP keys: with a full SMTP block, the realm f
 
 ## Limits and Out-of-Scope Items
 
-- **Asset size.** The five asset files are delivered as base64-encoded ConfigMap data. Keep the combined size of the assets below 1 MiB. The Keycloak theme has its own limit of 400000 bytes; see [Keycloak Login Page and Emails](#keycloak-login-page-and-emails).
+- **Asset size.** The five asset files are delivered as base64-encoded ConfigMap data. Keep the combined size of the assets below 1 MiB once base64-encoded, and below about 350 KB for PNG and JPEG files, because the Helm release Secret holds the assets twice and gzip does not shrink them. The Keycloak theme has its own limit of 400000 bytes; see [Keycloak Login Page and Emails](#keycloak-login-page-and-emails).
 - **No font binaries.** Font files are not delivered through the kit. Reference fonts by URL in `typography.fontFaceCSS`, for example `@font-face { font-family: 'Inter'; src: url('https://fonts.acme.example/inter.woff2'); }`, and make sure the URL is reachable from the browsers of users.
 - **Variables only.** `brand.css` sets CSS custom properties: every color token is written twice: its `dark` value under `html.codemieDark` and its `light` value under `html.codemieLight`. The two values always travel as a pair, so the brand follows the user's theme switch. Font variables are written in `:root`. The kit does not change component styles or class names.
 - **Load order.** The UI adds the favicon, manifest, page title and `brand.css` link when the page starts, so the default title may flash briefly before the brand title appears.
