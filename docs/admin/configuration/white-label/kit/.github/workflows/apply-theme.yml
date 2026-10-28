@@ -213,9 +213,11 @@ jobs:
           product_name=$(yq eval '.product.name' "$PACKAGE_PATH")
           logo_dark=$(yq eval '.assets.logoDark' "$PACKAGE_PATH")
 
-          # the UI serves its runtime configuration with the brand in it
+          # the UI serves its runtime configuration with the brand in it. The chart writes the brand as JSON
+          # (Helm toJson), which stores & as \u0026, so the name is compared in that form.
+          expected_name="${product_name//&/\\u0026}"
           curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "$base/config.js" \
-            | grep --fixed-strings --quiet "$product_name"
+            | grep --fixed-strings --quiet -- "$expected_name"
           # the override stylesheet and the brand assets are reachable
           curl --fail --silent --show-error "$base/brand.css" | grep --quiet -- '--font-family-body'
           curl --fail --silent --show-error --head "$base/brand/$logo_dark" > /dev/null

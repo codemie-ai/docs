@@ -1653,3 +1653,34 @@ wf_run() {
   run grep "helm upgrade keycloak" "$BATS_TMPDIR/helm-calls"
   [ "$status" -ne 0 ]
 }
+
+# smoke_dir <product name as config.js holds it>: CURL_STUB_DIR that serves a UI config.js and brand.css.
+# The UI chart writes BRAND with toJson, so an ampersand is stored as \u0026 (checked with helm template).
+smoke_dir() {
+  CURL_STUB_DIR="$BATS_TEST_TMPDIR/ui"
+  mkdir -p "$CURL_STUB_DIR"
+  printf 'window._env_ = {\n  BRAND: {"assets":{},"product":{"name":"%s","shortName":"RD"}},\n};\n' "$1" >"$CURL_STUB_DIR/config.js"
+  echo ':root { --font-family-body: Inter; }' >"$CURL_STUB_DIR/brand.css"
+}
+
+@test "workflow: smoke check passes for a product name with an ampersand, which config.js holds as \\u0026" {
+  smoke_dir 'R\u0026D'"'"'s Hub'
+  grep -qF 'R\u0026D' "$CURL_STUB_DIR/config.js"
+  pkg=$(mutate '.product.name = "R&D'"'"'s Hub"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com/
+  [ "$status" -eq 0 ]
+}
+
+@test "workflow: smoke check passes for a plain product name" {
+  smoke_dir 'Acme Suite'
+  pkg=$(mutate '.product.name = "Acme Suite"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com
+  [ "$status" -eq 0 ]
+}
+
+@test "workflow: smoke check fails when config.js carries another product name" {
+  smoke_dir 'Other Brand'
+  pkg=$(mutate '.product.name = "R&D'"'"'s Hub"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com
+  [ "$status" -ne 0 ]
+}
