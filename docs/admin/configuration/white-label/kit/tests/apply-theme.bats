@@ -718,6 +718,53 @@ YAML
   grep -q "rollout restart deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
 }
 
+@test "render: a templated extraVolumes string is kept and codemie-brand is added once over two runs" {
+  cat >"$BATS_TEST_TMPDIR/tpl.yaml" <<'YAML'
+extraVolumes: |
+  - name: codemie-customer-config
+    configMap:
+      name: {{ .Release.Name }}-customer-config
+YAML
+  run "$SCRIPT" --render-only --codemie-values "$BATS_TEST_TMPDIR/tpl.yaml" --output-dir "$OUT/a" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  f="$OUT/a/values-codemie.brand.yaml"
+  run "$SCRIPT" --render-only --codemie-values "$f" --output-dir "$OUT/b" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [ "$(yq eval '.extraVolumes' "$OUT/b/values-codemie.brand.yaml" | grep -c '^- name: codemie-brand$')" = "1" ]
+  yq eval '.extraVolumes' "$OUT/b/values-codemie.brand.yaml" | grep -qF '{{ .Release.Name }}-customer-config'
+}
+
+@test "render: an extraVolumes string that yq cannot parse stops the run instead of adding a duplicate" {
+  cat >"$BATS_TEST_TMPDIR/wrapped.yaml" <<'YAML'
+extraVolumes: |
+  {{- if .Values.customerConfig.enabled }}
+  - name: codemie-customer-config
+    configMap:
+      name: cfg
+  {{- end }}
+YAML
+  run "$SCRIPT" --render-only --codemie-values "$BATS_TEST_TMPDIR/wrapped.yaml" --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"extraVolumes"* ]]
+  [ ! -e "$OUT/values-codemie.brand.yaml" ]
+}
+
+@test "apply mode: an unparsable extraVolumes string stops before any upgrade" {
+  cat >"$BATS_TEST_TMPDIR/wrapped.yaml" <<'YAML'
+extraVolumeMounts: |
+  {{- if .Values.x }}
+  - name: a
+    mountPath: /a
+  {{- end }}
+YAML
+  run env PATH="$STUBS:$PATH" HELM_STUB_VALUES="$BATS_TEST_TMPDIR/wrapped.yaml" \
+    "$SCRIPT" --output-dir "$OUT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"extraVolumeMounts"* ]]
+  run grep "helm upgrade" "$BATS_TMPDIR/helm-calls"
+  [ "$status" -ne 0 ]
+}
+
 # ── email checksum ───────────────────────────────────────────────────────────
 
 # sum_of <dir> -> checksum/brand of the API values rendered into <dir>
