@@ -435,15 +435,48 @@ YAML
 @test "apply mode: calls kubectl rollout restart for both deployments" {
   run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
-  grep -q "rollout restart deployment/my-ui" "$BATS_TMPDIR/kubectl-calls"
-  grep -q "rollout restart deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout restart deployment.apps/my-ui" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout restart deployment.apps/my-backend" "$BATS_TMPDIR/kubectl-calls"
+}
+
+@test "apply mode: restarts the workloads found by the release label, whatever their names" {
+  run env PATH="$STUBS:$PATH" KUBECTL_STUB_WORKLOADS="my-ui=deployment.apps/my-ui-codemie-ui my-backend=deployment.apps/my-backend-codemie" \
+    "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  grep -q "get deployment .*-l app.kubernetes.io/instance=my-backend" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout restart deployment.apps/my-ui-codemie-ui -n default" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout restart deployment.apps/my-backend-codemie -n default" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout status deployment.apps/my-backend-codemie -n default" "$BATS_TMPDIR/kubectl-calls"
+  run grep -E "rollout (restart|status) deployment/" "$BATS_TMPDIR/kubectl-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply mode: an Argo Rollout is reported, not restarted with plain kubectl" {
+  run env PATH="$STUBS:$PATH" KUBECTL_STUB_WORKLOADS="my-ui=deployment.apps/my-ui my-backend=rollout.argoproj.io/my-backend" \
+    "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Argo Rollout"* ]]
+  grep -q "rollout restart deployment.apps/my-ui " "$BATS_TMPDIR/kubectl-calls"
+  run grep -E "rollout (restart|status) rollout" "$BATS_TMPDIR/kubectl-calls"
+  [ "$status" -ne 0 ]
+}
+
+@test "apply mode: a release with no Deployment or Rollout fails after the upgrades and names the release" {
+  run env PATH="$STUBS:$PATH" KUBECTL_STUB_WORKLOADS="my-ui=deployment.apps/my-ui" \
+    "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"my-backend"* ]]
+  [[ "$output" == *"app.kubernetes.io/instance"* ]]
+  grep -q "^helm upgrade my-backend " "$BATS_TMPDIR/helm-calls"
+  run grep "rollout restart" "$BATS_TMPDIR/kubectl-calls"
+  [ "$status" -ne 0 ]
 }
 
 @test "apply mode: waits for both rollouts to finish" {
   run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
-  grep -q "rollout status deployment/my-ui" "$BATS_TMPDIR/kubectl-calls"
-  grep -q "rollout status deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout status deployment.apps/my-ui" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout status deployment.apps/my-backend" "$BATS_TMPDIR/kubectl-calls"
 }
 
 @test "apply mode: chart references are required, and nothing runs without them" {
@@ -756,7 +789,7 @@ YAML
   pkg=$(email_pkg '.')
   run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$pkg" "$(email_assets)"
   [ "$status" -eq 0 ]
-  grep -q "rollout restart deployment/my-backend" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout restart deployment.apps/my-backend" "$BATS_TMPDIR/kubectl-calls"
 }
 
 @test "render: a templated extraVolumes string is kept and codemie-brand is added once over two runs" {
@@ -1682,5 +1715,35 @@ smoke_dir() {
   smoke_dir 'Other Brand'
   pkg=$(mutate '.product.name = "R&D'"'"'s Hub"')
   wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com
+  [ "$status" -ne 0 ]
+}
+
+@test "workflow: smoke check waits for the workloads found by the release label" {
+  smoke_dir 'Acme Suite'
+  pkg=$(mutate '.product.name = "Acme Suite"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com \
+    KUBECTL_STUB_WORKLOADS="codemie-ui=deployment.apps/codemie-ui-codemie-ui codemie=deployment.apps/codemie-backend"
+  [ "$status" -eq 0 ]
+  grep -q "rollout status deployment.apps/codemie-ui-codemie-ui -n apps" "$BATS_TMPDIR/kubectl-calls"
+  grep -q "rollout status deployment.apps/codemie-backend -n apps" "$BATS_TMPDIR/kubectl-calls"
+}
+
+@test "workflow: smoke check fails when a release has no Deployment" {
+  smoke_dir 'Acme Suite'
+  pkg=$(mutate '.product.name = "Acme Suite"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com \
+    KUBECTL_STUB_WORKLOADS="codemie-ui=deployment.apps/codemie-ui"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"codemie"* ]]
+}
+
+@test "workflow: smoke check reports an Argo Rollout instead of failing" {
+  smoke_dir 'Acme Suite'
+  pkg=$(mutate '.product.name = "Acme Suite"')
+  wf_run apply "Smoke check" CURL_STUB_DIR="$CURL_STUB_DIR" PACKAGE_PATH="$pkg" UI_URL=https://codemie.example.com \
+    KUBECTL_STUB_WORKLOADS="codemie-ui=deployment.apps/codemie-ui codemie=rollout.argoproj.io/codemie"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Argo Rollout"* ]]
+  run grep "rollout status rollout" "$BATS_TMPDIR/kubectl-calls"
   [ "$status" -ne 0 ]
 }
