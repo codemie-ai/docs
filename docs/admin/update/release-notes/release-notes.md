@@ -34,13 +34,15 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## October 2026 {#2026-10}
 
 <details className="release" id="v2-62-0">
-<summary><span className="release__version">CodeMie 2.62.0</span><span className="release__date">Oct 26, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.62.0</span><span className="release__date">Oct 26, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** October 26, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.62.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>CodeMie Keycloak Theme 2.62.0</h4>
+
+Updated from 2.50.0. This update upgrades the base build container image to Node.js 24 (`dhi.io/node:24-alpine3.23-dev`).
 
 <h3>Configuration Changes</h3>
 
