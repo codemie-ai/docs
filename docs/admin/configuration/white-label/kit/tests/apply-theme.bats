@@ -104,6 +104,32 @@ apply_args() {
   [[ "$output" == *"1 MiB"* ]]
 }
 
+@test "validate: incompressible assets that overflow the 1 MiB release Secret are rejected before any upgrade" {
+  big="$BATS_TEST_TMPDIR/assets"
+  cp -R "$ASSETS_DIR" "$big"
+  head -c 400000 /dev/urandom >"$big/logo-dark.svg"
+  run env PATH="$STUBS:$PATH" "$SCRIPT" --output-dir "$OUT" $(apply_args) "$FIXTURES/valid.yaml" "$big"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"release Secret"* ]]
+  [[ "$output" == *"1 MiB"* ]]
+  [ ! -f "$BATS_TMPDIR/helm-calls" ]
+}
+
+@test "validate: the same size of compressible text assets passes" {
+  big="$BATS_TEST_TMPDIR/assets"
+  cp -R "$ASSETS_DIR" "$big"
+  yes 'M0 0h10v10H0z' | head -c 700000 >"$big/logo-dark.svg"
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$big"
+  [ "$status" -eq 0 ]
+}
+
+@test "schema: fontFaceCSS above 20000 characters is rejected" {
+  pkg=$(mutate '.typography.fontFaceCSS = "@font-face { font-family: X; src: url(https://f.example/" + ("a" * 20000) + ".woff2); }"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"fontFaceCSS"* ]]
+}
+
 @test "validate: unsafe link urls, braces and markup are rejected" {
   pkg=$(mutate '.links.userGuide.url = "javascript:alert(1)" | .links.videoPortal.name = "{{ .Values }}" | .product.name = "<b>Acme</b>"')
   run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$ASSETS_DIR"

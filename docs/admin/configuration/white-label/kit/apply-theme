@@ -166,6 +166,8 @@ LINK_IDS=(
 )
 ASSET_FILE_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
 MAX_ASSET_BYTES=1048576 # ConfigMap size limit; the base64-encoded assets must fit below it
+MAX_RELEASE_BYTES=1048576 # Helm release Secret limit
+MAX_RELEASE_HEADROOM=102400 # estimated size of the chart templates and fixed values in the release Secret
 MAX_EMAIL_LOGO_BYTES=262144 # same limit the backend loader enforces (MAX_LOGO_BYTES)
 EMAIL_LOGO=""
 EMAIL_LOGO_PATH=""
@@ -491,6 +493,16 @@ yq -n '
   .brand.manifestData = strenv(B64_MANIFEST) |
   .brand.podAnnotations."checksum/brand" = strenv(CHECKSUM)
 ' >"$WORK_DIR/values-codemie-ui.brand.yaml"
+
+# The UI release Secret that Helm stores holds the values and the rendered manifest, so the assets
+# are in it twice; the Secret is gzip-compressed, then base64-encoded, and limited to 1 MiB. Gzip does
+# not shrink PNG or JPEG data. Estimate: compressed values x 2 x 4/3, plus headroom for the chart.
+UI_RELEASE_BYTES=$(( $(gzip -9c "$WORK_DIR/values-codemie-ui.brand.yaml" | wc -c) * 2 * 4 / 3 + MAX_RELEASE_HEADROOM ))
+if [[ $UI_RELEASE_BYTES -gt $MAX_RELEASE_BYTES ]]; then
+  echo "apply-theme: validation failed:" >&2
+  echo "  - assets: the UI release Secret would take about $UI_RELEASE_BYTES bytes, above the 1 MiB Helm limit of $MAX_RELEASE_BYTES bytes (assets are stored twice and PNG or JPEG data does not compress); shrink the assets or use SVG" >&2
+  exit 1
+fi
 
 # The API chart takes extraVolumes/extraVolumeMounts as multi-line strings and extraObjects as a
 # list. helm --reuse-values replaces all three wholesale, so the release's current values are
