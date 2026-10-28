@@ -181,6 +181,8 @@ After validation and rendering, the script:
 
 The script always reuses the values of the running releases. It never sets the image tag, and it pins `--version` to the chart version that is currently installed (read with `helm get metadata`, which needs Helm 3.9 or later), so applying a theme never changes which version of any release is running. For a local chart path the chart's own version applies and no `--version` is passed; use the chart that matches the installed release.
 
+Options go before the two positional arguments. The script rejects any argument after `<assets-dir>`, so a trailing `--render-only` cannot be ignored by mistake.
+
 | Option                          | Default               | Description                                                                   |
 | ------------------------------- | --------------------- | ----------------------------------------------------------------------------- |
 | `--render-only`                 | off                   | Validate and render only; make no cluster changes                             |
