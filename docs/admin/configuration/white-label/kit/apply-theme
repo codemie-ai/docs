@@ -766,9 +766,25 @@ if [[ "$KC_ACTIVE" == "1" ]]; then
 fi
 
 # ── Phase 4: restart ─────────────────────────────────────────────────────────
-kubectl rollout restart "deployment/$RELEASE_UI" -n "$NAMESPACE"
-kubectl rollout restart "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE"
-kubectl rollout status "deployment/$RELEASE_UI" -n "$NAMESPACE" --timeout=120s
-kubectl rollout status "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE" --timeout=120s
+# The workloads are found by the release label, not by name: the chart names a workload after the
+# release only when the release name contains the chart name. Plain kubectl can restart and watch
+# Deployments only; an Argo Rollout rolls through the checksum annotation and is reported.
+_deployments() { kubectl get deployment -n "$NAMESPACE" -l "app.kubernetes.io/instance=$1" -o name; } # <release>
+_rollouts() { kubectl get rollouts.argoproj.io -n "$NAMESPACE" -l "app.kubernetes.io/instance=$1" -o name 2>/dev/null || true; }
+RESTART_LIST=()
+for rel in "$RELEASE_UI" "$RELEASE_CODEMIE"; do
+  deployments=$(_deployments "$rel")
+  rollouts=$(_rollouts "$rel")
+  if [[ -z "$deployments" && -z "$rollouts" ]]; then
+    echo "apply-theme: both releases are upgraded, but no Deployment or Argo Rollout with the label app.kubernetes.io/instance=$rel was found in namespace $NAMESPACE; restart the pods of release $rel by hand." >&2
+    exit 1
+  fi
+  for w in $rollouts; do
+    echo "apply-theme: $w is an Argo Rollout: its pods roll through the checksum annotation; restart and wait with 'kubectl argo rollouts' if needed."
+  done
+  for w in $deployments; do RESTART_LIST+=("$w"); done
+done
+for w in ${RESTART_LIST[@]+"${RESTART_LIST[@]}"}; do kubectl rollout restart "$w" -n "$NAMESPACE"; done
+for w in ${RESTART_LIST[@]+"${RESTART_LIST[@]}"}; do kubectl rollout status "$w" -n "$NAMESPACE" --timeout=120s; done
 
 echo "apply-theme: done"

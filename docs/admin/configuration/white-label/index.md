@@ -177,7 +177,7 @@ After validation and rendering, the script:
 1. Runs `helm upgrade --reuse-values` for the UI release with `values-codemie-ui.brand.yaml`.
 2. Runs `helm upgrade --reuse-values` for the API release with `values-codemie.brand.yaml`.
 3. With an active `keycloak` block, runs `helm upgrade --reuse-values --wait` for the Keycloak release and then `helm upgrade --reuse-values` for the oauth2-proxy release. See [Keycloak Login Page and Emails](#keycloak-login-page-and-emails).
-4. Restarts the UI and API deployments and waits for the rollouts to finish. The API restart is what makes the platform read a changed email block or logo. The Keycloak release is not restarted by the script.
+4. Restarts the UI and API deployments and waits for the rollouts to finish. The deployments are found by the label `app.kubernetes.io/instance=<release>`, so a release name that differs from the workload name works. An Argo Rollout is reported and not restarted, because plain `kubectl` cannot restart it; its pods roll through the checksum annotation. If no workload carries the label, the script fails after both upgrades and names the release. The API restart is what makes the platform read a changed email block or logo. The Keycloak release is not restarted by the script.
 
 The script always reuses the values of the running releases. It never sets the image tag, and it pins `--version` to the chart version that is currently installed (read with `helm get metadata`, which needs Helm 3.9 or later), so applying a theme never changes which version of any release is running. For a local chart path the chart's own version applies and no `--version` is passed; use the chart that matches the installed release.
 

@@ -206,8 +206,22 @@ jobs:
           PACKAGE_PATH: ${{ inputs.package_path }}
           UI_URL: ${{ inputs.ui_url }}
         run: |
-          kubectl rollout status "deployment/$RELEASE_UI" -n "$NAMESPACE" --timeout=120s
-          kubectl rollout status "deployment/$RELEASE_CODEMIE" -n "$NAMESPACE" --timeout=120s
+          # the workloads are found by the release label: the chart names a workload after the release
+          # only when the release name contains the chart name. Plain kubectl watches Deployments only.
+          for release in "$RELEASE_UI" "$RELEASE_CODEMIE"; do
+            deployments=$(kubectl get deployment -n "$NAMESPACE" -l "app.kubernetes.io/instance=$release" -o name)
+            rollouts=$(kubectl get rollouts.argoproj.io -n "$NAMESPACE" -l "app.kubernetes.io/instance=$release" -o name 2>/dev/null || true)
+            if [[ -z "$deployments" && -z "$rollouts" ]]; then
+              echo "No Deployment or Argo Rollout with the label app.kubernetes.io/instance=$release in namespace $NAMESPACE." >&2
+              exit 1
+            fi
+            for workload in $rollouts; do
+              echo "$workload is an Argo Rollout: plain kubectl cannot watch it, check it with 'kubectl argo rollouts'."
+            done
+            for workload in $deployments; do
+              kubectl rollout status "$workload" -n "$NAMESPACE" --timeout=120s
+            done
+          done
 
           base="${UI_URL%/}"
           product_name=$(yq eval '.product.name' "$PACKAGE_PATH")
