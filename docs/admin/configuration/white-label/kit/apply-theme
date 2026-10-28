@@ -630,7 +630,8 @@ _render_keycloak() {
       "$WORK_DIR/values-keycloak.theme.yaml"
   done
 
-  # realm: display name and both themes always; smtp only with a connection (host and from)
+  # realm: display name and both themes always; smtp only with a connection (host and from), or nulls
+  # for an explicit empty smtp map; without a smtp block the SMTP settings of the release stay as they are
   yq -n '
     .realm.displayName = strenv(PRODUCT_NAME) |
     .realm.themes.loginTheme = strenv(KC_NAME) |
@@ -654,8 +655,8 @@ _render_keycloak() {
       .realm.smtp.authentication.username = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.username |
       .realm.smtp.authentication.password = load(strenv(PACKAGE_FILE)).keycloak.smtp.auth.password
     ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
-  else
-    # no usable SMTP block: null every smtp key so --reuse-values drops settings of an earlier run
+  elif [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE")" == "!!map" && "$(yq eval '.keycloak.smtp | length' "$PACKAGE_FILE")" == "0" ]]; then
+    # an explicit empty smtp map clears the SMTP connection written by an earlier run
     yq -i '
       .realm.smtp.host = null | .realm.smtp.from = null | .realm.smtp.port = null |
       .realm.smtp.enableSSL = null | .realm.smtp.enableStartTLS = null |
@@ -663,6 +664,7 @@ _render_keycloak() {
       .realm.smtp.authentication.username = null | .realm.smtp.authentication.password = null
     ' "$WORK_DIR/values-oauth2-proxy.realm.yaml"
   fi
+  # any other case writes no smtp key: --reuse-values keeps the SMTP settings of the Keycloak release
 }
 
 if [[ "$KC_ACTIVE" == "1" ]]; then

@@ -1253,12 +1253,23 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
   [ "$(yq eval '.realm.smtp.authentication.username | keys | .[]' "$REALM")" = "secretKeyRef" ]
 }
 
-@test "render: no smtp block nulls every realm smtp key and sets no sender name" {
+@test "render: no smtp block writes no realm smtp key and sets no sender name" {
   kc_files 'del(.keycloak.smtp) | .email.senderName = "Acme Mail"'
+  [ "$(yq eval '.realm | has("smtp")' "$REALM")" = "false" ]
+  ! grep -q 'Acme Mail' "$REALM"
+  [ "$(yq eval '.realm.themes.loginTheme' "$REALM")" = "acme-brand" ]
+}
+
+@test "render: a smtp map without host and from writes no realm smtp key" {
+  kc_files '.keycloak.smtp = {"port": 25}'
+  [ "$(yq eval '.realm | has("smtp")' "$REALM")" = "false" ]
+}
+
+@test "render: an explicit empty smtp map nulls every realm smtp key" {
+  kc_files '.keycloak.smtp = {}'
   for k in host from port enableSSL enableStartTLS fromDisplayName authentication.username authentication.password; do
     [ "$(yq eval ".realm.smtp.$k | tag" "$REALM")" = "!!null" ]
   done
-  ! grep -q 'Acme Mail' "$REALM"
   [ "$(yq eval '.realm.themes.loginTheme' "$REALM")" = "acme-brand" ]
 }
 

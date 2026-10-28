@@ -359,7 +359,7 @@ If the preflight finds no `keycloak-child-theme` entry in the volumes or volume 
 If the Keycloak upgrade fails or the `--wait` times out, the UI and API releases are already upgraded and the deployments are not yet restarted. Fix the cause, then run `apply-theme` again: every step is repeatable. The oauth2-proxy upgrade and the restarts run only when the Keycloak upgrade succeeds.
 
 :::warning Sender name
-`email.senderName` reaches Keycloak only as part of a full SMTP block (`host` and `from`). Without the block, the script warns, and Keycloak keeps its own sender. Without a full SMTP block, the realm file sets every SMTP key to `null`, so settings of an earlier run are removed.
+`email.senderName` reaches Keycloak only as part of a full SMTP block (`host` and `from`). Without the block, the script warns, and Keycloak keeps its own sender. Without a full SMTP block, the realm file has no SMTP keys, so the SMTP settings of the oauth2-proxy release stay as they are. To remove an SMTP connection written by an earlier run, set `keycloak.smtp: {}`: the realm file then sets every SMTP key to `null`.
 :::
 
 :::warning A full chart redeploy resets the brand
@@ -407,7 +407,7 @@ keycloakx:
       img.old-logo.svg: null
 ```
 
-The same rule applies to optional SMTP keys: the realm file writes unset optional keys as `null`, so no extra step is needed for them.
+The same rule applies to optional SMTP keys: with a full SMTP block, the realm file writes unset optional keys as `null`, so no extra step is needed for them.
 
 ## Limits and Out-of-Scope Items
 
