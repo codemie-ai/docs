@@ -87,6 +87,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ $# -lt 2 ]] && usage
+if [[ $# -gt 2 ]]; then
+  echo "Unexpected arguments after <assets-dir>: ${*:3}" >&2
+  echo "Options go before <theme-package.yaml> <assets-dir>." >&2
+  usage
+fi
 PACKAGE_FILE="$1"
 ASSETS_DIR="$2"
 

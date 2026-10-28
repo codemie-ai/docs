@@ -391,6 +391,21 @@ YAML
   [ "$(yq eval '.extraVolumes' "$OUT/values-codemie.brand.yaml" | yq eval 'length' -)" = "2" ]
 }
 
+@test "arguments: an option after the positional arguments is rejected, nothing runs" {
+  run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR" --render-only
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Unexpected arguments"* ]]
+  [[ "$output" == *"--render-only"* ]]
+  [ ! -f "$BATS_TMPDIR/helm-calls" ]
+  [ ! -f "$BATS_TMPDIR/kubectl-calls" ]
+}
+
+@test "arguments: a stray extra positional argument is rejected" {
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR" extra
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Unexpected arguments"* ]]
+}
+
 @test "apply mode: calls kubectl rollout restart for both deployments" {
   run env PATH="$STUBS:$PATH" "$SCRIPT" $(apply_args) "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
