@@ -467,14 +467,19 @@ A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
 A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
 A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
 A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
-B64_LOGOLIGHT=$(_b64 "$ASSETS_DIR/$A_LOGOLIGHT")
-B64_LOGODARK=$(_b64 "$ASSETS_DIR/$A_LOGODARK")
-B64_FAVICON=$(_b64 "$ASSETS_DIR/$A_FAVICON")
-B64_FAVICONSVG=$(_b64 "$ASSETS_DIR/$A_FAVICONSVG")
-B64_MANIFEST=$(_b64 "$ASSETS_DIR/$A_MANIFEST")
+# The base64 data goes through files and yq load_str, not the environment: Linux caps one
+# environment string at 128 KiB (MAX_ARG_STRLEN), and an asset above about 96 KiB would make yq
+# fail with "Argument list too long" there.
+B64_DIR="$TMP_ROOT/ui-b64"
+mkdir -p "$B64_DIR"
+_b64 "$ASSETS_DIR/$A_LOGOLIGHT" >"$B64_DIR/logo-light"
+_b64 "$ASSETS_DIR/$A_LOGODARK" >"$B64_DIR/logo-dark"
+_b64 "$ASSETS_DIR/$A_FAVICON" >"$B64_DIR/favicon"
+_b64 "$ASSETS_DIR/$A_FAVICONSVG" >"$B64_DIR/favicon-svg"
+_b64 "$ASSETS_DIR/$A_MANIFEST" >"$B64_DIR/manifest"
 BRAND_CSS=$(cat "$WORK_DIR/brand.css")
 export PRODUCT_NAME PRODUCT_SHORT A_LOGOLIGHT A_LOGODARK A_FAVICON A_FAVICONSVG A_MANIFEST
-export B64_LOGOLIGHT B64_LOGODARK B64_FAVICON B64_FAVICONSVG B64_MANIFEST BRAND_CSS CHECKSUM
+export B64_DIR BRAND_CSS CHECKSUM
 
 yq -n '
   .brand.enabled = true |
@@ -486,11 +491,11 @@ yq -n '
   .brand.assets.faviconSvg = strenv(A_FAVICONSVG) |
   .brand.assets.manifest = strenv(A_MANIFEST) |
   .brand.brandCssContent = strenv(BRAND_CSS) |
-  .brand.logoLightData = strenv(B64_LOGOLIGHT) |
-  .brand.logoDarkData = strenv(B64_LOGODARK) |
-  .brand.faviconData = strenv(B64_FAVICON) |
-  .brand.faviconSvgData = strenv(B64_FAVICONSVG) |
-  .brand.manifestData = strenv(B64_MANIFEST) |
+  .brand.logoLightData = load_str(strenv(B64_DIR) + "/logo-light") |
+  .brand.logoDarkData = load_str(strenv(B64_DIR) + "/logo-dark") |
+  .brand.faviconData = load_str(strenv(B64_DIR) + "/favicon") |
+  .brand.faviconSvgData = load_str(strenv(B64_DIR) + "/favicon-svg") |
+  .brand.manifestData = load_str(strenv(B64_DIR) + "/manifest") |
   .brand.podAnnotations."checksum/brand" = strenv(CHECKSUM)
 ' >"$WORK_DIR/values-codemie-ui.brand.yaml"
 
