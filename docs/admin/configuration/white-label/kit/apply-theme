@@ -511,32 +511,39 @@ fi
 
 # True when the YAML list <current> holds an item whose <key> equals <value>. Parsed with yq, so key
 # order, quoting and comments do not matter, and a volume named codemie-brand-assets is never
-# mistaken for codemie-brand.
-_has_item() { # <current> <key> <value>
+# mistaken for codemie-brand. The chart renders these strings with tpl, so a single-line {{ ... }}
+# action is replaced by a placeholder before parsing. A string yq still cannot parse stops the run:
+# reporting "absent" would add the entry again on every run.
+_has_item() { # <current> <key> <value> <field name>
   [[ -n "$1" ]] || return 1
-  local n
-  n=$(ITEM_VALUE="$3" yq eval "[.[] | select(.$2 == strenv(ITEM_VALUE))] | length" - <<<"$1") || return 1
+  local n probe
+  probe=$(sed 's/{{[^}]*}}/TPL/g' <<<"$1")
+  if ! n=$(ITEM_VALUE="$3" yq eval "[.[] | select(.$2 == strenv(ITEM_VALUE))] | length" - <<<"$probe" 2>/dev/null); then
+    echo "apply-theme: cannot parse the current $4 of the API release as a YAML list (templated lines such as {{- if }} are not supported)." >&2
+    echo "  Nothing was changed. Add the $BRAND_CONFIGMAP entries to $4 by hand, or pass values without that template." >&2
+    exit 1
+  fi
   [[ "$n" != "0" ]]
 }
 
-_append_block() { # <current> <block> <key> <value>: append the block unless an item with key=value exists
+_append_block() { # <current> <block> <key> <value> <field name>: append the block unless an item with key=value exists
   local cur="$1" block="$2"
-  if _has_item "$cur" "$3" "$4"; then printf '%s' "$cur"; return; fi
+  if _has_item "$cur" "$3" "$4" "$5"; then printf '%s' "$cur"; return; fi
   [[ -n "$cur" ]] && cur+=$'\n'
   printf '%s%s' "$cur" "$block"
 }
 export NEW_VOLUMES NEW_MOUNTS BRAND_YAML CUR_OBJECTS BRAND_CONFIGMAP EMAIL_LOGO B64_EMAIL_LOGO_FILE
 NEW_VOLUMES=$(_append_block "$CUR_VOLUMES" "- name: $BRAND_CONFIGMAP
   configMap:
-    name: $BRAND_CONFIGMAP" name "$BRAND_CONFIGMAP")
+    name: $BRAND_CONFIGMAP" name "$BRAND_CONFIGMAP" extraVolumes)
 NEW_MOUNTS=$(_append_block "$CUR_MOUNTS" "- name: $BRAND_CONFIGMAP
   mountPath: $BRAND_MOUNT_PATH
   subPath: brand.yaml
-  readOnly: true" mountPath "$BRAND_MOUNT_PATH")
+  readOnly: true" mountPath "$BRAND_MOUNT_PATH" extraVolumeMounts)
 # the same volume, whole: the backend reads the email logo from this directory
 NEW_MOUNTS=$(_append_block "$NEW_MOUNTS" "- name: $BRAND_CONFIGMAP
   mountPath: $BRAND_ASSETS_MOUNT_PATH
-  readOnly: true" mountPath "$BRAND_ASSETS_MOUNT_PATH")
+  readOnly: true" mountPath "$BRAND_ASSETS_MOUNT_PATH" extraVolumeMounts)
 # the base64 logo can exceed the per-string environment limit, so it travels in a file, not a variable
 B64_EMAIL_LOGO_FILE="$TMP_ROOT/email-logo.b64"
 : >"$B64_EMAIL_LOGO_FILE"
