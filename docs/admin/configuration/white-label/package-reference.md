@@ -256,7 +256,8 @@ The theme name must match `^[a-z0-9-]{3,40}$`: 3 to 40 characters of `a-z`, `0-9
 ### SMTP
 
 - `keycloak.smtp.host` and `keycloak.smtp.from` are set together or not at all. A block that has only one of them fails validation.
-- A full block (`host` and `from`) writes the SMTP connection to the realm settings. Without the block, the realm file has no SMTP settings and Keycloak keeps its own sender.
+- A full block (`host` and `from`) writes the SMTP connection to the realm settings. Without the block, the realm file has no SMTP keys, so the SMTP settings of the oauth2-proxy release and the Keycloak sender stay as they are.
+- An explicit empty block (`smtp: {}`) clears an SMTP connection written by an earlier run: the realm file sets every SMTP key to `null`.
 - `email.senderName` reaches Keycloak only through a full SMTP block. Without it, the script warns that the sender name is not used.
 - Keys other than `host`, `port`, `from`, `ssl`, `starttls` and `auth` are rejected.
 
