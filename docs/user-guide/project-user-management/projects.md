@@ -36,7 +36,11 @@ The projects list displays all projects you have access to. For each project, th
 - **Created** — date the project was created
 - **Assignments** — entity counts for linked items (users, assistants, workflows, data sources,
   and other resources), shown as icons with numbers
-- **Users** — total number of members in the project
+- **Users** — total number of members in the project, shown as a user-icon badge with the count.
+  Clicking the badge opens [Users Management](./users.md) with that project already applied in the
+  **Project** filter, so you see only its members. A project with no members shows **0**.
+  The badge is clickable only for Platform Admins, Maintainers, and Auditors; other users see the
+  count without a link.
 - **Actions** — row-level actions: **View**, **Edit**, **Delete**, and **Change ownership**
   (available to Platform Admins and Project Admins; not shown for personal projects)
 
