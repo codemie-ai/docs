@@ -168,6 +168,102 @@ User context placeholders are beneficial for:
 - If no authenticated user context exists, the system fails safely without injecting a token
   :::
 
+## Sending the User Profile to an MCP Server
+
+CodeMie can attach a small, non-sensitive profile of the authenticated user to every tool call it makes on an MCP server.
+The tool can use it for audit logging, per-user scoping of results, or personalisation.
+
+This is separate from the [header placeholders](#configuring-headers-with-user-context-placeholders) described above.
+Placeholders put values into HTTP headers, while the user profile travels in the tool call itself.
+
+### Overview
+
+Sending the user profile is **enabled by default**.
+CodeMie sends it to every MCP server unless the option is switched off for that server or assistant.
+
+:::warning Check the servers you use
+The profile includes personal data such as name and email (see [What the Tool Receives](#what-the-tool-receives)).
+Switch the option off for any MCP server that should not receive it, especially servers operated by third parties.
+:::
+
+### Turning It Off for an MCP Server
+
+Set `allow_user_context` to `false` in the MCP server configuration JSON. It can be set in three places:
+
+- **When adding a server manually.** Use the [JSON method](#add-mcp-server-with-json-method-manual-setup) in **Manual Setup**.
+- **When editing an existing server.** Open the server from the assistant, click **Edit**, and change the JSON. The new value applies to the next tool call.
+- **As a catalog default (administrators).** Open **Settings** > **Administration** > **MCPs catalog management**, create or edit the server, and add the field to **Configuration JSON**. Assistants that use the catalog server inherit the value.
+
+Example configuration:
+
+```json
+{
+  "name": "example-http-server",
+  "type": "streamable-http",
+  "url": "http://127.0.0.1:3001/mcp",
+  "allow_user_context": false
+}
+```
+
+| Value            | Result                                              |
+| ---------------- | --------------------------------------------------- |
+| `true` (default) | The user profile is sent with every tool invocation |
+| `false`          | The user profile is not sent to this MCP server     |
+
+:::note
+There is no separate toggle for this option in the interface. Set `allow_user_context` in the JSON configuration.
+:::
+
+### Overriding It per Assistant
+
+The value set on the MCP server is the default for every assistant that uses it.
+An assistant can override that default in its own MCP server entry using the same `allow_user_context` field.
+How the override works depends on where the server comes from.
+
+**A server from the MCP catalog.** The catalog value is a ceiling, so an assistant can switch the profile off but cannot switch it on again if the administrator turned it off:
+
+| Assistant value | Catalog value `true`         | Catalog value `false`        |
+| --------------- | ---------------------------- | ---------------------------- |
+| not set         | The user profile is sent     | The user profile is not sent |
+| `true`          | The user profile is sent     | The user profile is not sent |
+| `false`         | The user profile is not sent | The user profile is not sent |
+
+**A server with its own configuration.** When the assistant uses a server it configured itself, the assistant value wins whenever it is set:
+
+| Assistant value | Result                                                  |
+| --------------- | ------------------------------------------------------- |
+| not set         | The MCP server value applies                            |
+| `true`          | The user profile is sent, whatever the server value     |
+| `false`         | The user profile is not sent, whatever the server value |
+
+### What the Tool Receives
+
+The profile is delivered in the request `_meta` object under the key `codemie.ai/user-context`, on `tools/call` requests.
+Every field is optional, so a tool should treat a missing field as "not provided".
+
+| Field                                     | Description                                        |
+| ----------------------------------------- | -------------------------------------------------- |
+| `id`                                      | Stable CodeMie user identifier                     |
+| `username`                                | Login name                                         |
+| `name`, `email`, `picture`                | Display name, email and avatar URL (personal data) |
+| `roles`                                   | CodeMie roles                                      |
+| `is_admin`, `is_maintainer`, `is_auditor` | Role flags                                         |
+| `user_type`                               | User type, for example `regular`                   |
+| `project_names`, `admin_project_names`    | Projects the user belongs to or administers        |
+| `knowledge_bases`                         | Knowledge bases the user can access                |
+
+The profile never contains tokens or passwords.
+If a tool must act as the user against another system, use `{{user.token}}` in the server headers instead.
+
+:::warning Privacy and trust
+`name`, `email` and `picture` are personal data. Because the profile is sent by default, switch the option off for MCP servers that do not need it or are not trusted with it.
+The profile is not signed, so a tool should rely on it only when just CodeMie can reach the MCP server.
+:::
+
+:::note Requirements
+The MCP-Connect service must be a release that accepts and forwards the user profile. Contact the platform administrator if the tool does not receive it.
+:::
+
 ## Testing MCP Server Integration
 
 To ensure your MCP server is correctly configured and accessible, CodeMie provides a convenient **Test integration** feature:
