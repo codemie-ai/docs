@@ -1,0 +1,237 @@
+# Example workflow: validate, render, apply and smoke-check a white-label theme package.
+# Copy this file to .github/workflows/ in the repository that holds your theme package.
+# Assumes the kit (apply-theme script and schema) is checked in under ./kit.
+#
+# Setup in your repository:
+#   - secret KUBECONFIG_DATA: base64-encoded kubeconfig of a service account with limited rights
+#   - environment "white-label-apply": add required reviewers so nobody can use the kubeconfig
+#     without approval
+#   - replace the action SHAs below with the current release of each action when you adopt this file
+name: Apply white-label theme
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: Kubernetes namespace of the CodeMie release
+        required: true
+        default: codemie
+      release_ui:
+        description: Helm release name of the UI chart
+        required: true
+        default: codemie-ui
+      release_codemie:
+        description: Helm release name of the API chart
+        required: true
+        default: codemie
+      chart_ui:
+        description: Chart reference of the UI release (repository/chart or local path)
+        required: true
+      chart_codemie:
+        description: Chart reference of the API release (repository/chart or local path)
+        required: true
+      chart_keycloak:
+        description: Chart reference of the Keycloak release. Required when the package has a keycloak block, unless no_keycloak is set
+        required: false
+      chart_proxy:
+        description: Chart reference of the oauth2-proxy release. Required when the package has a keycloak block, unless no_keycloak is set
+        required: false
+      no_keycloak:
+        description: Skip the Keycloak theme and realm steps for this run
+        type: boolean
+        required: false
+        default: false
+      release_keycloak:
+        description: Helm release name of the Keycloak chart
+        required: false
+        default: keycloak
+      release_proxy:
+        description: Helm release name of the oauth2-proxy chart
+        required: false
+        default: oauth2-proxy
+      namespace_keycloak:
+        description: Kubernetes namespace of the Keycloak release
+        required: false
+        default: security
+      namespace_proxy:
+        description: Kubernetes namespace of the oauth2-proxy release
+        required: false
+        default: oauth2-proxy
+      customer_config_path:
+        description: Optional path to a committed customer-config.yaml. When set, the validate job checks the enabled links against it
+        required: false
+      package_path:
+        description: Path to the theme package file
+        required: true
+        default: theme/theme-package.yaml
+      assets_path:
+        description: Path to the directory with the brand assets
+        required: true
+        default: theme/assets
+      ui_url:
+        description: Public base URL of the CodeMie UI, used by the smoke check (for example https://codemie.example.com)
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate and render theme package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install ajv-cli
+        run: npm install --global ajv-cli@5
+
+      - name: Check Keycloak inputs
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          CHART_KEYCLOAK: ${{ inputs.chart_keycloak }}
+          CHART_PROXY: ${{ inputs.chart_proxy }}
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+        run: |
+          # a package with a keycloak block needs both charts in the apply job; fail now, not after the approval
+          if [[ "$NO_KEYCLOAK" != "true" && "$(yq eval '.keycloak | tag' "$PACKAGE_PATH")" == "!!map" ]]; then
+            if [[ -z "$CHART_KEYCLOAK" ]]; then
+              echo "The package has a keycloak block: set the chart_keycloak input, or no_keycloak to skip it." >&2
+              exit 1
+            fi
+            if [[ -z "$CHART_PROXY" ]]; then
+              echo "The package has a keycloak block: set the chart_proxy input, or no_keycloak to skip it." >&2
+              exit 1
+            fi
+          fi
+
+      - name: Render theme package without touching the cluster
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          ASSETS_PATH: ${{ inputs.assets_path }}
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+          CUSTOMER_CONFIG_FILE: ${{ inputs.customer_config_path }}
+        run: |
+          args=(--render-only --output-dir rendered)
+          if [[ "$NO_KEYCLOAK" == "true" ]]; then args+=(--no-keycloak); fi
+          if [[ -n "$CUSTOMER_CONFIG_FILE" ]]; then args+=(--customer-config "$CUSTOMER_CONFIG_FILE"); fi
+          ./kit/apply-theme "${args[@]}" "$PACKAGE_PATH" "$ASSETS_PATH"
+
+      - name: Keep the rendered files for review
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: rendered-theme
+          path: rendered/
+
+  apply:
+    name: Apply theme to the cluster
+    needs: validate
+    runs-on: ubuntu-latest
+    # The environment holds the approval gate: configure required reviewers on it.
+    environment: white-label-apply
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install ajv-cli
+        run: npm install --global ajv-cli@5
+
+      - name: Set up Helm
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@776406bce94f63e41d621b960d78ee25c8b76ede # v4.0.1
+
+      - name: Configure cluster access
+        env:
+          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "$KUBECONFIG_DATA" | base64 --decode > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Read the running customer configuration
+        env:
+          NAMESPACE: ${{ inputs.namespace }}
+        run: |
+          kubectl get configmap codemie-customer-config -n "$NAMESPACE" \
+            -o 'jsonpath={.data.customer-config\.yaml}' > "$RUNNER_TEMP/customer-config.yaml"
+          test -s "$RUNNER_TEMP/customer-config.yaml"
+
+      - name: Apply theme package
+        env:
+          NAMESPACE: ${{ inputs.namespace }}
+          RELEASE_UI: ${{ inputs.release_ui }}
+          RELEASE_CODEMIE: ${{ inputs.release_codemie }}
+          CHART_UI: ${{ inputs.chart_ui }}
+          CHART_CODEMIE: ${{ inputs.chart_codemie }}
+          CHART_KEYCLOAK: ${{ inputs.chart_keycloak }}
+          CHART_PROXY: ${{ inputs.chart_proxy }}
+          NO_KEYCLOAK: ${{ inputs.no_keycloak }}
+          RELEASE_KEYCLOAK: ${{ inputs.release_keycloak }}
+          RELEASE_PROXY: ${{ inputs.release_proxy }}
+          NAMESPACE_KEYCLOAK: ${{ inputs.namespace_keycloak }}
+          NAMESPACE_PROXY: ${{ inputs.namespace_proxy }}
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          ASSETS_PATH: ${{ inputs.assets_path }}
+        run: |
+          args=(
+            --namespace "$NAMESPACE"
+            --release-ui "$RELEASE_UI"
+            --release-codemie "$RELEASE_CODEMIE"
+            --chart-ui "$CHART_UI"
+            --chart-codemie "$CHART_CODEMIE"
+            --customer-config "$RUNNER_TEMP/customer-config.yaml"
+            --output-dir "$RUNNER_TEMP/rendered"
+          )
+          if [[ "$NO_KEYCLOAK" == "true" ]]; then
+            args+=(--no-keycloak)
+          else
+            if [[ -n "$CHART_KEYCLOAK" ]]; then args+=(--chart-keycloak "$CHART_KEYCLOAK"); fi
+            if [[ -n "$CHART_PROXY" ]]; then args+=(--chart-proxy "$CHART_PROXY"); fi
+            args+=(
+              --release-keycloak "$RELEASE_KEYCLOAK"
+              --release-proxy "$RELEASE_PROXY"
+              --namespace-keycloak "$NAMESPACE_KEYCLOAK"
+              --namespace-proxy "$NAMESPACE_PROXY"
+            )
+          fi
+          ./kit/apply-theme "${args[@]}" "$PACKAGE_PATH" "$ASSETS_PATH"
+
+      - name: Smoke check
+        env:
+          NAMESPACE: ${{ inputs.namespace }}
+          RELEASE_UI: ${{ inputs.release_ui }}
+          RELEASE_CODEMIE: ${{ inputs.release_codemie }}
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          UI_URL: ${{ inputs.ui_url }}
+        run: |
+          # the workloads are found by the release label: the chart names a workload after the release
+          # only when the release name contains the chart name. Plain kubectl watches Deployments only.
+          for release in "$RELEASE_UI" "$RELEASE_CODEMIE"; do
+            deployments=$(kubectl get deployment -n "$NAMESPACE" -l "app.kubernetes.io/instance=$release" -o name)
+            rollouts=$(kubectl get rollouts.argoproj.io -n "$NAMESPACE" -l "app.kubernetes.io/instance=$release" -o name 2>/dev/null || true)
+            if [[ -z "$deployments" && -z "$rollouts" ]]; then
+              echo "No Deployment or Argo Rollout with the label app.kubernetes.io/instance=$release in namespace $NAMESPACE." >&2
+              exit 1
+            fi
+            for workload in $rollouts; do
+              echo "$workload is an Argo Rollout: plain kubectl cannot watch it, check it with 'kubectl argo rollouts'."
+            done
+            for workload in $deployments; do
+              kubectl rollout status "$workload" -n "$NAMESPACE" --timeout=120s
+            done
+          done
+
+          base="${UI_URL%/}"
+          product_name=$(yq eval '.product.name' "$PACKAGE_PATH")
+          logo_dark=$(yq eval '.assets.logoDark' "$PACKAGE_PATH")
+
+          # the UI serves its runtime configuration with the brand in it. The chart writes the brand as JSON
+          # (Helm toJson), which stores & as \u0026, so the name is compared in that form.
+          expected_name="${product_name//&/\\u0026}"
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-all-errors "$base/config.js" \
+            | grep --fixed-strings --quiet -- "$expected_name"
+          # the override stylesheet and the brand assets are reachable
+          curl --fail --silent --show-error "$base/brand.css" | grep --quiet -- '--font-family-body'
+          curl --fail --silent --show-error --head "$base/brand/$logo_dark" > /dev/null

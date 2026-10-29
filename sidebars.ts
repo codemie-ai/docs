@@ -749,6 +749,16 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/observability/metrics-index-rotation',
               ],
             },
+            {
+              type: 'category',
+              label: 'White-Label Theming',
+              link: {
+                type: 'doc',
+                id: 'admin/configuration/white-label/white-label-overview',
+              },
+              collapsed: true,
+              items: ['admin/configuration/white-label/package-reference'],
+            },
           ],
         },
         {

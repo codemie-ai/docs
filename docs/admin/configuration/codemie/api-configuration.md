@@ -534,18 +534,18 @@ Session cookie settings for the local-auth login flow. Only relevant when `IDP_P
 
 SMTP configuration for sending verification and password-reset emails. Only active when `IDP_PROVIDER=local`.
 
-| Parameter                    | Type    | Default                   | Description                                                                                               |
-| ---------------------------- | ------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `EMAIL_VERIFICATION_ENABLED` | boolean | `true`                    | When `true`, new users must verify their email before logging in; set `false` to auto-verify all accounts |
-| `EMAIL_SMTP_HOST`            | string  | `""`                      | SMTP server hostname; leave empty to disable email sending entirely                                       |
-| `EMAIL_SMTP_PORT`            | integer | `587`                     | SMTP server port                                                                                          |
-| `EMAIL_SMTP_USERNAME`        | string  | `""`                      | SMTP account username                                                                                     |
-| `EMAIL_SMTP_PASSWORD`        | string  | `""`                      | SMTP account password                                                                                     |
-| `EMAIL_FROM_ADDRESS`         | string  | `""`                      | `From:` address for outbound emails; must be set for email delivery to be active                          |
-| `EMAIL_FROM_NAME`            | string  | `"CodeMie"`               | Display name shown alongside `EMAIL_FROM_ADDRESS` in email clients                                        |
-| `EMAIL_USE_TLS`              | boolean | `true`                    | Use STARTTLS upgrade on the configured port; set `false` for servers using implicit TLS or no TLS         |
-| `FRONTEND_URL`               | string  | `"http://localhost:3000"` | Base URL of the frontend, used to build clickable verification and password-reset links in emails         |
-| `PASSWORD_MIN_LENGTH`        | integer | `12`                      | Minimum character length for passwords; shorter passwords are rejected with HTTP 400                      |
+| Parameter                    | Type    | Default                   | Description                                                                                                                                                                                                                                        |
+| ---------------------------- | ------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EMAIL_VERIFICATION_ENABLED` | boolean | `true`                    | When `true`, new users must verify their email before logging in; set `false` to auto-verify all accounts                                                                                                                                          |
+| `EMAIL_SMTP_HOST`            | string  | `""`                      | SMTP server hostname; leave empty to disable email sending entirely                                                                                                                                                                                |
+| `EMAIL_SMTP_PORT`            | integer | `587`                     | SMTP server port                                                                                                                                                                                                                                   |
+| `EMAIL_SMTP_USERNAME`        | string  | `""`                      | SMTP account username                                                                                                                                                                                                                              |
+| `EMAIL_SMTP_PASSWORD`        | string  | `""`                      | SMTP account password                                                                                                                                                                                                                              |
+| `EMAIL_FROM_ADDRESS`         | string  | `""`                      | `From:` address for outbound emails; must be set for email delivery to be active                                                                                                                                                                   |
+| `EMAIL_FROM_NAME`            | string  | `""`                      | Display name shown alongside `EMAIL_FROM_ADDRESS` in email clients. The brand `senderName` takes precedence; when both are empty, `Platform Notifications` is used. See [White-Label Theming](../white-label/index.md#email-branding-and-defaults) |
+| `EMAIL_USE_TLS`              | boolean | `true`                    | Use STARTTLS upgrade on the configured port; set `false` for servers using implicit TLS or no TLS                                                                                                                                                  |
+| `FRONTEND_URL`               | string  | `"http://localhost:3000"` | Base URL of the frontend, used to build clickable verification and password-reset links in emails                                                                                                                                                  |
+| `PASSWORD_MIN_LENGTH`        | integer | `12`                      | Minimum character length for passwords; shorter passwords are rejected with HTTP 400                                                                                                                                                               |
 
 ---
 

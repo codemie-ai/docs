@@ -1,0 +1,35 @@
+name: White-label kit tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/admin/configuration/white-label/kit/**'
+      - '.github/workflows/white-label-kit-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/admin/configuration/white-label/kit/**'
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    name: apply-theme bats suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install bats and ajv-cli
+        run: |
+          npm install --global bats@1 ajv-cli@5
+          yq --version
+
+      - name: Run apply-theme tests
+        run: bats docs/admin/configuration/white-label/kit/tests/apply-theme.bats
