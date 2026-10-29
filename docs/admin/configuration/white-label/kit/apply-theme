@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # apply-theme — validate, render and (optionally) apply a theme package to a cluster
-# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5, helm >=3.9, kubectl >=1.25
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5, helm >=3.13, kubectl >=1.25
 set -euo pipefail
 # bash 5.2 expands & in a replacement string; product names such as R&D must stay literal
 shopt -u patsub_replacement 2>/dev/null || true
@@ -570,8 +570,10 @@ NEW_MOUNTS=$(_append_block "$NEW_MOUNTS" "- name: $BRAND_CONFIGMAP
 B64_EMAIL_LOGO_FILE="$TMP_ROOT/email-logo.b64"
 : >"$B64_EMAIL_LOGO_FILE"
 [[ -z "$EMAIL_LOGO" ]] || _b64 "$EMAIL_LOGO_PATH" >"$B64_EMAIL_LOGO_FILE"
-# the email block is optional: a package without one renders no email key at all
-BRAND_YAML=$(yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email)' "$PACKAGE_FILE")
+# the email block is optional: a package without one renders no email key at all.
+# email.images.logoUrl is read by the Keycloak mail theme only; the API loader rejects it as an unknown key
+# (and stops at startup), so it is dropped here, and images goes with it when nothing else is left in it.
+BRAND_YAML=$(yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email) | del(.email.images.logoUrl) | del(select(.email.images != null and (.email.images | length) == 0) | .email.images)' "$PACKAGE_FILE")
 
 yq -n '
   .podAnnotations."checksum/brand" = strenv(CHECKSUM) |
@@ -756,7 +758,7 @@ _upgrade() { # <release> <chart> <namespace> <values-file> [<more helm args>...]
   shift 4
   local -a pin=()
   version=$(helm get metadata "$release" -n "$ns" -o yaml | yq eval '.version // ""' -)
-  [[ -n "$version" ]] || { echo "apply-theme: cannot read the installed chart version of $release (needs helm >= 3.9)" >&2; exit 1; }
+  [[ -n "$version" ]] || { echo "apply-theme: cannot read the installed chart version of $release (needs helm >= 3.13)" >&2; exit 1; }
   # a local chart path carries its own version; --version applies to repository references only
   [[ -e "$chart" ]] || pin=(--version "$version")
   helm upgrade "$release" "$chart" --reuse-values ${pin[@]+"${pin[@]}"} -f "$values" ${1+"$@"}

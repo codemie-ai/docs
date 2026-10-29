@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Recording stub: logs every call; answers `get metadata` and `get values` like Helm 3.9+.
+# Recording stub: logs every call; answers `get metadata` and `get values` like Helm 3.13+.
 # HELM_STUB_DIR: `get values <rel>` answers from $HELM_STUB_DIR/<rel>.yaml ({} if absent),
 #   as JSON when -o json is present. When unset, HELM_STUB_VALUES is used.
 # HELM_STUB_FAIL_METADATA: `get metadata <rel>` for that release exits 1.
