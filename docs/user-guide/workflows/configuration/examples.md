@@ -1275,6 +1275,8 @@ user review before proceeding. The pattern is based on the **Project Onboarding 
 template: the workflow generates an onboarding email, converts it to HTML, and then pauses
 before sending — giving the user a chance to review and approve the final output.
 
+Before running this example, configure an [Email integration](../../tools_integrations/tools/email-sender-tool.md) with sending enabled and select it for the email-sender assistant.
+
 ---
 
 **Complete YAML Configuration:**
@@ -1297,7 +1299,7 @@ assistants:
   - id: email-sender
     model: gpt-4.1
     tools:
-      - name: Email
+      - name: send_email
     system_prompt: |
       Send the provided HTML email to the recipient.
       Before sending, summarise the email details and ask for explicit

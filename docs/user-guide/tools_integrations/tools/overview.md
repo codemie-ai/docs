@@ -29,7 +29,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[Webhook](./webhook.md)**                                                  | HTTP webhook integrations for event-driven automatization                                                         |
 | **[Elasticsearch](./elastic.md)**                                            | Search and data analysis platform for analytical queries and data access                                          |
 | **[Codebase Tools](./codebase-tools.md)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                   |
-| **[Email Sender](./email-sender-tool.md)**                                   | Send email notifications from assistants                                                                          |
+| **[Email](./email-sender-tool.md)**                                          | Read mailboxes, process attachments, and send emails from assistants and workflows                                |
 | **[OpenAPI](./openapi-tool.md)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
 | **[Jira](./jira.mdx)**                                                       | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
 | **[LiteLLM](./litellm.md)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
@@ -131,7 +131,7 @@ The table below shows which tools require integration setup and the integration 
 | **FileSystem => Code Interpreter**                    |        ❌ No         |       ---        |         ❌ No          |
 | **FileSystem => Code Executor**                       |        ❌ No         |       ---        |         ❌ No          |
 | **FileSystem => Generate Image**                      |        ❌ No         |       ---        |         ❌ No          |
-| **Notification => Email**                             |        ✅ Yes        |      Email       |         ❌ No          |
+| **Email**                                             |        ✅ Yes        |      Email       |         ❌ No          |
 | **LiteLLM**                                           |        ✅ Yes        |     LiteLLM      |         ❌ No          |
 | **Report Portal**                                     |        ✅ Yes        |   ReportPortal   |         ❌ No          |
 | **Codebase Tools => Sonar**                           |        ✅ Yes        |      Sonar       |         ❌ No          |

@@ -28,7 +28,7 @@ Configure and use various tools to extend assistant capabilities:
 - **Authentication & Security**: Keycloak integration for user authentication
 - **Code Quality**: SonarQube for code analysis and quality metrics
 - **Database**: SQL tools for database operations
-- **Communication**: Telegram and Email Sender for notifications and messaging
+- **Communication**: Telegram for notifications and messaging; Email for reading mailboxes and sending messages
 - **Cloud Platforms**: Azure, GCP, and AWS integrations for cloud operations
 - **DevOps**: Kubernetes for container orchestration, Webhook for event triggers
 - **Monitoring**: Elastic for logging and monitoring
