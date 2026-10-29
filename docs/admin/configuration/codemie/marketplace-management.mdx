@@ -36,8 +36,34 @@ Enable the flags in stages rather than all at once:
 3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. From this point, new publish requests enter the review queue instead of self-approving.
 
 :::warning
-Enabling `MARKETPLACE_APPROVAL_GATE_ENABLED` without `MARKETPLACE_MANAGEMENT_ENABLED` sends every publish to a review queue that cannot be reviewed: the approve, reject, and force-publish endpoints are not mounted, and authors see a "published" message although the assistant stays private. Enable `MARKETPLACE_MANAGEMENT_ENABLED` first, as in the rollout steps above.
+`MARKETPLACE_APPROVAL_GATE_ENABLED` takes effect only together with `MARKETPLACE_MANAGEMENT_ENABLED`. If the gate is on and management is off, the gate flag is ignored, a message is written to the startup log, and publishing self-approves as if the gate were off. Enable `MARKETPLACE_MANAGEMENT_ENABLED` first, as in the rollout steps above.
 :::
+
+Both flags are read at startup. Changing either requires a restart of the `codemie-api` service; there is no runtime reload. There is no dedicated Helm key, so the variables are set through `extraEnv` in the Helm values. Values must be quoted strings:
+
+```yaml
+extraEnv:
+  - name: MARKETPLACE_MANAGEMENT_ENABLED
+    value: 'true'
+  - name: MARKETPLACE_APPROVAL_GATE_ENABLED
+    value: 'true'
+```
+
+Reviewers are users with the administrator or maintainer role. Without at least one such user, every submission stays in `PENDING_REVIEW` with no way to resolve it. Administrators and maintainers who publish their own assistants skip the review queue; their assistants are approved immediately, although CRITICAL findings still block them unless they use Force-Publish.
+
+:::note Known issue
+While the approval gate is on, a "no moderator" warning is written to the startup log on every start, even when administrators exist. Verify manually that at least one administrator or maintainer account exists before enabling the gate.
+:::
+
+### Turning the Approval Gate Off
+
+Setting `MARKETPLACE_APPROVAL_GATE_ENABLED` back to `false` and restarting does not delete data, but it has these effects:
+
+- New publish requests self-approve again and no review decision is recorded.
+- Assistants already in `PENDING_REVIEW` stay there. They are not approved or published automatically, so the queue must be cleared manually, by approving, rejecting, or force-publishing the entries.
+- Editing a published assistant no longer sends it back for review.
+
+Enabling the gate on a deployment with existing assistants does not re-review them. Assistants that were already public stay visible and enter the review queue only when edited with changed content, or when published again.
 
 ## Accessing Marketplace Management
 

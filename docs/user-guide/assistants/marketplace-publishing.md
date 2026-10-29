@@ -12,7 +12,7 @@ description: Share your assistants with the community by publishing to the marke
 Share your custom assistants with the AI/Run CodeMie community by publishing them to the Marketplace. Follow the publishing process to ensure your assistant is properly configured and secure.
 
 :::info Marketplace review
-The review flow described on this page applies only when a platform administrator has turned on the approval gate (`MARKETPLACE_APPROVAL_GATE_ENABLED`) together with Marketplace management (`MARKETPLACE_MANAGEMENT_ENABLED`). Both are backend environment variables that are off by default and cannot be switched in the UI. With the approval gate on, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. On a deployment where the gate is off, publishing goes straight to the Marketplace, and the review statuses, re-validation on edit, and Force-Publish described on this page are not available. See [Enabling Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx#enabling-marketplace-management).
+The review flow described on this page applies only when a platform administrator has turned on the approval gate (`MARKETPLACE_APPROVAL_GATE_ENABLED`) together with Marketplace management (`MARKETPLACE_MANAGEMENT_ENABLED`). Both are backend environment variables that are off by default, require a restart of the API service, and cannot be switched in the UI. The approval gate has no effect unless Marketplace management is also enabled. With the approval gate on, every assistant published to the Marketplace passes automated quality checks and a manual review by a platform administrator before it becomes visible to other users. Administrators and maintainers who publish their own assistants skip the review queue, and their assistants are approved immediately. On a deployment where the gate is off, publishing goes straight to the Marketplace, and the review statuses, re-validation on edit, and Force-Publish described on this page are not available. See [Enabling Marketplace Management](../../admin/configuration/codemie/marketplace-management.mdx#enabling-marketplace-management).
 :::
 
 ## Publishing Process
@@ -164,7 +164,7 @@ After the deterministic checks pass, an AI-based quality analysis reviews the co
 
 - **Manual Edit**: open the assistant editor to apply the suggested changes.
 - **Cancel**: close the dialog without publishing.
-- **Publish Anyway**: skip the AI recommendations and continue publishing. Available to every user, including for CRITICAL items in the **Analysis Summary**.
+- **Publish Anyway**: skip the AI recommendations and continue publishing. When the analysis contains only optional recommendations, or when Marketplace management is not enabled on the deployment, the button is available to every user. When Marketplace management is enabled and the analysis contains CRITICAL items, only administrators and maintainers see it, and a reason for the override must be entered first.
 
 **Publish Anyway** skips only the AI check. It does not override failed deterministic checks.
 
