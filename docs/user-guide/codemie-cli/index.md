@@ -156,11 +156,46 @@ codemie install copilot --supported
 # Install OpenCode
 codemie install opencode --supported
 
+# Install Kimi Code
+codemie install kimi
+
 # Verify installation
 codemie doctor
 ```
 
 The built-in agent (`codemie-code`) is available immediately after setup without installation.
+
+#### Kimi Code
+
+Kimi Code is available as two agents: `kimi` and `kimi-acp`. Both share the same installer, so the installation steps are identical:
+
+```bash
+codemie install kimi
+codemie install kimi-acp
+```
+
+The commands work the same way on macOS, Linux, and Windows 11. On Windows, the command can be run from either PowerShell or Command Prompt. The CLI downloads the official Kimi Code installer, which is a PowerShell script on Windows, and runs it with Windows-compatible syntax.
+
+On Windows, the installer places `kimi.exe` in the `bin` folder of the Kimi installation directory, keeps a `.bak` copy of any previously installed `kimi.exe`, and adds `bin` to the user `PATH`.
+
+:::note
+A newly installed agent may not be found by `codemie doctor` or in the current session until the terminal is restarted, because the updated `PATH` is applied only to new terminal sessions.
+:::
+
+To see the installation steps and installer output, add the `--verbose` flag:
+
+```bash
+codemie install kimi --verbose
+```
+
+If the installation fails, the CLI reports the failed installation step together with the installer output. Failed installations do not leave temporary installer files behind.
+
+##### Troubleshooting Kimi Code Installation on Windows
+
+| Symptom                                                                           | Cause and resolution                                                                                                                                             |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Installer exited with code 255. Output: The syntax of the command is incorrect.` | Occurs in CodeMie CLI versions that run the Kimi PowerShell installer as a batch file. Update the CLI with `codemie self-update` and run the installation again. |
+| `kimi` is installed but is not recognized                                         | The `PATH` change is applied only to new terminals. Close and reopen PowerShell or Command Prompt, then run `codemie doctor`.                                    |
 
 :::info Additional Documentation
 For detailed configuration, authentication methods, troubleshooting, and advanced usage, see the [CodeMie CLI GitHub Repository](https://github.com/codemie-ai/codemie-code).
