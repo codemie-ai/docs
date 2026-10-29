@@ -46,6 +46,17 @@ This functionality is only available to users with the [isAdmin](/user-guide/get
 - **Require SHA-256 Signature**: Toggle to enable SHA-256 signature verification for incoming webhook requests. When enabled, requests must include a valid signature.
 - **GitHub Webhook Secret (optional)**: Optional field for GitHub webhook signature verification. Enter the secret token configured in your GitHub webhook settings to validate incoming GitHub events.
 - **GitHub Event Filter (optional)**: Optional field. Specify comma-separated GitHub event types to filter (e.g., `pull_request,push`). Only events matching these types will trigger the webhook.
+- **GitHub JSON Path Filter (optional)**: Optional field for filtering GitHub events by payload content. Enter a JSONPath expression to match specific fields inside the webhook payload — evaluated after the event type filter, so only events that pass the event type check are tested against this expression. Two syntax forms are supported:
+  - **Existence check** (plain path): `$.pull_request.draft` — matches if the field is present in the payload, regardless of its value.
+  - **Value comparison** (filter predicate): `$[?(@.pull_request.draft==false)]` — matches if the field equals the specified value.
+
+:::warning Common JSONPath mistake
+A nested predicate only matches when it filters an **array** field — for example, `$.pull_request.labels[?(@.name=='bug')]` matches pull requests that have a label named `bug`. Applying the same syntax to a non-array (object) field, such as `$.pull_request[?(@.draft==false)]`, **never matches**. For object fields, use a root-level filter expression instead: `$[?(@.pull_request.draft==false)]`.
+:::
+
+:::warning GitHub Webhook Secret required
+A GitHub JSON Path Filter can only be saved when **GitHub Webhook Secret** is also configured. Saving a JSON Path Filter without a webhook secret returns a validation error. The filter is evaluated only on signature-verified requests — without a configured secret, no verification occurs and the filter would never run.
+:::
 
 :::warning Important note
 Make sure the **Is Enabled** toggle is turned ON. If disabled, the webhook will not process any incoming requests and will not trigger the associated resource.
