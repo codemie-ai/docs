@@ -14,7 +14,8 @@ extending their capabilities beyond built-in tools.
 
 ## In this section
 
-| Page                                                         | Description                                                     |
-| ------------------------------------------------------------ | --------------------------------------------------------------- |
-| [Adding an MCP Server](./adding-an-mcp-server)               | Add and configure MCP servers in your assistants                |
-| [MCP Integration Credentials](./mcp-integration-credentials) | Configure whose credentials each user runs the MCP server under |
+| Page                                                         | Description                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| [Adding an MCP Server](./adding-an-mcp-server)               | Add and configure MCP servers in your assistants                          |
+| [MCP Integration Credentials](./mcp-integration-credentials) | Configure whose credentials each user runs the MCP server under           |
+| [Clone MCP Server](./clone-mcp-server)                       | Create a new catalog entry from an existing MCP server (Admin/Maintainer) |
