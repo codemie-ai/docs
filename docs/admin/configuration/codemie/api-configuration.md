@@ -557,6 +557,17 @@ SMTP configuration for sending verification and password-reset emails. Only acti
 
 ---
 
+### ServiceNow Integration
+
+Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. See [ServiceNow Budget Integration](./servicenow-budget-integration.md) for setup.
+
+| Parameter                        | Type   | Default | Description                                                                                                                 |
+| -------------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `SERVICENOW_INTEGRATION_ENABLED` | bool   | `false` | Registers the ServiceNow budget endpoints and restricts the ServiceNow service account to them                              |
+| `SERVICENOW_SERVICE_ACCOUNT_ID`  | string | `""`    | ID (token `sub`) of the Keycloak service account used by ServiceNow. When empty, every request to the endpoints is rejected |
+
+---
+
 ### Broker Token Exchange
 
 Multi-hop Keycloak token exchange chain. Activated automatically when `BROKER_TOKEN_URLS` is non-empty.

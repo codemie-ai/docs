@@ -188,3 +188,4 @@ Spend data updates on the collect schedule (nightly by default). There is typica
 - [LiteLLM Budget Configuration](../../extensions/litellm-proxy/budget-configuration) — predefined global budgets and enforcement flags
 - [API Configuration Reference](../api-configuration) — full environment variable reference
 - [Platform Administration](../platform-administration) — creating and managing projects
+- [ServiceNow Budget Integration](./servicenow-budget-integration.md) — requesting, adjusting, and cancelling project budgets from ServiceNow
