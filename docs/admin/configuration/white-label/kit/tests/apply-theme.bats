@@ -687,6 +687,32 @@ b64_decode_file() { printf '%s' "$1" | base64 -d >"$2" 2>/dev/null || printf '%s
   cmp "$BATS_TEST_TMPDIR/decoded.png" "$FIXTURES/email-assets/logo.png"
 }
 
+# unknown_backend_keys <brand.yaml> <yq path> <allowed keys, regex>: keys the backend loader would reject.
+# Key sets copy codemie/src/codemie/service/email_brand/loader.py: _ROOT_KEYS, _EMAIL_KEYS and the
+# email.images check in _load_logo (only "logo"). Update them together with that file.
+unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true; }
+
+@test "render email: email.images.logoUrl is for Keycloak only and never reaches brand.yaml" {
+  pkg=$(email_pkg '.email.images.logoUrl = "https://static.acme.example/logo.png"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  by="$BATS_TEST_TMPDIR/brand.yaml"
+  brand_yaml "$OUT/values-codemie.brand.yaml" >"$by"
+  [ "$(yq eval '.email.images.logo' "$by")" = "logo.png" ]
+  [ "$(yq eval '.email.images | has("logoUrl")' "$by")" = "false" ]
+  [ -z "$(unknown_backend_keys "$by" '.email.images' 'logo')" ]
+}
+
+@test "render email: with only logoUrl set, brand.yaml has no images key" {
+  pkg=$(email_pkg 'del(.email.images.logo) | .email.images.logoUrl = "https://static.acme.example/logo.png"')
+  run "$SCRIPT" --render-only --output-dir "$OUT" "$pkg" "$(email_assets)"
+  [ "$status" -eq 0 ]
+  by="$BATS_TEST_TMPDIR/brand.yaml"
+  brand_yaml "$OUT/values-codemie.brand.yaml" >"$by"
+  [ "$(yq eval '.email | has("images")' "$by")" = "false" ]
+  [ "$(yq eval '.email.palette.primary' "$by")" = "#112233" ]
+}
+
 @test "render email: a package without an email block renders no email key and no binaryData" {
   run "$SCRIPT" --render-only --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]
@@ -888,6 +914,10 @@ sum_of() { yq eval '.podAnnotations."checksum/brand"' "$1/values-codemie.brand.y
   for role in primary primaryText text background surface; do
     yq eval ".email.palette.$role" "$by" | grep -Eq '^#[0-9A-Fa-f]{6}$'
   done
+  # every key in the rendered file is one the backend loader accepts (an unknown key stops the API at startup)
+  [ -z "$(unknown_backend_keys "$by" '.' 'identity|email|links')" ]
+  [ -z "$(unknown_backend_keys "$by" '.email' 'senderName|signature|palette|images|messages')" ]
+  [ -z "$(unknown_backend_keys "$by" '.email.images' 'logo')" ]
   # every token in the rendered block is one the backend knows
   ! yq eval '.email | .. | select(tag == "!!str")' "$by" | grep -oE '\{[A-Za-z0-9_]+\}' | grep -vE '^\{(productName|projectName|costCenterName)\}$'
   logo=$(yq eval '.email.images.logo' "$by")
