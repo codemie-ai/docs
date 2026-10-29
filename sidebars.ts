@@ -45,6 +45,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             'user-guide/assistants/create-assistant',
+            'user-guide/assistants/assistant-creator-skill',
             'user-guide/assistants/sharing-assistants',
             'user-guide/assistants/edit-assistants',
             'user-guide/assistants/assistant-version-history',
@@ -188,6 +189,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
                 'user-guide/tools_integrations/tools/ms-teams-bot',
+                'user-guide/tools_integrations/tools/platform-tools',
                 {
                   type: 'category',
                   label: 'Git',

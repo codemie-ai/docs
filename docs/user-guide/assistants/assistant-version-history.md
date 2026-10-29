@@ -1,6 +1,6 @@
 ---
 id: assistant-version-history
-sidebar_position: 4
+sidebar_position: 5
 title: Version History
 pagination_prev: user-guide/assistants/edit-assistants
 pagination_next: user-guide/assistants/delete-assistants-and-chats

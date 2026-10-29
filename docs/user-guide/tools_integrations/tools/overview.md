@@ -46,6 +46,7 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 | **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels              |
 
 | **[MCP](./mcp/index.md)** | Model Context Protocol: add servers, configure credentials, and use MCP tools in assistants |
+| **[Platform Tools](./platform-tools.md)** | Built-in tools for platform analytics and for creating and testing assistants directly from a conversation |
 
 ---
 

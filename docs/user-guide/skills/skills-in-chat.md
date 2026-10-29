@@ -20,9 +20,8 @@ Learn how to dynamically attach and use skills during conversations without modi
 
 **Step 2: Select Skills**
 
-1. In the **Attach Skills** modal, browse and search for skills:
-   - **Project Skills** - Your personal skills
-   - **Marketplace Skills** - Community-shared skills
+1. In the **Attach Skills** modal, browse the combined list of available project and marketplace skills.
+   Use **Search skills...** to find a skill by name.
 2. Select one or more skills from the list
 
 ![Attach Skills Modal](./images/attach-skills-in-chat.png)
