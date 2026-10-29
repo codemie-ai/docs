@@ -127,7 +127,7 @@ After moving a data source, any assistants in the original project that referenc
 :::
 
 :::warning Integrations
-Integrations are not transferred between projects regardless of their level (project or user). If the data source relied on integrations (e.g., Git, Confluence, Jira connections), you will need to recreate them in the target project.
+Integrations are not transferred between projects regardless of their level (project or user). If the data source relied on integrations (e.g., Git, Confluence, Jira connections), you will need to recreate them in the target project, or transfer them with the [Transfer Integrations](../../api/settings-transfer.md) API (platform Admin or Maintainer role required).
 :::
 
 :::info
