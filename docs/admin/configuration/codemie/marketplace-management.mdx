@@ -16,54 +16,9 @@ For the submitter's side of the flow, see [Publish to Marketplace](../../../user
 
 ## Enabling Marketplace Management
 
-Marketplace management is controlled by two independent environment variables on the `codemie-api` service. Both default to `false`; the feature ships disabled and must be deliberately turned on per environment.
+Marketplace management is off by default and is turned on per environment with the `MARKETPLACE_MANAGEMENT_ENABLED` and `MARKETPLACE_APPROVAL_GATE_ENABLED` environment variables of the `codemie-api` service. Parameters, defaults, Helm configuration, rollout order, and the effects of turning the approval gate off are described in [Marketplace Management parameters](./api-configuration.md#marketplace-management).
 
-| Flag                                | Default | Description                                                                                                                                                                                                                                                                                     |
-| ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `MARKETPLACE_MANAGEMENT_ENABLED`    | `false` | Kill switch for the entire feature. When `false`, the `/v1/marketplace-management` router is not mounted, the **Marketplace management** page is unavailable, and all schedulers related to marketplace management are disabled.                                                                |
-| `MARKETPLACE_APPROVAL_GATE_ENABLED` | `false` | Approval gate for publishing. When `true`, submitting an assistant sets its status to `PENDING_REVIEW` and keeps it private until an administrator approves it; automated quality gates also run. When `false`, publish self-approves the assistant straight to `APPROVED` / global visibility. |
-
-Both are plain top-level environment variables read by pydantic `BaseSettings` with no prefix or namespace.
-
-The `features:marketplaceManagement` value visible in the frontend configuration is derived automatically from `MARKETPLACE_MANAGEMENT_ENABLED` at request time — it is not a separate flag for operators to set.
-
-### Recommended Rollout Order
-
-Enable the flags in stages rather than all at once:
-
-1. Set `MARKETPLACE_MANAGEMENT_ENABLED=true`. This mounts the router and exposes the **Marketplace management** page, but publishing behavior is unchanged — assistants still self-approve.
-2. Confirm that at least one administrator or maintainer account is available to review submissions.
-3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. From this point, new publish requests enter the review queue instead of self-approving.
-
-:::warning
-`MARKETPLACE_APPROVAL_GATE_ENABLED` takes effect only together with `MARKETPLACE_MANAGEMENT_ENABLED`. If the gate is on and management is off, the gate flag is ignored, a message is written to the startup log, and publishing self-approves as if the gate were off. Enable `MARKETPLACE_MANAGEMENT_ENABLED` first, as in the rollout steps above.
-:::
-
-Both flags are read at startup. Changing either requires a restart of the `codemie-api` service; there is no runtime reload. There is no dedicated Helm key, so the variables are set through `extraEnv` in the Helm values. Values must be quoted strings:
-
-```yaml
-extraEnv:
-  - name: MARKETPLACE_MANAGEMENT_ENABLED
-    value: 'true'
-  - name: MARKETPLACE_APPROVAL_GATE_ENABLED
-    value: 'true'
-```
-
-Reviewers are users with the administrator or maintainer role. Without at least one such user, every submission stays in `PENDING_REVIEW` with no way to resolve it. Administrators and maintainers who publish their own assistants skip the review queue; their assistants are approved immediately, although CRITICAL findings still block them unless they use Force-Publish.
-
-:::note Known issue
-While the approval gate is on, a "no moderator" warning is written to the startup log on every start, even when administrators exist. Verify manually that at least one administrator or maintainer account exists before enabling the gate.
-:::
-
-### Turning the Approval Gate Off
-
-Setting `MARKETPLACE_APPROVAL_GATE_ENABLED` back to `false` and restarting does not delete data, but it has these effects:
-
-- New publish requests self-approve again and no review decision is recorded.
-- Assistants already in `PENDING_REVIEW` stay there. They are not approved or published automatically, so the queue must be cleared manually, by approving, rejecting, or force-publishing the entries.
-- Editing a published assistant no longer sends it back for review.
-
-Enabling the gate on a deployment with existing assistants does not re-review them. Assistants that were already public stay visible and enter the review queue only when edited with changed content, or when published again.
+Reviewers are users with the administrator or maintainer role. Without at least one such user, every submission stays in `PENDING_REVIEW` with no way to resolve it.
 
 ## Accessing Marketplace Management
 

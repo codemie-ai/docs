@@ -100,17 +100,17 @@ Configure data migration, backup, and state import/export capabilities.
 
 Enable or disable experimental features and beta functionality.
 
-| Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                                                                                                                              |
-| ----------------------------------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                                                                                                                                                                                              |
-| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                                                                                                                                                                                             |
-| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the Marketplace. A failed validation blocks publishing until the author improves the assistant or chooses **Publish Anyway**; when disabled, the validation step is skipped. See [Marketplace Management](./marketplace-management.mdx#enabling-marketplace-management) |
-| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                                                                                                                                                                                     |
-| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                                                                                                                                                                                                    |
+| Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                                                                                         |
+| ----------------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                                                                                                                                                         |
+| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                                                                                                                                                        |
+| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the Marketplace. A failed validation blocks publishing until the author improves the assistant or chooses **Publish Anyway**; when disabled, the validation step is skipped. See [Marketplace Management](#marketplace-management) |
+| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                                                                                                                                                |
+| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                                                                                                                                                               |
 
 ### Marketplace Management
 
-Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. Set them through `extraEnv` in the Helm values. For rollout order and behavior, see [Marketplace Management](./marketplace-management.mdx#enabling-marketplace-management).
+Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. Set them through `extraEnv` in the Helm values. For the review workflow itself, see [Marketplace Management](./marketplace-management.mdx).
 
 | Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                        |
 | ----------------------------------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -124,6 +124,42 @@ Control Marketplace review and cleanup. All parameters are read at startup; chan
 :::warning
 `MARKETPLACE_AUDIT_RETENTION_DAYS` with a positive value deletes audit history irreversibly. Leave it at `0` unless a retention policy requires otherwise.
 :::
+
+#### Helm Configuration
+
+There is no dedicated Helm key. The variables are set through `extraEnv` in the Helm values. Values must be quoted strings:
+
+```yaml
+extraEnv:
+  - name: MARKETPLACE_MANAGEMENT_ENABLED
+    value: 'true'
+  - name: MARKETPLACE_APPROVAL_GATE_ENABLED
+    value: 'true'
+```
+
+#### Recommended Rollout Order
+
+1. Set `MARKETPLACE_MANAGEMENT_ENABLED=true`. This exposes the **Marketplace management** page, but publishing behavior is unchanged: assistants still self-approve.
+2. Confirm that at least one administrator or maintainer account exists to review submissions.
+3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. New publish requests then enter the review queue instead of self-approving.
+
+:::warning
+`MARKETPLACE_APPROVAL_GATE_ENABLED` takes effect only together with `MARKETPLACE_MANAGEMENT_ENABLED`. If the gate is on and management is off, the gate flag is ignored, a message is written to the startup log, and publishing self-approves as if the gate were off.
+:::
+
+:::note Known issue
+While the approval gate is on, a "no moderator" warning is written to the startup log on every start, even when administrators exist. Verify manually that at least one administrator or maintainer account exists before enabling the gate.
+:::
+
+#### Turning the Approval Gate Off
+
+Setting `MARKETPLACE_APPROVAL_GATE_ENABLED` back to `false` and restarting does not delete data, but it has these effects:
+
+- New publish requests self-approve again and no review decision is recorded.
+- Assistants already in `PENDING_REVIEW` stay there. They are not approved or published automatically, so the queue must be cleared manually, by approving, rejecting, or force-publishing the entries.
+- Editing a published assistant no longer sends it back for review.
+
+Enabling the gate on a deployment with existing assistants does not re-review them. Assistants that were already public stay visible and enter the review queue only when edited with changed content, or when published again.
 
 ### Support & Help
 
