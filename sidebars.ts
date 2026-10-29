@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'user-guide/getting-started/help-center',
         'user-guide/getting-started/release-notes',
         'user-guide/getting-started/glossary',
+        'user-guide/getting-started/accessibility',
       ],
     },
     {
