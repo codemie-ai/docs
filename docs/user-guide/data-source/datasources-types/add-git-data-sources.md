@@ -41,12 +41,12 @@ Use the **Files Filter** field to include or exclude specific formats. For examp
 ## Prerequisites
 
 :::note Required Integration
-This data source requires you to have at least one Git integration added to AI/Run CodeMie. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines.
+A Git integration is required for private repositories. Public repositories can be added without one. For more details, please refer to the [Integrations Overview](../../tools_integrations/integrations/index.md) guidelines.
 :::
 
 Before adding a Git data source, ensure you have:
 
-- Configured Git integration (GitHub, GitLab, or Bitbucket)
+- Configured Git integration (GitHub, GitLab, or Bitbucket) — not needed for public repositories
 - Access to the repository you want to index
 - Appropriate permissions to access repository content
 
@@ -152,7 +152,11 @@ Always use stable branches (e.g., `main`, `master`, `develop`) for indexing. Fea
   :::
 
 - Model Used for Embeddings: Select model Used for Embeddings.
-- Select integration for Git: Choose integration.
+- Select integration for Git: Choose integration. Optional for public repositories.
+
+:::info Connection Check
+When the data source is created, the repository link is checked first. With a selected integration, the link is checked using that integration's credentials. Without an integration, the link is checked for public accessibility. If the check fails, an error is shown in the form and the data source is not created.
+:::
 
 #### 5. Configure Reindex Schedule (Optional)
 
@@ -288,14 +292,25 @@ Errors can occur in the following cases:
 - **Invalid repository link**: URL format is incorrect or repository doesn't exist
 - **Invalid token**: Git integration credentials are expired or incorrect
 - **Incorrect branch link**: Specified branch doesn't exist in the repository
+- **Repository not publicly accessible**: No Git integration is selected, but the repository requires authentication (see [below](#repository-not-publicly-accessible))
 
-For all these cases, after the data source is added and automatic reindex is created, a general error with exit code (128) will appear:
+For the first three cases, after the data source is added and automatic reindex is created, a general error with exit code (128) will appear:
 
 ![Git Error Example](./add-git-data-sources/git-error-example.png)
 
 Now your Git repository is configured as a data source and ready to enhance your assistants with codebase knowledge.
 
 ### Common Error Messages
+
+#### Repository Not Publicly Accessible
+
+**Cause**: No Git integration was selected, and the repository could not be reached without credentials. The repository is private, does not exist, or did not respond within 15 seconds.
+
+**Solutions:**
+
+1. Verify the repository link is correct and the repository is public
+2. Select a Git integration with read access to the repository in the **Integration for Git** field
+3. If no suitable integration exists, add one under **Integrations** and select it in the form
 
 #### Exit Code 128
 
