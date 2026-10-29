@@ -1137,11 +1137,17 @@ Configure AI tool selection, code analysis integrations, tool execution limits, 
 
 Automatically select relevant tools based on user queries to improve response quality.
 
-| Parameter                  | Type    | Default | Description                                                    |
-| -------------------------- | ------- | ------- | -------------------------------------------------------------- |
-| `TOOL_SELECTION_ENABLED`   | boolean | `false` | Enable AI-powered tool selection from available toolkits       |
-| `TOOL_SELECTION_THRESHOLD` | integer | `3`     | Min tools before triggering smart selection (use all if below) |
-| `TOOL_SELECTION_LIMIT`     | integer | `3`     | Max tools to select per query to optimize token usage          |
+| Parameter                        | Type    | Default | Description                                                                                                                                                                                                         |
+| -------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TOOL_SELECTION_ENABLED`         | boolean | `false` | Enable AI-powered tool selection from available toolkits. Assistants use it only when **Enable Smart Tools selection** is also switched on in the assistant configuration                                           |
+| `TOOL_SELECTION_THRESHOLD`       | integer | `3`     | Min tools before triggering smart selection (use all if below)                                                                                                                                                      |
+| `TOOL_SELECTION_LIMIT`           | integer | `3`     | Max tools to select per query to optimize token usage. Not applied to assistants with **Enable Smart Tools selection** on, where the number of selected tools is capped by `TOOL_SELECTION_MAX_BOUND_TOOLS` instead |
+| `TOOL_SELECTION_MIN_SIMILARITY`  | float   | `0.3`   | Minimum cosine similarity (from `-1` to `1`) for a tool to be found for assistants with **Enable Smart Tools selection** on. Empty value disables the cutoff. Calibrate per deployment                              |
+| `TOOL_SELECTION_MAX_BOUND_TOOLS` | integer | `128`   | Max tools sent to the model for assistants with **Enable Smart Tools selection** on. Matches the OpenAI and Azure limit; minimum `1`                                                                                |
+
+:::info
+For assistants with **Enable Smart Tools selection** on, manually picked tools do not decide which tools run and the assistant chooses tools for each request. The manual tools are used only when no relevant tool is found. See [Smart Tool Selection](../../../user-guide/tools_integrations/tools/overview.md#smart-tool-selection) in the user guide.
+:::
 
 ### Admin Log Lookup
 
