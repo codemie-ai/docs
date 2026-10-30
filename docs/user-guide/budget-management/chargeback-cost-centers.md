@@ -130,6 +130,8 @@ list. It requires the **Maintainer** or **Admin** role, and is shown only when t
 UI is enabled. See [Enabling Budget Management UI](../../admin/configuration/codemie/project-budget-management.md#enabling-budget-management-ui).
 No additional configuration is required.
 
+![Cost center detail page with the Budget rollup card](./images/cost-center-budget-rollup.jpg)
+
 ### Totals
 
 The top of the card summarizes the whole cost center.
@@ -158,6 +160,10 @@ shows up after a reload. The card also refreshes after projects are linked to or
 cost center.
 
 ### Empty and Edge States
+
+A cost center whose linked projects have no budgets assigned shows `— not assigned —` in each category card.
+
+![Budget rollup with no budgets assigned](./images/cost-center-budget-rollup-empty.jpg)
 
 | Situation                                    | What the card shows                                                                                           |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
