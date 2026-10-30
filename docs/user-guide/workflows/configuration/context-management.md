@@ -484,6 +484,10 @@ states:
 # → Context after state: {"old_key": "old_value", "result": "success", "data": [1,2,3]} (merged)
 ```
 
+**Combining `true` with `output_key`**
+
+Setting `clear_context_store: true` together with an explicit `output_key` on the same transition is supported and does not fail. After the transition, the context holds only the key named by `output_key`, and all other keys are cleared. The standalone behavior of `true` and `output_key` described above is unchanged; this applies only when `output_key` is set.
+
 **reset_keys_in_context_store** (list of strings, default: `null`)
 
 Removes specific keys from the context store while preserving all other keys. Provides granular control over context cleanup.
@@ -589,6 +593,17 @@ next:
 ```
 
 Use case: When iterating in parallel and you need to collect every branch's output into a single list. Without `append_to_context: true`, only the last branch's value is kept (last-value-wins). With it, `context_store["all_results"]` contains a list with one entry per iteration.
+
+**Pattern 8: Full Reset With an Explicit Output Key**
+
+```yaml
+next:
+  state_id: next-phase
+  clear_context_store: true
+  output_key: phase_result
+```
+
+Use case: Start a fresh phase while keeping only the named output key.
 
 ### 6.3 Dynamic Value Resolution
 
