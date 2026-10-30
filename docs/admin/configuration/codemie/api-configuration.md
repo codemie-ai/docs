@@ -110,7 +110,7 @@ Enable or disable experimental features and beta functionality.
 
 ### Marketplace Management
 
-Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. Set them through `extraEnv` in the Helm values. For the review workflow itself, see [Marketplace Management](./marketplace-management.mdx).
+Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. For the review workflow, see [Marketplace Management](./marketplace-management.mdx).
 
 | Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                        |
 | ----------------------------------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -120,46 +120,6 @@ Control Marketplace review and cleanup. All parameters are read at startup; chan
 | `MARKETPLACE_AUDIT_RETENTION_DAYS`              | integer | `0`     | Number of days to keep Marketplace audit history. `0` keeps all history. Any positive value enables a daily purge at 02:30 UTC that permanently deletes older audit runs; the newest successful run per entity kind is always kept |
 | `MARKETPLACE_AUDIT_HEARTBEAT_TIMEOUT_MINUTES`   | integer | `60`    | Minutes without a heartbeat after which an audit run is treated as abandoned. `0` disables the reaper                                                                                                                              |
 | `MARKETPLACE_AUDIT_REAPER_INTERVAL_MINUTES`     | integer | `5`     | How often each instance checks for abandoned audit runs                                                                                                                                                                            |
-
-:::warning
-`MARKETPLACE_AUDIT_RETENTION_DAYS` with a positive value deletes audit history irreversibly. Leave it at `0` unless a retention policy requires otherwise.
-:::
-
-#### Helm Configuration
-
-There is no dedicated Helm key. The variables are set through `extraEnv` in the Helm values. Values must be quoted strings:
-
-```yaml
-extraEnv:
-  - name: MARKETPLACE_MANAGEMENT_ENABLED
-    value: 'true'
-  - name: MARKETPLACE_APPROVAL_GATE_ENABLED
-    value: 'true'
-```
-
-#### Recommended Rollout Order
-
-1. Set `MARKETPLACE_MANAGEMENT_ENABLED=true`. This exposes the **Marketplace management** page, but publishing behavior is unchanged: assistants still self-approve.
-2. Confirm that at least one administrator or maintainer account exists to review submissions.
-3. Set `MARKETPLACE_APPROVAL_GATE_ENABLED=true`. New publish requests then enter the review queue instead of self-approving.
-
-:::warning
-`MARKETPLACE_APPROVAL_GATE_ENABLED` takes effect only together with `MARKETPLACE_MANAGEMENT_ENABLED`. If the gate is on and management is off, the gate flag is ignored, a message is written to the startup log, and publishing self-approves as if the gate were off.
-:::
-
-:::note Known issue
-While the approval gate is on, a "no moderator" warning is written to the startup log on every start, even when administrators exist. Verify manually that at least one administrator or maintainer account exists before enabling the gate.
-:::
-
-#### Turning the Approval Gate Off
-
-Setting `MARKETPLACE_APPROVAL_GATE_ENABLED` back to `false` and restarting does not delete data, but it has these effects:
-
-- New publish requests self-approve again and no review decision is recorded.
-- Assistants already in `PENDING_REVIEW` stay there. They are not approved or published automatically, so the queue must be cleared manually, by approving, rejecting, or force-publishing the entries.
-- Editing a published assistant no longer sends it back for review.
-
-Enabling the gate on a deployment with existing assistants does not re-review them. Assistants that were already public stay visible and enter the review queue only when edited with changed content, or when published again.
 
 ### Support & Help
 
