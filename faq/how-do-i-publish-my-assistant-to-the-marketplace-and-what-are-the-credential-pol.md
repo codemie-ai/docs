@@ -22,7 +22,7 @@ integrations Requirements
 
 ## After Publishing
 
-- Your assistant \***\*moves from Project Assistants to the Marketplace\*\*** tab
+- Your assistant \***\*moves from Project Assistants to the Marketplace\*\*** tab. When the Marketplace approval gate is on, this happens only after an administrator approves the assistant; until then it has the **REVIEW** status and stays private. Sub-assistants published separately also go to the review queue
 - You maintain full control with options to:
   - View details
   - Edit the assistant
