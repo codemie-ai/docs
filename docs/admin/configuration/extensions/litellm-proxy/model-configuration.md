@@ -385,6 +385,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 | [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
+| [`gpt-6.1-terra-2026-10-26`](#gpt-61-terra)                 | GPT-6.1 Terra          |
 | [`o1`](#o1)                                                 | o1                     |
 | [`o3-mini`](#o3-mini)                                       | o3 mini                |
 | [`o3-2025-04-16`](#o3)                                      | o3                     |
@@ -1445,6 +1446,27 @@ model_list:
     id: gpt-6.1-sol-polandcentral-0
     base_model: azure/gpt-6.1-sol
     label: "GPT-6.1 Sol"
+    mode: responses
+```
+
+</details>
+
+#### GPT-6.1 Terra
+
+<details>
+<summary><strong>GPT-6.1 Terra</strong></summary>
+
+```yaml
+- model_name: gpt-6.1-terra-2026-10-26
+  litellm_params:
+    model: azure/codemie-gpt-6.1-terra-2026-10-26
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.1-terra-2026-10-26-polandcentral-0
+    base_model: azure/gpt-6.1-terra
+    label: "GPT-6.1 Terra"
     mode: responses
 ```
 
