@@ -66,6 +66,8 @@ The dashboard opens on the **Insights** tab and displays:
   active users, unique assistants invoked, and unique workflows invoked.
 - **Assistants & Workflows** — top assistants by total messages and workflows performance
   table with execution metrics and success rates.
+- **LLM Usage** — donut charts showing which models are used most and where the money goes;
+  see [LLM Usage Charts](#llm-usage-charts).
 
 :::tip
 To view your personal spending against your budget limit, go to
@@ -116,6 +118,40 @@ Users with the Auditor flag have the same analytics visibility as Platform Admin
 :::info
 To view analytics for projects or other users, Platform Admin, Project Admin, or Auditor
 access is required. Contact an administrator to obtain broader access to analytics data.
+:::
+
+## LLM Usage Charts
+
+The **LLM Usage** section of the Insights tab shows three donut charts side by side. Each chart has
+a **Top N** selector (**Top 10**, **Top 20** or **All**) and an expand icon that opens the chart in
+a larger view.
+
+![LLM Usage charts: Top LLMs, Top CLI LLMs and Top LLMs by Cost](./images/llm-usage-charts.png)
+
+| Chart                | What it shows                                             | Value       |
+| -------------------- | --------------------------------------------------------- | ----------- |
+| **Top LLMs**         | Models ranked by number of requests                       | Requests    |
+| **Top CLI LLMs**     | Models used through the CLI, ranked by number of requests | Requests    |
+| **Top LLMs by Cost** | Total cost of each model and its share of the total spend | Cost in USD |
+
+### Top LLMs by Cost
+
+**Top LLMs by Cost** answers the question _which models cost the most_. Each slice is the total
+cost of one model for the selected period, and the legend lists the exact amount in US dollars.
+
+- **Filters**: the chart follows the [global filters](#global-filtering-system) — time period,
+  users and projects.
+- **Included costs**: platform LLM usage and CLI usage routed through the LiteLLM proxy.
+- **Model names**: different names reported for the same model are combined into one slice.
+- **Consistency with other widgets**: for the same filters, the model costs add up to the totals
+  shown in **Projects Spending** and **Users Spending**. CLI costs are counted only from
+  7 February 2026, the date from which CLI usage data is reliable, in all three places.
+- **Dashboards**: the chart is also available as **LLMs Expenses** when you add a widget to a
+  custom dashboard.
+
+:::note
+When a period has more models than the selected **Top N**, the chart shows the models with the
+highest costs. Choose **All** to see every model.
 :::
 
 ## Global Filtering System
