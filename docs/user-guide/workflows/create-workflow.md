@@ -107,9 +107,25 @@ Configure essential workflow settings:
 - **Description**: Brief explanation of the workflow's purpose and features
 - **Start Hint**: Custom text displayed below the prompt input field when users start a workflow execution.
 - **Icon URL**: Link to an image (.png or .svg) for the workflow avatar
+- **Categories**: Optional. Select up to 3 categories that describe the workflow's use case. The list is the same as for assistants. See [Workflow Categories](#workflow-categories).
 
 :::info Required Fields
 Fields marked with an asterisk (\*) are required and must be filled in before saving the workflow.
+:::
+
+#### Workflow Categories
+
+The **Categories** field is a multi-select dropdown located below **Icon URL** in the workflow configuration. The same field is available in the create/edit form and in the **Basic** tab of the Visual Editor **Workflow Config** menu.
+
+![Categories field in the workflow configuration](./images/workflow-config-categories-field.png)
+
+- Selecting categories is optional. A workflow can be saved with no categories.
+- A maximum of 3 categories can be selected. Once 3 are chosen, additional options cannot be selected until one is removed.
+- Selected categories are saved with the workflow and pre-filled when the workflow is edited again.
+- Categories assigned here are used to [filter workflows](./workflows-overview.md#filtering-workflows-by-category) on the **My Workflows** and **All Workflows** pages.
+
+:::note
+Categories are managed centrally and shared with assistants. See [Assistant Categories Management](../assistants/assistant-categories-management.md). Categories selected here are independent of the categories chosen when [publishing to the Marketplace](./marketplace-publishing.md#selecting-categories).
 :::
 
 **Advanced Tab:**
