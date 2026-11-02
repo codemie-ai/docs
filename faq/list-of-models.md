@@ -1,8 +1,16 @@
 # List of models? What AI models are available in CodeMie? LLM model list?
 
-GPT-4o, GPT-4o 2024-08-06, GPT-4o 2024-11-20, GPT-4o-mini-2024-07-18, Gemini 2.0 Flash Exp, Bedrock Claude 3.5 Sonnet, Bedrock Claude 3.5 Sonnet v2 20241022, Bedrock Claude 3.7, o3 Mini 2025-01-31, o3 Mini 2025-01-31, Mixtral 8x7B Instruct
+CodeMie provides the following LLM models, grouped by provider:
 
-Note: The list of models is updated very often, so it will be easier for you to check it on the UI
+- **OpenAI (Azure OpenAI):** GPT-6.1 Sol, GPT-6 Sol, GPT-6 Luna, GPT-5.6 Sol, GPT-5.6 Terra, GPT-5.6 Luna, GPT-5.5, GPT-5.4, GPT-5.2, GPT-5.1 Codex, GPT-5, GPT-5 Mini, GPT-5 Nano, GPT-4.1, GPT-4.1 Mini, o3
+- **Anthropic (AWS Bedrock and Google Vertex AI):** Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, Claude Opus 4.5, Claude Sonnet 5.5, Claude Sonnet 5, Claude Sonnet 4.6, Claude Sonnet 4.5, Claude Haiku 5.5, Claude Haiku 4.5
+- **Google (Vertex AI):** Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.7 Flash, Gemini 3.5 Flash, Gemini 3 Flash, Gemini 3.1 Pro, Gemini 3.1 Flash Image, Gemini Nano Banana 2.1
+- **xAI:** Grok 4.6
+- **DeepSeek:** DeepSeek V4 Pro
+
+:::note
+The list of models is updated often, and the models available to you depend on your environment configuration. Check the model dropdown in the CodeMie UI for the current list.
+:::
 
 ## Sources
 
