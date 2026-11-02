@@ -26,12 +26,29 @@ Review every release between your current and target version that has a **Breaki
 
 :::warning Use the verified LiteLLM version
 While we recommend keeping CodeMie up to date, keep LiteLLM at the version that has been tested and verified with your CodeMie release.
-The currently tested and verified LiteLLM version is **1.99.2**.
+The currently tested and verified LiteLLM version is **1.99.4**.
 
 Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
 :::
 
 ## October 2026 {#2026-10}
+
+<details className="release" id="v2-63-0">
+<summary><span className="release__version">CodeMie 2.63.0</span><span className="release__date">Oct 30, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** October 30, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.63.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.99.4</h4>
+
+Updated from 1.99.2. For details, see the [LiteLLM 1.99.4 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.4).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
 
 <details className="release" id="v2-62-0">
 <summary><span className="release__version">CodeMie 2.62.0</span><span className="release__date">Oct 26, 2026</span><span className="badge badge--warning">Config changes</span></summary>
