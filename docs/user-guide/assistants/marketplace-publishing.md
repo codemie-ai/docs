@@ -235,6 +235,10 @@ Group several changes into a single edit. Each save of a published assistant tha
 
 ## Force-Publish for Administrators
 
+:::warning Access Required
+This functionality is only available to platform administrators and maintainers. Users with the [isAdmin](../getting-started/glossary.md#jwt-attributes) role can publish assistants without waiting in the review queue and override CRITICAL validation findings. Regular users do not see these options.
+:::
+
 Platform administrators and maintainers follow a shortened publishing flow:
 
 - If their assistant passes the validation checks, it is published directly with the **VERIFIED** status, without waiting in the review queue.
