@@ -47,9 +47,9 @@ Use browser Developer Tools to identify the LLM model being used in your workflo
 ```json
 {
   "model_id": "...",
-  "base_name": "gpt-4o",
+  "base_name": "gpt-4.1",
   "provider": "..."
 }
 ```
 
-The `base_name` field contains the model identifier (e.g., `gpt-4o`, `claude-3-sonnet`, etc.).
+The `base_name` field contains the model identifier (e.g., `gpt-4.1`, `claude-sonnet-5-5`, etc.).
