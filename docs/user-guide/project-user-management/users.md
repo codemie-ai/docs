@@ -59,6 +59,11 @@ Use the filter bar at the top of the list to narrow results:
 
 Click **Clear All** to reset all active filters.
 
+:::tip Open a project's members from Projects Management
+On the [Projects Management](./projects.md#projects-list) page, click a project's **Users** badge
+to open this page with the **Project** filter already set to that project.
+:::
+
 ## User Details
 
 Click the **⋮ (Actions)** menu on a user row, or click the user's name, to open the
