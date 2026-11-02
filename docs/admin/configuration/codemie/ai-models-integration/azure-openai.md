@@ -102,7 +102,7 @@ AZURE_OPENAI_REGION=eastus2
 
 1. Click **Deploy model** or **+ Create new deployment**
 2. Select **Deploy base model**
-3. Browse or search for your desired model (e.g., "gpt-4o")
+3. Browse or search for your desired model (e.g., "gpt-4.1")
 4. Select the model and click **Confirm**
 
 ### 3.4 Configure Deployment Settings
