@@ -10,6 +10,8 @@ CodeMie provides the following LLM models, grouped by provider:
 
 :::note
 The list of models is updated often, and the models available to you depend on your environment configuration. Check the model dropdown in the CodeMie UI for the current list.
+
+For model capabilities, context windows, and pricing, see the [LiteLLM model catalog](https://models.litellm.ai/).
 :::
 
 ## Sources
