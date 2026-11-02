@@ -110,3 +110,7 @@ Beyond the per-user resolution described above, a few guarantees are enforced at
 When an assistant is used as a node inside a workflow, the same per-assistant credential source applies: the assistant node runs under the current user with the same pinned, explicit, or "No integration" behavior it would use in a direct chat. Project-scoped integrations resolve against the running user's access just as they do in chat.
 
 An explicit selection can also be made without leaving the workflow: clicking an assistant node on the workflow executions page opens a panel with its **Your Integration Settings** section, where the selection can be saved for that workflow alone instead of for the assistant everywhere. See [Assistant Panel on the Executions Page](../../../workflows/assistant-panel-in-executions.md).
+
+## Testing with credentials
+
+Administrators can run a connection test for a saved catalog server using any MCP integration they can access, before the server is attached to an assistant. See [Testing a Saved MCP Server Configuration](./adding-an-mcp-server.md#testing-a-saved-mcp-server-configuration-administrators).
