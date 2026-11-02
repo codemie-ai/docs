@@ -135,11 +135,10 @@ Repeat **Step 3** to deploy additional models based on your requirements:
 
 **Recommended Models**:
 
-- **GPT-4.1**: General-purpose reasoning and code generation
-- **GPT-4.1 Mini**: Cost-effective option for simpler tasks
+- **GPT-4.1**: General-purpose model for everyday tasks
 - **GPT-5**: Reasoning model for complex tasks
 - **GPT-5.5**: Newer GPT-5 generation model
-- **GPT-6 Sol, GPT-6.1 Sol**: Latest generation reasoning models
+- **GPT-6.1 Sol**: Latest generation reasoning model
 - **GPT-6 Luna**: Cost-effective option for simpler tasks
 - **Embedding models**: `text-embedding-ada-002` for vector embeddings
 
