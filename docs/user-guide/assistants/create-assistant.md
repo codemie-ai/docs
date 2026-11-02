@@ -281,7 +281,7 @@ client.assistants.create(
         description="Customer-facing support assistant",
         system_prompt="...",
         project="proj",
-        llm_model_type="gpt-4o",
+        llm_model_type="gpt-4.1",
         hide_tool_outputs=True,
     )
 )
@@ -296,7 +296,7 @@ await client.assistants.create({
   description: 'Customer-facing support assistant',
   system_prompt: '...',
   project: 'proj',
-  llm_model_type: 'gpt-4o',
+  llm_model_type: 'gpt-4.1',
   context: [],
   toolkits: [],
   conversation_starters: [],
