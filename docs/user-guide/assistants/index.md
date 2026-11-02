@@ -53,6 +53,23 @@ Personalize your workspace for faster access:
 - [Favorites](./favorites.md) - Save frequently used assistants, skills, and workflows as favorites
 - [Pinned Assistants](./pinned-assistants.md) - Pin assistants to the navigation sidebar for one-click access
 
+## Filtering Assistants
+
+The **Project Assistants** list provides a filter panel for narrowing the list. Filters can be combined, and the selected values are kept in the page address.
+
+### MCP Servers Filter
+
+The **MCP servers** filter shows only assistants that use a selected MCP server:
+
+- Multi-select dropdown with a search field. Typing searches the MCP server catalog by name, and results load after a short delay.
+- Shows assistants that use **any** of the selected servers.
+- Counts only enabled MCP references. An MCP server that is attached to an assistant but switched off is not matched.
+- Only assistants visible to the current user are listed.
+- Pre-selected when opened from the **Assistants** count on the **MCPs management** page. See [MCP Management](../tools_integrations/tools/mcp/mcp-management.md#assistants-filtered-by-mcp-server).
+- Available only in **Project Assistants** and only when the MCP feature is enabled on the deployment. The filter is not shown in **Marketplace**, **Templates**, and **Favorites**.
+
+If the selected MCP server was deleted or is not accessible, the list shows the message `This MCP server could not be found or you no longer have access to it.` instead of the generic `No assistants found.` message.
+
 ## Moving Assistants Between Projects
 
 You can move an assistant from one project to another by changing its project assignment:
