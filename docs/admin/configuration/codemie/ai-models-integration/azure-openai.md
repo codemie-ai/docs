@@ -137,9 +137,10 @@ Repeat **Step 3** to deploy additional models based on your requirements:
 
 - **GPT-4.1**: General-purpose reasoning and code generation with a 1M token context window
 - **GPT-4.1 Mini**: Cost-effective option for simpler tasks
-- **GPT-5, GPT-5 Mini, GPT-5 Nano**: Reasoning models with enhanced capabilities
-- **GPT-5.1 Codex, GPT-5.2**: Newer GPT-5 generation models
-- **GPT-6 Sol, GPT-6 Luna, GPT-6.1 Sol**: Latest generation models with a large context window
+- **GPT-5**: Reasoning model for complex tasks
+- **GPT-5 Mini, GPT-5 Nano**: Smaller, cost-effective reasoning models for simpler tasks
+- **GPT-5.2**: Newer GPT-5 generation model
+- **GPT-6 Sol, GPT-6 Luna, GPT-6.1 Sol**: Latest generation reasoning models
 - **Embedding models**: `text-embedding-ada-002` for vector embeddings
 
 Each model deployment allows you to set specific TPM limits and deployment configurations.
