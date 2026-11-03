@@ -35,6 +35,10 @@ project detail pages. Set it to `false` if your deployment does not use budget t
 
 ## Background Jobs and Environment Variables
 
+:::note Version availability
+This section describes CodeMie **2.65.0** and later, where the spend ledger replaces the spend collector and the budget reset tracker. For earlier versions, see [Legacy Spend Collector (before 2.65.0)](#legacy-spend-collector-before-2650).
+:::
+
 Background jobs maintain budget and spend state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
 
 | Job                                           | Purpose                                                                                                                |
@@ -180,6 +184,77 @@ When the flag is disabled, all members share the project budget without individu
 
 :::note Spend data latency
 Spend data updates on the spend uploader schedule (every 2 minutes by default). Spend appears in the UI after the uploader copies the request from LiteLLM, which is typically a few minutes after the request completes.
+:::
+
+## Legacy Spend Collector (before 2.65.0)
+
+:::warning
+This section applies only to CodeMie versions **before 2.65.0**. In 2.65.0 the spend collector, the budget reset tracker, and the `project_spend_tracking` table are replaced by the spend ledger described above, and their environment variables are no longer read.
+:::
+
+Two background jobs maintain budget state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
+
+| Job                                                       | Purpose                                                                                                                |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Spend collector** (`litellm_spend_collector`)           | Polls LiteLLM for spend data and writes deltas to `project_spend_tracking`                                             |
+| **Budget reset tracker** (`litellm_budget_reset_tracker`) | Detects budget period rollovers and adjusts spend records accordingly                                                  |
+| **Startup reconciliation**                                | One-time on pod start: aligns DB state with LiteLLM (predefined budgets, user assignments, project budget assignments) |
+
+### Legacy environment variables
+
+| Variable                                          | Default        | Description                                                                                                                                             |
+| ------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`                 | `false`        | Enable the spend collector background job                                                                                                               |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 1 * * *`    | Cron expression (UTC) for the spend collector. See [API Configuration](./api-configuration.md#legacy-spend-collector-settings-before-2650) for details. |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`        | Enable the budget reset tracker background job                                                                                                          |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | `*/10 * * * *` | Cron expression (UTC) for the reset tracker                                                                                                             |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                                                                     |
+| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                                                                   |
+
+In the `codemie-api` Helm chart, add to the `extraEnv` list:
+
+```yaml
+extraEnv:
+  - name: LITELLM_SPEND_COLLECTOR_ENABLED
+    value: 'true'
+  - name: LITELLM_SPEND_COLLECTOR_SCHEDULE
+    value: '0 1 * * *'
+  - name: LITELLM_BUDGET_RESET_TRACKER_ENABLED
+    value: 'true'
+  - name: LITELLM_BUDGET_RESET_TRACKER_SCHEDULE
+    value: '0 0 * * *'
+  - name: LLM_PROXY_BUDGET_RECONCILIATION_ENABLED
+    value: 'true'
+```
+
+:::warning
+Without `LITELLM_SPEND_COLLECTOR_ENABLED=true`, spend data will not be collected and budget consumption will not be visible in the UI.
+:::
+
+### Legacy spend tracking
+
+CodeMie tracks project and member spend through a background polling job that reads usage data from LiteLLM and records it in the `project_spend_tracking` table.
+
+#### Legacy spend calculation
+
+On each collection run:
+
+1. The job fetches `current_period_spend` from LiteLLM for each tracked entity (project virtual key, per-member customer record).
+2. It calculates the **delta** — the difference from the previous snapshot.
+3. The **daily** value equals the delta for that run.
+4. The **cumulative** value accumulates across all runs and periods.
+
+If no previous snapshot exists (first run), the current spend value is used directly as both daily and cumulative.
+
+#### Legacy budget reset detection
+
+LiteLLM resets a budget's spend counter when its reset period elapses. CodeMie detects this by comparing the budget's last reset timestamp against the previous snapshot date. When a reset is detected:
+
+- The daily value reflects the new-period spend only.
+- The cumulative value continues to grow — it is not cleared on reset, preserving the full historical record.
+
+:::note Spend data latency
+In these versions spend data updates on the collect schedule (nightly by default), so there is typically up to a one-day lag between request completion and spend appearing in the UI.
 :::
 
 ## See Also

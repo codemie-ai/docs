@@ -1035,6 +1035,10 @@ Re-syncs budget reset state with LiteLLM's reset cycle once a day.
 
 When requests are routed through LiteLLM (`LLM_PROXY_ENABLED=true` and `LLM_PROXY_MODE=lite_llm`), CodeMie uses the replicated LiteLLM spend logs as the single **ledger** for every spend, budget, limit, and analytics figure. The ledger is the `litellm_spend_logs` table in the CodeMie database, fed by the spend uploader job described below.
 
+:::note Version availability
+The spend ledger (serving all spend, budget, and limit figures from `litellm_spend_logs`) and the `SPEND_LEDGER_*` and `EVENT_LOOP_LAG_*` settings are available starting with CodeMie **2.65.0**. The spend uploader (`LITELLM_SPEND_UPLOADER_*`) is available since **2.63.0**. On earlier versions, use the [legacy spend collector settings](#legacy-spend-collector-settings-before-2650).
+:::
+
 :::info
 The coverage, projection, and read-isolation settings apply only when chat requests are routed through LiteLLM. In deployments without LiteLLM routing they are ignored, and spend figures keep being served from Elasticsearch metrics.
 :::
@@ -1124,6 +1128,20 @@ Samples how late the API event loop wakes up. A lag means something blocked the 
 | ----------------------------------------- | ----- | ------- | ------------------------------------------------------------------------------------------------------- |
 | `EVENT_LOOP_LAG_MONITOR_INTERVAL_SECONDS` | float | `1.0`   | How often the event loop lag is sampled, in seconds. `0` disables the monitor.                          |
 | `EVENT_LOOP_LAG_WARN_SECONDS`             | float | `0.5`   | A sampled lag at or above this value is logged as a warning. Every sample is also recorded as a metric. |
+
+#### Legacy Spend Collector Settings (before 2.65.0)
+
+CodeMie versions before **2.65.0** collect spend with a nightly polling job instead of the ledger. The settings below are only read by those versions and were removed in 2.65.0. Do not set them on 2.65.0 or later.
+
+| Parameter                                    | Type    | Default          | Description                                                                                                                           |
+| -------------------------------------------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`            | boolean | `false`          | Enables the background spend collector job that stores project-level LiteLLM spend snapshots in the `project_spend_tracking` table.   |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`           | string  | `"0 1 * * *"`    | Cron schedule (UTC) for the spend collector. Defaults to nightly at 1 AM (`0 23 * * *` in versions before 2.63.0).                    |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`       | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                        |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`      | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                   |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`        | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                      |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS`        | integer | `600000`         | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
+| `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS` | integer | `600000`         | Threshold in milliseconds (10 min) after which member spend analytics data is considered stale and lazily refreshed.                  |
 
 ### LiteLLM Cache & Optimization
 
