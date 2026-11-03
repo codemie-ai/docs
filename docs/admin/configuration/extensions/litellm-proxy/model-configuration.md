@@ -1438,7 +1438,7 @@ model_list:
 ```yaml
 - model_name: gpt-6.1-sol
   litellm_params:
-    model: azure/codemie-gpt-6.1-sol-2026-09-29
+    model: azure/gpt-6.1-sol-2026-09-29
     api_base: https://api-base-polandcentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
     additional_drop_params: ["temperature", "top_p"]
@@ -1459,7 +1459,7 @@ model_list:
 ```yaml
 - model_name: gpt-6.1-terra-2026-10-26
   litellm_params:
-    model: azure/codemie-gpt-6.1-terra-2026-10-26
+    model: azure/gpt-6.1-terra-2026-10-26
     api_base: https://api-base-polandcentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
     additional_drop_params: ["temperature", "top_p"]
