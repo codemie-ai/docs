@@ -5,7 +5,7 @@ sidebar_label: Users
 sidebar_position: 3
 pagination_prev: user-guide/project-user-management/index
 pagination_next: null
-description: View and manage all platform users in AI/Run CodeMie. Inspect user details and manage project assignments.
+description: View and manage all platform users in AI/Run CodeMie. Inspect user details, manage project assignments, and deactivate or reactivate users.
 ---
 
 # Users Management
@@ -26,8 +26,9 @@ guide.
 :::
 
 The Users Management page gives Platform Admins a unified view of all users registered on the
-platform, their roles, and their project memberships. From here you can filter users, inspect
-individual user details, and manage project assignments.
+platform, their roles, and their project memberships. From this page, Platform Admins and
+Maintainers can filter users, inspect individual user details, manage project assignments, and
+deactivate or reactivate users.
 
 To access Users Management, click the **Profile** icon in the bottom-left corner → **Settings → Administration → Users management**.
 
@@ -41,13 +42,13 @@ The users list displays all platform users in a searchable, filterable table.
 
 | Column            | Description                                                                                                                                          |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Name**          | Display name                                                                                                                                         |
+| **Name**          | Display name. Deactivated users carry a **Deactivated** label under the name                                                                         |
 | **Email**         | User's email address                                                                                                                                 |
 | **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary.md#external-user-availableforexternal)                                     |
 | **Project Admin** | Whether the user holds Project Admin role in any project                                                                                             |
 | **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                                                            |
 | **Projects**      | Badge list of projects the user is assigned to. The default project is shown first and labeled **Default** — see [Default Project](#default-project) |
-| **Actions**       | Row-level actions (edit, view details)                                                                                                               |
+| **Actions**       | Row-level actions (view details, assign or reset budgets, deactivate or reactivate the user)                                                         |
 
 ### Filtering
 
@@ -56,6 +57,7 @@ Use the filter bar at the top of the list to narrow results:
 - **Search** — filter by name
 - **Project** — show only users assigned to a specific project
 - **Platform Role** — filter by `User`, `Project Admin`, or `Super Admin`
+- **Status** — `All` (default), `Active`, or `Deactivated`
 
 Click **Clear All** to reset all active filters.
 
@@ -176,6 +178,67 @@ default project stays in place.
 The user loses access to that project immediately. Their account is not affected. If the
 removed project was the user's default project, a new default is determined automatically —
 see [How the Default Project Is Determined](#how-the-default-project-is-determined).
+
+## Deactivate and Reactivate a User
+
+Deactivating a user blocks their access to the platform without deleting the account. The
+user's projects, roles, and budgets are kept, so access can be restored later by reactivating
+the user.
+
+### Who Can Deactivate and Reactivate Users
+
+Platform Admins and Maintainers can deactivate and reactivate users, with these rules:
+
+- Nobody can deactivate or reactivate their own account.
+- Only a Maintainer can deactivate or reactivate another Maintainer.
+- The last active Maintainer and the last active Platform Admin cannot be deactivated. Assign
+  the role to another user first.
+
+Auditors see the users list but not these actions.
+
+### Deactivate a User
+
+1. In the users list, click the **⋮ (Actions)** menu on the user's row.
+2. Select **Deactivate user**.
+3. In the **Deactivate user?** dialog, click **Deactivate**.
+
+The message _"User deactivated successfully"_ confirms the change, and the user is shown with
+the **Deactivated** label.
+
+### Reactivate a User
+
+1. In the users list, find the deactivated user. To show only deactivated users, set the
+   **Status** filter to `Deactivated`.
+2. Click the **⋮ (Actions)** menu on the user's row and select **Reactivate user**.
+3. In the **Reactivate user?** dialog, click **Reactivate**.
+
+The message _"User reactivated successfully"_ confirms the change.
+
+### What Deactivation Changes
+
+While a user is deactivated:
+
+- The user cannot sign in. A session that is already open stops working within about half a
+  minute.
+- The user cannot be added to projects or knowledge bases, and cannot be given a budget, a
+  platform role, or a new default project. Bulk assignments that include a deactivated user are
+  refused with a message about the deactivated users. In a CSV import of project members, the
+  rows of deactivated users are marked with an error in the preview and left out of the import.
+- User pickers, for example when adding project members, do not offer the user.
+- Schedulers and webhooks owned by the user do not run. Each scheduled run that comes due is
+  recorded in the scheduler's run history with the status skipped.
+- The user's MCP server authorizations are removed.
+- In a project's **Project Members** table, the user is still shown, with the **Deactivated**
+  label and the **Role** dropdown disabled, so the membership can be removed.
+
+### What Reactivation Restores
+
+Reactivation restores the user's access with the same projects, roles, and budgets as before.
+If a project budget was created while the user was deactivated, the user also gets a share of
+that budget.
+
+MCP server authorizations removed at deactivation are not restored. After reactivation, the
+user signs in again to each MCP server that requires it.
 
 ## Default Project
 
