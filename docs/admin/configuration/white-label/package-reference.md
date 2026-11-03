@@ -251,7 +251,7 @@ The `keycloak` block is optional. A package without it behaves exactly as before
 
 ### Theme Name
 
-The theme name must match `^[a-z0-9-]{3,40}$`: 3 to 40 characters of `a-z`, `0-9` and `-`. The names `codemie`, `base` and `keycloak` are reserved and are rejected. `codemie` is the vendor parent theme that the child theme extends, so it must stay unchanged.
+The theme name must match `^[a-z0-9-]{3,40}$`: 3 to 40 characters of `a-z`, `0-9` and `-`. The names `codemie`, `codemie-default`, `base` and `keycloak` are reserved and are rejected. `codemie` is the vendor parent theme that the child theme extends, so it must stay unchanged. `codemie-default` is the built-in theme with the original CodeMie login look. It is the default login theme of a deployment that has no child theme.
 
 ### SMTP
 

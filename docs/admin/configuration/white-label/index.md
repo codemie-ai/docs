@@ -282,7 +282,7 @@ The optional top-level `keycloak` block extends the brand to Keycloak. A package
 - The realm settings: the display name (`product.name`), the login theme, the email theme, and, when `keycloak.smtp` is a full block, the SMTP connection.
 - Nothing else. The kit never sets `extraVolumes` or `extraVolumeMounts`, and it never changes a chart version or an image tag.
 
-The block is configured as follows. The theme name has 3 to 40 characters of `a-z`, `0-9` and `-`, and must not be `codemie`, `base` or `keycloak`.
+The block is configured as follows. The theme name has 3 to 40 characters of `a-z`, `0-9` and `-`, and must not be `codemie`, `codemie-default`, `base` or `keycloak`.
 
 ```yaml
 keycloak:
@@ -330,7 +330,7 @@ Above 400000 bytes the script stops with an error. Reduce the assets (for exampl
 ### Prerequisites for the Keycloak steps
 
 :::warning Release order
-The order of a rollout is fixed: first release the Keycloak image that contains the vendor parent theme `codemie`, then deploy the Keycloak and oauth2-proxy charts that support the child theme, and only then run `apply-theme`. The parent theme must stay installed in Keycloak. When it is removed, the child theme has nothing to extend and the login page breaks.
+The order of a rollout is fixed: first release the Keycloak image that contains the vendor themes `codemie` (parent) and `codemie-default` (default look), then deploy the Keycloak and oauth2-proxy charts that support the child theme, and only then run `apply-theme`. The parent theme must stay installed in Keycloak. When it is removed, the child theme has nothing to extend and the login page breaks. Without `apply-theme`, the default login theme is `codemie-default`, so the login page of a deployment without a child theme keeps its original look. This theme exists only in the new image, so deploy the charts after the image.
 :::
 
 The Keycloak release must already carry the child theme hook, which the normal chart deployment adds to its volumes and volume mounts (the marker `keycloak-child-theme`). The script checks this before it changes anything.
@@ -450,11 +450,11 @@ The same rule applies to optional SMTP keys: with a full SMTP block, the realm f
 
 The kit is versioned independently of the platform, and the `kitVersion` in the metadata of this page is the version it describes. The package `version` field must match the major version of the kit.
 
-| Kit version                            | Package `version` | Required platform support                                                                                                                             |
-| -------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1                                      | `'1'`             | The `brand` chart values and the links overlay.                                                                                                       |
-| 1 (with the optional `email` block)    | `'1'`             | An email service that reads `brand.yaml` and the `brand-assets` directory.                                                                            |
-| 1 (with the optional `keycloak` block) | `'1'`             | A Keycloak chart with the child theme hook, an oauth2-proxy chart with the realm values, and the vendor parent theme `codemie` in the Keycloak image. |
+| Kit version                            | Package `version` | Required platform support                                                                                                                                             |
+| -------------------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1                                      | `'1'`             | The `brand` chart values and the links overlay.                                                                                                                       |
+| 1 (with the optional `email` block)    | `'1'`             | An email service that reads `brand.yaml` and the `brand-assets` directory.                                                                                            |
+| 1 (with the optional `keycloak` block) | `'1'`             | A Keycloak chart with the child theme hook, an oauth2-proxy chart with the realm values, and the vendor themes `codemie` and `codemie-default` in the Keycloak image. |
 
 When the theme package contract changes, this table gains a row.
 
