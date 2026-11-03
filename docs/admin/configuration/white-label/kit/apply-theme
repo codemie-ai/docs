@@ -174,7 +174,7 @@ EMAIL_LOGO_PATH=""
 KC_ACTIVE=0
 KC_MAX_BYTES=400000  # cap of the Keycloak child-theme ConfigMap; must match the Keycloak chart hook
 KC_WARN_BYTES=300000 # the release Secret holds the content twice and is limited to 1 MiB
-KC_RESERVED_THEMES=(codemie base keycloak)
+KC_RESERVED_THEMES=(codemie codemie-default base keycloak)
 
 # 1a. JSON Schema validation (all errors, not just the first)
 _AJV_INPUT="$TMP_ROOT/package.json"
