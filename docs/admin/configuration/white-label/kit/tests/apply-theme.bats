@@ -1088,7 +1088,7 @@ kc_rejected() {
 }
 
 @test "validate: reserved theme names rejected" {
-  for n in codemie base keycloak; do
+  for n in codemie codemie-default base keycloak; do
     kc_render ".keycloak.themeName = \"$n\""
     kc_rejected "keycloak.themeName"
   done
