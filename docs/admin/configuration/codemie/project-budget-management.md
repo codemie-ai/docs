@@ -54,7 +54,7 @@ Background jobs maintain budget and spend state. All jobs use PostgreSQL advisor
 | `LITELLM_SPEND_UPLOADER_ENABLED`                  | `false`                | Enable the spend uploader background job                                                                                                                                                                      |
 | `LITELLM_SPEND_UPLOADER_SCHEDULE`                 | `*/2 * * * *`          | Cron expression (UTC) for the spend uploader                                                                                                                                                                  |
 | `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`           | `""`                   | Connection URL of the LiteLLM database, or use the `_HOST`, `_PORT`, `_NAME`, `_USER`, `_PASSWORD`, and `_SSLMODE` variants. See [API Configuration](./api-configuration.md#litellm-spend-ledger) for details |
-| `SPEND_LEDGER_COVERAGE_FLOOR`                     | `2026-11-01T00:00:00Z` | Start of the period fully covered by the ledger. Set it after the first uploader load completes                                                                                                               |
+| `SPEND_LEDGER_COVERAGE_FLOOR`                     | `2026-11-01T00:00:00Z` | Start of the period fully covered by the ledger. After the first uploader load completes, set it to the earliest request timestamp in the load                                                                |
 | `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`     | `false`                | Enable the daily reset reconciliation job                                                                                                                                                                     |
 | `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`                | Enable one-time startup reconciliation on pod start                                                                                                                                                           |
 | `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`                  | Timeout in seconds for the startup reconciliation job                                                                                                                                                         |
@@ -157,13 +157,13 @@ CodeMie uses the LiteLLM spend logs as a **ledger** for project and member spend
 
 A budget's consumed amount is the sum of ledger rows over the budget period, which ends at the budget's reset instant. Budget resets do not clear any stored counter: a new period simply covers a new range of rows, so the full history stays available for analytics.
 
-Spend that cannot be answered completely is reported as **unavailable** or **partial** rather than as zero. This happens, for example, when the ledger is not yet activated (`SPEND_LEDGER_COVERAGE_FLOOR` is empty), when the ledger is marked not ready (`SPEND_LEDGER_READY=false`), or when a report reaches before the period covered by the ledger and legacy fallback is disabled (`SPEND_LEDGER_LEGACY_BELOW_FLOOR=false`).
+A spend figure that cannot be calculated completely is reported as **unavailable** or **partial** rather than as zero. This happens, for example, when the ledger is not activated (`SPEND_LEDGER_COVERAGE_FLOOR` is empty), when the ledger is marked not ready (`SPEND_LEDGER_READY=false`), or when a report reaches before the period covered by the ledger and legacy fallback is disabled (`SPEND_LEDGER_LEGACY_BELOW_FLOOR=false`).
 
 ### Activating the ledger
 
 1. Enable the spend uploader and configure the LiteLLM database connection (see [Environment variables](#environment-variables)).
 2. Wait for the first run to finish loading the historical spend logs.
-3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request contained in the completed load and restart the API pods.
+3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request contained in the completed load, replacing the default value, and restart the API pods. The value is read only at startup.
 
 Periods before this timestamp are served from the legacy Elasticsearch metrics unless `SPEND_LEDGER_LEGACY_BELOW_FLOOR` is `false`.
 
@@ -183,7 +183,7 @@ Member-level spend attribution is controlled by the `project_member_budget_track
 When the flag is disabled, all members share the project budget without individual caps.
 
 :::note Spend data latency
-Spend data updates on the spend uploader schedule (every 2 minutes by default). Spend appears in the UI after the uploader copies the request from LiteLLM, which is typically a few minutes after the request completes.
+Spend data updates on the spend uploader schedule (every 2 minutes by default). Spend appears in the UI once the uploader has copied the request from LiteLLM, typically within a few minutes of the request completing.
 :::
 
 ## Legacy Spend Collector (before 2.65.0)
@@ -192,7 +192,7 @@ Spend data updates on the spend uploader schedule (every 2 minutes by default). 
 This section applies only to CodeMie versions **before 2.65.0**. In 2.65.0 the spend collector, the budget reset tracker, and the `project_spend_tracking` table are replaced by the spend ledger described above, and their environment variables are no longer read.
 :::
 
-Two background jobs maintain budget state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
+Background jobs maintain budget state. All jobs use PostgreSQL advisory locks so only one pod runs each job in a multi-replica deployment.
 
 | Job                                                       | Purpose                                                                                                                |
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
