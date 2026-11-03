@@ -33,6 +33,45 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+<details className="release" id="v2-65-0">
+<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Upcoming</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** To be announced
+
+:::note Placeholder
+This entry is a draft and will be completed when 2.65.0 is released.
+:::
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+1. **[BREAKING] LiteLLM spend collector and related variables removed** — spend, budget, limit, and analytics figures are now served from a single spend ledger (`litellm_spend_logs`) that is filled by the spend uploader. The following variables are no longer read and must be removed from `extraEnv` if present.
+
+   | Removed variable                                                                                                       | Replaced by                                                                                                                                             |
+   | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `LITELLM_SPEND_COLLECTOR_ENABLED`, `LITELLM_SPEND_COLLECTOR_SCHEDULE`                                                  | `LITELLM_SPEND_UPLOADER_ENABLED`, `LITELLM_SPEND_UPLOADER_SCHEDULE` (see the next item)                                                                 |
+   | `LITELLM_BUDGET_RESET_TRACKER_ENABLED`, `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`, `LITELLM_BUDGET_RESET_WINDOW_MINUTES` | No replacement; budget periods are calculated from the ledger. Daily reset reconciliation remains available via `LITELLM_BUDGET_RESET_RECONCILIATION_*` |
+   | `BUDGET_USAGE_STALENESS_THRESHOLD_MS`, `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS`                                    | No replacement; figures are calculated from the ledger on read                                                                                          |
+   | `CLI_METRICS_CUTOFF_DATE`                                                                                              | No replacement                                                                                                                                          |
+
+   :::warning Spend figures depend on the spend uploader
+   Deployments that relied on the spend collector must enable the spend uploader, otherwise spend and budget consumption figures are missing or incomplete.
+   :::
+
+2. **Enable the spend uploader and activate the ledger** — required for deployments that route requests through LiteLLM.
+   1. Set `LITELLM_SPEND_UPLOADER_ENABLED: "true"` and configure the LiteLLM database connection (`LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`, or `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST` and `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` with the related variables).
+   2. Wait for the first run to finish loading the historical spend logs.
+   3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request in the completed load and restart the API pods.
+
+   See [Project Budget Management](../../configuration/codemie/project-budget-management.md#spend-tracking) for details.
+
+3. **New optional variables** — `SPEND_LEDGER_*` settings for coverage, projection, and read isolation, and `EVENT_LOOP_LAG_*` settings for event loop monitoring. All have defaults. See [API Configuration](../../configuration/codemie/api-configuration.md#litellm-spend-ledger).
+
+</details>
+
 <details className="release" id="v2-64-0">
 <summary><span className="release__version">CodeMie 2.64.0</span><span className="release__date">Nov 3, 2026</span><span className="release__no-action">No admin action required</span></summary>
 

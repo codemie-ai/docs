@@ -159,6 +159,18 @@ A budget's consumed amount is the sum of ledger rows over the budget period, whi
 
 A spend figure that cannot be calculated completely is reported as **unavailable** or **partial** rather than as zero. This happens, for example, when the ledger is not activated (`SPEND_LEDGER_COVERAGE_FLOOR` is empty), when the ledger is marked not ready (`SPEND_LEDGER_READY=false`), or when a report reaches before the period covered by the ledger and legacy fallback is disabled (`SPEND_LEDGER_LEGACY_BELOW_FLOOR=false`).
 
+### Spend log replication
+
+The spend uploader (available since 2.63.0) is a background job in the CodeMie API scheduler. It copies rows from the `LiteLLM_SpendLogs` table of the LiteLLM database into the `litellm_spend_logs` ledger in the CodeMie database.
+
+- The first run loads the full history and can take a long time. Later runs continue from where the previous one stopped, and a failed run resumes from the last committed page.
+- The job is safe in multi-replica deployments: a database advisory lock lets only one pod run it at a time.
+- The uploader is part of the Enterprise package and requires a `codemie-enterprise` build that includes it. If the build does not include it, or no LiteLLM database is configured, the job is not registered and a message is written to the API log.
+- The LiteLLM database is configured with either `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL` or the separate `_HOST`, `_PORT`, `_NAME`, `_USER`, `_PASSWORD`, and `_SSLMODE` variables, so that the password can come from its own secret. Read-only access is sufficient. The CodeMie database connection reuses the application's PostgreSQL settings, including IAM authentication.
+- LiteLLM spend logs must be enabled (`disable_spend_logs: false`), and the LiteLLM retention period must be long enough for rows to be copied before deletion. See [Spend Logs Retention](../extensions/litellm-proxy/spend-logs-retention.md).
+
+The `SPEND_LEDGER_*` settings apply only when chat requests are routed through LiteLLM and are read once at API startup. Without LiteLLM routing, they are ignored and spend figures keep being served from Elasticsearch metrics. The full parameter list is in the [API Configuration Reference](./api-configuration.md#litellm-spend-ledger).
+
 ### Activating the ledger
 
 1. Enable the spend uploader and configure the LiteLLM database connection (see [Environment variables](#environment-variables)).
@@ -202,14 +214,14 @@ Background jobs maintain budget state. All jobs use PostgreSQL advisory locks so
 
 ### Legacy environment variables
 
-| Variable                                          | Default        | Description                                                                                                                                             |
-| ------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_ENABLED`                 | `false`        | Enable the spend collector background job                                                                                                               |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 1 * * *`    | Cron expression (UTC) for the spend collector. See [API Configuration](./api-configuration.md#legacy-spend-collector-settings-before-2650) for details. |
-| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`        | Enable the budget reset tracker background job                                                                                                          |
-| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | `*/10 * * * *` | Cron expression (UTC) for the reset tracker                                                                                                             |
-| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                                                                     |
-| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                                                                   |
+| Variable                                          | Default        | Description                                                                                                                   |
+| ------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`                 | `false`        | Enable the spend collector background job                                                                                     |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`                | `0 1 * * *`    | Cron expression (UTC) for the spend collector. See [API Configuration](./api-configuration.md#legacy-parameters) for details. |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`            | `false`        | Enable the budget reset tracker background job                                                                                |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`           | `*/10 * * * *` | Cron expression (UTC) for the reset tracker                                                                                   |
+| `LLM_PROXY_BUDGET_RECONCILIATION_ENABLED`         | `false`        | Enable one-time startup reconciliation on pod start                                                                           |
+| `LLM_PROXY_BUDGET_RECONCILIATION_TIMEOUT_SECONDS` | `600`          | Timeout in seconds for the startup reconciliation job                                                                         |
 
 In the `codemie-api` Helm chart, add to the `extraEnv` list:
 

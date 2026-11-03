@@ -1033,115 +1033,49 @@ Re-syncs budget reset state with LiteLLM's reset cycle once a day.
 
 ### LiteLLM Spend Ledger
 
-When requests are routed through LiteLLM (`LLM_PROXY_ENABLED=true` and `LLM_PROXY_MODE=lite_llm`), CodeMie uses the replicated LiteLLM spend logs as the single **ledger** for every spend, budget, limit, and analytics figure. The ledger is the `litellm_spend_logs` table in the CodeMie database, fed by the spend uploader job described below.
-
-:::note Version availability
-The spend ledger and the `SPEND_LEDGER_*` and `EVENT_LOOP_LAG_*` settings are available starting with CodeMie **2.65.0**. The spend uploader (`LITELLM_SPEND_UPLOADER_*`) is available since **2.63.0**. For earlier versions, see [Legacy Spend Collector Settings](#legacy-spend-collector-settings-before-2650).
-:::
-
-:::info
-The coverage, projection, and read-isolation settings apply only when chat requests are routed through LiteLLM. Without LiteLLM routing they are ignored, and spend figures keep being served from Elasticsearch metrics.
-:::
+Parameters of the spend uploader (available since 2.63.0) and the spend ledger that serves spend, budget, and analytics figures when requests are routed through LiteLLM (available since 2.65.0). For setup steps and behavior, see [Project Budget Management](./project-budget-management.md#spend-tracking).
 
 #### Spend Log Replication
 
-The spend uploader is a background job in the CodeMie API scheduler. It copies rows from the `LiteLLM_SpendLogs` table of the LiteLLM database into the `litellm_spend_logs` ledger in the CodeMie database. The first run loads the full history and can take a long time; later runs continue from where the previous one stopped. A run that fails resumes from the last committed page on the next scheduled run.
-
-The job is safe in multi-replica deployments: it holds a database advisory lock while running, so a second pod finds the lock held and skips that run.
-
-:::note
-The spend uploader is part of the Enterprise package and requires a `codemie-enterprise` build that includes it. If the build does not include it, or no LiteLLM database is configured, the job is not registered and a message is written to the API log.
-:::
-
-| Parameter                         | Type    | Default         | Description                                                              |
-| --------------------------------- | ------- | --------------- | ------------------------------------------------------------------------ |
-| `LITELLM_SPEND_UPLOADER_ENABLED`  | boolean | `false`         | Enables the spend uploader job.                                          |
-| `LITELLM_SPEND_UPLOADER_SCHEDULE` | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader. Defaults to every 2 minutes. |
-
-**LiteLLM database connection.** The uploader reads from the LiteLLM database, so it needs its own connection settings. Read-only access is sufficient. Provide either a full URL or the separate parts.
-
-| Parameter                                    | Type    | Default     | Description                                                                                                                                                  |
-| -------------------------------------------- | ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`        | `postgresql://` URL of the LiteLLM database. When set, it takes precedence over the individual parts below. The value is masked in the logged configuration. |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`        | LiteLLM database host. Used only when the URL is empty; both host and user must be set.                                                                      |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`      | LiteLLM database port.                                                                                                                                       |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"` | LiteLLM database name.                                                                                                                                       |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`        | LiteLLM database user.                                                                                                                                       |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`        | LiteLLM database password. Special characters are percent-encoded when the URL is built, so the password can come from its own secret.                       |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`        | PostgreSQL `sslmode` for the LiteLLM connection (for example, `require`). Empty keeps the driver default.                                                    |
-
-The uploader connects to the CodeMie database using the application's own PostgreSQL settings (including IAM authentication when `PG_IAM_AUTH_PROVIDER` is configured) and writes to the `DEFAULT_DB_SCHEMA` schema.
-
-```yaml
-extraEnv:
-  - name: LITELLM_SPEND_UPLOADER_ENABLED
-    value: 'true'
-  - name: LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST
-    value: 'litellm-postgres.example.com'
-  - name: LITELLM_SPEND_UPLOADER_LITELLM_DB_USER
-    value: 'codemie_reader'
-  - name: LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: litellm-db-credentials
-        key: password
-  - name: LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE
-    value: 'require'
-```
-
-:::warning
-Make sure LiteLLM spend logs are enabled (`disable_spend_logs: false`) and that the LiteLLM retention period is long enough for the uploader to copy rows before they are deleted. See [Spend Logs Retention](../extensions/litellm-proxy/spend-logs-retention.md).
-:::
+| Parameter                                    | Type    | Default         | Description                                                                        |
+| -------------------------------------------- | ------- | --------------- | ---------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_UPLOADER_ENABLED`             | boolean | `false`         | Enables the spend uploader job                                                     |
+| `LITELLM_SPEND_UPLOADER_SCHEDULE`            | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader                                         |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`            | `postgresql://` URL of the LiteLLM database; takes precedence over the parts below |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`            | LiteLLM database host; used when the URL is empty (host and user are required)     |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`          | LiteLLM database port                                                              |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"`     | LiteLLM database name                                                              |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`            | LiteLLM database user (read-only access is sufficient)                             |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`            | LiteLLM database password                                                          |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`            | PostgreSQL `sslmode` (for example, `require`); empty keeps the driver default      |
 
 #### Ledger Coverage
 
-Coverage settings tell CodeMie which period the ledger covers completely, so that figures are never shown as zero or silently understated. They are read once at API startup, so changing them requires a restart of all API pods.
-
-| Parameter                         | Type    | Default                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| --------------------------------- | ------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SPEND_LEDGER_COVERAGE_FLOOR`     | string  | `"2026-11-01T00:00:00Z"` | ISO-8601 UTC timestamp of the earliest request the **completed** historical load contains. After the first uploader load has finished, set it to the timestamp of the earliest request in the completed load. An empty value leaves the ledger unactivated, and every spend figure is reported as unavailable (not zero). A value that is not a valid timestamp with a timezone is logged as an error and treated as empty. |
-| `SPEND_LEDGER_IDENTITY_FLOOR`     | string  | `""`                     | ISO-8601 UTC timestamp of the moment explicit request identity was fully rolled out on this deployment. Project-level figures reaching before this moment are labelled as partial. Leave empty if the rollout has not happened; project figures are then labelled partial indefinitely.                                                                                                                                     |
-| `SPEND_LEDGER_READY`              | boolean | `true`                   | Readiness of the ledger. Set to `false` when LiteLLM retention deletes rows at or after `SPEND_LEDGER_COVERAGE_FLOOR`, or when per-request spend logging in LiteLLM is stopped. While `false`, all spend figures are reported as unavailable.                                                                                                                                                                               |
-| `SPEND_LEDGER_LEGACY_BELOW_FLOOR` | boolean | `true`                   | Controls periods before `SPEND_LEDGER_COVERAGE_FLOOR`. When `true`, that portion of a report is served from the legacy Elasticsearch metrics. When `false`, it is reported as unavailable. The cutover instant is always `SPEND_LEDGER_COVERAGE_FLOOR`.                                                                                                                                                                     |
-| `SPEND_LEDGER_EMISSION_LAG_HOURS` | integer | `24`                     | Extra time in hours added to metric lookups to account for requests whose metrics are emitted late (a row belongs to the execution it was made in, which may still be running). Keep the value high: a value that is too low can drop rows from a report, while a value that is too high only makes lookups slightly larger.                                                                                                |
-| `SPEND_LEDGER_MAX_METRIC_IDS`     | integer | `50000`                  | Number of resolved metric identifiers above which a report grouped by a dimension is read in pages. Reports are never truncated at this limit.                                                                                                                                                                                                                                                                              |
+| Parameter                         | Type    | Default                  | Description                                                                                                  |
+| --------------------------------- | ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `SPEND_LEDGER_COVERAGE_FLOOR`     | string  | `"2026-11-01T00:00:00Z"` | ISO-8601 UTC start of the period fully covered by the ledger; empty leaves the ledger unactivated            |
+| `SPEND_LEDGER_IDENTITY_FLOOR`     | string  | `""`                     | ISO-8601 UTC completion time of the explicit identity rollout; earlier project figures are labelled partial  |
+| `SPEND_LEDGER_READY`              | boolean | `true`                   | Ledger readiness; set to `false` if retention deletes covered rows or LiteLLM spend logging is stopped       |
+| `SPEND_LEDGER_LEGACY_BELOW_FLOOR` | boolean | `true`                   | Serves periods before the coverage floor from legacy Elasticsearch metrics; `false` reports them unavailable |
+| `SPEND_LEDGER_EMISSION_LAG_HOURS` | integer | `24`                     | Extra lookback in hours for late-emitted metrics; keep high                                                  |
+| `SPEND_LEDGER_MAX_METRIC_IDS`     | integer | `50000`                  | Metric ID count above which dimension-grouped reports are read in pages                                      |
 
 #### Ledger Reads and Performance
 
-| Parameter                           | Type    | Default | Description                                                                                                                                                                                                                                                                                              |
-| ----------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SPEND_LEDGER_PROJECTION_ENABLED`   | boolean | `true`  | Answers windowed sums and row counts from the hourly projection table `litellm_spend_hourly` (whole hours) combined with raw rows (partial edge hours). Results are exact either way. Set to `false` to read raw rows only; the projection keeps being maintained, so this is a safe rollback for reads. |
-| `SPEND_LEDGER_POOL_SIZE`            | integer | `0`     | Size of a dedicated database connection pool for ledger reads. `0` shares the application pool. Each API worker holds its own pool, so size it against total workers × replicas.                                                                                                                         |
-| `SPEND_LEDGER_POOL_TIMEOUT_SECONDS` | float   | `30.0`  | How long a ledger read waits for a connection from the dedicated pool. Ignored when the pool is shared.                                                                                                                                                                                                  |
-| `SPEND_LEDGER_STATEMENT_TIMEOUT_MS` | integer | `0`     | Server-side time limit in milliseconds for a single ledger query. `0` means no limit. Applied to the dedicated pool only.                                                                                                                                                                                |
-| `SPEND_LEDGER_SLOW_READ_SECONDS`    | float   | `5.0`   | Ledger reads that take this long or longer are logged as warnings. Every read duration is also recorded as a metric.                                                                                                                                                                                     |
-
-:::tip
-Keep `SPEND_LEDGER_POOL_SIZE` at `0` until ledger reads are fast in the target environment. While reads are slow, a small dedicated pool or a statement timeout turns a slow figure into a missing one.
-:::
+| Parameter                           | Type    | Default | Description                                                                                           |
+| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `SPEND_LEDGER_PROJECTION_ENABLED`   | boolean | `true`  | Answers windowed reads from the hourly projection `litellm_spend_hourly`; `false` reads raw rows only |
+| `SPEND_LEDGER_POOL_SIZE`            | integer | `0`     | Dedicated connection pool size for ledger reads per API worker; `0` shares the application pool       |
+| `SPEND_LEDGER_POOL_TIMEOUT_SECONDS` | float   | `30.0`  | Wait for a dedicated-pool connection in seconds; ignored on the shared pool                           |
+| `SPEND_LEDGER_STATEMENT_TIMEOUT_MS` | integer | `0`     | Server-side timeout per ledger query in milliseconds (dedicated pool only); `0` means none            |
+| `SPEND_LEDGER_SLOW_READ_SECONDS`    | float   | `5.0`   | Ledger reads at or above this duration are logged as warnings                                         |
 
 #### Event Loop Monitoring
 
-Samples how late the API event loop wakes up. A lag means something blocked the loop (a blocking call or CPU saturation), so every request on that worker waited.
-
-| Parameter                                 | Type  | Default | Description                                                                                             |
-| ----------------------------------------- | ----- | ------- | ------------------------------------------------------------------------------------------------------- |
-| `EVENT_LOOP_LAG_MONITOR_INTERVAL_SECONDS` | float | `1.0`   | How often the event loop lag is sampled, in seconds. `0` disables the monitor.                          |
-| `EVENT_LOOP_LAG_WARN_SECONDS`             | float | `0.5`   | A sampled lag at or above this value is logged as a warning. Every sample is also recorded as a metric. |
-
-#### Legacy Spend Collector Settings (before 2.65.0)
-
-CodeMie versions before **2.65.0** collect spend with a nightly polling job instead of the ledger. The settings below are only read by those versions and were removed in 2.65.0. Do not set them on 2.65.0 or later.
-
-| Parameter                                    | Type    | Default          | Description                                                                                                                           |
-| -------------------------------------------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_ENABLED`            | boolean | `false`          | Enables the background spend collector job that stores project-level LiteLLM spend snapshots in the `project_spend_tracking` table.   |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE`           | string  | `"0 1 * * *"`    | Cron schedule (UTC) for the spend collector. Defaults to nightly at 1 AM (`0 23 * * *` in versions before 2.63.0).                    |
-| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`       | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                        |
-| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`      | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                   |
-| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`        | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                      |
-| `BUDGET_USAGE_STALENESS_THRESHOLD_MS`        | integer | `600000`         | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
-| `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS` | integer | `600000`         | Threshold in milliseconds (10 min) after which member spend analytics data is considered stale and lazily refreshed.                  |
+| Parameter                                 | Type  | Default | Description                                                           |
+| ----------------------------------------- | ----- | ------- | --------------------------------------------------------------------- |
+| `EVENT_LOOP_LAG_MONITOR_INTERVAL_SECONDS` | float | `1.0`   | Event loop lag sampling interval in seconds; `0` disables the monitor |
+| `EVENT_LOOP_LAG_WARN_SECONDS`             | float | `0.5`   | Sampled lag at or above this value is logged as a warning             |
 
 ### LiteLLM Cache & Optimization
 
@@ -1669,6 +1603,26 @@ Override with a JSON array via environment variable:
 ```bash
 AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 ```
+
+## Legacy Parameters
+
+<details>
+<summary>Parameters removed in 2.65.0</summary>
+
+The parameters below are read only by CodeMie versions before 2.65.0. For replacements and upgrade steps, see the [2.65.0 release notes](../../update/release-notes/release-notes.md#v2-65-0).
+
+| Parameter                                    | Type    | Default          | Description                                                                                      |
+| -------------------------------------------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------ |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`            | boolean | `false`          | Enables the spend collector job that stores LiteLLM spend snapshots in `project_spend_tracking`  |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`           | string  | `"0 1 * * *"`    | Cron schedule (UTC) for the spend collector (`0 23 * * *` before 2.63.0)                         |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`       | boolean | `false`          | Enables the job that monitors soon-to-reset project budget windows                               |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`      | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker                                                 |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`        | integer | `15`             | Look-ahead window in minutes for detecting project budgets that reset soon                       |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS`        | integer | `600000`         | Age in milliseconds after which budget usage is lazily refreshed on the `/budget_usage` endpoint |
+| `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS` | integer | `600000`         | Age in milliseconds after which member spend analytics data is lazily refreshed                  |
+| `CLI_METRICS_CUTOFF_DATE`                    | string  | `"2026-02-07"`   | CLI metrics data quality cutoff date                                                             |
+
+</details>
 
 ---
 
