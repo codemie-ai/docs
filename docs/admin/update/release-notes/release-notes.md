@@ -31,6 +31,23 @@ The currently tested and verified LiteLLM version is **1.99.4**.
 Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
 :::
 
+## November 2026 {#2026-11}
+
+<details className="release" id="v2-64-0">
+<summary><span className="release__version">CodeMie 2.64.0</span><span className="release__date">Nov 3, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** November 3, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.64.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ## October 2026 {#2026-10}
 
 <details className="release" id="v2-63-0">
@@ -234,7 +251,14 @@ No third-party component updates in this release.
 
 </details>
 
-## September 2026 {#2026-09}
+## Older Releases {#older-releases}
+
+Releases from previous months, grouped by year and month. Expand a month to see its releases.
+
+### 2026 {#older-2026}
+
+<details className="release-archive" id="2026-09">
+<summary><span className="release-archive__month">September</span><span className="release-archive__count">9 releases</span></summary>
 
 <details className="release" id="v2-54-0">
 <summary><span className="release__version">CodeMie 2.54.0</span><span className="release__date">Sep 29, 2026</span><span className="badge badge--info">Component updates</span></summary>
@@ -389,11 +413,7 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-## Older Releases {#older-releases}
-
-Releases from previous months, grouped by year and month. Expand a month to see its releases.
-
-### 2026 {#older-2026}
+</details>
 
 <details className="release-archive" id="2026-08">
 <summary><span className="release-archive__month">August</span><span className="release-archive__count">4 releases</span></summary>
