@@ -172,7 +172,26 @@ Project names, project codes, and emails are not case-sensitive: they are conver
 
 For `set` and `adjust`, the people listed in `admin_emails` become project admins, and admins are never removed by later requests. People without a CodeMie account are returned in `admins_pending` and the request still succeeds. They can be added later by sending the same request again once they have signed in to CodeMie.
 
-#### Example
+#### Examples
+
+The examples cover each action and the most common outcomes. The same request can be sent with `curl`, using the `$TOKEN` variable from [Verify the Setup](#3-verify-the-setup):
+
+```bash
+curl -X POST "https://<codemie-host>/code-assistant-api/v1/integrations/servicenow/budgets" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "adjust",
+    "request_id": "RITM0012346",
+    "epam_project_code": "abc-xmpl",
+    "codemie_project_name": "epm-xmpl",
+    "amounts": { "cli": 200 }
+  }'
+```
+
+##### Create a Project and Set Its Budget
+
+The project `epm-xmpl` and the cost center `abc-xmpl` do not exist yet. The request creates both, applies the budget, and makes the listed people project admins. The requester has not signed in to CodeMie yet, so the requester is returned in `admins_pending`.
 
 ```http
 POST /v1/integrations/servicenow/budgets
@@ -209,6 +228,178 @@ Authorization: Bearer <access-token>
 }
 ```
 
+Sending the same request again returns the same budget. `created_project` and `created_cost_center` are `false`, because both already exist. If the requester has signed in to CodeMie in the meantime, the requester moves from `admins_pending` to `admins_assigned`.
+
+##### Set a Budget Using Only the Project Code
+
+When `codemie_project_name` is omitted, the EPAM project code is used as the CodeMie project name. Because the two names are the same, no cost center is created or linked, and `cost_center` is `null`.
+
+```http
+POST /v1/integrations/servicenow/budgets
+Content-Type: application/json
+Authorization: Bearer <access-token>
+
+{
+  "action": "set",
+  "request_id": "RITM0012350",
+  "epam_project_code": "abc-demo",
+  "amounts": { "platform": 300 }
+}
+```
+
+```json
+{
+  "project_name": "abc-demo",
+  "cost_center": null,
+  "created_project": true,
+  "created_cost_center": false,
+  "budget": {
+    "total_amount": 300.0,
+    "budget_duration": "30d",
+    "categories": [{ "category": "platform", "max_budget": 300.0, "soft_budget": 240.0, "budget_reset_at": "2026-11-18T00:00:00Z" }]
+  },
+  "admins_assigned": [],
+  "admins_pending": []
+}
+```
+
+##### Replace an Existing Budget
+
+The project `epm-xmpl` already has a budget of Platform `500` and CLI `100`. `set` replaces the whole budget, so CLI is removed because it is not included. The Platform amount changed, so its soft limit is recalculated to 80% of the new amount. The project exists, so `created_project` is `false` and its cost center is reported but not changed.
+
+```http
+POST /v1/integrations/servicenow/budgets
+Content-Type: application/json
+Authorization: Bearer <access-token>
+
+{
+  "action": "set",
+  "request_id": "RITM0012351",
+  "epam_project_code": "abc-xmpl",
+  "codemie_project_name": "epm-xmpl",
+  "amounts": { "platform": 600 }
+}
+```
+
+```json
+{
+  "project_name": "epm-xmpl",
+  "cost_center": "abc-xmpl",
+  "created_project": false,
+  "created_cost_center": false,
+  "budget": {
+    "total_amount": 600.0,
+    "budget_duration": "30d",
+    "categories": [{ "category": "platform", "max_budget": 600.0, "soft_budget": 480.0, "budget_reset_at": "2026-11-18T00:00:00Z" }]
+  },
+  "admins_assigned": [],
+  "admins_pending": []
+}
+```
+
+##### Adjust One Category
+
+With a current budget of Platform `500` and CLI `100`, `adjust` changes only CLI. Platform is not included, so it keeps its amount and its soft limit. Only the changed category gets a new soft limit.
+
+```http
+POST /v1/integrations/servicenow/budgets
+Content-Type: application/json
+Authorization: Bearer <access-token>
+
+{
+  "action": "adjust",
+  "request_id": "RITM0012346",
+  "epam_project_code": "abc-xmpl",
+  "codemie_project_name": "epm-xmpl",
+  "amounts": { "cli": 200 }
+}
+```
+
+```json
+{
+  "project_name": "epm-xmpl",
+  "cost_center": "abc-xmpl",
+  "created_project": false,
+  "created_cost_center": false,
+  "budget": {
+    "total_amount": 700.0,
+    "budget_duration": "30d",
+    "categories": [
+      { "category": "platform", "max_budget": 500.0, "soft_budget": 400.0, "budget_reset_at": "2026-11-18T00:00:00Z" },
+      { "category": "cli", "max_budget": 200.0, "soft_budget": 160.0, "budget_reset_at": "2026-11-18T00:00:00Z" }
+    ]
+  },
+  "admins_assigned": [],
+  "admins_pending": []
+}
+```
+
+##### Remove a Category
+
+With a current budget of Platform `500`, CLI `200`, and Premium Models `50`, sending a category as `0` in `adjust` removes it and leaves the other categories unchanged. The Platform category cannot be removed this way: an `adjust` that leaves Platform at `0` returns `400`.
+
+```http
+POST /v1/integrations/servicenow/budgets
+Content-Type: application/json
+Authorization: Bearer <access-token>
+
+{
+  "action": "adjust",
+  "request_id": "RITM0012352",
+  "epam_project_code": "abc-xmpl",
+  "codemie_project_name": "epm-xmpl",
+  "amounts": { "premium_models": 0 }
+}
+```
+
+```json
+{
+  "project_name": "epm-xmpl",
+  "cost_center": "abc-xmpl",
+  "created_project": false,
+  "created_cost_center": false,
+  "budget": {
+    "total_amount": 700.0,
+    "budget_duration": "30d",
+    "categories": [
+      { "category": "platform", "max_budget": 500.0, "soft_budget": 400.0, "budget_reset_at": "2026-11-18T00:00:00Z" },
+      { "category": "cli", "max_budget": 200.0, "soft_budget": 160.0, "budget_reset_at": "2026-11-18T00:00:00Z" }
+    ]
+  },
+  "admins_assigned": [],
+  "admins_pending": []
+}
+```
+
+##### Cancel a Budget
+
+`cancel` removes the budget of an existing project. The project itself and its cost center are kept, `budget` is `null`, and `amounts` and `admin_emails` are not needed. If the project has no budget, the request still succeeds and changes nothing.
+
+```http
+POST /v1/integrations/servicenow/budgets
+Content-Type: application/json
+Authorization: Bearer <access-token>
+
+{
+  "action": "cancel",
+  "request_id": "RITM0012347",
+  "epam_project_code": "abc-xmpl",
+  "codemie_project_name": "epm-xmpl"
+}
+```
+
+```json
+{
+  "project_name": "epm-xmpl",
+  "cost_center": "abc-xmpl",
+  "created_project": false,
+  "created_cost_center": false,
+  "budget": null,
+  "admins_assigned": [],
+  "admins_pending": []
+}
+```
+
 #### Response Fields
 
 | Field                   | Description                                                                  |
@@ -234,6 +425,38 @@ Errors use the standard CodeMie error response: `message` explains what went wro
   }
 }
 ```
+
+Other common failures, with the cause of each:
+
+- **`400`**: an `adjust` that leaves the Platform amount at `0`, for example `{"platform": 0}`. Nothing is changed.
+
+  ```json
+  { "error": { "message": "Platform budget must be greater than 0", "details": null, "help": null } }
+  ```
+
+- **`404`**: `cancel` sent for a project that does not exist.
+
+  ```json
+  {
+    "error": {
+      "message": "Project 'epm-unknown' does not exist",
+      "details": null,
+      "help": "Check the CodeMie project name; there is no budget to cancel."
+    }
+  }
+  ```
+
+- **`409`**: the project name belongs to a deleted project.
+
+  ```json
+  {
+    "error": {
+      "message": "Project 'epm-xmpl' has been deleted",
+      "details": null,
+      "help": "Restore the project or use a different CodeMie project name."
+    }
+  }
+  ```
 
 | Status Code | Description                                                                                             |
 | ----------- | ------------------------------------------------------------------------------------------------------- |
