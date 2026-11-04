@@ -217,6 +217,10 @@ GRANT SELECT ON TABLE public."LiteLLM_SpendLogs" TO litellm_spend_reader;
 
 Create the identity CodeMie connects with and add it to the reader role. Connect to the LiteLLM database as the administrator user and use the option that matches your authentication method.
 
+:::tip
+We recommend the passwordless options (Google Cloud SQL IAM, Amazon RDS IAM, or Microsoft Entra authentication) because they use short-lived tokens and leave no static password to store or rotate. Use password authentication only when your database does not support identity-based authentication.
+:::
+
 **Password authentication**
 
 ```sql
