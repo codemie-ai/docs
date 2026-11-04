@@ -167,11 +167,19 @@ The spend uploader (available since 2.63.0) is a background job in the CodeMie A
 - The job is safe in multi-replica deployments: a database advisory lock lets only one pod run it at a time.
 - The uploader is part of the Enterprise package and requires a `codemie-enterprise` build that includes it. If the build does not include it, or no LiteLLM database is configured, the job is not registered and a message is written to the API log.
 - The LiteLLM database is configured with either `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL` or the separate `_HOST`, `_PORT`, `_NAME`, `_USER`, `_PASSWORD`, and `_SSLMODE` variables, so that the password can come from its own secret. Read-only access is sufficient. The CodeMie database connection reuses the application's PostgreSQL settings, including IAM authentication.
-- With `PG_IAM_AUTH_PROVIDER` set, the LiteLLM database can use IAM token authentication as well. When the URL carries no password, or the password variable is empty, a short-lived token from the configured cloud provider is used instead of a static password. The token is requested for every run and is never cached. The database user on the LiteLLM database must be enabled for IAM authentication (on AWS RDS, granted `rds_iam`; the token is bound to the database host, port, and user, so the AWS provider requires a network host and a user). When the connection is built from separate variables without an explicit `sslmode`, `require` is applied, because a token login is refused over an unencrypted connection. See [PostgreSQL IAM Authentication](./api-configuration.md#postgresql) for the application database settings.
+- The LiteLLM database supports IAM token authentication. See [IAM authentication for the LiteLLM database](#iam-authentication-for-the-litellm-database).
 - When the spend uploader is enabled and the LiteLLM database is configured, the API opens one test connection to the LiteLLM database at startup. If the credentials are rejected or the database cannot be reached, the API does not start, and the log names the failure type without echoing connection details.
 - LiteLLM spend logs must be enabled (`disable_spend_logs: false`), and the LiteLLM retention period must be long enough for rows to be copied before deletion. See [Spend Logs Retention](../extensions/litellm-proxy/spend-logs-retention.md).
 
 The `SPEND_LEDGER_*` settings apply only when chat requests are routed through LiteLLM and are read once at API startup. Without LiteLLM routing, they are ignored and spend figures keep being served from Elasticsearch metrics. The full parameter list is in the [API Configuration Reference](./api-configuration.md#litellm-spend-ledger).
+
+#### IAM authentication for the LiteLLM database
+
+The spend uploader supports IAM token authentication for the LiteLLM database, using the same cloud provider settings as the CodeMie database (`PG_IAM_AUTH_PROVIDER`, and `PG_AWS_RDS_REGION` on AWS). A short-lived token is requested for every run instead of a static password when `PG_IAM_AUTH_PROVIDER` is set and the LiteLLM database password is empty (or the URL has no password). A non-empty password keeps password authentication.
+
+- The database user on the LiteLLM database must be enabled for IAM authentication (on AWS RDS, granted `rds_iam`), and the API pods must be allowed to connect with `rds-db:connect`. See [AWS IAM Roles and Permissions](../../deployment/prerequisites/kubernetes/aws-iam-roles-and-permissions.md).
+- On AWS, a token is bound to the database host, port, and user, so a network host and a user are required.
+- When the connection is built from the separate variables and `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE` is empty, `require` is applied, because a token login is refused over an unencrypted connection.
 
 ### Activating the ledger
 
