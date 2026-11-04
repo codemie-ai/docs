@@ -241,18 +241,18 @@ Configure persistent data storage for conversations, users, workflows, and appli
 
 Primary relational database for structured data and transactional operations.
 
-| Parameter              | Type                                 | Default       | Description                                                                                                                                                                                            |
-| ---------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `POSTGRES_HOST`        | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                               |
-| `POSTGRES_PORT`        | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                 |
-| `POSTGRES_DB`          | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                              |
-| `POSTGRES_USER`        | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                          |
-| `POSTGRES_PASSWORD`    | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                  |
-| `PG_URL`               | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                        |
-| `PG_POOL_SIZE`         | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                          |
-| `DEFAULT_DB_SCHEMA`    | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                        |
-| `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
-| `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
+| Parameter              | Type                                 | Default       | Description                                                                                                                                                                                                                                                                           |
+| ---------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POSTGRES_HOST`        | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                                                                                                              |
+| `POSTGRES_PORT`        | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                                                                                                |
+| `POSTGRES_DB`          | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                                                                                                             |
+| `POSTGRES_USER`        | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                                                                                                         |
+| `POSTGRES_PASSWORD`    | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                                                                                                 |
+| `PG_URL`               | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                                                                                                       |
+| `PG_POOL_SIZE`         | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                                                                                                         |
+| `DEFAULT_DB_SCHEMA`    | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                                                                                                       |
+| `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider; also applies to the spend uploader's LiteLLM database when no password is set |
+| `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                                                                                                     |
 
 ### Elasticsearch
 
@@ -1014,37 +1014,68 @@ Set spending limits per user or team to control LLM usage costs.
 
 Caches user-to-budget resolution results to reduce database load on high-traffic deployments.
 
-| Parameter                             | Type    | Default  | Description                                                                                                                           |
-| ------------------------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `BUDGET_ASSIGNMENT_CACHE_TTL`         | integer | `60`     | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping).                                       |
-| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the assignment cache.                                                                                    |
-| `BUDGET_RESOLUTION_CACHE_TTL`         | integer | `60`     | TTL in seconds for the budget resolution cache.                                                                                       |
-| `BUDGET_RESOLUTION_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the resolution cache.                                                                                    |
-| `BUDGET_USAGE_STALENESS_THRESHOLD_MS` | integer | `600000` | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
+| Parameter                          | Type    | Default | Description                                                                                     |
+| ---------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `BUDGET_ASSIGNMENT_CACHE_TTL`      | integer | `60`    | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping). |
+| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE` | integer | `50000` | Maximum number of entries in the assignment cache.                                              |
+| `BUDGET_RESOLUTION_CACHE_TTL`      | integer | `60`    | TTL in seconds for the budget resolution cache.                                                 |
+| `BUDGET_RESOLUTION_CACHE_MAX_SIZE` | integer | `50000` | Maximum number of entries in the resolution cache.                                              |
 
-#### Budget Reset Tracking
+#### Budget Reset Reconciliation
 
-Manages automatic reset of per-member budget windows aligned with LiteLLM's reset cycle.
+Re-syncs budget reset state with LiteLLM's reset cycle once a day.
 
-| Parameter                                            | Type    | Default          | Description                                                                                                                             |
-| ---------------------------------------------------- | ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`               | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                          |
-| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`              | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                     |
-| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`                | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                        |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`          | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"`   | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`             | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
+| Parameter                                            | Type    | Default        | Description                                                                                                                             |
+| ---------------------------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`        | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"` | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`           | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
 
-### LiteLLM Spend Tracking
+### LiteLLM Spend Ledger
 
-Configure the background scheduler that collects project-level spending snapshots from LiteLLM
-and stores them in the `project_spend_tracking` table. The collector runs automatically for all
-projects — no per-project filtering configuration is required.
+Parameters of the spend uploader (available since 2.63.0) and the spend ledger that serves spend, budget, and analytics figures when requests are routed through LiteLLM (available since 2.65.0). For setup steps and behavior, see [Project Budget Management](./project-budget-management.md#spend-tracking).
 
-| Parameter                          | Type    | Default        | Description                                                                                   |
-| ---------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_ENABLED`  | boolean | `false`        | Enables the background spend collector job that stores project-level LiteLLM spend snapshots. |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string  | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`).     |
+#### Spend Log Replication
+
+| Parameter                                    | Type    | Default         | Description                                                                                                                                                     |
+| -------------------------------------------- | ------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_UPLOADER_ENABLED`             | boolean | `false`         | Enables the spend uploader job                                                                                                                                  |
+| `LITELLM_SPEND_UPLOADER_SCHEDULE`            | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader                                                                                                                      |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`            | `postgresql://` URL of the LiteLLM database; takes precedence over the parts below; without a password, an IAM token is used when `PG_IAM_AUTH_PROVIDER` is set |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`            | LiteLLM database host; used when the URL is empty (host and user are required)                                                                                  |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`          | LiteLLM database port                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"`     | LiteLLM database name                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`            | LiteLLM database user (read-only access is sufficient)                                                                                                          |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`            | LiteLLM database password; leave empty to use an IAM token when `PG_IAM_AUTH_PROVIDER` is set                                                                   |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`            | PostgreSQL `sslmode` (for example, `require`); empty keeps the driver default, or `require` with IAM token authentication                                       |
+
+#### Ledger Coverage
+
+| Parameter                         | Type    | Default                  | Description                                                                                                  |
+| --------------------------------- | ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `SPEND_LEDGER_COVERAGE_FLOOR`     | string  | `"2026-11-01T00:00:00Z"` | ISO-8601 UTC start of the period fully covered by the ledger; empty leaves the ledger unactivated            |
+| `SPEND_LEDGER_IDENTITY_FLOOR`     | string  | `""`                     | ISO-8601 UTC completion time of the explicit identity rollout; earlier project figures are labelled partial  |
+| `SPEND_LEDGER_READY`              | boolean | `true`                   | Ledger readiness; set to `false` if retention deletes covered rows or LiteLLM spend logging is stopped       |
+| `SPEND_LEDGER_LEGACY_BELOW_FLOOR` | boolean | `true`                   | Serves periods before the coverage floor from legacy Elasticsearch metrics; `false` reports them unavailable |
+| `SPEND_LEDGER_EMISSION_LAG_HOURS` | integer | `24`                     | Extra lookback in hours for late-emitted metrics; keep high                                                  |
+| `SPEND_LEDGER_MAX_METRIC_IDS`     | integer | `50000`                  | Metric ID count above which dimension-grouped reports are read in pages                                      |
+
+#### Ledger Reads and Performance
+
+| Parameter                           | Type    | Default | Description                                                                                           |
+| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `SPEND_LEDGER_PROJECTION_ENABLED`   | boolean | `true`  | Answers windowed reads from the hourly projection `litellm_spend_hourly`; `false` reads raw rows only |
+| `SPEND_LEDGER_POOL_SIZE`            | integer | `0`     | Dedicated connection pool size for ledger reads per API worker; `0` shares the application pool       |
+| `SPEND_LEDGER_POOL_TIMEOUT_SECONDS` | float   | `30.0`  | Wait for a dedicated-pool connection in seconds; ignored on the shared pool                           |
+| `SPEND_LEDGER_STATEMENT_TIMEOUT_MS` | integer | `0`     | Server-side timeout per ledger query in milliseconds (dedicated pool only); `0` means none            |
+| `SPEND_LEDGER_SLOW_READ_SECONDS`    | float   | `5.0`   | Ledger reads at or above this duration are logged as warnings                                         |
+
+#### Event Loop Monitoring
+
+| Parameter                                 | Type  | Default | Description                                                           |
+| ----------------------------------------- | ----- | ------- | --------------------------------------------------------------------- |
+| `EVENT_LOOP_LAG_MONITOR_INTERVAL_SECONDS` | float | `1.0`   | Event loop lag sampling interval in seconds; `0` disables the monitor |
+| `EVENT_LOOP_LAG_WARN_SECONDS`             | float | `0.5`   | Sampled lag at or above this value is logged as a warning             |
 
 ### LiteLLM Cache & Optimization
 
@@ -1572,6 +1603,26 @@ Override with a JSON array via environment variable:
 ```bash
 AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 ```
+
+## Legacy Parameters
+
+<details>
+<summary>Parameters removed in 2.65.0</summary>
+
+The parameters below are read only by CodeMie versions before 2.65.0. For replacements and upgrade steps, see the [2.65.0 release notes](../../update/release-notes/release-notes.md#v2-65-0).
+
+| Parameter                                    | Type    | Default          | Description                                                                                      |
+| -------------------------------------------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------ |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`            | boolean | `false`          | Enables the spend collector job that stores LiteLLM spend snapshots in `project_spend_tracking`  |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`           | string  | `"0 1 * * *"`    | Cron schedule (UTC) for the spend collector (`0 23 * * *` before 2.63.0)                         |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`       | boolean | `false`          | Enables the job that monitors soon-to-reset project budget windows                               |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`      | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker                                                 |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`        | integer | `15`             | Look-ahead window in minutes for detecting project budgets that reset soon                       |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS`        | integer | `600000`         | Age in milliseconds after which budget usage is lazily refreshed on the `/budget_usage` endpoint |
+| `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS` | integer | `600000`         | Age in milliseconds after which member spend analytics data is lazily refreshed                  |
+| `CLI_METRICS_CUTOFF_DATE`                    | string  | `"2026-02-07"`   | CLI metrics data quality cutoff date                                                             |
+
+</details>
 
 ---
 
