@@ -223,3 +223,22 @@ See [Favorites](../assistants/favorites.md) for full details.
 All workflow executions are saved in the execution history. Switch between past executions by clicking on them in the history panel:
 
 ![Workflow execution history](./images/workflows-overview/execution-history-panel.png)
+
+## Node Call History
+
+Each node in a workflow execution records the individual LLM and tool calls it made. Clicking a node in the execution graph opens the **Call history** popup, which lists every call with its input, output, status, timestamps, and duration.
+
+### Exporting Call History
+
+The popup header provides two actions for saving or sharing a node's call history:
+
+| Action                | Description                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Download**          | Saves the call history as a `.json` file. The filename is derived from the node name and execution ID. |
+| **Copy to clipboard** | Copies the full call history JSON to the clipboard.                                                    |
+
+Both actions export exactly what is visible in the popup — the calls shown, including any sub-calls (thoughts) — formatted as indented JSON.
+
+:::note
+Call history export is client-side only. No additional data is fetched from the server beyond what is already displayed in the popup.
+:::
