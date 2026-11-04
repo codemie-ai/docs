@@ -8,6 +8,9 @@ pagination_prev: admin/deployment/extensions/assistants-evaluation/assistants-ev
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Prerequisites for Deployment
 
 Before deploying Langfuse, complete the following steps:
@@ -54,7 +57,7 @@ langfuse:
 postgresql:
   deploy: false
   host: some-postgresql.database.example.com # Replace with your database host
-  database: postgres_langfuse
+  database: langfuse
   auth:
     username: langfuse_admin
     existingSecret: langfuse-postgresql
@@ -180,33 +183,44 @@ retention:
     blobstoragefilelogDays: 90  # Retain blob storage logs for 90 days (table: default.blob_storage_file_log)
 ```
 
-## Step 3: Configure PostgreSQL
+## Step 3: Database Configuration
 
-The `postgres_langfuse` database and user are created automatically during deployment via `db-init-job`. Enable it in `langfuse/values.yaml`:
+Configure the database connection and the initialization job based on your PostgreSQL deployment:
+
+<Tabs groupId="database-setup">
+  <TabItem value="shared" label="Shared Database (Default)" default>
+
+By default, Langfuse shares the main CodeMie PostgreSQL instance. In this mode, a dedicated `langfuse` database and user must be created inside that instance.
+
+You can create them automatically via `dbInitJob` or manually:
+
+#### Automatic Creation via `dbInitJob`
+
+Enable `dbInitJob` in `langfuse/values.yaml`:
 
 ```yaml
 dbInitJob:
+  # highlight-next-line
   enabled: true
 ```
 
-The init job uses admin PostgreSQL credentials from the `codemie-postgresql` secret. This secret is created automatically by `deploy-langfuse.sh` when `dbInitJob.enabled: true` — the script will prompt for admin credentials if the secret does not exist.
+The init job uses CodeMie PostgreSQL admin credentials from the `codemie-postgresql` secret, read from `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` in `deployment_outputs.env`.
 
-For manual deployment, create the secret before running Helm:
+- During automated deployment, `deploy-langfuse.sh` prompts for these admin credentials if the secret does not exist.
+- For manual deployment, create the secret before running Helm:
 
 ```bash
 kubectl create secret generic codemie-postgresql \
---namespace langfuse \
---from-literal=PG_USER="your_admin_user" \
---from-literal=PG_PASS="your_admin_password" \
---type=Opaque
+  --namespace langfuse \
+  --from-literal=PG_USER="your_admin_user" \
+  --from-literal=PG_PASS="your_admin_password" \
+  --type=Opaque
 ```
 
-:::info
-Admin credentials can be found in `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_USER`, `CODEMIE_POSTGRES_DATABASE_PASSWORD`).
-:::
+#### Manual Database Creation
 
 <details>
-<summary>Manual PostgreSQL Setup (alternative to dbInitJob)</summary>
+<summary>Manual PostgreSQL Setup</summary>
 
 Connect to your PostgreSQL instance using your cloud provider's query tools or deploy pgAdmin:
 
@@ -215,9 +229,9 @@ Connect to your PostgreSQL instance using your cloud provider's query tools or d
 kubectl create ns pgadmin
 
 kubectl create secret generic pgadmin4-credentials \
---namespace pgadmin \
---from-literal=password="$(openssl rand -hex 16)" \
---type=Opaque
+  --namespace pgadmin \
+  --from-literal=password="$(openssl rand -hex 16)" \
+  --type=Opaque
 
 helm upgrade --install pgadmin pgadmin/. -n pgadmin --values pgadmin/values.yaml --wait --timeout 900s --dependency-update
 
@@ -234,12 +248,12 @@ kubectl -n pgadmin get secret pgadmin4-credentials -o jsonpath='{.data.password}
 Execute the following SQL commands:
 
 ```sql
-CREATE DATABASE postgres_langfuse;
+CREATE DATABASE langfuse;
 CREATE USER langfuse_admin WITH PASSWORD 'your_strong_password_here';
-GRANT ALL PRIVILEGES ON DATABASE postgres_langfuse TO langfuse_admin;
+GRANT ALL PRIVILEGES ON DATABASE langfuse TO langfuse_admin;
 ```
 
-Switch to the `postgres_langfuse` database and grant schema privileges:
+Switch to the `langfuse` database and grant schema privileges:
 
 ```sql
 GRANT ALL ON SCHEMA public TO langfuse_admin;
@@ -248,6 +262,28 @@ GRANT ALL ON SCHEMA public TO langfuse_admin;
 If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/values.yaml`.
 
 </details>
+
+  </TabItem>
+  <TabItem value="dedicated" label="Dedicated Database">
+
+If you provisioned a dedicated RDS instance for Langfuse via `TF_VAR_langfuse_db_config`, Terraform already created the `langfuse` database and `langfuse_admin` master user.
+
+Keep `dbInitJob.enabled: false` in `langfuse/values.yaml`. The initialization job is not needed.
+
+Ensure your dedicated database host and credentials are configured in `langfuse/values.yaml`:
+
+```yaml
+postgresql:
+  deploy: false
+  host: "your-langfuse-rds-host"  # From LANGFUSE_POSTGRES_DATABASE_HOST in deployment_outputs.env
+  database: langfuse
+  auth:
+    username: langfuse_admin
+    existingSecret: langfuse-postgresql
+```
+
+  </TabItem>
+</Tabs>
 
 ## Step 4: Configure Object Storage
 

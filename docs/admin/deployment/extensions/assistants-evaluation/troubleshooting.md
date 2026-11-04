@@ -60,7 +60,7 @@ REVOKE ALL ON DATABASE postgres FROM langfuse_admin;
 DROP USER langfuse_admin;
 
 # -- Drop the database
-DROP DATABASE IF EXISTS postgres_langfuse;
+DROP DATABASE IF EXISTS langfuse;
 ```
 
 ### 2. Fix configuration issues
