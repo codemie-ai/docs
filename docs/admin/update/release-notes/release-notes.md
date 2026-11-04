@@ -66,6 +66,12 @@ No third-party component updates in this release.
    2. Wait for the first run to finish loading the historical spend logs.
    3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request in the completed load and restart the API pods.
 
+   The LiteLLM database connection supports IAM token authentication: with `PG_IAM_AUTH_PROVIDER` set, leave the password empty (or omit it from the URL) and a short-lived token is used.
+
+   :::warning API validates the LiteLLM database connection at startup
+   When `LITELLM_SPEND_UPLOADER_ENABLED` is `true` and the LiteLLM database is configured, the API connects to the LiteLLM database at startup and does not start if the credentials are rejected or the database is unreachable. Verify the connection settings before upgrading.
+   :::
+
    See [Project Budget Management](../../configuration/codemie/project-budget-management.md#spend-tracking) for details.
 
 3. **New optional variables** — `SPEND_LEDGER_*` settings for coverage, projection, and read isolation, and `EVENT_LOOP_LAG_*` settings for event loop monitoring. All have defaults. See [API Configuration](../../configuration/codemie/api-configuration.md#litellm-spend-ledger).

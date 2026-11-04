@@ -1037,17 +1037,17 @@ Parameters of the spend uploader (available since 2.63.0) and the spend ledger t
 
 #### Spend Log Replication
 
-| Parameter                                    | Type    | Default         | Description                                                                        |
-| -------------------------------------------- | ------- | --------------- | ---------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_UPLOADER_ENABLED`             | boolean | `false`         | Enables the spend uploader job                                                     |
-| `LITELLM_SPEND_UPLOADER_SCHEDULE`            | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader                                         |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`            | `postgresql://` URL of the LiteLLM database; takes precedence over the parts below |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`            | LiteLLM database host; used when the URL is empty (host and user are required)     |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`          | LiteLLM database port                                                              |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"`     | LiteLLM database name                                                              |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`            | LiteLLM database user (read-only access is sufficient)                             |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`            | LiteLLM database password                                                          |
-| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`            | PostgreSQL `sslmode` (for example, `require`); empty keeps the driver default      |
+| Parameter                                    | Type    | Default         | Description                                                                                                                                                     |
+| -------------------------------------------- | ------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_UPLOADER_ENABLED`             | boolean | `false`         | Enables the spend uploader job                                                                                                                                  |
+| `LITELLM_SPEND_UPLOADER_SCHEDULE`            | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader                                                                                                                      |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`            | `postgresql://` URL of the LiteLLM database; takes precedence over the parts below; without a password, an IAM token is used when `PG_IAM_AUTH_PROVIDER` is set |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`            | LiteLLM database host; used when the URL is empty (host and user are required)                                                                                  |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`          | LiteLLM database port                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"`     | LiteLLM database name                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`            | LiteLLM database user (read-only access is sufficient)                                                                                                          |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`            | LiteLLM database password; leave empty to use an IAM token when `PG_IAM_AUTH_PROVIDER` is set                                                                   |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`            | PostgreSQL `sslmode` (for example, `require`); empty keeps the driver default, or `require` with IAM token authentication                                       |
 
 #### Ledger Coverage
 
