@@ -47,6 +47,21 @@ assistants:
 - **name**: Display name (optional)
 - **model**: LLM model to use
 - **temperature**: Response randomness (0.0-2.0)
+- **effort**: Reasoning effort for models that support it: `low`, `medium`, `high`, `xhigh` or
+  `max` (optional). Use it instead of `temperature` for reasoning models (for example Claude 4.6+,
+  GPT-5.x, o-series, Gemini 3). Overrides the effort of the referenced assistant. A level above
+  the model's maximum is lowered to the highest supported level; on models without effort support
+  the field is ignored.
+
+  ```yaml
+  assistants:
+    - id: planner
+      model: claude-opus-4-6
+      effort: high
+      system_prompt: |
+        Break the task into steps.
+  ```
+
 - **system_prompt**: Custom instructions and context
 - **tools**: List of tools the assistant can use
 - **datasource_ids**: Data sources for knowledge base integration
