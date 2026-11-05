@@ -27,7 +27,7 @@ Before running the script, ensure you have completed the following configuration
 
 3. **Configure LLM Models:** Review and customize your desired models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](../model-config.md).
 
-4. **Database Initialization (Shared Database Only):** If using the shared CodeMie PostgreSQL instance, ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script will automatically create the required secrets to initialize the `litellm` database and user using admin credentials from `deployment_outputs.env` (`CODEMIE_POSTGRES_DATABASE_*`). If using a dedicated RDS instance (`TF_VAR_litellm_db_config`), keep it `false` as the database is provisioned automatically by Terraform.
+4. **Database Initialization:** If using the shared CodeMie PostgreSQL instance, ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script automatically creates the required secrets to initialize the `litellm` database and user using admin credentials from `deployment_outputs.env`. If using a dedicated database instance configured with `TF_VAR_litellm_db_config`, keep `dbInitJob.enabled: false` as the database is provisioned automatically by Terraform.
 
 :::warning
 
