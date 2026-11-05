@@ -172,8 +172,8 @@ User context placeholders are beneficial for:
 
 ## Sending the User Profile to an MCP Server
 
-CodeMie can attach a small, non-sensitive profile of the authenticated user to every tool call it makes on an MCP server.
-The tool can use it for audit logging, per-user scoping of results, or personalisation.
+CodeMie can attach a small profile of the authenticated user to every tool call it makes on an MCP server.
+The tool can use it for audit logging, per-user scoping of results, or personalization.
 
 This is separate from the [header placeholders](#configuring-headers-with-user-context-placeholders) described above.
 Placeholders put values into HTTP headers, while the user profile travels in the tool call itself.
@@ -183,7 +183,7 @@ Placeholders put values into HTTP headers, while the user profile travels in the
 Sending the user profile is **enabled by default**.
 CodeMie sends it to every MCP server unless the option is switched off for that server or assistant.
 
-:::warning Check the servers you use
+:::warning Check the servers in use
 The profile includes personal data such as name and email (see [What the Tool Receives](#what-the-tool-receives)).
 Switch the option off for any MCP server that should not receive it, especially servers operated by third parties.
 :::
@@ -219,10 +219,11 @@ There is no separate toggle for this option in the interface. Set `allow_user_co
 ### Overriding It per Assistant
 
 The value set on the MCP server is the default for every assistant that uses it.
-An assistant can override that default in its own MCP server entry using the same `allow_user_context` field.
-How the override works depends on where the server comes from.
+An assistant can override that default with an `allow_user_context` field in its MCP server entry.
+This field is a top-level property of the entry, next to `config`. It is not part of the configuration JSON, and the assistant form has no control for it, so it can only be set through the assistant API.
+How the override works depends on the server mode.
 
-**A server from the MCP catalog.** The catalog value is a ceiling, so an assistant can switch the profile off but cannot switch it on again if the administrator turned it off:
+**A catalog server in Global mode.** The catalog value is a ceiling, so an assistant can switch the profile off but cannot switch it on again if the administrator turned it off:
 
 | Assistant value | Catalog value `true`         | Catalog value `false`        |
 | --------------- | ---------------------------- | ---------------------------- |
@@ -230,7 +231,7 @@ How the override works depends on where the server comes from.
 | `true`          | The user profile is sent     | The user profile is not sent |
 | `false`         | The user profile is not sent | The user profile is not sent |
 
-**A server with its own configuration.** When the assistant uses a server it configured itself, the assistant value wins whenever it is set:
+**A server with its own configuration.** This covers a server the assistant configured itself, and a catalog server switched to Custom mode (`use_custom_config: true`). A Custom copy carries its own `allow_user_context` in its configuration JSON and ignores the catalog value, so the ceiling does not apply. If the administrator turned off custom MCP servers, Custom mode is not available and the catalog ceiling above applies. The assistant value wins whenever it is set:
 
 | Assistant value | Result                                                  |
 | --------------- | ------------------------------------------------------- |
