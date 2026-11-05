@@ -119,17 +119,6 @@ curl -X POST "$CODEMIE_API/v1/admin/hosted-applications/<application id>/securit
 
 Use `reinstate` instead of `suspend` to clear a suspension. To stop all hosted content, turn the feature off and restart the API.
 
-## Troubleshooting
-
-| Symptom                       | Check                                                                                     |
-| ----------------------------- | ----------------------------------------------------------------------------------------- |
-| Only Platform apps are listed | The API log for `Hosted applications are enabled but unavailable` and `GET /v1/config`.   |
-| Uploads stay queued           | The validator and ClamAV deployments are ready, and the validator node supports Landlock. |
-| Large uploads fail            | Ingress body size and timeouts.                                                           |
-| Viewer frame is empty         | CSP on the UI host, or third-party cookies blocked. Use **Open in new tab**.              |
-| `403 ACCOUNT_NOT_SUPPORTED`   | Service or external accounts, or no usable sign-in token.                                 |
-| Validation always unavailable | The validator and API versions do not match, or ClamAV is not ready.                      |
-
 ## More Information
 
 The repository file `hosted-applications/README.md` is the full operations runbook. It covers secret rotation, backup and restore, metrics, identity details, and residual risks. For end users, see [Hosted Applications](../../../user-guide/applications/hosted-applications.md).
