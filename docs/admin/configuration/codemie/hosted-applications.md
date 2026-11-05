@@ -84,11 +84,6 @@ Set `enabled: true` on the `features:hostedApplications` component of the custom
 
 ```yaml
 components:
-  # WHERE: Applications page, /apps routes, hosted API, content domain
-  # ENABLED: Users can upload, share, and open custom static web applications
-  # DISABLED: UI shows only Platform apps; hosted API answers 403 FEATURE_DISABLED;
-  #           content hosts answer a closed 503
-  # NOTE: Disabled by default. Needs the HOSTED_APPS_* settings below.
   - id: "features:hostedApplications"
     settings:
       enabled: true
