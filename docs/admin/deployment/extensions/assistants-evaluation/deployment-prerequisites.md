@@ -64,10 +64,6 @@ postgresql:
     secretKeys:
       userPasswordKey: password
 
-# Enable automatic database and user creation
-dbInitJob:
-  enabled: true
-
 # Adjust component resources:
 clickhouse:
   resources:
@@ -188,7 +184,7 @@ retention:
 Configure the database connection and the initialization job based on your PostgreSQL deployment:
 
 <Tabs groupId="database-setup">
-  <TabItem value="shared" label="Shared Database (Default)" default>
+  <TabItem value="shared" label="Shared Database" default>
 
 By default, Langfuse shares the main CodeMie PostgreSQL instance. In this mode, a dedicated `langfuse` database and user must be created inside that instance.
 
@@ -266,7 +262,7 @@ If creating the database manually, set `dbInitJob.enabled: false` in `langfuse/v
   </TabItem>
   <TabItem value="dedicated" label="Dedicated Database">
 
-If you provisioned a dedicated RDS instance for Langfuse via `TF_VAR_langfuse_db_config`, Terraform already created the `langfuse` database and `langfuse_admin` master user.
+If you provisioned a dedicated PostgreSQL instance for Langfuse via `TF_VAR_langfuse_db_config`, Terraform already created the `langfuse` database and `langfuse_admin` master user.
 
 Keep `dbInitJob.enabled: false` in `langfuse/values.yaml`. The initialization job is not needed.
 
@@ -275,7 +271,7 @@ Ensure your dedicated database host and credentials are configured in `langfuse/
 ```yaml
 postgresql:
   deploy: false
-  host: "your-langfuse-rds-host"  # From LANGFUSE_POSTGRES_DATABASE_HOST in deployment_outputs.env
+  host: "your-database-host"  # From LANGFUSE_POSTGRES_DATABASE_HOST in deployment_outputs.env
   database: langfuse
   auth:
     username: langfuse_admin

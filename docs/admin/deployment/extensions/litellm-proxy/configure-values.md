@@ -70,7 +70,7 @@ litellm-helm:
 Configure the database initialization job based on your PostgreSQL deployment:
 
 <Tabs groupId="database-setup">
-  <TabItem value="shared" label="Shared Database (Default)" default>
+  <TabItem value="shared" label="Shared Database" default>
 
 By default, LiteLLM shares the main CodeMie PostgreSQL instance. In this mode, a dedicated `litellm` database and user must be created inside that instance.
 
@@ -94,7 +94,7 @@ When enabled, the deployment script automatically creates the `codemie-postgresq
   </TabItem>
   <TabItem value="dedicated" label="Dedicated Database">
 
-If you provisioned a dedicated RDS instance for LiteLLM via `TF_VAR_litellm_db_config`, Terraform already created the `litellm` database and `litellm_admin` master user.
+If you provisioned a dedicated PostgreSQL instance for LiteLLM via `TF_VAR_litellm_db_config`, Terraform already created the `litellm` database and `litellm_admin` master user.
 
 Keep `dbInitJob.enabled: false` in `litellm/values-<cloud>.yaml`. The initialization job is not needed.
 

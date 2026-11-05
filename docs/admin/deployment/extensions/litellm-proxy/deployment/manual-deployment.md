@@ -69,9 +69,9 @@ kubectl create secret generic litellm-postgresql \
 --type=Opaque
 ```
 
-**4. PostgreSQL Admin Secret (Shared Database with dbInitJob only)**
+**4. PostgreSQL Admin Secret**
 
-Required only if `dbInitJob.enabled: true` in `litellm/values-<cloud>.yaml` when using a shared database. This secret provides CodeMie admin credentials used by the init job to create the `litellm` database and user automatically during deployment. For dedicated RDS instances, this secret is not needed.
+Required only when using a shared database with `dbInitJob.enabled: true` in `litellm/values-<cloud>.yaml`. This secret provides CodeMie admin credentials used by the init job to create the `litellm` database and user automatically during deployment. For dedicated database instances, this secret is not needed.
 
 ```bash
 kubectl create secret generic codemie-postgresql \

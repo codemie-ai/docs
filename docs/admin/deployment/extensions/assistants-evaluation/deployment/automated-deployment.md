@@ -74,7 +74,7 @@ Please enter the password for the Langfuse PostgreSQL user
 PostgreSQL password:
 ```
 
-**2. PostgreSQL admin credentials** — prompted only if `dbInitJob.enabled: true` in `langfuse/values.yaml` (when deploying on a shared database). Used by the init job to create the `langfuse` database and user:
+**2. PostgreSQL admin credentials** — prompted only if `dbInitJob.enabled: true` in `langfuse/values.yaml` when deploying on a shared database. Used by the init job to create the `langfuse` database and user:
 
 ```
 [INFO] PostgreSQL admin secret 'codemie-postgresql' not found in namespace 'langfuse'
@@ -83,7 +83,7 @@ PostgreSQL admin username:
 PostgreSQL admin password (input hidden):
 ```
 
-Admin credentials can be found in `deployment_outputs.env` — either `CODEMIE_POSTGRES_DATABASE_*` (shared database) or `LANGFUSE_POSTGRES_DATABASE_*` (dedicated database).
+Admin credentials can be found in `deployment_outputs.env`: `CODEMIE_POSTGRES_DATABASE_*` for a shared database or `LANGFUSE_POSTGRES_DATABASE_*` for a dedicated database.
 
 **3. Object storage credentials** — the script asks whether to skip creating the `langfuse-object-storage` secret:
 
