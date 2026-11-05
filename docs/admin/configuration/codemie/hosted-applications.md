@@ -39,9 +39,6 @@ While the feature is off, the Applications page shows only Platform apps and no 
 | DNS and TLS    | Wildcard DNS `*.<content domain>` to the ingress and a wildcard certificate.                                                                                     |
 | Identity       | `ENABLE_USER_MANAGEMENT=true`. Any `IDP_PROVIDER` works.                                                                                                         |
 | Storage        | A dedicated private bucket, with `FILES_STORAGE_TYPE` set to `aws` (S3) or `gcp` (GCS). Azure is not supported yet.                                              |
-| Validator node | Linux amd64 with Landlock ABI 3 or later (normally kernel 6.2+). The validator refuses to start without it.                                                      |
-| Database       | Alembic revisions `16001d9b0c1d` and `5c7e1a93b0d4`, applied by the normal migration step.                                                                       |
-| Images         | The validator image is built from the same commit as the API image.                                                                                              |
 
 ## Configuration
 
@@ -113,14 +110,29 @@ The CodeMie UI needs no configuration of its own. It reads `features:hostedAppli
 
 ### Validator and ClamAV
 
-Deploy the validator and ClamAV as two separate deployments, using the files in the `hosted-applications/` directory of the CodeMie repository (`Dockerfile.validator`, `Dockerfile.scanner`, `clamd.conf`). Neither has access to platform secrets, and only the API can reach the validator.
+The validator and ClamAV are deployed by the CodeMie Helm chart, as two separate deployments. Both are off by default. Enable them with the `features.tools.hosted-apps` block of the chart values, using the validator image supplied with the release:
 
-| Variable                   | Description                                                             |
-| -------------------------- | ----------------------------------------------------------------------- |
-| `VALIDATOR_SERVICE_KEY`    | Same value as `HOSTED_APPS_VALIDATOR_KEY`.                              |
-| `VALIDATOR_BIND_HOST`      | Set to `0.0.0.0` so the Service can reach the validator.                |
-| `CLAMD_HOST`, `CLAMD_PORT` | Address of the ClamAV Service.                                          |
-| `CLAMD_CONFIGURATION`      | Path of the mounted `clamd.conf`. The validator checks its scan limits. |
+```yaml
+features:
+  tools:
+    hosted-apps:
+      enabled: true
+      validator:
+        image:
+          repository: <registry>/codemie-hosted-validator
+      ingress:
+        host: <content host>
+```
+
+| Value                                | Description                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `enabled`                            | Renders the validator, ClamAV, and content Ingress. Default `false`.                                     |
+| `validator.image.repository`         | Validator image. The tag defaults to the API image tag.                                                  |
+| `ingress.host`                       | Required. Content host served by the content Ingress.                                                    |
+| `namespace.name`, `namespace.create` | Namespace of the validator and ClamAV (default `codemie-hosted-apps`), and whether the chart creates it. |
+| `clamdConfig.existingConfigMap`      | Optional. Use your own ConfigMap (key `clamd.conf`) instead of the one the chart creates.                |
+
+If the validator runs in a separate namespace, set `HOSTED_APPS_VALIDATOR_URL` to the full service name (`<service>.<namespace>.svc`) and create the `codemie-hosted-applications` Secret in that namespace as well. The chart sets the validator and ClamAV environment variables itself.
 
 :::caution Exactly one replica
 Validation results live in the validator instance that produced them. Do not scale the validator above one replica. While it restarts, uploads wait and viewing is not affected.
@@ -128,7 +140,7 @@ Validation results live in the validator instance that produced them. Do not sca
 
 ## Ingress
 
-- **Content hosts.** Route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
+- **Content hosts.** The chart creates the content Ingress when `features.tools.hosted-apps.enabled` is true. It must route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
 - **Management host.** Uploads carry up to 100 MiB: set the request body limit to at least `110m` and read and send timeouts to at least `900` seconds. The default chart sets `proxy-read-timeout: "600"`, so raise it and add `proxy-send-timeout`.
 
 ## Storage
@@ -140,10 +152,10 @@ Validation results live in the validator instance that produced them. Do not sca
 
 ## Rollout
 
-1. Apply the database migration.
-2. Create the DNS record, wildcard certificate, bucket, Secret, `codemie-hosted-clamd` ConfigMap, and the validator and ClamAV deployments.
-3. Raise the management ingress limits.
-4. Add the API settings and enable `features:hostedApplications`.
+1. Create the DNS record, wildcard certificate, bucket, and Secret.
+2. Raise the management ingress limits.
+3. Enable `features.tools.hosted-apps` in the chart values and add the API settings.
+4. Enable `features:hostedApplications` in the customer configuration.
 5. Check that the API log has no `Hosted applications are enabled but unavailable` warning, that the validator and ClamAV deployments are ready, and that `GET /v1/config` reports the feature as enabled.
 6. Upload a test page, open it, share it with a second user, and sign out.
 
@@ -168,7 +180,7 @@ Use `reinstate` instead of `suspend` to clear a suspension. To stop all hosted c
 | Large uploads fail            | Ingress body size and timeouts.                                                           |
 | Viewer frame is empty         | CSP on the UI host, or third-party cookies blocked. Use **Open in new tab**.              |
 | `403 ACCOUNT_NOT_SUPPORTED`   | Service or external accounts, or no usable sign-in token.                                 |
-| Validation always unavailable | API and validator images built from different commits, or a different `clamd.conf`.       |
+| Validation always unavailable | The validator and API versions do not match, or ClamAV is not ready.                      |
 
 ## More Information
 
