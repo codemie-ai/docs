@@ -70,17 +70,7 @@ The reason names the failing setting, for example a missing content domain, a co
 
 ### API settings
 
-Set these as environment variables of the CodeMie API (the `extraEnv` of the `codemie-api` chart). Take secrets from a Kubernetes Secret or your secret manager. The full list is in the [API Configuration Reference](./api-configuration.md#hosted-applications).
-
-| Parameter                       | Required | Description                                                                             |
-| ------------------------------- | -------- | --------------------------------------------------------------------------------------- |
-| `HOSTED_APPS_CONTENT_DOMAIN`    | yes      | The separate content domain, for example `apps-content.example.net`.                    |
-| `HOSTED_APPS_CREDENTIAL_SECRET` | yes      | Secret of at least 32 bytes for sessions and tickets.                                   |
-| `HOSTED_APPS_VALIDATOR_KEY`     | yes      | Secret of at least 32 characters, shared with the validator as `VALIDATOR_SERVICE_KEY`. |
-| `HOSTED_APPS_STORAGE_BUCKET`    | yes      | Dedicated bucket. Never the generic files bucket. The API does not create it.           |
-| `FILES_STORAGE_TYPE`            | yes      | `aws` or `gcp`.                                                                         |
-| `HOSTED_APPS_VALIDATOR_URL`     | no       | Validator Service address. Use `http://codemie-hosted-validator:8091` in a cluster.     |
-| `HOSTED_APPS_QUOTA_BYTES`       | no       | Storage per owner. Default `2147483648` (2 GiB).                                        |
+Set the `HOSTED_APPS_*` variables on the CodeMie API through the `extraEnv` of the `codemie-api` chart, and take secrets from a Kubernetes Secret or your secret manager. All parameters, defaults, and descriptions are in the [API Configuration Reference](./api-configuration.md#hosted-applications). The required ones are `HOSTED_APPS_CONTENT_DOMAIN`, `HOSTED_APPS_CREDENTIAL_SECRET`, `HOSTED_APPS_VALIDATOR_KEY`, `HOSTED_APPS_STORAGE_BUCKET`, and `FILES_STORAGE_TYPE` (`aws` or `gcp`).
 
 The feature also reuses `FRONTEND_URL` (the only origin allowed to embed content) and `JWT_ISSUER` (the organization ID). Do not change `JWT_ISSUER` after users create applications, because applications are stored under it.
 
