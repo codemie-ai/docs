@@ -352,7 +352,7 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 
 ### Hosted Applications
 
-Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs `ENABLE_USER_MANAGEMENT=true`, `JWT_ISSUER`, and `FRONTEND_URL`. For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
+Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs `ENABLE_USER_MANAGEMENT=true`, `JWT_ISSUER` (the organization ID; do not change it after users create applications), and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
 
 | Parameter                                  | Type    | Default                 | Description                                                                                                                                                                                         |
 | ------------------------------------------ | ------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

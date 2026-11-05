@@ -42,64 +42,12 @@ While the feature is off, the Applications page shows only Platform apps and no 
 
 ## Configuration
 
-### Feature switch
+### Feature switch and API settings
 
-Enable the `features:hostedApplications` component in `customer-config.yaml`. It controls the UI and the API together.
+- **Feature switch.** Enable the `features:hostedApplications` component in the customer configuration. It controls the UI and the API together. See [Customer Feature Configuration](./customer-feature-configuration.md#advanced-features).
+- **API settings.** The `HOSTED_APPS_*` variables are listed in the [API Configuration Reference](./api-configuration.md#hosted-applications).
 
-```yaml
-components:
-  - id: "features:hostedApplications"
-    settings:
-      enabled: true
-      name: "Custom Applications"
-      description: "Upload, share and open custom static web applications on the Applications page"
-```
-
-`FEATURE_HOSTED_APPLICATIONS=true|false` overrides `enabled`, but only when the component exists in the file. The flag is read at startup, so restart the API after changing it. See [Customer Feature Configuration](./customer-feature-configuration.md).
-
-If the flag is on but the deployment cannot run the feature safely, the feature stays off and the API logs:
-
-```text
-Hosted applications are enabled but unavailable: <reason>
-```
-
-The reason names the failing setting, for example a missing content domain, a content domain that shares a registrable domain with `FRONTEND_URL` or the identity provider, a secret shorter than 32 characters, a missing bucket, or `FILES_STORAGE_TYPE=azure`.
-
-### API settings
-
-Set the `HOSTED_APPS_*` variables on the CodeMie API through the `extraEnv` of the `codemie-api` chart, and take secrets from a Kubernetes Secret or your secret manager. All parameters, defaults, and descriptions are in the [API Configuration Reference](./api-configuration.md#hosted-applications). The required ones are `HOSTED_APPS_CONTENT_DOMAIN`, `HOSTED_APPS_CREDENTIAL_SECRET`, `HOSTED_APPS_VALIDATOR_KEY`, `HOSTED_APPS_STORAGE_BUCKET`, and `FILES_STORAGE_TYPE` (`aws` or `gcp`).
-
-The feature also reuses `FRONTEND_URL` (the only origin allowed to embed content) and `JWT_ISSUER` (the organization ID). Do not change `JWT_ISSUER` after users create applications, because applications are stored under it.
-
-```yaml
-extraEnv:
-  - name: FEATURE_HOSTED_APPLICATIONS
-    value: "true"
-  - name: HOSTED_APPS_CONTENT_DOMAIN
-    value: "apps-content.example.net"
-  - name: FILES_STORAGE_TYPE
-    value: "aws" # or "gcp"
-  - name: HOSTED_APPS_STORAGE_BUCKET
-    value: "codemie-hosted-apps"
-  - name: HOSTED_APPS_VALIDATOR_URL
-    value: "http://codemie-hosted-validator:8091"
-  - name: HOSTED_APPS_CREDENTIAL_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: codemie-hosted-applications
-        key: credential-secret
-  - name: HOSTED_APPS_VALIDATOR_KEY
-    valueFrom:
-      secretKeyRef:
-        name: codemie-hosted-applications
-        key: validator-key
-```
-
-```bash
-kubectl -n codemie create secret generic codemie-hosted-applications \
-  --from-literal=credential-secret="$(openssl rand -base64 48)" \
-  --from-literal=validator-key="$(openssl rand -base64 48)"
-```
+If the feature is enabled but the deployment cannot run it safely, it stays off and the API logs `Hosted applications are enabled but unavailable: <reason>`. The reason names the failing setting.
 
 ### UI
 
