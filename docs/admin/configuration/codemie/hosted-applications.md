@@ -26,7 +26,8 @@ While the feature is off, the Applications page shows only Platform apps and no 
 | -------------- | -------------------------------------------------------------------------------------------------------- |
 | CodeMie API    | Management API, content gateway, and validation workers. One process serves both hosts by `Host` header. |
 | Content domain | A separate registrable domain. Each version is served from `v-<release>.<content domain>`.               |
-| Validator pod  | A private pod that checks every upload (sandboxed parser and ClamAV malware scan). Exactly one replica.  |
+| Validator      | A private deployment that checks every upload in a sandboxed parser. Exactly one replica.                |
+| ClamAV         | A separate private deployment that scans uploads for malware on behalf of the validator.                 |
 | Object storage | A dedicated private S3 or GCS bucket for the validated files.                                            |
 | PostgreSQL     | Applications, versions, sharing, sessions, and the job queue.                                            |
 
@@ -71,15 +72,15 @@ The reason names the failing setting, for example a missing content domain, a co
 
 Set these as environment variables of the CodeMie API (the `extraEnv` of the `codemie-api` chart). Take secrets from a Kubernetes Secret or your secret manager. The full list is in the [API Configuration Reference](./api-configuration.md#hosted-applications).
 
-| Parameter                       | Required | Description                                                                                 |
-| ------------------------------- | -------- | ------------------------------------------------------------------------------------------- |
-| `HOSTED_APPS_CONTENT_DOMAIN`    | yes      | The separate content domain, for example `apps-content.example.net`.                        |
-| `HOSTED_APPS_CREDENTIAL_SECRET` | yes      | Secret of at least 32 bytes for sessions and tickets.                                       |
-| `HOSTED_APPS_VALIDATOR_KEY`     | yes      | Secret of at least 32 characters, shared with the validator pod as `VALIDATOR_SERVICE_KEY`. |
-| `HOSTED_APPS_STORAGE_BUCKET`    | yes      | Dedicated bucket. Never the generic files bucket. The API does not create it.               |
-| `FILES_STORAGE_TYPE`            | yes      | `aws` or `gcp`.                                                                             |
-| `HOSTED_APPS_VALIDATOR_URL`     | no       | Validator Service address. Use `http://codemie-hosted-validator:8091` in a cluster.         |
-| `HOSTED_APPS_QUOTA_BYTES`       | no       | Storage per owner. Default `2147483648` (2 GiB).                                            |
+| Parameter                       | Required | Description                                                                             |
+| ------------------------------- | -------- | --------------------------------------------------------------------------------------- |
+| `HOSTED_APPS_CONTENT_DOMAIN`    | yes      | The separate content domain, for example `apps-content.example.net`.                    |
+| `HOSTED_APPS_CREDENTIAL_SECRET` | yes      | Secret of at least 32 bytes for sessions and tickets.                                   |
+| `HOSTED_APPS_VALIDATOR_KEY`     | yes      | Secret of at least 32 characters, shared with the validator as `VALIDATOR_SERVICE_KEY`. |
+| `HOSTED_APPS_STORAGE_BUCKET`    | yes      | Dedicated bucket. Never the generic files bucket. The API does not create it.           |
+| `FILES_STORAGE_TYPE`            | yes      | `aws` or `gcp`.                                                                         |
+| `HOSTED_APPS_VALIDATOR_URL`     | no       | Validator Service address. Use `http://codemie-hosted-validator:8091` in a cluster.     |
+| `HOSTED_APPS_QUOTA_BYTES`       | no       | Storage per owner. Default `2147483648` (2 GiB).                                        |
 
 The feature also reuses `FRONTEND_URL` (the only origin allowed to embed content) and `JWT_ISSUER` (the organization ID). Do not change `JWT_ISSUER` after users create applications, because applications are stored under it.
 
@@ -120,19 +121,19 @@ The CodeMie UI needs no configuration of its own. It reads `features:hostedAppli
 - `FRONTEND_URL` on the API must match the address users open in the browser.
 - If your edge adds a `Content-Security-Policy` to the UI host, its `frame-src` must allow `https://*.<content domain>`.
 
-### Validator pod
+### Validator and ClamAV
 
-Deploy the validator from the `hosted-applications/` directory of the CodeMie repository (`kubernetes.yaml`, `Dockerfile.validator`, `Dockerfile.scanner`, `clamd.conf`). It runs one validator container and one ClamAV container with no access to platform secrets.
+Deploy the validator and ClamAV as two separate deployments, using the files in the `hosted-applications/` directory of the CodeMie repository (`Dockerfile.validator`, `Dockerfile.scanner`, `clamd.conf`). Neither has access to platform secrets, and only the API can reach the validator.
 
-| Variable                   | Description                                                        |
-| -------------------------- | ------------------------------------------------------------------ |
-| `VALIDATOR_SERVICE_KEY`    | Same value as `HOSTED_APPS_VALIDATOR_KEY`.                         |
-| `VALIDATOR_BIND_HOST`      | Set to `0.0.0.0` in the pod so the Service can reach it.           |
-| `CLAMD_HOST`, `CLAMD_PORT` | `127.0.0.1` and `3310`, because ClamAV runs in the same pod.       |
-| `CLAMD_CONFIGURATION`      | Path of the mounted `clamd.conf`. The validator checks its limits. |
+| Variable                   | Description                                                             |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `VALIDATOR_SERVICE_KEY`    | Same value as `HOSTED_APPS_VALIDATOR_KEY`.                              |
+| `VALIDATOR_BIND_HOST`      | Set to `0.0.0.0` so the Service can reach the validator.                |
+| `CLAMD_HOST`, `CLAMD_PORT` | Address of the ClamAV Service.                                          |
+| `CLAMD_CONFIGURATION`      | Path of the mounted `clamd.conf`. The validator checks its scan limits. |
 
 :::caution Exactly one replica
-Validation results live in the validator pod that produced them. Do not scale the validator above one replica. While it restarts, uploads wait and viewing is not affected.
+Validation results live in the validator instance that produced them. Do not scale the validator above one replica. While it restarts, uploads wait and viewing is not affected.
 :::
 
 ## Ingress
@@ -150,10 +151,10 @@ Validation results live in the validator pod that produced them. Do not scale th
 ## Rollout
 
 1. Apply the database migration.
-2. Create the DNS record, wildcard certificate, bucket, Secret, `codemie-hosted-clamd` ConfigMap, and the validator objects.
+2. Create the DNS record, wildcard certificate, bucket, Secret, `codemie-hosted-clamd` ConfigMap, and the validator and ClamAV deployments.
 3. Raise the management ingress limits.
 4. Add the API settings and enable `features:hostedApplications`.
-5. Check that the API log has no `Hosted applications are enabled but unavailable` warning, that both validator containers are ready, and that `GET /v1/config` reports the feature as enabled.
+5. Check that the API log has no `Hosted applications are enabled but unavailable` warning, that the validator and ClamAV deployments are ready, and that `GET /v1/config` reports the feature as enabled.
 6. Upload a test page, open it, share it with a second user, and sign out.
 
 ## Operations
@@ -170,14 +171,14 @@ Use `reinstate` instead of `suspend` to clear a suspension. To stop all hosted c
 
 ## Troubleshooting
 
-| Symptom                       | Check                                                                                   |
-| ----------------------------- | --------------------------------------------------------------------------------------- |
-| Only Platform apps are listed | The API log for `Hosted applications are enabled but unavailable` and `GET /v1/config`. |
-| Uploads stay queued           | The validator pod: both containers ready, and the node supports Landlock.               |
-| Large uploads fail            | Ingress body size and timeouts.                                                         |
-| Viewer frame is empty         | CSP on the UI host, or third-party cookies blocked. Use **Open in new tab**.            |
-| `403 ACCOUNT_NOT_SUPPORTED`   | Service or external accounts, or no usable sign-in token.                               |
-| Validation always unavailable | API and validator images built from different commits, or a different `clamd.conf`.     |
+| Symptom                       | Check                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------- |
+| Only Platform apps are listed | The API log for `Hosted applications are enabled but unavailable` and `GET /v1/config`.   |
+| Uploads stay queued           | The validator and ClamAV deployments are ready, and the validator node supports Landlock. |
+| Large uploads fail            | Ingress body size and timeouts.                                                           |
+| Viewer frame is empty         | CSP on the UI host, or third-party cookies blocked. Use **Open in new tab**.              |
+| `403 ACCOUNT_NOT_SUPPORTED`   | Service or external accounts, or no usable sign-in token.                                 |
+| Validation always unavailable | API and validator images built from different commits, or a different `clamd.conf`.       |
 
 ## More Information
 
