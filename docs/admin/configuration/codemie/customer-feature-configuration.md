@@ -501,19 +501,11 @@ components:
       enabled: true
       name: "SharePoint CodeMie OAuth"
       description: "Show Sign in with Microsoft (CodeMie Project) authentication option for SharePoint datasource"
-
-  # WHERE: Applications page, /apps routes, hosted API, content domain
-  # ENABLED: Users can upload, share, and open custom static web applications
-  # DISABLED: Only Platform apps are listed; hosted API and content domain are closed
-  # NOTE: Disabled by default. Also needs the HOSTED_APPS_* settings, a validator pod, and a
-  #       separate content domain. FEATURE_HOSTED_APPLICATIONS=true|false overrides `enabled`
-  #       where this component exists. See Custom Applications.
-  - id: "features:hostedApplications"
-    settings:
-      enabled: false
-      name: "Custom Applications"
-      description: "Upload, share and open custom static web applications on the Applications page"
 ```
+
+### Custom Applications
+
+The `features:hostedApplications` component turns custom (hosted) static web applications on or off for the UI and the API together. It is disabled by default and needs additional API settings, a validator pod, and a separate content domain. See [Custom Applications](./hosted-applications.md).
 
 ### MCP Auth Configuration
 
