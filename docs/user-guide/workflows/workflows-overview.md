@@ -226,19 +226,22 @@ All workflow executions are saved in the execution history. Switch between past 
 
 ## Node Call History
 
-Each node in a workflow execution records the individual LLM and tool calls it made. Clicking a node in the execution graph opens the **Call history** popup, which lists every call with its input, output, status, timestamps, and duration.
+Each node in a workflow execution records the individual LLM and tool calls it made. To view them, open an execution, select the node in the **States** list at the bottom of the execution page, and click **Call history**. The button is not available for the **Starting Prompt** item. The popup, titled `Calls history for` followed by the node name, lists every call with its status, input, and result. Expand a call to see its input, result, and any sub-calls (thoughts) it made.
 
 ### Exporting Call History
 
-The popup header provides two actions for saving or sharing a node's call history:
+The popup header provides two actions for saving or sharing a node's call history. They appear once the node's calls are loaded and are hidden for a node without calls:
 
 | Action                | Description                                                                                            |
 | --------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Download**          | Saves the call history as a `.json` file. The filename is derived from the node name and execution ID. |
 | **Copy to clipboard** | Copies the full call history JSON to the clipboard.                                                    |
 
-Both actions export exactly what is visible in the popup — the calls shown, including any sub-calls (thoughts) — formatted as indented JSON.
+Both actions export the same indented JSON. It contains:
+
+- **Node summary** — node name, execution and state IDs, status, start time, end time, and duration in seconds.
+- **Calls** — every call shown in the popup, including sub-calls. Each call carries its input, output (as the raw message and as parsed content when the output is valid JSON), error value, and date.
 
 :::note
-Call history export is client-side only. No additional data is fetched from the server beyond what is already displayed in the popup.
+Call history export is client-side only. The file is built from the call data already loaded for the popup, and no additional data is fetched from the server.
 :::
