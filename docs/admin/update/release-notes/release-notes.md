@@ -88,7 +88,7 @@ The following models are retired on **November 19, 2026** according to the [Azur
 | `o3-2025-04-16`      | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-sol`           |
 | `o3-mini`            | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-terra`         |
 | `o4-mini-2025-04-16` | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-terra`         |
-| `gemini-3.6-flash`   | Google       | Nov 19, 2026    | `gemini-3.8-flash`      |
+| `gemini-3.6-flash`   | Vertex AI    | Nov 19, 2026    | `gemini-3.8-flash`      |
 
 :::warning Update model references before November 19, 2026
 Remove the retired models from your LiteLLM configuration and replace them with the recommended models. Also update any assistants, workflows, and premium model lists that still reference them.
