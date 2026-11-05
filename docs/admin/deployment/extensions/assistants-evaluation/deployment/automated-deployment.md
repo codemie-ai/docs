@@ -8,6 +8,9 @@ pagination_prev: admin/deployment/extensions/assistants-evaluation/deployment/de
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Automated Deployment (Recommended)
 
 The automated deployment uses the `deploy-langfuse.sh` script to handle the entire Langfuse deployment process.
@@ -66,6 +69,11 @@ The Langfuse application version is configured in `langfuse/values.yaml` using `
 
 The script will prompt for passwords if the required secrets are not found:
 
+<Tabs groupId="database-setup">
+  <TabItem value="shared" label="Shared Database" default>
+
+When deploying on the shared CodeMie PostgreSQL instance with `dbInitJob.enabled: true`, the script prompts for two passwords:
+
 **1. Langfuse PostgreSQL user password** — used to create the Langfuse PostgreSQL user and for the app to connect:
 
 ```
@@ -74,7 +82,7 @@ Please enter the password for the Langfuse PostgreSQL user
 PostgreSQL password:
 ```
 
-**2. PostgreSQL admin credentials** — prompted only if `dbInitJob.enabled: true` in `langfuse/values.yaml` when deploying on a shared database. Used by the init job to create the `langfuse` database and user:
+**2. PostgreSQL admin credentials** — CodeMie PostgreSQL admin credentials from `deployment_outputs.env` via `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD`. Used by the init job to create the `langfuse` database and user:
 
 ```
 [INFO] PostgreSQL admin secret 'codemie-postgresql' not found in namespace 'langfuse'
@@ -83,7 +91,23 @@ PostgreSQL admin username:
 PostgreSQL admin password (input hidden):
 ```
 
-Admin credentials can be found in `deployment_outputs.env`: `CODEMIE_POSTGRES_DATABASE_*` for a shared database or `LANGFUSE_POSTGRES_DATABASE_*` for a dedicated database.
+  </TabItem>
+  <TabItem value="dedicated" label="Dedicated Database">
+
+When deploying on a dedicated PostgreSQL instance with `dbInitJob.enabled: false`, the database and master user are provisioned automatically by Terraform. The initialization job is skipped, so admin credentials are not prompted.
+
+The script prompts only for the application user password:
+
+**1. Langfuse PostgreSQL user password** — enter `LANGFUSE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`:
+
+```
+[INFO] PostgreSQL secret 'langfuse-postgresql' not found in namespace 'langfuse'
+Please enter the password for the Langfuse PostgreSQL user
+PostgreSQL password:
+```
+
+  </TabItem>
+</Tabs>
 
 **3. Object storage credentials** — the script asks whether to skip creating the `langfuse-object-storage` secret:
 

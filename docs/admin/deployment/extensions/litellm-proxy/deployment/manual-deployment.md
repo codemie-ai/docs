@@ -82,7 +82,7 @@ kubectl create secret generic codemie-postgresql \
 ```
 
 :::info
-Admin credentials can be found in `deployment_outputs.env` — use `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` for a shared database, or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` for a dedicated LiteLLM database.
+Admin credentials can be found in `deployment_outputs.env` via `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD`. For dedicated database instances, this secret is not needed.
 :::
 
 **5. Drain Token Secret**
