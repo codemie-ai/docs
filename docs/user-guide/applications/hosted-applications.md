@@ -3,14 +3,14 @@ id: hosted-applications
 title: Hosted Applications
 sidebar_label: Hosted Applications
 sidebar_position: 3
-description: Upload a static web application, share it with colleagues, and open it inside AI/Run CodeMie
+description: Upload a small static web page for presentations, share it with colleagues, and open it inside AI/Run CodeMie
 pagination_prev: user-guide/applications/index
 pagination_next: null
 ---
 
 # Hosted Applications
 
-Hosted Applications let you upload a small web application to CodeMie, keep it private or share it, and open it from the **Applications** page without hosting it anywhere else.
+A hosted application is a **small, static web page** that you upload to CodeMie and open from the **Applications** page, without hosting it anywhere else. Hosted applications are meant for **presentations**: slides, reports, demos, and visual walkthroughs that people read and click through. They are not interactive applications.
 
 :::info Availability
 The feature is turned on by your CodeMie administrator. If you see only Platform apps on the Applications page, the feature is off for your deployment. See [Hosted Applications configuration](../../admin/configuration/codemie/hosted-applications.md).
@@ -23,7 +23,24 @@ The feature is turned on by your CodeMie administrator. If you see only Platform
 | HTML file   | One `.html` file up to 20 MiB.                                                           |
 | ZIP archive | A prebuilt static web app up to 100 MiB, 500 MiB unpacked, 5,000 files, 50 MiB per file. |
 
-Only static content is supported: HTML, CSS, JavaScript, images, fonts, and similar files. CodeMie does not build your project and does not run server-side code. Run your build locally or in CI and upload the output folder as a ZIP.
+Only static content is supported: HTML, CSS, JavaScript for display and animation, images, SVG, fonts, audio and video files, and bundled `JSON` or `CSV` data. CodeMie does not build your project and does not run server-side code. Run your build locally or in CI and upload the output folder as a ZIP. Bundle every file you need, because nothing is loaded from other sites.
+
+## What a Hosted Application Cannot Do
+
+For security, the page runs in a restricted browser sandbox. Design it as a self-contained presentation:
+
+| Not available                | Detail                                                                                                          |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Network requests             | No calls to APIs, servers, or WebSockets, and no resources from CDNs or other sites. Bundle everything.         |
+| Forms and data input         | Forms cannot be submitted, so nothing a viewer types is sent or saved.                                          |
+| Modal dialogs                | `alert`, `confirm`, and `prompt` are blocked.                                                                   |
+| Popups and navigation        | No new windows or tabs, no redirects of the CodeMie page, and no file downloads.                                |
+| Device access                | Camera, microphone, location, payments, USB, and full screen are blocked.                                       |
+| Embedded content             | No nested frames, plugins, web workers, or service workers.                                                     |
+| Server-side code and secrets | Server files, `node_modules`, `package.json`, hidden files, source maps, and credentials in files are rejected. |
+| CodeMie data                 | The page cannot read your CodeMie session, tokens, or data.                                                     |
+
+If a page depends on any of these, it will not work as expected. Use it for static content only.
 
 Each person can keep up to 500 applications and 500 folders, and has a storage quota (2 GiB by default) shared by all versions, card covers, and uploads in progress.
 
