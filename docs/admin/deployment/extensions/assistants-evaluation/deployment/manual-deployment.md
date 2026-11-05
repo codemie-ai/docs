@@ -104,9 +104,11 @@ kubectl create secret generic codemie-postgresql \
 --type=Opaque
 ```
 
-:::info
-Admin credentials can be found in `deployment_outputs.env` via `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD`. For dedicated database instances, this secret is not needed.
-:::
+:::info PostgreSQL Secrets
+
+- **`langfuse-postgresql`**: For dedicated database instances, use `LANGFUSE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`.
+- **`codemie-postgresql`**: Required only for a shared database with `dbInitJob.enabled: true`. Use `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`. For dedicated database instances, skip this secret.
+  :::
 
 ## Step 4: Update Helm Dependencies
 
