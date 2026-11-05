@@ -10,13 +10,30 @@ pagination_next: null
 
 # Custom Applications (Hosted Applications)
 
-Custom Applications let CodeMie users upload a single HTML file or a ZIP archive of a prebuilt static web app, keep it private, share it with colleagues or the whole organization, and open it inside CodeMie on the **Applications** page.
+Hosted applications let CodeMie users upload a small static web page (a single HTML file or a ZIP archive of a prebuilt static build), keep it private, share it with colleagues or the whole organization, and open it inside CodeMie on the **Applications** page. The feature is intended for **presentations**: slides, reports, and demos. It is not a platform for interactive applications.
 
 CodeMie only stores and serves static bytes. It never builds an artifact, never runs uploaded server-side code, and starts no runtime per application. Uploaded code runs in the viewer's browser on a **separate, isolated content origin**, so it cannot read CodeMie cookies, tokens, or storage.
 
 :::info Off by default
 The feature is disabled until you turn it on and complete the deployment steps on this page. While it is off, no hosted background work runs, the UI never calls the hosted API, and the Applications page shows only Platform apps.
 :::
+
+## Content Restrictions
+
+Uploaded pages run under a fixed browser policy that cannot be changed by configuration. Tell users to design them as self-contained static presentations.
+
+| Area                | Policy                                                                                                                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Resources           | Scripts, styles, images, fonts, and media are allowed from the page's own origin only (images and fonts may also use `data:`, media and images `blob:`). External CDNs and sites are blocked.           |
+| Network             | `connect-src 'self'`: requests only to the same content origin, so no calls to APIs or other sites.                                                                                                     |
+| Forms               | `form-action 'none'` and no `allow-forms` in the sandbox: forms cannot submit.                                                                                                                          |
+| Dialogs and windows | The sandbox grants only `allow-scripts` and `allow-same-origin`, so modal dialogs, popups, top-level navigation, and downloads are blocked.                                                             |
+| Embedded content    | `frame-src`, `object-src`, `worker-src`, and `manifest-src` are `'none'`. Dynamic evaluation and workers are reported as restricted capabilities.                                                       |
+| Device features     | The permissions policy denies camera, microphone, geolocation, payment, USB, and fullscreen.                                                                                                            |
+| Allowed file types  | `html`, `htm`, `css`, `js`, `mjs`, `json`, `txt`, `csv`, `svg`, common image and font formats, and `mp3`, `mp4`, `ogg`, `webm` media.                                                                   |
+| Rejected content    | Server files (`server.js`, `package.json`, `web.config`, `nginx.conf`), `node_modules`, `.git`, `server` or `ssr` folders, hidden files, source maps, private keys, and SVG with a DOCTYPE or entities. |
+
+A page that references external resources is accepted with an `EXTERNAL_DEPENDENCY` warning, and the resources do not load.
 
 ## How It Works
 
