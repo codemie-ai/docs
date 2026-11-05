@@ -1,19 +1,19 @@
 ---
-id: custom-applications
-title: Custom Applications
-sidebar_label: Custom Applications
+id: hosted-applications
+title: Hosted Applications
+sidebar_label: Hosted Applications
 sidebar_position: 3
 description: Upload a static web application, share it with colleagues, and open it inside AI/Run CodeMie
 pagination_prev: user-guide/applications/index
 pagination_next: null
 ---
 
-# Custom Applications
+# Hosted Applications
 
-Custom Applications let you upload a small web application to CodeMie, keep it private or share it, and open it from the **Applications** page without hosting it anywhere else.
+Hosted Applications let you upload a small web application to CodeMie, keep it private or share it, and open it from the **Applications** page without hosting it anywhere else.
 
 :::info Availability
-The feature is turned on by your CodeMie administrator. If you see only Platform apps on the Applications page, the feature is off for your deployment. See [Custom Applications configuration](../../admin/configuration/codemie/hosted-applications.md).
+The feature is turned on by your CodeMie administrator. If you see only Platform apps on the Applications page, the feature is off for your deployment. See [Hosted Applications configuration](../../admin/configuration/codemie/hosted-applications.md).
 :::
 
 ## What You Can Upload

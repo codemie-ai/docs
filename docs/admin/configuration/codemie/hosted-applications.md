@@ -20,26 +20,7 @@ The feature is disabled until you turn it on and complete the deployment steps o
 
 ## How It Works
 
-```text
-        https://codemie.example.com               https://v-<release>.apps-content.example.net
-        (CodeMie UI, management API)              (one origin per release, wildcard DNS + TLS)
-                    |                                             |
-         existing API ingress                       wildcard content ingress
-                    |                                             |
-                    +--------------------+------------------------+
-                                         |  Host header preserved
-                                         v
-  +---------------------- CodeMie API pods (every replica) -----------------------+
-  |  Host dispatcher                                                             |
-  |    content domain host  -> closed content gateway (never management routes)  |
-  |    any other host       -> management API                                    |
-  |  validation workers + maintenance loop ---> validator Service :8091          |
-  |  dedicated private bucket (S3 or GCS), shared by every replica               |
-  +------------------------------------------------------------------------------+
-        |                      |                       |
-   PostgreSQL        identity provider        validator pod (1 replica)
-                                               validator + ClamAV (clamd, freshclam)
-```
+![Hosted Applications high-level architecture](./images/hosted-applications-architecture.drawio.png)
 
 | Component      | Role                                                                                                                             |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -594,4 +575,4 @@ Run the validator and a standalone clamd container locally. The local clamd need
 | Architecture and data model                           | `docs/hosted-applications/architecture.md`                           |
 | Production readiness review                           | `docs/hosted-applications/production-readiness-review-2026-10-07.md` |
 
-For end-user instructions see [Custom Applications](../../../user-guide/applications/custom-applications.md). For the customer configuration file, see [Customer Feature Configuration](./customer-feature-configuration.md).
+For end-user instructions see [Hosted Applications](../../../user-guide/applications/hosted-applications.md). For the customer configuration file, see [Customer Feature Configuration](./customer-feature-configuration.md).
