@@ -376,7 +376,7 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'user-guide/applications/custom-applications',
+            'user-guide/applications/hosted-applications',
             'user-guide/applications/integration-guide',
           ],
         },
