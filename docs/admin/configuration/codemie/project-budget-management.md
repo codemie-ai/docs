@@ -218,7 +218,11 @@ GRANT SELECT ON TABLE public."LiteLLM_SpendLogs" TO litellm_spend_reader;
 Create the identity CodeMie connects with and add it to the reader role. Connect to the LiteLLM database as the administrator user and use the option that matches your authentication method.
 
 :::tip
-We recommend the passwordless options (Google Cloud SQL IAM, Amazon RDS IAM, or Microsoft Entra authentication) because they use short-lived tokens and leave no static password to store or rotate. Use password authentication only when your database does not support identity-based authentication.
+If the CodeMie database already uses IAM authentication, we recommend the passwordless option for the same cloud provider (Google Cloud SQL IAM, Amazon RDS IAM, or Microsoft Entra authentication). It uses short-lived tokens and leaves no static password to store or rotate.
+:::
+
+:::warning
+`PG_IAM_AUTH_PROVIDER` is a single setting for both databases. When it is set, the CodeMie database also switches to token authentication and `POSTGRES_PASSWORD` is ignored. If the CodeMie database uses a password, use password authentication for the LiteLLM database and set `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` from a Kubernetes secret.
 :::
 
 **Password authentication**
@@ -245,7 +249,7 @@ Then grant the reader role to the IAM user:
 GRANT litellm_spend_reader TO "<gsa-name>@<project-id>.iam";
 ```
 
-Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<gsa-name>@<project-id>.iam` (the service account email without the `.gserviceaccount.com` suffix), leave the password empty, and set `PG_IAM_AUTH_PROVIDER` to `gcp`.
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<gsa-name>@<project-id>.iam` (the service account email without the `.gserviceaccount.com` suffix) and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `gcp` for the CodeMie database.
 
 **Amazon RDS with IAM authentication**
 
@@ -267,7 +271,7 @@ The IAM role used by CodeMie API needs the `rds-db:connect` permission for this 
 }
 ```
 
-Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `codemie_spend_reader`, leave the password empty, and set `PG_IAM_AUTH_PROVIDER` to `aws` and `PG_AWS_RDS_REGION` to the region of the instance.
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `codemie_spend_reader` and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `aws` for the CodeMie database, and the LiteLLM instance must be in the region set in `PG_AWS_RDS_REGION`.
 
 **Azure Database for PostgreSQL with Microsoft Entra authentication**
 
@@ -283,7 +287,7 @@ Then connect to the LiteLLM database and grant the reader role:
 GRANT litellm_spend_reader TO "<managed-identity-name>";
 ```
 
-Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<managed-identity-name>`, leave the password empty, and set `PG_IAM_AUTH_PROVIDER` to `azure`.
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<managed-identity-name>` and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `azure` for the CodeMie database.
 
 #### Step 4: Verify access
 
