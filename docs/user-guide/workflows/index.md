@@ -31,6 +31,7 @@ Manage and share your workflow executions:
 
 - [Share Workflow Execution](./share-workflow-execution.md) - Share results with team members
 - [Exporting Workflow Execution](./exporting-workflow-execution.md) - Export execution data
+- [Exporting Node Call History](./exporting-node-call-history.md) - View a node's LLM and tool calls and export them as JSON
 - [Assistant Panel on the Executions Page](./assistant-panel-in-executions.md) - Open the full assistant view from an execution and set personal integrations per workflow
 - [LLM Model Name in Workflow](./llm-model-name-in-workflow.md) - Configure AI models for workflows
 
