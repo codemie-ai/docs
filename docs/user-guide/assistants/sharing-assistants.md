@@ -119,7 +119,7 @@ On the assistant cards, the status label refers to project-level sharing only:
 ### Limitations
 
 - **Personal integrations**: an assistant that uses personal (user-level) integrations cannot be shared with specific users. Replace them with project integrations first. Personal integrations also cannot be added to an assistant that is already shared with users.
-- **Runtime context**: a recipient runs the assistant under their own account, not as the owner. Indexed data source content is available without separate data source access, while tool and Git credentials are resolved for the recipient. Sub-assistants that are private to the owner are not available to the recipient.
+- **Runtime context**: a recipient runs the assistant under their own account, not as the owner. Indexed data source content is available without separate data source access. Integrations selected in the assistant's tools are used as configured, also for recipients who are not members of the project. Tools without a selected integration use the recipient's own integrations. Sub-assistants that are private to the owner are not available to the recipient.
 - **Deleting an assistant** removes all granted access automatically.
 - **Out of scope**: sharing with external users, edit or collaboration access, and bulk or group sharing.
 
