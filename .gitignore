@@ -17,3 +17,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local CodeMie analytics exports (personal usage and cost data)
+docs/codemie/analytics/
+codemie-analytics-*.json

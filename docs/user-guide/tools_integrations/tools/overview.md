@@ -15,35 +15,36 @@ Assistant's tools are powerful enhancements that bring completely new capabiliti
 
 ## Available Tools
 
-| Tool                                                                         | Description                                                                                                       |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **[A2A Protocol](./a2a.mdx)**                                                | Agent-to-Agent protocol integration for connecting external AI agents and enabling cross-framework collaboration  |
-| **[Keycloak](./keycloak.md)**                                                | Access management and authentication tool that allows users to leverage AI/Run CodeMie for project access control |
-| **[SonarQube](./sonarqube.mdx)**                                             | Code quality analysis and static code review tool for comprehensive codebase analysis                             |
-| **[SQL](./sql.md)**                                                          | Database operations tool for querying and managing SQL databases                                                  |
-| **[Telegram](./telegram.md)**                                                | Send notifications to Telegram channels and bots                                                                  |
-| **[Azure](./azure.md)**                                                      | Microsoft Azure cloud platform integration for cloud resource management                                          |
-| **[GCP](./gcp.md)**                                                          | Google Cloud Platform integration for GCP resource operations                                                     |
-| **[AWS](./aws.md)**                                                          | Amazon Web Services integration for AWS cloud operations                                                          |
-| **[Kubernetes](./kubernetes.md)**                                            | Kubernetes cluster management tool for container orchestration                                                    |
-| **[Webhook](./webhook.md)**                                                  | HTTP webhook integrations for event-driven automatization                                                         |
-| **[Elasticsearch](./elastic.md)**                                            | Search and data analysis platform for analytical queries and data access                                          |
-| **[Codebase Tools](./codebase-tools.md)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                   |
-| **[Email Sender](./email-sender-tool.md)**                                   | Send email notifications from assistants                                                                          |
-| **[OpenAPI](./openapi-tool.md)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                              |
-| **[Jira](./jira.mdx)**                                                       | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                  |
-| **[LiteLLM](./litellm.md)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                          |
-| **[Confluence](./confluence.mdx)**                                           | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                  |
-| **[ReportPortal](./reportportal.md)**                                        | AI-powered test execution analysis, launch data retrieval, and failure recommendations                            |
-| **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon.md)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                          |
-| **[Xray](./xray.md)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                  |
-| **[ServiceNow](./servicenow.md)**                                            | ITSM operations including incident management, change requests, and CMDB operations                               |
-| **[Scheduler](./scheduler.md)**                                              | Task scheduling and automation (Admin role only)                                                                  |
-| **[Plugin](./plugin.md)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                               |
-| **[FileSystem](./filesystem.md)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image            |
-| **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                   |
-| **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                          |
-| **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels              |
+| Tool                                                                         | Description                                                                                                                                     |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[A2A Protocol](./a2a.mdx)**                                                | Agent-to-Agent protocol integration for connecting external AI agents and enabling cross-framework collaboration                                |
+| **[Keycloak](./keycloak.md)**                                                | Access management and authentication tool that allows users to leverage AI/Run CodeMie for project access control                               |
+| **[SonarQube](./sonarqube.mdx)**                                             | Code quality analysis and static code review tool for comprehensive codebase analysis                                                           |
+| **[SQL](./sql.md)**                                                          | Database operations tool for querying and managing SQL databases                                                                                |
+| **[Telegram](./telegram.md)**                                                | Send notifications to Telegram channels and bots                                                                                                |
+| **[Azure](./azure.md)**                                                      | Microsoft Azure cloud platform integration for cloud resource management                                                                        |
+| **[GCP](./gcp.md)**                                                          | Google Cloud Platform integration for GCP resource operations                                                                                   |
+| **[AWS](./aws.md)**                                                          | Amazon Web Services integration for AWS cloud operations                                                                                        |
+| **[Kubernetes](./kubernetes.md)**                                            | Kubernetes cluster management tool for container orchestration                                                                                  |
+| **[Webhook](./webhook.md)**                                                  | HTTP webhook integrations for event-driven automatization                                                                                       |
+| **[Elasticsearch](./elastic.md)**                                            | Search and data analysis platform for analytical queries and data access                                                                        |
+| **[Codebase Tools](./codebase-tools.md)**                                    | Comprehensive code analysis and management with repo browsing, code search, and file operations                                                 |
+| **[Email Sender](./email-sender-tool.md)**                                   | Send email notifications from assistants                                                                                                        |
+| **[OpenAPI](./openapi-tool.md)**                                             | Integrate with any third-party tools supporting the OpenAPI standard                                                                            |
+| **[Jira](./jira.mdx)**                                                       | Issue tracking and project management integration for Jira Cloud and Jira Old UI                                                                |
+| **[LiteLLM](./litellm.md)**                                                  | LLM proxy integration for connecting to various AI model providers through a unified API                                                        |
+| **[Confluence](./confluence.mdx)**                                           | Atlassian Confluence integration for retrieving and interacting with spaces, pages, and articles                                                |
+| **[ReportPortal](./reportportal.md)**                                        | AI-powered test execution analysis, launch data retrieval, and failure recommendations                                                          |
+| **[Quality Assurance](./quality-assurance-with-jira-zephyr-scale-addon.md)** | Test management with Zephyr Scale (formerly TM4J) and Zephyr Squad for Jira environments                                                        |
+| **[Xray](./xray.md)**                                                        | Test management with Xray for Jira - retrieve and interact with test cases using JQL-like syntax                                                |
+| **[ServiceNow](./servicenow.md)**                                            | ITSM operations including incident management, change requests, and CMDB operations                                                             |
+| **[Scheduler](./scheduler.md)**                                              | Task scheduling and automation (Admin role only)                                                                                                |
+| **[Plugin](./plugin.md)**                                                    | Custom plugin integrations for extending assistant capabilities (e.g., file system)                                                             |
+| **[FileSystem](./filesystem.md)**                                            | Code execution and file processing tools including Code Interpreter, Code Executor, and Generate Image                                          |
+| **[Git](./git-overview.md)**                                                 | Version control system integration for GitHub, GitLab, Bitbucket, and Azure DevOps repositories                                                 |
+| **[Azure DevOps](./azure-devops/index.md)**                                  | Work Items, Wiki, and Test Plans management via Azure DevOps integration                                                                        |
+| **[MS Teams Bot](./ms-teams-bot.md)**                                        | Chat with CodeMie assistants directly from Microsoft Teams personal chats, group chats, and channels                                            |
+| **[Microsoft Exchange](./ms-exchange.md)**                                   | Mailbox access via Microsoft Graph or on-premises EWS: read folders, messages and attachment text; send, forward, move, tag and delete messages |
 
 | **[MCP](./mcp/index.md)** | Model Context Protocol: add servers, configure credentials, and use MCP tools in assistants |
 
@@ -110,47 +111,48 @@ Smart selection prevents LLM context overload and maintains optimal performance 
 
 The table below shows which tools require integration setup and the integration name to use:
 
-| Tool Name                                             | Integration Required | Integration Name | Requires Project Admin |
-| ----------------------------------------------------- | :------------------: | :--------------: | :--------------------: |
-| **Project Management => Jira**                        |        ✅ Yes        |       Jira       |         ❌ No          |
-| **Git**                                               |        ✅ Yes        |       Git        |         ❌ No          |
-| **VCS => GitHub / GitLab / AzureDevOps**              |        ✅ Yes        |       Git        |         ❌ No          |
-| **Project Management => Confluence**                  |        ✅ Yes        |    Confluence    |         ❌ No          |
-| **Cloud => Kubernetes**                               |        ✅ Yes        |    Kubernetes    |         ❌ No          |
-| **Cloud => AWS**                                      |        ✅ Yes        |       AWS        |         ❌ No          |
-| **Cloud => GCP**                                      |        ✅ Yes        |       GCP        |         ❌ No          |
-| **Cloud => Azure**                                    |        ✅ Yes        |      Azure       |         ❌ No          |
-| **Access Management => Keycloak**                     |        ✅ Yes        |     Keycloak     |         ❌ No          |
-| **Cloud => AzureDevOps**                              |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Wiki**                                 |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Work Item**                            |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Azure DevOps Test Plan**                            |        ✅ Yes        |   AzureDevOps    |         ❌ No          |
-| **Data Management => Elasticsearch**                  |        ✅ Yes        |     Elastic      |         ❌ No          |
-| **OpenAPI**                                           |        ✅ Yes        |     OpenAPI      |         ❌ No          |
-| **Plugin**                                            |        ✅ Yes        |      Plugin      |         ❌ No          |
-| **FileSystem => Code Interpreter**                    |        ❌ No         |       ---        |         ❌ No          |
-| **FileSystem => Code Executor**                       |        ❌ No         |       ---        |         ❌ No          |
-| **FileSystem => Generate Image**                      |        ❌ No         |       ---        |         ❌ No          |
-| **Notification => Email**                             |        ✅ Yes        |      Email       |         ❌ No          |
-| **LiteLLM**                                           |        ✅ Yes        |     LiteLLM      |         ❌ No          |
-| **Report Portal**                                     |        ✅ Yes        |   ReportPortal   |         ❌ No          |
-| **Codebase Tools => Sonar**                           |        ✅ Yes        |      Sonar       |         ❌ No          |
-| **Codebase Tools => Get Repo Tree** (Experimental)    |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Search Code** (Experimental)      |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Read Files Content**              |        ❌ No         |      --- \*      |         ❌ No          |
-| **Codebase Tools => Read Files Content with Summary** |        ❌ No         |      --- \*      |         ❌ No          |
-| **Data Management => SQL**                            |        ✅ Yes        |       SQL        |         ❌ No          |
-| **Notification => Telegram**                          |        ✅ Yes        |     Telegram     |         ❌ No          |
-| **Webhook**                                           |        ✅ Yes        |     Webhook      |         ✅ Yes         |
-| **Quality Assurance => ZephyrCloud**                  |        ✅ Yes        |   ZephyrCloud    |         ❌ No          |
-| **Quality Assurance => ZephyrSquad**                  |        ✅ Yes        |   ZephyrSquad    |         ❌ No          |
-| **Quality Assurance => Xray**                         |        ✅ Yes        |       Xray       |         ❌ No          |
-| **Research => Google Search**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Google Places**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Wikipedia**                             |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Tavily Search**                         |        ❌ No         |       ---        |         ❌ No          |
-| **Research => Web Scraper**                           |        ❌ No         |       ---        |         ❌ No          |
-| **Scheduler**                                         |        ✅ Yes        |    Scheduler     |         ✅ Yes         |
+| Tool Name                                             | Integration Required |  Integration Name  | Requires Project Admin |
+| ----------------------------------------------------- | :------------------: | :----------------: | :--------------------: |
+| **Project Management => Jira**                        |        ✅ Yes        |        Jira        |         ❌ No          |
+| **Git**                                               |        ✅ Yes        |        Git         |         ❌ No          |
+| **VCS => GitHub / GitLab / AzureDevOps**              |        ✅ Yes        |        Git         |         ❌ No          |
+| **Project Management => Confluence**                  |        ✅ Yes        |     Confluence     |         ❌ No          |
+| **Cloud => Kubernetes**                               |        ✅ Yes        |     Kubernetes     |         ❌ No          |
+| **Cloud => AWS**                                      |        ✅ Yes        |        AWS         |         ❌ No          |
+| **Cloud => GCP**                                      |        ✅ Yes        |        GCP         |         ❌ No          |
+| **Cloud => Azure**                                    |        ✅ Yes        |       Azure        |         ❌ No          |
+| **Access Management => Keycloak**                     |        ✅ Yes        |      Keycloak      |         ❌ No          |
+| **Cloud => AzureDevOps**                              |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Wiki**                                 |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Work Item**                            |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Azure DevOps Test Plan**                            |        ✅ Yes        |    AzureDevOps     |         ❌ No          |
+| **Data Management => Elasticsearch**                  |        ✅ Yes        |      Elastic       |         ❌ No          |
+| **OpenAPI**                                           |        ✅ Yes        |      OpenAPI       |         ❌ No          |
+| **Plugin**                                            |        ✅ Yes        |       Plugin       |         ❌ No          |
+| **FileSystem => Code Interpreter**                    |        ❌ No         |        ---         |         ❌ No          |
+| **FileSystem => Code Executor**                       |        ❌ No         |        ---         |         ❌ No          |
+| **FileSystem => Generate Image**                      |        ❌ No         |        ---         |         ❌ No          |
+| **Notification => Email**                             |        ✅ Yes        |       Email        |         ❌ No          |
+| **LiteLLM**                                           |        ✅ Yes        |      LiteLLM       |         ❌ No          |
+| **Report Portal**                                     |        ✅ Yes        |    ReportPortal    |         ❌ No          |
+| **Codebase Tools => Sonar**                           |        ✅ Yes        |       Sonar        |         ❌ No          |
+| **Codebase Tools => Get Repo Tree** (Experimental)    |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Search Code** (Experimental)      |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Read Files Content**              |        ❌ No         |       --- \*       |         ❌ No          |
+| **Codebase Tools => Read Files Content with Summary** |        ❌ No         |       --- \*       |         ❌ No          |
+| **Data Management => SQL**                            |        ✅ Yes        |        SQL         |         ❌ No          |
+| **Notification => Telegram**                          |        ✅ Yes        |      Telegram      |         ❌ No          |
+| **Webhook**                                           |        ✅ Yes        |      Webhook       |         ✅ Yes         |
+| **Quality Assurance => ZephyrCloud**                  |        ✅ Yes        |    ZephyrCloud     |         ❌ No          |
+| **Quality Assurance => ZephyrSquad**                  |        ✅ Yes        |    ZephyrSquad     |         ❌ No          |
+| **Quality Assurance => Xray**                         |        ✅ Yes        |        Xray        |         ❌ No          |
+| **Microsoft Exchange**                                |        ✅ Yes        | Microsoft Exchange |         ❌ No          |
+| **Research => Google Search**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Google Places**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Wikipedia**                             |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Tavily Search**                         |        ❌ No         |        ---         |         ❌ No          |
+| **Research => Web Scraper**                           |        ❌ No         |        ---         |         ❌ No          |
+| **Scheduler**                                         |        ✅ Yes        |     Scheduler      |         ✅ Yes         |
 
 ::: note \* For these Codebase tools, Git data source should be added as additional context.
 :::
