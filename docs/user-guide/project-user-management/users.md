@@ -61,6 +61,8 @@ Use the filter bar at the top of the list to narrow results:
 
 Click **Clear All** to reset all active filters.
 
+![Users Management list with the Status filter and a user marked with the Deactivated label](./images/users-status-filter.png)
+
 :::tip Open a project's members from Projects Management
 On the [Projects Management](./projects.md#projects-list) page, click a project's **Users** badge
 to open this page with the **Project** filter already set to that project.
@@ -202,6 +204,10 @@ Auditors see the users list but not these actions.
 2. Select **Deactivate user**.
 3. In the **Deactivate user?** dialog, click **Deactivate**.
 
+![Actions menu on a user's row with the Deactivate user option](./images/user-deactivate-action.png)
+
+![Deactivate user? confirmation dialog](./images/user-deactivate-dialog.png)
+
 The message _"User deactivated successfully"_ confirms the change, and the user is shown with
 the **Deactivated** label.
 
@@ -211,6 +217,8 @@ the **Deactivated** label.
    **Status** filter to `Deactivated`.
 2. Click the **⋮ (Actions)** menu on the user's row and select **Reactivate user**.
 3. In the **Reactivate user?** dialog, click **Reactivate**.
+
+![Users list filtered by the Deactivated status, with the Reactivate user option in the Actions menu](./images/user-reactivate-action.png)
 
 The message _"User reactivated successfully"_ confirms the change.
 
@@ -230,6 +238,8 @@ While a user is deactivated:
 - The user's MCP server authorizations are removed.
 - In a project's **Project Members** table, the user is still shown, with the **Deactivated**
   label and the **Role** dropdown disabled, so the membership can be removed.
+
+![Project Members table with a deactivated user: the Deactivated label and a disabled Role dropdown](./images/project-members-deactivated.png)
 
 ### What Reactivation Restores
 
