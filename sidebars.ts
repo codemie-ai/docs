@@ -227,6 +227,7 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'user-guide/tools_integrations/tools/mcp/adding-an-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
+                    'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
                   ],
                 },
               ],
@@ -346,6 +347,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Standalone',
+          link: {
+            type: 'doc',
+            id: 'user-guide/standalone/index',
+          },
+          collapsed: true,
+          items: ['user-guide/standalone/run-guide'],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
@@ -375,7 +386,11 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/api/index',
           },
           collapsed: true,
-          items: ['user-guide/api/client-secret-access', 'user-guide/api/user-password-access'],
+          items: [
+            'user-guide/api/client-secret-access',
+            'user-guide/api/user-password-access',
+            'user-guide/api/settings-transfer',
+          ],
         },
         {
           type: 'category',
@@ -445,7 +460,18 @@ const sidebars: SidebarsConfig = {
               },
               collapsed: true,
               items: [
-                'admin/deployment/prerequisites/prerequisites-kubernetes',
+                {
+                  type: 'category',
+                  label: 'Kubernetes',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/deployment/prerequisites/prerequisites-kubernetes',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/deployment/prerequisites/kubernetes/aws-iam-roles-and-permissions',
+                  ],
+                },
                 'admin/deployment/prerequisites/prerequisites-on-vm',
               ],
             },
@@ -636,7 +662,9 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
+                'admin/configuration/codemie/servicenow-budget-integration',
               ],
             },
             {

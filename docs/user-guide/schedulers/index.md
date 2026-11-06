@@ -11,6 +11,10 @@ pagination_next: user-guide/schedulers/create-scheduler
 
 Schedulers automate the execution of CodeMie resources — **Assistants**, **Workflows**, and **Data Sources** — on a recurring cron-based schedule. Instead of triggering resources manually, a scheduler fires them automatically at configured intervals, maintaining a full history of every run.
 
+:::info
+Schedulers run only when the Trigger Engine is enabled on the CodeMie API (`TRIGGER_ENGINE_ENABLED=true`). If your schedulers never run, contact your administrator. See [Trigger Engine configuration](../../admin/configuration/codemie/api-configuration#trigger-engine).
+:::
+
 ## Schedulers List
 
 The **Schedulers** section is accessible from the left navigation. It displays all schedulers associated with the current account, showing at a glance when each last ran, what its result was, and when it is scheduled to run next.

@@ -100,13 +100,26 @@ Configure data migration, backup, and state import/export capabilities.
 
 Enable or disable experimental features and beta functionality.
 
-| Parameter                                       | Type    | Default | Description                                                                                                                                                         |
-| ----------------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                         |
-| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                        |
-| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the marketplace; disable to skip validation and allow any assistant to be published without review |
-| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                |
-| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                               |
+| Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                                                                                         |
+| ----------------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AMNA_AIRN_PRECREATE_WORKFLOWS`                 | boolean | `false` | Pre-create AMNA-AIRN workflows on deployment (beta feature)                                                                                                                                                                                                                                         |
+| `LLM_REQUEST_ADD_MARKDOWN_PROMPT`               | boolean | `true`  | Add markdown formatting hint to improve LLM output structure                                                                                                                                                                                                                                        |
+| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | Run LLM-based quality validation when publishing an assistant to the Marketplace. A failed validation blocks publishing until the author improves the assistant or chooses **Publish Anyway**; when disabled, the validation step is skipped. See [Marketplace Management](#marketplace-management) |
+| `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                                                                                                                                                |
+| `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                                                                                                                                                               |
+
+### Marketplace Management
+
+Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. For the review workflow, see [Marketplace Management](./marketplace-management.mdx).
+
+| Parameter                                       | Type    | Default | Description                                                                                                                                                                                                                        |
+| ----------------------------------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MARKETPLACE_MANAGEMENT_ENABLED`                | boolean | `false` | Kill switch for Marketplace management. When `false`, the `/v1/marketplace-management` routes return 404, the **Marketplace management** page is unavailable, and the related schedulers are disabled                              |
+| `MARKETPLACE_APPROVAL_GATE_ENABLED`             | boolean | `false` | Require administrator approval before an assistant becomes visible in the Marketplace. Takes effect only when `MARKETPLACE_MANAGEMENT_ENABLED` is also `true`; otherwise the flag is ignored and publishing self-approves          |
+| `MARKETPLACE_LLM_VALIDATION_ON_PUBLISH_ENABLED` | boolean | `true`  | LLM-based quality validation on publish. Independent of the two flags above; see [Feature Flags & Experimental Features](#feature-flags--experimental-features)                                                                    |
+| `MARKETPLACE_AUDIT_RETENTION_DAYS`              | integer | `0`     | Number of days to keep Marketplace audit history. `0` keeps all history. Any positive value enables a daily purge at 02:30 UTC that permanently deletes older audit runs; the newest successful run per entity kind is always kept |
+| `MARKETPLACE_AUDIT_HEARTBEAT_TIMEOUT_MINUTES`   | integer | `60`    | Minutes without a heartbeat after which an audit run is treated as abandoned. `0` disables the reaper                                                                                                                              |
+| `MARKETPLACE_AUDIT_REAPER_INTERVAL_MINUTES`     | integer | `5`     | How often each instance checks for abandoned audit runs                                                                                                                                                                            |
 
 ### Support & Help
 
@@ -228,29 +241,34 @@ Configure persistent data storage for conversations, users, workflows, and appli
 
 Primary relational database for structured data and transactional operations.
 
-| Parameter              | Type                                 | Default       | Description                                                                                                                                                                                            |
-| ---------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `POSTGRES_HOST`        | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                               |
-| `POSTGRES_PORT`        | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                 |
-| `POSTGRES_DB`          | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                              |
-| `POSTGRES_USER`        | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                          |
-| `POSTGRES_PASSWORD`    | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                  |
-| `PG_URL`               | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                        |
-| `PG_POOL_SIZE`         | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                          |
-| `DEFAULT_DB_SCHEMA`    | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                        |
-| `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider |
-| `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                      |
+| Parameter              | Type                                 | Default       | Description                                                                                                                                                                                                                                                                           |
+| ---------------------- | ------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POSTGRES_HOST`        | string                               | `"localhost"` | PostgreSQL server hostname or IP address                                                                                                                                                                                                                                              |
+| `POSTGRES_PORT`        | integer                              | `5432`        | PostgreSQL server port                                                                                                                                                                                                                                                                |
+| `POSTGRES_DB`          | string                               | `"postgres"`  | Database name for CodeMie tables and data                                                                                                                                                                                                                                             |
+| `POSTGRES_USER`        | string                               | `"postgres"`  | Database username with read/write permissions                                                                                                                                                                                                                                         |
+| `POSTGRES_PASSWORD`    | string                               | `"password"`  | Database password (use secrets manager in production)                                                                                                                                                                                                                                 |
+| `PG_URL`               | string                               | `""`          | Complete connection string (overrides individual params if set)                                                                                                                                                                                                                       |
+| `PG_POOL_SIZE`         | integer                              | `10`          | Connection pool size; increase for high concurrency workloads                                                                                                                                                                                                                         |
+| `DEFAULT_DB_SCHEMA`    | string                               | `"codemie"`   | PostgreSQL schema for organizing CodeMie tables                                                                                                                                                                                                                                       |
+| `PG_IAM_AUTH_PROVIDER` | string (`""`, `gcp`, `aws`, `azure`) | `""`          | Enables cloud IAM token-based authentication for PostgreSQL instead of a static password; when set, `POSTGRES_PASSWORD` is ignored and a short-lived token is fetched from the matching cloud provider; also applies to the spend uploader's LiteLLM database when no password is set |
+| `PG_AWS_RDS_REGION`    | string                               | `""`          | AWS region used when generating an RDS IAM auth token (`PG_IAM_AUTH_PROVIDER=aws`); falls back to `AWS_DEFAULT_REGION` when empty                                                                                                                                                     |
 
 ### Elasticsearch
 
 Document store for full-text search, analytics, and unstructured data.
 
-| Parameter                     | Type    | Default                   | Description                                                                                                                                                                          |
-| ----------------------------- | ------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ELASTIC_URL`                 | string  | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                                                                                                                                                   |
-| `ELASTIC_PASSWORD`            | string  | `""`                      | Password for `elastic` user or configured username                                                                                                                                   |
-| `ELASTIC_USERNAME`            | string  | `""`                      | Username for Elasticsearch authentication                                                                                                                                            |
-| `ELASTIC_DATASOURCE_REPLICAS` | integer | `1`                       | Number of replica shards for datasource indexes; set to `0` to have only the primary shard for each indexed datasource, reducing total shard usage on clusters with limited capacity |
+| Parameter                     | Type                             | Default                   | Description                                                                                                                                                                                                                                                                                                       |
+| ----------------------------- | -------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ELASTIC_URL`                 | string                           | `"http://localhost:9200"` | Elasticsearch cluster endpoint URL                                                                                                                                                                                                                                                                                |
+| `ELASTIC_PASSWORD`            | string                           | `""`                      | Password for `elastic` user or configured username                                                                                                                                                                                                                                                                |
+| `ELASTIC_USERNAME`            | string                           | `""`                      | Username for Elasticsearch authentication                                                                                                                                                                                                                                                                         |
+| `ELASTIC_DATASOURCE_REPLICAS` | integer                          | `1`                       | Number of replica shards for datasource indexes; set to `0` to have only the primary shard for each indexed datasource, reducing total shard usage on clusters with limited capacity                                                                                                                              |
+| `RETRIEVAL_BACKEND`           | string (`elasticsearch`, `none`) | `"elasticsearch"`         | Selects the retrieval backend. Set to `none` to run without Elasticsearch — Knowledge Bases, Data Sources, and code indexing are disabled; the admin log lookup endpoint is unaffected by this setting but relies on the same Elasticsearch connection, so also set `ADMIN_LOG_LOOKUP_ENABLED=false` in that case |
+
+:::info Standalone deployments
+The [CodeMie Standalone](../../../user-guide/standalone/index.md) image sets `RETRIEVAL_BACKEND=none` by default, since it does not include an Elasticsearch container.
+:::
 
 #### Elasticsearch Indexes
 
@@ -451,6 +469,24 @@ database on startup.
 
 ---
 
+### Keycloak Enterprise Settings
+
+<EnterpriseFeature />
+
+Enterprise-only settings for deployments where an upstream OAuth2/OIDC reverse proxy (such as oauth2-proxy or envoy) authenticates requests and injects user context via HTTP headers and cookies before they reach the application.
+
+:::note
+Setting `AUTHORIZATION_HEADER` to `Authorization` is supported — the Bearer scheme is correctly recognized and stripped when this header name is used.
+:::
+
+| Parameter              | Type   | Default                         | Description                                                                                                                                      |
+| ---------------------- | ------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AUTHORIZATION_HEADER` | string | `"x-auth-request-access-token"` | Name of the HTTP header from which the application reads the inbound JWT access token injected by the upstream OAuth2/OIDC reverse proxy         |
+| `SESSION_COOKIE`       | string | `"oidc_session"`                | Name of the cookie holding the OIDC session established by the upstream proxy; used to associate requests with an authenticated session          |
+| `USER_INFO_HEADER`     | string | `"x-userinfo"`                  | Name of the HTTP header carrying base64-encoded user claims in JWT format, injected by the upstream proxy to convey user identity and attributes |
+
+---
+
 ### Admin Bootstrap
 
 Auto-create a SuperAdmin account on startup when none exists. Active only when `IDP_PROVIDER=local` and `ENABLE_USER_MANAGEMENT=true` in non-local environments.
@@ -531,6 +567,17 @@ SMTP configuration for sending verification and password-reset emails. Only acti
 | Parameter                  | Type   | Default                   | Description                                                                                                            |
 | -------------------------- | ------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `COST_CENTER_NAME_PATTERN` | string | `"^[a-z0-9]+-[a-z0-9]+$"` | Regex applied via `re.fullmatch` to every cost-center name at creation or update time; names not matching are rejected |
+
+---
+
+### ServiceNow Integration
+
+Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. See [ServiceNow Budget Integration](./servicenow-budget-integration.md) for setup.
+
+| Parameter                        | Type   | Default | Description                                                                                                                 |
+| -------------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `SERVICENOW_INTEGRATION_ENABLED` | bool   | `false` | Registers the ServiceNow budget endpoints and restricts the ServiceNow service account to them                              |
+| `SERVICENOW_SERVICE_ACCOUNT_ID`  | string | `""`    | ID (token `sub`) of the Keycloak service account used by ServiceNow. When empty, every request to the endpoints is rejected |
 
 ---
 
@@ -1001,37 +1048,68 @@ Set spending limits per user or team to control LLM usage costs.
 
 Caches user-to-budget resolution results to reduce database load on high-traffic deployments.
 
-| Parameter                             | Type    | Default  | Description                                                                                                                           |
-| ------------------------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `BUDGET_ASSIGNMENT_CACHE_TTL`         | integer | `60`     | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping).                                       |
-| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the assignment cache.                                                                                    |
-| `BUDGET_RESOLUTION_CACHE_TTL`         | integer | `60`     | TTL in seconds for the budget resolution cache.                                                                                       |
-| `BUDGET_RESOLUTION_CACHE_MAX_SIZE`    | integer | `50000`  | Maximum number of entries in the resolution cache.                                                                                    |
-| `BUDGET_USAGE_STALENESS_THRESHOLD_MS` | integer | `600000` | Threshold in milliseconds (10 min) after which budget usage is considered stale and lazily refreshed on the `/budget_usage` endpoint. |
+| Parameter                          | Type    | Default | Description                                                                                     |
+| ---------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `BUDGET_ASSIGNMENT_CACHE_TTL`      | integer | `60`    | TTL in seconds for the user-to-budget assignment cache (user to category to budget ID mapping). |
+| `BUDGET_ASSIGNMENT_CACHE_MAX_SIZE` | integer | `50000` | Maximum number of entries in the assignment cache.                                              |
+| `BUDGET_RESOLUTION_CACHE_TTL`      | integer | `60`    | TTL in seconds for the budget resolution cache.                                                 |
+| `BUDGET_RESOLUTION_CACHE_MAX_SIZE` | integer | `50000` | Maximum number of entries in the resolution cache.                                              |
 
-#### Budget Reset Tracking
+#### Budget Reset Reconciliation
 
-Manages automatic reset of per-member budget windows aligned with LiteLLM's reset cycle.
+Re-syncs budget reset state with LiteLLM's reset cycle once a day.
 
-| Parameter                                            | Type    | Default          | Description                                                                                                                             |
-| ---------------------------------------------------- | ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`               | boolean | `false`          | Enables the background job that monitors soon-to-reset project budget windows.                                                          |
-| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`              | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker job. Defaults to every 10 minutes.                                                     |
-| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`                | integer | `15`             | Look-ahead window in minutes for detecting project budgets that will reset soon.                                                        |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`          | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"`   | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
-| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`             | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
+| Parameter                                            | Type    | Default        | Description                                                                                                                             |
+| ---------------------------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_ENABLED`        | boolean | `false`        | Enables the daily reconciliation job that re-syncs reset state at midnight UTC.                                                         |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_SCHEDULE`       | string  | `"10 0 * * *"` | Cron schedule (UTC) for the reset reconciliation job. Must run within `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` of midnight. |
+| `LITELLM_BUDGET_RESET_RECONCILIATION_WINDOW_MINUTES` | integer | `10`           | Allowed execution window in minutes after midnight UTC for the reconciliation job.                                                      |
 
-### LiteLLM Spend Tracking
+### LiteLLM Spend Ledger
 
-Configure the background scheduler that collects project-level spending snapshots from LiteLLM
-and stores them in the `project_spend_tracking` table. The collector runs automatically for all
-projects — no per-project filtering configuration is required.
+Parameters of the spend uploader (available since 2.63.0) and the spend ledger that serves spend, budget, and analytics figures when requests are routed through LiteLLM (available since 2.65.0). For setup steps and behavior, see [Project Budget Management](./project-budget-management.md#spend-tracking).
 
-| Parameter                          | Type    | Default        | Description                                                                                   |
-| ---------------------------------- | ------- | -------------- | --------------------------------------------------------------------------------------------- |
-| `LITELLM_SPEND_COLLECTOR_ENABLED`  | boolean | `false`        | Enables the background spend collector job that stores project-level LiteLLM spend snapshots. |
-| `LITELLM_SPEND_COLLECTOR_SCHEDULE` | string  | `"0 23 * * *"` | Cron schedule (UTC) for the spend collector. Defaults to nightly at 11 PM (`0 23 * * *`).     |
+#### Spend Log Replication
+
+| Parameter                                    | Type    | Default         | Description                                                                                                                                                     |
+| -------------------------------------------- | ------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LITELLM_SPEND_UPLOADER_ENABLED`             | boolean | `false`         | Enables the spend uploader job                                                                                                                                  |
+| `LITELLM_SPEND_UPLOADER_SCHEDULE`            | string  | `"*/2 * * * *"` | Cron schedule (UTC) for the spend uploader                                                                                                                      |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`      | string  | `""`            | `postgresql://` URL of the LiteLLM database; takes precedence over the parts below; without a password, an IAM token is used when `PG_IAM_AUTH_PROVIDER` is set |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST`     | string  | `""`            | LiteLLM database host; used when the URL is empty (host and user are required)                                                                                  |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PORT`     | integer | `5432`          | LiteLLM database port                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_NAME`     | string  | `"litellm"`     | LiteLLM database name                                                                                                                                           |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER`     | string  | `""`            | LiteLLM database user (read-only access is sufficient)                                                                                                          |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` | string  | `""`            | LiteLLM database password; leave empty to use an IAM token when `PG_IAM_AUTH_PROVIDER` is set                                                                   |
+| `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE`  | string  | `""`            | PostgreSQL `sslmode` (for example, `require`); empty keeps the driver default, or `require` with IAM token authentication                                       |
+
+#### Ledger Coverage
+
+| Parameter                         | Type    | Default                  | Description                                                                                                  |
+| --------------------------------- | ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `SPEND_LEDGER_COVERAGE_FLOOR`     | string  | `"2026-11-01T00:00:00Z"` | ISO-8601 UTC start of the period fully covered by the ledger; empty leaves the ledger unactivated            |
+| `SPEND_LEDGER_IDENTITY_FLOOR`     | string  | `""`                     | ISO-8601 UTC completion time of the explicit identity rollout; earlier project figures are labelled partial  |
+| `SPEND_LEDGER_READY`              | boolean | `true`                   | Ledger readiness; set to `false` if retention deletes covered rows or LiteLLM spend logging is stopped       |
+| `SPEND_LEDGER_LEGACY_BELOW_FLOOR` | boolean | `true`                   | Serves periods before the coverage floor from legacy Elasticsearch metrics; `false` reports them unavailable |
+| `SPEND_LEDGER_EMISSION_LAG_HOURS` | integer | `24`                     | Extra lookback in hours for late-emitted metrics; keep high                                                  |
+| `SPEND_LEDGER_MAX_METRIC_IDS`     | integer | `50000`                  | Metric ID count above which dimension-grouped reports are read in pages                                      |
+
+#### Ledger Reads and Performance
+
+| Parameter                           | Type    | Default | Description                                                                                           |
+| ----------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `SPEND_LEDGER_PROJECTION_ENABLED`   | boolean | `true`  | Answers windowed reads from the hourly projection `litellm_spend_hourly`; `false` reads raw rows only |
+| `SPEND_LEDGER_POOL_SIZE`            | integer | `0`     | Dedicated connection pool size for ledger reads per API worker; `0` shares the application pool       |
+| `SPEND_LEDGER_POOL_TIMEOUT_SECONDS` | float   | `30.0`  | Wait for a dedicated-pool connection in seconds; ignored on the shared pool                           |
+| `SPEND_LEDGER_STATEMENT_TIMEOUT_MS` | integer | `0`     | Server-side timeout per ledger query in milliseconds (dedicated pool only); `0` means none            |
+| `SPEND_LEDGER_SLOW_READ_SECONDS`    | float   | `5.0`   | Ledger reads at or above this duration are logged as warnings                                         |
+
+#### Event Loop Monitoring
+
+| Parameter                                 | Type  | Default | Description                                                           |
+| ----------------------------------------- | ----- | ------- | --------------------------------------------------------------------- |
+| `EVENT_LOOP_LAG_MONITOR_INTERVAL_SECONDS` | float | `1.0`   | Event loop lag sampling interval in seconds; `0` disables the monitor |
+| `EVENT_LOOP_LAG_WARN_SECONDS`             | float | `0.5`   | Sampled lag at or above this value is logged as a warning             |
 
 ### LiteLLM Cache & Optimization
 
@@ -1123,6 +1201,10 @@ For authoring instructions, see [Sub-workflows](../../../user-guide/workflows/su
 
 Enable time-based or event-driven workflow automation.
 
+:::warning
+`TRIGGER_ENGINE_ENABLED` must be set to `true` for the [Schedulers](../../../../user-guide/schedulers/) feature to work. When it is `false` (default), schedulers can still be created in the UI, but they never run.
+:::
+
 | Parameter                     | Type    | Default | Description                                     |
 | ----------------------------- | ------- | ------- | ----------------------------------------------- |
 | `TRIGGER_ENGINE_ENABLED`      | boolean | `false` | Enable scheduled workflows and event triggers   |
@@ -1149,6 +1231,12 @@ Automatically select relevant tools based on user queries to improve response qu
 | `TOOL_SELECTION_ENABLED`   | boolean | `false` | Enable AI-powered tool selection from available toolkits       |
 | `TOOL_SELECTION_THRESHOLD` | integer | `3`     | Min tools before triggering smart selection (use all if below) |
 | `TOOL_SELECTION_LIMIT`     | integer | `3`     | Max tools to select per query to optimize token usage          |
+
+### Admin Log Lookup
+
+| Parameter                  | Type    | Default | Description                                                                                                                                                                                          |
+| -------------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ADMIN_LOG_LOOKUP_ENABLED` | boolean | `true`  | Enables the admin log lookup endpoint, which queries Elasticsearch. Set to `false` for deployments running with `RETRIEVAL_BACKEND=none` (no Elasticsearch), otherwise the endpoint returns HTTP 503 |
 
 ### Code Analysis Services
 
@@ -1386,17 +1474,27 @@ Nightly background job that identifies datasources with no recent usage or updat
 
 <EnterpriseFeature />
 
-Read API for per-session coding-agent cost, tooling, repository, and efficiency analytics, backed by ClickHouse. Enable the feature through `features:cliAnalytics` in `customer-config.yaml` — see [Customer Feature Configuration](./customer-feature-configuration.md#advanced-features).
+Read API for per-session coding-agent cost, tooling, repository, and efficiency analytics, backed by PostgreSQL. The backend ingests OTLP and event-hook payloads directly without requiring an OpenTelemetry Collector, and stores data in PostgreSQL (`codemie_analytics` schema). Enable the feature through `features:cliAnalytics` in `customer-config.yaml` -- see [Customer Feature Configuration](./customer-feature-configuration.md#advanced-features).
 
-| Parameter                             | Type    | Default                 | Description                                                                                                                                                                        |
-| ------------------------------------- | ------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CLICKHOUSE_HOST`                     | string  | `"localhost"`           | ClickHouse HTTP host used by the analytics read API                                                                                                                                |
-| `CLICKHOUSE_PORT`                     | integer | `8123`                  | ClickHouse HTTP port                                                                                                                                                               |
-| `CLICKHOUSE_USER`                     | string  | `"default"`             | ClickHouse user for the analytics read API                                                                                                                                         |
-| `CLICKHOUSE_PASSWORD`                 | string  | `""`                    | ClickHouse password for the analytics read API                                                                                                                                     |
-| `CLICKHOUSE_QUERY_TIMEOUT_SECONDS`    | integer | `30`                    | Timeout for ClickHouse queries issued by the analytics read API                                                                                                                    |
-| `ANALYTICS_INGEST_OTLP_HTTP_ENDPOINT` | string  | `"http://otelcol:4318"` | OTLP HTTP endpoint the backend forwards incoming analytics payloads to; override with the host-mapped port (e.g. `http://localhost:14318`) when running outside the Docker network |
-| `ANALYTICS_INGEST_MAX_BODY_BYTES`     | integer | `5242880`               | Maximum accepted request body size, in bytes, for analytics ingest endpoints                                                                                                       |
+| Parameter                                      | Type    | Default               | Description                                                                                                                         |
+| ---------------------------------------------- | ------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ANALYTICS_INGEST_MAX_BODY_BYTES`              | integer | `5242880`             | Maximum accepted request body size, in bytes, for analytics ingest endpoints (5 MiB)                                                |
+| `CLI_ANALYTICS_PG_URL`                         | string  | `""`                  | Dedicated PostgreSQL connection URL for CLI analytics; when empty, falls back to the application database (`PG_URL` / `POSTGRES_*`) |
+| `CLI_ANALYTICS_PG_SCHEMA`                      | string  | `"codemie_analytics"` | PostgreSQL schema used for analytics tables                                                                                         |
+| `CLI_ANALYTICS_PG_POOL_SIZE`                   | integer | `8`                   | Dedicated connection pool size for analytics                                                                                        |
+| `CLI_ANALYTICS_PG_STATEMENT_TIMEOUT_MS`        | integer | `30000`               | Statement timeout in milliseconds for analytics dashboard read queries                                                              |
+| `CLI_ANALYTICS_PG_WORK_MEM`                    | string  | `"32MB"`              | PostgreSQL work_mem per analytics session                                                                                           |
+| `CLI_ANALYTICS_PG_INGEST_ACQUIRE_TIMEOUT_MS`   | integer | `1000`                | Connection pool acquire timeout in milliseconds for ingest requests                                                                 |
+| `CLI_ANALYTICS_PG_INGEST_STATEMENT_TIMEOUT_MS` | integer | `10000`               | Statement timeout in milliseconds for ingest transactions                                                                           |
+| `CLI_ANALYTICS_RAW_RETENTION_DAYS`             | integer | `90`                  | Retention period in days for raw telemetry records                                                                                  |
+| `CLI_ANALYTICS_ROLLUP_RETENTION_DAYS`          | integer | `365`                 | Retention period in days for daily and hourly rollups                                                                               |
+| `CLI_ANALYTICS_SESSION_RETENTION_DAYS`         | integer | `0`                   | Retention period in days for whole sessions in session tables; `0` disables session purging                                         |
+| `CLI_ANALYTICS_SESSION_PURGE_BATCH_SIZE`       | integer | `5000`                | Maximum number of idle sessions one session purge statement deletes; a statement also stops at 100,000 child rows                   |
+| `CLI_ANALYTICS_DEDUP_RETENTION_DAYS`           | integer | `14`                  | Retention period in days for duplicate record tracking                                                                              |
+| `CLI_ANALYTICS_ROLLUP_REFRESH_SECONDS`         | integer | `30`                  | Refresh interval in seconds for background rollup calculation                                                                       |
+| `CLI_ANALYTICS_ROLLUP_BATCH_SIZE`              | integer | `5000`                | Number of keys recomputed per transaction during rollup refresh                                                                     |
+| `CLI_ANALYTICS_PARTITION_PREMAKE_WEEKS`        | integer | `4`                   | Number of weeks ahead to premake table partitions                                                                                   |
+| `CLI_ANALYTICS_MAINTENANCE_INTERVAL_MINUTES`   | integer | `60`                  | Interval in minutes between maintenance tasks (partition creation, retention cleanup)                                               |
 
 ---
 
@@ -1441,7 +1539,7 @@ Each model entry supports these configuration options:
 
 | Field                              | Type    | Description                                                                                                                                                                                                                                                                                                                                                               |
 | ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4`, `claude-3-opus-20240229`)                                                                                                                                                                                                                                                                                                      |
+| `base_name`                        | string  | Canonical model identifier (e.g., `gpt-4.1`, `claude-opus-4-6-20260205`)                                                                                                                                                                                                                                                                                                  |
 | `deployment_name`                  | string  | Provider-specific deployment name (Azure deployment, Bedrock model ID)                                                                                                                                                                                                                                                                                                    |
 | `label`                            | string  | Human-friendly display name shown in UI model selector                                                                                                                                                                                                                                                                                                                    |
 | `multimodal`                       | boolean | Model supports vision (images/video) in addition to text                                                                                                                                                                                                                                                                                                                  |
@@ -1463,7 +1561,7 @@ tool calls simultaneously within one inference round. Results arrive concurrentl
 rendered in the UI as parallel entries under the same thought step.
 
 Standard GPT and Claude models support parallel tool calls. Reasoning models
-(`o1`, `o3`, `o3-mini`, `o4-mini`, and similar) do **not** — always set
+(o-series and similar) do **not** — always set
 `parallel_tool_calls: false` in their `features` block.
 :::
 
@@ -1540,9 +1638,30 @@ Override with a JSON array via environment variable:
 AUTHORIZED_APPS_ALLOWED_KEY_DOMAINS=["trusted.example","keys.trusted.example"]
 ```
 
+## Legacy Parameters
+
+<details>
+<summary>Parameters removed in 2.65.0</summary>
+
+The parameters below are read only by CodeMie versions before 2.65.0. For replacements and upgrade steps, see the [2.65.0 release notes](../../update/release-notes/release-notes.md#v2-65-0).
+
+| Parameter                                    | Type    | Default          | Description                                                                                      |
+| -------------------------------------------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------ |
+| `LITELLM_SPEND_COLLECTOR_ENABLED`            | boolean | `false`          | Enables the spend collector job that stores LiteLLM spend snapshots in `project_spend_tracking`  |
+| `LITELLM_SPEND_COLLECTOR_SCHEDULE`           | string  | `"0 1 * * *"`    | Cron schedule (UTC) for the spend collector (`0 23 * * *` before 2.63.0)                         |
+| `LITELLM_BUDGET_RESET_TRACKER_ENABLED`       | boolean | `false`          | Enables the job that monitors soon-to-reset project budget windows                               |
+| `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`      | string  | `"*/10 * * * *"` | Cron schedule (UTC) for the reset-window tracker                                                 |
+| `LITELLM_BUDGET_RESET_WINDOW_MINUTES`        | integer | `15`             | Look-ahead window in minutes for detecting project budgets that reset soon                       |
+| `BUDGET_USAGE_STALENESS_THRESHOLD_MS`        | integer | `600000`         | Age in milliseconds after which budget usage is lazily refreshed on the `/budget_usage` endpoint |
+| `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS` | integer | `600000`         | Age in milliseconds after which member spend analytics data is lazily refreshed                  |
+| `CLI_METRICS_CUTOFF_DATE`                    | string  | `"2026-02-07"`   | CLI metrics data quality cutoff date                                                             |
+
+</details>
+
 ---
 
 ## See Also
 
 - [Kubernetes Deployment](../../deployment/infrastructure-deployment/kubernetes.mdx) - Complete Kubernetes deployment walkthrough for AWS, Azure, and GCP
 - [On-VM Deployment](../../deployment/infrastructure-deployment/on-vm.mdx) - EC2, Azure VM, or Compute Engine deployment with Docker Compose
+- [Running CodeMie Standalone](../../../user-guide/standalone/run-guide.md) - Single-image setup without Elasticsearch or Keycloak

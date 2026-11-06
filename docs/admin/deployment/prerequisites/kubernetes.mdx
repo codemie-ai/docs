@@ -28,6 +28,9 @@ To deploy AI/Run CodeMie on AWS, you need:
 
 - **Active AWS Account** with preferred region for deployment
 - **Programmatic Access** with credentials that have permissions to create and manage IAM Roles and Policy Documents
+  :::info IAM Roles and Permissions
+  For the complete list of IAM roles and permissions, including the requirements for installation into existing infrastructure and an existing EKS cluster, see [AWS IAM Roles and Permissions](./kubernetes/aws-iam-roles-and-permissions.md).
+  :::
 - **Sufficient Quota** for the required resources (EKS, RDS, networking, storage, etc.)
   :::info Complete Resource List
   For a detailed list of all AWS resources that will be provisioned, refer to the [Architecture](../../architecture/kubernetes.mdx) section or review the Terraform modules in the deployment repository.

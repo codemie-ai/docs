@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "docusaurus": {
+    "entry": [
+      "src/theme/**/*.{js,jsx,ts,tsx}",
+      "src/components/**/*.{js,jsx,ts,tsx}",
+      "src/css/**/*.css",
+      "{blog,docs}/**/*.{md,mdx}"
+    ]
+  },
+  "ignoreDependencies": [
+    "@docusaurus/module-type-aliases",
+    "@docusaurus/tsconfig",
+    "@docusaurus/types",
+    "@docusaurus/plugin-content-docs",
+    "@docusaurus/theme-common",
+    "@easyops-cn/docusaurus-search-local",
+    "docusaurus-plugin-image-zoom",
+    "prism-react-renderer",
+    "react-dom",
+    "prettier-plugin-tailwindcss"
+  ]
+}

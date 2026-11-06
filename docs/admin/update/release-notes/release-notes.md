@@ -24,7 +24,180 @@ We highly recommend keeping CodeMie up to date. Regular upgrades deliver the lat
 Review every release between your current and target version that has a **Breaking**, **Config changes**, or **Component updates** badge. Releases marked **No admin action required** can be skipped.
 :::
 
+:::warning Use the verified LiteLLM version
+While we recommend keeping CodeMie up to date, keep LiteLLM at the version that has been tested and verified with your CodeMie release.
+The currently tested and verified LiteLLM version is **1.99.4**.
+
+Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
+:::
+
+## November 2026 {#2026-11}
+
+<details className="release" id="v2-65-0">
+<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** November 6, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.65.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**LiteLLM Spend Ledger**
+
+1. **[BREAKING] LiteLLM spend collector and related variables removed** — spend, budget, limit, and analytics figures are now served from a single spend ledger (`litellm_spend_logs`) that is filled by the spend uploader. The following variables are no longer read and must be removed from `extraEnv` if present.
+
+   | Removed variable                                                                                                       | Replaced by                                                                                                                                             |
+   | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `LITELLM_SPEND_COLLECTOR_ENABLED`, `LITELLM_SPEND_COLLECTOR_SCHEDULE`                                                  | `LITELLM_SPEND_UPLOADER_ENABLED`, `LITELLM_SPEND_UPLOADER_SCHEDULE` (see the next item)                                                                 |
+   | `LITELLM_BUDGET_RESET_TRACKER_ENABLED`, `LITELLM_BUDGET_RESET_TRACKER_SCHEDULE`, `LITELLM_BUDGET_RESET_WINDOW_MINUTES` | No replacement; budget periods are calculated from the ledger. Daily reset reconciliation remains available via `LITELLM_BUDGET_RESET_RECONCILIATION_*` |
+   | `BUDGET_USAGE_STALENESS_THRESHOLD_MS`, `BUDGET_MEMBER_SPEND_STALENESS_THRESHOLD_MS`                                    | No replacement; figures are calculated from the ledger on read                                                                                          |
+   | `CLI_METRICS_CUTOFF_DATE`                                                                                              | No replacement                                                                                                                                          |
+
+   :::warning Spend figures depend on the spend uploader
+   Deployments that relied on the spend collector must enable the spend uploader, otherwise spend and budget consumption figures are missing or incomplete.
+   :::
+
+2. **Enable the spend uploader and activate the ledger** — required for deployments that route requests through LiteLLM.
+   1. Set `LITELLM_SPEND_UPLOADER_ENABLED: "true"` and configure the LiteLLM database connection (`LITELLM_SPEND_UPLOADER_LITELLM_DB_URL`, or `LITELLM_SPEND_UPLOADER_LITELLM_DB_HOST` and `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` with the related variables).
+   2. Wait for the first run to finish loading the historical spend logs.
+   3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request in the completed load and restart the API pods.
+
+   The LiteLLM database connection supports IAM token authentication: with `PG_IAM_AUTH_PROVIDER` set, leave the password empty (or omit it from the URL) and a short-lived token is used.
+
+   :::warning API validates the LiteLLM database connection at startup
+   When `LITELLM_SPEND_UPLOADER_ENABLED` is `true` and the LiteLLM database is configured, the API connects to the LiteLLM database at startup and does not start if the credentials are rejected or the database is unreachable. Verify the connection settings before upgrading.
+   :::
+
+   See [Project Budget Management](../../configuration/codemie/project-budget-management.md#spend-tracking) for details.
+
+3. **New optional variables** — `SPEND_LEDGER_*` settings for coverage, projection, and read isolation, and `EVENT_LOOP_LAG_*` settings for event loop monitoring. All have defaults. See [API Configuration](../../configuration/codemie/api-configuration.md#litellm-spend-ledger).
+
+**Model Retirements**
+
+The following models are retired on **November 19, 2026** according to the [Azure OpenAI model retirement schedule ↗](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule) and the [Gemini 3.6 Flash model page ↗](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-6-flash). After this date, requests to these models fail. Their configuration examples have been removed from [LiteLLM Model Configuration](../../configuration/extensions/litellm-proxy/model-configuration.md).
+
+| Retired model        | Provider     | Retirement date | Recommended replacement |
+| -------------------- | ------------ | --------------- | ----------------------- |
+| `o1`                 | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-sol`           |
+| `o3-2025-04-16`      | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-sol`           |
+| `o3-mini`            | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-terra`         |
+| `o4-mini-2025-04-16` | Azure OpenAI | Nov 19, 2026    | `gpt-5.6-terra`         |
+| `gemini-3.6-flash`   | Vertex AI    | Nov 19, 2026    | `gemini-3.8-flash`      |
+
+:::warning Update model references before November 19, 2026
+Remove the retired models from your LiteLLM configuration and replace them with the recommended models. Also update any assistants, workflows, and premium model lists that still reference them.
+:::
+
+</details>
+
+<details className="release" id="v2-64-0">
+<summary><span className="release__version">CodeMie 2.64.0</span><span className="release__date">Nov 3, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** November 3, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.64.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 ## October 2026 {#2026-10}
+
+<details className="release" id="v2-63-0">
+<summary><span className="release__version">CodeMie 2.63.0</span><span className="release__date">Oct 30, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** October 30, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.63.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.99.4</h4>
+
+Updated from 1.99.2. For details, see the [LiteLLM 1.99.4 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.99.4).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details className="release" id="v2-62-0">
+<summary><span className="release__version">CodeMie 2.62.0</span><span className="release__date">Oct 26, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 26, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.62.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**CodeMie Keycloak Theme**
+
+Updated from 2.50.0 to 2.62.0. This update upgrades the base build container image to Node.js 24 (`dhi.io/node:24-alpine3.23-dev`).
+
+</details>
+
+<details className="release" id="v2-61-0">
+<summary><span className="release__version">CodeMie 2.61.0</span><span className="release__date">Oct 22, 2026</span><span className="badge badge--warning">Config changes</span></summary>
+
+**Release Date:** October 22, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.61.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**LiteLLM graceful drain**
+
+LiteLLM pods now drain in-flight requests through the `/health/drain` endpoint before they stop. This was added so that rollouts and scale-down no longer drop requests that are still being served. The drain call is authorized with a token stored in the new `litellm-drain-token` secret. The `general_settings.enable_drain_endpoint: true` setting and the `preStop` hook are already included in the updated `litellm/config/litellm-<cloud>-config.yaml` and `litellm/values-<cloud>.yaml` files.
+
+**Actions required**
+
+- Only if LiteLLM Proxy is deployed:
+  - Automated deployment: no action required, `helm-charts.sh` creates the `litellm-drain-token` secret.
+  - Manual deployment: create the secret before upgrading, see [Manual Deployment](../../deployment/extensions/litellm-proxy/deployment/manual-deployment.md).
+  - Custom LiteLLM `values.yaml` or config files: copy the `extraEnvVars`, `lifecycle.preStop` and `enable_drain_endpoint` settings from the updated files.
+
+</details>
+
+<details className="release" id="v2-60-0">
+<summary><span className="release__version">CodeMie 2.60.0</span><span className="release__date">Oct 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** October 19, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.60.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Keycloak Operator 1.35.0</h4>
+
+Existing deployments need [CRDs update](../3rd-party-components/keycloak/operator-upgrade.md).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
+<details className="release" id="v2-59-0">
+<summary><span className="release__version">CodeMie 2.59.0</span><span className="release__date">Oct 16, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** October 16, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.59.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
 
 <details className="release" id="v2-58-0">
 <summary><span className="release__version">CodeMie 2.58.0</span><span className="release__date">Oct 12, 2026</span><span className="badge badge--warning">Config changes</span></summary>
@@ -137,7 +310,14 @@ No third-party component updates in this release.
 
 </details>
 
-## September 2026 {#2026-09}
+## Older Releases {#older-releases}
+
+Releases from previous months, grouped by year and month. Expand a month to see its releases.
+
+### 2026 {#older-2026}
+
+<details className="release-archive" id="2026-09">
+<summary><span className="release-archive__month">September</span><span className="release-archive__count">9 releases</span></summary>
 
 <details className="release" id="v2-54-0">
 <summary><span className="release__version">CodeMie 2.54.0</span><span className="release__date">Sep 29, 2026</span><span className="badge badge--info">Component updates</span></summary>
@@ -214,15 +394,11 @@ No breaking configuration changes were introduced in this release.
 </details>
 
 <details className="release" id="v2-50-0">
-<summary><span className="release__version">CodeMie 2.50.0</span><span className="release__date">Sep 14, 2026</span><span className="badge badge--info">Component updates</span></summary>
+<summary><span className="release__version">CodeMie 2.50.0</span><span className="release__date">Sep 14, 2026</span><span className="badge badge--info">Component updates</span><span className="badge badge--warning">Config changes</span></summary>
 
 **Release Date:** September 14, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.50.0)
 
 <h3>Third-Party Component Updates</h3>
-
-<h4>CodeMie Keycloak Theme 2.50.0</h4>
-
-Updated from 2.15.2. This update addresses security vulnerabilities in the base Alpine Linux image.
 
 <h4>LiteLLM 1.96.2</h4>
 
@@ -230,7 +406,9 @@ Updated from 1.93.0. For details, see the [LiteLLM 1.96.2 Release Notes ↗](htt
 
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+**CodeMie Keycloak Theme**
+
+Updated from 2.15.2 to 2.50.0. This update addresses security vulnerabilities in the base Alpine Linux image.
 
 </details>
 
@@ -294,11 +472,7 @@ No breaking configuration changes were introduced in this release.
 
 </details>
 
-## Older Releases {#older-releases}
-
-Releases from previous months, grouped by year and month. Expand a month to see its releases.
-
-### 2026 {#older-2026}
+</details>
 
 <details className="release-archive" id="2026-08">
 <summary><span className="release-archive__month">August</span><span className="release-archive__count">4 releases</span></summary>

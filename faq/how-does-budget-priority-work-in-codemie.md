@@ -16,6 +16,12 @@ configured. In that case, all requests are resolved within the project:
 
 If the project has no budgets configured at all, personal and default budgets apply normally.
 
+**Which project is used:** requests made through a project's own assistant, workflow, or data
+source use that project. Requests that are not tied to a project — Marketplace assistants used by
+non-members of the assistant's project, AI generation, and CLI requests without a configured
+project — use the user's **default project**, which administrators assign in Users Management.
+If that project has no budget for the request, the personal or default budget is charged.
+
 **Key rules to remember:**
 
 - The Platform budget is the universal fallback within a project. If a project has budgets for
@@ -29,3 +35,4 @@ If the project has no budgets configured at all, personal and default budgets ap
 ## Sources
 
 - [Budget Management — Budget Priority](https://codemie-ai.github.io/docs/user-guide/budget-management#budget-priority)
+- [Budget Management — Default Project](https://codemie-ai.github.io/docs/user-guide/budget-management#default-project)

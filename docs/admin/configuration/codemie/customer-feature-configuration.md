@@ -36,6 +36,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:subWorkflow`                    | Workflow editor and execution                                       | Sub-workflow configuration and execution                                                        | Sub-workflow controls; API and runtime access return `403`                          | Disabled by default; enable with `subWorkflowNode`                                             |
 | **PLATFORM-MANAGED MODE**                 |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:budgetManagement`               | Project detail pages, Settings → Administration                     | Budget columns and budget management section                                                    | Budget tracking UI                                                                  |                                                                                                |
+| `features:projectModelOverride`           | Project detail pages → Models tab                                   | Models tab on project detail page; per-project model allow-list and default model selector      | Models tab hidden; all platform models available in every project                   | Disabled by default; requires Project Admin or Platform Admin to configure                     |
 | **DYNAMIC TOOLS (Chat Interface)**        |                                                                     |                                                                                                 |                                                                                     |                                                                                                |
 | `features:webSearch`                      | Chat → Dynamic tools settings (gear icon)                           | "Web Search" toggle                                                                             | Web search option                                                                   | If both disabled, entire section hidden. Editable at runtime                                   |
 | `features:dynamicCodeInterpreter`         | Chat → Dynamic tools settings (gear icon)                           | "Code Interpreter" toggle                                                                       | Code interpreter option                                                             | If both disabled, entire section hidden                                                        |
@@ -310,6 +311,58 @@ components:
   - id: "features:showAllProjects"
     settings:
       enabled: true
+
+  # WHERE: Project detail pages → Models tab
+  # ENABLED: Shows the Models tab on project detail pages, allowing Project Admins and Platform
+  #          Admins to restrict which LLM models are available within a project and set a
+  #          project-level default model
+  # DISABLED: Models tab is hidden; all platform models are available in every project
+  # NOTE: Disabled by default. When LiteLLM Proxy is deployed, restrictions are also enforced
+  #       at the API level. Not shown on personal projects.
+  - id: "features:projectModelOverride"
+    settings:
+      enabled: false
+      name: "Project Model Override"
+      description: "Enable Project model override configuration."
+```
+
+#### Project Model Override {#project-model-override}
+
+Controls whether the **Models** tab appears on project detail pages. When enabled, Project Admins
+and Platform Admins can restrict which LLM models are available within a project and set a
+project-level default model. The selection applies to all chats, assistants, and workflows that
+belong to the project.
+
+**Where it appears:** Project detail pages → **Models** tab. Not shown on personal projects.
+
+**How it works:**
+
+- **When `enabled: true`** — The **Models** tab is visible to Project Admins and Platform Admins.
+  Admins can enable or disable specific models for the project and choose a project-level default.
+  Users in the project only see the allowed models in model selectors.
+- **When `enabled: false`** (default) — The **Models** tab is hidden. All platform models are
+  available in every project without restriction.
+
+When [LiteLLM Proxy](../../../admin/deployment/extensions/litellm-proxy/index.md) is deployed,
+saving a project's model configuration regenerates the project's LiteLLM virtual keys to enforce
+restrictions at the API level. Without LiteLLM Proxy, restrictions are enforced in the UI layer
+only.
+
+For full usage instructions, see
+[Model Configuration](../../../user-guide/project-user-management/projects.md#model-configuration)
+in the Project Management guide.
+
+```yaml
+components:
+  # WHERE: Project detail pages → Models tab
+  # ENABLED: Shows Models tab; Project Admins can restrict models and set project default
+  # DISABLED: Models tab hidden; all platform models available in every project
+  # NOTE: Disabled by default
+  - id: "features:projectModelOverride"
+    settings:
+      enabled: false
+      name: "Project Model Override"
+      description: "Enable Project model override configuration."
 ```
 
 ### Advanced Features
@@ -355,8 +408,8 @@ components:
   # WHERE: Analytics page → CLI Analytics tab
   # ENABLED: Shows per-session coding-agent cost, tooling, repository, and efficiency analytics
   # DISABLED: Hides the CLI Analytics tab
-  # NOTE: Enterprise package feature only. Requires the backend ClickHouse and OTel Collector
-  #       environment variables — see CodeMie API Configuration Reference (CLI Analytics section).
+  # NOTE: Enterprise package feature only. Telemetry is stored in PostgreSQL (uses the application database
+  #       by default, or a separate database via `CLI_ANALYTICS_PG_URL`) -- see CodeMie API Configuration Reference (CLI Analytics section).
   #       Can also be toggled at runtime with FEATURE_CLI_ANALYTICS=true, which overrides `enabled`.
   #       `deliveryFramework` classifies sessions by the prefix of the coding-agent skill/framework
   #       identifier, falling back to `fallbackLabel` when no rule matches.
@@ -555,10 +608,17 @@ The following fields appear in the `/v1/config` API response but are **not confi
 These values are served automatically from the backend configuration. No `customer-config.yaml` action is required.
 :::
 
-| Field           | Backend env var         | Default    | Description                        |
-| --------------- | ----------------------- | ---------- | ---------------------------------- |
-| `idpProvider`   | `IDP_PROVIDER`          | `keycloak` | Identity provider in use           |
-| `mcpAuthOrigin` | `CALLBACK_API_BASE_URL` | _(none)_   | Origin URL for MCP OAuth callbacks |
+| Field                     | Backend env var                     | Default    | Description                                                                  |
+| ------------------------- | ----------------------------------- | ---------- | ---------------------------------------------------------------------------- |
+| `idpProvider`             | `IDP_PROVIDER`                      | `keycloak` | Identity provider in use                                                     |
+| `mcpAuthOrigin`           | `CALLBACK_API_BASE_URL`             | _(none)_   | Origin URL for MCP OAuth callbacks                                           |
+| `features:knowledgeBases` | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Enabled only when `RETRIEVAL_BACKEND=elasticsearch` and `ELASTIC_URL` is set |
+| `features:datasources`    | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Same condition as `features:knowledgeBases`                                  |
+| `features:codeIndexing`   | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Same condition as `features:knowledgeBases`                                  |
+
+:::info Standalone deployments
+The [CodeMie Standalone](../../../user-guide/standalone/index.md) image sets `RETRIEVAL_BACKEND=none` by default and includes no Elasticsearch container, so `features:knowledgeBases`, `features:datasources`, and `features:codeIndexing` are disabled regardless of `customer-config.yaml`.
+:::
 
 ### Datasource Features
 
@@ -581,6 +641,10 @@ Controls whether the **Schedulers** item is visible in the left navigation sideb
 
 - **When `enabled: true`** (default) — Schedulers navigation item appears in the sidebar
 - **When `enabled: false`** — Schedulers navigation item is hidden
+
+:::note
+This flag only controls the visibility of the navigation item. For schedulers to actually run, the Trigger Engine must be enabled on the API with `TRIGGER_ENGINE_ENABLED=true`. See [API Configuration](../api-configuration#trigger-engine).
+:::
 
 This flag can be toggled directly in the Customer Configuration UI under **Settings → Administration → Customer Configuration**.
 
@@ -1245,6 +1309,12 @@ extraObjects:
           - id: "features:showAllProjects"
             settings:
               enabled: true
+
+          - id: "features:projectModelOverride"
+            settings:
+              enabled: false
+              name: "Project Model Override"
+              description: "Enable Project model override configuration."
 
           # Banner, Chat Disclaimer and Release Notes
           # NOTE: Can be overridden at runtime in Settings → Administration → Customer Configuration

@@ -5,7 +5,7 @@ sidebar_position: 1
 title: LiteLLM Proxy Installation and Configuration Guide
 description: Load balancing and high availability for LLM requests
 pagination_prev: admin/deployment/extensions/extensions-overview
-pagination_next: null
+pagination_next: admin/deployment/extensions/litellm-proxy/configure-values
 ---
 
 import Tabs from '@theme/Tabs';
@@ -31,6 +31,14 @@ Before you begin, ensure you have:
 :::warning Version Requirement
 
 LiteLLM Proxy requires AI/Run CodeMie version 2.0.0 or higher. Ensure your CodeMie installation is updated before proceeding.
+
+:::
+
+:::warning Use the verified LiteLLM version
+
+Install and run only the LiteLLM version that has been tested and verified with CodeMie. The current version is listed in the [Release Notes](../../../update/release-notes/release-notes.md).
+
+Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
 
 :::
 

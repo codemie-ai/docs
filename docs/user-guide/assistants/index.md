@@ -36,7 +36,7 @@ Quick start with pre-built assistants:
 Discover and share assistants with the community:
 
 - [Marketplace Overview](./marketplace-overview.md) - Discover community-contributed assistants
-- [Publish to Marketplace](./marketplace-publishing.md) - Share your assistants with the community
+- [Publish to Marketplace](./marketplace-publishing.md) - Share your assistants with the community, validation checks, and the review process
 - [Assistant Categories Management](./assistant-categories-management.md) - Organize assistants with categories
 - [Clone Assistant from Marketplace](./clone-assistant-from-marketplace.md) - Customize marketplace assistants
 
