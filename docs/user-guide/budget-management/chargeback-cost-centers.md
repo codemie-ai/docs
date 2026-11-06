@@ -112,6 +112,79 @@ Assigning a cost center does not by itself redirect billing. The project's budge
 both **Enable chargeback** and **Attribute to a cost center** switched on for its spend to roll up.
 :::
 
+## Budget Rollup
+
+The cost center detail page includes a read-only **Budget rollup** card that combines the budgets of
+all linked projects in one place. It removes the need to open each project and total the figures
+manually.
+
+The rollup is calculated on demand from the projects currently linked to the cost center. Nothing is
+stored: the cost center still has no budget of its own, and the card has no edit controls.
+
+### Viewing the Rollup
+
+Path: **Profile → Settings → Administration → Cost centers management → select a cost center**
+
+The **Budget rollup** section appears between the cost center details and the **Linked projects**
+list. It requires the **Maintainer** or **Admin** role, and is shown only when the budget management
+UI is enabled. See [Enabling Budget Management UI](../../admin/configuration/codemie/project-budget-management.md#enabling-budget-management-ui).
+No additional configuration is required.
+
+![Cost center detail page with the Budget rollup card](./images/cost-center-budget-rollup.jpg)
+
+### Totals
+
+The top of the card summarizes the whole cost center.
+
+| Field            | Description                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Total budget** | Sum of the hard limits of all categories across the linked projects, labeled with the shared reset period (for example, `Monthly · 30d`)                |
+| **Spend**        | Combined spend of the linked projects. Includes API key spend, matching the **Spend** figure on the project page; a hint on the label states the amount |
+| **% used**       | **Spend** as a percentage of **Total budget**, capped at 100%. Shows `—` when there is no total budget to compare against                               |
+
+### Distribution
+
+Below the totals, three cards show the same figures per budget category: **Platform**, **CLI**, and
+**Premium Models**. Each card uses the same layout as the category cards on the project page.
+
+| Field                  | Description                                                                              |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| **Spend / hard limit** | Category spend against the summed hard limit, with a progress bar colored by consumption |
+| **Remaining**          | Hard limit minus spend, never below zero                                                 |
+| **Soft limit**         | Sum of the soft limits for the category                                                  |
+| Footer                 | Number of distinct members with an allocation and the total amount allocated to them     |
+
+A project with no budget in a category contributes zero to that category; the other categories are
+still summed. The figures are recalculated each time the page loads, so a changed project budget
+shows up after a reload. The card also refreshes after projects are linked to or unlinked from the
+cost center.
+
+### Empty and Edge States
+
+A cost center whose linked projects have no budgets assigned shows `— not assigned —` in each category card.
+
+![Budget rollup with no budgets assigned](./images/cost-center-budget-rollup-empty.jpg)
+
+| Situation                                    | What the card shows                                                                                           |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| No projects are linked                       | `No projects linked` in each category card, and `—` for the totals                                            |
+| No linked project has a budget in a category | `— not assigned —` in that category card                                                                      |
+| Linked projects use different reset periods  | **Total budget** shows `Not summed: different reset periods`, with a hint listing the period of each category |
+| Some budget rows were left out of a category | A note under the footer, such as `+1 pending sync` or `+1 excluded (different reset window)`                  |
+| The rollup cannot be loaded                  | An error message with a **Retry** button                                                                      |
+
+:::info
+Amounts are summed only across budgets that share a reset period. Within a category, the monthly
+(`30d`) period is preferred when any linked project uses it. Budgets with a different period are
+left out of the sum and reported in the note, rather than added together. Budgets that have not yet
+finished syncing with the LLM proxy are likewise left out until the sync completes.
+:::
+
+:::note
+**Spend** includes API key spend, which is not part of any category, so the category cards may add up
+to less than the header figure. The hint next to **Spend** states the difference.
+:::
+
 ## Putting It Together
 
 A typical rollout across a department:
@@ -122,7 +195,8 @@ A typical rollout across a department:
 4. On each project's budget, switch on **Enable chargeback** and **Attribute to a cost center**.
 
 Every project then carries its own enforced limit, while the department receives a single combined
-bill for their AI spend.
+bill for their AI spend. The combined budget and spend can be reviewed at any time in the
+[Budget Rollup](#budget-rollup) on the cost center page.
 
 ## See Also
 
