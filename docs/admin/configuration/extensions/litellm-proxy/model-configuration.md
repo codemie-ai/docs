@@ -329,6 +329,12 @@ Each model entry in the `model_list` array consists of three main sections:
   such and avoid treating it as a normal deployable model. See
   [LiteLLM Native Auto-Routing](../../codemie/ai-models-integration/litellm-native-auto-routing.md)
   for the field schema and a worked example.
+- **`mode`**: (Optional) Set to `audio_transcription` to make the model a speech-to-text (STT)
+  model. CodeMie lists it in the STT model list and not in the chat model list.
+- **`stt_config`**: (Optional) Per-model STT settings: `default_language`,
+  `forward_request_headers`, `response_headers`, `response_body_fields` and
+  `request_timeout_seconds`. See
+  [Speech-to-Text Configuration](../../codemie/speech-to-text-configuration.md).
 
 ## Model Configuration Examples
 
