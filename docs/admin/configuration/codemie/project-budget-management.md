@@ -166,7 +166,7 @@ The spend uploader (available since 2.63.0) is a background job in the CodeMie A
 - The first run loads the full history and can take a long time. Later runs continue from where the previous one stopped, and a failed run resumes from the last committed page.
 - The job is safe in multi-replica deployments: a database advisory lock lets only one pod run it at a time.
 - The uploader is part of the Enterprise package and requires a `codemie-enterprise` build that includes it. If the build does not include it, or no LiteLLM database is configured, the job is not registered and a message is written to the API log.
-- The LiteLLM database is configured with either `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL` or the separate `_HOST`, `_PORT`, `_NAME`, `_USER`, `_PASSWORD`, and `_SSLMODE` variables, so that the password can come from its own secret. Read-only access is sufficient. The CodeMie database connection reuses the application's PostgreSQL settings, including IAM authentication.
+- The LiteLLM database is configured with either `LITELLM_SPEND_UPLOADER_LITELLM_DB_URL` or the separate `_HOST`, `_PORT`, `_NAME`, `_USER`, `_PASSWORD`, and `_SSLMODE` variables, so that the password can come from its own secret. Read-only access is sufficient. The CodeMie database connection reuses the application's PostgreSQL settings, including IAM authentication. See [Read-only access to the LiteLLM database](#read-only-access-to-the-litellm-database).
 - The LiteLLM database supports IAM token authentication. See [IAM authentication for the LiteLLM database](#iam-authentication-for-the-litellm-database).
 - When the spend uploader is enabled and the LiteLLM database is configured, the API opens one test connection to the LiteLLM database at startup. If the credentials are rejected or the database cannot be reached, the API does not start, and the log names the failure type without echoing connection details.
 - LiteLLM spend logs must be enabled (`disable_spend_logs: false`), and the LiteLLM retention period must be long enough for rows to be copied before deletion. See [Spend Logs Retention](../extensions/litellm-proxy/spend-logs-retention.md).
@@ -181,9 +181,127 @@ The spend uploader supports IAM token authentication for the LiteLLM database, u
 - On AWS, a token is bound to the database host, port, and user, so a network host and a user are required.
 - When the connection is built from the separate variables and `LITELLM_SPEND_UPLOADER_LITELLM_DB_SSLMODE` is empty, `require` is applied, because a token login is refused over an unencrypted connection.
 
+### Read-only access to the LiteLLM database
+
+The spend uploader only reads the `LiteLLM_SpendLogs` table. Instead of reusing the LiteLLM database owner, give CodeMie a dedicated identity with read access to this one table. The recommended setup is a `NOLOGIN` group role that holds the privileges, plus a login identity for CodeMie that is a member of the role. The login identity can be a password user or, when `PG_IAM_AUTH_PROVIDER` is set, a cloud IAM identity (see [IAM authentication for the LiteLLM database](#iam-authentication-for-the-litellm-database)).
+
+:::note Before you start
+
+- The `LiteLLM_SpendLogs` table is created by LiteLLM database migrations. Start LiteLLM at least once against the database before you grant access to the table.
+- On managed PostgreSQL services (Cloud SQL, Amazon RDS, Azure Database for PostgreSQL), the administrator user is not a superuser and cannot grant privileges on tables it does not own. Run the table grant as the table owner, which is the user LiteLLM connects with.
+
+:::
+
+#### Step 1: Create the reader role
+
+Connect to the LiteLLM database as the administrator user and create the group role:
+
+```sql
+CREATE ROLE litellm_spend_reader NOLOGIN;
+
+GRANT CONNECT ON DATABASE litellm TO litellm_spend_reader;
+GRANT USAGE ON SCHEMA public TO litellm_spend_reader;
+```
+
+Replace `litellm` with the name of your LiteLLM database.
+
+#### Step 2: Grant read access to the spend logs table
+
+Connect to the LiteLLM database as the LiteLLM database user (the table owner) and grant read access:
+
+```sql
+GRANT SELECT ON TABLE public."LiteLLM_SpendLogs" TO litellm_spend_reader;
+```
+
+#### Step 3: Create the CodeMie login identity
+
+Create the identity CodeMie connects with and add it to the reader role. Connect to the LiteLLM database as the administrator user and use the option that matches your authentication method.
+
+:::tip
+If the CodeMie database already uses IAM authentication, we recommend the passwordless option for the same cloud provider (Google Cloud SQL IAM, Amazon RDS IAM, or Microsoft Entra authentication). It uses short-lived tokens and leaves no static password to store or rotate.
+:::
+
+:::warning
+`PG_IAM_AUTH_PROVIDER` is a single setting for both databases. When it is set, the CodeMie database also switches to token authentication and `POSTGRES_PASSWORD` is ignored. If the CodeMie database uses a password, use password authentication for the LiteLLM database and set `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` from a Kubernetes secret.
+:::
+
+**Password authentication**
+
+```sql
+CREATE ROLE codemie_spend_reader LOGIN PASSWORD '<password>' IN ROLE litellm_spend_reader;
+```
+
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `codemie_spend_reader` and `LITELLM_SPEND_UPLOADER_LITELLM_DB_PASSWORD` to the password, preferably from a Kubernetes secret.
+
+**Google Cloud SQL with IAM authentication**
+
+The LiteLLM Cloud SQL instance needs the `cloudsql.iam_authentication` flag set to `on`, and the Google service account used by CodeMie API needs the `roles/cloudsql.instanceUser` and `roles/cloudsql.client` roles. Add the service account as an IAM database user of the LiteLLM instance:
+
+```bash
+gcloud sql users create <gsa-name>@<project-id>.iam \
+  --instance=<litellm-instance-name> \
+  --type=cloud_iam_service_account
+```
+
+Then grant the reader role to the IAM user:
+
+```sql
+GRANT litellm_spend_reader TO "<gsa-name>@<project-id>.iam";
+```
+
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<gsa-name>@<project-id>.iam` (the service account email without the `.gserviceaccount.com` suffix) and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `gcp` for the CodeMie database.
+
+**Amazon RDS with IAM authentication**
+
+The LiteLLM RDS instance needs IAM database authentication enabled. Create the database user and grant it the `rds_iam` and reader roles:
+
+```sql
+CREATE USER codemie_spend_reader;
+GRANT rds_iam TO codemie_spend_reader;
+GRANT litellm_spend_reader TO codemie_spend_reader;
+```
+
+The IAM role used by CodeMie API needs the `rds-db:connect` permission for this user on the LiteLLM instance:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": "rds-db:connect",
+  "Resource": "arn:aws:rds-db:<region>:<account-id>:dbuser:<litellm-db-resource-id>/codemie_spend_reader"
+}
+```
+
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `codemie_spend_reader` and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `aws` for the CodeMie database, and the LiteLLM instance must be in the region set in `PG_AWS_RDS_REGION`.
+
+**Azure Database for PostgreSQL with Microsoft Entra authentication**
+
+The LiteLLM flexible server needs Microsoft Entra authentication enabled. Connect to the `postgres` database as a Microsoft Entra administrator and create the principal of the managed identity used by CodeMie API:
+
+```sql
+SELECT * FROM pgaadauth_create_principal('<managed-identity-name>', false, false);
+```
+
+Then connect to the LiteLLM database and grant the reader role:
+
+```sql
+GRANT litellm_spend_reader TO "<managed-identity-name>";
+```
+
+Set `LITELLM_SPEND_UPLOADER_LITELLM_DB_USER` to `<managed-identity-name>` and leave the password empty. `PG_IAM_AUTH_PROVIDER` must already be set to `azure` for the CodeMie database.
+
+#### Step 4: Verify access
+
+Connect to the LiteLLM database as the CodeMie login identity and run:
+
+```sql
+SELECT count(*) FROM public."LiteLLM_SpendLogs";
+```
+
+The query must return a row count without a permission error.
+
 ### Activating the ledger
 
-1. Enable the spend uploader and configure the LiteLLM database connection (see [Environment variables](#environment-variables)).
+1. Enable the spend uploader and configure the LiteLLM database connection (see [Environment variables](#environment-variables) and [Read-only access to the LiteLLM database](#read-only-access-to-the-litellm-database)).
 2. Wait for the first run to finish loading the historical spend logs.
 3. Set `SPEND_LEDGER_COVERAGE_FLOOR` to the timestamp of the earliest request contained in the completed load, replacing the default value, and restart the API pods. The value is read only at startup.
 
