@@ -34,13 +34,9 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-65-0">
-<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Upcoming</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
+<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
 
-**Release Date:** To be announced
-
-:::note Placeholder
-This entry is a draft and will be completed when 2.65.0 is released.
-:::
+**Release Date:** November 6, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.65.0)
 
 <h3>Third-Party Component Updates</h3>
 
