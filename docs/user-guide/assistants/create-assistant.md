@@ -3,7 +3,7 @@ id: create-assistant
 sidebar_position: 1
 title: Create Assistant
 pagination_prev: user-guide/assistants/assistants-overview
-pagination_next: user-guide/assistants/sharing-assistants
+pagination_next: user-guide/assistants/assistant-creator-skill
 description: Build custom AI assistants tailored to your specific needs and workflows
 ---
 
@@ -13,7 +13,9 @@ Create custom assistants tailored to your specific needs. We recommend starting 
 
 ## Creating an Assistant
 
-You can create an assistant in two ways: manually or using AI generation.
+You can create an assistant in two ways: manually or using AI generation. A third option, the
+[Assistant Creator skill](./assistant-creator-skill.md), builds an assistant through a guided
+conversation instead of the configuration form.
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';

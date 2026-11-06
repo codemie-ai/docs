@@ -1,6 +1,6 @@
 ---
 id: marketplace-overview
-sidebar_position: 8
+sidebar_position: 9
 title: Marketplace Overview
 pagination_prev: user-guide/assistants/create-assistant-from-a-template
 pagination_next: user-guide/assistants/marketplace-publishing

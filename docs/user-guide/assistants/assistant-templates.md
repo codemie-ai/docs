@@ -1,6 +1,6 @@
 ---
 id: assistant-templates
-sidebar_position: 6
+sidebar_position: 7
 title: Assistant Templates
 pagination_prev: user-guide/assistants/delete-assistants-and-chats
 pagination_next: user-guide/assistants/create-assistant-from-a-template

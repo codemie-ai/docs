@@ -72,11 +72,9 @@ Start or open an existing chat with an assistant.
 **Step 2: Attach Skills**
 
 1. Click the **Skills** button (input field)
-2. In the **Attach Skills** modal:
-   - Browse your **Project Skills**
-   - Or explore **Marketplace Skills**
-   - Select one or more skills to add
-3. Click **Confirm**
+2. In the **Attach Skills** modal, browse the combined list of available project and marketplace skills
+3. Use **Search skills...** to find skills by name and select one or more skills to add
+4. Click **Confirm**
 
 ![Attach Skills in Chat](./images/attach-skills-in-chat.png)
 

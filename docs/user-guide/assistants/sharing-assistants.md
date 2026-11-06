@@ -1,8 +1,8 @@
 ---
 id: sharing-assistants
-sidebar_position: 2
+sidebar_position: 3
 title: Share Assistants
-pagination_prev: user-guide/assistants/create-assistant
+pagination_prev: user-guide/assistants/assistant-creator-skill
 pagination_next: user-guide/assistants/edit-assistants
 description: Share assistants with team members and collaborators
 ---
