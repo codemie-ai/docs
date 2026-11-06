@@ -45,6 +45,7 @@ Creating a workflow from scratch can be complex, especially for first-time users
 | **Name**                | Unique name for the workflow                                                             |
 | **Description**         | Brief description of the workflow's features and purpose                                 |
 | **Icon URL**            | URL to an icon image for the workflow avatar                                             |
+| **Categories**          | Optional. Up to 3 categories that describe the workflow's use case                       |
 | **Supervisor Prompt**   | Global context shared across all assistants; can include variables like date, time, etc. |
 
 7. Click **Create** to save your workflow.
