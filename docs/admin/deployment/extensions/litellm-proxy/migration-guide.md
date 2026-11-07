@@ -22,7 +22,7 @@ We will first deploy and verify a standalone LiteLLM instance. Only after confir
 
 ### 1. Prepare the PostgreSQL Database
 
-The `postgres_litellm` database and user are created automatically by `db-init-job` during deployment. Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`.
+The `litellm` database and user are created automatically by `db-init-job` during deployment. Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`.
 
 # For manual database setup, see [Manual PostgreSQL Setup](./deployment/manual-deployment.md#manual-postgresql-setup).
 
