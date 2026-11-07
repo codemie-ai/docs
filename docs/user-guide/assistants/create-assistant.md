@@ -223,6 +223,59 @@ The `30000` placeholder is a visual hint only. Until a value is entered and save
 continues to use each tool's own default limit.
 :::
 
+## Smart Tools Selection
+
+The **Enable Smart Tools selection** toggle, located above the **Tools configuration** section,
+lets the assistant choose its tools and skills for each request instead of always offering the
+model every tool configured manually. The toggle is shown only when Smart Tool Selection is
+enabled on the platform level.
+
+![Enable Smart Tools selection toggle in the assistant configuration form](./images/smart-tools-selection.png)
+
+**How to enable**
+
+1. Switch on **Enable Smart Tools selection**.
+2. Click **Save**. The assistant details page shows **Smart Tools: ON** under **Tools & Capabilities**.
+
+**Behavior**
+
+| State   | Behavior                                                                                                                                                                |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **On**  | For each request, the assistant uses the tools it finds relevant, based on the request and the conversation history. Tools required by attached skills are always added |
+| **Off** | The assistant uses only the tools selected in **Tools configuration**, up to the configured tool limit                                                                  |
+
+- Narrowing applies only when enough tools are found. The threshold is a platform setting. With
+  fewer tools, all found tools are used. The tools picked in the form are used only when no
+  relevant tool is found.
+- Tools picked in the form do not decide which tools run. While the toggle is on, tool checkboxes,
+  **Select all**, MCP server toggles, plugin selections, and **Automatic credentials lookup** switches stay visible but cannot be changed. Earlier
+  selections are kept and become active again when the toggle is switched off.
+- No limit applies to the number of tools that can be added to the assistant in this mode.
+- Tools of the assistant's data sources and MCP servers are always available, even though the
+  MCP server toggles cannot be changed.
+- Integration (credential) dropdowns remain editable, and a credential chosen for a tool is applied
+  whenever that tool is selected for a request.
+- A new MCP server added in this mode defaults to using all of its tools.
+- If no relevant tool is found, the tool lookup fails, or the request has no text, the assistant
+  falls back to the configured toolkits and the tools required by attached skills.
+
+:::info Tools Requiring Explicit Enablement
+Web search and code interpreter are added only when the matching feature is available and
+switched on for the request in the chat. Image generation is added only when it is enabled for
+the assistant and not switched off for the request. Code and Git tools are added whenever the
+assistant has a code data source. See [Chat Input Settings](./chat-input-settings.md).
+
+Only the tools picked in **Tools configuration** use the integration pinned to the assistant.
+All other tools use the integration settings of the user running the request, or of the project
+when the user has none. A tool without a matching integration is skipped.
+:::
+
+:::note
+Smart Tools selection does not guarantee a tool call; the model may still answer directly. The
+feature is available only when it is enabled on the platform level. For details, see
+[Smart Tool Selection](../tools_integrations/tools/overview.md#smart-tool-selection).
+:::
+
 ## Tool Output Visibility
 
 The **Hide tool outputs from end users** toggle controls whether end users can see tool calls and
