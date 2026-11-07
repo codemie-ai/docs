@@ -106,4 +106,5 @@ The chat shows loaded skills in the right panel. Simply uncheck skills to remove
 
 - [Skills Overview](./skills-overview.md) - Learn more about Skills concepts
 - [Create Skill](./create-skill.md) - Build skills for dynamic use
+- [Skill Bundles](./skill-bundles.md) - Skill scripts and files in the chat workspace
 - [Attach to Assistants](./attach-skills-to-assistants.md) - Permanent skill attachment

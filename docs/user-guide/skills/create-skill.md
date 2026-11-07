@@ -19,9 +19,10 @@ Skills are **markdown-based knowledge units** that get loaded into assistant con
 
 - ✅ **Markdown content** (up to 300KB) - instructions, code examples, best practices
 - ✅ **Tool references** - specify which tools the skill requires
-- ❌ **No support for**: external scripts, file attachments, binary assets, or embedded images
+- ✅ **Supporting files** - scripts, templates, and data uploaded as a skill bundle and made available in the assistant workspace. See [Skill Bundles](./skill-bundles.md)
+- ❌ **No support for**: binary assets or embedded images inside the instructions
 
-All skill content must be text-based markdown.
+The skill instructions themselves must be text-based markdown.
 :::
 
 ## Creating a Skill

@@ -20,6 +20,7 @@ Learn the basics of creating and managing skills:
 
 - [Skills Overview](./skills-overview.md) - Introduction to skills and their capabilities
 - [Create Skill](./create-skill.md) - Build a skill from scratch or import from file
+- [Skill Bundles](./skill-bundles.md) - Ship scripts and supporting files with a skill and run them in the workspace
 - [Manage Skills](./manage-skills.md) - Edit, export, and delete skills
 
 ## Using Skills

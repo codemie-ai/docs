@@ -87,6 +87,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/skills/skills-overview',
             'user-guide/skills/create-skill',
+            'user-guide/skills/skill-bundles',
             'user-guide/skills/attach-skills-to-assistants',
             'user-guide/skills/manage-skills',
             'user-guide/skills/marketplace-skills',
