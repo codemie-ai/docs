@@ -22,14 +22,14 @@ While the feature is off, the Applications page shows only Platform apps and no 
 
 ![Hosted Applications high-level architecture](./images/hosted-applications-architecture.drawio.png)
 
-| Component      | Role                                                                                                     |
-| -------------- | -------------------------------------------------------------------------------------------------------- |
-| CodeMie API    | Management API, content gateway, and validation workers. One process serves both hosts by `Host` header. |
-| Content domain | A separate registrable domain. Each version is served from `v-<release>.<content domain>`.               |
-| Validator      | A private deployment that checks every upload in a sandboxed parser. Exactly one replica.                |
-| ClamAV         | A separate private deployment that scans uploads for malware on behalf of the validator.                 |
-| Object storage | A dedicated private S3 or GCS bucket for the validated files.                                            |
-| PostgreSQL     | Applications, versions, sharing, sessions, and the job queue.                                            |
+| Component      | Role                                                                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CodeMie API    | Management API, content gateway, and validation workers. One process serves both hosts by `Host` header.                                                   |
+| Content domain | A separate registrable domain. Each version is served from `v-<version ID>.<content domain>`, and its viewer frame from `w-<version ID>.<content domain>`. |
+| Validator      | A private deployment that checks every upload in a sandboxed parser. Exactly one replica.                                                                  |
+| ClamAV         | A separate private deployment that scans uploads for malware on behalf of the validator.                                                                   |
+| Object storage | A dedicated private S3 or GCS bucket for the validated files.                                                                                              |
+| PostgreSQL     | Applications, versions, sharing, sessions, and the job queue.                                                                                              |
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ While the feature is off, the Applications page shows only Platform apps and no 
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Content domain | A separate registrable domain, for example `apps-content.example.net` when CodeMie runs on `example.com`. Never a subdomain of CodeMie or the identity provider. |
 | DNS and TLS    | Wildcard DNS `*.<content domain>` to the ingress and a wildcard certificate.                                                                                     |
-| Identity       | `ENABLE_USER_MANAGEMENT=true`. Any `IDP_PROVIDER` works.                                                                                                         |
+| Identity       | `ENABLE_USER_MANAGEMENT=true`. Any installed `IDP_PROVIDER` works.                                                                                               |
 | Storage        | A dedicated private bucket, with `FILES_STORAGE_TYPE` set to `aws` (S3) or `gcp` (GCS). Azure is not supported yet.                                              |
 
 ## Configuration
@@ -69,18 +69,19 @@ features:
         image:
           repository: <registry>/codemie-hosted-validator
       ingress:
-        host: <content host>
+        host: "*.<content domain>"
 ```
 
-| Value                                | Description                                                                                              |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `enabled`                            | Renders the validator, ClamAV, and content Ingress. Default `false`.                                     |
-| `validator.image.repository`         | Validator image. The tag defaults to the API image tag.                                                  |
-| `ingress.host`                       | Required. Content host served by the content Ingress.                                                    |
-| `namespace.name`, `namespace.create` | Namespace of the validator and ClamAV (default `codemie-hosted-apps`), and whether the chart creates it. |
-| `clamdConfig.existingConfigMap`      | Optional. Use your own ConfigMap (key `clamd.conf`) instead of the one the chart creates.                |
+| Value                                                                               | Description                                                                                                   |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `enabled`                                                                           | Renders the validator, ClamAV, and content Ingress. Default `false`.                                          |
+| `validator.image.repository`                                                        | Validator image. The tag defaults to the API image tag.                                                       |
+| `ingress.host`                                                                      | Required. Wildcard host of the content Ingress, for example `*.apps-content.example.net`.                     |
+| `ingress.enabled`, `ingress.ingressClassName`, `ingress.tls`, `ingress.annotations` | Optional. Content Ingress is enabled by default with class `nginx`. Put the wildcard certificate under `tls`. |
+| `namespace.name`, `namespace.create`                                                | Namespace of the validator and ClamAV (default `codemie-hosted-apps`), and whether the chart creates it.      |
+| `clamdConfig.existingConfigMap`                                                     | Optional. Use your own ConfigMap (key `clamd.conf`) instead of the one the chart creates.                     |
 
-If the validator runs in a separate namespace, set `HOSTED_APPS_VALIDATOR_URL` to the full service name (`<service>.<namespace>.svc`) and create the `codemie-hosted-applications` Secret in that namespace as well. The chart sets the validator and ClamAV environment variables itself.
+The validator Service is `codemie-hosted-apps-validator` and runs in the `namespace.name` namespace, which is separate from the API by default. Set `HOSTED_APPS_VALIDATOR_URL` to the full service name, `http://codemie-hosted-apps-validator.<namespace>.svc:8091`, and create the `codemie-hosted-applications` Secret in the validator namespace as well, with the key `validator-key` (the API reads `HOSTED_APPS_VALIDATOR_KEY` from the same value). The chart sets the validator and ClamAV environment variables itself.
 
 :::caution Exactly one replica
 Validation results live in the validator instance that produced them. Do not scale the validator above one replica. While it restarts, uploads wait and viewing is not affected.
@@ -88,7 +89,7 @@ Validation results live in the validator instance that produced them. Do not sca
 
 ## Ingress
 
-- **Content hosts.** The chart creates the content Ingress when `features.tools.hosted-apps.enabled` is true. It must route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
+- **Content hosts.** The chart creates the content Ingress `codemie-hosted-apps-content` when `features.tools.hosted-apps.enabled` and `ingress.enabled` are true. It must route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
 - **Management host.** Uploads carry up to 100 MiB: set the request body limit to at least `110m` and read and send timeouts to at least `900` seconds. The default chart sets `proxy-read-timeout: "600"`, so raise it and add `proxy-send-timeout`.
 
 ## Storage
@@ -109,7 +110,7 @@ Validation results live in the validator instance that produced them. Do not sca
 
 ## Operations
 
-To take an application down immediately, a platform administrator can suspend it. This unpublishes it, removes all shares, and ends open sessions:
+To take an application down immediately, a platform administrator can suspend it from the application's page (**Suspend**) or through the API. A suspended application disappears for everyone except its owner, project administrators, and platform administrators, and it cannot be activated, published, or shared. Existing shares are kept and apply again after the application is reinstated.
 
 ```bash
 curl -X POST "$CODEMIE_API/v1/admin/hosted-applications/<application id>/security/suspend" \
@@ -117,7 +118,7 @@ curl -X POST "$CODEMIE_API/v1/admin/hosted-applications/<application id>/securit
   -H "Idempotency-Key: $(uuidgen)" -d '{"reason": "Phishing report"}'
 ```
 
-Use `reinstate` instead of `suspend` to clear a suspension. To stop all hosted content, turn the feature off and restart the API.
+Use `reinstate` instead of `suspend` to clear a suspension. Reinstating needs an `If-Match` header with the current application ETag, and the administrator who reinstates cannot be the application's creator. The body can name another accepted `version_id` to make active, with `delete_previous` to remove the previous version. To stop all hosted content, turn the feature off and restart the API.
 
 ## More Information
 
