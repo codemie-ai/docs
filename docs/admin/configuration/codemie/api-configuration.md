@@ -142,6 +142,7 @@ These parameters define paths to configuration files and directories. Typically 
 | `CUSTOMER_CONFIG_DIR`             | Path | `config/customer`                | Customer-specific customizations and branding                                                  |
 | `ASSISTANT_CATEGORIES_CONFIG_DIR` | Path | `config/categories`              | Assistant categorization and organization                                                      |
 | `AUTHORIZED_APPS_CONFIG_DIR`      | Path | `config/authorized_applications` | External application access control definitions                                                |
+| `PROVISIONING_CLIENTS_CONFIG_DIR` | Path | `config/provisioning_clients`    | Directory with `provisioning-clients-config.yaml`, the registry of provisioning API clients    |
 | `INDEX_DUMPS_DIR`                 | Path | `config/index-dumps`             | Pre-built index snapshots for faster deployment                                                |
 | `ALEMBIC_MIGRATIONS_DIR`          | Path | `external/alembic`               | Database schema migration scripts                                                              |
 | `ALEMBIC_INI_PATH`                | Path | `external/alembic/alembic.ini`   | Alembic database migration configuration                                                       |
@@ -570,14 +571,13 @@ SMTP configuration for sending verification and password-reset emails. Only acti
 
 ---
 
-### ServiceNow Integration
+### Provisioning API
 
-Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. See [ServiceNow Budget Integration](./servicenow-budget-integration.md) for setup.
+Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. Clients are registered in `provisioning-clients-config.yaml`, located by `PROVISIONING_CLIENTS_CONFIG_DIR` (see [Configuration File Paths](#configuration-file-paths)). See [Provisioning Clients Configuration](./provisioning-clients.md) for setup.
 
-| Parameter                        | Type   | Default | Description                                                                                                                 |
-| -------------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `SERVICENOW_INTEGRATION_ENABLED` | bool   | `false` | Registers the ServiceNow budget endpoints and restricts the ServiceNow service account to them                              |
-| `SERVICENOW_SERVICE_ACCOUNT_ID`  | string | `""`    | ID (token `sub`) of the Keycloak service account used by ServiceNow. When empty, every request to the endpoints is rejected |
+| Parameter                  | Type | Default | Description                                                                                                                                         |
+| -------------------------- | ---- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PROVISIONING_API_ENABLED` | bool | `false` | Mounts the provisioning API (`/v1/provisioning`) for registered provisioning clients. Clients are confined to this API whether or not it is enabled |
 
 ---
 
