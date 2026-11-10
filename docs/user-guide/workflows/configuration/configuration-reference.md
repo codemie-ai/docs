@@ -239,6 +239,9 @@ max_concurrency: 10
     strategy: balanced
   ```
 
+- **validation**: Save-time contract validation mode, `warn` or `strict` (default: `warn`). Can also be set on a state, where it overrides the workflow value for that state — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+- **require_input_contracts**: Boolean, workflow level only (default: `false`). When `true`, a reachable state without declared or derived input-contract coverage blocks saving — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+
 #### Workflow-Level Settings Examples:
 
 **Example 1: High-Concurrency Batch Processing**
@@ -572,6 +575,11 @@ states:
 ```
 
 (See Section 4 for detailed state configuration)
+
+State-level contract keys:
+
+- **input_schema**: Declared input contract as JSON text (a root object with a `properties` object, optional `required` list; up to 64 KiB and 32 nesting levels) — see [Input contracts](./workflow-states.md#input-contracts-input_schema)
+- **validation**: `warn` or `strict`; overrides the workflow-level value for this state — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
 
 ### 3.5 Custom Nodes Configuration
 
