@@ -111,27 +111,15 @@ data:
 
 To encode values: `echo -n 'your-value-here' | base64`
 
-**Step 2: Add NATS Helm Repository**
-
-Add the official NATS Helm repository:
-
-```bash
-# Add repository
-helm repo add nats https://nats-io.github.io/k8s/helm/charts/
-
-# Update repository index
-helm repo update nats
-```
-
-**Step 3: Install NATS Helm Chart**
+**Step 2: Install NATS Helm Chart**
 
 Deploy NATS using the official Helm chart:
 
 <CodeBlock language="bash">
-{`helm upgrade --install codemie-nats nats/nats \\
-  --version 1.2.6 \\
+{`helm upgrade --install codemie-nats codemie-nats/. \\
   --namespace codemie \\
   --values ./codemie-nats/${props.valuesFileName} \\
+  --dependency-update \\
   --wait \\
   --timeout 900s`}
 </CodeBlock>
