@@ -24,6 +24,8 @@ ignorePaths:
 words:
   # Project/Brand names
   - HMAC
+  - dbuser
+  - serviceaccount
   - codemie
   - passwordless
   - SAMEORIGIN
@@ -38,7 +40,6 @@ words:
   - EPMDEDP
   - Tavily
   - SonarQube
-  - DevForce
   - EPMCDME
   - crunchydata
   - DALL-E
@@ -54,6 +55,20 @@ words:
   - reportportal
   - berriai
   - Ollama
+  - Entra
+  - NTLM
+  - EWS
+  - Autodiscover
+  - sentitems
+  - deleteditems
+  - junkemail
+  - msgfolderroot
+  - subfolders
+  - CIDR
+  - CIDRs
+  - CGNAT
+  - ULA
+  - exchangelib
   # Cloud/Infrastructure
   - kubernetes
   - kubectl
@@ -141,6 +156,7 @@ words:
   - fluentbit
   - tfstate
   - nslookup
+  - nofile
   # Data
   - PostgreSQL
   - Postgres

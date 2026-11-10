@@ -2,7 +2,7 @@ import CodeBlock from '@theme/CodeBlock';
 
 ## Storage Class Installation
 
-The {props.storageClassName} enables Kubernetes to dynamically provision {props.storageType} for stateful workloads like databases.
+The Storage Class enables Kubernetes to dynamically provision block storage (Amazon EBS, Azure Disk, or GCP Persistent Disk, depending on your cloud provider) for stateful workloads like databases.
 
 ### Step 1: Check Existing Storage Classes
 
@@ -13,15 +13,15 @@ kubectl get storageclass
 ```
 
 :::info Skip if Already Exists
-If your cluster already has appropriate storage classes (typically {props.existingStorageExamples}), you can skip this installation.
+If your cluster already has appropriate storage classes, you can skip this installation. Clusters commonly ship with a default storage class such as `gp2`/`gp3` (AWS), `managed-premium` (Azure), or `standard-rwo` (GCP).
 :::
 
 ### Step 2: Install Custom Storage Class
 
-If no suitable storage class exists, install the {props.cloudProvider} storage class:
+If no suitable storage class exists, install the storage class manifest for your cloud provider (`aws`, `azure`, or `gcp`):
 
 <CodeBlock language="bash">
-{`kubectl apply -f storage-class/${props.storageClassFileName}`}
+{`kubectl apply -f storage-class/storageclass-<cloud>.yaml`}
 </CodeBlock>
 
 ### Step 3: Verify Storage Class

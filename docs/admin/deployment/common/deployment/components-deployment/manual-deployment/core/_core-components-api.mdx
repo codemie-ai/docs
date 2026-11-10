@@ -1,10 +1,8 @@
 import CodeBlock from '@theme/CodeBlock';
 
-## CodeMie API Installation
-
 CodeMie API is the backend service that handles all business logic, AI orchestration, and data processing.
 
-### Step 1: Configure API Values
+**Step 1: Configure API Values**
 
 The domain configuration should already be set from the Getting Started section. Verify the values in <code>codemie-api/{props.valuesFileName}</code> are correct:
 
@@ -15,7 +13,7 @@ The domain configuration should already be set from the Getting Started section.
 If you followed the Getting Started steps, these replacements should already be done.
 :::
 
-### Step 2: Copy Elasticsearch Credentials
+**Step 2: Copy Elasticsearch Credentials**
 
 CodeMie API needs access to Elasticsearch. Copy the credentials to the codemie namespace:
 
@@ -25,7 +23,7 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
   kubectl apply -n codemie -f -
 ```
 
-### Step 3: Install CodeMie API Helm Chart
+**Step 3: Install CodeMie API Helm Chart**
 
 Deploy CodeMie API:
 
@@ -39,7 +37,7 @@ Deploy CodeMie API:
   --timeout 600s`}
 </CodeBlock>
 
-### Step 4: Verify CodeMie API Deployment
+**Step 4: Verify CodeMie API Deployment**
 
 Check that CodeMie API is running:
 

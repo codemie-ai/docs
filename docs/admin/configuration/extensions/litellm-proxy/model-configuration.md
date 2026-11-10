@@ -358,6 +358,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`claude-opus-4-8`](#claude-opus-48)            | Claude Opus 4.8                |
 | [`claude-opus-5-5`](#claude-opus-55)            | Claude Opus 5.5                |
 | [`claude-haiku-4-5-20251001`](#claude-haiku-45) | Claude Haiku 4.5               |
+| [`claude-haiku-5-5`](#claude-haiku-55)          | Claude Haiku 5.5               |
 | [`amazon.titan-embed-text-v2:0`](#amazon-titan) | Amazon Titan Embeddings        |
 | [`grok-4.6`](#grok-46)                          | Grok 4.6                       |
 | [`moonshotai.kimi-k3`](#moonshotai-kimi-k3)     | MoonshotAI Kimi K3             |
@@ -384,10 +385,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-6-luna`](#gpt-6-luna)                                 | GPT-6 Luna             |
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 | [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
-| [`o1`](#o1)                                                 | o1                     |
-| [`o3-mini`](#o3-mini)                                       | o3 mini                |
-| [`o3-2025-04-16`](#o3)                                      | o3                     |
-| [`o4-mini-2025-04-16`](#o4-mini)                            | o4 mini                |
+| [`gpt-6.1-terra-2026-10-26`](#gpt-61-terra)                 | GPT-6.1 Terra          |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
@@ -406,10 +404,11 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3-flash`](#gemini-3-flash)                | Gemini 3 Flash                         |
 | [`gemini-3.1-pro`](#gemini-31-pro)                 | Gemini 3.1 Pro                         |
 | [`gemini-3.1-flash-image`](#gemini-31-flash-image) | Gemini 3.1 Flash Image (Nano Banana 2) |
+| [`gemini-nano-banana-2.1`](#gemini-nano-banana-21) | Gemini Nano Banana 2.1                 |
 | [`gemini-3.5-flash`](#gemini-35-flash)             | Gemini 3.5 Flash                       |
-| [`gemini-3.6-flash`](#gemini-36-flash)             | Gemini 3.6 Flash                       |
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
 | [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
+| [`gemini-4-argon`](#gemini-4-argon)                | Gemini 4 Argon                         |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -625,7 +624,7 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
 # US Region
 - model_name: claude-haiku-4-5-20251001
   litellm_params:
-    model: bedrock/converse/us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model: bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: us-west-2
   model_info:
@@ -636,13 +635,33 @@ See the [AWS data retention requirement](#claude-fable) above — it applies to 
 # EU Region
 - model_name: claude-haiku-4-5-20251001
   litellm_params:
-    model: bedrock/converse/eu.anthropic.claude-haiku-4-5-20251001-v1:0
+    model: bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0
     litellm_credential_name: default_aws_bedrock_credential
     aws_region_name: eu-central-1
   model_info:
     id: claude-4-5-haiku-eu-central-1
     base_model: eu.anthropic.claude-haiku-4-5-20251001-v1:0
     label: "Bedrock Claude Haiku 4.5"
+```
+
+</details>
+
+#### Claude Haiku 5.5
+
+<details>
+<summary><strong>Claude Haiku 5.5</strong></summary>
+
+```yaml
+# EU Region
+- model_name: claude-haiku-5-5
+  litellm_params:
+    model: bedrock/eu.anthropic.claude-haiku-5-5
+    litellm_credential_name: default_aws_bedrock_credential
+    aws_region_name: eu-central-1
+  model_info:
+    id: claude-haiku-5-5-eu-central-1
+    base_model: eu.anthropic.claude-haiku-5-5
+    label: "Bedrock Claude Haiku 5.5"
 ```
 
 </details>
@@ -892,7 +911,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.5-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.5
@@ -915,7 +934,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.6-luna-2026-07-09-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.6-luna
@@ -961,7 +980,7 @@ GPT models hosted through Amazon Bedrock's Mantle offering use the `bedrock_mant
     aws_region_name: us-east-1
     aws_bedrock_project_id: os.environ/BEDROCK_MANTLE_PROJECT_ID_US_EAST-1
     // highlight-next-line
-    additional_drop_params: ["user"]
+    additional_drop_params: ["user", "top_p"]
   model_info:
     id: gpt-5.6-terra-2026-07-09-us-east-1
     base_model: bedrock_mantle/openai.gpt-5.6-terra
@@ -1414,7 +1433,7 @@ model_list:
 ```yaml
 - model_name: gpt-6.1-sol
   litellm_params:
-    model: azure/codemie-gpt-6.1-sol-2026-09-29
+    model: azure/gpt-6.1-sol-2026-09-29
     api_base: https://api-base-polandcentral-0.openai.azure.com/
     litellm_credential_name: default_azure_openai_credential
     additional_drop_params: ["temperature", "top_p"]
@@ -1422,6 +1441,27 @@ model_list:
     id: gpt-6.1-sol-polandcentral-0
     base_model: azure/gpt-6.1-sol
     label: "GPT-6.1 Sol"
+    mode: responses
+```
+
+</details>
+
+#### GPT-6.1 Terra
+
+<details>
+<summary><strong>GPT-6.1 Terra</strong></summary>
+
+```yaml
+- model_name: gpt-6.1-terra-2026-10-26
+  litellm_params:
+    model: azure/gpt-6.1-terra-2026-10-26
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.1-terra-2026-10-26-polandcentral-0
+    base_model: azure/gpt-6.1-terra
+    label: "GPT-6.1 Terra"
     mode: responses
 ```
 
@@ -1481,92 +1521,6 @@ model_list:
     id: gpt-5-3-codex-2026-02-24-eastus2-0
     base_model: azure/gpt-5.3-codex
     label: "GPT-5.3 Codex 2026-02-24"
-```
-
-</details>
-
-### o-series
-
-#### o1
-
-<details>
-<summary><strong>o1</strong></summary>
-
-```yaml
-- model_name: o1
-  litellm_params:
-    model: azure/o1-2024-12-17
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o1-swedencentral-0-eu
-    base_model: azure/eu/o1-2024-12-17
-    label: "o1 2024-12-17"
-    supports_native_streaming: false
-```
-
-</details>
-
-#### o3
-
-<details>
-<summary><strong>o3</strong></summary>
-
-```yaml
-- model_name: o3-2025-04-16
-  litellm_params:
-    model: azure/o3-2025-04-16
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o3-2025-04-16-swedencentral-0-eu
-    base_model: azure/o3-2025-04-16
-    label: "o3 2025-04-16"
-    supports_native_streaming: false
-```
-
-</details>
-
-#### o3-Mini
-
-<details>
-<summary><strong>o3-Mini</strong></summary>
-
-```yaml
-- model_name: o3-mini
-  litellm_params:
-    model: azure/o3-mini-2025-01-31
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o3-mini-swedencentral-0-eu
-    base_model: azure/eu/o3-mini-2025-01-31
-    label: "o3 Mini 2025-01-31"
-    supports_native_streaming: false
-```
-
-</details>
-
-#### o4-Mini
-
-<details>
-<summary><strong>o4-Mini</strong></summary>
-
-```yaml
-- model_name: o4-mini-2025-04-16
-  litellm_params:
-    model: azure/o4-mini-2025-04-16
-    api_base: https://api-base-swedencentral-0.openai.azure.com/
-    litellm_credential_name: default_azure_openai_credential
-    api_version: 2024-12-01-preview
-  model_info:
-    id: o4-mini-2025-04-16-swedencentral-0-eu
-    base_model: azure/o4-mini-2025-04-16
-    label: "o4-mini 2025-04-16"
-    supports_native_streaming: false
 ```
 
 </details>
@@ -1779,6 +1733,26 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
 
 </details>
 
+#### Gemini Nano Banana 2.1
+
+<details>
+<summary><strong>Gemini Nano Banana 2.1</strong></summary>
+
+```yaml
+- model_name: gemini-nano-banana-2.1
+  litellm_params:
+    model: vertex_ai/gemini-nano-banana-2.1
+    vertex_location: "global"
+  model_info:
+    id: gemini-nano-banana-2.1-global
+    base_model: vertex_ai/gemini-nano-banana-2.1
+    label: "Gemini Nano Banana 2.1"
+    forbidden_for_web: true
+    supports_image_generation: true
+```
+
+</details>
+
 #### Gemini 3.5 Flash
 
 <details>
@@ -1793,24 +1767,6 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.5-flash-global
     base_model: gemini-3.5-flash
     label: "Gemini 3.5 Flash"
-```
-
-</details>
-
-#### Gemini 3.6 Flash
-
-<details>
-<summary><strong>Gemini 3.6 Flash</strong></summary>
-
-```yaml
-- model_name: gemini-3.6-flash
-  litellm_params:
-    model: vertex_ai/gemini-3.6-flash
-    vertex_location: "global"
-  model_info:
-    id: gemini-3.6-flash-global
-    base_model: vertex_ai/gemini-3.6-flash
-    label: "Gemini 3.6 Flash"
 ```
 
 </details>
@@ -1847,6 +1803,33 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-3.8-flash-global
     base_model: vertex_ai/gemini-3.8-flash
     label: "Gemini 3.8 Flash"
+```
+
+</details>
+
+#### Gemini 4 Argon
+
+<details>
+<summary><strong>Gemini 4 Argon</strong></summary>
+
+```yaml
+- model_name: gemini-4-argon
+  litellm_params:
+    model: vertex_ai/gemini-4-argon
+    vertex_location: "global"
+  model_info:
+    id: gemini-4-argon-global
+    base_model: vertex_ai/gemini-4-argon
+    label: "Gemini 4 Argon"
+
+- model_name: gemini-4-argon
+  litellm_params:
+    model: vertex_ai/gemini-4-argon
+    vertex_location: "eu"
+  model_info:
+    id: gemini-4-argon-eu
+    base_model: vertex_ai/gemini-4-argon
+    label: "Gemini 4 Argon"
 ```
 
 </details>

@@ -1,0 +1,37 @@
+---
+id: prerequisites-overview
+title: Prerequisites
+sidebar_label: Prerequisites
+sidebar_position: 2
+pagination_prev: admin/architecture/architecture-on-vm
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+import NextSteps from '../common/deployment/prerequisites/_next-steps.mdx';
+
+# Prerequisites
+
+This section outlines the requirements and prerequisites necessary for deploying AI/Run CodeMie. All requirements must be met before proceeding with the installation.
+
+## Prerequisite Sets
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Account access, network, DNS, cluster, and tooling requirements for the full production Kubernetes deployment (EKS, AKS, or GKE)."
+    link="/admin/deployment/prerequisites/prerequisites-kubernetes"
+  />
+  <FeatureCard
+    icon="/img/icons/server.svg"
+    iconType="image"
+    title="On VM"
+    description="Account access, deployment machine tools, and authentication requirements for the lightweight single-VM deployment."
+    link="/admin/deployment/prerequisites/prerequisites-on-vm"
+  />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+<NextSteps />

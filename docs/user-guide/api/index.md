@@ -99,7 +99,7 @@ Call particular assistant for getting answers/tasks.
 ```json
 {
   "text": "hi",
-  "llmModel": "gpt-4o",
+  "llmModel": "gpt-4.1",
   "stream": true
 }
 ```

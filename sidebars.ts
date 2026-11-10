@@ -112,6 +112,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/workflows/create-workflow-from-template',
             'user-guide/workflows/share-workflow-execution',
             'user-guide/workflows/exporting-workflow-execution',
+            'user-guide/workflows/exporting-node-call-history',
             'user-guide/workflows/assistant-panel-in-executions',
             'user-guide/workflows/marketplace-overview',
             'user-guide/workflows/marketplace-publishing',
@@ -188,6 +189,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
                 'user-guide/tools_integrations/tools/ms-teams-bot',
+                'user-guide/tools_integrations/tools/ms-exchange',
                 {
                   type: 'category',
                   label: 'Git',
@@ -226,6 +228,7 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'user-guide/tools_integrations/tools/mcp/adding-an-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
+                    'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
                   ],
                 },
               ],
@@ -345,6 +348,16 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Standalone',
+          link: {
+            type: 'doc',
+            id: 'user-guide/standalone/index',
+          },
+          collapsed: true,
+          items: ['user-guide/standalone/run-guide'],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
@@ -374,7 +387,11 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/api/index',
           },
           collapsed: true,
-          items: ['user-guide/api/client-secret-access', 'user-guide/api/user-password-access'],
+          items: [
+            'user-guide/api/client-secret-access',
+            'user-guide/api/user-password-access',
+            'user-guide/api/settings-transfer',
+          ],
         },
         {
           type: 'category',
@@ -415,6 +432,19 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'category',
+          label: 'Architecture',
+          link: {
+            type: 'doc',
+            id: 'admin/architecture/architecture-overview',
+          },
+          collapsed: true,
+          items: [
+            'admin/architecture/architecture-kubernetes',
+            'admin/architecture/architecture-on-vm',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Deployment',
           link: {
             type: 'doc',
@@ -424,100 +454,87 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'category',
-              label: 'AWS',
+              label: 'Prerequisites',
+              link: {
+                type: 'doc',
+                id: 'admin/deployment/prerequisites/prerequisites-overview',
+              },
               collapsed: true,
               items: [
                 {
                   type: 'category',
-                  label: 'Kubernetes (EKS)',
+                  label: 'Kubernetes',
                   link: {
                     type: 'doc',
-                    id: 'admin/deployment/aws/kubernetes/overview',
+                    id: 'admin/deployment/prerequisites/prerequisites-kubernetes',
                   },
                   collapsed: true,
                   items: [
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/aws/kubernetes/prerequisites',
-                      label: 'Prerequisites',
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/aws/kubernetes/architecture',
-                      label: 'Architecture',
-                    },
-                    {
-                      type: 'category',
-                      label: 'Infrastructure Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment',
-                        'admin/deployment/aws/kubernetes/infrastructure-deployment/infrastructure-manual-deployment',
-                      ],
-                    },
-                    {
-                      type: 'category',
-                      label: 'CodeMie Components Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/aws/kubernetes/components-deployment/components-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/aws/kubernetes/components-deployment/components-scripted-deployment',
-                        {
-                          type: 'category',
-                          label: 'CodeMie Manual Deployment',
-                          link: {
-                            type: 'doc',
-                            id: 'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/manual-deployment-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/k8s-components',
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/data-layer',
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/security-and-identity',
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/plugin-engine',
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/core-components',
-                            'admin/deployment/aws/kubernetes/components-deployment/manual-deployment/observability',
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/aws/kubernetes/accessing-applications',
-                      label: 'Accessing Applications',
-                    },
+                    'admin/deployment/prerequisites/kubernetes/aws-iam-roles-and-permissions',
+                  ],
+                },
+                'admin/deployment/prerequisites/prerequisites-on-vm',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Infrastructure Deployment',
+              link: {
+                type: 'doc',
+                id: 'admin/deployment/infrastructure-deployment/infrastructure-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                'admin/deployment/infrastructure-deployment/infrastructure-deployment-kubernetes',
+                'admin/deployment/infrastructure-deployment/infrastructure-deployment-on-vm',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Platform Deployment',
+              link: {
+                type: 'doc',
+                id: 'admin/deployment/platform-deployment/platform-deployment-overview',
+              },
+              collapsed: true,
+              items: [
+                {
+                  type: 'category',
+                  label: 'Automated Deployment',
+                  link: {
+                    type: 'doc',
+                    id: 'admin/deployment/platform-deployment/automated/platform-automated-overview',
+                  },
+                  collapsed: true,
+                  items: [
+                    'admin/deployment/platform-deployment/automated/platform-automated-kubernetes',
+                    'admin/deployment/platform-deployment/automated/on-vm',
                   ],
                 },
                 {
                   type: 'category',
-                  label: 'On VM (EC2)',
+                  label: 'Manual Deployment',
                   link: {
                     type: 'doc',
-                    id: 'admin/deployment/aws/on-vm/overview',
+                    id: 'admin/deployment/platform-deployment/manual/platform-manual-overview',
                   },
                   collapsed: true,
                   items: [
-                    'admin/deployment/aws/on-vm/prerequisites',
-                    'admin/deployment/aws/on-vm/architecture',
                     {
                       type: 'category',
-                      label: 'Deployment',
+                      label: 'Kubernetes',
                       link: {
                         type: 'doc',
-                        id: 'admin/deployment/aws/on-vm/deployment/deployment',
+                        id: 'admin/deployment/platform-deployment/manual/kubernetes/platform-manual-kubernetes-overview',
                       },
                       collapsed: true,
                       items: [
-                        'admin/deployment/aws/on-vm/deployment/scripted-deployment',
-                        'admin/deployment/aws/on-vm/deployment/manual-deployment',
-                        'admin/deployment/aws/on-vm/deployment/byo',
+                        'admin/deployment/platform-deployment/manual/kubernetes/k8s-components',
+                        'admin/deployment/platform-deployment/manual/kubernetes/data-layer',
+                        'admin/deployment/platform-deployment/manual/kubernetes/security-and-identity',
+                        'admin/deployment/platform-deployment/manual/kubernetes/plugin-engine',
+                        'admin/deployment/platform-deployment/manual/kubernetes/core-components',
+                        'admin/deployment/platform-deployment/manual/kubernetes/observability',
                       ],
                     },
                   ],
@@ -525,208 +542,9 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'category',
-              label: 'Azure',
-              collapsed: true,
-              items: [
-                {
-                  type: 'category',
-                  label: 'Kubernetes (AKS)',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/azure/kubernetes/overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/azure/kubernetes/prerequisites',
-                      label: 'Prerequisites',
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/azure/kubernetes/architecture',
-                      label: 'Architecture',
-                    },
-                    {
-                      type: 'category',
-                      label: 'Infrastructure Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/azure/kubernetes/infrastructure-deployment/infrastructure-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/azure/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment',
-                      ],
-                    },
-                    {
-                      type: 'category',
-                      label: 'CodeMie Components Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/azure/kubernetes/components-deployment/components-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/azure/kubernetes/components-deployment/components-scripted-deployment',
-                        {
-                          type: 'category',
-                          label: 'CodeMie Manual Deployment',
-                          link: {
-                            type: 'doc',
-                            id: 'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/manual-deployment-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/k8s-components',
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/data-layer',
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/security-and-identity',
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/plugin-engine',
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/core-components',
-                            'admin/deployment/azure/kubernetes/components-deployment/manual-deployment/observability',
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/azure/kubernetes/accessing-applications',
-                      label: 'Accessing Applications',
-                    },
-                  ],
-                },
-                {
-                  type: 'category',
-                  label: 'On VM (Azure VM)',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/azure/on-vm/overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/azure/on-vm/prerequisites',
-                    'admin/deployment/azure/on-vm/architecture',
-                    {
-                      type: 'category',
-                      label: 'Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/azure/on-vm/deployment/deployment',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/azure/on-vm/deployment/scripted-deployment',
-                        'admin/deployment/azure/on-vm/deployment/manual-deployment',
-                        'admin/deployment/azure/on-vm/deployment/byo',
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: 'category',
-              label: 'GCP',
-              collapsed: true,
-              items: [
-                {
-                  type: 'category',
-                  label: 'Kubernetes (GKE)',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/gcp/kubernetes/overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/gcp/kubernetes/prerequisites',
-                      label: 'Prerequisites',
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/gcp/kubernetes/architecture',
-                      label: 'Architecture',
-                    },
-                    {
-                      type: 'category',
-                      label: 'Infrastructure Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-scripted-deployment',
-                        'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-manual-deployment',
-                        'admin/deployment/gcp/kubernetes/infrastructure-deployment/infrastructure-bastion-host-access',
-                      ],
-                    },
-                    {
-                      type: 'category',
-                      label: 'CodeMie Components Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/gcp/kubernetes/components-deployment/components-deployment-overview',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/gcp/kubernetes/components-deployment/components-scripted-deployment',
-                        {
-                          type: 'category',
-                          label: 'CodeMie Manual Deployment',
-                          link: {
-                            type: 'doc',
-                            id: 'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/manual-deployment-overview',
-                          },
-                          collapsed: true,
-                          items: [
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/k8s-components',
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/data-layer',
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/security-and-identity',
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/plugin-engine',
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/core-components',
-                            'admin/deployment/gcp/kubernetes/components-deployment/manual-deployment/observability',
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      type: 'doc',
-                      id: 'admin/deployment/gcp/kubernetes/accessing-applications',
-                      label: 'Accessing Applications',
-                    },
-                  ],
-                },
-                {
-                  type: 'category',
-                  label: 'On VM (GCE)',
-                  link: {
-                    type: 'doc',
-                    id: 'admin/deployment/gcp/on-vm/overview',
-                  },
-                  collapsed: true,
-                  items: [
-                    'admin/deployment/gcp/on-vm/prerequisites',
-                    'admin/deployment/gcp/on-vm/architecture',
-                    {
-                      type: 'category',
-                      label: 'Deployment',
-                      link: {
-                        type: 'doc',
-                        id: 'admin/deployment/gcp/on-vm/deployment/deployment',
-                      },
-                      collapsed: true,
-                      items: [
-                        'admin/deployment/gcp/on-vm/deployment/scripted-deployment',
-                        'admin/deployment/gcp/on-vm/deployment/manual-deployment',
-                        'admin/deployment/gcp/on-vm/deployment/byo',
-                      ],
-                    },
-                  ],
-                },
-              ],
+              type: 'doc',
+              id: 'admin/deployment/accessing-applications',
+              label: 'Accessing Applications',
             },
             {
               type: 'category',
@@ -795,8 +613,6 @@ const sidebars: SidebarsConfig = {
                   ],
                 },
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
-                'admin/deployment/extensions/angular-upgrade-assistant/angular-upgrade-assistant',
-                'admin/deployment/extensions/salesforce-devforce-ai/salesforce-devforce-ai',
                 'admin/deployment/extensions/mf-lens/mf-lens',
               ],
             },
@@ -847,7 +663,10 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
+                'admin/configuration/codemie/provisioning-clients',
+                'admin/configuration/codemie/servicenow-budget-integration',
               ],
             },
             {

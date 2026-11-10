@@ -11,7 +11,7 @@ pagination_next: null
 
 ## Overview
 
-This guide explains how to enable Azure OpenAI services in your Azure account and deploy AI models for use with AI/Run CodeMie. Azure OpenAI provides access to OpenAI models including GPT-4.1, GPT-5, o1, and o3-series models.
+This guide explains how to enable Azure OpenAI services in your Azure account and deploy AI models for use with AI/Run CodeMie. Azure OpenAI provides access to OpenAI models including GPT-4.1, GPT-5, and GPT-6 models.
 
 :::info When to Use This Guide
 This configuration is required if you plan to use Azure OpenAI models such as GPT-4.1, GPT-5, or any OpenAI models hosted on Azure.
@@ -102,7 +102,7 @@ AZURE_OPENAI_REGION=eastus2
 
 1. Click **Deploy model** or **+ Create new deployment**
 2. Select **Deploy base model**
-3. Browse or search for your desired model (e.g., "gpt-4o")
+3. Browse or search for your desired model (e.g., "gpt-4.1")
 4. Select the model and click **Confirm**
 
 ### 3.4 Configure Deployment Settings
@@ -135,11 +135,11 @@ Repeat **Step 3** to deploy additional models based on your requirements:
 
 **Recommended Models**:
 
-- **GPT-4o**: General-purpose, multimodal reasoning and code generation
-- **GPT-4o-mini**: Cost-effective option for simpler tasks
-- **GPT-4.1**: Advanced reasoning with larger context window
-- **GPT-5**: Latest generation model with enhanced capabilities
-- **o1/o3-mini**: Specialized reasoning models for complex problem-solving
+- **GPT-4.1**: General-purpose model for everyday tasks
+- **GPT-5**: Reasoning model for complex tasks
+- **GPT-5.5**: Newer GPT-5 generation model
+- **GPT-6.1 Sol**: Latest generation reasoning model
+- **GPT-6 Luna**: Cost-effective option for simpler tasks
 - **Embedding models**: `text-embedding-ada-002` for vector embeddings
 
 Each model deployment allows you to set specific TPM limits and deployment configurations.

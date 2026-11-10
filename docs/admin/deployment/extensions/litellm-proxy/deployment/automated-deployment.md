@@ -12,7 +12,7 @@ pagination_next: null
 
 The deployment script automates:
 
-- Kubernetes secret creation
+- Kubernetes secret creation, including the `litellm-drain-token` secret used for graceful request draining during pod shutdown
 - Helm repository configuration
 - LiteLLM Proxy deployment
 - Integration secret creation for CodeMie

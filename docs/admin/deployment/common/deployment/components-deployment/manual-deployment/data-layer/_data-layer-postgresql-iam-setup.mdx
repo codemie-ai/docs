@@ -1,7 +1,7 @@
 import CodeBlock from '@theme/CodeBlock';
 import Admonition from '@theme/Admonition';
 
-### Create the IAM Authentication Database User
+**Create the IAM Authentication Database User**
 
 Before creating the connection secret, bootstrap the dedicated `codemie_admin` role that codemie-api will use for IAM authentication. This connects as the master user `dbadmin` (password auth) to create the new role, grant it `rds_iam`, and grant it full access to the `codemie` database:
 
@@ -26,7 +26,7 @@ Replace every <code>CODEMIE_*</code> placeholder with the actual value from <cod
 If <code>codemie_admin</code> was already created (e.g. by a prior deployment run), <code>CREATE USER</code> fails with <code>role "codemie_admin" already exists</code>. This is safe to ignore — re-run the command without the <code>CREATE USER ...;</code> clause to (re-)apply the grants only.
 </Admonition>
 
-### Upgrading an Existing Deployment to IAM Authentication
+#### Upgrading an Existing Deployment to IAM Authentication
 
 <details>
 <summary>Migration steps for existing deployments</summary>

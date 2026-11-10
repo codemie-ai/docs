@@ -7,9 +7,47 @@ pagination_prev: null
 pagination_next: admin/security/data-processing-storage
 ---
 
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
 # Security & Compliance
 
 Welcome to the AI/Run CodeMie Security & Compliance documentation. This section provides comprehensive information about the platform's security architecture, data processing policies, storage mechanisms, and compliance controls.
+
+## Security Topics
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Data Processing & Storage"
+    description="Detailed explanation of how data flows through the platform, storage layers, and regional distribution."
+    link="/admin/security/data-processing-storage"
+  />
+  <FeatureCard
+    icon="/img/icons/fingerprint.svg"
+    iconType="image"
+    title="Roles & RBAC"
+    description="Role-based access control descriptions and capabilities for each platform role."
+    link="/admin/security/roles-rbac"
+  />
+  <FeatureCard
+    icon="/img/icons/assistant.svg"
+    iconType="image"
+    title="LLM Output Image Allow-List"
+    description="Domain allow-list that gates every image rendered from assistant output, closing the prompt-injection exfiltration channel."
+    link="/admin/security/llm-output-image-allow-list"
+  />
+  <FeatureCard
+    icon="/img/icons/server.svg"
+    iconType="image"
+    title="Network Policies"
+    description="Kubernetes NetworkPolicy configuration for workload-level traffic segmentation between CodeMie services."
+    link="/admin/security/network-policies/"
+  />
+  <div style={{ visibility: 'hidden' }} />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
 
 ## Overview
 
@@ -43,10 +81,7 @@ The CodeMie platform is built with security-first principles, implementing indus
 
 ## Core Security Principles & Architecture
 
-This section describes the fundamental security patterns and practices implemented in the CodeMie platform:
-
-- **[Data Processing & Storage Architecture](./data-processing-storage.md)**: Detailed explanation of how data flows through the platform, storage layers, and regional distribution
-- **[Image Allow-List for LLM Output](./llm-output-image-allow-list.md)**: Domain allow-list that gates every image rendered from assistant output, closing the prompt-injection exfiltration channel
+The following principles underpin the fundamental security patterns and practices implemented in the CodeMie platform:
 
 ### 1. Defense in Depth
 

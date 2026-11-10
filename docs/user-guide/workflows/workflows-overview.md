@@ -223,3 +223,9 @@ See [Favorites](../assistants/favorites.md) for full details.
 All workflow executions are saved in the execution history. Switch between past executions by clicking on them in the history panel:
 
 ![Workflow execution history](./images/workflows-overview/execution-history-panel.png)
+
+## Node Call History
+
+Each node in a workflow execution records the individual LLM and tool calls it made. To view them, open an execution, select the node in the node list at the bottom of the execution page, below the workflow graph, and click **Call history**. The popup lists every call with its status, input, and result, and provides **Download** and **Copy to clipboard** actions to export the calls as JSON.
+
+See [Exporting Node Call History](./exporting-node-call-history.md) for the full steps and the exported JSON structure.

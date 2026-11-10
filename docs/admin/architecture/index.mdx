@@ -1,0 +1,38 @@
+---
+id: architecture-overview
+title: AI/Run CodeMie Deployment Architecture
+sidebar_label: Architecture
+sidebar_position: 1
+pagination_prev: admin/index
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# AI/Run CodeMie Deployment Architecture
+
+This section describes the AI/Run CodeMie deployment architecture, including infrastructure components, network design, and resource requirements. Two architecture variants are available depending on the target environment.
+
+## Architecture Variants
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Full production deployment on a managed Kubernetes cluster (EKS, AKS, or GKE), including network design and container resource requirements."
+    link="/admin/architecture/architecture-kubernetes"
+  />
+  <FeatureCard
+    icon="/img/icons/server.svg"
+    iconType="image"
+    title="On VM"
+    description="Lightweight single-VM deployment using Docker Compose. Ideal for proof-of-concept and demo environments."
+    link="/admin/architecture/architecture-on-vm"
+  />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+## Next Steps
+
+After reviewing the architecture, proceed to [Prerequisites](../deployment/prerequisites/) to review the requirements before deployment.

@@ -14,36 +14,43 @@ import FeatureGrid from '@site/src/components/FeatureGrid';
 
 Configure AI/Run CodeMie to match your organizational requirements and workflows.
 
-## AI/Run CodeMie Configuration Areas
+## CodeMie
 
 <FeatureGrid>
   <FeatureCard
     icon="/img/icons/cloud-data.svg"
     iconType="image"
-    title="Data Sources"
+    title="Data Sources Configuration"
     description="Configure data source loaders for code files, Confluence, Jira, and file uploads with custom chunking strategies and processing options."
     link="/admin/configuration/codemie/datasources-configuration"
   />
   <FeatureCard
     icon="/img/icons/appearance.svg"
     iconType="image"
-    title="UI Customization"
-    description="Show or hide UI components and configure custom URLs for video portal, user guide, admin actions, and help resources."
+    title="Customer Feature Configuration"
+    description="Show or hide UI components and configure custom URLs for the video portal, user guide, admin actions, and help resources."
     link="/admin/configuration/codemie/customer-feature-configuration"
   />
   <FeatureCard
-    icon="/img/icons/appearance.svg"
+    icon="/img/icons/refresh.svg"
     iconType="image"
     title="Dynamic Customer Configuration"
     description="Change the banner, chat disclaimer, and other declared settings from the Administration page without a redeploy."
     link="/admin/configuration/codemie/dynamic-customer-configuration"
   />
   <FeatureCard
-    icon="/img/icons/fingerprint.svg"
+    icon="/img/icons/tool.svg"
     iconType="image"
-    title="Access Control"
-    description="Configure authentication, provision users, assign roles and permissions, and integrate with identity providers like Entra ID or Okta."
-    link="/admin/configuration/access-control/"
+    title="Code Executor"
+    description="Configure sandbox mode, resource limits, and security policies for the isolated Kubernetes pods that run user-submitted Python code."
+    link="/admin/configuration/codemie/code-executor-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/lightning.svg"
+    iconType="image"
+    title="Scaling & Availability"
+    description="Tune the Horizontal Pod Autoscaler and Pod Disruption Budget to control CodeMie API pod counts and availability during disruptions."
+    link="/admin/configuration/codemie/scaling-configuration"
   />
   <FeatureCard
     icon="/img/icons/configuration.svg"
@@ -53,27 +60,124 @@ Configure AI/Run CodeMie to match your organizational requirements and workflows
     link="/admin/configuration/codemie/ai-models-integration/"
   />
   <FeatureCard
-    icon="/img/icons/configuration.svg"
+    icon="/img/icons/api.svg"
     iconType="image"
     title="API Configuration"
     description="Configure CodeMie API settings including application parameters, AI providers, database connections, security, storage, and observability."
     link="/admin/configuration/codemie/api-configuration"
   />
+  <FeatureCard
+    icon="/img/icons/user.svg"
+    iconType="image"
+    title="Platform Administration"
+    description="Create and manage projects, and access platform-wide settings as a global admin."
+    link="/admin/configuration/codemie/platform-administration"
+  />
+  <FeatureCard
+    icon="/img/icons/enterprise.svg"
+    iconType="image"
+    title="Project Budget Management"
+    description="Enable and configure project-level budgets so admins can track and limit AI usage spend per project."
+    link="/admin/configuration/codemie/project-budget-management"
+  />
 </FeatureGrid>
 
-## Extensions Configuration
+## Access Control
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/configure.svg"
+    iconType="image"
+    title="Initial Realm Setup"
+    description="Complete the one-time Keycloak setup required to store custom attributes before creating any users."
+    link="/admin/configuration/access-control/initial-realm-setup"
+  />
+  <FeatureCard
+    icon="/img/icons/fingerprint.svg"
+    iconType="image"
+    title="Platform-managed Mode Configuration"
+    description="Enable Platform-managed mode for fresh installations or when switching from Keycloak-managed mode."
+    link="/admin/configuration/access-control/platform-managed-mode-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/user.svg"
+    iconType="image"
+    title="User Provisioning"
+    description="Choose a method to create user accounts — manual creation, Keycloak Assistant, or Entra ID federation."
+    link="/admin/configuration/access-control/user-provisioning/"
+  />
+  <FeatureCard
+    icon="/img/icons/protect.svg"
+    iconType="image"
+    title="User Authorization"
+    description="Grant users platform and project permissions by assigning roles, attributes, and guest mappings."
+    link="/admin/configuration/access-control/user-authorization/"
+  />
+  <div style={{ visibility: 'hidden' }} />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+## Extensions
 
 Configure optional extensions to enhance AI/Run CodeMie capabilities.
+
+### ✨ Assistants Evaluation
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/datasource.svg"
+    iconType="image"
+    title="Data Volume Maintenance"
+    description="Run ClickHouse maintenance queries for Langfuse — analyze disk usage, clean up data, and monitor TTL settings."
+    link="/admin/configuration/extensions/assistants-evaluation/data-volume-maintenance"
+  />
+  <div style={{ visibility: 'hidden' }} />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+### ✨ LiteLLM Proxy
 
 <FeatureGrid>
   <FeatureCard
     icon="/img/icons/plugin.svg"
     iconType="image"
-    title="LiteLLM Proxy"
+    title="Budget Configuration"
     description="Configure budgets, rate limits, and spending controls in LiteLLM Proxy for cost management and usage tracking."
     link="/admin/configuration/extensions/litellm-proxy/budget-configuration"
   />
-  <div style={{ visibility: 'hidden' }} />
+  <FeatureCard
+    icon="/img/icons/integration.svg"
+    iconType="image"
+    title="Model Configuration"
+    description="Add and configure AI models in LiteLLM Proxy's config.yaml to route requests to multiple LLM providers through a unified gateway."
+    link="/admin/configuration/extensions/litellm-proxy/model-configuration"
+  />
+  <FeatureCard
+    icon="/img/icons/paper.svg"
+    iconType="image"
+    title="Spend Logs Retention"
+    description="Manage the retention period for LiteLLM spend logs that track API calls, token usage, and cost per request."
+    link="/admin/configuration/extensions/litellm-proxy/spend-logs-retention"
+  />
+</FeatureGrid>
+
+## Observability
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/analytics.svg"
+    iconType="image"
+    title="Logs Retention"
+    description="Manage retention for infrastructure logs aggregated in Elasticsearch to prevent unbounded disk usage."
+    link="/admin/configuration/observability/logs-retention"
+  />
+  <FeatureCard
+    icon="/img/icons/refresh.svg"
+    iconType="image"
+    title="Metrics Index Rotation"
+    description="Configure quarterly rotation for the Elasticsearch index that stores CodeMie's user and usage metrics."
+    link="/admin/configuration/observability/metrics-index-rotation"
+  />
   <div style={{ visibility: 'hidden' }} />
 </FeatureGrid>
 

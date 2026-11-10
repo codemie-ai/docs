@@ -9,6 +9,31 @@ pagination_prev: admin/update/3rd-party-components/keycloak/keycloak
 
 # Keycloak Operator Upgrade
 
+## Upgrade Keycloak Operator from 1.32.0 to 1.35.0
+
+#### Update version number in `keycloak-operator-helm/Chart.yaml` file
+
+| Parameter  | Current Value | New Value |
+| ---------- | ------------- | --------- |
+| version    | 1.32.0        | 1.35.0    |
+| appVersion | 1.32.0        | 1.35.0    |
+
+#### Update Custom Resource definitions
+
+:::note
+Applicable for existing deployments only.
+:::
+
+```shell
+for crd_file in keycloak-operator-helm/crds/*.yaml; do
+    kubectl apply -f "$crd_file"
+done
+```
+
+:::warning IMPORTANT
+Ensure `keycloak-operator-helm/Chart.lock` file and `keycloak-operator-helm/charts/` directory do not exist before apply changes.
+:::
+
 ## Upgrade Keycloak Operator from 1.23.0 to 1.32.0
 
 #### Update version number in `keycloak-operator-helm/Chart.yaml` file

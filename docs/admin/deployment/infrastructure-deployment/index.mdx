@@ -1,0 +1,53 @@
+---
+id: infrastructure-deployment-overview
+title: Infrastructure Deployment
+sidebar_label: Infrastructure Deployment
+sidebar_position: 1
+pagination_prev: admin/deployment/prerequisites/prerequisites-overview
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Infrastructure Deployment
+
+This section covers deploying the cloud infrastructure required to run AI/Run CodeMie — managed Kubernetes clusters, virtual machines, networking, storage, and databases. All guides support AWS, GCP, and Azure in a unified format using cloud tabs.
+
+:::info Existing Infrastructure
+If you already have a provisioned cluster or VM with all required services, skip this section and proceed directly to [Platform Deployment](../platform-deployment/).
+:::
+
+## Deployment Tracks
+
+Choose the deployment track that matches your target environment:
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Provision a managed Kubernetes cluster (EKS / GKE / AKS) with networking, storage, and databases using Terraform. Recommended for production."
+    link="/admin/deployment/infrastructure-deployment/infrastructure-deployment-kubernetes"
+  />
+  <FeatureCard
+    icon="/img/icons/server.svg"
+    iconType="image"
+    title="On VM"
+    description="Provision a single virtual machine (EC2 / GCE / Azure VM) and prepare it for CodeMie Docker Compose deployment. Ideal for lightweight single-node setups."
+    link="/admin/deployment/infrastructure-deployment/infrastructure-deployment-on-vm"
+  />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>
+
+## Deployment Methods
+
+Both tracks support two deployment methods:
+
+| Method       | Description                                                      | Recommendation                          |
+| ------------ | ---------------------------------------------------------------- | --------------------------------------- |
+| **Scripted** | Automated shell script handles all Terraform phases in sequence  | Recommended for most users              |
+| **Manual**   | Step-by-step Terraform commands for full control over each phase | Advanced use cases, custom integrations |
+
+## Next Steps
+
+After completing infrastructure deployment, proceed to [Platform Deployment](../platform-deployment/) to install AI/Run CodeMie application components.

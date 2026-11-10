@@ -4,7 +4,7 @@ The table below specifies resource requirements for AI/Run CodeMie components si
 
 | Component                      | Pods                     | RAM   | vCPU | Storage        |
 | ------------------------------ | ------------------------ | ----- | ---- | -------------- |
-| CodeMie API                    | 2                        | 8Gi   | 4.0  | –              |
+| CodeMie API                    | 2                        | 8Gi   | 2.0  | –              |
 | CodeMie UI                     | 1                        | 128Mi | 0.1  | –              |
 | Elasticsearch                  | 2                        | 16Gi  | 4.0  | 200 GB per pod |
 | Kibana                         | 1                        | 1Gi   | 1.0  | –              |
@@ -16,7 +16,7 @@ The table below specifies resource requirements for AI/Run CodeMie components si
 | NATS + Auth Callout            | 1 + 1                    | 512Mi | 1.0  | –              |
 | MCP Connect                    | 1                        | 1Gi   | 0.5  | –              |
 | Fluent Bit                     | DaemonSet                | 128Mi | 0.1  | –              |
-| LLM Proxy                      | 1                        | 1Gi   | 1.0  | –              |
+| LLM Proxy                      | 1                        | 4Gi   | 1.0  | –              |
 
 :::info Scaling Considerations
 

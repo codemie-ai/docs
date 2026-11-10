@@ -1,0 +1,37 @@
+---
+id: platform-automated-overview
+title: Automated Platform Deployment
+sidebar_label: Automated Deployment
+sidebar_position: 1
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Automated Platform Deployment
+
+Automated deployment uses scripts to install all AI/Run CodeMie components in the correct dependency order.
+
+:::tip Recommended Approach
+Scripted deployment is recommended for standard installations as it automates component ordering, validates prerequisites, and ensures consistent configuration across all components.
+:::
+
+## Deployment Tracks
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Deploy all components onto an EKS / GKE / AKS cluster using the helm-charts.sh script. Handles installation order and dependency validation automatically."
+    link="/admin/deployment/platform-deployment/automated/platform-automated-kubernetes"
+  />
+  <FeatureCard
+    icon="/img/icons/server.svg"
+    iconType="image"
+    title="On VM"
+    description="Deploy the CodeMie stack onto a provisioned VM using the ./deploy.sh --byo script. For Docker Compose based single-node deployments."
+    link="/admin/deployment/platform-deployment/automated/on-vm"
+  />
+  <div style={{ visibility: 'hidden' }} />
+</FeatureGrid>

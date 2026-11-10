@@ -85,6 +85,17 @@ kubectl create secret generic codemie-postgresql \
 Admin credentials can be found in `deployment_outputs.env` — use `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` for a shared database, or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` for a dedicated LiteLLM database.
 :::
 
+**5. Drain Token Secret**
+
+This token authorizes the `/health/drain` call made by the `preStop` hook in `litellm/values-<cloud>.yaml`. It lets a pod finish in-flight requests before it stops during rollouts and scale-down.
+
+```bash
+kubectl create secret generic litellm-drain-token \
+--namespace litellm \
+--from-literal=token="$(openssl rand -hex 16)" \
+--type=Opaque
+```
+
 ### Cloud-Specific Secrets (Create only what you need)
 
 Refer to [Cloud Provider Authentication](../auth-secrets.md) for details on obtaining these credentials.

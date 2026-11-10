@@ -16,6 +16,10 @@ The Scheduler feature allows you to automatically trigger CodeMie workflows, ass
 1. **Data Source Scheduler** - Built directly into the data source creation interface for automatic reindexing
 2. **Integration-based Scheduler** - Created via Integrations tab for workflows, assistants, and data sources
 
+:::info
+Scheduled runs require the Trigger Engine to be enabled on the CodeMie API (`TRIGGER_ENGINE_ENABLED=true`). Contact your administrator if scheduled runs do not start. See [Trigger Engine configuration](../../../../admin/configuration/codemie/api-configuration#trigger-engine).
+:::
+
 ## Data Source Scheduler
 
 The scheduler is now integrated directly into the data source creation and update interface, making it easy to set up automatic reindexing schedules.
