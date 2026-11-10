@@ -168,7 +168,7 @@ For detailed configuration, authentication methods, troubleshooting, and advance
 
 ## Using CodeMie Connect
 
-CodeMie Connect is available for macOS and Windows. It sets up CodeMie CLI, manages the coding tools, and checks that everything works. The sidebar has Home, Tools, Connections, Health, and CLI usage analytics. Tools are run from a terminal; the app only sets them up.
+CodeMie Connect is a desktop app for macOS. It sets up CodeMie CLI, manages the coding tools, and checks that everything works. The sidebar has Home, Tools, Connections, Health, and CLI usage analytics. Tools are run from a terminal; the app only sets them up.
 
 ### Set up CodeMie
 
