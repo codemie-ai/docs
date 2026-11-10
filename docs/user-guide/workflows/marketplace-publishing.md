@@ -63,7 +63,7 @@ At least one category is required. Attempting to publish without a category sele
 :::
 
 :::note
-These categories are selected at publish time. They are separate from the optional [categories set in the workflow configuration](./create-workflow.md#workflow-categories).
+These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results on **My Workflows**).
 :::
 
 ## After Publishing

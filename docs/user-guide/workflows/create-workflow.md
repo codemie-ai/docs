@@ -125,7 +125,7 @@ The **Categories** field is a multi-select dropdown located below **Icon URL** i
 - Categories assigned here are used to [filter workflows](./workflows-overview.md#filtering-workflows-by-category) on the **My Workflows** and **All Workflows** pages.
 
 :::note
-Categories are managed centrally and shared with assistants. See [Assistant Categories Management](../assistants/assistant-categories-management.md). Categories selected here are independent of the categories chosen when [publishing to the Marketplace](./marketplace-publishing.md#selecting-categories).
+Categories are managed centrally and shared with assistants. See [Assistant Categories Management](../assistants/assistant-categories-management.md). This is the same field that is used when [publishing to the Marketplace](./marketplace-publishing.md#selecting-categories): the publish dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection.
 :::
 
 **Advanced Tab:**

@@ -47,7 +47,7 @@ When editing a category with assigned assistants, a warning displays showing:
 
 ## Delete Category
 
-**Delete is disabled** for categories with any assigned assistants or [workflows](../workflows/create-workflow.md#workflow-categories).
+**Delete is disabled** for categories with any assigned assistants. Deletion is also refused with an error for categories used by [workflows](../workflows/create-workflow.md#workflow-categories); the error lists the number and up to 10 names of assistants and workflows using the category.
 
 To delete:
 
