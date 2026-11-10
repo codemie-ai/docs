@@ -33,6 +33,12 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+:::info Save-time contract validation
+When save-time contract validation is enabled, workflows that do not opt into declared input contracts, strict validation, or required input-contract coverage can receive additional contract warnings and coverage information. These results describe save-time analysis. They do not add runtime input or output checks and do not change workflow execution. Existing configuration and access checks still apply.
+
+The feature is controlled by the platform setting `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. See [Workflow States](../../../user-guide/workflows/configuration/workflow-states.md#platform-prerequisite).
+:::
+
 <details className="release" id="v2-65-0">
 <summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">3 hotfixes</span></summary>
 
