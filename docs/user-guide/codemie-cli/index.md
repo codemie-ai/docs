@@ -168,11 +168,13 @@ For detailed configuration, authentication methods, troubleshooting, and advance
 
 ## Using CodeMie Connect
 
-CodeMie Connect sets up CodeMie CLI, manages the coding tools, and checks that everything works. The sidebar has Home, Tools, Connections, Health, and CLI usage analytics. Tools are run from a terminal; the app only sets them up.
+CodeMie Connect is available for macOS and Windows. It sets up CodeMie CLI, manages the coding tools, and checks that everything works. The sidebar has Home, Tools, Connections, Health, and CLI usage analytics. Tools are run from a terminal; the app only sets them up.
 
 ### Set up CodeMie
 
-On first launch, Home shows a checklist of four steps: sign in, choose how CodeMie reaches a model, install a tool, and verify health.
+Nothing needs to be installed beforehand. On first launch the app shows **Preparing CodeMie…** while it downloads Node.js and installs CodeMie CLI. This happens once and takes about a minute. If the download fails, the app asks to check the internet connection or proxy and offers a retry.
+
+Home then shows a checklist of four steps: sign in, choose how CodeMie reaches a model, install a tool, and verify health. Until sign-in and a model are set, Tools, Connections, Health, and CLI usage analytics are dimmed and cannot be opened. Home stays available, and the other screens unlock once the first two steps are done.
 
 ![CodeMie Connect Home checklist](./images/connect-home-checklist.png)
 
@@ -195,6 +197,8 @@ After setup, Home replaces the checklist with four status cards: Profile, Health
 
 If the saved profile stops working, Home shows "Your profile is no longer working" and marks the profile as needing attention.
 
+When a newer version of CodeMie Connect is available, a banner on Home reads "CodeMie `<version>` is available". **Update and restart** downloads the update, installs it, and restarts the app; the existing setup is kept. The banner can be dismissed with **✕** and returns on the next launch.
+
 ### Install, update, and remove tools
 
 Tools lists every available tool and how many are installed. CodeMie Code is built into the CLI and always shows as installed.
@@ -213,7 +217,7 @@ Health runs the same checks as `codemie doctor`, grouped into the CodeMie accoun
 
 ![Health screen](./images/connect-health.png)
 
-A failed check shows a **What to do** remedy where one is known, with the command to run and, where possible, a button that performs it, such as **Set up CodeMie** for a missing configuration. **Open today's log** opens today's CodeMie debug log.
+A failed check shows a **What to do** remedy where one is known, with the command to run and, where possible, a button that performs it, such as **Set up CodeMie** for a missing configuration or **Sign in again** when the CodeMie session has expired. **Open today's log** opens today's CodeMie debug log.
 
 ### See what CodeMie ran
 
