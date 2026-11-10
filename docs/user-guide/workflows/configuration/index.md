@@ -83,6 +83,7 @@ This documentation is organized into the following sections:
     - Code Review Workflow
     - Document Processing Pipeline
     - Multi-Branch Processing
+    - Workflow with Input and Output Contracts
 
 11. **[Troubleshooting](./troubleshooting.md)**
     - Common Issues
