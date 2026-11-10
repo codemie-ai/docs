@@ -34,7 +34,7 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-66-0">
-<summary><span className="release__version">CodeMie 2.66.0</span><span className="release__date">Nov 10, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.66.0</span><span className="release__date">Nov 10, 2026</span><span className="badge badge--secondary">1 hotfix</span></summary>
 
 **Release Date:** November 10, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.66.0)
 
@@ -45,6 +45,10 @@ No third-party component updates in this release.
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
+
+<h3>Hotfixes</h3>
+
+- **2.66.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.66.1) – November 10, 2026
 
 </details>
 
