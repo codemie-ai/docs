@@ -351,6 +351,27 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 | -------------------------- | ------ | ------- | ------------------------------------------------ |
 | `FILES_STORAGE_GCP_REGION` | string | `"US"`  | Multi-region or region for Cloud Storage buckets |
 
+### Hosted Applications
+
+Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs and `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
+
+| Parameter                                  | Type    | Default                 | Description                                                                                                                                                                                            |
+| ------------------------------------------ | ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `HOSTED_APPS_CONTENT_DOMAIN`               | string  | `""`                    | Required. Registrable domain, separate from every first-party domain, that serves uploaded content from `v-<version ID>.<domain>`. Local development: `apps.localhost:<backend port>` with `ENV=local` |
+| `HOSTED_APPS_CREDENTIAL_SECRET`            | string  | `""`                    | Required secret of at least 32 bytes. HMAC key for content sessions, launch tickets, cursors, and idempotency records                                                                                  |
+| `HOSTED_APPS_VALIDATOR_URL`                | string  | `http://127.0.0.1:8091` | Address of the validator Service, for example `http://codemie-hosted-apps-validator.codemie-hosted-apps.svc:8091`. No path, query, or credentials                                                      |
+| `HOSTED_APPS_VALIDATOR_KEY`                | string  | `""`                    | Required secret of at least 32 characters, shared with the validator pod as `VALIDATOR_SERVICE_KEY`                                                                                                    |
+| `HOSTED_APPS_STORAGE_BUCKET`               | string  | `""`                    | Required when `FILES_STORAGE_TYPE` is `aws` or `gcp`. Dedicated private bucket, never the generic files bucket. The API does not create it                                                             |
+| `HOSTED_APPS_STORAGE_DIR`                  | string  | `""`                    | `filesystem` storage only (development and tests). Absolute path outside `FILES_STORAGE_DIR`                                                                                                           |
+| `HOSTED_APPS_STORAGE_S3_GRACE_SECONDS`     | integer | `30`                    | S3 only. Extra wait after the writer lease ends before cleanup. Startup refuses S3 when clock skew exceeds it                                                                                          |
+| `HOSTED_APPS_STORAGE_SWEEP_SECONDS`        | integer | `3600`                  | Interval of the sweep that deletes old orphaned objects from the hosted bucket (S3 and GCS)                                                                                                            |
+| `HOSTED_APPS_STORAGE_SWEEP_BUDGET_SECONDS` | integer | `20`                    | Time budget of one sweep run                                                                                                                                                                           |
+| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per user in bytes (2 GiB). Minimum `1048576`                                                                                                                                             |
+
+:::note Storage backend
+Hosted applications use `FILES_STORAGE_TYPE` to select the backend: `aws` (S3) or `gcp` (GCS). `azure` keeps the feature unavailable, and `filesystem` is for development only.
+:::
+
 ---
 
 ## Redis Configuration
