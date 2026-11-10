@@ -57,7 +57,7 @@ codemie sdk assistants create --data '{
   "name": "Code Reviewer",
   "project": "Engineering",
   "system_prompt": "You are a senior engineer performing code reviews. Focus on correctness, security, and performance.",
-  "llm_model_type": "claude-3-5-sonnet",
+  "llm_model_type": "claude-sonnet-5-5",
   "shared_with_project": true
 }'
 ```

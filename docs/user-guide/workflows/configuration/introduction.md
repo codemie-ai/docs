@@ -872,7 +872,7 @@ states:
 # Last Updated: 2025-01-20
 
 assistants:
-  # Primary analyzer - uses GPT-4 for accuracy
+  # Primary analyzer - uses GPT-4.1 for accuracy
   - id: code-analyzer
     model: gpt-4.1
 

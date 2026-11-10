@@ -2,7 +2,7 @@
 id: assistant-panel-in-executions
 title: Assistant Panel on the Executions Page
 sidebar_label: Assistant Panel
-pagination_prev: user-guide/workflows/exporting-workflow-execution
+pagination_prev: user-guide/workflows/exporting-node-call-history
 pagination_next: user-guide/workflows/marketplace-overview
 sidebar_position: 8
 description: Open the full assistant view from the workflow executions page and choose personal integration settings for a single workflow or for the assistant everywhere

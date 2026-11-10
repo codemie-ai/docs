@@ -112,6 +112,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/workflows/create-workflow-from-template',
             'user-guide/workflows/share-workflow-execution',
             'user-guide/workflows/exporting-workflow-execution',
+            'user-guide/workflows/exporting-node-call-history',
             'user-guide/workflows/assistant-panel-in-executions',
             'user-guide/workflows/marketplace-overview',
             'user-guide/workflows/marketplace-publishing',
@@ -188,6 +189,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/tools_integrations/tools/plugin',
                 'user-guide/tools_integrations/tools/filesystem',
                 'user-guide/tools_integrations/tools/ms-teams-bot',
+                'user-guide/tools_integrations/tools/ms-exchange',
                 {
                   type: 'category',
                   label: 'Git',
@@ -226,6 +228,7 @@ const sidebars: SidebarsConfig = {
                   items: [
                     'user-guide/tools_integrations/tools/mcp/adding-an-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
+                    'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
                   ],
                 },
               ],
@@ -374,7 +377,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/applications/index',
           },
           collapsed: true,
-          items: ['user-guide/applications/integration-guide'],
+          items: [
+            'user-guide/applications/hosted-applications',
+            'user-guide/applications/integration-guide',
+          ],
         },
         {
           type: 'category',
@@ -631,6 +637,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/hosted-applications',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
@@ -660,7 +667,9 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
+                'admin/configuration/codemie/provisioning-clients',
                 'admin/configuration/codemie/servicenow-budget-integration',
               ],
             },

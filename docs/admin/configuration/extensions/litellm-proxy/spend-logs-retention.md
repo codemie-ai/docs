@@ -76,6 +76,10 @@ general_settings:
 
 After configuring retention settings, the LiteLLM proxy pods need to be restarted for the changes to take effect.
 
+:::warning Retention and the CodeMie spend ledger
+CodeMie replicates LiteLLM spend logs into its own `litellm_spend_logs` ledger and serves all spend, budget, and analytics figures from it. Make sure the retention period is long enough for the spend uploader to copy rows before LiteLLM deletes them, and that the uploader is running. If retention deletes rows at or after `SPEND_LEDGER_COVERAGE_FLOOR`, set `SPEND_LEDGER_READY=false` so figures are reported as unavailable instead of understated. See [LiteLLM Spend Ledger](../../codemie/api-configuration.md#litellm-spend-ledger).
+:::
+
 ### Advanced Configuration
 
 #### Cleanup Capacity
