@@ -141,6 +141,8 @@ cost of one model for the selected period, and the legend lists the exact amount
 
 - **Filters**: the chart follows the [global filters](#global-filtering-system) — time period,
   users and projects.
+- **Client source**: costs are not filtered by client source. When a client source is selected,
+  the chart shows no cost values (usage charts keep the filter).
 - **Included costs**: platform LLM usage and CLI usage routed through the LiteLLM proxy.
 - **Model names**: different names reported for the same model are combined into one slice.
 - **Consistency with other widgets**: for the same filters, the model costs add up to the totals
