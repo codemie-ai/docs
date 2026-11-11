@@ -365,8 +365,7 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'user-guide/control-plane/on-vm',
-            'user-guide/control-plane/standalone',
+            'user-guide/control-plane/on-dedicated-vdi',
             'user-guide/control-plane/configuration',
           ],
         },
