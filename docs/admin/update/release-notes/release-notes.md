@@ -39,6 +39,31 @@ When save-time contract validation is enabled, workflows that do not opt into de
 The feature is controlled by the platform setting `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. See [Workflow States](../../../user-guide/workflows/configuration/workflow-states.md#platform-prerequisite).
 :::
 
+<details className="release" id="v2-66-0">
+<summary><span className="release__version">CodeMie 2.66.0</span><span className="release__date">Nov 10, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
+
+**Release Date:** November 10, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.66.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+**PostgreSQL Database Names**
+
+1. **LiteLLM and Langfuse default database names changed** — the Helm defaults changed from `postgres_litellm` to `litellm` and from `postgres_langfuse` to `langfuse`, matching the databases Terraform creates for dedicated instances (`TF_VAR_litellm_db_config`, `TF_VAR_langfuse_db_config`).
+
+   :::warning Shared database upgrades
+   If LiteLLM or Langfuse already runs on the shared CodeMie PostgreSQL instance under the old name, set `db.database` (LiteLLM) and `langfuse.postgresql.database` (Langfuse) to the old name in your values files. Otherwise the services connect to a new, empty database.
+   :::
+
+<h3>Hotfixes</h3>
+
+- **2.66.1** · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.66.1) – November 10, 2026
+
+</details>
+
 <details className="release" id="v2-65-0">
 <summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">3 hotfixes</span></summary>
 

@@ -55,17 +55,17 @@ Generate with AI analyzes your requirements and automatically sets up the assist
 
 **Configuration Fields**
 
-| Field                              | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| **Project**                        | The project where the assistant will be created                            |
-| **Shared with Project**            | Enable to allow team members to view and use the assistant                 |
-| **Name**                           | Descriptive name for the assistant                                         |
-| **Slug**                           | Unique human-readable identifier for sharing (e.g., `my-custom-assistant`) |
-| **Description**                    | Brief description of the assistant's purpose and capabilities              |
-| **System Instructions**            | Core prompt that defines the assistant's behavior and responses            |
-| **Icon URL** (Optional)            | URL to an image for the assistant's avatar                                 |
-| **Data Source Context** (Optional) | Project documentation or Git repository for context                        |
-| **Available Tools**                | Tools and integrations to extend the assistant's capabilities              |
+| Field                              | Description                                                                                                                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Project**                        | The project where the assistant will be created                                                                                                                                   |
+| **Shared with Project**            | Enable to allow team members to view and use the assistant. To share with specific users only, see [Share with Specific Users](./sharing-assistants.md#share-with-specific-users) |
+| **Name**                           | Descriptive name for the assistant                                                                                                                                                |
+| **Slug**                           | Unique human-readable identifier for sharing (e.g., `my-custom-assistant`)                                                                                                        |
+| **Description**                    | Brief description of the assistant's purpose and capabilities                                                                                                                     |
+| **System Instructions**            | Core prompt that defines the assistant's behavior and responses                                                                                                                   |
+| **Icon URL** (Optional)            | URL to an image for the assistant's avatar                                                                                                                                        |
+| **Data Source Context** (Optional) | Project documentation or Git repository for context                                                                                                                               |
+| **Available Tools**                | Tools and integrations to extend the assistant's capabilities                                                                                                                     |
 
 **Slug Configuration**
 
