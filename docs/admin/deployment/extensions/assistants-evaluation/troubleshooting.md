@@ -47,7 +47,15 @@ kubectl delete namespace langfuse
 
 # Delete langfuse-integration secret
 kubectl -n codemie delete secret langfuse-integration
+```
 
+:::warning Shared database only
+Run the SQL below only if Langfuse uses the shared CodeMie PostgreSQL instance. `DROP DATABASE` permanently deletes all Langfuse data.
+
+If you use a dedicated database provisioned by Terraform, skip this SQL. The `langfuse` database and `langfuse_admin` user are managed by Terraform. Keep them and only delete the Kubernetes resources above before re-running the deployment.
+:::
+
+```bash
 # Reset postgresql database instance
 # Connect to the "postgres" database first, if not already connected
 psql -U postgres
