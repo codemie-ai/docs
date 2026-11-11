@@ -27,7 +27,9 @@ Before running the script, ensure you have completed the following configuration
 
 3. **Configure LLM Models:** Review and customize your desired models and regions in the `litellm/config/litellm-<cloud>-config.yaml` file, as detailed in [Model Configuration](../model-config.md).
 
-4. **Database Initialization:** Ensure `dbInitJob.enabled: true` is set in `litellm/values-<cloud>.yaml`. The script will automatically create the required secrets to initialize the `postgres_litellm` database and user. Admin credentials are read from `deployment_outputs.env` — either `CODEMIE_POSTGRES_DATABASE_*` (shared database) or `LITELLM_POSTGRES_DATABASE_*` (dedicated database), depending on your setup.
+4. **Database Initialization:** Configure `dbInitJob.enabled` in `litellm/values-<cloud>.yaml` based on your database setup:
+   - **Shared Database:** Set `dbInitJob.enabled: true`. The script automatically creates the required secrets to initialize the `litellm` database and user using admin credentials from `deployment_outputs.env`.
+   - **Dedicated Database:** Keep `dbInitJob.enabled: false`. When configured with `TF_VAR_litellm_db_config`, the database is provisioned automatically by Terraform.
 
 :::warning
 

@@ -71,7 +71,9 @@ kubectl create secret generic litellm-postgresql \
 
 **4. PostgreSQL Admin Secret**
 
-Required if `dbInitJob.enabled: true` in `litellm/values-<cloud>.yaml`. This secret provides admin credentials used by the init job to create the `postgres_litellm` database and user automatically during deployment.
+Required only for a shared database with `dbInitJob.enabled: true`. For dedicated database instances, skip this secret.
+
+This secret provides CodeMie admin credentials used by the init job to create the `litellm` database and user. Use `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`.
 
 ```bash
 kubectl create secret generic codemie-postgresql \
@@ -80,10 +82,6 @@ kubectl create secret generic codemie-postgresql \
 --from-literal=PG_PASS="your_admin_password" \
 --type=Opaque
 ```
-
-:::info
-Admin credentials can be found in `deployment_outputs.env` — use `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` for a shared database, or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` for a dedicated LiteLLM database.
-:::
 
 **5. Drain Token Secret**
 
@@ -285,14 +283,14 @@ Avoid special characters such as `@`, `#`, `$`, `!`, `%`, `&`, `=`, `\` as they 
 :::
 
 ```sql
-CREATE DATABASE postgres_litellm;
+CREATE DATABASE litellm;
 CREATE USER litellm WITH PASSWORD 'your_strong_password_here';
-GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
+GRANT ALL PRIVILEGES ON DATABASE litellm TO litellm;
 ```
 
 ### Configure Schema Permissions
 
-Reconnect to the `postgres_litellm` database using admin credentials, then:
+Reconnect to the `litellm` database using admin credentials, then:
 
 ```sql
 GRANT ALL ON SCHEMA public TO litellm;
