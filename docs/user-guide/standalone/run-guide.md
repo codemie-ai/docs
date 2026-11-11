@@ -26,8 +26,9 @@ Running CodeMie Standalone takes four steps:
 3. [Create and fill in the environment file](#configuring-the-environment).
 4. [Start the stack](#starting-the-stack) and open CodeMie at `http://localhost:8080`.
 
-Optional customization, such as an external customer configuration or disabling Budget Management,
-is covered in [Advanced Configuration](#advanced-configuration).
+A condensed [Quick Start](#quick-start) is provided below. Optional customization, such as an
+external customer configuration or disabling Budget Management, is covered in
+[Advanced Configuration](#advanced-configuration).
 
 ## Prerequisites
 
@@ -152,14 +153,15 @@ cp standalone/.env.standalone.example standalone/.env.standalone
 `standalone/.env.standalone` is read by `docker-compose.standalone.yml` via `env_file`. At
 minimum, configure:
 
-| Variable                                   | Default                         | Description                                                                                                                                                        |
-| ------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `RETRIEVAL_BACKEND`                        | `none`                          | `elasticsearch` \| `none`. When `none`, Knowledge Bases, Data Sources, and code indexing are disabled — no Elasticsearch container is part of the standalone stack |
-| `ADMIN_LOG_LOOKUP_ENABLED`                 | `false`                         | Must be `false` when `RETRIEVAL_BACKEND=none` — the admin log lookup endpoint depends on the same backend and returns HTTP 503 if enabled without it               |
-| `ENABLE_USER_MANAGEMENT`                   | `true`                          | Enables local user self-management in the built-in auth provider                                                                                                   |
-| `EMAIL_VERIFICATION_ENABLED`               | `false`                         | Set to `false` to auto-verify all accounts; with the platform default (`true`), new users must verify their email before logging in                                |
-| `MODELS_ENV`                               | `azure`                         | Selects the LLM provider profile; set exactly one provider block (Azure OpenAI or AWS Bedrock)                                                                     |
-| `SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD` | `admin@codemie.ai` / `password` | Seeded local superadmin credentials — change before any shared or long-lived deployment                                                                            |
+| Variable                                   | Default                         | Description                                                                                                                                                                                                            |
+| ------------------------------------------ | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ENV`                                      | _(none, required)_              | Runtime environment, `development` in the example file. The container refuses to start when it is unset. Do not use `local`: it accepts a user-id header as login and makes every user an administrator                |
+| `ELASTIC_URL`                              | _(empty)_                       | Optional external Elasticsearch. When empty, Knowledge Bases, Data Sources, and code indexing are unavailable. `RETRIEVAL_BACKEND` has no effect in the standalone image — see [Optional Services](#optional-services) |
+| `ADMIN_LOG_LOOKUP_ENABLED`                 | `false`                         | Keep `false` unless Elasticsearch is configured — the admin log lookup endpoint depends on it                                                                                                                          |
+| `ENABLE_USER_MANAGEMENT`                   | `true`                          | Enables local user self-management in the built-in auth provider                                                                                                                                                       |
+| `EMAIL_VERIFICATION_ENABLED`               | `false`                         | Set to `false` to auto-verify all accounts; with the platform default (`true`), new users must verify their email before logging in                                                                                    |
+| `MODELS_ENV`                               | `azure`                         | Selects the LLM provider profile; set exactly one provider block (Azure OpenAI or AWS Bedrock)                                                                                                                         |
+| `SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD` | `admin@codemie.ai` / `password` | Seeded local superadmin credentials — change before any shared or long-lived deployment                                                                                                                                |
 
 :::tip At least one LLM provider is required
 Configure exactly one of the two LLM provider blocks in `.env.standalone` — Azure OpenAI
@@ -212,6 +214,140 @@ docker run --rm -v ./codemie-repos:/src -v codemie_repos:/dst docker.io/library/
 ```
 
 :::
+
+## Quick Start
+
+The shortest path to a running instance, using the published image and a PostgreSQL database.
+
+1. Obtain the version-matched standalone deployment files for the release and open the directory
+   that contains `standalone/`.
+2. Select the image matching the release:
+
+   ```bash
+   export CODEMIE_IMAGE=codemie/codemie-oss-standalone:<tag>
+   ```
+
+3. Create the environment file and fill in one LLM provider block and the superadmin password
+   (see [Configuring the Environment](#configuring-the-environment)):
+
+   ```bash
+   cp standalone/.env.standalone.example standalone/.env.standalone
+   ```
+
+4. Start the stack and wait until the `codemie` container is `healthy`:
+
+   ```bash
+   docker compose -f standalone/docker-compose.standalone.yml up -d
+   docker compose -f standalone/docker-compose.standalone.yml ps
+   ```
+
+5. Open `http://localhost:8080` and log in with `SUPERADMIN_EMAIL` and `SUPERADMIN_PASSWORD`.
+
+The first start can take up to two minutes: the container waits for the backend to answer its
+health check for up to 120 seconds before nginx starts.
+
+## External Dependencies
+
+The application container holds only the frontend, backend, and nginx. Everything it stores or
+calls lives outside the image:
+
+| Dependency                   | Required | Provided by the Compose file                  | Configured by                                            |
+| ---------------------------- | -------- | --------------------------------------------- | -------------------------------------------------------- |
+| PostgreSQL                   | Yes      | `postgres:17` container, for convenience only | `PG_URL`                                                 |
+| LLM provider (Azure/Bedrock) | Yes      | No                                            | `MODELS_ENV` and provider variables                      |
+| Elasticsearch                | No       | No                                            | `ELASTIC_URL`                                            |
+| Redis                        | No       | No                                            | `REDIS_HOST`                                             |
+| pgvector                     | —        | Not supported                                 | There is no vector-store setting in the standalone image |
+
+The lifecycle of these services — provisioning, backups, upgrades, and credentials — is the
+responsibility of the operator. Removing the Compose-managed `postgres` volume deletes all
+application data.
+
+### Using an External PostgreSQL
+
+PostgreSQL is the only required dependency. The provided Compose file starts a `postgres:17`
+container and sets `PG_URL` for the `codemie` service. To use an existing PostgreSQL server
+instead, edit `standalone/docker-compose.standalone.yml`:
+
+1. Remove the `postgres` service, its `depends_on` entry under `codemie`, and the `postgres_data`
+   volume.
+2. Replace the `PG_URL` value under `codemie.environment` with the connection string of the
+   external database:
+
+   ```yaml
+   environment:
+     - PG_URL=postgresql://<user>:<password>@<host>:5432/<database>
+   ```
+
+`PG_URL` set under `environment` takes precedence over the same variable in `.env.standalone`.
+The database must be reachable from the container, and the user must be able to create tables and
+schemas, because the application applies its migrations at startup.
+
+:::warning Credentials
+The bundled Compose file contains the example credentials `postgres` / `password`. Replace them
+for any instance reachable by other users, and keep real values out of version control.
+:::
+
+### Optional Services
+
+**Elasticsearch.** With `ELASTIC_URL` empty (the image default), the application starts and
+Knowledge Bases, Data Sources, and code indexing are unavailable. Setting `ELASTIC_URL` in
+`standalone/.env.standalone` enables them:
+
+```text
+ELASTIC_URL=https://<elasticsearch-host>:9200
+```
+
+Standalone only checks that the value is non-empty. A wrong URL surfaces as connection errors, or a
+failed startup. Credentials are supplied with `ELASTIC_USERNAME` and `ELASTIC_PASSWORD`; see the
+[Data Sources Configuration](../../admin/configuration/codemie/datasources-configuration.md).
+
+**pgvector.** Using PostgreSQL with pgvector as a vector store is not implemented in the standalone
+image. Knowledge Bases, Data Sources, and code indexing require Elasticsearch.
+
+**Redis.** Setting `REDIS_HOST` enables Google integration OAuth (together with
+`GOOGLE_OAUTH_ENABLED=true`) and webhook rate limiting. Without it, both are skipped and one
+warning per feature is logged at startup.
+
+## Configuration and Restart Behavior
+
+Configuration is read once at container start.
+
+| Change                                             | Required action                                                                                                     |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Edit `.env.standalone`, or the `environment` block | Recreate the container: `docker compose -f standalone/docker-compose.standalone.yml up -d --force-recreate codemie` |
+| Edit or remove the external `customer-config.yaml` | Restart or recreate the `codemie` container                                                                         |
+| Change `CODEMIE_IMAGE`                             | Run `docker compose ... up -d`; the container is recreated with the new image                                       |
+
+:::note
+`docker compose restart` does not re-read `env_file`. Recreating the container is required for
+`.env.standalone` changes to take effect.
+:::
+
+Missing LLM settings do not stop the container. The backend logs a `Core gating` warning, and
+Chats, Assistants, and Workflows stay off until the settings are provided and the container is
+restarted.
+
+## Identifying the Version
+
+- **Image tag.** The tag in `CODEMIE_IMAGE` is the authoritative release identifier:
+
+  ```bash
+  docker inspect codemie --format '{{.Config.Image}}'
+  ```
+
+- **Running application.** The backend reports its version at the info endpoint:
+
+  ```bash
+  curl -s http://localhost:8080/api/v1/info
+  ```
+
+  The `version` field contains the backend application version. Include it, together with the
+  image tag, when reporting an issue.
+
+- **Startup logs.** `docker compose -f standalone/docker-compose.standalone.yml logs codemie` shows
+  the effective configuration (secrets masked) and the capability warnings described in
+  [Troubleshooting](./troubleshooting.md).
 
 ## Advanced Configuration
 
@@ -294,6 +430,7 @@ The following files are created locally and are not tracked in the `codemie` rep
 ## See Also
 
 - [Standalone Overview](./index.md)
+- [Troubleshooting](./troubleshooting.md)
 - [API Configuration Reference](../../admin/configuration/codemie/api-configuration.md)
 - [CodeMie Customer Feature Configuration](../../admin/configuration/codemie/customer-feature-configuration.md)
 - [Docker Hub: codemie/codemie-oss-standalone](https://hub.docker.com/repository/docker/codemie/codemie-oss-standalone)
