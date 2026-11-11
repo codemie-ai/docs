@@ -26,6 +26,7 @@ Use this table to quickly find where each component appears in the UI.
 | `feedbackAssistant`                       | Help Center, Quick actions (top-right)                              | Feedback assistant card/button                                                                  | Feedback collection interface                                                       |                                                                                                                                                                                      |
 | `mcpConnect`                              | Assistant/Workflow config → Tools                                   | "MCP Servers" option in dropdown                                                                | MCP integration option                                                              |                                                                                                                                                                                      |
 | `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                             | Catalog-referenced and custom MCP servers                                                       | Possibility to configure custom MCP servers                                         |                                                                                                                                                                                      |
+| `features:mcpServerInstructions`          | Assistant and skill system prompt                                   | Usage instructions declared by MCP servers are added to the system prompt                       | Instructions are not added; MCP servers behave as before                            | Enabled by default; needs MCP Connect that returns `instructions`; see [MCP Server Instructions](#mcp-server-instructions)                                                           |
 | `skills`                                  | Navigation, Chat config, Assistant config                           | Skills menu, skill selector, management pages                                                   | Entire Skills subsystem                                                             | Major feature gate                                                                                                                                                                   |
 | `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise package only                                                                                                                                                              |
 | `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS`                                                                                       |
@@ -534,6 +535,82 @@ components:
       enabled: true
       value: 60
 ```
+
+### MCP Server Instructions {#mcp-server-instructions}
+
+An MCP server can declare usage instructions during the connection handshake. MCP Connect returns them with the tool list, and when the `features:mcpServerInstructions` component is enabled, AI/Run CodeMie appends them to the system prompt of the assistant or skill that uses the server. For the user-facing behavior, see [MCP Server Instructions](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md).
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Boolean - add MCP server instructions to the system prompt
+```
+
+```yaml
+components:
+  # Adds the instructions that MCP servers declare at handshake to the system prompt
+  # NOTE: Enabled by default. A missing component counts as disabled
+  - id: "features:mcpServerInstructions"
+    settings:
+      enabled: true
+      name: "MCP Server Instructions"
+      description: "Inject usage instructions that MCP servers declare at handshake into the system prompt"
+```
+
+To turn the feature off, set `enabled: false`. The flag is evaluated each time the agent is built, so the next message in a conversation is affected after the API instances load the changed configuration. The component is not editable on the **Customer Configuration** page; change it in `customer-config.yaml`.
+
+:::warning Missing component disables the feature
+A `customer-config.yaml` that replaces the default file and does not contain `features:mcpServerInstructions` leaves the feature disabled. Add the component shown above to enable it.
+:::
+
+#### Requirements
+
+- `MCP_CONNECT_ENABLED` is `true` and the MCP Connect service is a version that returns the `instructions` field with `tools/list`. Older versions never return instructions, so the feature has no effect.
+- The MCP server declares instructions in its `initialize` response.
+
+#### Delimiter Secret
+
+Each instructions block is wrapped in `BEGIN`/`END` markers that carry a unique identifier. The identifier is the security boundary: text from the server that imitates a marker without the exact identifier is not treated as a delimiter. The identifier is derived from the conversation ID with an HMAC keyed by the `MCP_INSTRUCTIONS_NONCE_SECRET` environment variable of the `codemie-api` service, so it stays the same during one conversation and cannot be predicted by an MCP server.
+
+| Parameter                       | Type   | Default | Description                                                                      |
+| ------------------------------- | ------ | ------- | -------------------------------------------------------------------------------- |
+| `MCP_INSTRUCTIONS_NONCE_SECRET` | string | unset   | Shared key for the delimiter identifier. Must be at least 32 characters when set |
+
+Behavior:
+
+- **Set**: every API replica derives the same identifier for a conversation. The system prompt stays identical across pods and restarts, so LLM provider prompt caching keeps working.
+- **Unset**: each API process generates its own random key. The feature still works, but the same conversation can get a different identifier on another replica or after a restart, which causes prompt-cache misses. A warning is logged once per process.
+- **Shorter than 32 characters**: the API fails at startup with `MCP_INSTRUCTIONS_NONCE_SECRET must be at least 32 characters`.
+
+Use the same value on every `codemie-api` replica. Generate a value and store it in a Kubernetes secret:
+
+```bash
+kubectl create secret generic codemie-mcp-secrets \
+  --namespace codemie \
+  --from-literal=MCP_INSTRUCTIONS_NONCE_SECRET="$(openssl rand -hex 32)"
+```
+
+Reference the secret in the Helm values of the `codemie-api` chart:
+
+```yaml
+extraEnv:
+  - name: MCP_INSTRUCTIONS_NONCE_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: codemie-mcp-secrets
+        key: MCP_INSTRUCTIONS_NONCE_SECRET
+```
+
+:::warning Create the secret first
+A `secretKeyRef` that points to a missing secret prevents the pods from starting. Create the secret before applying the values.
+:::
+
+Apply the change with `helm upgrade` and wait for the `codemie-api` pods to restart. Changing the secret later changes the identifiers of existing conversations once, which causes a single prompt-cache miss per conversation.
+
+#### Size Limits
+
+The platform limits each server's instructions to 4000 characters and the whole section to 12000 characters. MCP Connect additionally caps the text at `MCP_CONNECT_MAX_INSTRUCTIONS_CHARS` characters (default `8192`). See the [limits table](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md#limits).
 
 ### Tool Call Permissions
 
