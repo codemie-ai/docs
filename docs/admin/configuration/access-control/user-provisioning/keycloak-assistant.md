@@ -146,7 +146,7 @@ kubectl rollout restart deployment/oauth2-proxy -n oauth2-proxy
 
 ![Integrations Tab](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_10-15-44.png)
 
-#### 11. Click the `Create` button in the top right corner and select `Create Project Integration`.
+#### 11. Click the `+ Create` button in the top right corner. On the `New Integration` form, select `Project` in the `Scope` field.
 
 ![Create Integration](@site/docs/admin/configuration/images/user-configuration/image-2025-9-17_10-16-37.png)
 

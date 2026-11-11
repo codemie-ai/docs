@@ -2,7 +2,7 @@
 
 To configure A2A Integration:
 
-1. Navigate to Integrations → User or Project → + Create
+1. Navigate to Integrations → + Create and select the Scope (User or Project)
 2. Select basic parameters:
    - Project: Select your CodeMie project name
    - Global Integration: Toggle on to use across multiple projects

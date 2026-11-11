@@ -4,11 +4,12 @@ The User integrations menu in CodeMie is a feature that allows users to integrat
 
 To integrate a tool, follow these steps:
 
-1. In the CodeMie main menu, click the "integrations" button.
-2. In the User integrations menu, click the "new integration" button.
-3. Select the tool you wish to integrate.
-4. Specify the required Alias and credentials (usually the URL and token).
-5. Click "Create Integration" to finalize the integration.
+1. In the CodeMie main menu, click **Integrations**.
+2. Click **+ Create**. The **New Integration** form opens.
+3. Keep **Scope: User** for a personal integration. Project admins can select **Scope: Project** to share the integration with a project.
+4. Select the tool to integrate in the **Credential Type** dropdown.
+5. Specify the required Alias and credentials (usually the URL and token).
+6. Click **Save** to finalize the integration.
 
 ## Sources
 

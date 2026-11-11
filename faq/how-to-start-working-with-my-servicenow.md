@@ -7,7 +7,7 @@ To integrate ServiceNow with CodeMie, follow the steps below:
 [https://www.servicenow.com/docs/bundle/yokohama-platform-security/page/integrate/authentication/task/configure-api-key.html](https://www.servicenow.com/docs/bundle/yokohama-platform-security/page/integrate/authentication/task/configure-api-key.html)
 
 2. In the CodeMie main menu, click the integrations button:  
-   2.1. Select Integration Type: User or Project and click Create.  
+   2.1. Click Create and select the Scope: User or Project.  
    2.2. In the new user setting menu, fill in the following parameters:
 
 - Project Name: Select the name of your project.

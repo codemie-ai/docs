@@ -10,7 +10,7 @@ To integrate Bitbucket with CodeMie, follow the steps below:
    1.5. Fill the Label field and choose permission and click create.
 2. Copy New app password and click close.
 3. In the CodeMie main menu, click the integrations button.
-4. Select Integration Type: User or Project and click Create
+4. Click Create and select the Scope: User or Project
 5. Select the Project Name.
 6. Select the Credential Type: Git.
 7. Fill in the Alias is a representation of the user setting.
