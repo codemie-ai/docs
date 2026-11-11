@@ -94,13 +94,15 @@ Configure your PostgreSQL instance with the necessary database and user.
 
 ## Step 1: Deploy AICE
 
-Install or upgrade AICE using Helm:
+Install or upgrade AICE with the Helm chart:
 
 ```bash
 helm upgrade --install aice ./aice \
---namespace aice \
---values ./aice/values-<cloud_name>.yaml
+  --namespace aice \
+  --values ./aice/values-<cloud_name>.yaml
 ```
+
+Replace `<cloud_name>` with the name of your cloud provider, for example `aws`, `azure` or `gcp`.
 
 ## Next Steps
 

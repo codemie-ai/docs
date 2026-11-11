@@ -358,6 +358,20 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Control Plane',
+          link: {
+            type: 'doc',
+            id: 'user-guide/control-plane/control-plane',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/control-plane/on-vm',
+            'user-guide/control-plane/standalone',
+            'user-guide/control-plane/configuration',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
@@ -618,6 +632,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
                 'admin/deployment/extensions/mf-lens/mf-lens',
+                'admin/deployment/extensions/control-plane/control-plane',
               ],
             },
           ],
