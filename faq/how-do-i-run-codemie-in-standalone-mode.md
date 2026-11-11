@@ -1,7 +1,7 @@
 # How do I run CodeMie in standalone mode?
 
 CodeMie Standalone packages the frontend, backend, and nginx into a single Docker image, paired
-with a separate PostgreSQL container via Docker Compose. It is intended for proof-of-concept
+with a separate PostgreSQL container via Docker Compose (PostgreSQL, Elasticsearch, and Redis are external dependencies). It is intended for proof-of-concept
 work, demos, and local development — not production, which should use the AWS, Azure, or GCP
 Kubernetes or On VM deployment guides.
 
@@ -20,9 +20,10 @@ using `standalone/build-image.sh`; see the Run Guide for both workflows.
 
 CodeMie Standalone authenticates with the platform's built-in local provider by default — there
 is no Keycloak container in the stack. By default it also runs without Elasticsearch
-(`RETRIEVAL_BACKEND=none`), so Knowledge Bases, Data Sources, and code indexing are unavailable.
+(`ELASTIC_URL` is empty), so Knowledge Bases, Data Sources, and code indexing are unavailable.
 
 ## Sources
 
 - [AI/Run CodeMie Standalone](https://docs.codemie.ai/user-guide/standalone/)
 - [Running CodeMie Standalone](https://docs.codemie.ai/user-guide/standalone/run-guide)
+- [Troubleshooting CodeMie Standalone](https://docs.codemie.ai/user-guide/standalone/troubleshooting)
