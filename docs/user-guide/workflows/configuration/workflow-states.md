@@ -97,20 +97,22 @@ When you save a workflow, the platform classifies each state's `output_schema` t
 fields the state can provide to later states. This classification is separate from the agent's
 structured-output behavior described above. The table shows what each form supplies.
 
-| Form                  | What it is                               | What it supplies at save time                                                                     |
-| --------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `schema`              | A valid JSON Schema object               | Top-level property names, plus types and required flags where the schema declares them            |
-| `example`             | A plain JSON object that is not a schema | Field names only. Example values do not establish field types                                     |
-| `list` (plain)        | A JSON list of objects                   | Field names taken from the object items. No types or required flags                               |
-| `list` (array schema) | A schema whose root is an array          | Field names from `items.properties`, with types and required flags taken from `items`             |
-| `invalid`             | Malformed JSON text                      | Quoted keys that can be recovered, as names only. If none can be recovered, the source is unknown |
-| `none`                | No `output_schema`, or a blank one       | Nothing. The state declares no output information                                                 |
+| Form                  | What it is                                                                                                                                                             | What it supplies at save time                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `schema`              | A valid JSON Schema object                                                                                                                                             | Top-level property names, plus types and required flags where the schema declares them                                     |
+| `example`             | A plain JSON object that is not a schema                                                                                                                               | Field names only. Example values do not establish field types                                                              |
+| `list` (plain)        | A JSON list of objects                                                                                                                                                 | Field names taken from the object items. No types or required flags                                                        |
+| `list` (array schema) | A schema whose root is an array                                                                                                                                        | Field names from `items.properties`, with types and required flags taken from `items`                                      |
+| `invalid`             | A value that is not usable as an output contract: malformed JSON text, or valid JSON that fails the checks, such as a scalar or an object that fails the schema checks | Quoted keys that can be recovered from some malformed text, as names only. If none can be recovered, the source is unknown |
+| `none`                | No `output_schema`, or a blank one                                                                                                                                     | Nothing. The state declares no output information                                                                          |
 
 Keep these points in mind:
 
 - A value that parses as JSON but fails the schema checks is not automatically an `example`.
   Classification depends on the text.
 - A list with no usable names remains an unknown source.
+- Key recovery applies to some malformed text, not to every `invalid` value. A valid JSON scalar
+  has no keys to recover, so its source is unknown.
 - Recovery from malformed text never establishes types or required status.
 - A root array schema is classified as a `list`, not as a `schema`.
 - Save-time classification does not mean every node enforces its output contract at runtime.
@@ -197,7 +199,9 @@ states:
 ```
 
 **Required coverage.** A state has input-contract coverage when it has a usable declared
-`input_schema` or a contract that can be derived: from agent placeholders, from the extraction
+`input_schema` or a contract that can be derived: from agent placeholders (only when the state
+sets `resolve_dynamic_values_in_prompt: true`; otherwise its task placeholders contribute no
+requirements), from the extraction
 roots of a transform node, or from the argument schema of a tool (even one with no mandatory
 parameters). With `require_input_contracts: true`, an uncovered reachable state blocks saving in
 both modes. A state-level `warn` does not disable this rule, and the setting does not require an
@@ -283,8 +287,34 @@ Remember:
 
 In the workflow editor, workflow-level settings are under **Contracts** in the advanced
 configuration. Action states have input and output contract fields and a validation-mode
-override. **Check** evaluates the current form without saving it. A successful Check does not
-guarantee that a later save succeeds, because access, dependencies, and input can change.
+override. **Check** evaluates the current form without saving it.
+
+**Procedure:**
+
+1. Configure the contracts: the workflow-level settings under **Contracts**, then the input and
+   output contract fields and the validation-mode override on each state.
+2. Click **Check**.
+3. Read the **Issues** list. Each entry names the state and, where available, the field.
+4. Select **Go to Issue** to jump to the field.
+5. Change the field.
+6. Click **Check** again.
+7. Click **Save** when the remaining issues are acceptable for the effective mode.
+
+**Resolved.** After a local edit the editor can mark an issue **Resolved**. That only means the
+field changed on your screen. It does not prove that backend validation passed, so always
+**Check** again before saving.
+
+A successful Check does not guarantee that a later save succeeds, because access, dependencies,
+and input can change.
+
+**Troubleshooting**
+
+| Question                                  | Answer                                                                                                                                                                                                                     |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Why does `warn` mode block Save?          | Some findings block in both modes: a declared requirement that fails, a missing required coverage under `require_input_contracts: true`, and a malformed `input_schema`. See [Requirement outcomes](#requirement-outcomes) |
+| Why is coverage absent?                   | Contract linking did not run, for example because `WORKFLOW_CONTRACT_LINKING_ENABLED` is off. Absent coverage is not zero coverage and not a successful analysis                                                           |
+| Why does full coverage still show issues? | Coverage counts states that have an input contract, not requirements that passed. See [Contract coverage](#contract-coverage)                                                                                              |
+| Why did Check pass but Save fail?         | Check does not save. Access, dependencies, or input can change between the two, and the editor's **Resolved** mark is local only                                                                                           |
 
 #### Platform prerequisite
 

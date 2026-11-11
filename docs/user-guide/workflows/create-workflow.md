@@ -326,14 +326,30 @@ automatically the first time it opens, then saves the resulting positions.
 ### Save Options
 
 - **Save**: Save the workflow configuration without executing
-- **Save & Run**: Save and immediately execute the workflow to test it
+- **Save & Run**: Save the workflow, then open the run dialog so you can start an execution
 - **Cancel**: Discard all changes and exit
+
+#### Saving with contract warnings
+
+When the workflow has [contract](./configuration/workflow-states.md#using-check-in-the-editor)
+warnings, the visual editor saves it and stays open instead of continuing straight to
+execution. The editor then offers three actions:
+
+- **Saved** confirms that the workflow was stored. Warnings do not prevent saving.
+- **Done** closes the editor.
+- **Run anyway** continues to the run dialog despite the warnings. Execution still requires the
+  run dialog: enter the input and start the run there.
+
+Warnings and informational `UNVERIFIED` results are different. A warning means the analysis
+found a likely problem, such as an optional field that a state needs. `UNVERIFIED` means the
+analysis could not establish the result, and in `warn` mode it is informational only. Under
+`strict`, `UNVERIFIED` results block saving.
 
 ### Testing Your Workflow
 
 After creating your workflow:
 
-1. Click **Save & Run** to test immediately
+1. Click **Save & Run** to save and open the run dialog
 2. Enter required input parameters in the execution dialog
 3. Monitor the execution progress
 4. Review the results and debug if needed
