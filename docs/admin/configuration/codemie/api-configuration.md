@@ -142,6 +142,7 @@ These parameters define paths to configuration files and directories. Typically 
 | `CUSTOMER_CONFIG_DIR`             | Path | `config/customer`                | Customer-specific customizations and branding                                                  |
 | `ASSISTANT_CATEGORIES_CONFIG_DIR` | Path | `config/categories`              | Assistant categorization and organization                                                      |
 | `AUTHORIZED_APPS_CONFIG_DIR`      | Path | `config/authorized_applications` | External application access control definitions                                                |
+| `PROVISIONING_CLIENTS_CONFIG_DIR` | Path | `config/provisioning_clients`    | Directory with `provisioning-clients-config.yaml`, the registry of provisioning API clients    |
 | `INDEX_DUMPS_DIR`                 | Path | `config/index-dumps`             | Pre-built index snapshots for faster deployment                                                |
 | `ALEMBIC_MIGRATIONS_DIR`          | Path | `external/alembic`               | Database schema migration scripts                                                              |
 | `ALEMBIC_INI_PATH`                | Path | `external/alembic/alembic.ini`   | Alembic database migration configuration                                                       |
@@ -349,6 +350,27 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 | Parameter                  | Type   | Default | Description                                      |
 | -------------------------- | ------ | ------- | ------------------------------------------------ |
 | `FILES_STORAGE_GCP_REGION` | string | `"US"`  | Multi-region or region for Cloud Storage buckets |
+
+### Hosted Applications
+
+Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs and `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
+
+| Parameter                                  | Type    | Default                 | Description                                                                                                                                                                                            |
+| ------------------------------------------ | ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `HOSTED_APPS_CONTENT_DOMAIN`               | string  | `""`                    | Required. Registrable domain, separate from every first-party domain, that serves uploaded content from `v-<version ID>.<domain>`. Local development: `apps.localhost:<backend port>` with `ENV=local` |
+| `HOSTED_APPS_CREDENTIAL_SECRET`            | string  | `""`                    | Required secret of at least 32 bytes. HMAC key for content sessions, launch tickets, cursors, and idempotency records                                                                                  |
+| `HOSTED_APPS_VALIDATOR_URL`                | string  | `http://127.0.0.1:8091` | Address of the validator Service, for example `http://codemie-hosted-apps-validator.codemie-hosted-apps.svc:8091`. No path, query, or credentials                                                      |
+| `HOSTED_APPS_VALIDATOR_KEY`                | string  | `""`                    | Required secret of at least 32 characters, shared with the validator pod as `VALIDATOR_SERVICE_KEY`                                                                                                    |
+| `HOSTED_APPS_STORAGE_BUCKET`               | string  | `""`                    | Required when `FILES_STORAGE_TYPE` is `aws` or `gcp`. Dedicated private bucket, never the generic files bucket. The API does not create it                                                             |
+| `HOSTED_APPS_STORAGE_DIR`                  | string  | `""`                    | `filesystem` storage only (development and tests). Absolute path outside `FILES_STORAGE_DIR`                                                                                                           |
+| `HOSTED_APPS_STORAGE_S3_GRACE_SECONDS`     | integer | `30`                    | S3 only. Extra wait after the writer lease ends before cleanup. Startup refuses S3 when clock skew exceeds it                                                                                          |
+| `HOSTED_APPS_STORAGE_SWEEP_SECONDS`        | integer | `3600`                  | Interval of the sweep that deletes old orphaned objects from the hosted bucket (S3 and GCS)                                                                                                            |
+| `HOSTED_APPS_STORAGE_SWEEP_BUDGET_SECONDS` | integer | `20`                    | Time budget of one sweep run                                                                                                                                                                           |
+| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per user in bytes (2 GiB). Minimum `1048576`                                                                                                                                             |
+
+:::note Storage backend
+Hosted applications use `FILES_STORAGE_TYPE` to select the backend: `aws` (S3) or `gcp` (GCS). `azure` keeps the feature unavailable, and `filesystem` is for development only.
+:::
 
 ---
 
@@ -570,14 +592,13 @@ SMTP configuration for sending verification and password-reset emails. Only acti
 
 ---
 
-### ServiceNow Integration
+### Provisioning API
 
-Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. See [ServiceNow Budget Integration](./servicenow-budget-integration.md) for setup.
+Enterprise feature. Requires `ENABLE_USER_MANAGEMENT=true`. Clients are registered in `provisioning-clients-config.yaml`, located by `PROVISIONING_CLIENTS_CONFIG_DIR` (see [Configuration File Paths](#configuration-file-paths)). See [Provisioning Clients Configuration](./provisioning-clients.md) for setup.
 
-| Parameter                        | Type   | Default | Description                                                                                                                 |
-| -------------------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `SERVICENOW_INTEGRATION_ENABLED` | bool   | `false` | Registers the ServiceNow budget endpoints and restricts the ServiceNow service account to them                              |
-| `SERVICENOW_SERVICE_ACCOUNT_ID`  | string | `""`    | ID (token `sub`) of the Keycloak service account used by ServiceNow. When empty, every request to the endpoints is rejected |
+| Parameter                  | Type | Default | Description                                                                                                                                         |
+| -------------------------- | ---- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PROVISIONING_API_ENABLED` | bool | `false` | Mounts the provisioning API (`/v1/provisioning`) for registered provisioning clients. Clients are confined to this API whether or not it is enabled |
 
 ---
 

@@ -377,7 +377,10 @@ const sidebars: SidebarsConfig = {
             id: 'user-guide/applications/index',
           },
           collapsed: true,
-          items: ['user-guide/applications/integration-guide'],
+          items: [
+            'user-guide/applications/hosted-applications',
+            'user-guide/applications/integration-guide',
+          ],
         },
         {
           type: 'category',
@@ -634,6 +637,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/codemie/datasources-configuration',
                 'admin/configuration/codemie/customer-feature-configuration',
+                'admin/configuration/codemie/hosted-applications',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
                 'admin/configuration/codemie/scaling-configuration',
@@ -665,6 +669,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/platform-administration',
                 'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
+                'admin/configuration/codemie/provisioning-clients',
                 'admin/configuration/codemie/servicenow-budget-integration',
               ],
             },
