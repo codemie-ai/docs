@@ -18,7 +18,7 @@ To create webhook integrations, you must have the **Project Admin** role. If you
 
 3. (Optional) Create a Workflow or Datasource – these resource types also support webhooks.
 
-## 4. Select Integration Type: User or Project and click Create
+## 4. Click Create and select the Scope: User or Project
 
 5. On the New Project integrations page, fill in the fields to create a webhook:
 

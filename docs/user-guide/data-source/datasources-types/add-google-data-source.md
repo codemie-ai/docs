@@ -80,8 +80,8 @@ A Google OAuth integration links your Google account to AI/Run CodeMie. You only
 ### Steps
 
 1. In the AI/Run CodeMie main menu, click **Integrations**.
-2. Click **+ Create** and select **Create User Integration**.
-3. In the **Credential Type** dropdown, select **Google OAuth**.
+2. Click **+ Create**. The **New Integration** form opens with **Scope: User**.
+3. In the **Credential Type** dropdown, select **Google OAuth**. This type is available at the User scope only, so the **Scope** field is locked to **User** after selection.
 4. Click the **Sign in with Google** button.
 5. A browser popup opens. Select your Google account and grant the requested permissions (read-only access to Google Documents).
 6. Once sign-in is complete, the button shows **Re-authenticate** and **Signed in as: `<your-email>`** above it.

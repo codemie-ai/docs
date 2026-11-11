@@ -40,10 +40,10 @@ Before an assistant can be used from Teams, it needs to be exposed to the bot th
 
 ### User vs. Project Scope
 
-| Integration scope | Created under                                                           | Exposed to                                            |
-| ----------------- | ----------------------------------------------------------------------- | ----------------------------------------------------- |
-| **User**          | **Integrations → User**                                                 | The Teams user who created it, in personal chats only |
-| **Project**       | **Integrations → Project** (requires `isAdmin` or `applications_admin`) | Any group chat or channel where `/setup` is run       |
+| Integration scope | Created with                                                                              | Exposed to                                            |
+| ----------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **User**          | **Integrations → + Create → Scope: User**                                                 | The Teams user who created it, in personal chats only |
+| **Project**       | **Integrations → + Create → Scope: Project** (requires `isAdmin` or `applications_admin`) | Any group chat or channel where `/setup` is run       |
 
 See [Integrations](../integrations/index.md) for the full explanation of integration scopes, priority, and how a default is picked when more than one exists.
 

@@ -12,8 +12,8 @@ Prerequisites
 ## Setting Up CRON Integration
 
 1. **Navigate to Integrations**
-   - Go to **Integrations** → Integration Type: **Project Integrations**
-   - Click **+ New Integration**
+   - Go to **Integrations** and click **+ Create**
+   - Select **Scope: Project**
 
 2. **Configure integrations Settings**
    - **Project:** Select your target project

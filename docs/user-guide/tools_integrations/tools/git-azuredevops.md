@@ -63,7 +63,7 @@ For full details on PAT creation and management, see the
 ## 2. Configure Integration in CodeMie
 
 - In the CodeMie main menu, click the **Integrations** button.
-- Select Integration Type: **User** or **Project** and click **+ Create**.
+- Click **+ Create** and select the **Scope**: **User** or **Project**.
 - Select the Project Name.
 - Select the Credential Type: **Git**.
 - Fill in the **Alias** field — a label to identify this integration.
