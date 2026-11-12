@@ -33,12 +33,13 @@ While the feature is off, the Applications page shows only Platform apps and no 
 
 ## Prerequisites
 
-| Area           | Requirement                                                                                                                                                      |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Content domain | A separate registrable domain, for example `apps-content.example.net` when CodeMie runs on `example.com`. Never a subdomain of CodeMie or the identity provider. |
-| DNS and TLS    | Wildcard DNS `*.<content domain>` to the ingress and a wildcard certificate.                                                                                     |
-| Identity       | `ENABLE_USER_MANAGEMENT=true`. Any installed `IDP_PROVIDER` works.                                                                                               |
-| Storage        | A dedicated private bucket, with `FILES_STORAGE_TYPE` set to `aws` (S3) or `gcp` (GCS). Azure is not supported yet.                                              |
+| Area            | Requirement                                                                                                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content domain  | A separate registrable domain, for example `apps-content.example.net` when CodeMie runs on `example.com`. Never a subdomain of CodeMie or the identity provider.             |
+| DNS and TLS     | Wildcard DNS `*.<content domain>` to the ingress and a wildcard certificate.                                                                                                 |
+| Identity        | `ENABLE_USER_MANAGEMENT=true`. Any installed `IDP_PROVIDER` works.                                                                                                           |
+| Storage         | A dedicated private bucket, with `FILES_STORAGE_TYPE` set to `aws` (S3) or `gcp` (GCS). Azure is not supported yet.                                                          |
+| Validator nodes | Linux amd64 nodes with Landlock ABI 3 or later (normally Linux 6.2 or later). On GKE, a dedicated Ubuntu node pool (not Autopilot). See [Validator nodes](#validator-nodes). |
 
 ## Configuration
 
@@ -87,6 +88,12 @@ The validator Service is `codemie-hosted-apps-validator` and runs in the `namesp
 Validation results live in the validator instance that produced them. Do not scale the validator above one replica. While it restarts, uploads wait and viewing is not affected.
 :::
 
+### Validator nodes
+
+The validator parses uploads in a kernel sandbox (Landlock and seccomp) and exits at startup if the node cannot enforce it. On such a node the pod crash-loops with `Parser isolation is not enforced on this node`.
+
+Run the validator on Linux amd64 nodes with Landlock ABI 3 or later (normally kernel 6.2 or later). On GKE, the default Container-Optimized OS image is built without Landlock, so place the validator on a dedicated Ubuntu node pool with the `validator.nodeSelector` and `validator.tolerations` chart values. The API and ClamAV can stay on the default nodes. GKE Autopilot nodes always run Container-Optimized OS, where Landlock is disabled, so the validator cannot run on Autopilot; use a GKE Standard node pool.
+
 ## Ingress
 
 - **Content hosts.** The chart creates the content Ingress `codemie-hosted-apps-content` when `features.tools.hosted-apps.enabled` and `ingress.enabled` are true. It must route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
@@ -101,7 +108,7 @@ Validation results live in the validator instance that produced them. Do not sca
 
 ## Rollout
 
-1. Create the DNS record, wildcard certificate, bucket, and Secret.
+1. Create the DNS record, wildcard certificate, bucket, and Secret. On GKE, also create the validator node pool.
 2. Raise the management ingress limits.
 3. Enable `features.tools.hosted-apps` in the chart values and add the API settings.
 4. Enable `features:hostedApplications` in the customer configuration.
