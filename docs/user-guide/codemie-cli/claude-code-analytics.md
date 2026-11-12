@@ -30,7 +30,11 @@ Two independent decisions control what leaves the machine:
 
 Connecting a folder does not turn collection on. For a native Claude Code session with a personal subscription, collection alone does not publish session content to a project; both must be in place.
 
-A personal Claude subscription and a project destination are also different things. The subscription only pays for the model usage. The project is where analytics are stored, and it is a separate choice: connecting a folder with `--project` names the project that receives that folder's session content. A project that is merely configured, for example in a profile or workspace, does not by itself grant the explicit folder consent that sharing conversation content requires. For a session classified as Personal, on a deployment that supports this publication contract, the session without explicit folder consent stays in owner-only personal analytics where available. It is not published to a shared project as a fallback if personal storage is unavailable.
+A personal Claude subscription and a project destination are also different things. The subscription only pays for the model usage. The project is where analytics are stored, and it is a separate choice: connecting a folder with `--project` names the project that receives that folder's session content. A project that is merely configured, for example in a profile or workspace, does not by itself grant the explicit folder consent that sharing conversation content requires. On CLI versions that include EPMCDME-17142, a session classified as Personal, or a confirmed subscription session whose classification is Unknown, does not send CLI Analytics telemetry without explicit `connect-folder` consent for its folder. Consent is not retroactive: sessions that ran before the folder was connected are not sent afterwards. On earlier versions, such a session without consent stays in owner-only personal analytics where available, and is not published to a shared project as a fallback if personal storage is unavailable.
+
+:::note CodeMie Chats history sync is separate
+This rule covers CLI Analytics telemetry only. The separate CodeMie Chats history sync is not changed by it or by `connect-folder`, so not all data stays on the device.
+:::
 
 ## Prerequisites
 
