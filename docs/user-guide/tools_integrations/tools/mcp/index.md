@@ -19,3 +19,4 @@ extending their capabilities beyond built-in tools.
 | [Adding an MCP Server](./adding-an-mcp-server)               | Add and configure MCP servers in your assistants                          |
 | [MCP Integration Credentials](./mcp-integration-credentials) | Configure whose credentials each user runs the MCP server under           |
 | [Clone MCP Server](./clone-mcp-server)                       | Create a new catalog entry from an existing MCP server (Admin/Maintainer) |
+| [MCP Server Instructions](./mcp-server-instructions)         | Usage instructions declared by MCP servers are followed by assistants     |

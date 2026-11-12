@@ -178,11 +178,12 @@ for platform configuration.
 
 AI/Run CodeMie supports MCP servers for extending assistant capabilities.
 
-| Topic                                                                   | Description                                                  |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **[Adding an MCP Server](./mcp/adding-an-mcp-server.md)**               | Learn how to add and configure MCP servers                   |
-| **[MCP Integration Credentials](./mcp/mcp-integration-credentials.md)** | Choose whose credentials each user runs the MCP server under |
-| **[Clone MCP Server](./mcp/clone-mcp-server.md)**                       | Create a new catalog entry from an existing MCP server       |
+| Topic                                                                   | Description                                                    |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------- |
+| **[Adding an MCP Server](./mcp/adding-an-mcp-server.md)**               | Learn how to add and configure MCP servers                     |
+| **[MCP Integration Credentials](./mcp/mcp-integration-credentials.md)** | Choose whose credentials each user runs the MCP server under   |
+| **[Clone MCP Server](./mcp/clone-mcp-server.md)**                       | Create a new catalog entry from an existing MCP server         |
+| **[MCP Server Instructions](./mcp/mcp-server-instructions.md)**         | Usage instructions declared by MCP servers reach the assistant |
 
 ---
 

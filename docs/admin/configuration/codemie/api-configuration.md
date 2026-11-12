@@ -1003,6 +1003,14 @@ Configure Model Context Protocol for enhanced AI context management and tool int
 | `MCP_CONNECT_BUCKETS_COUNT`  | integer | `10`                      | Number of context buckets for partitioning and isolation    |
 | `MCP_TOOL_TOKENS_SIZE_LIMIT` | integer | `30000`                   | Max tokens for tool definitions to prevent context overflow |
 
+### MCP Server Instructions
+
+| Parameter                       | Type   | Default | Description                                                                                                                                    |
+| ------------------------------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MCP_INSTRUCTIONS_NONCE_SECRET` | string | unset   | Shared key (at least 32 characters) for the delimiters around MCP server instructions in the system prompt. Set the same value on all replicas |
+
+When unset, each API process uses its own key, so the same conversation can get a different prompt on another replica and provider prompt caching misses. A value shorter than 32 characters fails at startup. The behavior is enabled by the `features:mcpServerInstructions` component; see [MCP Server Instructions](./customer-feature-configuration.md#mcp-server-instructions) for the full setup, including the Kubernetes secret and Helm values.
+
 ### MCP Client Configuration
 
 | Parameter            | Type  | Default | Description                                                     |
