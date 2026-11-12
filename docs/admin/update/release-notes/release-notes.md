@@ -34,7 +34,7 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-67-0">
-<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="badge badge--info">Component updates</span></summary>
+<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.67.0)
 
@@ -48,12 +48,30 @@ Updated from 7.15.3 (Helm chart 10.7.4, previously 10.6.1). The update addresses
 
 No breaking configuration changes were introduced in this release.
 
+**AI Katas**
+
+1. **AI Katas are no longer enabled by default** — if users work with [AI Katas](../../../user-guide/ai-katas/katas-overview.md), administrators must enable the feature explicitly by adding the following component to the customer feature configuration. See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for details.
+
+   ```yaml
+   components:
+     - id: "helpLinks:katas:overview"
+       settings:
+         enabled: true
+         availableForExternal: true
+         name: "How to work with Katas"
+         url: "https://docs.codemie.ai/user-guide/ai-katas"
+   ```
+
+   :::warning AI Katas are unavailable after the upgrade unless enabled
+   Deployments that relied on the previous default lose access to AI Katas after upgrading to this release. Add the component above before upgrading to keep the feature available.
+   :::
+
 **oauth2-proxy Behavior Changes**
 
-The oauth2-proxy security fixes tighten request handling. The default CodeMie configuration is not affected, but review these items if you customized oauth2-proxy:
+The oauth2-proxy security fixes tighten request handling. The default CodeMie configuration is not affected, but administrators who customized oauth2-proxy should review these items:
 
 - **Stricter skip-auth path matching** — `--skip-auth-route` and `--skip-auth-regex` no longer exempt paths with dot segments, repeated slashes, semicolons, backslashes, or encoded forms of them.
-- **Client IP headers are trusted only from trusted proxies** — when `--reverse-proxy` is enabled, headers set with `--real-client-ip-header` are accepted only from peers that match `--trusted-proxy-ip`. If `--trusted-proxy-ip` is not set, all sources remain trusted. To protect `--trusted-ip` exemptions, set it to the CIDR ranges of your ingress.
+- **Client IP headers are trusted only from trusted proxies** — when `--reverse-proxy` is enabled, headers set with `--real-client-ip-header` are accepted only from peers that match `--trusted-proxy-ip`. If `--trusted-proxy-ip` is not set, all sources remain trusted. To protect `--trusted-ip` exemptions, set it to the CIDR ranges of the ingress.
 - **Redirect and error handling** — the trailing slash redirect keeps the query string, OAuth state redirect URLs are escaped, and an invalid ID token audience returns `403` instead of `500`. Review monitoring that alerts on `5xx` responses from oauth2-proxy.
 
 </details>
