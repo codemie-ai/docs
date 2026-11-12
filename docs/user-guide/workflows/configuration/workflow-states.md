@@ -232,6 +232,22 @@ informational in both modes, although a separate strict output-form finding can 
 and the required-coverage rule blocks in both modes. `warn` mode therefore does not mean that
 all findings are warnings.
 
+##### Compare warn and strict
+
+In this small example, the producer declares
+`{"value":"description"}` as its output contract. The consumer requires `value` as a string.
+The example form supplies the field name but cannot establish its type.
+
+Under the default `warn` mode, Check reports one informational **Unverified** finding.
+
+![An example-form output produces an Unverified finding in warn mode](../images/contract-validation/unverified-warn-mode.svg)
+
+Change the workflow mode to `strict` and Check again. The type finding becomes an error, and a
+second error reports the producer's non-schema output contract. The panel states which mode
+caused the rejection.
+
+![Strict mode turns the unverified finding into an error and rejects the output form](../images/contract-validation/strict-mode-errors.svg)
+
 #### Check and Save results
 
 Contract findings use the `contract_validation` identifier. Raw outcomes are converted into
@@ -283,11 +299,28 @@ Remember:
 - Coverage is omitted when contract linking does not run. Absent coverage is not zero coverage and
   not a successful analysis.
 
+##### Check with incomplete coverage
+
+The workflow below has three reachable states.
+The first two have input contracts. The final **Log-result** state has a constant output and no
+declared or derived input contract. With `require_input_contracts: false`, Check returns
+**No issues found** and **Input contract coverage: 2 of 3 states**.
+
+![A successful Check reports input contract coverage of two out of three states](../images/contract-validation/incomplete-coverage.svg)
+
+This result does not establish input coverage for **Log-result**. Enable `require_input_contracts`
+if a missing input contract must block saving.
+
 #### Using Check in the editor
 
 In the workflow editor, workflow-level settings are under **Contracts** in the advanced
 configuration. Action states have input and output contract fields and a validation-mode
 override. **Check** evaluates the current form without saving it.
+
+See [Checking Workflow Contracts](../create-workflow.md#checking-workflow-contracts) for screenshots
+of the Issues panel, field navigation, and the local **Resolved** state. The
+[workflow contract settings](../create-workflow.md#workflow-contract-settings) and
+[node contract fields](../create-workflow.md#node-contract-fields) are also shown in that guide.
 
 **Procedure:**
 
