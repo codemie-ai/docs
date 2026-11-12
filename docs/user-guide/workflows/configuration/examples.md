@@ -1356,3 +1356,155 @@ states:
 | Any action the user should explicitly approve before it runs   | Steps that run dozens of times in a loop |
 
 ---
+
+### 11.6 Example: Workflow with Input and Output Contracts
+
+This workflow declares an output contract on a producer state and an input contract on the
+consumer that reads its data. It shows how save-time validation reports coverage and how the
+result changes between `warn` and `strict`. For the concepts, see
+[Workflow States](./workflow-states.md#save-time-output-contract-forms).
+
+---
+
+**Complete YAML Configuration:**
+
+```yaml
+validation: warn
+require_input_contracts: true
+
+assistants:
+  - id: ticket-analyzer
+    model: gpt-4.1
+    system_prompt: Classify support tickets and summarize them.
+
+  - id: reply-writer
+    model: gpt-4.1
+    system_prompt: Write a short reply to the customer.
+
+states:
+  - id: analyze-ticket
+    assistant_id: ticket-analyzer
+    resolve_dynamic_values_in_prompt: true
+    task: |
+      Analyze this ticket: {{ticket_text}}
+    input_schema: |
+      {
+        "type": "object",
+        "properties": {
+          "ticket_text": { "type": "string" }
+        }
+      }
+    output_schema: |
+      {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "summary": { "type": "string" }
+        },
+        "required": ["severity", "summary"]
+      }
+    next:
+      state_id: write-reply
+
+  - id: write-reply
+    assistant_id: reply-writer
+    resolve_dynamic_values_in_prompt: true
+    task: |
+      Write a reply for a {{severity}} severity ticket: {{summary}}
+    input_schema: |
+      {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string" },
+          "summary": { "type": "string" }
+        },
+        "required": ["severity", "summary"]
+      }
+    next:
+      state_id: end
+```
+
+Both states set `resolve_dynamic_values_in_prompt: true`. Its default is `false`, and without it
+the `{{…}}` placeholders in `task` are sent to the assistant as literal text and are not replaced.
+Agent task placeholders also contribute derived input requirements only when this setting is on.
+
+**Supplying `ticket_text`:** `ticket_text` is a workflow input. Enter it in the execution dialog
+when you run the workflow, for example `{"ticket_text": "The export button returns a 500 error."}`.
+No upstream state produces it, so the platform cannot confirm at save time that it will be
+provided.
+
+**Data path:**
+
+1. `analyze-ticket` reads `ticket_text` from the workflow input and declares it as an optional input field. Its `output_schema`
+   is a valid JSON Schema, so it is classified as `schema` and supplies `severity` and `summary`
+   with types and required flags.
+2. `write-reply` declares `severity` and `summary` as required input. Both are supplied by the
+   upstream output contract, so the requirements are satisfied.
+
+**Expected result with contract linking enabled:**
+
+- Under `validation: warn`, the workflow is accepted. Check returns one warning: `ticket_text` is
+  optional on `analyze-ticket` and no upstream state guarantees it. This is the expected
+  result, not a fault in the example.
+- The `severity` and `summary` requirements of `write-reply` produce no issues.
+- Coverage: `validated_states: 2`, `total_states: 2`, `uncovered_state_ids: []`,
+  `analysed: true`, `cap_reached: false`. Every reachable state has an input contract, which
+  satisfies `require_input_contracts`.
+
+Full coverage here means every reachable state has an input contract. It does not mean every
+requirement was proven to pass, and it does not mean runtime values will be valid. That is why
+coverage is full while one warning is still reported.
+
+**Variation 1: a non-schema producer under `warn` and `strict`**
+
+Start from the original example and replace the `output_schema` of `analyze-ticket` with an
+example-form object:
+
+```yaml
+    output_schema: |
+      {
+        "severity": "One of: low, medium, high",
+        "summary": "One sentence summary"
+      }
+```
+
+| Workflow `validation` | Result                                                                                                                                                                                                                                                                                  |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `warn`                | Accepted. Check returns two `UNVERIFIED` entries. The example form supplies the names `severity` and `summary` but not their types, so the declared types on `write-reply` cannot be confirmed from the producer. They are informational and do not block saving. Coverage is unchanged |
+| `strict`              | Rejected with three blocking errors. The producer writes to context with a non-schema output contract, which is blocked under strict mode, and the unverifiable results become `ERROR` entries                                                                                          |
+
+**Variation 2: a state without input coverage**
+
+This variation also starts from the original example. Add a third state that has no placeholders
+and no `input_schema`, and change `write-reply` to point to it by replacing its `next` block with
+`state_id: log-result`:
+
+```yaml
+  - id: write-reply
+    # ...unchanged...
+    next:
+      state_id: log-result   # was: end
+```
+
+The new state:
+
+```yaml
+  - id: log-result
+    assistant_id: reply-writer
+    task: Log that the reply was sent.
+    next:
+      state_id: end
+```
+
+Without the changed `next`, `log-result` is unreachable and is not counted: the workflow is
+accepted with `validated_states: 2` and `total_states: 2`. With the connection in place and
+`require_input_contracts: true`, the workflow is rejected in both `warn` and `strict`
+mode, and the response coverage reports `validated_states: 2`, `total_states: 3`, and
+`uncovered_state_ids: ["log-result"]`. Setting `validation: warn` on the `log-result` state does
+not change this. With `require_input_contracts: false`, the workflow is accepted, but the
+coverage still shows the uncovered state, so a Check with no issues is not proof of full coverage.
+
+See [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+and [Contract coverage](./workflow-states.md#contract-coverage) for the rules behind these results.
+
+---
