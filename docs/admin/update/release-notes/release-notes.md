@@ -34,17 +34,40 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-67-0">
-<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.67.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>oauth2-proxy 7.15.6</h4>
+
+Updated from 7.15.3 (Helm chart 10.7.4, previously 10.6.1). The update addresses multiple security vulnerabilities, including two critical authentication bypass advisories. For details, see the release notes for [7.15.4 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.4), [7.15.5 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.5), and [7.15.6 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.6).
 
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
+
+**AI Katas**
+
+1. **AI Katas are no longer enabled by default** — the UI hides the Katas navigation, pages, floating kata window, and kata leaderboard metrics unless the `features:katas` component is enabled. If users work with [AI Katas](../../../user-guide/ai-katas/katas-overview.md), administrators must enable the feature explicitly by adding the following component to the customer feature configuration. See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for details.
+
+   ```yaml
+   components:
+     - id: "features:katas"
+       settings:
+         enabled: true
+         name: "AI Katas"
+         description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
+   ```
+
+   :::warning AI Katas are unavailable after the upgrade unless enabled
+   Deployments that relied on the previous default lose access to AI Katas after upgrading to this release. Add the component above before upgrading to keep the feature available.
+   :::
+
+**oauth2-proxy Behavior Changes**
+
+The oauth2-proxy security fixes tighten request handling. The default CodeMie configuration is not affected. Administrators who customized oauth2-proxy should review the [oauth2-proxy changelog ↗](https://github.com/oauth2-proxy/oauth2-proxy/blob/master/CHANGELOG.md) for the 7.15.4, 7.15.5, and 7.15.6 releases.
 
 </details>
 
