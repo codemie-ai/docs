@@ -375,6 +375,10 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
+**Project Analytics for Claude Code**
+
+Native Claude Code sessions can be sent to a CodeMie project and reviewed under **CLI Analytics**. This requires explicit folder consent and gives project admins access to the conversation content of those sessions. See [Send Claude Code Sessions to Project Analytics](./claude-code-analytics.md) for the steps, consent details, verification, and disconnecting.
+
 ### Connect Remote MCP Servers
 
 Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
