@@ -34,17 +34,27 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-67-0">
-<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.67.0</span><span className="release__date">Nov 12, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 12, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.67.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>oauth2-proxy 7.15.6</h4>
+
+Updated from 7.15.3 (Helm chart 10.7.4, previously 10.6.1). The update addresses multiple security vulnerabilities, including two critical authentication bypass advisories. For details, see the release notes for [7.15.4 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.4), [7.15.5 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.5), and [7.15.6 ↗](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.6).
 
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
+
+**oauth2-proxy Behavior Changes**
+
+The oauth2-proxy security fixes tighten request handling. The default CodeMie configuration is not affected, but review these items if you customized oauth2-proxy:
+
+- **Stricter skip-auth path matching** — `--skip-auth-route` and `--skip-auth-regex` no longer exempt paths with dot segments, repeated slashes, semicolons, backslashes, or encoded forms of them.
+- **Client IP headers are trusted only from trusted proxies** — when `--reverse-proxy` is enabled, headers set with `--real-client-ip-header` are accepted only from peers that match `--trusted-proxy-ip`. If `--trusted-proxy-ip` is not set, all sources remain trusted. To protect `--trusted-ip` exemptions, set it to the CIDR ranges of your ingress.
+- **Redirect and error handling** — the trailing slash redirect keeps the query string, OAuth state redirect URLs are escaped, and an invalid ID token audience returns `403` instead of `500`. Review monitoring that alerts on `5xx` responses from oauth2-proxy.
 
 </details>
 
