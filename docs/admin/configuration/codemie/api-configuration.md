@@ -216,6 +216,8 @@ Enables AI-generated images for visual content creation within assistants.
 
 Converts voice input to text for conversational interfaces and voice commands.
 
+These variables configure one STT model. To add more STT models through LiteLLM Proxy, see [Speech-to-Text Configuration](./speech-to-text-configuration.md).
+
 | Parameter                 | Type   | Default | Description                                                |
 | ------------------------- | ------ | ------- | ---------------------------------------------------------- |
 | `STT_API_URL`             | string | `""`    | Whisper or compatible STT service endpoint                 |
