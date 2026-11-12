@@ -59,13 +59,15 @@ No third-party component updates in this release.
 </details>
 
 <details className="release" id="v2-65-0">
-<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">3 hotfixes</span></summary>
+<summary><span className="release__version">CodeMie 2.65.0</span><span className="release__date">Nov 6, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">3 hotfixes</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 6, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.65.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>NATS 2.15.2</h4>
+
+NATS upgraded from 2.11.0
 
 <h3>Configuration Changes</h3>
 
@@ -114,6 +116,10 @@ The following models are retired on **November 19, 2026** according to the [Azur
 :::warning Update model references before November 19, 2026
 Remove the retired models from your LiteLLM configuration and replace them with the recommended models. Also update any assistants, workflows, and premium model lists that still reference them.
 :::
+
+**NATS Configuration**
+
+**[BREAKING] NATS configuration values moved to `nats` root section** - NATS is now dependency of `codemie-nats` helm chart.
 
 <h3>Hotfixes</h3>
 

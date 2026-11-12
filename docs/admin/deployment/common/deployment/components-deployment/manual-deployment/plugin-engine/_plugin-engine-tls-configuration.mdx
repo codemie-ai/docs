@@ -13,8 +13,7 @@ TLS is handled by Network Load Balancer with TLS certificate on the load balance
 **NATS Helm Values** (<code>codemie-nats/{props.valuesFileName}</code>):
 
 ```yaml
-params:
-  conf: |
+params.conf: |
     tls: {}
     allow_non_tls: true
 ```
@@ -55,8 +54,7 @@ Plain text communication without encryption.
 **NATS Helm Values** (<code>codemie-nats/{props.valuesFileName}</code>):
 
 ```yaml
-params:
-  conf: |
+params.conf: |
     tls: {}
     allow_non_tls: true
 ```
