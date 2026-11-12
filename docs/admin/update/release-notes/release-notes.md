@@ -50,16 +50,15 @@ No breaking configuration changes were introduced in this release.
 
 **AI Katas**
 
-1. **AI Katas are no longer enabled by default** — if users work with [AI Katas](../../../user-guide/ai-katas/katas-overview.md), administrators must enable the feature explicitly by adding the following component to the customer feature configuration. See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for details.
+1. **AI Katas are no longer enabled by default** — the UI hides the Katas navigation, pages, floating kata window, and kata leaderboard metrics unless the `features:katas` component is enabled. If users work with [AI Katas](../../../user-guide/ai-katas/katas-overview.md), administrators must enable the feature explicitly by adding the following component to the customer feature configuration. See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for details.
 
    ```yaml
    components:
-     - id: "helpLinks:katas:overview"
+     - id: "features:katas"
        settings:
          enabled: true
-         availableForExternal: true
-         name: "How to work with Katas"
-         url: "https://docs.codemie.ai/user-guide/ai-katas"
+         name: "AI Katas"
+         description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
    ```
 
    :::warning AI Katas are unavailable after the upgrade unless enabled
