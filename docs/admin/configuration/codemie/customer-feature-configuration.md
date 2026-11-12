@@ -546,12 +546,6 @@ in the leaderboard.
   directly shows the same result as other disabled features. A missing `features:katas` entry in
   the configuration reads as disabled with no error.
 
-:::warning Katas are off by default
-Starting from version 2.67.0, AI Katas are disabled by default. Deployments that relied on the
-previous always-on behaviour must add the `features:katas` component to keep the feature available.
-See the [2.67.0 release notes](../../update/release-notes/release-notes.md) for upgrade instructions.
-:::
-
 ```yaml
 components:
   # WHERE: Navigation, Katas pages, floating window, onboarding tour, leaderboard
