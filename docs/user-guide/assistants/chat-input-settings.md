@@ -4,7 +4,7 @@ title: Chat Input Settings
 sidebar_label: Chat Input Settings
 sidebar_position: 19
 pagination_prev: user-guide/assistants/assistants-overview
-pagination_next: null
+pagination_next: user-guide/assistants/chat-notifications
 ---
 
 # Chat Input Settings

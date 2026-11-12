@@ -72,6 +72,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/html-preview',
                 'user-guide/assistants/copy-table',
                 'user-guide/assistants/chat-input-settings',
+                'user-guide/assistants/chat-notifications',
               ],
             },
           ],
