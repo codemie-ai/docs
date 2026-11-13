@@ -705,7 +705,7 @@ These values are served automatically from the backend configuration. No `custom
 | `features:codeIndexing`   | `RETRIEVAL_BACKEND` + `ELASTIC_URL` | enabled    | Same condition as `features:knowledgeBases`                                  |
 
 :::info Standalone deployments
-The [CodeMie Standalone](../../../user-guide/standalone/index.md) image sets `RETRIEVAL_BACKEND=none` by default and includes no Elasticsearch container, so `features:knowledgeBases`, `features:datasources`, and `features:codeIndexing` are disabled regardless of `customer-config.yaml`.
+The [CodeMie Standalone](../../../user-guide/standalone/index.md) image has an empty `ELASTIC_URL` by default (`RETRIEVAL_BACKEND` has no effect there) and includes no Elasticsearch container, so `features:knowledgeBases`, `features:datasources`, and `features:codeIndexing` are disabled regardless of `customer-config.yaml`.
 :::
 
 ### Datasource Features
