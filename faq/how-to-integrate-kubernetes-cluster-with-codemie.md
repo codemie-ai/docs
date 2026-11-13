@@ -42,7 +42,7 @@ To integrate Kubernetes cluster with CodeMie, follow the steps below(fo example 
   2.5. Copy bearerToken.
 
 2. In the CodeMie main menu, click the Integrations button.
-3. Select Integration Type: User or Project and click Create
+3. Click Create and select the Scope: User or Project
 4. Select the Project Name.
 5. Select the Credential Type: Kubernetes.
 6. Fill in the Alias is a representation of the user setting.

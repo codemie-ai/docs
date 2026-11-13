@@ -19,7 +19,7 @@
 
 ## 2. Configure Integration in AI/Run CodeMie
 
-2.1. In the AI/Run CodeMie main menu, click **Integrations**, select **User** or **Project** tab, and click **+ Create**.
+2.1. In the AI/Run CodeMie main menu, click **Integrations**, click **+ Create**, and select the **Scope**: **User** or **Project**.
 
 2.2. Specify the integration parameters and click **Save**:
 
@@ -28,7 +28,7 @@
 - **Credential Type**: LiteLLM
 - **Alias**: Enter integration name (e.g., "codemie-demo").
 - **API Key**: Paste the Virtual Key copied in the previous step.
-  > **Note:** If you create this integration under the **Project** tab, the key will be available to the entire project by default, meaning all project members can use it.
+  > **Note:** If this integration is created with **Scope: Project**, the key will be available to the entire project by default, meaning all project members can use it.
 
 ## 3. Budget Limit Notification
 

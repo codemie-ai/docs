@@ -13,7 +13,7 @@ components:
       enabled: true
 ```
 
-Once enabled, regular users will see LiteLLM as an option in the **User** tab of the
+Once enabled, regular users will see LiteLLM as an option when creating an integration with **Scope: User** on the
 Integrations page and can create and manage their own LiteLLM API keys independently.
 
 ## Sources

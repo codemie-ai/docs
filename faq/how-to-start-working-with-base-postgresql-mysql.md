@@ -37,7 +37,7 @@ To integrate base with CodeMie, follow the steps below:
 
 1.  Copy your database endpoint URL.
 1.  In the CodeMie main menu, click the integrations button.
-1.  Select Integration Type: User or Project and click Create
+1.  Click Create and select the Scope: User or Project
 1.  Select the Project Name.
 1.  Select the Credential Type: SQL.
 1.  Fill in the Alias is a representation of the user setting.

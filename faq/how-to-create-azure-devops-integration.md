@@ -58,7 +58,7 @@ To integrate Sonar with CodeMie, follow the steps below:
 
 2. Click on the Copy button.
 3. In the CodeMie main menu, click the integrations button.
-4. Select Integration Type: User or Project and click Create
+4. Click Create and select the Scope: User or Project
 5. Select the Project Name.
 6. Select the Credential Type: Sonar.
 7. Fill in the Alias is a representation of the user setting.

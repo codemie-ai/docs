@@ -21,7 +21,7 @@ To integrate Version Control System Azure DevOps tool in CodeMie, follow the ste
 3. Store the token securely - it will not be displayed again
 
 4. In the CodeMie main menu, click the integrations button.
-5. Select Integration Type: User or Project and click Create
+5. Click Create and select the Scope: User or Project
 6. Select the Project Name.
 7. Select the Credential Type: Git.
 8. Fill in the Alias is a representation of the user setting.

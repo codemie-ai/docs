@@ -4,8 +4,8 @@ Project-level credentials (Project Integrations) are shared with all project mem
 
 To create a **Project Integration**:
 
-1. Go to **Integrations** in the main menu and click the **Project** tab.
-2. Click **+ Create**, select the tool, fill in the credentials and alias, then click **Save**.
+1. Go to **Integrations** in the main menu, click **+ Create**, and select **Scope: Project**.
+2. Select the project and the tool, fill in the credentials and alias, then click **Save**.
 
 The integration is immediately available to all project members.
 

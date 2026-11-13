@@ -4,7 +4,7 @@ The purpose of Quality Assurance tools within AI/Run CodeMie, particularly in th
 
 1. In Jira cloud click on profile icon and click Zephyr Scale API Access Tokens
 2. Click Create access token and click copy button.
-3. Select Integration Type: User or Project and click Create.
+3. Click Create and select the Scope: User or Project.
 4. Select the Project Name.
 5. Select the Credential Type: ZephyrCloud.
 6. Alias: Enter the name of the integration.
