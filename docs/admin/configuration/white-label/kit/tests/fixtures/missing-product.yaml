@@ -1,0 +1,21 @@
+version: '1'
+
+colors:
+  surface.base.primary:
+    dark: '#111111'
+    light: '#ffffff'
+
+typography:
+  bodyFamily: 'Inter, sans-serif'
+  bodyProseFamily: 'Georgia, serif'
+  codeFamily: 'Fira Code, monospace'
+  fontFaceCSS: null
+
+assets:
+  logoLight: 'logo-light.svg'
+  logoDark: 'logo-dark.svg'
+  favicon: 'favicon.ico'
+  faviconSvg: 'favicon.svg'
+  manifest: 'site.webmanifest'
+
+links: {}

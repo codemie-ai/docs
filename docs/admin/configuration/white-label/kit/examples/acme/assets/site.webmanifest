@@ -1,0 +1,7 @@
+{
+  "name": "Acme Corp AI Platform",
+  "short_name": "Acme",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone"
+}

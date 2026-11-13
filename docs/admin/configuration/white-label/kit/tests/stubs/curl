@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Recording stub: serves files from $CURL_STUB_DIR by URL path (/config.js, /brand.css); /brand/<file> answers empty.
+# A missing file answers like `curl --fail`: exit 22.
+echo "curl $*" >> "$BATS_TMPDIR/curl-calls"
+out=""
+url=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -o | --output) out="$2"; shift 2 ;;
+    --retry | --retry-delay) shift 2 ;;
+    -*) shift ;;
+    *) url="$1"; shift ;;
+  esac
+done
+rest="${url#*://}"
+path="/${rest#*/}"
+case "$path" in
+  /brand/*) body=/dev/null ;;
+  *) body="${CURL_STUB_DIR:-/nonexistent}${path}"; [[ -f "$body" ]] || exit 22 ;;
+esac
+if [[ -n "$out" ]]; then cat "$body" >"$out"; else cat "$body"; fi
