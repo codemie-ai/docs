@@ -319,6 +319,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/codemie-cli/codemie-claude-skills',
             'user-guide/codemie-cli/sdk-cli-reference',
             'user-guide/codemie-cli/claude-desktop',
+            'user-guide/codemie-cli/claude-code-analytics',
           ],
         },
         {
