@@ -28,6 +28,7 @@ Use this table to quickly find where each component appears in the UI.
 | `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                             | Catalog-referenced and custom MCP servers                                                       | Possibility to configure custom MCP servers                                         |                                                                                                                                                                                      |
 | `features:mcpServerInstructions`          | Assistant and skill system prompt                                   | Usage instructions declared by MCP servers are added to the system prompt                       | Instructions are not added; MCP servers behave as before                            | Enabled by default; needs MCP Connect that returns `instructions`; see [MCP Server Instructions](#mcp-server-instructions)                                                           |
 | `skills`                                  | Navigation, Chat config, Assistant config                           | Skills menu, skill selector, management pages                                                   | Entire Skills subsystem                                                             | Major feature gate                                                                                                                                                                   |
+| `features:katas`                          | Main navigation, Katas pages, floating kata window, leaderboard     | Katas navigation, pages, floating window, onboarding tour step, leaderboard metrics             | All Katas UI surfaces                                                               | Disabled by default                                                                                                                                                                  |
 | `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise package only                                                                                                                                                              |
 | `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS`                                                                                       |
 | `features:showAllProjects`                | Settings → Administration → project selector                        | All projects returned by admin project picker (no limit or search minimum)                      | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                                                                                                      |
@@ -393,6 +394,21 @@ components:
       name: "Skills"
       description: "Modular knowledge units that provide domain-specific instructions to assistants"
 
+  # WHERE: 1) Main navigation → AI Katas menu item
+  #        2) All Katas pages (routes under /katas)
+  #        3) Floating kata window (and its local-storage restore on page load)
+  #        4) Onboarding tour step for Katas
+  #        5) Leaderboard → Kata Completion score part and Katas Completed metric
+  # ENABLED: Shows all Katas UI surfaces: navigation, pages, floating window, tour step, leaderboard metrics
+  # DISABLED: Hides all Katas UI - navigation item removed, pages blocked, floating window suppressed,
+  #           tour step hidden, leaderboard kata metrics not shown. A missing entry reads as disabled.
+  # NOTE: Disabled by default
+  - id: "features:katas"
+    settings:
+      enabled: false
+      name: "AI Katas"
+      description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
+
   # WHERE: 1) Analytics page → AI Adoption dashboard
   #        2) Settings → Administration → AI Adoption Config
   #        3) Main navigation (Enterprise package only)
@@ -509,6 +525,41 @@ components:
       name: "Custom Applications"
       description: "Upload, share and open custom static web applications on the Applications page"
 ```
+
+#### AI Katas
+
+Controls whether the AI Katas learning feature is visible in the application. When disabled, every
+Katas surface is hidden — the navigation item (desktop and mobile), all Katas pages, the floating
+kata window, the onboarding tour step, and the Kata Completion score part and Katas Completed metric
+in the leaderboard.
+
+**Where it appears:**
+
+- Main navigation sidebar → AI Katas item
+- All Katas pages (routes under `/katas`)
+- Floating kata window (including local-storage restore on page load)
+- Onboarding tour → Katas step
+- Leaderboard → Kata Completion score part and Katas Completed metric
+
+- **When `enabled: true`** — All Katas UI surfaces are visible and work as normal.
+- **When `enabled: false`** (default) — All Katas UI surfaces are hidden. Opening a Katas URL
+  directly shows the same result as other disabled features. A missing `features:katas` entry in
+  the configuration reads as disabled with no error.
+
+```yaml
+components:
+  # WHERE: Navigation, Katas pages, floating window, onboarding tour, leaderboard
+  # ENABLED: Shows all Katas UI surfaces
+  # DISABLED: Hides all Katas UI surfaces — navigation, pages, floating window, tour step, leaderboard metrics
+  # NOTE: Disabled by default
+  - id: "features:katas"
+    settings:
+      enabled: false
+      name: "AI Katas"
+      description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
+```
+
+For the user-facing description of AI Katas, see the [AI Katas user guide](../../../user-guide/ai-katas/katas-overview.md).
 
 ### Custom Applications
 
@@ -1447,6 +1498,12 @@ extraObjects:
               enabled: true
               name: "Skills"
               description: "Modular knowledge units that provide domain-specific instructions to assistants"
+
+          - id: "features:katas"
+            settings:
+              enabled: false
+              name: "AI Katas"
+              description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
 
           - id: "aiAdoption"
             settings:

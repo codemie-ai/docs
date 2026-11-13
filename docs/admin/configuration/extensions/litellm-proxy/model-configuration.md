@@ -416,6 +416,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
 | [`gemini-4-argon`](#gemini-4-argon)                | Gemini 4 Argon                         |
 | [`gemini-4-carbon`](#gemini-4-carbon)              | Gemini 4 Carbon                        |
+| [`gemini-4-hydrogen`](#gemini-4-hydrogen)          | Gemini 4 Hydrogen                      |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -1864,6 +1865,37 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-4-carbon-eu
     base_model: vertex_ai/gemini-4-carbon
     label: "Gemini 4 Carbon"
+```
+
+</details>
+
+#### Gemini 4 Hydrogen
+
+The EU deployment has `order: 1` and the global deployment has `order: 2`. LiteLLM sends requests to the EU endpoint first and falls back to the global endpoint only when the EU deployment is unavailable.
+
+<details>
+<summary><strong>Gemini 4 Hydrogen</strong></summary>
+
+```yaml
+- model_name: gemini-4-hydrogen
+  litellm_params:
+    model: vertex_ai/gemini-4-hydrogen
+    vertex_location: "eu"
+    order: 1
+  model_info:
+    id: gemini-4-hydrogen-eu
+    base_model: vertex_ai/gemini-4-hydrogen
+    label: "Gemini 4 Hydrogen"
+
+- model_name: gemini-4-hydrogen
+  litellm_params:
+    model: vertex_ai/gemini-4-hydrogen
+    vertex_location: "global"
+    order: 2
+  model_info:
+    id: gemini-4-hydrogen-global
+    base_model: vertex_ai/gemini-4-hydrogen
+    label: "Gemini 4 Hydrogen"
 ```
 
 </details>
