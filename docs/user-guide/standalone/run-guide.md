@@ -268,9 +268,12 @@ Other behavior to note:
 ### Disabling Budget Management
 
 The `features:budgetManagement` component requires LiteLLM, which is not included in the
-standalone stack. Leaving it enabled exposes Budget Management controls in the UI even though the
-corresponding LiteLLM-backed admin endpoints are unavailable. Disable it for standalone
-deployments using one of:
+standalone stack. Budget Management, Cost Centers, and Chargeback are also Enterprise features:
+without the `codemie-enterprise` package they stay unavailable in the UI and the API regardless of
+their flags (see [Enterprise-Gated Features](../../admin/configuration/codemie/customer-feature-configuration.md#enterprise-gated-features)).
+If the standalone image includes `codemie-enterprise`, leaving `features:budgetManagement` enabled
+exposes Budget Management controls in the UI even though the corresponding LiteLLM-backed admin
+endpoints are unavailable. Disable it for such deployments using one of:
 
 - With an external customer configuration, set `features:budgetManagement` to `enabled: false` in
   the mounted YAML.

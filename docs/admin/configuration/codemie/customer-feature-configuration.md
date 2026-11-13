@@ -76,6 +76,36 @@ Use this table to quickly find where each component appears in the UI.
 | **PRECONFIGURED ASSISTANTS**              |                                                                     |                                                                                                 |                                                                                     |                                                                                                                                                                                      |
 | Any assistant ID                          | Assistants list, New chat dropdown, Help Center → AI Help           | Assistant appears in all locations                                                              | Assistant hidden from all locations                                                 | Default: enabled if not configured                                                                                                                                                   |
 
+### Enterprise-Gated Features {#enterprise-gated-features}
+
+Three components are available only when the `codemie-enterprise` package is installed, which is part of the Enterprise package:
+
+| Component ID                 | Feature            | Documentation                                                                                   |
+| ---------------------------- | ------------------ | ----------------------------------------------------------------------------------------------- |
+| `features:costCenters`       | Cost Centers       | [Chargeback and Cost Centers](../../../user-guide/budget-management/chargeback-cost-centers.md) |
+| `features:budgetManagement`  | Budget Management  | [Project Budget Management](./project-budget-management.md)                                     |
+| `features:projectChargeback` | Project Chargeback | [Chargeback and Cost Centers](../../../user-guide/budget-management/chargeback-cost-centers.md) |
+
+A feature is available only when both conditions are met:
+
+- The `codemie-enterprise` package is installed.
+- The component is enabled in `customer-config.yaml` (or through a `FEATURE_<ID>` override).
+
+| `codemie-enterprise` | Component flag              | Result                                         |
+| -------------------- | --------------------------- | ---------------------------------------------- |
+| Installed            | `enabled: true`             | Feature is available                           |
+| Installed            | `enabled: false`            | Feature is disabled                            |
+| Not installed        | `enabled: true`             | Feature is unavailable; the flag has no effect |
+| Not installed        | `enabled: false` or omitted | Feature is unavailable                         |
+
+When a feature is unavailable because the package is missing, the platform behaves exactly as if the flag were set to `false`:
+
+- The UI hides the feature. No message indicates that the package is missing.
+- Direct API calls to the feature's endpoints are rejected with `403` "Feature not available".
+- Project responses omit budget and spending data.
+
+The check applies to all Budget Management endpoints, including project budgets, budget categories, cost center budget summaries, and member spend limits.
+
 ## Configuration Parameters
 
 All parameters are organized into two main sections: `components` and `preconfigured_assistants`.
