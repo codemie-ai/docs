@@ -78,6 +78,8 @@ and the features enabled for the deployment:
 | **Budgets**      | Members with budget view access        | `features:budgetManagement` flag enabled     |
 | **Integrations** | Project Admins and Platform Admins     | —                                            |
 
+The **Budgets** tab also requires the `codemie-enterprise` package. Without it, the tab is hidden even when the `features:budgetManagement` flag is enabled.
+
 The **Overview** tab shows:
 
 - Project **description**, **type**, **created by**, and timestamps
