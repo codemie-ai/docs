@@ -99,6 +99,7 @@ words:
   - awscli
   - NACLs
   - xlarge
+  - xhigh
   - AWSIRSA
   - envsubst
   - superadmin
