@@ -408,7 +408,9 @@ codemie proxy connect --omp --profile <name>   # Use a specific profile
 codemie proxy disconnect --omp                 # Remove the extension
 ```
 
-Traffic sent through the connector is also reported as the `codemie-omp` client. Run `omp models refresh` after the models of your project change.
+After connecting, restart omp or run `omp models refresh` to load the catalog. omp caches the model list for 24 hours, so run `omp models refresh` again after switching profiles or after the models available to your profile change.
+
+Traffic sent through the connector is reported as the `codemie-omp` client when `--omp` is the only connected target. While Claude Desktop is connected to CodeMie, the shared proxy keeps the `claude-desktop` client, and omp traffic is reported under it. `--omp` cannot be combined with `--vscode`.
 
 **Sessions run outside CodeMie.** Sessions started with plain `omp` (not through `codemie-omp`) are not uploaded to the platform. They are read from `~/.omp/agent/sessions` only by the local report, and only when requested:
 
