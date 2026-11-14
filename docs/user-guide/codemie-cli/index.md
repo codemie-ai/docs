@@ -18,11 +18,11 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 ## Overview
 
-CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and a built-in agent powered by LangGraph. CodeMie Connect is the desktop app for CodeMie CLI: it covers setup, tool installation, and health checks from a window instead of the terminal (see [Using CodeMie Connect](#using-codemie-connect)).
+CodeMie CLI is a unified command-line interface that provides access to multiple AI coding assistants through a single NPM package. It serves as a wrapper for popular AI coding agents including Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, Oh My Pi, and a built-in agent powered by LangGraph. CodeMie Connect is the desktop app for CodeMie CLI: it covers setup, tool installation, and health checks from a window instead of the terminal (see [Using CodeMie Connect](#using-codemie-connect)).
 
 ### Key Capabilities
 
-**Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
+**Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, Oh My Pi, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
 
 **Profile Management**: Maintain separate configurations for different contexts (work, personal, team projects). Each profile can be configured with its own provider (Azure OpenAI, AWS Bedrock, or LiteLLM), enabling seamless switching between environments.
 
@@ -156,6 +156,9 @@ codemie install copilot --supported
 # Install OpenCode
 codemie install opencode --supported
 
+# Install Oh My Pi
+codemie install omp --supported
+
 # Verify installation
 codemie doctor
 ```
@@ -245,6 +248,7 @@ codemie install gemini --supported   # Install Gemini CLI
 codemie install codex --supported    # Install OpenAI Codex
 codemie install copilot --supported  # Install GitHub Copilot CLI
 codemie install opencode --supported # Install OpenCode
+codemie install omp --supported      # Install Oh My Pi
 codemie uninstall <agent>            # Remove an agent
 ```
 
@@ -302,6 +306,7 @@ codemie-gemini                       # Gemini CLI agent
 codemie-codex                        # OpenAI Codex agent
 codemie-copilot                      # GitHub Copilot CLI agent
 codemie-opencode                     # OpenCode agent
+codemie-omp                          # Oh My Pi agent
 
 # Single task mode (executes and exits)
 codemie-code --task "<prompt>"       # Built-in CodeMie agent
@@ -310,6 +315,7 @@ codemie-gemini --task "<prompt>"     # Gemini CLI agent
 codemie-codex --task "<prompt>"      # OpenAI Codex agent
 codemie-copilot --task "<prompt>"    # GitHub Copilot CLI agent
 codemie-opencode --task "<prompt>"   # OpenCode agent
+codemie-omp --task "<prompt>"        # Oh My Pi agent
 ```
 
 **Common Options:**
@@ -356,6 +362,7 @@ codemie analytics                    # Show all analytics
 codemie analytics --agent claude     # Filter by agent
 codemie analytics --last 7d          # Last 7 days
 codemie analytics --export json      # Export to JSON
+codemie analytics --include-external # Also count sessions run outside CodeMie (plain claude, codex, omp, …)
 ```
 
 **Log Management**
@@ -374,6 +381,44 @@ Tracked metrics include:
 - Tool usage statistics with success/failure rates
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
+
+### Oh My Pi
+
+[Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent) (`omp`) is a fork of the Pi coding agent. CodeMie CLI supports it in two ways.
+
+**Managed launcher (`codemie-omp`)** starts omp with the active CodeMie profile and reports the session to the CodeMie platform:
+
+```bash
+codemie install omp --supported
+codemie-omp                                # Interactive session
+codemie-omp --task "<prompt>"              # Single task
+codemie-omp --continue                     # Continue the latest session
+codemie-omp --resume <session-id>          # Resume a specific session
+```
+
+- Your omp setup in `~/.omp` stays unchanged: CodeMie loads its own model and analytics extensions for the run only.
+- Sessions appear on the **Analytics → CLI Insights** tab as the `codemie-omp` client, and their conversations are imported under the **Oh My Pi** source.
+- Supported providers: CodeMie SSO, Bearer Auth, LiteLLM, and Ollama.
+
+**Model catalog connector** gives a plain `omp` installation the live CodeMie model catalog of the active profile:
+
+```bash
+codemie proxy connect --omp                    # Install the CodeMie models extension for omp
+codemie proxy connect --omp --profile <name>   # Use a specific profile
+codemie proxy disconnect --omp                 # Remove the extension
+```
+
+Traffic sent through the connector is also reported as the `codemie-omp` client. Run `omp models refresh` after the models of your project change.
+
+**Sessions run outside CodeMie.** Sessions started with plain `omp` (not through `codemie-omp`) are not uploaded to the platform. They are read from `~/.omp/agent/sessions` only by the local report, and only when requested:
+
+```bash
+codemie analytics --include-external --agent omp
+```
+
+:::note
+Reporting omp sessions to the CLI Insights tab as `codemie-omp` requires a CodeMie CLI release that includes the managed Oh My Pi launcher, and a CodeMie platform version that maps the `codemie-omp` client to the Oh My Pi import source. Earlier `codemie proxy connect --omp` versions reported omp traffic under the generic CLI client.
+:::
 
 ### Connect Remote MCP Servers
 
