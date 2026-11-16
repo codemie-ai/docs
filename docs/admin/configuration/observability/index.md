@@ -148,8 +148,9 @@ A response served from the CodeMie or LiteLLM response cache is recorded with a 
   configuration has no `cache_creation_input_token_cost`, so cache writes are not charged
   separately. Set it for models that support prompt caching, as in the Bedrock Claude entries of the
   reference configuration.
-- **Direct Anthropic and Vertex AI Claude calls.** Cache writes appear as `input_cache_creation`
-  tokens, and their cost is included in the `input` line, as in CodeMie spend.
+- **Direct Anthropic API calls** (`provider: anthropic`). Cache writes appear as
+  `input_cache_creation` tokens, and their cost is included in the `input` line, as in CodeMie
+  spend.
 
 ---
 
