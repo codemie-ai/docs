@@ -109,6 +109,48 @@ Langfuse integration is configured via environment variables in the CodeMie API 
 - Latency by model and endpoint
 - Conversation-level aggregations
 
+### Cost and Prompt Caching
+
+When a model uses prompt caching, CodeMie sends each Langfuse generation its token usage and a
+cost breakdown by token type. The cost lines are the same figures CodeMie uses for spend
+tracking, so the Langfuse total of a request matches its CodeMie spend.
+
+| Cost line              | What it covers                                             |
+| ---------------------- | ---------------------------------------------------------- |
+| `input`                | Input tokens not served from or written to the cache       |
+| `input_cache_read`     | Input tokens read from the provider's prompt cache         |
+| `input_cache_creation` | Input tokens written to the provider's prompt cache        |
+| `output`               | Output tokens                                              |
+| `output_reasoning`     | Reasoning tokens, when the LiteLLM proxy reports them      |
+| `tool_usage`           | Provider tool charges, when the LiteLLM proxy reports them |
+| `total`                | Cost of the request                                        |
+
+Where the figures come from depends on how the model is called:
+
+| Call path                                       | Source of the cost                                                                                                                                                         |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| LiteLLM proxy, non-streaming                    | Cost lines as returned by the proxy in its response cost headers                                                                                                           |
+| LiteLLM proxy, streaming                        | The proxy's total cost of the request. It is split into cost lines in proportion to each token type's price in the model's `cost` configuration                            |
+| Direct provider call, without the LiteLLM proxy | Calculated by CodeMie from the token counts and the model's `cost` configuration in the [LLM configuration](../codemie/ai-models-integration/codemie-native-llm-config.md) |
+
+A response served from the CodeMie or LiteLLM response cache is recorded with a total cost of `0`.
+
+#### Reading the cost breakdown
+
+- **Only `total` is shown.** On a streaming LiteLLM request, CodeMie splits the total only when
+  the model's `cost` configuration has a price for every token type the request used. Add the
+  missing price (for example `cache_creation_input_token_cost`) to get the cost lines. On a
+  non-streaming request the cost lines are the ones the proxy returns.
+- **No cost is shown, only tokens.** On a direct provider call, the model has no `cost`
+  configuration. Langfuse then prices the tokens with its own model definitions, if it has one for
+  the model.
+- **Cache writes have tokens but no `input_cache_creation` cost.** The model's `cost`
+  configuration has no `cache_creation_input_token_cost`, so cache writes are not charged
+  separately. Set it for models that support prompt caching, as in the Bedrock Claude entries of the
+  reference configuration.
+- **Direct Anthropic and Vertex AI Claude calls.** Cache writes appear as `input_cache_creation`
+  tokens, and their cost is included in the `input` line, as in CodeMie spend.
+
 ---
 
 ## Related Configuration
