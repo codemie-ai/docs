@@ -2,7 +2,7 @@
 id: routing-analytics
 title: Routing Analytics
 sidebar_label: Routing Analytics
-sidebar_position: 2
+sidebar_position: 4
 pagination_prev: user-guide/analytics/analytics-overview
 pagination_next: null
 ---

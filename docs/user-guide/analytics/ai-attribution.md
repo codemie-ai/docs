@@ -2,7 +2,7 @@
 id: ai-attribution
 title: AI Attribution
 sidebar_label: AI Attribution
-sidebar_position: 3
+sidebar_position: 2
 pagination_prev: user-guide/analytics/analytics-overview
 pagination_next: null
 ---
