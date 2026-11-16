@@ -2,7 +2,7 @@
 id: ai-champions-leaderboard
 title: AI Champions Leaderboard
 sidebar_label: AI Champions Leaderboard
-sidebar_position: 1
+sidebar_position: 3
 pagination_prev: user-guide/analytics/analytics-overview
 pagination_next: null
 ---

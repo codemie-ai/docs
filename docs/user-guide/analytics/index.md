@@ -159,6 +159,18 @@ When enabled, the **Routing Analytics** section shows routing costs, estimated s
 router distribution, activity by tier, and the paths from routers to served models.
 See [Routing Analytics](./routing-analytics.md) for an explanation of the dashboard.
 
+## Spend Inventory
+
+The **Insights** tab is the Spend Inventory: total AI spend across assistants, workflows, data
+source indexing, and CLI, broken down by source, project, user, and model. See
+[Spend Inventory](./spend-inventory.md) for a walkthrough of each section.
+
+## AI Attribution
+
+The **AI Attribution** tab breaks down AI coding sessions by user, repository, model, and tool:
+what each session cost, how efficiently it used context, and whether it changed any code.
+See [AI Attribution](./ai-attribution.md) for a walkthrough of each screen.
+
 ## AI Champions Leaderboard
 
 The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by

@@ -380,6 +380,8 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'user-guide/analytics/spend-inventory',
+            'user-guide/analytics/ai-attribution',
             'user-guide/analytics/ai-champions-leaderboard',
             'user-guide/analytics/routing-analytics',
           ],
