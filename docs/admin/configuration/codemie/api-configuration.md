@@ -1560,16 +1560,33 @@ Automated background job that runs LLM-based analysis on completed conversations
 
 ## Stale Datasource Detection
 
-Nightly background job that identifies datasources with no recent usage or updates and marks them as stale to prompt review or cleanup.
+Nightly background job that identifies datasources with no recent usage or updates and marks them as stale. Optionally, the same run can then delete the Elasticsearch indexes of stale datasources to reclaim storage.
 
-| Parameter                         | Type    | Default       | Description                                                                                        |
-| --------------------------------- | ------- | ------------- | -------------------------------------------------------------------------------------------------- |
-| `STALE_DATASOURCE_ENABLED`        | boolean | `false`       | Enable the nightly stale datasource detection job                                                  |
-| `STALE_DATASOURCE_SCHEDULE`       | string  | `"0 3 * * *"` | Cron schedule (UTC) for the detection job; defaults to 3 AM daily                                  |
-| `STALE_DATASOURCE_NO_USAGE_DAYS`  | integer | `90`          | Days without usage metrics after which a datasource is considered stale                            |
-| `STALE_DATASOURCE_NO_UPDATE_DAYS` | integer | `120`         | Days without any update used as a fallback staleness criterion when no usage metrics are available |
-| `STALE_DATASOURCE_GRACE_DAYS`     | integer | `7`           | Newly created datasources are never marked stale within this grace period                          |
-| `STALE_DATASOURCE_BATCH_SIZE`     | integer | `100`         | Elasticsearch query batch size for metrics aggregation during detection                            |
+The job runs in two phases:
+
+1. **Detection** (`STALE_DATASOURCE_ENABLED`) -- datasources with no usage or updates within the configured thresholds are marked `STALE`.
+2. **Index deletion** (`STALE_DATASOURCE_DELETION_ENABLED`, disabled by default) -- the Elasticsearch index of each idle `STALE` datasource is deleted and the datasource moves to `ARCHIVED`.
+
+| Parameter                                | Type    | Default       | Description                                                                                                                                             |
+| ---------------------------------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `STALE_DATASOURCE_ENABLED`               | boolean | `false`       | Enable the nightly stale datasource detection job                                                                                                       |
+| `STALE_DATASOURCE_SCHEDULE`              | string  | `"0 3 * * *"` | Cron schedule (UTC) for the job; defaults to 3 AM daily                                                                                                 |
+| `STALE_DATASOURCE_NO_USAGE_DAYS`         | integer | `90`          | Days without usage metrics after which a datasource is considered stale                                                                                 |
+| `STALE_DATASOURCE_NO_UPDATE_DAYS`        | integer | `120`         | Days without any update used as a fallback staleness criterion when no usage metrics are available                                                      |
+| `STALE_DATASOURCE_GRACE_DAYS`            | integer | `7`           | Newly created datasources are never marked stale within this grace period                                                                               |
+| `STALE_DATASOURCE_BATCH_SIZE`            | integer | `100`         | Elasticsearch query batch size for metrics aggregation during detection                                                                                 |
+| `STALE_DATASOURCE_DELETION_ENABLED`      | boolean | `false`       | Enable the index deletion phase: delete the Elasticsearch index of stale datasources and mark them `ARCHIVED`. Requires `STALE_DATASOURCE_ENABLED=true` |
+| `STALE_DATASOURCE_MAX_DELETIONS_PER_RUN` | integer | `100`         | Maximum number of indexes deleted per run; when reached, the sweep stops and the remaining stale datasources are processed in subsequent runs           |
+
+:::warning
+Index deletion removes the datasource's Elasticsearch index permanently. Enable `STALE_DATASOURCE_DELETION_ENABLED` only after reviewing which datasources are currently marked stale. Enabling it also processes any existing stale backlog on the next run.
+:::
+
+Index deletion only removes the Elasticsearch index. The datasource record, scheduler, and webhook integrations are kept, so no configuration is lost.
+
+- **Reactivation** -- a datasource returns to `ACTIVE` after a successful reindex. For `ARCHIVED` datasources, a scheduled or webhook-triggered run performs a full reindex.
+- **Safeguards** -- datasources that are being indexed or queued are skipped. Before an index is deleted, activity is re-checked and recently active datasources return to `ACTIVE`. An index shared with an `ACTIVE` datasource is never deleted.
+- **Startup validation** -- enabling `STALE_DATASOURCE_DELETION_ENABLED` without `STALE_DATASOURCE_ENABLED` fails startup with a configuration error.
 
 ---
 
