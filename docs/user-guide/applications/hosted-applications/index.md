@@ -61,7 +61,7 @@ Open **Applications** in the main menu. The page has these tabs:
 | **Shared with me** | Applications that other people shared with the current user by name or by link.                                                         |
 | **Platform apps**  | Applications configured by the platform team. See [Applications](../index.md).                                                          |
 
-![Applications catalog with application cards](./images/catalog-automatic-covers.png)
+![My apps tab with filters and application cards](./images/catalog-my-apps.png)
 
 ### Search and Filters
 

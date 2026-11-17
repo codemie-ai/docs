@@ -14,7 +14,7 @@ Every upload creates a new version of the application. CodeMie checks each versi
 
 Versions are managed on the application details page. To open it, select **Details** in the card menu (**⋮**), or select a card that has no active version yet. Only managers see the **Versions** section.
 
-![Application details page with the Versions section and the Overview panel](./images/application-details-page.png)
+![Application details page with a Ready and Selected version and the Overview panel](./images/application-details-page.png)
 
 ## Version Statuses
 
@@ -49,6 +49,8 @@ Open the version menu (**⋮**) and select **Validation details**. The **Version
 
 The checks never show the value of a credential that they find.
 
+![Security checks of a rejected version with the reason and how to fix it](./images/rejected-version-checks.png)
+
 ### Rejection Reasons
 
 | Reason                                       | How to fix it                                                                                                                                                        |
@@ -75,6 +77,8 @@ A ZIP stops at **Needs setup** when CodeMie cannot decide which folder is the si
 - **Site root**: the folder that holds the built site, for example `dist`;
 - **HTML entrypoint**: the page to open first, for example `index.html`;
 - **Navigation**: **Static pages / hash routing**, or **Single-page app with history routing**.
+
+![Needs setup dialog with Site root, HTML entrypoint, and Navigation](./images/needs-setup-dialog.png)
 
 Select **Validate configuration**. The version becomes **Ready** when the checks pass.
 

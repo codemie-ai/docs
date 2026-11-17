@@ -20,11 +20,11 @@ Select **Details** in the card menu (**⋮**). The **Application details** page 
 - **About**: the description;
 - **Versions**: managers only. See [Versions and Validation](./versions-and-validation.md);
 - **Preview**: the card cover;
-- **Overview**: **Publisher**, **Project**, **Shared status**, **Type** (HTML file or static app), **Active version**, **Preview version**, **Updated**, and **Created**;
+- **Overview**: **Publisher**, **Project**, **Shared status**, **Type** (HTML file or static bundle), **Active version**, **Preview version**, **Updated**, and **Created**;
 - **Shared with**: the people with access;
 - **Access link**: the **Application link**, with a copy button and a note on who can open it.
 
-![Application details page with the Versions section and the Overview panel](./images/application-details-page.png)
+![Application details page with the active version and the Overview panel](./images/application-details-active.png)
 
 ## Edit an Application
 
