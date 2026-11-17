@@ -144,13 +144,10 @@ A response served from the CodeMie or LiteLLM response cache is recorded with a 
 - **No cost is shown, only tokens.** On a direct provider call, the model has no `cost`
   configuration. Langfuse then prices the tokens with its own model definitions, if it has one for
   the model.
-- **Cache writes have tokens but no `input_cache_creation` cost.** The model's `cost`
-  configuration has no `cache_creation_input_token_cost`, so cache writes are not charged
-  separately. Set it for models that support prompt caching, as in the Bedrock Claude entries of the
-  reference configuration.
-- **Direct Anthropic API calls** (`provider: anthropic`). Cache writes appear as
-  `input_cache_creation` tokens, and their cost is included in the `input` line, as in CodeMie
-  spend.
+- **`input_cache_creation` is priced at the input rate.** On a direct provider call, the model's
+  `cost` configuration has no `cache_creation_input_token_cost`, so CodeMie prices cache writes at
+  the `input` price, in Langfuse and in CodeMie spend. Set it to price cache writes at the
+  provider's rate, as in the Bedrock Claude entries of the reference configuration.
 
 ---
 
