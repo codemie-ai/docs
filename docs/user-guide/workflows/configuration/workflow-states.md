@@ -39,7 +39,7 @@ states:
 - **resolve_dynamic_values_in_prompt**: Enable template variable resolution
 - **output_schema**: Structured output definition (optional) — see [Two Modes of `output_schema`](#two-modes-of-output_schema) and [Save-time output contract forms](#save-time-output-contract-forms)
 - **input_schema**: Declared input contract as JSON text (optional) — see [Input contracts](#input-contracts-input_schema)
-- **validation**: State-level save-time validation mode, `warn` or `strict` (optional) — see [Validation modes and required coverage](#validation-modes-and-required-coverage)
+- **save_validation**: State-level save-time validation mode, `warn` or `strict` (optional) — see [Validation modes and required coverage](#validation-modes-and-required-coverage)
 - **interrupt_before**: Pause workflow for user confirmation
 - **retry_policy**: Custom retry configuration
 - **finish_iteration**: Marks the last step of a per-item chain — see [Iteration Properties](./state-transitions.md#iteration-properties)
@@ -181,18 +181,19 @@ item data along an iteration branch.
 Two settings control how strictly save-time validation treats findings. Both are described in
 the [Configuration Reference](./configuration-reference.md#32-workflow-level-settings).
 
-- **`validation`** — `warn` or `strict`. Set at workflow level (default `warn`) and optionally on
-  a state. An explicit state value overrides the workflow value for that state's checks.
+- **`save_validation`** — `warn` or `strict`, shown as **Save validation** in the editor. Set at
+  workflow level (default `warn`) and optionally on a state. An explicit state value overrides the
+  workflow value for that state's checks. It applies at save time only: Save, Check, and dry-run.
 - **`require_input_contracts`** — boolean, workflow level only, default `false`.
 
 ```yaml
-validation: warn
+save_validation: warn
 require_input_contracts: true
 
 states:
   - id: publish
     assistant_id: publisher
-    validation: strict   # this state's checks use strict
+    save_validation: strict   # this state's checks use strict
     task: Publish {{report}}
     next:
       state_id: end
@@ -242,9 +243,9 @@ Under the default `warn` mode, Check reports one informational **Unverified** fi
 
 ![An example-form output produces an Unverified finding in warn mode](../images/contract-validation/unverified-warn-mode.svg)
 
-Change the workflow mode to `strict` and Check again. The type finding becomes an error, and a
-second error reports the producer's non-schema output contract. The panel states which mode
-caused the rejection.
+Change the workflow **Save validation** to `strict` and Check again. The type finding becomes an
+error, and a second error reports the producer's non-schema output contract. The panel states
+which save validation setting caused the rejection.
 
 ![Strict mode turns the unverified finding into an error and rejects the output form](../images/contract-validation/strict-mode-errors.svg)
 
@@ -314,7 +315,7 @@ if a missing input contract must block saving.
 #### Using Check in the editor
 
 In the workflow editor, workflow-level settings are under **Contracts** in the advanced
-configuration. Action states have input and output contract fields and a validation-mode
+configuration. Action states have input and output contract fields and a **Save validation**
 override. **Check** evaluates the current form without saving it.
 
 See [Checking Workflow Contracts](../create-workflow.md#checking-workflow-contracts) for screenshots
@@ -325,7 +326,7 @@ of the Issues panel, field navigation, and the local **Resolved** state. The
 **Procedure:**
 
 1. Configure the contracts: the workflow-level settings under **Contracts**, then the input and
-   output contract fields and the validation-mode override on each state.
+   output contract fields and the **Save validation** override on each state.
 2. Click **Check**.
 3. Read the **Issues** list. Each entry names the state and, where available, the field.
 4. Select **Go to Issue** to jump to the field.
@@ -354,7 +355,7 @@ and input can change.
 Save-time contract linking is controlled by the platform setting
 `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. When it is disabled, new contract
 warnings and coverage are not returned, but the `input_schema` structure checks still apply. No
-per-workflow `validation` value turns linking off when the platform enables it. A successful save
+per-workflow `save_validation` value turns linking off when the platform enables it. A successful save
 does not prove that runtime values are correct.
 
 For a complete workflow with both contracts, expected coverage, and a warn versus strict

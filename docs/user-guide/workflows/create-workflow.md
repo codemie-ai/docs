@@ -140,12 +140,13 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 - **Performance Settings**: Parallel task execution and recursion depth limits
 - **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
 - **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
-- **Contracts**: Select the workflow validation mode and whether input-contract coverage is required
+- **Contracts**: Select the workflow **Save validation** mode and whether input-contract coverage is required
 
 #### Workflow contract settings
 
-Expand **Contracts** to configure save-time validation. In this example, **Default (warn)** is
-selected and **Require input contracts** is on. Declared or derived input contracts can provide
+Expand **Contracts** to configure save-time validation. In this example, **Save validation** is
+set to **Default (warn)** and **Require input contracts** is on. **Save validation** applies at
+save time only: Save, Check, and dry-run. Declared or derived input contracts can provide
 coverage. The switch does not require an explicit declaration on every state.
 
 ![Advanced settings with the Contracts section outlined](./images/contract-validation/workflow-contract-settings.svg)
@@ -170,10 +171,10 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 #### Node contract fields
 
 Select an action node and expand **Contracts**. The Assistant node below shows **Input contract**,
-**Output contract**, and **Validation mode**. **Use workflow default** follows the workflow setting.
+**Output contract**, and **Save validation**. **Use workflow default** follows the workflow setting.
 Select `warn` or `strict` to override that setting for this node.
 
-![Assistant node with input contract, output contract, and validation mode outlined](./images/contract-validation/node-contract-fields.svg)
+![Assistant node with input contract, output contract, and Save validation outlined](./images/contract-validation/node-contract-fields.svg)
 
 In this example, the producer has an empty input contract and an example-form output contract.
 The output declares the name `value`, but it does not establish its type. A Transform node uses
