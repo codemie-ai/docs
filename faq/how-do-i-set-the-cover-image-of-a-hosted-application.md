@@ -11,4 +11,4 @@ To use a specific image, upload it in the **Cover** field or include it in the Z
 
 ## Sources
 
-- [Hosted Applications](https://docs.codemie.ai/user-guide/applications/hosted-applications/)
+- [Card Cover of a Hosted Application](https://docs.codemie.ai/user-guide/applications/hosted-applications/card-cover/)

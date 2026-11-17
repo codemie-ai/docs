@@ -8,4 +8,5 @@ The hosted applications feature must be turned on by the CodeMie administrator.
 
 ## Sources
 
-- [Hosted Applications](https://docs.codemie.ai/user-guide/applications/hosted-applications/)
+- [Create and Upload a Hosted Application](https://docs.codemie.ai/user-guide/applications/hosted-applications/create-and-upload/)
+- [Share a Hosted Application](https://docs.codemie.ai/user-guide/applications/hosted-applications/share/)

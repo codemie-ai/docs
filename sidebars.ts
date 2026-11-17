@@ -395,7 +395,23 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'user-guide/applications/hosted-applications',
+            {
+              type: 'category',
+              label: 'Hosted Applications',
+              link: {
+                type: 'doc',
+                id: 'user-guide/applications/hosted-applications/hosted-applications',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/applications/hosted-applications/create-and-upload',
+                'user-guide/applications/hosted-applications/versions-and-validation',
+                'user-guide/applications/hosted-applications/card-cover',
+                'user-guide/applications/hosted-applications/share',
+                'user-guide/applications/hosted-applications/open-and-view',
+                'user-guide/applications/hosted-applications/manage',
+              ],
+            },
             'user-guide/applications/integration-guide',
           ],
         },
