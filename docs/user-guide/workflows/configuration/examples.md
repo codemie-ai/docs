@@ -1369,7 +1369,7 @@ result changes between `warn` and `strict`. For the concepts, see
 **Complete YAML Configuration:**
 
 ```yaml
-validation: warn
+save_validation: warn
 require_input_contracts: true
 
 assistants:
@@ -1443,7 +1443,7 @@ provided.
 
 **Expected result with contract linking enabled:**
 
-- Under `validation: warn`, the workflow is accepted. Check returns one warning: `ticket_text` is
+- Under `save_validation: warn`, the workflow is accepted. Check returns one warning: `ticket_text` is
   optional on `analyze-ticket` and no upstream state guarantees it. This is the expected
   result, not a fault in the example.
 - The `severity` and `summary` requirements of `write-reply` produce no issues.
@@ -1468,10 +1468,10 @@ example-form object:
       }
 ```
 
-| Workflow `validation` | Result                                                                                                                                                                                                                                                                                  |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `warn`                | Accepted. Check returns two `UNVERIFIED` entries. The example form supplies the names `severity` and `summary` but not their types, so the declared types on `write-reply` cannot be confirmed from the producer. They are informational and do not block saving. Coverage is unchanged |
-| `strict`              | Rejected with three blocking errors. The producer writes to context with a non-schema output contract, which is blocked under strict mode, and the unverifiable results become `ERROR` entries                                                                                          |
+| Workflow `save_validation` | Result                                                                                                                                                                                                                                                                                  |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `warn`                     | Accepted. Check returns two `UNVERIFIED` entries. The example form supplies the names `severity` and `summary` but not their types, so the declared types on `write-reply` cannot be confirmed from the producer. They are informational and do not block saving. Coverage is unchanged |
+| `strict`                   | Rejected with three blocking errors. The producer writes to context with a non-schema output contract, which is blocked under strict mode, and the unverifiable results become `ERROR` entries                                                                                          |
 
 **Variation 2: a state without input coverage**
 
@@ -1500,7 +1500,7 @@ Without the changed `next`, `log-result` is unreachable and is not counted: the 
 accepted with `validated_states: 2` and `total_states: 2`. With the connection in place and
 `require_input_contracts: true`, the workflow is rejected in both `warn` and `strict`
 mode, and the response coverage reports `validated_states: 2`, `total_states: 3`, and
-`uncovered_state_ids: ["log-result"]`. Setting `validation: warn` on the `log-result` state does
+`uncovered_state_ids: ["log-result"]`. Setting `save_validation: warn` on the `log-result` state does
 not change this. With `require_input_contracts: false`, the workflow is accepted, but the
 coverage still shows the uncovered state, so a Check with no issues is not proof of full coverage.
 
