@@ -228,9 +228,10 @@ each does to saving.
 | `WARNING`                         | Availability, type, or another property is uncertain or risky | Warning        | Blocks         |
 | `UNVERIFIED`                      | Analysis cannot establish the result                          | Informational  | Blocks         |
 
-Two exceptions to keep in mind: the advisory to convert an `example` into a schema stays
-informational in both modes, although a separate strict output-form finding can still block;
-and the required-coverage rule blocks in both modes. `warn` mode therefore does not mean that
+Two exceptions to keep in mind: the advisory to convert an output contract into a JSON schema
+stays informational in both modes, although a separate strict output-form finding can still
+block; and the required-coverage rule blocks in both modes. The advisory appears only when keys
+were recovered from an `output_schema` that is not valid JSON, not for an `example` output. `warn` mode therefore does not mean that
 all findings are warnings.
 
 ##### Compare warn and strict
@@ -241,13 +242,13 @@ The example form supplies the field name but cannot establish its type.
 
 Under the default `warn` mode, Check reports one informational **Unverified** finding.
 
-![An example-form output produces an Unverified finding in warn mode](../images/contract-validation/unverified-warn-mode.svg)
+![An example-form output produces an Unverified finding in warn mode](./images/unverified-warn-mode.png)
 
 Change the workflow **Save validation** to `strict` and Check again. The type finding becomes an
 error, and a second error reports the producer's non-schema output contract. The panel states
 which save validation setting caused the rejection.
 
-![Strict mode turns the unverified finding into an error and rejects the output form](../images/contract-validation/strict-mode-errors.svg)
+![Strict mode turns the unverified finding into an error and rejects the output form](./images/strict-mode-errors.png)
 
 #### Check and Save results
 
@@ -266,8 +267,11 @@ under `strict`, and a raw derived `ERROR` appears as a public `WARNING` under `w
 
 - **Accepted response.** A successful save or Check returns the contract warnings and, when
   contract linking ran, the [coverage](#contract-coverage) object.
-- **Rejected response.** A rejection carries `error.details` with `error_type`, `message`,
-  `errors`, `warnings`, and `coverage`.
+- **Rejected response.** With `error_format=json`, a rejection carries `error.details` with
+  `error_type`, `message`, `errors`, `warnings`, and `coverage`. The default
+  `error_format=string` returns `error.details` as plain text instead: the errors, then the
+  warnings prefixed by their value, then the coverage line, joined with `<br>`. The UI requests
+  JSON. The create, update, and Check endpoints accept `error_format`.
 - **Issue entries** identify the state and the relevant data field or configuration location.
   Location details can be absent.
 - **Warning limit.** At most 100 contract warnings are returned. When more exist,
@@ -307,7 +311,7 @@ The first two have input contracts. The final **Log-result** state has a constan
 declared or derived input contract. With `require_input_contracts: false`, Check returns
 **No issues found** and **Input contract coverage: 2 of 3 states**.
 
-![A successful Check reports input contract coverage of two out of three states](../images/contract-validation/incomplete-coverage.svg)
+![A successful Check reports input contract coverage of two out of three states](./images/incomplete-coverage.png)
 
 This result does not establish input coverage for **Log-result**. Enable `require_input_contracts`
 if a missing input contract must block saving.
