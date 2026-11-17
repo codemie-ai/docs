@@ -31,7 +31,7 @@ Before creating a workflow, ensure you have:
 
 The **Visual Workflow Editor** is a drag-and-drop interface that makes building workflows intuitive and visual. Instead of writing YAML code, you design workflows graphically.
 
-![Workflow editor with Check, save actions, and Workflow Config outlined](./images/contract-validation/editor-controls.svg)
+![Workflow editor with Check, save actions, and Workflow Config outlined](./images/editor-controls.png)
 
 The orange rectangles identify **Check**, the save actions, and **Workflow Config**.
 
@@ -149,7 +149,7 @@ set to **Default (warn)** and **Require input contracts** is on. **Save validati
 save time only: Save, Check, and dry-run. Declared or derived input contracts can provide
 coverage. The switch does not require an explicit declaration on every state.
 
-![Advanced settings with the Contracts section outlined](./images/contract-validation/workflow-contract-settings.svg)
+![Advanced settings with the Contracts section outlined](./images/workflow-contract-settings.png)
 
 See [Validation modes and required coverage](./configuration/workflow-states.md#validation-modes-and-required-coverage)
 for the rules and [Platform prerequisite](./configuration/workflow-states.md#platform-prerequisite)
@@ -174,7 +174,7 @@ Select an action node and expand **Contracts**. The Assistant node below shows *
 **Output contract**, and **Save validation**. **Use workflow default** follows the workflow setting.
 Select `warn` or `strict` to override that setting for this node.
 
-![Assistant node with input contract, output contract, and Save validation outlined](./images/contract-validation/node-contract-fields.svg)
+![Assistant node with input contract, output contract, and Save validation outlined](./images/node-contract-fields.png)
 
 In this example, the producer has an empty input contract and an example-form output contract.
 The output declares the name `value`, but it does not establish its type. A Transform node uses
@@ -386,7 +386,7 @@ string named `value` and another field named `missing`. Check reports one type w
 missing-field error. The error blocks saving even in `warn` mode. Both states have input
 contracts, so coverage is still **2 of 2**.
 
-![Issues panel with one error, one warning, full coverage, and the affected node outlined](./images/contract-validation/mixed-errors-and-warnings.svg)
+![Issues panel with one error, one warning, full coverage, and the affected node outlined](./images/mixed-errors-and-warnings.png)
 
 **Changes not saved yet** means this is a Check result. It does not confirm that the workflow was
 stored. For the outcome rules, see [Requirement outcomes](./configuration/workflow-states.md#requirement-outcomes).
@@ -396,13 +396,13 @@ stored. For the outcome rules, see [Requirement outcomes](./configuration/workfl
 Select **Go to Issue** on a finding. The editor opens the relevant node configuration and focuses
 the field. Here, the missing-field error points to **Consumer → Input contract**.
 
-![Go to Issue focuses the input contract and displays its error message](./images/contract-validation/go-to-issue.svg)
+![Go to Issue focuses the input contract and displays its error message](./images/go-to-issue.png)
 
 To repair this example, remove `missing` from both `properties` and `required`, and change the
 type of `value` from `string` to `number`. Apply the node changes with the panel's **Save** button.
 Then open **Issues** again.
 
-![Issues marked Resolved after a local edit, with Check outlined](./images/contract-validation/resolved-before-check.svg)
+![Issues marked Resolved after a local edit, with Check outlined](./images/resolved-before-check.png)
 
 **Resolved** means the local field changed. It does not prove that backend validation passed.
 Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
@@ -431,7 +431,7 @@ The example below keeps only the type mismatch from the previous section. Save s
 `warn` mode. The outlined status and actions confirm that the workflow is saved and that execution
 is a separate choice.
 
-![Saved with warnings, with Done, Saved, and Run anyway outlined](./images/contract-validation/saved-with-warnings.svg)
+![Saved with warnings, with Done, Saved, and Run anyway outlined](./images/saved-with-warnings.png)
 
 Warnings and informational `UNVERIFIED` results are different. A warning means the analysis
 found a likely problem, such as an optional field that a state needs. `UNVERIFIED` means the
