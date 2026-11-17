@@ -12,7 +12,7 @@ pagination_next: null
 
 Hosted applications let CodeMie users upload a small static web page (one HTML file or a ZIP of a prebuilt static build), share it, and open it inside CodeMie on the **Applications** page. The feature is intended for **presentations**: slides, reports, and demos.
 
-CodeMie only stores and serves static files. Uploaded pages run in the viewer's browser on a separate content domain, so they cannot access CodeMie cookies, tokens, or data. They also cannot make network requests, submit forms, open dialogs or popups, or load external resources.
+CodeMie only stores and serves static files. The one exception is the automatic preview: after a version passes validation, the validator takes one picture of its start page in a sandboxed browser, and the application card uses it as a cover (see [Automatic preview](#automatic-preview)). Uploaded pages run in the viewer's browser on a separate content domain, so they cannot access CodeMie cookies, tokens, or data. They also cannot make network requests, submit forms, open dialogs, or load external resources. They can switch to full screen and open pop-up windows, which keep the same sandbox.
 
 :::info Off by default
 While the feature is off, the Applications page shows only Platform apps and no hosted background work runs.
@@ -26,7 +26,7 @@ While the feature is off, the Applications page shows only Platform apps and no 
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CodeMie API    | Management API, content gateway, and validation workers. One process serves both hosts by `Host` header.                                                   |
 | Content domain | A separate registrable domain. Each version is served from `v-<version ID>.<content domain>`, and its viewer frame from `w-<version ID>.<content domain>`. |
-| Validator      | A private deployment that checks every upload in a sandboxed parser. Exactly one replica.                                                                  |
+| Validator      | A private deployment that checks every upload in a sandboxed parser and takes the automatic preview in a sandboxed Chromium renderer. Exactly one replica. |
 | ClamAV         | A separate private deployment that scans uploads for malware on behalf of the validator.                                                                   |
 | Object storage | A dedicated private S3 or GCS bucket for the validated files.                                                                                              |
 | PostgreSQL     | Applications, versions, sharing, sessions, and the job queue.                                                                                              |
@@ -94,6 +94,54 @@ The validator parses uploads in a kernel sandbox (Landlock and seccomp) and exit
 
 Run the validator on Linux amd64 nodes with Landlock ABI 3 or later (normally kernel 6.2 or later). On GKE, the default Container-Optimized OS image is built without Landlock, so place the validator on a dedicated Ubuntu node pool with the `validator.nodeSelector` and `validator.tolerations` chart values. The API and ClamAV can stay on the default nodes. GKE Autopilot nodes always run Container-Optimized OS, where Landlock is disabled, so the validator cannot run on Autopilot; use a GKE Standard node pool.
 
+### Automatic preview
+
+When an application has no uploaded cover and no cover image in its files, its card shows a picture of the start page. The validator takes this picture once for each version that passes validation. It needs no extra pod, Service, or image: the renderer is a child process of the validator, and the validator image contains a pinned Chromium version.
+
+How the renderer works:
+
+- It opens the start page at 1280 × 800 px with no network access. Every request is answered from the files of the version, and all other requests fail.
+- It takes one JPEG (at most 1 MiB and 2048 px per side) when the page is quiet, or at 15 seconds. At 20 seconds it stops the browser and there is no picture.
+- It runs under the same kernel sandbox as the parser (Landlock and seccomp), with an empty environment and without access to the validator secrets.
+- It never changes the validation result. If there is no picture, the card uses the application initials.
+- Pages that use WebGL give a blank picture, because the renderer has no GPU. A picture with one color only is not used.
+
+Requirements and settings:
+
+| Item           | Value                                                                                                                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Memory         | The default validator memory limit is `3Gi` (it was `2Gi`). If `features.tools.hosted-apps.validator.resources` is overridden, raise the limit to at least `3Gi`.                                  |
+| Switch         | `VALIDATOR_PREVIEW_CAPTURE` on the validator, `true` (default) or `false`. Any other value stops the validator at start.                                                                           |
+| Node kernel    | Landlock ABI 3 or later, as for the parser. Linux 6.12 or later (Landlock ABI 6) also stops the renderer from sending signals to the validator. On ABI 3 to 5 this extra protection is not active. |
+| Chromium patch | Rebuild the validator image at least every 4 weeks, and at once after a Chromium security release. The image label `org.codemie.chromium-version` shows the pinned version.                        |
+
+The chart does not set `VALIDATOR_PREVIEW_CAPTURE`. To set it, add it to `features.tools.hosted-apps.validator.env`. Helm replaces lists, so repeat the default entries of that list:
+
+```yaml
+features:
+  tools:
+    hosted-apps:
+      validator:
+        env:
+          - name: VALIDATOR_BIND_HOST
+            value: '0.0.0.0'
+          - name: VALIDATOR_SERVICE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: codemie-hosted-applications
+                key: validator-key
+          - name: CLAMD_HOST
+            value: codemie-hosted-apps-clamd
+          - name: CLAMD_PORT
+            value: '3310'
+          - name: CLAMD_CONFIGURATION
+            value: /etc/clamav/clamd.conf
+          - name: VALIDATOR_PREVIEW_CAPTURE
+            value: 'false'
+```
+
+At start, the validator logs `Preview capture on (chromium=<version>)`, or `Preview capture off (reason=<reason>)` when the switch is `false`, the secrets cannot be hidden, or the renderer self-test fails. When capture is off, validation continues and cards fall back to the other cover sources. `GET /health` on the validator (protected by the service key) also reports `"capture": "on"` or `"off"`.
+
 ## Ingress
 
 - **Content hosts.** The chart creates the content Ingress `codemie-hosted-apps-content` when `features.tools.hosted-apps.enabled` and `ingress.enabled` are true. It must route `*.<content domain>`, and only that, to the CodeMie API Service. Keep `Host` unchanged. Do not add authentication, rewrites, caching, or a CDN in front of it, and do not log request bodies, cookies, or `Authorization` headers.
@@ -112,8 +160,20 @@ Run the validator on Linux amd64 nodes with Landlock ABI 3 or later (normally ke
 2. Raise the management ingress limits.
 3. Enable `features.tools.hosted-apps` in the chart values and add the API settings.
 4. Enable `features:hostedApplications` in the customer configuration.
-5. Check that the API log has no `Hosted applications are enabled but unavailable` warning, that the validator and ClamAV deployments are ready, and that `GET /v1/config` reports the feature as enabled.
-6. Upload a test page, open it, share it with a second user, and sign out.
+5. Check that the API log has no `Hosted applications are enabled but unavailable` warning, that the validator and ClamAV deployments are ready, that the validator log has `Preview capture on`, and that `GET /v1/config` reports the feature as enabled.
+6. Upload a test page without a cover, check that its card shows a picture of the page, open it, share it with a second user, and sign out.
+
+### Upgrade to a release with the automatic preview
+
+The API and the validator must come from the same release. An older API cannot read a version that has an automatic preview, so a mixed deployment makes the content of such versions unavailable for a short time.
+
+1. Make sure the validator image is built from the same commit as the API image and pushed with the same tag.
+2. Deploy the new release with `VALIDATOR_PREVIEW_CAPTURE=false`.
+3. When all API pods run the new release, set `VALIDATOR_PREVIEW_CAPTURE=true` and restart the validator.
+
+:::warning Rollback
+After versions are accepted with an automatic preview, a rollback to an older release makes the content and the cover of those versions unreadable. No automated repair exists. Before a rollback, read the rollback notes in the repository runbook `hosted-applications/README.md`. To stop new pictures at once, set `VALIDATOR_PREVIEW_CAPTURE=false` and restart the validator.
+:::
 
 ## Operations
 
