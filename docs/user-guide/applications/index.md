@@ -22,6 +22,10 @@ The **Applications** tab lists tools that other teams build on top of AI/Run Cod
 
 This page is for project and delivery managers. The engineering details are in the [Integration Guide](./integration-guide.md).
 
+:::tip Share a static page
+To share an HTML report, a slide deck, or a static web build, no integration is needed. Any signed-in user can upload it as a [hosted application](./hosted-applications/index.md) and share it from the **Applications** page.
+:::
+
 ## What CodeMie provides and what the application team provides
 
 <ProvidesCompare

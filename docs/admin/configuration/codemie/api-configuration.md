@@ -355,7 +355,7 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 
 ### Hosted Applications
 
-Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs and `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
+Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
 
 | Parameter                                  | Type    | Default                 | Description                                                                                                                                                                                            |
 | ------------------------------------------ | ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -368,7 +368,7 @@ Settings for custom (hosted) static web applications. The feature is switched on
 | `HOSTED_APPS_STORAGE_S3_GRACE_SECONDS`     | integer | `30`                    | S3 only. Extra wait after the writer lease ends before cleanup. Startup refuses S3 when clock skew exceeds it                                                                                          |
 | `HOSTED_APPS_STORAGE_SWEEP_SECONDS`        | integer | `3600`                  | Interval of the sweep that deletes old orphaned objects from the hosted bucket (S3 and GCS)                                                                                                            |
 | `HOSTED_APPS_STORAGE_SWEEP_BUDGET_SECONDS` | integer | `20`                    | Time budget of one sweep run                                                                                                                                                                           |
-| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per user in bytes (2 GiB). Minimum `1048576`                                                                                                                                             |
+| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per creator in bytes (2 GiB): all versions, covers, and uploads in progress of the applications that a user created, whoever uploads them. Minimum `1048576`                             |
 
 :::note Storage backend
 Hosted applications use `FILES_STORAGE_TYPE` to select the backend: `aws` (S3) or `gcp` (GCS). `azure` keeps the feature unavailable, and `filesystem` is for development only.
