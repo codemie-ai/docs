@@ -345,7 +345,6 @@ words:
   - keycloakx
   - backchannel
   - xforwarded
-  - quarkus
   - CIBA
   - urlencode
   - Vercel
