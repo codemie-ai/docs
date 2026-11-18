@@ -17,18 +17,18 @@ There are two scopes, and the **Global** toggle extends a User integration to al
 - **Project Integration** (Scope: **Project**): Shared configuration available to all members of the selected project. Can be created by project admins only.
 
 :::note
-Only project admins (`applications_admin` role in the project) and platform admins (`isAdmin`) can create **Project Integrations** and see the Project scope in the list and in the form. Members without these rights work with User integrations only. To request `applications_admin` access, submit a Support ticket. See [Project & User Management](../../project-user-management/index.mdx) for details on managing roles.
+Only project admins (`applications_admin` role in the project), platform admins (`isAdmin`), and maintainers can create **Project Integrations** and see the Project scope in the list and in the form. Project integrations require admin rights on the project. Users who administer no project (members only, external users, service accounts) can create only User integrations, and only inside a project they belong to. To request `applications_admin` access, submit a Support ticket. See [Project & User Management](../../project-user-management/index.mdx) for details on managing roles.
 :::
 
 ## How the Default Integration Is Selected
 
 When a tool requires an integration and no specific one has been chosen, CodeMie picks it automatically. **User Integration always takes priority over Project Integration.**
 
-| Priority | Type                        | Created with                                                 | Visible to                                                   |
-| -------- | --------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 1        | **User Integration**        | **Scope: User**, current project                             | The owner only, in this project                              |
-| 2        | **User Global Integration** | **Scope: User**, **Global Integration** toggle enabled       | The owner only, in all projects where the owner is onboarded |
-| 3        | **Project Integration**     | **Scope: Project** (project admins and platform admins only) | All project members                                          |
+| Priority | Type                        | Created with                                                               | Visible to                                                   |
+| -------- | --------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1        | **User Integration**        | **Scope: User**, current project                                           | The owner only, in this project                              |
+| 2        | **User Global Integration** | **Scope: User**, **Global Integration** toggle enabled                     | The owner only, in all projects where the owner is onboarded |
+| 3        | **Project Integration**     | **Scope: Project** (project admins, platform admins, and maintainers only) | All project members                                          |
 
 If no matching integration is found at any level, the action requiring it will fail.
 
@@ -114,7 +114,7 @@ The page shows one combined list of all integrations the current user can see. T
 
 What the list shows depends on the role:
 
-- **Project admins and platform admins** see User and Project integrations together. A **Scope** filter with the options **All** (default), **User**, and **Project** narrows the list to one scope.
+- **Project admins, platform admins, and maintainers** see User and Project integrations together. A **Scope** filter with the options **All** (default), **User**, and **Project** narrows the list to one scope.
 - **Members without project-admin rights** see only their own User integrations. The **Scope** filter is not displayed, and the list behaves as if **Scope: User** is always selected.
 
 ![Integrations list for a member](./images/integrations-list-member-view.png)
@@ -129,9 +129,9 @@ All integrations are created with the same **New Integration** form, regardless 
 
 2. Select the **Scope**. This is the first field of the form and defines who can use the integration:
    - **User**: only the creator can use the integration. Turn on **Global Integration** to use it in every project the creator is onboarded to.
-   - **Project**: every member of the selected project can use the integration. Only project admins and platform admins can select this scope. For other members, the form explains that Project integrations can be created by project admins only. Project admins see only the projects they administer in the **Project** field.
+   - **Project**: every member of the selected project can use the integration. Only project admins, platform admins, and maintainers can select this scope. For other members, the form explains that Project integrations can be created by project admins only. Project admins see only the projects they administer in the **Project** field.
 
-3. Select the **Project** the integration belongs to. The project cannot be changed after saving.
+3. Select the **Project** the integration belongs to. A project is required, except when **Scope: User** is selected with **Global Integration** turned on: the **Project** selector is then disabled, because the integration is not tied to a single project. The project cannot be changed after saving.
 
 4. Select the desired tool from the **Credential Type** dropdown, specify the **Alias** and the credentials, then click **Save**:
 
@@ -247,7 +247,7 @@ As the number of integrations grows, the filter panel on the **Integrations** pa
 | Filter         | Shown for                                                 | Description                                                                                            |
 | -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Search**     | Everyone                                                  | Free-text search                                                                                       |
-| **Scope**      | Project admins and platform admins                        | **All** (default), **User**, or **Project**                                                            |
+| **Scope**      | Project admins, platform admins, and maintainers          | **All** (default), **User**, or **Project**                                                            |
 | **Project**    | Everyone                                                  | A single project                                                                                       |
 | **Type**       | Everyone                                                  | One or more credential types. Types bound to one scope carry a **User only** or **Project only** badge |
 | **Global**     | **Scope: User**, and members without project-admin rights | **All**, **Global**, or **Non Global** User integrations                                               |
