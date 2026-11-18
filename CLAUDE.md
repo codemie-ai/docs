@@ -166,6 +166,18 @@ docs/user-guide/assistants/
 
 **Exception**: Only use `static/` for truly shared assets (logo, favicon, brand assets).
 
+### Screenshot Capture Guidelines
+
+Apply these rules to every new or replaced screenshot.
+
+- ✅ Show the full browser or app window, not a fragment of it.
+- ✅ Blur sensitive data: names, initials, emails, domains, IPs, hostnames, internal URLs and tokens. Use a tool such as macOS Preview or Skitch, or ShareX or Flameshot.
+- ✅ Capture at 100% browser and OS zoom.
+- ✅ Use a standard aspect ratio of 4:3, 16:9 or 16:10 (±3%). Set it by sizing the window.
+- ❌ Do not crop an image to reach the aspect ratio.
+
+**Note**: These rules apply to new and replaced screenshots only. Existing screenshots are not audited retroactively.
+
 ## Front Matter and Document IDs
 
 ### Required Front Matter
@@ -804,6 +816,7 @@ Before committing documentation changes:
 - [ ] Run `npm start` and verify no errors
 - [ ] Check all pages render correctly
 - [ ] Verify images display properly
+- [ ] Check screenshots show the full window, hide sensitive data, use 100% zoom and a standard aspect ratio
 - [ ] Test all internal links work
 - [ ] Confirm sidebar navigation works
 - [ ] Check for MDX compilation warnings
