@@ -27,7 +27,7 @@ Review the Keycloak upgrading guide from [Migrating to 26.4.6](https://www.keycl
 
 | Parameter           | Current Value | New Value |
 | ------------------- | ------------- | --------- |
-| keycloakx.image.tag | UNSET         | `26.5.7`  |
+| keycloakx.image.tag | `26.4.5`      | `26.5.7`  |
 
 ```yaml
 keycloakx:
