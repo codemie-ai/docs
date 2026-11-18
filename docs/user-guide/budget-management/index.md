@@ -86,6 +86,7 @@ Budget management is a unique role. Project Admin cannot manage budgets in any p
 | ----------------------------------- | ---------- | ----- | ------------- | --------- |
 | Create / update / delete any budget | Yes        | No    | No            | No        |
 | View budget list                    | Yes        | Yes   | No            | Yes       |
+| View budget details                 | Yes        | Yes   | No            | Yes       |
 | View own project budget             | Yes        | Yes   | Yes           | Yes (all) |
 | Override a member's allocation      | Yes        | No    | No            | No        |
 
@@ -168,7 +169,9 @@ project per chat or per conversation, and the charged project is not shown to us
 
 The budget list shows a **Created By** column with the name of the user who created each budget.
 
-To see all properties of a budget, open the actions menu of its row and select **View details**. The details view shows the budget ID, name, description, category, limits, duration, reset date, and **Created By**. **View details** is available to every role that can view the budget list, including Admin and Auditor.
+To see all properties of a budget, open the actions menu of its row and select **View details**. The details view shows the budget ID, name, description, category, limits, duration, reset date, **Created By**, and **Updated** (the date of the last change, or the creation date if the budget has never been edited). **View details** is available for every budget, including preconfigured ones, and to every role that can view the budget list, including Admin and Auditor.
+
+The **Edit** action appears in the same menu only for users with the Maintainer role, and never for preconfigured budgets, which are managed through platform configuration.
 
 The **Created By** value is resolved as follows:
 
