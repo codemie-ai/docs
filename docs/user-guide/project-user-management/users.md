@@ -11,7 +11,7 @@ description: View and manage all platform users in AI/Run CodeMie. Inspect user 
 # Users Management
 
 :::info Access levels
-**Platform Admins and Maintainers** can view user details, manage project assignments, and assign platform roles including the Auditor flag.
+**Platform Admins and Maintainers** can view user details, manage project assignments, and assign platform roles including the Auditor flag and the Invoker role.
 
 **Auditors** have read-only access — all user details and budget spend data are visible, but create, edit, deactivate, and role-change controls are not available.
 
@@ -47,6 +47,7 @@ The users list displays all platform users in a searchable, filterable table.
 | **User Type**     | `Regular` or `External` — see [External User](../getting-started/glossary.md#external-user-availableforexternal)                                     |
 | **Project Admin** | Whether the user holds Project Admin role in any project                                                                                             |
 | **Super Admin**   | Whether the user has platform-wide Super Admin privileges                                                                                            |
+| **Invoker**       | Whether the user has the [Invoker](./invoker-role.md) role (`Yes` or empty)                                                                          |
 | **Projects**      | Badge list of projects the user is assigned to. The default project is shown first and labeled **Default** — see [Default Project](#default-project) |
 | **Actions**       | Row-level actions (view details, assign or reset budgets, deactivate or reactivate the user)                                                         |
 
@@ -56,7 +57,7 @@ Use the filter bar at the top of the list to narrow results:
 
 - **Search** — filter by name
 - **Project** — show only users assigned to a specific project
-- **Platform Role** — filter by `User`, `Project Admin`, or `Super Admin`
+- **Platform Role** — filter by `User`, `Project Admin`, `Super Admin`, `Auditor`, or `Invoker`
 - **Status** — `All` (default), `Active`, or `Deactivated`
 
 Click **Clear All** to reset all active filters.
@@ -78,7 +79,7 @@ The panel shows:
 - **Avatar** and display name
 - **User Type**: `Regular` or `External`
 - **Email**: user's email address
-- **Platform Roles** block — Admin, Maintainer, and Auditor toggles (visible to Platform Admins and Maintainers only)
+- **Platform Roles** block — Admin, Maintainer, Auditor, and Invoker toggles (visible to Platform Admins and Maintainers only)
 - **Projects** table — list of projects the user is assigned to, with their role in each and the user's default project
 - **Budget Spending** widget — current budget consumption for the selected user (see below)
 
@@ -113,6 +114,17 @@ flag has no effect for this user."_
 
 The stored flag value is not modified.
 :::
+
+### Invoker Role
+
+The **Invoker** toggle assigns the restricted [Invoker role](./invoker-role.md). Maintainers see
+it next to Auditor, Admin, and Maintainer; a Platform Admin who is not a Maintainer sees the
+Invoker toggle only.
+
+![User Details panel with the Invoker toggle switched on](./images/user-details-invoker-toggle.png)
+
+See [Invoker Role Administration](../../admin/configuration/access-control/invoker-role.md) for
+the exclusion rules and the conditions under which the assignment is refused.
 
 ### Budget Spending
 
