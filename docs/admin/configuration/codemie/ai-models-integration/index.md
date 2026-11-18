@@ -145,3 +145,7 @@ Integrate with your existing LLM proxy service that implements OpenAI-compatible
 - **Choose LiteLLM** if you need production-grade features, usage analytics, multi-cloud support, or plan to scale
 - **Choose Native** if you need to get started quickly, testing features, or have simple single-provider requirements
 - **Choose Third-Party** if you already have an existing LLM proxy infrastructure
+
+## Runtime Model Management
+
+After the integration is configured, platform administrators can control model availability and defaults at runtime from the administration UI — no deployment change required. See [Global Model Management](../global-model-management.md).
