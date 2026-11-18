@@ -29,7 +29,7 @@ This functionality is only available to users with the [isAdmin](/user-guide/get
 
 ## 2. Create Webhook Integration
 
-2.1. Navigate to **Integrations**, click **+ Create**, and select **Scope: Project**.
+2.1. Navigate to **Integrations**, click **+ New Integration**, and select **Scope: Project**.
 
 2.2. On the **New Integration** page, fill in the fields to create a webhook:
 

@@ -125,7 +125,7 @@ Each project's Project integrations are listed to the admins of that project onl
 
 All integrations are created with the same **New Integration** form, regardless of scope.
 
-1. On the **Integrations** page, click **+ Create**. The form opens with the **Scope** already selected to match the list: **Scope: Project** is preselected when the list is filtered to **Project**, otherwise **User**.
+1. On the **Integrations** page, click **+ New Integration**. The **New Integration** form opens with the **Scope** already selected to match the list: **Scope: Project** is preselected when the list is filtered to **Project**, otherwise **User**.
 
 2. Select the **Scope**. This is the first field of the form and defines who can use the integration:
    - **User**: only the creator can use the integration. Turn on **Global Integration** to use it in every project the creator is onboarded to.
@@ -148,7 +148,7 @@ The **Credential Type** dropdown is sorted alphabetically and includes a scrollb
 :::
 
 :::info
-Changing the **Scope** while filling in the form clears the **Credential Type** if the new scope does not offer it. Switching to **Project** also turns off the **Global Integration** toggle, because Global applies to User integrations only. Moving an existing integration from one scope to the other is not supported; the **Scope** field is locked when an integration is edited.
+The **Global Integration** toggle is shown for **Scope: User** only, because Global applies to User integrations only. Moving an existing integration from one scope to the other is not supported; the **Scope** field is locked when an integration is edited.
 :::
 
 ### Scope-Bound Credential Types
@@ -166,12 +166,13 @@ Most credential types are available at both scopes. Some types exist at one scop
 
 Scope-bound types are marked with a **User only** or **Project only** badge in the **Credential Type** dropdown of the form and in the **Type** filter of the list. They affect the form as follows:
 
-- **Selecting a type bound to the other scope switches the Scope automatically** while the Scope is still changeable. For example, selecting **DIAL** while **Scope: User** is selected switches the Scope to **Project**.
-- **After a scope-bound type is selected, the Scope field is locked.** The form explains why, for example: "DIAL is available only at Project scope, so User is unavailable. Pick another type to change it." To change the scope, select a different credential type first.
+- **A type bound to the other scope shows the hint "Switches Scope to …"** in the **Credential Type** dropdown. For example, while **Scope: User** is selected, **DIAL** is listed with the hint "Switches Scope to Project".
+- **Selecting a type bound to the other scope switches the Scope automatically.** The form confirms the change, for example: "DIAL is available only at Project scope, so Scope switched to Project."
+- **After a scope-bound type is selected, the scope that does not match is disabled.** For **DIAL**, **User** is disabled; for **Google OAuth**, **Project** is disabled. The form explains why, for example: "DIAL is available only at Project scope, so User is unavailable. Pick another type to change it." To change the scope, select a different credential type first.
 - **Members without project-admin rights** see Project-only types such as DIAL as disabled, with the hint "Project only · needs project admin rights".
-- When the Scope is locked (for example, when the form is opened from a project page), types bound to the other scope are listed as disabled with the hint "Not available at … scope".
+- Entry points that fix the scope keep it. The quick-create form opened from an assistant or a data source creates **User** integrations only and has no **Scope** field.
 
-![Scope locked by a scope-bound type](./images/integration-create-scope-locked.png)
+![Scope disabled by a scope-bound type](./images/integration-create-scope-locked.png)
 
 ## Integration Validation During Assistant Save
 
@@ -247,10 +248,14 @@ As the number of integrations grows, the filter panel on the **Integrations** pa
 | -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Search**     | Everyone                                                  | Free-text search                                                                                       |
 | **Scope**      | Project admins and platform admins                        | **All** (default), **User**, or **Project**                                                            |
-| **Project**    | Everyone                                                  | One or more projects                                                                                   |
+| **Project**    | Everyone                                                  | A single project                                                                                       |
 | **Type**       | Everyone                                                  | One or more credential types. Types bound to one scope carry a **User only** or **Project only** badge |
 | **Global**     | **Scope: User**, and members without project-admin rights | **All**, **Global**, or **Non Global** User integrations                                               |
-| **Created by** | **Scope: Project**                                        | Filters Project integrations by the user who created them                                              |
+| **Created by** | **Scope: Project**                                        | Filters Project integrations by creator: **Me** checkbox or a user selected from the list              |
+
+**Clear all** at the top of the filter panel resets the search and all filters.
+
+The selected **Scope** is kept in the page URL (for example, `?scope=project`). After **Cancel**, **Save**, or the back arrow in the **New Integration** form, the list opens with the same scope selected. The **Project**, **Type**, and **Global** filters and the search are kept in the URL as well.
 
 At **Scope: All**, the **Global** and **Created by** filters are not offered, and the panel shows the hint "Pick a scope to filter by Global or Created by."
 

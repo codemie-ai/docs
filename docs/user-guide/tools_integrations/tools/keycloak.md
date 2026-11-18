@@ -35,7 +35,7 @@ To integrate Keycloak with AI/Run CodeMie, follow the steps below:
 
 2.1. In the AI/Run CodeMie main menu, click the **Integrations** button.
 
-2.2. Select **User** or **Project** (this functionality is available for Administrators and application admins only) and click the **+ Create** button.
+2.2. Click the **+ New Integration** button and select the **Scope**: **User** or **Project** (Project is available for Administrators and application admins only).
 
 ![Create integration](./images/image83.png)
 

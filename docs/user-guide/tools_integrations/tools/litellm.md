@@ -48,7 +48,7 @@ You will not be able to view this key again. Make sure to copy and save it befor
 Creating a LiteLLM integration with **Scope: User** requires the `features:personalLiteLLMIntegrations` feature to be enabled in the customer configuration. If this option is not available, contact an administrator to enable it.
 :::
 
-2.1. In the AI/Run CodeMie main menu, click **Integrations** and then **+ Create**.
+2.1. In the AI/Run CodeMie main menu, click **Integrations** and then **+ New Integration**.
 
 2.2. Specify the integration parameters and click **Save**:
 

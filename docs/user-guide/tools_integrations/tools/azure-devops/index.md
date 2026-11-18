@@ -56,8 +56,8 @@ In the CodeMie main menu, click **Integrations**.
 
 ### 2.2 Create a New Integration
 
-1. Select integration type: **User** or **Project**.
-2. Click **+ Create**.
+1. Click **+ New Integration**.
+2. Select the **Scope**: **User** or **Project**.
 3. Fill in the integration form:
    - **Project**: Select your CodeMie project.
    - **Credential Type**: Select **AzureDevOps**.

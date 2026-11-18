@@ -34,7 +34,7 @@ CodeMie integrates with Atlassian Confluence to allow assistants to retrieve and
 
 ## 2. Configure Integration in CodeMie
 
-2.1. In the CodeMie main menu, click **Integrations**, click **+ Create**, and select the **Scope**: **User** or **Project**.
+2.1. In the CodeMie main menu, click **Integrations**, click **+ New Integration**, and select the **Scope**: **User** or **Project**.
 
 2.2. Specify the integration parameters and click **+ Save**:
 

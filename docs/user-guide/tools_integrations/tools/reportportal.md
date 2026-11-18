@@ -31,7 +31,7 @@ You won't be able to see your Key once you click the "Close" button. Make sure t
 
 ## 2. Configure Integration in AI/Run CodeMie
 
-2.1. In the AI/Run CodeMie main menu, click **Integrations**, click **+ Create**, and select the **Scope**: **User** or **Project**.
+2.1. In the AI/Run CodeMie main menu, click **Integrations**, click **+ New Integration**, and select the **Scope**: **User** or **Project**.
 
 2.2. Specify the integration parameters and click **+ Save**:
 
