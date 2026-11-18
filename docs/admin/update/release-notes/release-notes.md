@@ -34,13 +34,17 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-68-0">
-<summary><span className="release__version">CodeMie 2.68.0</span><span className="release__date">Nov 16, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.68.0</span><span className="release__date">Nov 16, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 16, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.68.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Keycloak 26.5.7</h4>
+
+Updated Keycloak to 26.5.7.
+
+**Upgrade instructions:** [Keycloak Upgrade 26.4.5 → 26.5.7](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5.md)
 
 <h3>Configuration Changes</h3>
 
