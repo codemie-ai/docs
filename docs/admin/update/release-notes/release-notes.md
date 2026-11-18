@@ -40,7 +40,7 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 <h3>Third-Party Component Updates</h3>
 
-<h4>Keycloak 26.5.7 (keycloakx 7.1.9)</h4>
+<h4>Keycloak 26.5.7</h4>
 
 Updated Keycloak to 26.5.7 (up from 26.5.6).
 
