@@ -1,18 +1,18 @@
 ---
 id: keycloak-26-5-to-26-6
 sidebar_position: 6
-title: Keycloak Upgrade 26.5.7 → 26.6.5
-description: Upgrade Keycloak from 26.5.7 to 26.6.5
+title: Keycloak Upgrade 26.5.7 → 26.6.4
+description: Upgrade Keycloak from 26.5.7 to 26.6.4
 pagination_prev: admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-upgrade
 pagination_next: null
 ---
 
-# Upgrade Keycloak from 26.5.7 to 26.6.5
+# Upgrade Keycloak from 26.5.7 to 26.6.4
 
 Before you start, complete the [Pre-Upgrade Requirements](./index.md#pre-upgrade-requirements), then apply the changes below with the [Upgrade Procedure](./index.md#upgrade-procedure).
 
 :::warning IMPORTANT
-Review the Keycloak upgrading guide from [Migrating to 26.6.0](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-0) to [Migrating to 26.6.5](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-5) before the upgrade.
+Review the Keycloak upgrading guide from [Migrating to 26.6.0](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-0) to [Migrating to 26.6.4](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-4) before the upgrade.
 
 This page covers only the CodeMie Helm chart and cannot account for custom Keycloak settings.
 :::
@@ -21,18 +21,18 @@ This page covers only the CodeMie Helm chart and cannot account for custom Keycl
 
 | Parameter  | Current Value | New Value |
 | ---------- | ------------- | --------- |
-| appVersion | 26.5.7        | 26.6.5    |
+| appVersion | 26.5.7        | 26.6.4    |
 
 ## Changes for `keycloak-helm/values-<cloud_name>.yaml`
 
 | Parameter           | Current Value | New Value |
 | ------------------- | ------------- | --------- |
-| keycloakx.image.tag | `26.5.7`      | `26.6.5`  |
+| keycloakx.image.tag | `26.5.7`      | `26.6.4`  |
 
 ```yaml
 keycloakx:
   image:
-    tag: 26.6.5
+    tag: 26.6.4
 ```
 
 ## JavaScript Policies
