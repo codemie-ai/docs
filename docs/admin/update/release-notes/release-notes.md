@@ -42,7 +42,7 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 <h4>Keycloak 26.5.7 (keycloakx 7.1.9)</h4>
 
-Updated Keycloak to 26.5.7 (up from 26.5.6). The keycloakx chart stays at 7.1.9. For details, see the [Keycloak 26.5.7 Release Notes ↗](https://github.com/keycloak/keycloak/releases/tag/26.5.7).
+Updated Keycloak to 26.5.7 (up from 26.5.6). For details, see the [Keycloak 26.5.7 Release Notes ↗](https://github.com/keycloak/keycloak/releases/tag/26.5.7).
 
 **Upgrade instructions:** [Keycloak Upgrade 26.4.5 → 26.5.7](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5.md)
 
