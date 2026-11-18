@@ -1,6 +1,6 @@
 ---
 id: keycloak-26-4-to-26-5
-sidebar_position: 9
+sidebar_position: 7
 title: Keycloak Upgrade 26.4.5 → 26.5.7
 description: Upgrade Keycloak from 26.4.5 to 26.5.7
 pagination_prev: admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-upgrade
