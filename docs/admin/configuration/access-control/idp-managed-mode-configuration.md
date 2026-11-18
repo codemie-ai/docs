@@ -16,8 +16,13 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 
 In **IdP-managed mode** (`IDP_MANAGED_ENABLED=true`), the identity provider (IdP) owns users, the platform
 administrator role, and project membership. The platform exposes a management API under `/v1/idp-sync/`. An external
-sync job, run by the customer, calls this API to bring the IdP state into the platform. Changes made
-through the platform UI or API are refused, so the IdP stays the single source of truth.
+sync job, run by the customer, calls this API to bring the IdP state into the platform. Changes to these data
+made through the platform UI or API are refused, so the IdP stays the single source of truth. An administrator can
+still edit the name, the picture, the user type, and the maintainer and auditor flags in the UI. The next sync
+overwrites the name, the picture, and the role flags, and the user type when the job sends it.
+
+This page is written and verified for Keycloak. Other identity providers are covered by a note in
+[Step 1](#step-1-create-the-idp-client-for-the-sync-job); that setup has not been verified.
 
 The platform ships the API and the switch only. It does not ship the sync job, a scheduler, or a sync image.
 The job and its scheduling live on the customer side.
@@ -29,12 +34,16 @@ turns `ENABLE_USER_MANAGEMENT` on.
 
 - Requests that change users, administrator status, or project membership through the platform return `403`.
 - Reads and user budgets keep working.
-- The mode is exposed in the public configuration, so the UI hides the editing controls.
-- The mode does not depend on a particular IdP: the management API reads only standard token claims, and the sync job writes users and project membership through it.
+- The mode is exposed in the public configuration, so the UI can hide the editing controls.
+- The Provisioning API refuses, with the same `403`, a request that would create a project or assign project
+  admins. Budgets and cost centers of existing projects keep working.
+- The platform does not start with `IDP_PROVIDER=local`: that provider accepts only platform tokens, so the sync job
+  cannot authenticate.
 
 :::note
-The maintainer and auditor flags can still be edited in the administrator UI while the mode is on. If the
-sync job manages these roles, its next run overwrites a manual change.
+The name, the picture, the user type, and the maintainer and auditor flags can still be edited in the
+administrator UI while the mode is on. The next sync run overwrites the name, the picture, and the role flags,
+and also the user type if the job sends it.
 :::
 
 ## Prerequisites
@@ -46,25 +55,29 @@ sync job manages these roles, its next run overwrites a manual change.
 
 ## Step 1: Create the IdP Client for the Sync Job
 
-1. In the IdP, create a client (an application registration) for the sync job.
+1. In the Keycloak realm, create a client for the sync job.
 2. Set client authentication to **On**, so the client is confidential.
-3. Enable the client credentials grant (in Keycloak: **Service accounts roles**).
+3. Enable the client credentials grant (**Service accounts roles**).
 4. Make the access token of the service account carry the claims listed below. A service account has no
-   `name` and no `user_type` by default, so both need hardcoded-claim mappers (in Keycloak) or an equivalent claim configuration.
+   `name` by default, so it needs a hardcoded-claim mapper.
 
-   | Claim                | Value                                                                                                                                                                       |
-   | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | `sub`                | The ID of the service account user in the IdP. The platform looks the user up by it.                                                                                        |
-   | `preferred_username` | The user name of the service account, for example `service-account-<client-id>` in Keycloak. Must equal `IDP_SYNC_SERVICE_ACCOUNT_USERNAME`, the same on every environment. |
-   | `name`               | A display name (hardcoded-claim mapper).                                                                                                                                    |
-   | `realm_access.roles` | The roles of the service account (in Keycloak, the realm roles).                                                                                                            |
-   | `user_type`          | The fixed value `service_account` (hardcoded-claim mapper).                                                                                                                 |
+   | Claim                | Value                                                                                                                                               |
+   | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `sub`                | The ID of the service account user in the IdP. The platform looks the user up by it.                                                                |
+   | `preferred_username` | The user name of the service account, `service-account-<client-id>`. Must equal `IDP_SYNC_SERVICE_ACCOUNT_USERNAME`, the same on every environment. |
+   | `name`               | A display name (hardcoded-claim mapper).                                                                                                            |
+   | `realm_access.roles` | The realm roles of the service account.                                                                                                             |
 
    The platform refuses the API to any token whose user name differs from
-   `IDP_SYNC_SERVICE_ACCOUNT_USERNAME` or whose `user_type` is not `service_account`. Without the other
-   claims, the call can fail with `401` or `403`.
+   `IDP_SYNC_SERVICE_ACCOUNT_USERNAME`. Without the other claims, the call can fail with `401` or `403`.
 
 5. Store the client ID and the client secret in the secret store of the system that runs the job.
+
+:::note Other identity providers
+With the OIDC and Entra ID plugins the platform takes the user name from the `email` claim, and the token must
+carry `email` and `groups`. A client-credentials token usually has neither, so `IDP_SYNC_SERVICE_ACCOUNT_USERNAME`
+would have to equal the `email` claim of that token. This setup has not been verified.
+:::
 
 :::warning
 The same client credentials that read the IdP also authorize writes to the platform. Treat the client secret
@@ -104,7 +117,9 @@ run, check all of the following:
 
    The response status is `200`.
 
-2. The same request with a forged `x-auth-request-access-token` header and no valid token is rejected.
+2. The same request with a forged `x-auth-request-access-token` header and no valid token is rejected. With
+   Keycloak and `JWKS_VALIDATION_ENABLED=false`, this is the header the platform trusts. With the other IdPs the
+   platform reads `Authorization: Bearer`, so forge that header instead.
 3. A direct call to the backend service that bypasses the proxy returns `401`.
 4. The backend has no network path other than through the proxy.
 
@@ -137,7 +152,7 @@ If a step fails:
 ## Maintainer and Auditor Roles
 
 Besides users, project membership, and the administrator flag, the API carries the maintainer and auditor
-flags. Which IdP roles map to them (in Keycloak, realm roles) is a setting of the sync job, not of the platform. The
+flags. Which Keycloak realm roles map to them is a setting of the sync job, not of the platform. The
 following rules apply to the flags:
 
 - The auditor flag is independent of other roles.
@@ -151,7 +166,7 @@ When a role is switched on in the job for the first time, the next run removes i
 hold the corresponding role in the IdP. The roles must be handed out in the IdP first, then checked in a dry
 run, and only then switched on.
 
-An older job that does not send `is_maintainer` and `is_auditor` leaves the stored flags unchanged.
+An older job that does not send `is_maintainer`, `is_auditor`, or `user_type` leaves the stored values unchanged.
 
 ## Management API Contract
 
@@ -169,22 +184,25 @@ All routes are under `/v1/idp-sync/` and are available to the service account fr
 
 The body of `PUT /v1/idp-sync/users/{user_id}`:
 
-| Field           | Required | Description                                                                                          |
-| --------------- | -------- | ---------------------------------------------------------------------------------------------------- |
-| `id`            | Yes      | The IdP user ID (UUID, the token subject).                                                           |
-| `email`         | Yes      | The user email.                                                                                      |
-| `username`      | Yes      | The login name.                                                                                      |
-| `name`          | Yes      | The display name.                                                                                    |
-| `is_admin`      | Yes      | The platform administrator flag.                                                                     |
-| `picture`       | No       | An avatar URL, up to 1024 characters. An omitted or empty value leaves the stored picture unchanged. |
-| `is_maintainer` | No       | The maintainer flag. Requires `is_admin=true`.                                                       |
-| `is_auditor`    | No       | The auditor flag.                                                                                    |
+| Field           | Required | Description                                                                                                                                       |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`            | Yes      | The IdP user ID (UUID, the token subject).                                                                                                        |
+| `email`         | Yes      | The user email.                                                                                                                                   |
+| `username`      | Yes      | The login name.                                                                                                                                   |
+| `name`          | Yes      | The display name.                                                                                                                                 |
+| `is_admin`      | Yes      | The platform administrator flag.                                                                                                                  |
+| `user_type`     | No       | `regular` or `external`; `service_account` is refused with `422`. An omitted value leaves the stored type unchanged, and a new user is `regular`. |
+| `picture`       | No       | An avatar URL, up to 1024 characters. An omitted or empty value leaves the stored picture unchanged.                                              |
+| `is_maintainer` | No       | The maintainer flag. Requires `is_admin=true`.                                                                                                    |
+| `is_auditor`    | No       | The auditor flag.                                                                                                                                 |
 
 Notable refusals:
 
 - Personal projects cannot be assigned or removed (`409`). The same applies to the project creator on removal.
-- The last active administrator and the sync account itself cannot be deactivated.
-- The last active administrator or maintainer cannot be demoted (`409`).
+- The sync account itself cannot be deactivated.
+- The last active administrator or maintainer cannot be demoted or deactivated (`409`). The sync account can
+  deactivate a maintainer. A job treats this `409` as a refusal for that one user.
+- A project name with a space at the start or at the end is refused with `422` on assign and unassign.
 - A reactivated user keeps memberships and member budget allocations. Only the missing budget shares are
   added, so limits set by a project administrator survive.
 
