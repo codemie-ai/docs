@@ -9,10 +9,10 @@ pagination_next: null
 
 # Upgrade Keycloak from 26.4.5 to 26.5.7
 
-The full description of Keycloak migration changes is in the [Keycloak upgrading guide](https://www.keycloak.org/docs/latest/upgrading/index.html). Apply the changes below with the [generic upgrade procedure](./index.md).
+Before you start, complete the [Pre-Upgrade Requirements](./index.md#pre-upgrade-requirements), then apply the changes below with the [Upgrade Procedure](./index.md#upgrade-procedure).
 
 :::warning IMPORTANT
-Make sure only one Keycloak pod runs during the upgrade, and back up the database first.
+Review the [Keycloak upgrading guide](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-5-7) from "Migrating to 26.5.7" down to "Migrating to 26.4.6" before the upgrade. This page covers only the CodeMie Helm chart. Your Keycloak can have realm, client, identity provider or theme settings that these changes affect.
 :::
 
 ## Changes for `keycloak-helm/Chart.yaml`
