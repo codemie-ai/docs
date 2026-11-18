@@ -14,7 +14,7 @@ Before you start, complete the [Pre-Upgrade Requirements](./index.md#pre-upgrade
 :::warning IMPORTANT
 Review the Keycloak upgrading guide from [Migrating to 26.4.6](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-4-6) to [Migrating to 26.5.7](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-5-7) before the upgrade.
 
-This page covers only the CodeMie Helm chart and cannot account for custom settings in your Keycloak.
+This page covers only the CodeMie Helm chart and cannot account for custom Keycloak settings.
 :::
 
 ## Changes for `keycloak-helm/Chart.yaml`
