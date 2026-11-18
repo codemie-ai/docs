@@ -60,7 +60,7 @@ When the toggle is **On**, the integration dropdown is hidden — no manual sele
 
 ![Automatic Credentials Lookup toggle enabled](./images/automatic-credentials-lookup-on.png)
 
-When the toggle is **Off**, the dropdown becomes visible and a specific integration can be pinned:
+When the toggle is **Off**, the dropdown becomes visible and a specific integration can be pinned. If no integration of the tool's type is available yet, an **Add User Integration** button is shown in place of the dropdown:
 
 ![Automatic Credentials Lookup toggle disabled with integration dropdown](./images/automatic-credentials-lookup-off.png)
 
@@ -254,6 +254,8 @@ As the number of integrations grows, the filter panel on the **Integrations** pa
 | **Created by** | **Scope: Project**                                        | Filters Project integrations by creator: **Me** checkbox or a user selected from the list              |
 
 **Clear all** at the top of the filter panel resets the search and all filters.
+
+![Filter panel with Scope: Project and the Created by filter](./images/integrations-scope-filters.png)
 
 The selected **Scope** is kept in the page URL (for example, `?scope=project`). After **Cancel**, **Save**, or the back arrow in the **New Integration** form, the list opens with the same scope selected. The **Project**, **Type**, and **Global** filters and the search are kept in the URL as well.
 
