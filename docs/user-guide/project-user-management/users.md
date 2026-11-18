@@ -26,7 +26,7 @@ guide.
 :::
 
 :::note IdP-managed mode
-In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (✨ Enterprise), Keycloak owns users and the administrator role. Changes to these data made in the platform are refused. They are made in Keycloak and reach the platform with the next run of the sync job.
+In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (✨ Enterprise), the identity provider (IdP) owns users and the administrator role. Changes to these data made in the platform are refused. They are made in the IdP and reach the platform with the next run of the sync job.
 :::
 
 The Users Management page gives Platform Admins a unified view of all users registered on the
