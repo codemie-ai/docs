@@ -21,6 +21,8 @@ The model catalog is read from whatever LLM integration is configured for the de
 
 The page requires the global `admin` role. It is not visible to users with the maintainer, auditor, or project admin role.
 
+![Global model management page](./images/global-model-management/global-model-management-overview.png)
+
 ## Model Catalog
 
 The table on the page lists every chat and embedding model available on the platform.
@@ -53,6 +55,8 @@ Disabling a model that is actively used in production assistants or workflows wi
 Deprecating a model first is the recommended path: it blocks new selections while letting existing work continue unaffected, giving time to migrate.
 :::
 
+![Model status badges — enabled, deprecated, and disabled](./images/global-model-management/model-status-badges.png)
+
 ## Filtering the Catalog
 
 Use the filter controls above the table to narrow down the model list:
@@ -63,6 +67,8 @@ Use the filter controls above the table to narrow down the model list:
 - **Premium only**: hides non-premium models.
 
 The status summary line below the section heading reflects the filtered count. Filtering away a row that is currently selected also removes it from the selection automatically.
+
+![Status filter with Deprecated and Disabled selected](./images/global-model-management/filters-applied.png)
 
 ## Changing Model Status
 
@@ -80,6 +86,8 @@ The status summary line below the section heading reflects the filtered count. F
 3. Choose the target status from the **Bulk actions** menu.
 4. Click **Apply changes** to persist.
 
+![Bulk actions menu with four models selected](./images/global-model-management/model-bulk-actions.png)
+
 ## Applying and Discarding Changes
 
 All pending edits — both status changes and global default changes — are saved together.
@@ -88,6 +96,8 @@ All pending edits — both status changes and global default changes — are sav
 - **Discard changes**: Reverts all pending edits to the last saved state.
 
 If the page is left with unsaved changes and navigation is attempted, a confirmation prompt appears.
+
+![Rows with pending edits marked by the unsaved-changes indicator](./images/global-model-management/model-unsaved-changes.png)
 
 ## Global Default Model
 
@@ -101,6 +111,8 @@ The **Default models** section controls which model is used when an assistant or
 | **A specific model**       | Uses the selected model as the platform-wide default, overriding whatever the deployment configuration declares.                                  |
 
 Only enabled chat models that are not switchyard routers appear in the default model selector. Deprecated models are excluded.
+
+![Global default model selector open, showing available model options](./images/global-model-management/global-default-selector.png)
 
 ### Setting the Default
 
