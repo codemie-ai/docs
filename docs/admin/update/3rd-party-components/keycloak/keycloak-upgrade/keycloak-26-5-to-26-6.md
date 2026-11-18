@@ -48,4 +48,4 @@ SELECT r.name AS realm, c.client_id, p.name, pc.value AS code
  WHERE p.type = 'js';
 ```
 
-An empty result means no action. A policy named `Default Policy` with the code `$evaluation.grant();` was created automatically when Authorization was enabled on the client in an older Keycloak version. To remove it, open **Clients** → the client → **Authorization**, delete **Default Permission**, then **Default Policy**. To keep JavaScript policies, add `scripts` to `KC_FEATURES`.
+An empty result means no action. A policy named `Default Policy` with the code `$evaluation.grant();` was created automatically when Authorization was enabled on the client in an older Keycloak version. To remove it, open **Clients** → the client → **Authorization**, delete **Default Permission**, then **Default Policy**. A client created for the [Keycloak user migration](../../../../configuration/access-control/platform-managed-mode-configuration.md#create-keycloak-service-account-client) has such a policy; once the migration is finished, delete the whole client instead. To keep JavaScript policies, add `scripts` to `KC_FEATURES`.
