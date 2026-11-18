@@ -440,6 +440,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/project-user-management/projects',
             'user-guide/project-user-management/users',
+            'user-guide/project-user-management/invoker-role',
           ],
         },
         {
@@ -721,6 +722,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/access-control/initial-realm-setup',
                 'admin/configuration/access-control/platform-managed-mode-configuration',
+                'admin/configuration/access-control/invoker-role',
                 {
                   type: 'category',
                   label: 'User Provisioning',
