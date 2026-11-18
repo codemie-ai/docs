@@ -703,6 +703,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/api-configuration',
                 'admin/configuration/codemie/speech-to-text-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/global-model-management',
                 'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
                 'admin/configuration/codemie/provisioning-clients',
