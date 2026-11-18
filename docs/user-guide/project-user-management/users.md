@@ -25,6 +25,10 @@ is not visible, ask your administrator to follow the
 guide.
 :::
 
+:::note IdP-managed mode
+In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (✨ Enterprise), Keycloak owns users and the administrator role. Changes to these data made in the platform are refused. They are made in Keycloak and reach the platform with the next run of the sync job.
+:::
+
 The Users Management page gives Platform Admins a unified view of all users registered on the
 platform, their roles, and their project memberships. From this page, Platform Admins and
 Maintainers can filter users, inspect individual user details, manage project assignments, and
