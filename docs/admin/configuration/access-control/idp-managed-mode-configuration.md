@@ -200,7 +200,10 @@ The body of `PUT /v1/idp-sync/users/{user_id}`:
 
 Notable refusals:
 
-- Personal projects cannot be assigned or removed (`409`). The same applies to the project creator on removal.
+- The personal project of a user is named by the user email. The platform does not create it at login in this
+  mode: the job assigns it with the email as the project name, which creates the project when it is missing. A
+  removal takes the user out of the project and keeps the project. Another user's personal project is refused with
+  `409`. The project creator of any other project cannot be removed (`409`).
 - The sync account itself cannot be deactivated.
 - The last active administrator or maintainer cannot be demoted or deactivated (`409`). The sync account can
   deactivate a maintainer. A job treats this `409` as a refusal for that one user.
