@@ -69,20 +69,23 @@ No breaking configuration changes were introduced in this release.
 
 <h3>Third-Party Component Updates</h3>
 
-<h4>Keycloak 26.5.7</h4>
+<h4>Keycloak</h4>
 
-Updated Keycloak to 26.5.7.
+This release contains two Keycloak updates. They are independent and can be applied separately.
 
-**Upgrade instructions:** [Keycloak Upgrade 26.4.5 → 26.5.7](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5.md)
+1. **Keycloak image 26.5.7**
 
-<h4>Keycloak Helm chart 7.4.0</h4>
+   Updated Keycloak to 26.5.7.
 
-Updated the `keycloakx` Helm chart from 7.1.9 to 7.4.0 to prepare for the Envoy Gateway migration.
+   **Upgrade instructions:** [Keycloak Upgrade 26.4.5 → 26.5.7](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5.md)
 
-- Keycloak stays at 26.5.7.
-- The `dbchecker` init container image changed from `docker.io/busybox:1.32` to `docker.io/busybox:1.37`.
+2. **Keycloak Helm chart 7.4.0**
 
-**Upgrade instructions:** [Keycloak Upgrade](../3rd-party-components/keycloak/keycloak-upgrade/index.md)
+   Updated the `keycloakx` Helm chart from 7.1.9 to 7.4.0 to prepare for the Envoy Gateway migration.
+   - Keycloak keeps the version pinned in `keycloakx.image.tag` in the custom values.
+   - The `dbchecker` init container image changed from `docker.io/busybox:1.32` to `docker.io/busybox:1.37`.
+
+   **Upgrade instructions:** [Keycloak Upgrade](../3rd-party-components/keycloak/keycloak-upgrade/index.md)
 
 <h3>Configuration Changes</h3>
 
