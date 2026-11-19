@@ -130,27 +130,43 @@ no default is assigned, the user's personal project is used; a user without a pe
 falls back to the first of their projects by name.
 
 The default project answers the question "which project pays" whenever a request is not bound
-to a project of its own. Each request is attributed to one project as follows:
+to a specific project of its own — and serves as the first fallback when the asset project
+cannot pay.
 
-| Request                                                                                               | Project the request is attributed to  |
-| ----------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| Assistant, workflow, or data source that belongs to a project (not published to the Marketplace)      | That project — the default is ignored |
-| Marketplace assistant, user **is** a member of the assistant's project                                | The assistant's project               |
-| Marketplace assistant, user is **not** a member of the assistant's project                            | The user's default project            |
-| Actions not tied to a project asset — for example, AI generation of assistants, skills, and workflows | The user's default project            |
-| CLI agent or IDE request through the LLM proxy **with** a project configured in the CLI               | The configured project                |
-| CLI agent or IDE request through the LLM proxy **without** a configured project                       | The user's default project            |
+The table below shows how each request type is attributed. After the target project is
+identified, the fallback chain **target → default project → personal budget** applies: the
+first funded step is charged.
 
-After the project is chosen, the regular [Budget Priority](#budget-priority) rules apply. If the
-attributed project has no active budget that covers the request — including the user's member
-allocation and the project's Platform fallback — the request is charged to the user's personal
-or default budget. CodeMie does not search the user's other projects for a budget, and the
-missing project budget does not by itself block the request.
+| Request                                                                                            | Target project                                                              | Fallback chain                    |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------- |
+| Personal assistant — admin-assigned default project exists                                         | Default project                                                             | Personal budget                   |
+| Personal assistant — no admin-assigned default                                                     | Personal project                                                            | Personal budget                   |
+| Project assistant, workflow, or data source — user is a member; project is funded for the user     | Asset project                                                               | —                                 |
+| Project assistant, workflow, or data source — user is a member; project is not funded for the user | Default project                                                             | Personal budget                   |
+| Project assistant, workflow, or data source (shared) — user is not a member                        | Default project                                                             | Personal budget                   |
+| **Marketplace** (published) assistant or workflow — any user                                       | Default project                                                             | Personal budget                   |
+| Workflow node or sub-assistant using a saved assistant                                             | Rows above applied to that asset for the user who started the run           | Same                              |
+| Skill, AI generation, workflow generation (no asset)                                               | Default project                                                             | Personal budget                   |
+| CLI or IDE — no project specified                                                                  | Default project                                                             | Personal budget                   |
+| CLI or IDE — explicit project; user is a member                                                    | That project                                                                | Default project → personal budget |
+| CLI or IDE — explicit project; user is not a member (not admin or maintainer)                      | Request rejected (403)                                                      | —                                 |
+| CLI or IDE — explicit project; user is not a member (admin or Maintainer)                          | Default project (header ignored and logged)                                 | Personal budget                   |
+| Scheduled or webhook trigger                                                                       | Rows above applied to the trigger owner using their memberships and default | Same                              |
 
-Such requests are marked as a budget fallback in usage analytics: they carry the
-`budget_fallback_from` attribute with the name of the project that had no budget, so they can be
-told apart from ordinary personal usage. The `project` recorded with the spend is the project
-whose budget was actually charged.
+:::note
+Marketplace assistants always charge the user's default project, regardless of project
+membership. This applies even when the user is a member of the assistant's project.
+:::
+
+An exhausted budget is never bypassed — a hard limit blocks the request; a soft limit
+allows it with a warning. Neither case triggers a reroute.
+
+Fallback requests are marked in usage analytics with the `budget_fallback_from` attribute
+(the targeted project that had no funded budget), so they can be distinguished from ordinary
+personal usage. The `project` field records the project whose budget was actually charged.
+
+For the full attribution specification — including workflow nodes, triggers, CLI edge cases,
+and IDP-claims mode — see [Budget Attribution](./budget-attribution.md).
 
 #### Changing or Removing the Default Project
 
