@@ -81,7 +81,7 @@ The **Download** button in the **Preview** header downloads the selected file as
 Workspace files are never executed in the application:
 
 - HTML files are displayed as text. Only the optional **Preview** of the code block renders HTML, inside an isolated sandbox, as for HTML in chat.
-- HTML and scripts embedded in Markdown files are sanitized in the same way as assistant replies in chat.
+- HTML embedded in Markdown files is not rendered, as in assistant replies in chat. Tags such as `<script>` or `<img>` appear as literal text, so no script, event handler, or `javascript:` link is ever executed. The output is additionally sanitized before display.
 
 ## Limitations
 
