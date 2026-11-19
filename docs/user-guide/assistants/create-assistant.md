@@ -235,6 +235,12 @@ The setting is located in the **Extra configuration** section of the assistant c
 form. It is shown only when the selected **LLM model** supports effort; for such models it
 replaces **Temperature** and **Top P**.
 
+![Effort dropdown in the Extra configuration section for a reasoning model](./images/effort-assistant-dropdown.png)
+
+Models without effort support keep the **Temperature** and **Top P** fields:
+
+![Temperature and Top P fields for a model without effort support](./images/effort-assistant-temperature-model.png)
+
 **Behavior**
 
 - The levels in the dropdown are the ones the selected model supports. Possible levels are
@@ -244,6 +250,9 @@ replaces **Temperature** and **Top P**.
 - Changing the **LLM model** resets **Effort**, **Temperature** and **Top P**.
 - Selecting `xhigh` or `max` shows a non-blocking warning: _"Higher effort increases model
   thinking and may significantly increase token usage."_
+
+  ![Token usage warning shown when the max effort level is selected](./images/effort-assistant-max-effort-warning.png)
+
 - A saved effort is shown in the **Configuration** block of the assistant details page.
 
 **Field rules**
