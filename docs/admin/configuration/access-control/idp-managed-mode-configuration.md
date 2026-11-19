@@ -17,9 +17,8 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 In **IdP-managed mode** (`IDP_MANAGED_ENABLED=true`), the identity provider (IdP) owns users, the platform
 administrator role, and project membership. The platform exposes a management API under `/v1/idp-sync/`. An external
 sync job, run by the customer, calls this API to bring the IdP state into the platform. Changes to these data
-made through the platform UI or API are refused, so the IdP stays the single source of truth. An administrator can
-still edit the name, the picture, the user type, and the maintainer and auditor flags in the UI. The next sync
-overwrites the name, the picture, and the role flags, and the user type when the job sends it.
+made through the platform UI or API are refused, so the IdP stays the single source of truth. The administrator UI
+hides the controls for these changes and shows the user type and the maintainer and auditor flags as read-only.
 
 This page is written and verified for Keycloak. Other identity providers are covered by a note in
 [Step 1](#step-1-create-the-idp-client-for-the-sync-job); that setup has not been verified.
@@ -34,16 +33,19 @@ turns `ENABLE_USER_MANAGEMENT` on.
 
 - Requests that change users, administrator status, or project membership through the platform return `403`.
 - Reads and user budgets keep working.
-- The mode is exposed in the public configuration, so the UI can hide the editing controls.
+- The mode is exposed in the public configuration, so the UI hides the editing controls for:
+  - creating, deactivating, and reactivating users;
+  - assigning users to a project, removing them, and changing their project role, including bulk actions and import;
+  - creating and deleting projects;
+  - changing the project owner.
 - The Provisioning API refuses, with the same `403`, a request that would create a project or assign project
   admins. Budgets and cost centers of existing projects keep working.
 - The platform does not start with `IDP_PROVIDER=local`: that provider accepts only platform tokens, so the sync job
   cannot authenticate.
 
 :::note
-The name, the picture, the user type, and the maintainer and auditor flags can still be edited in the
-administrator UI while the mode is on. The next sync run overwrites the name, the picture, and the role flags,
-and also the user type if the job sends it.
+Budget actions stay available in the UI. The sync sets the name, the picture, and the role flags, and the user
+type when the job sends it.
 :::
 
 ## Prerequisites
@@ -203,6 +205,7 @@ Notable refusals:
 - The last active administrator or maintainer cannot be demoted or deactivated (`409`). The sync account can
   deactivate a maintainer. A job treats this `409` as a refusal for that one user.
 - A project name with a space at the start or at the end is refused with `422` on assign and unassign.
+- A new user gets the default budget, and a membership change re-splits the equal member shares of the project.
 - A reactivated user keeps memberships and member budget allocations. Only the missing budget shares are
   added, so limits set by a project administrator survive.
 

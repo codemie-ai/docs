@@ -26,7 +26,7 @@ guide.
 :::
 
 :::note IdP-managed mode
-In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (Enterprise package), the identity provider (IdP) owns users and the administrator role. Changes to these data made in the platform are refused. They are made in the IdP and reach the platform with the next run of the sync job. An administrator can still edit the name, the picture, the user type, and the maintainer and auditor flags; the next sync overwrites the name, the picture, and the role flags, and the user type if the job sends it.
+In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (Enterprise package), the identity provider (IdP) owns users and the administrator role. Changes to these data are made in the IdP and reach the platform with the next run of the sync job. The controls for these changes are hidden in the interface, and the platform API refuses the requests. The user type and the maintainer and auditor flags are read-only.
 :::
 
 The Users Management page gives Platform Admins a unified view of all users registered on the
