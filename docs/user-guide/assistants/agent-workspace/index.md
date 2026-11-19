@@ -15,9 +15,12 @@ Each chat has an agent workspace: a set of files that the assistant creates or m
 
 1. Open a chat with an assistant.
 2. In the chat header, click the **Browse files** button. The **Agent workspace** dialog opens.
+
+   ![Chat header with the Browse files button highlighted](./images/workspace-browse-files-button.png)
+
 3. Select a file in the list on the left. The **Preview** area on the right shows its content.
 
-![Agent workspace dialog with the file list on the left and the preview of the selected file on the right](./images/workspace-dialog-overview.png)
+   ![Agent workspace dialog with the file list on the left and the preview of the selected file on the right](./images/workspace-dialog-overview.png)
 
 If the chat has no workspace files, the dialog shows **No files found.** Until a file is selected, the preview area shows **Select a file from the list to see its preview.**
 
