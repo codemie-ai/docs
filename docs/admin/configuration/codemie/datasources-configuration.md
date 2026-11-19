@@ -307,7 +307,7 @@ sharepoint_loader:
 - `max_file_size_mb` - Files exceeding this limit are skipped during indexing
 - `graph_api_version` - Update if a newer stable Graph API version is required
 - `max_retries` - Increase for unstable network connections to SharePoint
-- `fetch_timeout_seconds` - A SharePoint datasource still in Fetching after this time (default 30 minutes) is moved to Error with a message that says how to recover it. The check runs in the stale-indexing watchdog, so it only applies when the trigger engine is running and `STALE_INDEXING_WATCHDOG_ENABLED` is `true` (see [API Configuration](./api-configuration.md)). Keep it at 60 seconds or more
+- `fetch_timeout_seconds` - A SharePoint datasource still in Fetching after this time (default 30 minutes) is moved to Error with a message that says how to recover it. The check runs every minute as a trigger engine job, so it applies whenever the trigger engine is running (see [Trigger Engine](./api-configuration.md#trigger-engine)). It doesn't depend on `STALE_INDEXING_WATCHDOG_ENABLED`. Keep it at 60 seconds or more
 
 ### SVN Loader
 
