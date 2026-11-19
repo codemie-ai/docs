@@ -173,12 +173,14 @@ personal budget.
 
 ## Analytics Attribution
 
-Usage analytics record each charged request with two fields:
+Usage analytics record each charged request with the following fields:
 
-| Field                  | Description                                                                                                                                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `project`              | The project whose budget was actually charged                                                                                                                                              |
-| `budget_fallback_from` | Present only on fallback requests. The name of the project that was targeted but had no funded budget for the user. Distinguishes a default-project fallback from ordinary personal usage. |
+| Field                    | Description                                                                                                                                                                                                                                                                |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `project`                | The project whose budget was actually charged.                                                                                                                                                                                                                             |
+| `budget_fallback_from`   | Present only on fallback requests. The name of the project that was targeted but had no funded budget for the user.                                                                                                                                                        |
+| `budget_fallback_kind`   | Present only on fallback requests. `default_project` when the charge landed on the user's default project; `personal` when it landed on the personal budget. Use this field to distinguish the two fallback types — `budget_fallback_from` alone does not tell them apart. |
+| `budget_funding_unknown` | `true` when the fallback decision was made while the funding check for the target project could not be completed (for example, a transient error). The request proceeded rather than being blocked, and the recorded attribution reflects the fallback that was applied.   |
 
 ---
 

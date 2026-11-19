@@ -162,8 +162,9 @@ An exhausted budget is never bypassed — a hard limit blocks the request; a sof
 allows it with a warning. Neither case triggers a reroute.
 
 Fallback requests are marked in usage analytics with the `budget_fallback_from` attribute
-(the targeted project that had no funded budget), so they can be distinguished from ordinary
-personal usage. The `project` field records the project whose budget was actually charged.
+(the targeted project that had no funded budget) and `budget_fallback_kind`, which records
+whether the charge landed on the `default_project` or the `personal` budget. The `project`
+field records the project whose budget was actually charged.
 
 For the full attribution specification — including workflow nodes, triggers, CLI edge cases,
 and IDP-claims mode — see [Budget Attribution](./budget-attribution.md).
@@ -301,7 +302,7 @@ LLM usage triggered by a Webhook or Workflow is charged to the budget of the use
 - Budgets for Platform, CLI, and Premium Models categories are independent. Configuring a Platform budget does not automatically cover CLI or premium model requests — each category must be configured separately.
 - Project budget has the highest priority and overrides personal and default budgets — but only when the project has at least one budget configured. If the project has no budgets at all, personal and default budgets apply normally.
 - When a project budget is active, the user's personal and default budgets are not affected and are not charged.
-- Requests that are not tied to a project — Marketplace assistants used by non-members, AI generation, and CLI requests without a configured project — are charged to the user's [default project](#default-project). If that project has no budget for the request, the personal or default budget is charged instead.
+- Requests that are not tied to a specific project asset — all Marketplace assistants and workflows (regardless of project membership), AI generation, and CLI requests without a configured project — are charged to the user's [default project](#default-project). If that project has no budget for the request, the personal budget is charged instead. See [Marketplace (Published) Assets](./budget-attribution.md#marketplace-published-assets) for details.
 - ⚠️ **Platform budget is the universal fallback within a project context.** If a project has budgets for some categories but not others, requests to uncovered categories fall back to the project's Platform budget — not to personal or default budgets. The only exception is a Premium-only project (no Platform budget configured): in this case both Platform and CLI requests fall back to personal/default Platform budget, as the system always resolves uncovered categories through the Platform fallback path. To track each category separately within a project, configure Platform, CLI, and Premium Models budgets on the project explicitly.
 
 ## Spending Data Update Frequency
