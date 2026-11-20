@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # apply-keycloak-theme - write the Keycloak login and email theme files of a Keycloak theme package into
-# <output-dir>/keycloak and its mirror <chart-dir>/theme. Prints on stdout the names-only YAML for
-# the values of keycloak-helm and oauth2-proxy. The script writes files only: no base64, no values
-# file, no cluster call. Deploy with helm-charts.sh afterwards.
+# the folder named by --output-dir (created when missing; only the owned files are written, nothing
+# else in the folder is touched). With --chart-dir the theme is also mirrored to <chart-dir>/theme and
+# the names-only YAML for the chart values is printed on stdout. The script writes files only: no
+# base64, no values file, no cluster call.
 # Prerequisites: yq >=4 (mikefarah), ajv-cli >=5
 set -euo pipefail
 
@@ -16,38 +17,30 @@ KIT_BRAND_VERSION=1
 # shellcheck source=lib/common.sh
 source "$SCRIPT_DIR/lib/common.sh"
 
-# --chart-dir is handled here until the script drops the chart mirror
 kit_usage() {
-  echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>] [--chart-dir <keycloak-helm-folder>]" >&2
+  echo "Usage: $KIT_SCRIPT --output-dir <theme-folder> [--chart-dir <keycloak-helm-folder>]" >&2
   echo "         <keycloak-theme-package.yaml> <source-dir>" >&2
   echo "" >&2
-  echo "  --output-dir  assets folder of the wrapper chart (default: codemie-ui/assets)" >&2
-  echo "  --chart-dir   Keycloak chart folder; the theme is mirrored to <chart-dir>/theme (default: keycloak-helm)" >&2
-  echo "  <source-dir>  folder with the logo, favicon and email logo files" >&2
-  echo "Run the script from the root of the charts repository. Options go before the two arguments." >&2
+  echo "  --output-dir  folder that receives the theme files (required; any path, created when missing)" >&2
+  echo "  --chart-dir   Keycloak chart folder (optional; must exist): the theme is mirrored to <chart-dir>/theme" >&2
+  echo "                and the names-only YAML for the chart values is printed on stdout" >&2
+  echo "  <source-dir>  folder with the logo and favicon files" >&2
+  echo "Options go before the two arguments." >&2
   exit 1
 }
-CHART_DIR="keycloak-helm"
-REST=()
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --chart-dir)
-      [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
-      CHART_DIR="$2"
-      shift 2
-      ;;
-    --output-dir)
-      REST+=("$1")
-      if [[ $# -ge 2 ]]; then REST+=("$2"); shift; fi
-      shift
-      ;;
-    *)
-      REST+=("$1")
-      shift
-      ;;
-  esac
-done
-kit_parse_args "codemie-ui/assets" ${REST[@]+"${REST[@]}"}
+
+# the option of this script that the shared parser does not know
+CHART_DIR=""
+kit_parse_option() {
+  if [[ "$1" == "--chart-dir" ]]; then
+    [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
+    CHART_DIR="$2"
+    KIT_OPT_SHIFT=2
+    return 0
+  fi
+  return 1
+}
+kit_parse_args "" "$@"
 kit_init
 
 # Step 1 and 2: every check ends before anything is written
@@ -58,9 +51,14 @@ THEME_NAME=$(kit_str "$PACKAGE_FILE" '.themeName')
 for reserved in "${KIT_RESERVED_THEMES[@]}"; do
   [[ "$THEME_NAME" != "$reserved" ]] || kit_die "themeName: '$reserved' is reserved, choose another name"
 done
-kit_guard_target "$OUTPUT_DIR" keycloak || exit 1
-[[ -d "$CHART_DIR" ]] || kit_die "chart folder not found: $CHART_DIR"
-kit_guard_target "$CHART_DIR" theme || exit 1
+A_IMAGES=$(printf '%s\n' "$(kit_str "$PACKAGE_FILE" .assets.logoLight)" "$(kit_str "$PACKAGE_FILE" .assets.logoDark)" "$(kit_str "$PACKAGE_FILE" .assets.favicon)" "$(kit_str "$PACKAGE_FILE" .assets.faviconSvg)" | LC_ALL=C sort -u)
+OWNED=(login/theme.properties login/resources/css/brand.css email/theme.properties)
+while IFS= read -r img; do OWNED+=("login/resources/img/$img"); done <<<"$A_IMAGES"
+kit_guard_output_dir "$OUTPUT_DIR" "${OWNED[@]}" || exit 1
+if [[ -n "$CHART_DIR" ]]; then
+  [[ -d "$CHART_DIR" ]] || kit_die "chart folder not found: $CHART_DIR"
+  kit_guard_target "$CHART_DIR" theme || exit 1
+fi
 
 # Step 3: generate the owned files once, then build both targets from them
 PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
@@ -69,7 +67,7 @@ A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
 A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
 A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
 A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
-GEN="$TMP_ROOT/generated"
+GEN="$TMP_ROOT/stage"
 mkdir -p "$GEN/login/resources/css" "$GEN/login/resources/img" "$GEN/email"
 
 # one "key=value" line per call; the input checks keep backslash and control characters out
@@ -110,46 +108,34 @@ for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG"; do
   cp "$SOURCE_DIR/$name" "$GEN/login/resources/img/$name"
 done
 
-# _build <existing folder> <new folder>: keep what the script does not own, replace what it owns.
-# Owned: login/theme.properties, login/resources/css/brand.css, the files of login/resources/img
-# (except .gitkeep) and email/theme.properties.
-_build() {
-  local existing="$1" new="$2"
-  if [[ -d "$existing" ]]; then cp -R "$existing/." "$new/"; fi
-  rm -f "$new/login/theme.properties" "$new/login/resources/css/brand.css" "$new/email/theme.properties"
-  if [[ -d "$new/login/resources/img" ]]; then
-    find "$new/login/resources/img" -type f ! -name .gitkeep -delete
-  fi
-  mkdir -p "$new/login/resources/css" "$new/login/resources/img" "$new/email"
-  cp -R "$GEN/." "$new/"
-}
-
-kit_stage "$(dirname "${OUTPUT_DIR%/}")"
-NEW_ASSETS="$STAGE"
-_build "$OUTPUT_DIR/keycloak" "$NEW_ASSETS"
-kit_stage "$CHART_DIR"
-NEW_MIRROR="$STAGE"
-_build "$CHART_DIR/theme" "$NEW_MIRROR"
-
-# Step 4: the only step that changes the output
-mkdir -p "$OUTPUT_DIR"
-kit_swap_dir "$NEW_ASSETS" "$OUTPUT_DIR/keycloak"
-kit_swap_dir "$NEW_MIRROR" "$CHART_DIR/theme"
-
-echo "apply-keycloak-theme: files written to $OUTPUT_DIR/keycloak and $CHART_DIR/theme" >&2
-echo "  Paste the YAML below into keycloak-helm/values-<cloud>.yaml (keycloakx) and oauth2-proxy/values-<cloud>.yaml (realm)." >&2
-echo "  Check that the theme name is the same in both files, then deploy with helm-charts.sh." >&2
-
-IMAGES=$(printf '%s\n' "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG" | LC_ALL=C sort -u)
-echo "# keycloak-helm/values-<cloud>.yaml"
-echo "keycloakx:"
-echo "  childTheme:"
-echo "    enabled: true"
-echo "    name: $THEME_NAME"
-echo "    images:"
-while IFS= read -r img; do echo "      - $img"; done <<<"$IMAGES"
-echo "# oauth2-proxy/values-<cloud>.yaml"
-echo "realm:"
-echo "  themes:"
-echo "    loginTheme: $THEME_NAME"
-echo "    emailTheme: $THEME_NAME"
+# Step 4: the only step that changes anything. The mirror copy is staged first (the moves empty the
+# stage folder). Each owned file is moved by itself into --output-dir; the folder and its owned
+# sub-folders are created when missing, nothing else is touched.
+if [[ -n "$CHART_DIR" ]]; then
+  kit_stage "$CHART_DIR"
+  MIRROR_STAGE="$STAGE"
+  cp -R "$GEN/." "$MIRROR_STAGE/"
+fi
+for rel in "${OWNED[@]}"; do
+  kit_move_owned_file "$GEN/$rel" "$OUTPUT_DIR/$rel"
+done
+TARGETS=("folder $OUTPUT_DIR")
+if [[ -n "$CHART_DIR" ]]; then
+  # the mirror target belongs to the script: whole-folder swap
+  kit_swap_dir "$MIRROR_STAGE" "$CHART_DIR/theme"
+  TARGETS+=("mirror $CHART_DIR/theme")
+  IMAGES="$A_IMAGES"
+  echo "# keycloak-helm/values-<cloud>.yaml"
+  echo "keycloakx:"
+  echo "  childTheme:"
+  echo "    enabled: true"
+  echo "    name: $THEME_NAME"
+  echo "    images:"
+  while IFS= read -r img; do echo "      - $img"; done <<<"$IMAGES"
+  echo "# oauth2-proxy/values-<cloud>.yaml"
+  echo "realm:"
+  echo "  themes:"
+  echo "    loginTheme: $THEME_NAME"
+  echo "    emailTheme: $THEME_NAME"
+fi
+for t in "${TARGETS[@]}"; do echo "$KIT_SCRIPT: written $t" >&2; done

@@ -50,7 +50,8 @@ kit_usage() {
   exit 1
 }
 
-# kit_parse_args <default output dir> "$@": sets OUTPUT_DIR, PACKAGE_FILE and SOURCE_DIR
+# kit_parse_args <default output dir> "$@": sets OUTPUT_DIR, PACKAGE_FILE and SOURCE_DIR.
+# An empty default means --output-dir is required (the script checks it with the output guard).
 kit_parse_args() {
   OUTPUT_DIR="$1"
   KIT_DEFAULT_OUTPUT_DIR="$1"
@@ -64,6 +65,11 @@ kit_parse_args() {
         ;;
       --help | -h) kit_usage ;;
       -*)
+        # a script with an option of its own defines kit_parse_option: it sets KIT_OPT_SHIFT and returns 0
+        if declare -F kit_parse_option >/dev/null && kit_parse_option "$@"; then
+          shift "$KIT_OPT_SHIFT"
+          continue
+        fi
         echo "Unknown option: $1" >&2
         kit_usage
         ;;
@@ -314,4 +320,64 @@ kit_swap_dir() {
   fi
   if [[ -n "$backup" ]]; then rm -rf "$backup"; fi
   return 0
+}
+
+# kit_guard_output_dir <folder> <owned relative file>...
+# The guard of a folder the script writes owned files into (it never swaps or deletes the folder).
+# Refuses (returns 1 with a message) an empty value, /, ., .., $HOME, a symlink, a path that is no
+# folder, and an owned path that is a symlink or a folder. A missing folder is fine: it is created later.
+kit_guard_output_dir() {
+  local dir="$1" base phys home p comp cur rest
+  shift
+  if [[ -z "$dir" ]]; then
+    echo "$KIT_SCRIPT: --output-dir is required and must not be empty" >&2
+    return 1
+  fi
+  while [[ "$dir" == */ && "$dir" != "/" ]]; do dir="${dir%/}"; done
+  base="${dir##*/}"
+  if [[ "$dir" == "/" || "$base" == "." || "$base" == ".." ]]; then
+    echo "$KIT_SCRIPT: refusing to write into '$dir': name a theme folder, not /, . or .." >&2
+    return 1
+  fi
+  if [[ -L "$dir" ]]; then
+    echo "$KIT_SCRIPT: $dir is a symbolic link; refusing to write through it" >&2
+    return 1
+  fi
+  if [[ -e "$dir" && ! -d "$dir" ]]; then
+    echo "$KIT_SCRIPT: $dir is not a folder" >&2
+    return 1
+  fi
+  if [[ -d "$dir" ]]; then
+    phys=$(cd -P "$dir" && pwd)
+    home=$(cd -P "${HOME:-/nonexistent}" 2>/dev/null && pwd) || home=""
+    if [[ "$phys" == "/" || "$phys" == "$home" ]]; then
+      echo "$KIT_SCRIPT: refusing to write into $dir: it is / or the home folder" >&2
+      return 1
+    fi
+  fi
+  for p in "$@"; do
+    cur="$dir"
+    rest="$p"
+    while [[ -n "$rest" ]]; do
+      comp="${rest%%/*}"
+      if [[ "$rest" == */* ]]; then rest="${rest#*/}"; else rest=""; fi
+      cur="$cur/$comp"
+      if [[ -L "$cur" ]]; then
+        echo "$KIT_SCRIPT: $cur is a symbolic link; refusing to write through it" >&2
+        return 1
+      fi
+    done
+    if [[ -d "$dir/$p" ]]; then
+      echo "$KIT_SCRIPT: $dir/$p is a folder; it must be a file" >&2
+      return 1
+    fi
+  done
+  return 0
+}
+
+# kit_move_owned_file <staged file> <target file>: create the folders of the target when missing,
+# then rename the staged file over the target. Touches nothing else.
+kit_move_owned_file() {
+  mkdir -p "$(dirname "$2")"
+  mv -f "$1" "$2"
 }
