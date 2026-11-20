@@ -39,7 +39,7 @@ keycloakx:
 
 Since 26.8.2, the Keycloak Admin API accepts only tokens with the `kc-admin-api` scope. Other tokens get `401`, even with admin roles.
 
-The upgrade adds the scope to `admin-cli` and `security-admin-console` in every realm, so the Admin Console keeps working. These CodeMie clients need it added by hand:
+The upgrade adds the scope to `admin-cli` and `security-admin-console` in every realm, so the Admin Console and keycloak-operator, which logs in through `admin-cli`, keep working. These CodeMie clients need it added by hand:
 
 - `codemie-migration-client` of the [Keycloak user migration](../../../../configuration/access-control/platform-managed-mode-configuration.md#create-keycloak-service-account-client), if the migration has not run yet.
 - The client of a [Keycloak tool integration](../../../../../user-guide/tools_integrations/tools/keycloak.md), unless it is `admin-cli`.
