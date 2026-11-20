@@ -267,6 +267,21 @@ Each model entry in the `model_list` array consists of three main sections:
 - **`label`**: Human-readable display name shown in CodeMie UI
 - **`forbidden_for_web`**: (Optional) Set to `true` to hide this model from CodeMie UI
 - **`supports_image_generation`**: (Optional) Set to `true` to include this model in the image generation model selector. Typically combined with `forbidden_for_web: true` since image generation models are not intended for general chat.
+- **Effort and temperature flags**: (Optional) CodeMie reads these LiteLLM capability flags to
+  decide which **Effort** levels a model offers and whether it accepts `temperature`. They are
+  usually filled from the LiteLLM models database; set them in `model_info` only to override it.
+
+  | Flag                              | Effect in CodeMie                                                                                     |
+  | --------------------------------- | ----------------------------------------------------------------------------------------------------- |
+  | `supports_reasoning`              | Enables `low`, `medium`, `high` for non-Claude models                                                 |
+  | `supports_output_config`          | Enables `low`, `medium`, `high` for Claude models (Claude models need this or one of the flags below) |
+  | `supports_xhigh_reasoning_effort` | Adds `xhigh`                                                                                          |
+  | `supports_max_reasoning_effort`   | Adds `max`                                                                                            |
+  | `supports_sampling_params: false` | `temperature` is not sent to the model                                                                |
+
+  Gemini models are limited to `low`, `medium`, `high`. The selected level is sent to the proxy as
+  `reasoning_effort`.
+
 - **`default_for_categories`**: Array of categories for default model selection.
 
   Available categories:
