@@ -4,7 +4,8 @@
 # else in the folder is touched). With --chart-dir the theme is also mirrored to <chart-dir>/theme and
 # the names-only YAML for the chart values is printed on stdout. The script writes files only: no
 # base64, no values file, no cluster call.
-# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5
+# With --jar <file> a jar is also written (built from the staged files, never from the output folder).
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5; zip only with --jar
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,11 +20,13 @@ source "$SCRIPT_DIR/lib/common.sh"
 
 kit_usage() {
   echo "Usage: $KIT_SCRIPT --output-dir <theme-folder> [--chart-dir <keycloak-helm-folder>]" >&2
+  echo "         [--jar <file>]" >&2
   echo "         <keycloak-theme-package.yaml> <source-dir>" >&2
   echo "" >&2
   echo "  --output-dir  folder that receives the theme files (required; any path, created when missing)" >&2
   echo "  --chart-dir   Keycloak chart folder (optional; must exist): the theme is mirrored to <chart-dir>/theme" >&2
   echo "                and the names-only YAML for the chart values is printed on stdout" >&2
+  echo "  --jar         also write a Keycloak theme jar to <file> (needs zip)" >&2
   echo "  <source-dir>  folder with the logo and favicon files" >&2
   echo "Options go before the two arguments." >&2
   exit 1
@@ -31,7 +34,14 @@ kit_usage() {
 
 # the option of this script that the shared parser does not know
 CHART_DIR=""
+JAR_FILE=""
 kit_parse_option() {
+  if [[ "$1" == "--jar" ]]; then
+    [[ $# -ge 2 && -n "$2" ]] || kit_die "--jar needs a value"
+    JAR_FILE="$2"
+    KIT_OPT_SHIFT=2
+    return 0
+  fi
   if [[ "$1" == "--chart-dir" ]]; then
     [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
     CHART_DIR="$2"
@@ -58,6 +68,12 @@ kit_guard_output_dir "$OUTPUT_DIR" "${OWNED[@]}" || exit 1
 if [[ -n "$CHART_DIR" ]]; then
   [[ -d "$CHART_DIR" ]] || kit_die "chart folder not found: $CHART_DIR"
   kit_guard_target "$CHART_DIR" theme || exit 1
+fi
+
+if [[ -n "$JAR_FILE" ]]; then
+  command -v zip >/dev/null 2>&1 || kit_die "zip is required for --jar but was not found on PATH"
+  [[ ! -d "$JAR_FILE" && ! -L "$JAR_FILE" ]] || kit_die "--jar: $JAR_FILE is a folder or a symlink, name a file"
+  [[ ! -e "$(dirname "$JAR_FILE")" || -d "$(dirname "$JAR_FILE")" ]] || kit_die "--jar: the parent of $JAR_FILE is not a folder"
 fi
 
 # Step 3: generate the owned files once, then build both targets from them
@@ -108,6 +124,20 @@ for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG"; do
   cp "$SOURCE_DIR/$name" "$GEN/login/resources/img/$name"
 done
 
+# The jar is built from the stage folder (never from --output-dir, so a foreign file cannot enter it).
+# Names are sorted with LC_ALL=C and every mtime is fixed, so the same input gives the same bytes.
+if [[ -n "$JAR_FILE" ]]; then
+  JAR_TREE="$TMP_ROOT/jar-tree"
+  mkdir -p "$JAR_TREE/META-INF" "$JAR_TREE/theme/$THEME_NAME"
+  cp -R "$GEN/." "$JAR_TREE/theme/$THEME_NAME/"
+  types_json=""
+  for t in $KIT_MANIFEST_TYPES; do types_json="$types_json${types_json:+,}\"$t\""; done
+  printf '{"themes":[{"name":"%s","types":[%s]}]}\n' "$THEME_NAME" "$types_json" >"$JAR_TREE/META-INF/keycloak-themes.json"
+  find "$JAR_TREE" -exec touch -t 198001010000 {} +
+  (cd "$JAR_TREE" && find META-INF theme -type f | LC_ALL=C sort | zip -X -D -q "$TMP_ROOT/built.jar" -@) \
+    || kit_die "the jar could not be built"
+fi
+
 # Step 4: the only step that changes anything. The mirror copy is staged first (the moves empty the
 # stage folder). Each owned file is moved by itself into --output-dir; the folder and its owned
 # sub-folders are created when missing, nothing else is touched.
@@ -120,6 +150,17 @@ for rel in "${OWNED[@]}"; do
   kit_move_owned_file "$GEN/$rel" "$OUTPUT_DIR/$rel"
 done
 TARGETS=("folder $OUTPUT_DIR")
+if [[ -n "$JAR_FILE" ]]; then
+  # stage-and-move: the jar is copied next to its target, then renamed over it
+  jar_dir="$(dirname "$JAR_FILE")"
+  mkdir -p "$jar_dir"
+  jar_stage=$(mktemp "$jar_dir/.kit-jar-XXXXXX")
+  KIT_STAGES+=("$jar_stage")
+  if ! { cp "$TMP_ROOT/built.jar" "$jar_stage" && mv -f "$jar_stage" "$JAR_FILE"; }; then
+    kit_die "the jar was not written; the theme folder is written. Run the script again to write both from one run"
+  fi
+  TARGETS+=("jar $JAR_FILE")
+fi
 if [[ -n "$CHART_DIR" ]]; then
   # the mirror target belongs to the script: whole-folder swap
   kit_swap_dir "$MIRROR_STAGE" "$CHART_DIR/theme"

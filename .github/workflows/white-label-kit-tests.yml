@@ -26,8 +26,10 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install bats and ajv-cli
+      - name: Install bats, ajv-cli and zip
         run: |
+          sudo apt-get update
+          sudo apt-get install -y zip unzip
           npm install --global bats@1 ajv-cli@5
           yq --version
 
@@ -39,3 +41,4 @@ jobs:
           bats docs/admin/configuration/white-label/kit/tests/common.bats
           bats docs/admin/configuration/white-label/kit/tests/apply-theme.bats
           bats docs/admin/configuration/white-label/kit/tests/apply-keycloak-theme.bats
+          bats docs/admin/configuration/white-label/kit/tests/apply-keycloak-jar.bats
