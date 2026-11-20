@@ -356,7 +356,8 @@ token_paths() {
   ' "$1" | LC_ALL=C sort -u
 }
 
-# schema_paths: dotted path of every property of the schema; the free-form colors map is one path
+# schema_paths [schema file]: dotted path of every property of the schema (default: the UI schema); the
+# free-form colors map is one path
 schema_paths() {
   node -e '
     const s = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
@@ -371,7 +372,7 @@ schema_paths() {
     };
     walk(s, "");
     console.log([...out].join("\n"));
-  ' "$SCHEMA" | LC_ALL=C sort -u
+  ' "${1:-$SCHEMA}" | LC_ALL=C sort -u
 }
 
 @test "template: the token paths of theme-config.template.yaml equal the schema properties" {
@@ -392,6 +393,61 @@ schema_paths() {
 @test "template: the awk reader sees a changed token (guard against a reader that finds nothing)" {
   sed "s/^# product:/# prodct:/" "$BATS_TEST_DIRNAME/../theme-config.template.yaml" >"$BATS_TEST_TMPDIR/t.yaml"
   [ "$(token_paths "$BATS_TEST_TMPDIR/t.yaml")" != "$(schema_paths)" ]
+}
+
+KC_SCHEMA="$BATS_TEST_DIRNAME/../keycloak-theme-package.schema.json"
+KC_TEMPLATE="$BATS_TEST_DIRNAME/../keycloak-theme-config.template.yaml"
+KC_PACKAGE="$BATS_TEST_DIRNAME/../keycloak-theme-package.yaml"
+
+@test "keycloak template: the token paths of keycloak-theme-config.template.yaml equal its schema" {
+  [ -n "$(schema_paths "$KC_SCHEMA")" ]
+  [ "$(token_paths "$KC_TEMPLATE")" = "$(schema_paths "$KC_SCHEMA")" ]
+  [ "$(token_paths "$KC_PACKAGE")" = "$(token_paths "$KC_TEMPLATE")" ]
+}
+
+@test "keycloak template: the schema has no typography, no effects, no manifest and no links" {
+  paths=$(schema_paths "$KC_SCHEMA")
+  for k in typography effects assets.manifest links version; do
+    if grep -qx "$k" <<<"$paths"; then false; fi
+  done
+  grep -qx 'themeName' <<<"$paths"
+}
+
+# part <schema> <yq path>: one part of a schema as sorted JSON
+part() { yq eval -o=json -I0 "$2" "$1"; }
+
+@test "keycloak schema: the definitions shared with the UI schema are equal" {
+  UI="$SCHEMA"
+  [ -n "$(part "$KC_SCHEMA" '.properties.colors')" ]
+  [ "$(part "$UI" '.properties.colors')" = "$(part "$KC_SCHEMA" '.properties.colors')" ]
+  [ "$(part "$UI" '.properties.product')" = "$(part "$KC_SCHEMA" '.properties.product')" ]
+  [ "$(part "$UI" '.definitions.email.properties.palette')" = "$(part "$KC_SCHEMA" '.properties.email.properties.palette')" ]
+  [ "$(part "$UI" '.definitions.email.properties.signature')" = "$(part "$KC_SCHEMA" '.properties.email.properties.signature')" ]
+  for k in logoLight logoDark favicon faviconSvg; do
+    [ "$(part "$UI" ".properties.assets.properties.$k")" = "$(part "$KC_SCHEMA" ".properties.assets.properties.$k")" ]
+  done
+  [ "$(part "$KC_SCHEMA" '.properties.assets.properties.logoLight.pattern')" != "null" ]
+}
+
+@test "keycloak schema: a guard against a comparison that reads nothing" {
+  [ "$(part "$KC_SCHEMA" '.properties.nothing')" = "null" ]
+}
+
+@test "packages: no file is shared between the UI package and the Keycloak package" {
+  kit="$BATS_TEST_DIRNAME/.."
+  # each script names only its own package files
+  if grep -qE '(^|[^-])theme-(package|config)' "$kit/apply-keycloak-theme"; then false; fi
+  if grep -q 'keycloak-theme-' "$kit/apply-theme"; then false; fi
+  # no file of one package is a link to or a copy of a file of the other
+  for pair in "theme-package.yaml keycloak-theme-package.yaml" "theme-config.template.yaml keycloak-theme-config.template.yaml" "theme-package.schema.json keycloak-theme-package.schema.json" "fixtures/valid.yaml fixtures/keycloak.yaml"; do
+    set -- $pair
+    a="$kit/$1"; [ "$1" = "${1#fixtures/}" ] || a="$kit/tests/$1"
+    b="$kit/$2"; [ "$2" = "${2#fixtures/}" ] || b="$kit/tests/$2"
+    [ -f "$a" ] && [ -f "$b" ] && [ ! -L "$b" ]
+    if cmp -s "$a" "$b"; then false; fi
+  done
+  # the Keycloak script reads its own schema
+  grep -q 'keycloak-theme-package.schema.json' "$kit/apply-keycloak-theme"
 }
 
 @test "schema: senderName and smtp are rejected as unknown keys" {
@@ -502,7 +558,8 @@ need_charts() {
   d=$(work_assets)
   run "$BATS_TEST_DIRNAME/../apply-theme" --output-dir "$BATS_TEST_TMPDIR/out" "$pkg" "$d"
   [ "$status" -eq 0 ]
-  run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/out" --chart-dir "$BATS_TEST_TMPDIR/chart" "$pkg" "$d"
+  yq eval '.email.images.logo = "logo.png"' "$FIXTURES/keycloak.yaml" >"$BATS_TEST_TMPDIR/kc.yaml"
+  run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/out" --chart-dir "$BATS_TEST_TMPDIR/chart" "$BATS_TEST_TMPDIR/kc.yaml" "$d"
   [ "$status" -eq 0 ]
   layout=$(contract_lines layout)
   text=$(contract_lines text)

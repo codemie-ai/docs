@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codemie-ai.github.io/docs/kit/keycloak-theme-package.schema.json",
+  "title": "KeycloakThemePackage",
+  "type": "object",
+  "required": ["themeName", "product", "colors", "assets"],
+  "additionalProperties": false,
+  "properties": {
+    "themeName": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,40}$"
+    },
+    "product": {
+      "type": "object",
+      "required": ["name", "shortName"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+        },
+        "shortName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["dark", "light"],
+        "additionalProperties": false,
+        "properties": {
+          "dark": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "light": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*$"
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logoLight", "logoDark", "favicon", "faviconSvg"],
+      "additionalProperties": false,
+      "properties": {
+        "logoLight": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "logoDark": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "favicon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "faviconSvg": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "signature": {
+          "type": "string"
+        },
+        "palette": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "primaryText": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          }
+        },
+        "images": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "logo": {
+              "type": "string",
+              "minLength": 1
+            },
+            "logoUrl": {
+              "type": "string",
+              "pattern": "^https://[^\\s${}<>\"\\\\]{1,2000}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

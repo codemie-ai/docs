@@ -4,7 +4,7 @@
 bats_require_minimum_version 1.5.0
 FIXTURES="$BATS_TEST_DIRNAME/fixtures"
 SCRIPT="$BATS_TEST_DIRNAME/../apply-keycloak-theme"
-PLATFORM="$BATS_TEST_DIRNAME/../apply-theme"
+LIB="$BATS_TEST_DIRNAME/../lib/common.sh"
 ASSETS_DIR="$FIXTURES/assets"
 
 setup() {
@@ -13,9 +13,9 @@ setup() {
   mkdir -p "$CHART"
 }
 
-# kc_pkg '<yq expression>' -> path of valid.yaml with a keycloak block and the change applied
+# kc_pkg '<yq expression>' -> path of keycloak.yaml with the change applied
 kc_pkg() {
-  yq eval '.keycloak.themeName = "acme-brand" | '"${1:-.}" "$FIXTURES/valid.yaml" >"$BATS_TEST_TMPDIR/kc-mutated.yaml"
+  yq eval "${1:-.}" "$FIXTURES/keycloak.yaml" >"$BATS_TEST_TMPDIR/kc-mutated.yaml"
   echo "$BATS_TEST_TMPDIR/kc-mutated.yaml"
 }
 
@@ -66,15 +66,16 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
   diff -r "$OUT/keycloak" "$CHART/theme"
 }
 
-@test "output: the images are byte copies and login brand.css equals the platform brand.css" {
+@test "output: the images are byte copies and login brand.css is the colour rendering of the package" {
   kc_run
   [ "$status" -eq 0 ]
   for f in logo-light.svg logo-dark.svg favicon.ico favicon.svg; do
     cmp "$OUT/keycloak/login/resources/img/$f" "$ASSETS_DIR/$f"
   done
-  run "$PLATFORM" --output-dir "$BATS_TEST_TMPDIR/platform" "$(kc_pkg)" "$ASSETS_DIR"
-  [ "$status" -eq 0 ]
-  cmp "$OUT/keycloak/login/resources/css/brand.css" "$BATS_TEST_TMPDIR/platform/brand.css"
+  bash -c 'source "$1"; kit_render_brand_css "$2"' _ "$LIB" "$(kc_pkg)" >"$BATS_TEST_TMPDIR/expected.css"
+  cmp "$OUT/keycloak/login/resources/css/brand.css" "$BATS_TEST_TMPDIR/expected.css"
+  grep -q -- '--colors-surface-base-primary: 17 17 17;' "$OUT/keycloak/login/resources/css/brand.css"
+  if grep -q -- '--font-family' "$OUT/keycloak/login/resources/css/brand.css"; then false; fi
 }
 
 @test "output: no file holds base64 data, a values file or a ConfigMap" {
@@ -187,33 +188,20 @@ realm:
   iconv -f UTF-8 -t UTF-8 "$OUT/keycloak/email/theme.properties" >/dev/null
 }
 
-@test "same brand values: both scripts give the same names and brand.css from one template" {
-  pkg=$(kc_pkg '.product.name = "R&D Süite" | .effects.gradients = "none"')
-  run "$PLATFORM" --output-dir "$BATS_TEST_TMPDIR/p" "$pkg" "$ASSETS_DIR"
-  [ "$status" -eq 0 ]
-  run "$SCRIPT" --output-dir "$BATS_TEST_TMPDIR/k" --chart-dir "$CHART" "$pkg" "$ASSETS_DIR"
-  [ "$status" -eq 0 ]
-  [ "$(yq eval -p=json '.product.name' "$BATS_TEST_TMPDIR/p/brand-config.json")" = "$(prop "$BATS_TEST_TMPDIR/k/keycloak/login/theme.properties" brand.product.name)" ]
-  [ "$(yq eval -p=json '.product.shortName' "$BATS_TEST_TMPDIR/p/brand-config.json")" = "$(prop "$BATS_TEST_TMPDIR/k/keycloak/login/theme.properties" brand.product.shortName)" ]
-  cmp "$BATS_TEST_TMPDIR/p/brand.css" "$BATS_TEST_TMPDIR/k/keycloak/login/resources/css/brand.css"
-}
-
 @test "theme name: reserved names, bad characters and bad length are refused and nothing is written" {
   for n in codemie codemie-default base keycloak Acme_Brand ab "$(printf 'a%.0s' $(seq 1 41))"; do
-    run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg ".keycloak.themeName = \"$n\"")" "$ASSETS_DIR"
+    run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg ".themeName = \"$n\"")" "$ASSETS_DIR"
     [ "$status" -ne 0 ]
-    [[ "$output" == *"keycloak.themeName"* ]]
+    [[ "$output" == *"themeName"* ]]
     [ ! -e "$OUT" ]
     [ ! -e "$CHART/theme" ]
   done
 }
 
-@test "theme name: a package without a keycloak block is refused" {
-  pkg="$BATS_TEST_TMPDIR/nokc.yaml"
-  yq eval 'del(.keycloak)' "$FIXTURES/valid.yaml" >"$pkg"
-  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$pkg" "$ASSETS_DIR"
+@test "theme name: a package without themeName is refused" {
+  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg 'del(.themeName)')" "$ASSETS_DIR"
   [ "$status" -ne 0 ]
-  [[ "$output" == *"keycloak.themeName: required"* ]]
+  [[ "$output" == *"themeName"* ]]
   [ ! -e "$OUT" ]
 }
 
@@ -221,13 +209,12 @@ realm:
   kc_run
   [ "$status" -eq 0 ]
   before="$(tree_state "$OUT")$(tree_state "$CHART")"
-  for expr in '.email.signature = "Team ${x}"' '.email.senderName = "A"' '.keycloak.smtp.host = "smtp.acme.example"' '.assets.favicon = "absent.ico"' '.assets.logoLight = "Logo Light.svg"'; do
+  for expr in '.email.signature = "Team ${x}"' '.email.senderName = "A"' '.smtp.host = "smtp.acme.example"' '.assets.manifest = "site.webmanifest"' '.typography.bodyFamily = "Inter"' '.effects.gradients = "none"' '.assets.favicon = "absent.ico"' '.assets.logoLight = "Logo Light.svg"'; do
     run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg "$expr")" "$ASSETS_DIR"
     [ "$status" -ne 0 ]
     [ "$before" = "$(tree_state "$OUT")$(tree_state "$CHART")" ]
   done
-  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg '.keycloak.smtp.host = "x" | .email.senderName = "A"')" "$ASSETS_DIR"
-  [[ "$output" == *"keycloak.smtp"* ]]
+  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg '.email.senderName = "A"')" "$ASSETS_DIR"
   [[ "$output" == *"email.senderName"* ]]
   [[ "$output" == *"realm settings"* ]]
 }
