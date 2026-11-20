@@ -1,9 +1,9 @@
 # Are Data Sources and Analytics available without Elasticsearch?
 
 Data Sources, Knowledge Bases, and code indexing all depend on the Elasticsearch-backed
-retrieval layer. When the backend's `RETRIEVAL_BACKEND` setting is `none` — the default for
-CodeMie Standalone, which does not include an Elasticsearch container — these three features are
-disabled, regardless of what `customer-config.yaml` specifies. The admin log lookup endpoint
+retrieval layer. When Elasticsearch is not configured — `ELASTIC_URL` is empty in CodeMie Standalone, which does not
+include an Elasticsearch container, and `RETRIEVAL_BACKEND=none` elsewhere — these three features
+are disabled, regardless of what `customer-config.yaml` specifies. The admin log lookup endpoint
 relies on the same connection and should also be disabled (`ADMIN_LOG_LOOKUP_ENABLED=false`) in
 that mode, or it returns an error.
 
