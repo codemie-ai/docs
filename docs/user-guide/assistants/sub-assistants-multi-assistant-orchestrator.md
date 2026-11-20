@@ -54,6 +54,19 @@ The multi-assistant capability allows you to build an orchestrator assistant tha
 - Cannot select the assistant itself as a sub-assistant
   :::
 
+### Tool-Call Confirmation in Sub-Assistants
+
+The **Tool Calls** policy of a sub-assistant works the same way as for any other assistant: **Manual** asks before every tool call, **Guarded** asks before write tools only, and **Auto** never asks. A sub-assistant can be added to an orchestrator with any policy.
+
+When a sub-assistant makes a call that requires confirmation, the **Allow** and **Deny** buttons appear inside the step of that sub-assistant, nested under the orchestrator's delegation step. The containing steps open automatically.
+
+- **Allow**: the call runs, the sub-assistant finishes its turn, and the orchestrator continues with its reply.
+- **Deny**: the call does not run, the sub-assistant is told that the call was denied, and both finish their turns.
+
+The effective policy is resolved for each sub-assistant in the same order as for a single assistant. A customer-wide minimum policy applies to every sub-assistant call, and a conversation-level override applies to a sub-assistant that has **Allow override** enabled. See [Tool Call Permissions](../../admin/configuration/codemie/customer-feature-configuration.md#tool-call-permissions).
+
+A call that waits for a decision stays open after the page is reloaded, and the prompt remains blocked until a decision is made. The waiting step is shown even when **Hide tool outputs from end users** is enabled.
+
 ## Configuration Best Practices
 
 ### 1. System Instructions
