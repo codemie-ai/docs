@@ -27,6 +27,10 @@ To integrate Keycloak with AI/Run CodeMie, follow the steps below:
 
 ![Service accounts roles](./images/image25.png)
 
+:::note Keycloak 26.8.2 or later
+For a client other than `admin-cli`, also select the **Client scopes** tab, click **Add client scope**, select `kc-admin-api`, click **Add** → **Default**. Without this scope the tool gets `401` from Keycloak.
+:::
+
 1.6. Select the **Credentials** tab and copy the **Client secret**.
 
 ![Credentials](./images/image84.png)

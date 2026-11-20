@@ -103,7 +103,8 @@ In the Keycloak Admin Console, create a new client in the target realm:
    - `query-clients`
    - `query-groups`
    - `query-realms`
-6. Go to the **Credentials** tab and copy the **Client secret**.
+6. Keycloak 26.8.2 or later: go to the **Client scopes** tab, click **Add client scope**, select `kc-admin-api`, click **Add** → **Default**. Without this scope the migration gets `401`.
+7. Go to the **Credentials** tab and copy the **Client secret**.
 
 #### Configure environment variables
 
