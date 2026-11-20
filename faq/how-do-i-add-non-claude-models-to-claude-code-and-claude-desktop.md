@@ -11,9 +11,8 @@ linked to the CodeMie profile. Other models, such as Grok, Gemini, or Kimi, can 
 
 In Claude Code, the models appear in the `/model` picker marked **Not a Claude model**. In Claude
 Desktop, they appear under their regular names in the model picker. Non-Claude models may not work
-well with Claude Code and Claude Desktop: some Claude-specific features may be unsupported, and
-support in Claude Desktop may stop working after an application update. Anthropic does not support
-non-Claude models in these clients.
+well with Claude Code and Claude Desktop: some Claude-specific features may be unsupported.
+Anthropic does not support non-Claude models in these clients.
 
 ## Sources
 
