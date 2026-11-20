@@ -24,6 +24,8 @@ CodeMie CLI is a unified command-line interface that provides access to multiple
 
 **Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
 
+**Claude Code and Claude Desktop**: Run Claude Code through `codemie-claude` and connect Claude Desktop to the CodeMie gateway. By default, only Claude models are available in both; other models of the project catalog can be added per profile. See [Claude with CodeMie](./claude/index.md).
+
 **Profile Management**: Maintain separate configurations for different contexts (work, personal, team projects). Each profile can be configured with its own provider (Azure OpenAI, AWS Bedrock, or LiteLLM), enabling seamless switching between environments.
 
 **Enterprise Features**: Built-in support for SSO authentication via CodeMie platform, comprehensive analytics and usage tracking, audit logging with session management, secrets scanning via Gitleaks, budget controls, and governance policies.
@@ -108,17 +110,14 @@ codemie setup
 # 2. Check your setup
 codemie doctor
 
-# 3. Install Claude Code
+# 3. Install an agent (Claude Code in this example)
 codemie install claude --supported
 
-# 4. Register your CodeMie assistants
-codemie setup assistants
-
-# 5. Start Claude Code with CodeMie
+# 4. Start the agent with CodeMie
 codemie-claude
 ```
 
-After `codemie setup assistants`, your CodeMie assistants are available inside Claude Code as subagents (`@assistant-name`) and slash commands (`/assistant-name`).
+For Claude Code and Claude Desktop, including model selection, assistants, skills, and MCP servers, see [Claude with CodeMie](./claude/index.md).
 
 ### Setup Configuration
 
@@ -252,8 +251,6 @@ codemie uninstall <agent>            # Remove an agent
 
 ```bash
 codemie setup                        # Configuration wizard
-codemie setup assistants             # Register CodeMie assistants in Claude Code as @name subagents and /name slash commands
-codemie setup skills                 # Register CodeMie skills as slash commands
 codemie doctor                       # Health check and diagnostics
 codemie self-update                  # Update CodeMie CLI to the latest version
 codemie self-update --check          # Check for updates without installing
@@ -261,32 +258,9 @@ codemie --version                    # Show version
 codemie --help                       # Show help
 ```
 
-**MCP Server Management**
+**Claude-specific commands**
 
-Manage remote MCP servers registered with Claude Code. All MCP traffic is routed through the built-in `codemie-mcp-proxy`, which handles OAuth automatically.
-
-```bash
-codemie mcp add <name> <url>         # Register an MCP server
-codemie mcp add <name> <url> --scope project  # Register for the current project only
-codemie mcp remove <name>            # Remove a registered MCP server
-codemie mcp list                     # List all registered MCP servers
-```
-
-Examples:
-
-```bash
-# Add a remote MCP server for the current user
-codemie mcp add my-server https://mcp.example.com/sse
-
-# Add a project-scoped MCP server
-codemie mcp add my-server https://mcp.example.com/sse --scope project
-
-# List all registered MCP servers
-codemie mcp list
-
-# Remove an MCP server
-codemie mcp remove my-server
-```
+Commands for Claude Code and Claude Desktop (`codemie setup assistants`, `codemie setup skills`, `codemie mcp`, `codemie proxy connect --claude-desktop`, and `codemie-claude models`) are described in [Claude with CodeMie](./claude/index.md).
 
 ### Agent Shortcuts
 
@@ -318,6 +292,8 @@ codemie-opencode --task "<prompt>"   # OpenCode agent
 - `--profile <name>`: Use specific profile
 - `--model <model>`: Override default model
 - `--help`: Show agent-specific help
+
+For `codemie-claude`, see also [Claude with CodeMie](./claude/index.md).
 
 **Example Workflows**
 
@@ -378,16 +354,9 @@ Tracked metrics include:
 To send usage from Claude Code and GitHub Copilot to CodeMie
 [AI Attribution](../analytics/ai-attribution.md), see [Enable AI Analytics](./enable-analytics.md).
 
-### Connect Remote MCP Servers
+### Connect VS Code
 
-Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
-
-```bash
-codemie mcp add <name> <url>
-codemie mcp add <name> <url> --scope project
-codemie mcp remove <name>
-codemie mcp list
-```
+Remote MCP servers for Claude Code are managed with `codemie mcp`; see [MCP Servers](./claude/index.md#mcp-servers).
 
 To connect VS Code to the CodeMie model catalog and MCP proxy:
 

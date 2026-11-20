@@ -21,4 +21,4 @@ assistant categories
 
 ## Sources
 
-- [Manage CodeMie Assets from CLI](https://codemie-ai.github.io/docs/user-guide/codemie-cli/sdk-asset-management)
+- [Manage CodeMie Assets from CLI](https://codemie-ai.github.io/docs/user-guide/codemie-cli/claude/sdk-cli-reference)

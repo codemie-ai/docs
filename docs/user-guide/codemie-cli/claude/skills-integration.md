@@ -2,9 +2,9 @@
 id: skills-integration
 title: Access CodeMie Skills from CLI
 sidebar_label: Skills
-sidebar_position: 3
-pagination_prev: user-guide/codemie-cli/assistants-integration
-pagination_next: user-guide/codemie-cli/codemie-claude-skills
+sidebar_position: 4
+pagination_prev: user-guide/codemie-cli/claude/codemie-claude
+pagination_next: null
 ---
 
 import EnterpriseFeature from '@site/src/components/EnterpriseFeature';

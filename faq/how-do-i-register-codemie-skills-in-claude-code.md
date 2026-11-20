@@ -10,4 +10,4 @@ Once registered, the skill is available in Claude Code as a slash command — ty
 
 ## Sources
 
-- [Access CodeMie Skills from CLI](https://docs.codemie.ai/user-guide/codemie-cli/skills-integration)
+- [Access CodeMie Skills from CLI](https://docs.codemie.ai/user-guide/codemie-cli/claude/skills-integration)
