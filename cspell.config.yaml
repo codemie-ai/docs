@@ -23,7 +23,6 @@ ignorePaths:
   - docs/admin/configuration/white-label/kit/apply-theme
   - docs/admin/configuration/white-label/kit/apply-keycloak-theme
   - docs/admin/configuration/white-label/kit/lib/
-  - docs/admin/configuration/white-label/kit/tests/stubs/
 
 # Custom dictionary - project-specific words that are correct
 words:
