@@ -9,7 +9,7 @@ pagination_next: null
 
 # Upgrade Keycloak from 26.5.7 to 26.6.4
 
-Before you start, complete the [Pre-Upgrade Requirements](./index.md#pre-upgrade-requirements), then apply the changes below with the [Upgrade Procedure](./index.md#upgrade-procedure).
+Before the upgrade, complete the [Pre-Upgrade Requirements](./index.md#pre-upgrade-requirements), then apply the changes below with the [Upgrade Procedure](./index.md#upgrade-procedure).
 
 :::warning IMPORTANT
 Review the Keycloak upgrading guide from [Migrating to 26.6.0](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-0) to [Migrating to 26.6.4](https://www.keycloak.org/docs/latest/upgrading/index.html#migrating-to-26-6-4) before the upgrade.
@@ -48,4 +48,25 @@ SELECT r.name AS realm, c.client_id, p.name, pc.value AS code
  WHERE p.type = 'js';
 ```
 
-An empty result means no action. A policy named `Default Policy` with the code `$evaluation.grant();` was created automatically when Authorization was enabled on the client in an older Keycloak version. To remove it, open **Clients** → the client → **Authorization**, delete **Default Permission**, then **Default Policy**. A client created for the [Keycloak user migration](../../../../configuration/access-control/platform-managed-mode-configuration.md#create-keycloak-service-account-client) has such a policy; once the migration is finished, delete the whole client instead. To keep JavaScript policies, add `scripts` to `KC_FEATURES`.
+An empty result means no action. Otherwise, check the `code` column of each row.
+
+**If `code` is `$evaluation.grant();`**, Keycloak created the policy automatically. Delete it:
+
+1. Open **Clients** → the client → **Authorization**.
+2. Delete **Default Permission**.
+3. Delete **Default Policy**.
+
+For `codemie-migration-client` of a finished [Keycloak user migration](../../../../configuration/access-control/platform-managed-mode-configuration.md#create-keycloak-service-account-client), delete the whole client instead.
+
+**If `code` is anything else**, the policy is a custom check. To keep it, enable the `scripts` feature in `keycloakx.extraEnv`:
+
+```yaml
+- name: KC_FEATURES
+  value: "scripts"
+```
+
+## Verification
+
+```sql
+SELECT version FROM migration_model ORDER BY update_time DESC LIMIT 1;   -- 26.6.4
+```
