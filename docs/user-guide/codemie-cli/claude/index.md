@@ -150,32 +150,7 @@ Registering CodeMie assistants and skills is a CodeMie CLI feature that is not l
 
 ## MCP Servers
 
-Remote MCP servers can be registered with Claude Code through CodeMie CLI. All MCP traffic is
-routed through the built-in `codemie-mcp-proxy`, which handles OAuth automatically, so tokens do
-not need to be managed manually.
-
-```bash
-codemie mcp add <name> <url>                    # Register an MCP server for the current user
-codemie mcp add <name> <url> --scope project    # Register for the current project only
-codemie mcp remove <name>                       # Remove a registered MCP server
-codemie mcp list                                # List all registered MCP servers
-```
-
-Examples:
-
-```bash
-# Add a remote MCP server for the current user
-codemie mcp add my-server https://mcp.example.com/sse
-
-# Add a project-scoped MCP server
-codemie mcp add my-server https://mcp.example.com/sse --scope project
-
-# List all registered MCP servers
-codemie mcp list
-
-# Remove an MCP server
-codemie mcp remove my-server
-```
+Remote MCP servers for Claude Code are managed with `codemie mcp`. All MCP traffic is routed through the built-in `codemie-mcp-proxy`. See [Connect Remote MCP Servers](../index.md#connect-remote-mcp-servers).
 
 ## In This Section
 

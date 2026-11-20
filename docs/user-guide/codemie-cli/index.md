@@ -263,9 +263,32 @@ codemie --version                    # Show version
 codemie --help                       # Show help
 ```
 
-**Claude-specific commands**
+**MCP Server Management**
 
-Commands for Claude Code and Claude Desktop (`codemie mcp`, `codemie proxy connect --claude-desktop`, and `codemie-claude models`) are described in [Claude with CodeMie](./claude/index.md).
+Manage remote MCP servers registered with Claude Code. All MCP traffic is routed through the built-in `codemie-mcp-proxy`, which handles OAuth automatically.
+
+```bash
+codemie mcp add <name> <url>         # Register an MCP server
+codemie mcp add <name> <url> --scope project  # Register for the current project only
+codemie mcp remove <name>            # Remove a registered MCP server
+codemie mcp list                     # List all registered MCP servers
+```
+
+Examples:
+
+```bash
+# Add a remote MCP server for the current user
+codemie mcp add my-server https://mcp.example.com/sse
+
+# Add a project-scoped MCP server
+codemie mcp add my-server https://mcp.example.com/sse --scope project
+
+# List all registered MCP servers
+codemie mcp list
+
+# Remove an MCP server
+codemie mcp remove my-server
+```
 
 ### Agent Shortcuts
 
@@ -356,9 +379,16 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
-### Connect VS Code
+### Connect Remote MCP Servers
 
-Remote MCP servers for Claude Code are managed with `codemie mcp`; see [MCP Servers](./claude/index.md#mcp-servers).
+Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
+
+```bash
+codemie mcp add <name> <url>
+codemie mcp add <name> <url> --scope project
+codemie mcp remove <name>
+codemie mcp list
+```
 
 To connect VS Code to the CodeMie model catalog and MCP proxy:
 
