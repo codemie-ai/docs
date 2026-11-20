@@ -2,8 +2,8 @@
 id: skills-integration
 title: Access CodeMie Skills from CLI
 sidebar_label: Skills
-sidebar_position: 4
-pagination_prev: user-guide/codemie-cli/claude/codemie-claude
+sidebar_position: 3
+pagination_prev: user-guide/codemie-cli/assistants-integration
 pagination_next: null
 ---
 

@@ -2,9 +2,9 @@
 id: assistants-integration
 title: Access CodeMie Assistants from CLI
 sidebar_label: Assistants
-sidebar_position: 3
-pagination_prev: user-guide/codemie-cli/claude/codemie-claude
-pagination_next: null
+sidebar_position: 2
+pagination_prev: user-guide/codemie-cli/codemie-cli
+pagination_next: user-guide/codemie-cli/skills-integration
 ---
 
 import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
