@@ -108,6 +108,20 @@ Enable or disable experimental features and beta functionality.
 | `HIDE_AGENT_STREAMING_EXCEPTIONS`               | boolean | `false` | Suppress agent exceptions from being surfaced in the UI response stream; useful to hide internal errors from end-users in production                                                                                                                                                                |
 | `METRICS_ROTATION_ENABLED`                      | boolean | `false` | Enable quarterly Elasticsearch index rotation for `codemie_metrics_logs` user metrics                                                                                                                                                                                                               |
 
+### Routing Spend Backfill
+
+Replace the cost figures on routing usage documents in Elasticsearch with values from the spend ledger. Settings are read from the environment at startup, so changing any of them requires a restart of the `codemie-api` service.
+
+| Parameter                        | Type    | Default | Description                                                                                                                                        |
+| -------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SPEND_BACKFILL_ENABLED`         | boolean | `false` | Enable the backfill job. It runs after each successful spend uploader feed, so `LITELLM_SPEND_UPLOADER_ENABLED` must also be `true`                |
+| `SPEND_BACKFILL_DRY_RUN`         | boolean | `false` | Compute and log the changes without writing to Elasticsearch. Environment setting only: there is no runtime switch, so changing it needs a restart |
+| `SPEND_BACKFILL_MAX_AGE_HOURS`   | integer | `48`    | Start of the recent window, in hours before the run                                                                                                |
+| `SPEND_BACKFILL_BATCH`           | integer | `1000`  | Documents read per Elasticsearch page                                                                                                              |
+| `SPEND_BACKFILL_TIMEOUT_SECONDS` | integer | `60`    | Maximum wall time for one run                                                                                                                      |
+| `SPEND_BACKFILL_HISTORY_START`   | string  | `""`    | ISO-8601 UTC start of the one-off history pass; empty turns the pass off                                                                           |
+| `SPEND_BACKFILL_PROJECTS`        | string  | `""`    | Comma-separated project names to backfill; empty means all projects                                                                                |
+
 ### Marketplace Management
 
 Control Marketplace review and cleanup. All parameters are read at startup; changing any of them requires a restart of the `codemie-api` service. For the review workflow, see [Marketplace Management](./marketplace-management.mdx).
