@@ -80,14 +80,6 @@ const config: Config = {
         // Pages moved into the Claude subsection of CodeMie CLI
         redirects: [
           {
-            from: '/user-guide/codemie-cli/assistants-integration',
-            to: '/user-guide/codemie-cli/claude/assistants-integration',
-          },
-          {
-            from: '/user-guide/codemie-cli/skills-integration',
-            to: '/user-guide/codemie-cli/claude/skills-integration',
-          },
-          {
             from: '/user-guide/codemie-cli/codemie-claude-skills',
             to: '/user-guide/codemie-cli/claude/codemie-claude-skills',
           },

@@ -316,6 +316,8 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             'user-guide/codemie-cli/enable-analytics',
+            'user-guide/codemie-cli/assistants-integration',
+            'user-guide/codemie-cli/skills-integration',
             {
               type: 'category',
               label: 'Claude',
@@ -325,8 +327,6 @@ const sidebars: SidebarsConfig = {
               },
               collapsed: true,
               items: [
-                'user-guide/codemie-cli/claude/assistants-integration',
-                'user-guide/codemie-cli/claude/skills-integration',
                 'user-guide/codemie-cli/claude/codemie-claude-skills',
                 'user-guide/codemie-cli/claude/sdk-cli-reference',
                 'user-guide/codemie-cli/claude/claude-desktop',

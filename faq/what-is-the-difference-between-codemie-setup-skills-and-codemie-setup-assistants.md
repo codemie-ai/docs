@@ -15,5 +15,5 @@ tools or MCP servers, attach it to an assistant on the CodeMie platform and regi
 
 ## Sources
 
-- [Access CodeMie Skills from CLI](https://docs.codemie.ai/user-guide/codemie-cli/claude/skills-integration)
-- [Access CodeMie Assistants from CLI](https://docs.codemie.ai/user-guide/codemie-cli/claude/assistants-integration)
+- [Access CodeMie Skills from CLI](https://docs.codemie.ai/user-guide/codemie-cli/skills-integration)
+- [Access CodeMie Assistants from CLI](https://docs.codemie.ai/user-guide/codemie-cli/assistants-integration)

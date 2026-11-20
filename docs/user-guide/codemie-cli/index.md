@@ -113,11 +113,14 @@ codemie doctor
 # 3. Install an agent (Claude Code in this example)
 codemie install claude --supported
 
-# 4. Start the agent with CodeMie
+# 4. Register your CodeMie assistants
+codemie setup assistants
+
+# 5. Start the agent with CodeMie
 codemie-claude
 ```
 
-For Claude Code and Claude Desktop, including model selection, assistants, skills, and MCP servers, see [Claude with CodeMie](./claude/index.md).
+After `codemie setup assistants`, CodeMie assistants are available inside the agent as subagents (`@assistant-name`) and slash commands (`/assistant-name`). See [Assistants](./assistants-integration.md) and [Skills](./skills-integration.md). For Claude Code and Claude Desktop, including model selection and MCP servers, see [Claude with CodeMie](./claude/index.md).
 
 ### Setup Configuration
 
@@ -251,6 +254,8 @@ codemie uninstall <agent>            # Remove an agent
 
 ```bash
 codemie setup                        # Configuration wizard
+codemie setup assistants             # Register CodeMie assistants as @name subagents and /name slash commands
+codemie setup skills                 # Register CodeMie skills as slash commands
 codemie doctor                       # Health check and diagnostics
 codemie self-update                  # Update CodeMie CLI to the latest version
 codemie self-update --check          # Check for updates without installing
@@ -260,7 +265,7 @@ codemie --help                       # Show help
 
 **Claude-specific commands**
 
-Commands for Claude Code and Claude Desktop (`codemie setup assistants`, `codemie setup skills`, `codemie mcp`, `codemie proxy connect --claude-desktop`, and `codemie-claude models`) are described in [Claude with CodeMie](./claude/index.md).
+Commands for Claude Code and Claude Desktop (`codemie mcp`, `codemie proxy connect --claude-desktop`, and `codemie-claude models`) are described in [Claude with CodeMie](./claude/index.md).
 
 ### Agent Shortcuts
 

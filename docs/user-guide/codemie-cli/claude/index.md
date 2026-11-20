@@ -139,12 +139,12 @@ The Claude Desktop connection itself is described in [Claude Desktop](./claude-d
 
 ## Assistants and Skills
 
-CodeMie assistants and skills can be registered in Claude Code and called from a coding session.
+Registering CodeMie assistants and skills is a CodeMie CLI feature that is not limited to Claude. In Claude Code, registered assistants and skills can be called from a coding session.
 
 | Capability                   | Command                    | In Claude Code                | Details                                        |
 | ---------------------------- | -------------------------- | ----------------------------- | ---------------------------------------------- |
-| CodeMie assistants           | `codemie setup assistants` | `@assistant-name` or `/name`  | [Assistants](./assistants-integration.md)      |
-| CodeMie skills               | `codemie setup skills`     | `/skill-name`                 | [Skills](./skills-integration.md)              |
+| CodeMie assistants           | `codemie setup assistants` | `@assistant-name` or `/name`  | [Assistants](../assistants-integration.md)     |
+| CodeMie skills               | `codemie setup skills`     | `/skill-name`                 | [Skills](../skills-integration.md)             |
 | Pre-built skills for CodeMie | none, available at launch  | Described in natural language | [Built-in Skills](./codemie-claude-skills.md)  |
 | Platform asset management    | `codemie sdk`              | `codemie-sdk` skill           | [SDK CLI Reference](./sdk-asset-management.md) |
 
@@ -179,10 +179,8 @@ codemie mcp remove my-server
 
 ## In This Section
 
-| Page                                           | Description                                                                     |
-| ---------------------------------------------- | ------------------------------------------------------------------------------- |
-| [Assistants](./assistants-integration.md)      | Register CodeMie assistants in Claude Code and chat with them from the terminal |
-| [Skills](./skills-integration.md)              | Install CodeMie skills in Claude Code as slash commands                         |
-| [Built-in Skills](./codemie-claude-skills.md)  | Six pre-built skills available automatically in `codemie-claude`                |
-| [SDK CLI Reference](./sdk-asset-management.md) | Reference for the `codemie sdk` commands used by the `codemie-sdk` skill        |
-| [Claude Desktop](./claude-desktop.md)          | Connect Claude Desktop to the CodeMie gateway                                   |
+| Page                                           | Description                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------ |
+| [Built-in Skills](./codemie-claude-skills.md)  | Six pre-built skills available automatically in `codemie-claude`         |
+| [SDK CLI Reference](./sdk-asset-management.md) | Reference for the `codemie sdk` commands used by the `codemie-sdk` skill |
+| [Claude Desktop](./claude-desktop.md)          | Connect Claude Desktop to the CodeMie gateway                            |
