@@ -81,10 +81,10 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
   kc_run
   [ "$status" -eq 0 ]
   b64=$(base64 <"$ASSETS_DIR/logo-light.svg" | tr -d '\n')
-  ! grep -rqF -- "$b64" "$OUT/keycloak" "$CHART/theme"
+  if grep -rqF -- "$b64" "$OUT/keycloak" "$CHART/theme"; then false; fi
   [ -z "$(find "$OUT" "$CHART" -name 'values*' -o -name '*.b64')" ]
-  ! grep -rqE 'binaryData|extraObjects|kind: ConfigMap' "$OUT/keycloak" "$CHART/theme"
-  ! grep -qE '(^|[^a-z-])(helm|kubectl|curl|base64)[[:space:]]' "$SCRIPT"
+  if grep -rqE 'binaryData|extraObjects|kind: ConfigMap' "$OUT/keycloak" "$CHART/theme"; then false; fi
+  if grep -qE '(^|[^a-z-])(helm|kubectl|curl|base64)[[:space:]]' "$SCRIPT"; then false; fi
 }
 
 @test "output: .gitkeep and messages_en.properties stay, stale images and other owned files are replaced" {
@@ -160,14 +160,14 @@ realm:
   [ "$(prop "$f" brand.email.color.primary)" = "#112233" ]
   [ "$(prop "$f" brand.email.color.text)" = "#223344" ]
   [ "$(prop "$f" brand.email.logo)" = "https://cdn.acme.example/logo.png" ]
-  ! grep -q 'brand.email.color.primaryText' "$f"
-  ! grep -q 'brand.email.color.surface' "$f"
+  if grep -q 'brand.email.color.primaryText' "$f"; then false; fi
+  if grep -q 'brand.email.color.surface' "$f"; then false; fi
 }
 
 @test "email.theme.properties: without an email block no brand.email key is written" {
   kc_run
   [ "$status" -eq 0 ]
-  ! grep -q 'brand.email' "$OUT/keycloak/email/theme.properties"
+  if grep -q 'brand.email' "$OUT/keycloak/email/theme.properties"; then false; fi
 }
 
 @test "email.theme.properties: the signature gets the product name and a newline as backslash-n on one line" {
@@ -267,4 +267,10 @@ realm:
   [ "$status" -ne 0 ]
   [[ "$output" == *"plain file name inside the source folder"* ]]
   [ ! -e "$OUT" ]
+}
+
+@test "properties policy: the Keycloak script rejects a dollar-brace in product.name" {
+  run --separate-stderr "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$(kc_pkg '.product.name = "Acme ${env} Suite"')" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$stderr" == *"product.name"* ]]
 }

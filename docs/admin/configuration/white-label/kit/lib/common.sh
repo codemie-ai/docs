@@ -223,7 +223,7 @@ kit_report_errors() {
 }
 
 # The only input checks (step 2): schema (all errors), safe characters of values that reach a
-# .properties file, asset files exist and are no symlinks, file names follow the chart rule.
+# .properties file (skipped when KIT_PROPERTIES_CHECK=no), asset files exist and are no symlinks, file names follow the chart rule.
 # Not checked: sizes (the charts own them), email-logo content, links, theme content (the test harness owns it).
 kit_check_inputs() {
   ERRORS=()
@@ -246,13 +246,17 @@ data\//g' "$ajv_err")
   done
   _kit_check_file "email.images.logo" "$(kit_str '.email.images.logo')"
 
-  _kit_check_prop "product.name" "$(kit_str '.product.name')"
-  _kit_check_prop "product.shortName" "$(kit_str '.product.shortName')"
-  _kit_check_prop "email.signature" "$(kit_str '.email.signature')" allow_newline
-  _kit_check_prop "email.images.logoUrl" "$(kit_str '.email.images.logoUrl')"
-  for pk in $(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true); do
-    _kit_check_prop "email.palette.$pk" "$(kit_str ".email.palette.\"$pk\"")"
-  done
+  # Only apply-keycloak-theme writes .properties files; apply-theme sets KIT_PROPERTIES_CHECK=no
+  if [[ "${KIT_PROPERTIES_CHECK:-yes}" == "yes" ]]; then
+    _kit_check_prop "product.name" "$(kit_str '.product.name')"
+    _kit_check_prop "product.shortName" "$(kit_str '.product.shortName')"
+    _kit_check_prop "email.signature" "$(kit_str '.email.signature')" allow_newline
+    _kit_check_prop "email.images.logoUrl" "$(kit_str '.email.images.logoUrl')"
+    while IFS= read -r pk; do
+      [[ -n "$pk" ]] || continue
+      _kit_check_prop "email.palette.$pk" "$(kit_str ".email.palette.\"$pk\"")"
+    done < <(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true)
+  fi
 
   [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
 }

@@ -300,8 +300,8 @@ work_assets() {
   light=$(sed -n '/^html.codemieLight {/,/^}/p' "$css")
   [[ "$light" == *"--colors-surface-base-primary: 255 255 255;"* ]]
   root=$(sed -n '/^:root {/,/^}/p' "$css")
-  ! [[ "$root" == *"--colors-"* ]]
-  ! grep -q -- '!important\|--brand-gradients' "$css"
+  if [[ "$root" == *"--colors-"* ]]; then false; fi
+  if grep -q -- '!important\|--brand-gradients' "$css"; then false; fi
 }
 
 @test "brand.css: effects.gradients none writes the option and single-colour gradients in both themes" {
@@ -386,7 +386,7 @@ schema_paths() {
 @test "template: theme-config.template.yaml has every token commented out and no senderName or smtp" {
   f="$BATS_TEST_DIRNAME/../theme-config.template.yaml"
   [ -z "$(grep -vE '^(#|$)' "$f")" ]
-  ! grep -qE 'senderName|smtp' "$f" "$BATS_TEST_DIRNAME/../theme-package.yaml"
+  if grep -qE 'senderName|smtp' "$f" "$BATS_TEST_DIRNAME/../theme-package.yaml"; then false; fi
 }
 
 @test "template: the awk reader sees a changed token (guard against a reader that finds nothing)" {
@@ -416,7 +416,7 @@ schema_paths() {
 
 # ── contract with the charts ─────────────────────────────────────────────────
 
-CHARTS="$BATS_TEST_DIRNAME/../../../../../../../codemie-helm-charts"
+CHARTS="${KIT_CHARTS_DIR:-$BATS_TEST_DIRNAME/../../../../../../../codemie-helm-charts}"
 CONTRACT="$FIXTURES/contract/chart-values-keys.txt"
 
 # contract_lines <kind>: the values of the fixture lines of one kind
@@ -425,6 +425,11 @@ contract_lines() { grep -E "^$1 " "$CONTRACT" | cut -d' ' -f2-; }
 # need_charts: skip with a visible message when the charts repository is not next to this one
 need_charts() {
   if [ ! -d "$CHARTS/keycloak-helm" ]; then
+    # KIT_REQUIRE_CHARTS=yes turns the skip into a failure, for a runner that has the charts
+    if [ "${KIT_REQUIRE_CHARTS:-no}" = "yes" ]; then
+      echo "codemie-helm-charts not found at $CHARTS (set KIT_CHARTS_DIR)"
+      return 1
+    fi
     skip "codemie-helm-charts not found at $CHARTS: contract lines are not checked against the charts"
   fi
 }
@@ -439,7 +444,7 @@ need_charts() {
 }
 
 @test "contract: the fixture lists no childTheme.data, binaryData, 400000, img. prefix or realm.smtp" {
-  ! grep -E 'childTheme\.data|childTheme\.binaryData|binaryData|400000|img\.|realm\.smtp' "$CONTRACT"
+  if grep -E 'childTheme\.data|childTheme\.binaryData|binaryData|400000|img\.|realm\.smtp' "$CONTRACT"; then false; fi
 }
 
 @test "contract: the asset-name regex of the fixture is the regex of the lib" {

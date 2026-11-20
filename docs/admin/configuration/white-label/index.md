@@ -86,7 +86,7 @@ The kit itself can live anywhere, for example in `./kit`. The charts repository 
 
 4. **Check the files.** The script writes the files in the next section into `codemie-ui/assets`. Review `brand.css` and `brand-config.json`, especially at the first run.
 
-5. **Enable the brand.** Set `branding.enabled: true` at the top level of the values file of the cloud, `codemie-ui/values-<cloud>.yaml`. The default is `false`: the chart ignores the folder and `NOTES.txt` says so.
+5. **Enable the brand.** Set `branding.enabled: true` under the key `codemie-ui:` in the values file of the cloud, `codemie-ui/values-<cloud>.yaml`. The default is `false`: the chart ignores the folder and `NOTES.txt` says so.
 
 6. **Deploy.** Run `helm-charts.sh` as for a normal deployment of the version, for example:
 
@@ -102,7 +102,7 @@ A plain `helm upgrade` does not restart pods when only brand files changed. `hel
 
 ### Files written by apply-theme
 
-The script checks all inputs first and builds the files in a temporary folder next to the output folder. Only then does it replace the target paths. A failed check leaves an existing output unchanged.
+The script checks all inputs first and builds the files in a temporary folder next to the output folder. Only then does it replace the target paths. A failed check leaves an existing output unchanged. The replacement itself is a series of renames, not one atomic step. If the process stops during it (a kill, a full disk), some targets can hold new files and others old files, and a folder `.kit-stage-*` or `.kit-old-*` can stay next to the output. Delete such folders and run the script again.
 
 | Path in `codemie-ui/assets` | Content                                                                                       |
 | --------------------------- | --------------------------------------------------------------------------------------------- |
@@ -116,7 +116,7 @@ The script replaces the content of `platform/` and `email/` (old files go) and k
 
 ### Input checks
 
-Each script runs the same input checks, in one function, and lists all problems at once. If any check fails, it exits with a non-zero code and writes nothing.
+Each script runs the same input checks, in one function, and lists all problems at once. The one difference is the value policy for `.properties` files: only `apply-keycloak-theme` applies it, because only that script writes such files. If any check fails, it exits with a non-zero code and writes nothing.
 
 1. The removed tokens `email.senderName` and `keycloak.smtp` are reported by name, with the text that sends the reader to the realm settings. See [Release Notes](#release-notes).
 2. The package is validated against `theme-package.schema.json`.

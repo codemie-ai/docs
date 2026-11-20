@@ -261,7 +261,7 @@ The theme name must match `^[a-z0-9-]{3,40}$`: 3 to 40 characters of `a-z`, `0-9
 
 ### Value Policy
 
-Both scripts check the values that reach a `.properties` file. The checked values are `product.name`, `product.shortName`, `email.signature`, the values of `email.palette`, and `email.images.logoUrl`. Each of them is rejected when it contains:
+`apply-keycloak-theme` checks the values that reach a `.properties` file. `apply-theme` does not apply this policy. The checked values are `product.name`, `product.shortName`, `email.signature`, the values of `email.palette`, and `email.images.logoUrl`. Each of them is rejected when it contains:
 
 - `${`
 - `<`, `>`, `"` or a backslash

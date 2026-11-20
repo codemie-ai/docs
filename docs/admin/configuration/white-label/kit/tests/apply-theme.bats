@@ -120,14 +120,14 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   [ "$status" -eq 0 ]
   for f in logo-light.svg favicon.ico; do
     b64=$(base64 <"$ASSETS_DIR/$f" | tr -d '\n')
-    ! grep -rqF -- "$b64" "$OUT" --exclude-dir=platform
+    if grep -rqF -- "$b64" "$OUT" --exclude-dir=platform; then false; fi
   done
   [ -z "$(find "$OUT" -name 'values*' -o -name '*.b64')" ]
-  ! grep -rqE 'kind: ConfigMap|binaryData|extraObjects|checksum/brand' "$OUT" --exclude-dir=platform
+  if grep -rqE 'kind: ConfigMap|binaryData|extraObjects|checksum/brand' "$OUT" --exclude-dir=platform; then false; fi
 }
 
 @test "output: the script calls no helm, kubectl or curl" {
-  ! grep -qE '(^|[^a-z-])(helm|kubectl|curl|base64)[[:space:]]' "$SCRIPT"
+  if grep -qE '(^|[^a-z-])(helm|kubectl|curl|base64)[[:space:]]' "$SCRIPT"; then false; fi
 }
 
 @test "output: an existing folder is updated, stale files go, .gitkeep and unowned files stay" {
@@ -174,10 +174,10 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
 @test "failed check: a bad token leaves an existing output byte-equal" {
   old_output
   before=$(tree_state "$OUT")
-  pkg=$(mutate '.email.signature = "Team ${x}"')
+  pkg=$(mutate '.assets.logoLight = "nope.svg"')
   run "$SCRIPT" --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
   [ "$status" -ne 0 ]
-  [[ "$output" == *'email.signature'* ]]
+  [[ "$output" == *'assets.logoLight'* ]]
   [ "$before" = "$(tree_state "$OUT")" ]
 }
 
@@ -313,8 +313,15 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   done
   [ -z "$(unknown_backend_keys "$by" '.' 'identity|email|links')" ]
   [ -z "$(unknown_backend_keys "$by" '.email' 'senderName|signature|palette|images|messages')" ]
-  ! yq eval '.email | .. | select(tag == "!!str")' "$by" | grep -oE '\{[A-Za-z0-9_]+\}' | grep -vE '^\{(productName|projectName|costCenterName)\}$'
+  if yq eval '.email | .. | select(tag == "!!str")' "$by" | grep -oE '\{[A-Za-z0-9_]+\}' | grep -vE '^\{(productName|projectName|costCenterName)\}$'; then false; fi
   logo=$(yq eval '.email.images.logo' "$by")
   [ -n "$logo" ] && [ "$logo" != "null" ]
   [ "$(od -An -tx1 -N8 "$OUT/email/$logo" | tr -d ' \n')" = "89504e470d0a1a0a" ]
+}
+
+@test "properties policy: a platform-only run accepts a dollar-brace name that the Keycloak script rejects" {
+  pkg=$(mutate '.product.name = "Acme ${env} Suite"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -eq 0 ]
+  [ "$(yq eval -r '.product.name' "$OUT/brand-config.json")" = 'Acme ${env} Suite' ]
 }
