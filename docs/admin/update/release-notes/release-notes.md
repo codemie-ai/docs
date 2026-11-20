@@ -26,7 +26,7 @@ Review every release between your current and target version that has a **Breaki
 
 :::warning Use the verified LiteLLM version
 While we recommend keeping CodeMie up to date, keep LiteLLM at the version that has been tested and verified with your CodeMie release.
-The currently tested and verified LiteLLM version is **1.99.4**.
+The currently tested and verified LiteLLM version is **1.101.6**.
 
 Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
 :::
