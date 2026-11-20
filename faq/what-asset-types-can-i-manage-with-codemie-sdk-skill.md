@@ -19,4 +19,4 @@ marketplace.
 
 ## Sources
 
-- [Manage Platform Assets from CLI](https://codemie-ai.github.io/docs/user-guide/codemie-cli/sdk-asset-management)
+- [Manage Platform Assets from CLI](https://codemie-ai.github.io/docs/user-guide/codemie-cli/claude/sdk-cli-reference)

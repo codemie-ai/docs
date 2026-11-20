@@ -17,4 +17,4 @@ discovery, go to **Settings → Inference configuration → Connection → Model
 
 ## Sources
 
-- [Claude Desktop Integration](https://codemie-ai.github.io/docs/user-guide/codemie-cli/claude-desktop)
+- [Claude Desktop Integration](https://codemie-ai.github.io/docs/user-guide/codemie-cli/claude/claude-desktop)
