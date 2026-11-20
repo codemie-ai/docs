@@ -544,7 +544,7 @@ need_charts() {
   run "$BATS_TEST_DIRNAME/../apply-theme" --output-dir "$BATS_TEST_TMPDIR/out" "$pkg" "$d"
   [ "$status" -eq 0 ]
   yq eval '.email.images.logo = "logo.png"' "$FIXTURES/keycloak.yaml" >"$BATS_TEST_TMPDIR/kc.yaml"
-  run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/out" --chart-dir "$BATS_TEST_TMPDIR/chart" "$BATS_TEST_TMPDIR/kc.yaml" "$d"
+  run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/kcout" --chart-dir "$BATS_TEST_TMPDIR/chart" "$BATS_TEST_TMPDIR/kc.yaml" "$d"
   [ "$status" -eq 0 ]
   layout=$(contract_lines layout)
   text=$(contract_lines text)
@@ -554,10 +554,14 @@ need_charts() {
       brand.css | brand-config.json | email/brand.yaml) grep -qxF "$f" <<<"$layout" ;;
       platform/*) grep -qxF 'platform/*' <<<"$layout" ;;
       email/*) grep -qxF 'email/*' <<<"$layout" ;;
-      keycloak/*) grep -qxF 'keycloak' <<<"$layout" && p="${f#keycloak/}" && { grep -qxF "$p" <<<"$text" || grep -qxF "${p%/*}/" <<<"$text"; } ;;
       *) false ;;
     esac || { echo "path not in the fixture layout: $f"; return 1; }
   done < <(cd "$BATS_TEST_TMPDIR/out" && find . -type f | sed 's#^\./##')
+  # keycloak script paths: the output folder is the theme folder, so each path is a text line of the fixture
+  grep -qxF 'keycloak' <<<"$layout"
+  while IFS= read -r f; do
+    { grep -qxF "$f" <<<"$text" || grep -qxF "${f%/*}/" <<<"$text"; } || { echo "path not in the fixture layout: keycloak $f"; return 1; }
+  done < <(cd "$BATS_TEST_TMPDIR/kcout" && find . -type f | sed 's#^\./##')
   # every fixture layout path has output, and the mirror has the five paths
   [ -f "$BATS_TEST_TMPDIR/out/brand.css" ] && [ -f "$BATS_TEST_TMPDIR/out/brand-config.json" ] && [ -d "$BATS_TEST_TMPDIR/out/platform" ]
   for t in login/theme.properties login/resources/css/brand.css email/theme.properties; do
