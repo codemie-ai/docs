@@ -150,7 +150,7 @@ The option wins over the per-user Custom Appearance setting for gradients. Butto
 
 ## Assets
 
-All values are plain file names relative to the assets directory that is passed to `apply-theme`: up to 100 characters from letters, digits, `.`, `_`, and `-`, starting with a letter or digit. Paths, duplicate names, and symbolic links are rejected. Two size limits apply. The combined size of the files must stay below 1 MiB once base64-encoded (about 750 KB of files), which is the limit of the ConfigMap. The Helm release Secret of the UI release holds the files twice and is also limited to 1 MiB, and the script checks that limit after rendering. Text files such as SVG compress well and reach the first limit. PNG and JPEG data does not compress, so about 350 KB of those files is the practical maximum.
+All values are plain file names of files in the source folder that is passed to `apply-theme` (`<source-dir>`). A name has up to 100 characters from letters, digits, `.`, `_`, and `-`, and starts with a letter or digit. This is the file-name rule of the charts. A name with a path, a name that breaks the rule (for example `Logo Light.svg`), a missing file, and a symbolic link are rejected. The scripts copy each file by name, so the name in the package is the name in the output folders. The size of the files is not checked by the scripts: the charts check the size limits when the Helm release is built. See [Limits](./index.md#limits).
 
 | Path                | Type   | Required | Description                          |
 | ------------------- | ------ | -------- | ------------------------------------ |
@@ -162,7 +162,7 @@ All values are plain file names relative to the assets directory that is passed 
 
 ## Links
 
-The `links` object is required, but each link inside it is optional in the schema. In practice, include every link that is enabled in `customer-config.yaml`: `apply-theme` fails validation when an enabled link is missing from the package. Only the link identifiers below are allowed.
+The `links` object is required, but each link inside it is optional in the schema. The scripts do not compare the links with `customer-config.yaml`. Only the link identifiers below are allowed.
 
 | Path                              | Type   | Required | Description                                                                                                     |
 | --------------------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------- |
@@ -184,11 +184,10 @@ The `email` block is optional. A package without it works: the platform sends em
 
 | Path                              | Type   | Required | Description                                                                                                                    |
 | --------------------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `email.senderName`                | string | No       | Display name of the sender. Must not be blank. May use `{productName}`.                                                        |
 | `email.signature`                 | string | No       | Closing line of every email. May use `{productName}`.                                                                          |
 | `email.palette`                   | object | No       | Email colors. Allowed roles: `primary`, `primaryText`, `text`, `background`, `surface`.                                        |
 | `email.palette.<role>`            | string | No       | Six-digit hex color `#RRGGBB`, upper case or lower case. Shorthand such as `#fff` is rejected.                                 |
-| `email.images.logo`               | string | No       | File name of the email logo in the assets directory, for platform emails. See [Email Logo](#email-logo).                       |
+| `email.images.logo`               | string | No       | File name of the email logo in the source folder, for platform emails. See [Email Logo](#email-logo).                          |
 | `email.images.logoUrl`            | string | No       | Absolute `https://` URL of the logo for Keycloak emails. See [Keycloak Email Logo URL](#keycloak-email-logo-url).              |
 | `email.messages.<id>`             | object | No       | Texts of one message. Allowed ids: `verification`, `password_reset`, `budget_soft_limit`, `budget_stopped`, `budget_restored`. |
 | `email.messages.<id>.subject`     | string | No       | Subject line. Must not be blank.                                                                                               |
@@ -217,79 +216,59 @@ Omitted roles use the platform defaults: `primary` `#4F46E5`, `primaryText` `#FF
 
 A token is a name in braces, for example `{productName}`. A string such as `{a b}` or `{}` is not a token and is kept as written. Any other token name is rejected.
 
-| Token              | Allowed in                                                                             |
-| ------------------ | -------------------------------------------------------------------------------------- |
-| `{productName}`    | Every text field, including `senderName` and `signature`. Its value is `product.name`. |
-| `{projectName}`    | `subject` and `intro` of `budget_stopped` and `budget_restored`.                       |
-| `{costCenterName}` | `subject` and `intro` of `budget_stopped`.                                             |
+| Token              | Allowed in                                                            |
+| ------------------ | --------------------------------------------------------------------- |
+| `{productName}`    | Every text field, including `signature`. Its value is `product.name`. |
+| `{projectName}`    | `subject` and `intro` of `budget_stopped` and `budget_restored`.      |
+| `{costCenterName}` | `subject` and `intro` of `budget_stopped`.                            |
 
 ### Email Logo
 
 `email.images.logo` is used by platform emails. Keycloak emails do not use it; see [Keycloak Email Logo URL](#keycloak-email-logo-url).
 
-- Use the file name only. A name with `/`, a backslash or `..` is rejected.
-- Allowed extensions: `png`, `jpg`, `jpeg`, `gif`. The extension is not case-sensitive.
-- The file must exist in the assets directory and must not be a symbolic link.
-- Maximum size: 262144 bytes (256 KiB).
-- The file content must match the extension: PNG, JPEG or GIF (`GIF87a` or `GIF89a`) signature.
+- Use the file name only. A name with `/` or a backslash is rejected, and the name follows the file-name rule of [Assets](#assets).
+- The file must exist in the source folder and must not be a symbolic link. `apply-theme` copies it to `email/` in the assets folder.
+- Allowed types are PNG, JPEG and GIF, up to 262144 bytes (256 KiB). The scripts do not check the type, the size or the content. The API loader checks them when it reads the logo, and the test harness checks the result.
+
+:::note Sender name
+The package has no sender name. The sender name of platform emails comes from `EMAIL_FROM_NAME` in the API values, or it is `Platform Notifications`. The previous token `email.senderName` is removed. A package that still has it fails with a message that points to the realm settings.
+:::
 
 ## Keycloak
 
-The `keycloak` block is optional. A package without it behaves exactly as before: no Keycloak output file and no Keycloak Helm call. The block is also skipped for a single run with `--no-keycloak`. When the block is present, `keycloak.themeName` is required and the other keys are optional. No key may be added that is not listed here. The rollout steps are described in [Keycloak Login Page and Emails](./index.md#keycloak-login-page-and-emails).
+The `keycloak` block is optional for `apply-theme`, which ignores it. `apply-keycloak-theme` needs the block, because `keycloak.themeName` is required. No key may be added that is not listed here. The steps are described in [Keycloak Login Page and Emails](./index.md#keycloak-login-page-and-emails).
 
-| Path                              | Type    | Required | Description                                                                                                                 |
-| --------------------------------- | ------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `keycloak.themeName`              | string  | Yes      | Name of the Keycloak child theme. See [Theme Name](#theme-name).                                                            |
-| `keycloak.smtp`                   | object  | No       | SMTP connection of the realm. See [SMTP](#smtp).                                                                            |
-| `keycloak.smtp.host`              | string  | No       | SMTP server host name. 1 to 253 characters of letters, digits, `.` and `-`. Set together with `from`.                       |
-| `keycloak.smtp.port`              | integer | No       | SMTP server port, from 1 to 65535.                                                                                          |
-| `keycloak.smtp.from`              | string  | No       | Sender address, for example `no-reply@acme.example`. 3 to 254 characters. Set together with `host`.                         |
-| `keycloak.smtp.ssl`               | boolean | No       | Use SSL for the connection.                                                                                                 |
-| `keycloak.smtp.starttls`          | boolean | No       | Use STARTTLS for the connection.                                                                                            |
-| `keycloak.smtp.auth`              | object  | No       | SMTP credentials. Allowed keys: `username` and `password`.                                                                  |
-| `keycloak.smtp.auth.<credential>` | object  | No       | One credential, `username` or `password`. Only a secret reference is accepted. See [Secret References](#secret-references). |
+| Path                 | Type   | Required | Description                                                      |
+| -------------------- | ------ | -------- | ---------------------------------------------------------------- |
+| `keycloak.themeName` | string | Yes      | Name of the Keycloak child theme. See [Theme Name](#theme-name). |
+
+:::note Removed token
+`keycloak.smtp` is removed. The SMTP connection and the sender name of Keycloak emails are set in the Keycloak realm settings. A package that still has the token fails with a message that points to the realm settings.
+:::
 
 ### Theme Name
 
 The theme name must match `^[a-z0-9-]{3,40}$`: 3 to 40 characters of `a-z`, `0-9` and `-`. The names `codemie`, `codemie-default`, `base` and `keycloak` are reserved and are rejected. `codemie` is the vendor parent theme that the child theme extends, so it must stay unchanged. `codemie-default` is the built-in theme with the original CodeMie login look. It is the default login theme of a deployment that has no child theme.
-
-### SMTP
-
-- `keycloak.smtp.host` and `keycloak.smtp.from` are set together or not at all. A block that has only one of them fails validation.
-- A full block (`host` and `from`) writes the SMTP connection to the realm settings. Without the block, the realm file has no SMTP keys, so the SMTP settings of the oauth2-proxy release and the Keycloak sender stay as they are.
-- An explicit empty block (`smtp: {}`) clears an SMTP connection written by an earlier run: the realm file sets every SMTP key to `null`.
-- `email.senderName` reaches Keycloak only through a full SMTP block. Without it, the script warns that the sender name is not used.
-- Keys other than `host`, `port`, `from`, `ssl`, `starttls` and `auth` are rejected.
-
-### Secret References
-
-SMTP credentials are accepted only as references to an existing Kubernetes Secret. A literal username or password is a validation error. The kit does not create Secrets.
-
-| Path                                                | Type   | Required | Description                                 |
-| --------------------------------------------------- | ------ | -------- | ------------------------------------------- |
-| `keycloak.smtp.auth.<credential>.secretKeyRef`      | object | Yes      | Reference to a key of a Kubernetes Secret.  |
-| `keycloak.smtp.auth.<credential>.secretKeyRef.name` | string | Yes      | Secret name. 1 to 253 characters.           |
-| `keycloak.smtp.auth.<credential>.secretKeyRef.key`  | string | Yes      | Key inside the Secret. 1 to 253 characters. |
 
 ### Keycloak Email Logo URL
 
 `email.images.logoUrl` is the logo of Keycloak emails. Mail clients do not load a logo from the cluster, so the value is an absolute URL.
 
 - The URL starts with `https://` and has 1 to 2000 characters after it. It must not contain whitespace, `$`, `{`, `}`, `<`, `>`, `"` or a backslash.
-- The file is a PNG, JPG or GIF image. A URL whose path ends in `.svg` is rejected, because email clients do not render SVG.
+- The file is a PNG, JPG or GIF image. A SVG image does not show in email clients. The scripts do not check the type of the file behind the URL.
 - When `logoUrl` is not set, the mail shows the product name as text. A data URI is not accepted.
-- When only `email.images.logo` is set, the script warns that Keycloak emails do not use it.
+- Keycloak emails do not use `email.images.logo`: when only the logo file is set, the mail shows the product name as text.
 
-### Keycloak Value Policy
+### Value Policy
 
-When the `keycloak` block is active, the values that reach Keycloak properties files are checked. The checked values are `product.name`, `product.shortName`, `email.signature`, the values of `email.palette`, and `email.images.logoUrl`. Each of them is rejected when it contains:
+Both scripts check the values that reach a `.properties` file. The checked values are `product.name`, `product.shortName`, `email.signature`, the values of `email.palette`, and `email.images.logoUrl`. Each of them is rejected when it contains:
 
 - `${`
 - `<`, `>`, `"` or a backslash
 - control characters. Only `email.signature` may contain line breaks.
 - leading or trailing whitespace
 
-`keycloak.themeName` has its own pattern, described in [Theme Name](#theme-name). In addition, `assets.logoLight` and `assets.logoDark` are required, and the theme content must stay within 400000 bytes. All problems are listed at once, and nothing is written when any check fails.
+`keycloak.themeName` has its own pattern, described in [Theme Name](#theme-name). All problems are listed at once, and nothing is written when any check fails.
 
 ## Complete Example
 
@@ -324,7 +303,6 @@ links:
     url: 'https://docs.acme.example/'
 
 email:
-  senderName: 'Acme Notifications'
   signature: 'The {productName} Team'
   palette:
     primary: '#0B5FFF'
@@ -337,19 +315,4 @@ email:
 
 keycloak:
   themeName: 'acme-brand'
-  smtp:
-    host: 'smtp.acme.example'
-    port: 587
-    from: 'no-reply@acme.example'
-    ssl: false
-    starttls: true
-    auth:
-      username:
-        secretKeyRef:
-          name: 'acme-smtp'
-          key: 'username'
-      password:
-        secretKeyRef:
-          name: 'acme-smtp'
-          key: 'password'
 ```
