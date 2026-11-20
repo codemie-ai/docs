@@ -120,20 +120,21 @@ model**. Requests to them are sent through the CodeMie gateway like requests to 
 
 ### Non-Claude models in Claude Desktop
 
-Claude Desktop accepts only model IDs that read as Claude and rejects IDs that name another model
-family. Selected models are therefore listed under an opaque `claude-x-<hash>` ID, with the real
-model name as the display name. The local CodeMie proxy maps the ID back to the real model on each
-request, so the requests reach the model that was selected. The `claude-x-<hash>` ID is calculated
-from the real ID, so it stays the same between restarts.
+Selected models appear in the Claude Desktop model picker under their regular names, next to the
+Claude models, and requests to them are sent through the local CodeMie proxy and the CodeMie
+gateway. Claude Desktop must be restarted after the selection is changed.
 
 The Claude Desktop connection itself is described in [Claude Desktop](./claude-desktop.md).
 
-:::warning Limitations
+:::warning Non-Claude models may not work well
 
-- The `claude-x-<hash>` ID works around a model ID check in Claude Desktop. A Claude Desktop update
-  may break it.
-- Anthropic does not support non-Claude models in Claude Code or Claude Desktop. Non-Claude models
-  may not support every feature, such as extended thinking, prompt caching, or some tools.
+Claude Code and Claude Desktop are built for Claude models. Non-Claude models may not support every
+feature, such as extended thinking, prompt caching, or some tools, and may behave less reliably
+than Claude models, for example when calling tools. Anthropic does not support non-Claude models in
+these clients.
+
+Support for non-Claude models in Claude Desktop relies on a workaround for the model check in the
+application, so a Claude Desktop update may stop it from working.
 
 :::
 

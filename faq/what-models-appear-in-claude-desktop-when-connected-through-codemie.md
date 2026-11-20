@@ -7,8 +7,7 @@ catalog configured in the organization's CodeMie platform — for example, `clau
 versions are enabled by the organization's admin.
 
 Non-Claude models, such as Grok, Gemini, or Kimi, appear only if they were selected for the profile
-with `codemie-claude models select`. They are listed under their real display name, with an opaque
-`claude-x-<hash>` ID behind it.
+with `codemie-claude models select`. They are listed under their regular names in the model picker.
 
 The model list is fetched automatically at every Claude Desktop launch. To see which models
 were discovered, go to **Settings → Inference configuration → Connection → Models** and check
