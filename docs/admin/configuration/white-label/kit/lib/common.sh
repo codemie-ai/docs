@@ -1,0 +1,342 @@
+# Shared functions of apply-theme and apply-keycloak-theme. Source this file; do not run it.
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5. Works with bash 3.2 and later.
+#
+# The caller sets KIT_SCRIPT (script name for messages), PACKAGE_FILE and SOURCE_DIR.
+# Order of work of every script (the output changes only in the last step):
+#   1. kit_removed_tokens   2. kit_check_inputs   3. build every target in a staged folder
+#   4. kit_swap_file / kit_swap_dir
+# bash 5.2 expands & in a replacement string; product names such as R&D must stay literal
+shopt -u patsub_replacement 2>/dev/null || true
+
+KIT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+KIT_SCHEMA="$KIT_LIB_DIR/../theme-package.schema.json"
+
+# Asset and logo file names. The same rule as the chart (keycloak-helm/templates/child-theme-configmap.yaml)
+# and the UI (codemie-ui/src/utils/brand.ts). Held once here; the contract fixture holds the second copy.
+KIT_ASSET_NAME_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
+KIT_ASSET_KEYS=(logoLight logoDark favicon faviconSvg manifest)
+KIT_RESERVED_THEMES=(codemie codemie-default base keycloak)
+
+KIT_STAGES=()
+TMP_ROOT=""
+
+kit_cleanup() {
+  local s
+  for s in ${KIT_STAGES[@]+"${KIT_STAGES[@]}"}; do rm -rf "$s"; done
+  [[ -z "$TMP_ROOT" ]] || rm -rf "$TMP_ROOT"
+}
+
+# Scratch files live in one folder that is removed on exit. The schema input needs a .json
+# extension, which ajv-cli uses to decide how to read it.
+kit_init() {
+  TMP_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/kit-scratch-XXXXXX")
+  trap kit_cleanup EXIT
+}
+
+kit_die() {
+  echo "${KIT_SCRIPT:-kit}: $*" >&2
+  exit 1
+}
+
+# kit_usage: print the synopsis of the running script and exit 1. KIT_ALLOW_CHART_DIR=yes adds --chart-dir.
+kit_usage() {
+  if [[ "${KIT_ALLOW_CHART_DIR:-no}" == "yes" ]]; then
+    echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>] [--chart-dir <keycloak-helm-folder>]" >&2
+  else
+    echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>]" >&2
+  fi
+  echo "         <theme-package.yaml> <source-dir>" >&2
+  echo "" >&2
+  echo "  --output-dir  assets folder of the wrapper chart (default: codemie-ui/assets)" >&2
+  if [[ "${KIT_ALLOW_CHART_DIR:-no}" == "yes" ]]; then
+    echo "  --chart-dir   Keycloak chart folder; the theme is mirrored to <chart-dir>/theme (default: keycloak-helm)" >&2
+  fi
+  echo "  <source-dir>  folder with the logo, favicon, manifest and email logo files" >&2
+  echo "Run the script from the root of the charts repository. Options go before the two arguments." >&2
+  exit 1
+}
+
+# kit_parse_args "$@": sets OUTPUT_DIR, CHART_DIR, PACKAGE_FILE and SOURCE_DIR
+kit_parse_args() {
+  OUTPUT_DIR="codemie-ui/assets"
+  CHART_DIR="keycloak-helm"
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --output-dir)
+        [[ $# -ge 2 ]] || kit_die "--output-dir needs a value"
+        OUTPUT_DIR="$2"
+        shift 2
+        ;;
+      --chart-dir)
+        if [[ "${KIT_ALLOW_CHART_DIR:-no}" != "yes" ]]; then
+          echo "Unknown option: $1" >&2
+          kit_usage
+        fi
+        [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
+        CHART_DIR="$2"
+        shift 2
+        ;;
+      --help | -h) kit_usage ;;
+      -*)
+        echo "Unknown option: $1" >&2
+        kit_usage
+        ;;
+      *) break ;;
+    esac
+  done
+  [[ $# -ge 2 ]] || kit_usage
+  if [[ $# -gt 2 ]]; then
+    echo "Unexpected arguments after <source-dir>: ${*:3}" >&2
+    echo "Options go before <theme-package.yaml> <source-dir>." >&2
+    kit_usage
+  fi
+  PACKAGE_FILE="$1"
+  SOURCE_DIR="$2"
+}
+
+# kit_str <yq path>: the value when it is a string, else nothing
+kit_str() { yq eval "$1 | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true; }
+
+# kit_read_brand: product and asset fields, read by both scripts through this one function
+kit_read_brand() {
+  PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
+  PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
+  A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
+  A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
+  A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
+  A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
+  A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
+  EMAIL_LOGO=$(kit_str '.email.images.logo')
+}
+
+# Render brand.css to stdout. Each token carries a dark and a light value, and both are emitted together:
+# the dark values under html.codemieDark and the light values under html.codemieLight, the same
+# selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
+# space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
+# in :root. Nothing needs !important.
+kit_render_brand_css() {
+  local FONT_FACE GRADIENTS DARK_VARS="" LIGHT_VARS="" FLAT_VARS="" token dark light pair
+  FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
+  GRADIENTS=$(yq eval '.effects.gradients // "default"' "$PACKAGE_FILE")
+  # effects.gradients: none also makes the two-colour gradients of controls and tinted areas single-colour: the
+  # end colour follows the start colour (a var() reference, so it works whether or not the package sets the
+  # start colour). The swatch gradient has a middle colour too.
+  for pair in border-specific-primary-button surface-specific-button-tertiary onboarding-tooltip \
+    surface-specific-tint-gradient surface-specific-banner-gradient surface-specific-switch-on \
+    surface-specific-magic-gradient surface-specific-action-accent-hover surface-specific-swatch-gradient; do
+    FLAT_VARS+="  --colors-${pair}-to: var(--colors-${pair}-from);"$'\n'
+  done
+  FLAT_VARS+="  --colors-surface-specific-swatch-gradient-via: var(--colors-surface-specific-swatch-gradient-from);"$'\n'
+  _kit_hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
+  while read -r token dark light; do
+    [[ -n "$token" ]] || continue
+    DARK_VARS+="  --colors-${token//./-}: $(_kit_hex_to_rgb "$dark");"$'\n'
+    LIGHT_VARS+="  --colors-${token//./-}: $(_kit_hex_to_rgb "$light");"$'\n'
+  done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
+
+  {
+    if [[ -n "$FONT_FACE" ]]; then echo "$FONT_FACE"; fi
+    echo ":root {"
+    echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
+    echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
+    # effects.gradients: none removes every background gradient. The UI reads this variable; it is not a colour.
+    if [[ "$GRADIENTS" == "none" ]]; then echo "  --brand-gradients: none;"; fi
+    echo "}"
+    if [[ -n "$DARK_VARS" || "$GRADIENTS" == "none" ]]; then
+      echo "html.codemieDark {"
+      printf '%s' "$DARK_VARS"
+      if [[ "$GRADIENTS" == "none" ]]; then printf '%s' "$FLAT_VARS"; fi
+      echo "}"
+      echo "html.codemieLight {"
+      printf '%s' "$LIGHT_VARS"
+      if [[ "$GRADIENTS" == "none" ]]; then printf '%s' "$FLAT_VARS"; fi
+      echo "}"
+    fi
+  }
+}
+
+# Removed tokens (step 1). Each one found is named with the text to set it in the realm settings.
+kit_removed_tokens() {
+  local found=0
+  if [[ "$(yq eval '.email.senderName | tag' "$PACKAGE_FILE" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+    echo "$KIT_SCRIPT: email.senderName is removed from the theme package." >&2
+    echo "  The sender name of platform emails comes from EMAIL_FROM_NAME in the API values (default: Platform Notifications)." >&2
+    echo "  Set the sender name of Keycloak emails in the Keycloak realm settings (Email, From display name)." >&2
+    found=1
+  fi
+  if [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+    echo "$KIT_SCRIPT: keycloak.smtp is removed from the theme package." >&2
+    echo "  Set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
+    found=1
+  fi
+  [[ "$found" == "0" ]]
+}
+
+# Properties policy: every value that reaches a .properties file. Rejects ${, < > " \, control
+# characters (a newline only when allowed) and leading or trailing whitespace.
+_kit_check_prop() { # <dotted path> <value> [allow_newline]
+  local path="$1" value="$2" probe="$2"
+  [[ -n "$value" ]] || return 0
+  if [[ "${3:-}" == "allow_newline" ]]; then probe="${probe//$'\n'/}"; fi
+  case "$value" in
+    *'${'*) ERRORS+=("$path: must not contain \${") ;;
+  esac
+  case "$value" in
+    *'<'* | *'>'* | *'"'* | *'\'*) ERRORS+=("$path: must not contain < > \" or a backslash") ;;
+  esac
+  if [[ "$probe" =~ [[:cntrl:]] ]]; then
+    ERRORS+=("$path: must not contain control characters")
+  fi
+  if [[ "$value" =~ ^[[:space:]] || "$value" =~ [[:space:]]$ ]]; then
+    ERRORS+=("$path: must not start or end with whitespace")
+  fi
+  return 0
+}
+
+# One file name of the package: plain name, chart rule, exists in the source folder, no symlink.
+_kit_check_file() { # <dotted path> <file name>
+  local label="$1" name="$2" path
+  [[ -n "$name" ]] || return 0
+  if [[ "$name" == */* || "$name" == *\\* ]]; then
+    ERRORS+=("$label: must be a plain file name inside the source folder, got: $name")
+    return 0
+  fi
+  if [[ ! "$name" =~ $KIT_ASSET_NAME_RE ]]; then
+    ERRORS+=("$label: invalid file name (start with a letter or digit; letters, digits, . _ - only; at most 100 characters): $name")
+    return 0
+  fi
+  path="$SOURCE_DIR/$name"
+  if [[ -L "$path" ]]; then
+    ERRORS+=("$label: must not be a symbolic link: $path")
+  elif [[ ! -f "$path" ]]; then
+    ERRORS+=("$label: file not found: $path")
+  fi
+  return 0
+}
+
+# kit_report_errors: print ERRORS under one heading
+kit_report_errors() {
+  local e
+  echo "$KIT_SCRIPT: validation failed:" >&2
+  for e in "${ERRORS[@]}"; do echo "  - $e" >&2; done
+}
+
+# The only input checks (step 2): schema (all errors), safe characters of values that reach a
+# .properties file, asset files exist and are no symlinks, file names follow the chart rule.
+# Not checked: sizes (the charts own them), email-logo content, links, theme content (the test harness owns it).
+kit_check_inputs() {
+  ERRORS=()
+  local ajv_input="$TMP_ROOT/package.json" ajv_err="$TMP_ROOT/ajv.err" key pk line
+  if ! yq eval -o=json "$PACKAGE_FILE" >"$ajv_input" 2>"$ajv_err"; then
+    ERRORS+=("cannot parse $PACKAGE_FILE: $(tr '\n' ' ' <"$ajv_err")")
+    kit_report_errors
+    return 1
+  fi
+  if ! ajv validate -s "$KIT_SCHEMA" --spec draft7 --all-errors --errors=text -d "$ajv_input" >"$ajv_err" 2>&1; then
+    # ajv prints all errors on one comma-joined line; put one per line and drop its "<file> invalid" summary
+    while IFS= read -r line; do
+      if [[ -n "$line" && "$line" != *" invalid" ]]; then ERRORS+=("$line"); fi
+    done < <(sed 's/, data\//\
+data\//g' "$ajv_err")
+  fi
+
+  for key in "${KIT_ASSET_KEYS[@]}"; do
+    _kit_check_file "assets.$key" "$(kit_str ".assets.$key")"
+  done
+  _kit_check_file "email.images.logo" "$(kit_str '.email.images.logo')"
+
+  _kit_check_prop "product.name" "$(kit_str '.product.name')"
+  _kit_check_prop "product.shortName" "$(kit_str '.product.shortName')"
+  _kit_check_prop "email.signature" "$(kit_str '.email.signature')" allow_newline
+  _kit_check_prop "email.images.logoUrl" "$(kit_str '.email.images.logoUrl')"
+  for pk in $(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true); do
+    _kit_check_prop "email.palette.$pk" "$(kit_str ".email.palette.\"$pk\"")"
+  done
+
+  [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
+}
+
+# The keycloak.themeName rule (Keycloak script only): a-z0-9-, 3 to 40 characters, not reserved.
+kit_check_theme_name() {
+  ERRORS=()
+  local name r
+  name=$(kit_str '.keycloak.themeName')
+  if [[ -z "$name" ]]; then
+    ERRORS+=("keycloak.themeName: required; add a keycloak block with a themeName to the package")
+  elif [[ ! "$name" =~ ^[a-z0-9-]{3,40}$ ]]; then
+    ERRORS+=("keycloak.themeName: must be 3 to 40 characters of a-z, 0-9 and -")
+  else
+    for r in "${KIT_RESERVED_THEMES[@]}"; do
+      if [[ "$name" == "$r" ]]; then ERRORS+=("keycloak.themeName: '$r' is reserved, choose another name"); fi
+    done
+  fi
+  [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
+}
+
+# Path guards. kit_guard_target <target folder> <owned relative path>...
+# Stops (returns 1 with a message) when the parent of the target does not exist, the target is a
+# symlink or no folder, or an owned path (or anything below it) is a symlink. "." owns the whole folder.
+kit_guard_target() {
+  local dir="${1%/}" parent p comp cur rest
+  shift
+  parent=$(dirname "$dir")
+  if [[ ! -d "$parent" ]]; then
+    echo "$KIT_SCRIPT: parent folder does not exist: $parent" >&2
+    return 1
+  fi
+  if [[ -L "$dir" ]]; then
+    echo "$KIT_SCRIPT: $dir is a symbolic link; refusing to write through it" >&2
+    return 1
+  fi
+  if [[ -e "$dir" && ! -d "$dir" ]]; then
+    echo "$KIT_SCRIPT: $dir is not a folder" >&2
+    return 1
+  fi
+  [[ -d "$dir" ]] || return 0
+  for p in "$@"; do
+    cur="$dir"
+    rest="$p"
+    while [[ -n "$rest" ]]; do
+      comp="${rest%%/*}"
+      if [[ "$rest" == */* ]]; then rest="${rest#*/}"; else rest=""; fi
+      cur="$cur/$comp"
+      if [[ -L "$cur" ]]; then
+        echo "$KIT_SCRIPT: $cur is a symbolic link; refusing to write through it" >&2
+        return 1
+      fi
+    done
+    if [[ -d "$dir/$p" && -n "$(find "$dir/$p" -type l 2>/dev/null | head -n 1)" ]]; then
+      echo "$KIT_SCRIPT: a symbolic link is inside $dir/$p: $(find "$dir/$p" -type l | head -n 1)" >&2
+      return 1
+    fi
+  done
+  return 0
+}
+
+# kit_stage <parent>: make a temporary folder next to the target (same file system); path in STAGE
+kit_stage() {
+  STAGE=$(mktemp -d "${1%/}/.kit-stage-XXXXXX")
+  KIT_STAGES+=("$STAGE")
+}
+
+# kit_swap_file <staged file> <target>: rename over the target
+kit_swap_file() {
+  mv -f "$1" "$2"
+}
+
+# kit_swap_dir <staged folder> <target folder>: the old target goes aside, the staged folder takes
+# its place, then the old copy is removed. The old copy comes back when the move fails.
+kit_swap_dir() {
+  local staged="$1" target="${2%/}" backup=""
+  if [[ -e "$target" ]]; then
+    backup="$(dirname "$target")/.kit-old-$$-$RANDOM"
+    mv "$target" "$backup"
+  fi
+  if ! mv "$staged" "$target"; then
+    if [[ -n "$backup" ]]; then mv "$backup" "$target"; fi
+    return 1
+  fi
+  if [[ -n "$backup" ]]; then rm -rf "$backup"; fi
+  return 0
+}
