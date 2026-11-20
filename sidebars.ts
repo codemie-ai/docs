@@ -73,6 +73,16 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/copy-table',
                 'user-guide/assistants/chat-input-settings',
                 'user-guide/assistants/chat-notifications',
+                {
+                  type: 'category',
+                  label: 'Agent Workspace',
+                  link: {
+                    type: 'doc',
+                    id: 'user-guide/assistants/agent-workspace/agent-workspace',
+                  },
+                  collapsed: true,
+                  items: ['user-guide/assistants/agent-workspace/workspace-file-preview'],
+                },
               ],
             },
           ],
