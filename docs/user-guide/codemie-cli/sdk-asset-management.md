@@ -62,6 +62,16 @@ codemie sdk assistants create --data '{
 }'
 ```
 
+:::warning
+`skip_integration_validation: true` skips the check of toolkit integration credentials. When
+Marketplace management is enabled on the platform (`MARKETPLACE_MANAGEMENT_ENABLED`), only
+[Platform Admins](../getting-started/glossary.md#platform-admin) and Maintainers can use it
+(see [Roles and access control](../../admin/security/roles-rbac.md)). Project Admin rights in
+your own project are not enough. For other users, create returns 403 and the CLI
+shows the generic message "Authorization error: You do not have permission to create assistant."
+Remove the field from the JSON, or create the required integrations in the project first.
+:::
+
 **List scopes:**
 
 | Scope                       | Returns                       |
