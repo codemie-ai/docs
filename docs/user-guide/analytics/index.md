@@ -171,6 +171,13 @@ The **AI Attribution** tab breaks down AI coding sessions by user, repository, m
 what each session cost, how efficiently it used context, and whether it changed any code.
 See [AI Attribution](./ai-attribution.md) for a walkthrough of each screen.
 
+## Run Attributes
+
+Custom labels supplied when an assistant conversation or workflow execution starts can be used to
+find, filter, and group individual runs, for example by work item or team. Run attributes are
+available through the analytics API and SDKs and are an Enterprise package capability. See
+[Run Attributes in Analytics](./run-attributes.md) for the endpoints and filters.
+
 ## AI Champions Leaderboard
 
 The Analytics Dashboard includes an **AI Champions Leaderboard** tab that ranks users by
