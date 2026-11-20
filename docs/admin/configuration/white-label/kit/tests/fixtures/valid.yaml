@@ -53,6 +53,3 @@ links:
   googleDocsDocumentation:
     name: 'Acme Google Docs'
     url: 'https://docs.acme.example/gdocs'
-
-keycloak:
-  themeName: 'acme-brand'

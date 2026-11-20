@@ -159,23 +159,9 @@
     },
     "email": {
       "$ref": "#/definitions/email"
-    },
-    "keycloak": {
-      "$ref": "#/definitions/keycloak"
     }
   },
   "definitions": {
-    "keycloak": {
-      "type": "object",
-      "required": ["themeName"],
-      "additionalProperties": false,
-      "properties": {
-        "themeName": {
-          "type": "string",
-          "pattern": "^[a-z0-9-]{3,40}$"
-        }
-      }
-    },
     "link": {
       "type": "object",
       "required": ["name", "url"],
@@ -275,10 +261,6 @@
             "logo": {
               "type": "string",
               "minLength": 1
-            },
-            "logoUrl": {
-              "type": "string",
-              "pattern": "^https://[^\\s${}<>\"\\\\]{1,2000}$"
             }
           }
         },

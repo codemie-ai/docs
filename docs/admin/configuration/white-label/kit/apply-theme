@@ -53,9 +53,8 @@ for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG" "$A_MANIFE
   cp "$SOURCE_DIR/$name" "$NEW/platform/$name"
 done
 
-# brand.yaml is read by the API. email.images.logoUrl is for the Keycloak mail theme only: the API
-# loader rejects it as an unknown key, so it is dropped here, and images goes with it when empty.
-yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email) | del(.email.images.logoUrl) | del(select(.email.images != null and (.email.images | length) == 0) | .email.images)' \
+# brand.yaml is read by the API. images is dropped when it is empty.
+yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email) | del(select(.email.images != null and (.email.images | length) == 0) | .email.images)' \
   "$PACKAGE_FILE" >"$NEW/email/brand.yaml"
 if [[ -n "$EMAIL_LOGO" ]]; then
   cp "$SOURCE_DIR/$EMAIL_LOGO" "$NEW/email/$EMAIL_LOGO"

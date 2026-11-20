@@ -153,13 +153,14 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   [ "$first" = "$(tree_state "$OUT")" ]
 }
 
-@test "output: a keycloak block in the package changes nothing in keycloak/" {
+@test "keycloak block: a package with a keycloak block is refused and nothing is written" {
   old_output
-  pkg=$(mutate '.keycloak.themeName = "acme-brand"')
-  before=$(tree_state "$OUT/keycloak")
-  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
-  [ "$status" -eq 0 ]
-  [ "$before" = "$(tree_state "$OUT/keycloak")" ]
+  before=$(tree_state "$OUT")
+  run "$SCRIPT" --output-dir "$OUT" "$FIXTURES/ui-with-keycloak-block.yaml" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"keycloak"* ]]
+  [[ "$output" == *"moved to keycloak-theme-package.yaml"* ]]
+  [ "$before" = "$(tree_state "$OUT")" ]
 }
 
 @test "brand.css: the file equals the lib render and carries the package colours" {
@@ -199,10 +200,12 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
 @test "failed check: a removed token names the token and leaves the output byte-equal" {
   old_output
   before=$(tree_state "$OUT")
-  pkg=$(mutate '.email.senderName = "Acme Notifications" | .keycloak.themeName = "acme-brand" | .keycloak.smtp.host = "smtp.acme.example"')
+  pkg=$(mutate '.email.senderName = "Acme Notifications" | .keycloak.smtp.host = "smtp.acme.example"')
   run "$SCRIPT" --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.senderName"* ]]
+  [[ "$output" == *"EMAIL_FROM_NAME"* ]]
+  [[ "$output" == *"Platform Notifications"* ]]
   [[ "$output" == *"keycloak.smtp"* ]]
   [[ "$output" == *"realm settings"* ]]
   [ "$before" = "$(tree_state "$OUT")" ]
@@ -268,22 +271,20 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
 }
 
 @test "email: every key of brand.yaml is one the backend loader accepts" {
-  pkg=$(email_pkg '.email.images.logoUrl = "https://static.acme.example/logo.png"')
+  pkg=$(email_pkg '.')
   run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
   [ "$status" -eq 0 ]
   by="$OUT/email/brand.yaml"
   [ -z "$(unknown_backend_keys "$by" '.' 'identity|email|links')" ]
   [ -z "$(unknown_backend_keys "$by" '.email' 'senderName|signature|palette|images|messages')" ]
   [ -z "$(unknown_backend_keys "$by" '.email.images' 'logo')" ]
-  [ "$(yq eval '.email.images | has("logoUrl")' "$by")" = "false" ]
 }
 
-@test "email: with only logoUrl set, brand.yaml has no images key" {
-  pkg=$(email_pkg 'del(.email.images.logo) | .email.images.logoUrl = "https://static.acme.example/logo.png"')
-  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$ASSETS_DIR"
-  [ "$status" -eq 0 ]
-  [ "$(yq eval '.email | has("images")' "$OUT/email/brand.yaml")" = "false" ]
-  [ "$(yq eval '.email.palette.primary' "$OUT/email/brand.yaml")" = "#112233" ]
+@test "email: a package with email.images.logoUrl is refused by the schema" {
+  pkg=$(email_pkg '.email.images.logoUrl = "https://static.acme.example/logo.png"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"additional properties"* ]]
 }
 
 @test "email: a package without an email block writes brand.yaml with no email key and no logo" {

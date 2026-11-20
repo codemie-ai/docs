@@ -17,7 +17,7 @@ lib() {
   local code="$1"
   export T="$BATS_TEST_TMPDIR"
   shift
-  run bash -c 'source "$1"; KIT_SCRIPT=test; PACKAGE_FILE=$2; SOURCE_DIR=$3; SCHEMA_FILE=$4; ASSET_KEYS="logoLight logoDark favicon faviconSvg manifest"; PROP_PATHS=".product.name .product.shortName .email.signature:nl .email.images.logoUrl .email.palette.*"; kit_init; '"$code" _ "$LIB" "${1:-$FIXTURES/valid.yaml}" "${2:-$ASSETS_DIR}" "$SCHEMA"
+  run bash -c 'source "$1"; KIT_SCRIPT=test; PACKAGE_FILE=$2; SOURCE_DIR=$3; SCHEMA_FILE=$4; ASSET_KEYS="logoLight logoDark favicon faviconSvg manifest"; PROP_PATHS=".product.name .product.shortName .email.signature:nl .email.palette.*"; kit_init; '"$code" _ "$LIB" "${1:-$FIXTURES/valid.yaml}" "${2:-$ASSETS_DIR}" "$SCHEMA"
 }
 
 # writable copy of the asset fixtures plus the email logo fixtures
@@ -192,7 +192,7 @@ work_assets() {
 }
 
 @test "removed tokens: keycloak.smtp is named and points to the realm settings" {
-  pkg=$(mutate '.keycloak.themeName = "acme-brand" | .keycloak.smtp.host = "smtp.acme.example"')
+  pkg=$(mutate '.keycloak.smtp.host = "smtp.acme.example"')
   lib 'kit_removed_tokens "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"keycloak.smtp"* ]]
@@ -200,7 +200,7 @@ work_assets() {
 }
 
 @test "removed tokens: both are listed together, and a clean package passes" {
-  pkg=$(mutate '.email.senderName = "A" | .keycloak.themeName = "acme-brand" | .keycloak.smtp = {}')
+  pkg=$(mutate '.email.senderName = "A" | .keycloak.smtp = {}')
   lib 'kit_removed_tokens "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.senderName"* ]]
@@ -209,32 +209,18 @@ work_assets() {
   [ "$status" -eq 0 ]
 }
 
-@test "theme name: reserved names are rejected" {
-  for n in codemie codemie-default base keycloak; do
-    pkg=$(mutate ".keycloak.themeName = \"$n\"")
-    lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
-    [ "$status" -ne 0 ]
-    [[ "$output" == *"keycloak.themeName"* ]]
-    [[ "$output" == *"reserved"* ]]
-  done
-}
-
-@test "theme name: length and characters are checked, a good name passes" {
-  for n in ab Acme_Brand "$(printf 'a%.0s' $(seq 1 41))"; do
-    pkg=$(mutate ".keycloak.themeName = \"$n\"")
-    lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
-    [ "$status" -ne 0 ]
-  done
-  pkg=$(mutate '.keycloak.themeName = "acme-brand"')
-  lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
-  [ "$status" -eq 0 ]
-}
-
-@test "theme name: a package without the keycloak block is rejected naming keycloak.themeName" {
-  pkg=$(mutate 'del(.keycloak)')
-  lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
+@test "removed tokens: a keycloak block is named and moved to keycloak-theme-package.yaml" {
+  lib 'kit_removed_tokens "$PACKAGE_FILE"' "$FIXTURES/ui-with-keycloak-block.yaml"
   [ "$status" -ne 0 ]
-  [[ "$output" == *"keycloak.themeName: required"* ]]
+  [[ "$output" == *"keycloak"* ]]
+  [[ "$output" == *"moved to keycloak-theme-package.yaml"* ]]
+}
+
+@test "ui schema: no keycloak definition and no email.images.logoUrl" {
+  [ "$(part "$SCHEMA" '.definitions.keycloak')" = "null" ]
+  [ "$(part "$SCHEMA" '.properties.keycloak')" = "null" ]
+  [ "$(part "$SCHEMA" '.definitions.email.properties.images.properties.logoUrl')" = "null" ]
+  [ "$(part "$SCHEMA" '.definitions.email.properties.images.properties.logo.type')" = '"string"' ]
 }
 
 @test "path guard: a missing parent folder is refused" {
@@ -456,7 +442,6 @@ part() { yq eval -o=json -I0 "$2" "$1"; }
   [ "$status" -ne 0 ]
   [[ "$output" == *"additional properties"* ]]
   [[ "$output" == *"data/email must NOT have additional properties"* ]]
-  [[ "$output" == *"data/keycloak must NOT have additional properties"* ]]
 }
 
 @test "example: the acme example passes the input checks and renders brand.css" {
@@ -554,7 +539,7 @@ need_charts() {
 
 @test "contract: the paths both scripts write are paths of the fixture layout" {
   mkdir -p "$BATS_TEST_TMPDIR/chart"
-  pkg=$(mutate '.keycloak.themeName = "acme-brand" | .email.images.logo = "logo.png"')
+  pkg=$(mutate '.email.images.logo = "logo.png"')
   d=$(work_assets)
   run "$BATS_TEST_DIRNAME/../apply-theme" --output-dir "$BATS_TEST_TMPDIR/out" "$pkg" "$d"
   [ "$status" -eq 0 ]

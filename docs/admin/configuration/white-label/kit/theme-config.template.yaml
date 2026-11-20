@@ -108,7 +108,6 @@
 #     surface: '' # optional - card background
 #   images:
 #     logo: '' # optional - file name in <source-dir>; png, jpg, jpeg or gif, up to 256 KiB (the API checks the type and size)
-#     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak
 #   messages: # optional - verification, password_reset, budget_soft_limit, budget_stopped, budget_restored
 #     verification:
 #       subject: '' # optional - must not be blank when set
@@ -138,6 +137,3 @@
 #       intro: '' # optional
 # Tokens in text fields - {productName} in every text field; {projectName} in subject and intro of budget_stopped and
 # budget_restored; {costCenterName} in subject and intro of budget_stopped.
-# optional - Keycloak login theme. Omit the block when only apply-theme is used.
-# keycloak:
-#   themeName: '' # required for apply-keycloak-theme - theme name, 3-40 characters: a-z, 0-9, -

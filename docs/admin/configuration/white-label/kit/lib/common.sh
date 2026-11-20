@@ -142,9 +142,12 @@ kit_removed_tokens() { # <package>
     echo "  Set the sender name of Keycloak emails in the Keycloak realm settings (Email, From display name)." >&2
     found=1
   fi
-  if [[ "$(yq eval '.keycloak.smtp | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
-    echo "$KIT_SCRIPT: keycloak.smtp is removed from the theme package." >&2
-    echo "  Set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
+  if [[ "$(yq eval '.keycloak | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+    echo "$KIT_SCRIPT: the keycloak block moved to keycloak-theme-package.yaml." >&2
+    echo "  Remove the block from this package and put the theme name in keycloak-theme-package.yaml (run apply-keycloak-theme with it)." >&2
+    if [[ "$(yq eval '.keycloak.smtp | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+      echo "  keycloak.smtp is removed: set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
+    fi
     found=1
   fi
   [[ "$found" == "0" ]]
@@ -245,22 +248,6 @@ data\//g' "$ajv_err")
   [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
 }
 
-# The keycloak.themeName rule (Keycloak script only): a-z0-9-, 3 to 40 characters, not reserved.
-kit_check_theme_name() { # <package>
-  ERRORS=()
-  local name r
-  name=$(kit_str "$1" '.keycloak.themeName')
-  if [[ -z "$name" ]]; then
-    ERRORS+=("keycloak.themeName: required; add a keycloak block with a themeName to the package")
-  elif [[ ! "$name" =~ ^[a-z0-9-]{3,40}$ ]]; then
-    ERRORS+=("keycloak.themeName: must be 3 to 40 characters of a-z, 0-9 and -")
-  else
-    for r in "${KIT_RESERVED_THEMES[@]}"; do
-      if [[ "$name" == "$r" ]]; then ERRORS+=("keycloak.themeName: '$r' is reserved, choose another name"); fi
-    done
-  fi
-  [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
-}
 
 # Path guards. kit_guard_target <target folder> <owned relative path>...
 # Stops (returns 1 with a message) when the parent of the target does not exist, the target is a
