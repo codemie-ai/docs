@@ -69,7 +69,7 @@ trigger model discovery after setup:
 6. Click **Apply Changes**, then restart Claude Desktop.
 
 All discovered models appear in Claude Desktop's model picker. Non-Claude models selected with
-`codemie-claude models` are listed too, under an opaque `claude-x-<hash>` ID. See
+`codemie-claude models` are listed too. See
 [Available Models](./index.md#non-claude-models-in-claude-desktop).
 
 ![Model discovery result in Claude Desktop inference settings](./images/claude-desktop-model-discovery.png)
