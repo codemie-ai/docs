@@ -132,6 +132,7 @@ The variable takes a JSON object of string keys and string values. Keys follow t
 - Invalid JSON, a non-object value, a non-string value (including numbers and `null`), or a malformed key is rejected before any Job is created. The error names the offending key.
 - `sandbox-shared` mode accepts the variable but ignores it.
 - The annotations apply to the pod template only, not to the Job object.
+- The annotations do not enable Datadog tracing for the executed Python script. The executor starts the script with a cleared environment and an explicit allow-list, so the variables that the Datadog init container injects (`PYTHONPATH`, `LD_PRELOAD`, `DD_*`) do not reach the user process.
 - The value is read once per API process. Restart the CodeMie API pods to apply a changed value. Jobs created after the restart carry the new annotations.
 
 The Helm `podAnnotations` value applies only to CodeMie API, ds-pool, and proxy-pool pods. It does not reach executor Job pods, so use `CODE_EXECUTOR_POD_ANNOTATIONS` for these pods.
