@@ -110,17 +110,17 @@ codemie setup
 # 2. Check your setup
 codemie doctor
 
-# 3. Install an agent (Claude Code in this example)
+# 3. Install Claude Code
 codemie install claude --supported
 
 # 4. Register your CodeMie assistants
 codemie setup assistants
 
-# 5. Start the agent with CodeMie
+# 5. Start Claude Code with CodeMie
 codemie-claude
 ```
 
-After `codemie setup assistants`, CodeMie assistants are available inside the agent as subagents (`@assistant-name`) and slash commands (`/assistant-name`). See [Assistants](./assistants-integration.md) and [Skills](./skills-integration.md). For Claude Code and Claude Desktop, including model selection and MCP servers, see [Claude with CodeMie](./claude/index.md).
+After `codemie setup assistants`, your CodeMie assistants are available inside Claude Code as subagents (`@assistant-name`) and slash commands (`/assistant-name`).
 
 ### Setup Configuration
 
@@ -254,7 +254,7 @@ codemie uninstall <agent>            # Remove an agent
 
 ```bash
 codemie setup                        # Configuration wizard
-codemie setup assistants             # Register CodeMie assistants as @name subagents and /name slash commands
+codemie setup assistants             # Register CodeMie assistants in Claude Code as @name subagents and /name slash commands
 codemie setup skills                 # Register CodeMie skills as slash commands
 codemie doctor                       # Health check and diagnostics
 codemie self-update                  # Update CodeMie CLI to the latest version
