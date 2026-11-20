@@ -327,7 +327,8 @@ Move to `docs/admin/update/release-notes/release-notes.md` and remove here after
 
 ## Limits
 
-- **Asset size.** The scripts do not check sizes. A ConfigMap of the wrapper chart must stay below 1 MiB, and the release estimate of the files must stay below 1048576 bytes. The chart render fails above these limits and names the sizes. The release Secret size coefficient of that estimate is not measured on a stand.
+- **Asset size.** The scripts do not check sizes. A ConfigMap of the wrapper chart must stay below 1 MiB, and the release estimate of the files must stay below 1048576 bytes. The chart render fails above these limits and names the sizes. A measurement on a stand showed that the release Secret grows by about 2.69 bytes for each byte of binary files, and that Kubernetes rejects a Secret above 1048576 bytes. The estimate of the chart uses 8/3 (2.67) and stops the render at about 355 KB of binary files. The measured capacity is about 392 KB.
+- **File types.** The chart puts files with a text extension (`.css`, `.json`, `.svg`, `.yaml`, `.yml`, `.webmanifest`, `.txt`, `.xml`) into ConfigMap `data`. It puts every other file into `binaryData`.
 - **Keycloak size.** The Keycloak theme folder is limited to 400000 characters; see [Size limit](#size-limit).
 - **No font binaries.** Font files are not delivered through the kit. Reference fonts by URL in `typography.fontFaceCSS`, for example `@font-face { font-family: 'Inter'; src: url('https://fonts.acme.example/inter.woff2'); }`, and make sure the URL is reachable from the browsers of users.
 - **Variables only.** `brand.css` sets CSS custom properties: every color token is written twice: its `dark` value under `html.codemieDark` and its `light` value under `html.codemieLight`. The two values always travel as a pair, so the brand follows the user's theme switch. Font variables are written in `:root`. The kit does not change component styles or class names.
@@ -337,8 +338,8 @@ Move to `docs/admin/update/release-notes/release-notes.md` and remove here after
 - **API sender name.** No script path sets the API sender name of platform emails; see [Email Branding and Defaults](#email-branding-and-defaults).
 - **Keycloak scope.** Only the login and email themes are branded. The account console, locales, and per-mail texts are not part of the kit.
 - **Another theme folder.** `apply-keycloak-theme` writes only to `keycloak-helm/theme`. A deployment that sets another `keycloakx.childTheme.folder` copies the files by hand.
-- **Registry pull.** `helm-charts.sh` pulls the registry chart with `helm pull --version ${ai_run_version}`. This flow is proven only by a test with a stub, not by a deployment.
-- **First upgrade.** The first `helm upgrade` of an existing `codemie-ui` release with the wrapper chart is not checked for object ownership errors. Check it on a stand first.
+- **Registry pull.** The pull function of `helm-charts.sh` ran against the registry with chart 2.68.0 and `--version`, and Helm accepted the archive. A full run of `helm-charts.sh` on a stand is not part of this check.
+- **First upgrade.** A first `helm upgrade` of an existing `codemie-ui` release (registry chart 2.68.0) to the wrapper chart ran on a stand without an object ownership error. It used the locally packaged chart of the first change as the dependency. Repeat it with the released chart.
 - **Chart under test.** The names tests ran against the unreleased chart of the first change, not against a released chart.
 - **Redeploy.** `helm-charts.sh` does not use `--reuse-values`. A full deployment resets values that were set outside the values files. Keep the brand in the files of the Helm repository so that each deployment applies it again.
 - **Sub-path hosting.** Brand asset URLs follow the base path the UI was built with, so they work with a sub-path deployment of the UI.
