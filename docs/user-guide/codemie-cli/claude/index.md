@@ -133,9 +133,6 @@ feature, such as extended thinking, prompt caching, or some tools, and may behav
 than Claude models, for example when calling tools. Anthropic does not support non-Claude models in
 these clients.
 
-Support for non-Claude models in Claude Desktop relies on a workaround for the model check in the
-application, so a Claude Desktop update may stop it from working.
-
 :::
 
 ## Assistants and Skills
