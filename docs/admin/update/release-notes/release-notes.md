@@ -33,6 +33,23 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+<details className="release" id="v2-72-0">
+<summary><span className="release__version">CodeMie 2.72.0</span><span className="release__date">TBD</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** TBD
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>LiteLLM 1.101.6</h4>
+
+Updated from 1.99.4. For details, see the [LiteLLM 1.101.6 Release Notes ↗](https://github.com/BerriAI/litellm/releases/tag/v1.101.6).
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-71-0">
 <summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">Nov 26, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
 
