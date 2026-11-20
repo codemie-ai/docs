@@ -11,6 +11,8 @@ pagination_prev: admin/update/3rd-party-components/keycloak/keycloak
 
 ## Upgrade Keycloak Operator from 1.35.0 to 1.36.0
 
+Keycloak Operator 1.36.0 no longer rewrites client scope protocol mappers on every reconcile.
+
 :::warning IMPORTANT
 Review the [Keycloak Operator 1.36.0 release notes](https://github.com/epam/edp-keycloak-operator/releases/tag/v1.36.0) if the cluster has custom Keycloak resources. The CodeMie Helm charts do not use the fields with breaking changes.
 :::
