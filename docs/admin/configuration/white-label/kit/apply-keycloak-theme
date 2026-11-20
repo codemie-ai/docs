@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# apply-keycloak-theme - write the Keycloak login and email theme files of a theme package into
+# <output-dir>/keycloak and its mirror <chart-dir>/theme. Prints on stdout the names-only YAML for
+# the values of keycloak-helm and oauth2-proxy. The script writes files only: no base64, no values
+# file, no cluster call. Deploy with helm-charts.sh afterwards.
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+KIT_SCRIPT="apply-keycloak-theme"
+KIT_ALLOW_CHART_DIR="yes"
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
+kit_parse_args "$@"
+kit_init
+
+# Step 1 and 2: every check ends before anything is written
+kit_removed_tokens || exit 1
+kit_check_inputs || exit 1
+kit_check_theme_name || exit 1
+kit_guard_target "$OUTPUT_DIR" keycloak || exit 1
+[[ -d "$CHART_DIR" ]] || kit_die "chart folder not found: $CHART_DIR"
+kit_guard_target "$CHART_DIR" theme || exit 1
+
+# Step 3: generate the owned files once, then build both targets from them
+kit_read_brand
+THEME_NAME=$(kit_str '.keycloak.themeName')
+GEN="$TMP_ROOT/generated"
+mkdir -p "$GEN/login/resources/css" "$GEN/login/resources/img" "$GEN/email"
+
+# one "key=value" line per call; the input checks keep backslash and control characters out
+_prop() { printf '%s=%s\n' "$1" "$2"; }
+
+{
+  _prop parent codemie
+  _prop brand.version 1
+  _prop brand.product.name "$PRODUCT_NAME"
+  _prop brand.product.shortName "$PRODUCT_SHORT"
+  _prop brand.logo.light "$A_LOGOLIGHT"
+  _prop brand.logo.dark "$A_LOGODARK"
+  _prop brand.favicon "$A_FAVICON"
+  _prop brand.faviconSvg "$A_FAVICONSVG"
+} >"$GEN/login/theme.properties"
+
+{
+  _prop parent codemie
+  _prop brand.version 1
+  _prop brand.product.name "$PRODUCT_NAME"
+  for pk in primary primaryText text background surface; do
+    pv=$(kit_str ".email.palette.$pk")
+    [[ -z "$pv" ]] && continue
+    _prop "brand.email.color.$pk" "$pv"
+  done
+  logo_url=$(kit_str '.email.images.logoUrl')
+  if [[ -n "$logo_url" ]]; then _prop brand.email.logo "$logo_url"; fi
+  sig=$(kit_str '.email.signature')
+  if [[ -n "$sig" ]]; then
+    sig="${sig//\{productName\}/$PRODUCT_NAME}"
+    sig="${sig//$'\n'/\\n}"
+    _prop brand.email.signature "$sig"
+  fi
+} >"$GEN/email/theme.properties"
+
+kit_render_brand_css >"$GEN/login/resources/css/brand.css"
+for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG"; do
+  cp "$SOURCE_DIR/$name" "$GEN/login/resources/img/$name"
+done
+
+# _build <existing folder> <new folder>: keep what the script does not own, replace what it owns.
+# Owned: login/theme.properties, login/resources/css/brand.css, the files of login/resources/img
+# (except .gitkeep) and email/theme.properties.
+_build() {
+  local existing="$1" new="$2"
+  if [[ -d "$existing" ]]; then cp -R "$existing/." "$new/"; fi
+  rm -f "$new/login/theme.properties" "$new/login/resources/css/brand.css" "$new/email/theme.properties"
+  if [[ -d "$new/login/resources/img" ]]; then
+    find "$new/login/resources/img" -type f ! -name .gitkeep -delete
+  fi
+  mkdir -p "$new/login/resources/css" "$new/login/resources/img" "$new/email"
+  cp -R "$GEN/." "$new/"
+}
+
+kit_stage "$(dirname "${OUTPUT_DIR%/}")"
+NEW_ASSETS="$STAGE"
+_build "$OUTPUT_DIR/keycloak" "$NEW_ASSETS"
+kit_stage "$CHART_DIR"
+NEW_MIRROR="$STAGE"
+_build "$CHART_DIR/theme" "$NEW_MIRROR"
+
+# Step 4: the only step that changes the output
+mkdir -p "$OUTPUT_DIR"
+kit_swap_dir "$NEW_ASSETS" "$OUTPUT_DIR/keycloak"
+kit_swap_dir "$NEW_MIRROR" "$CHART_DIR/theme"
+
+echo "apply-keycloak-theme: files written to $OUTPUT_DIR/keycloak and $CHART_DIR/theme" >&2
+echo "  Paste the YAML below into keycloak-helm/values-<cloud>.yaml (keycloakx) and oauth2-proxy/values-<cloud>.yaml (realm)." >&2
+echo "  Check that the theme name is the same in both files, then deploy with helm-charts.sh." >&2
+
+IMAGES=$(printf '%s\n' "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG" | LC_ALL=C sort -u)
+echo "# keycloak-helm/values-<cloud>.yaml"
+echo "keycloakx:"
+echo "  childTheme:"
+echo "    enabled: true"
+echo "    name: $THEME_NAME"
+echo "    images:"
+while IFS= read -r img; do echo "      - $img"; done <<<"$IMAGES"
+echo "# oauth2-proxy/values-<cloud>.yaml"
+echo "realm:"
+echo "  themes:"
+echo "    loginTheme: $THEME_NAME"
+echo "    emailTheme: $THEME_NAME"
