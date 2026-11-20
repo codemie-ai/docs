@@ -8,24 +8,62 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KIT_SCRIPT="apply-keycloak-theme"
-KIT_ALLOW_CHART_DIR="yes"
+SCHEMA="$SCRIPT_DIR/theme-package.schema.json"
+ASSET_KEYS="logoLight logoDark favicon faviconSvg manifest"
+PROP_PATHS=".product.name .product.shortName .email.signature:nl .email.images.logoUrl .email.palette.*"
 # shellcheck source=lib/common.sh
 source "$SCRIPT_DIR/lib/common.sh"
 
-kit_parse_args "$@"
+# --chart-dir is handled here until the script drops the chart mirror
+kit_usage() {
+  echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>] [--chart-dir <keycloak-helm-folder>]" >&2
+  echo "         <theme-package.yaml> <source-dir>" >&2
+  echo "" >&2
+  echo "  --output-dir  assets folder of the wrapper chart (default: codemie-ui/assets)" >&2
+  echo "  --chart-dir   Keycloak chart folder; the theme is mirrored to <chart-dir>/theme (default: keycloak-helm)" >&2
+  echo "  <source-dir>  folder with the logo, favicon, manifest and email logo files" >&2
+  echo "Run the script from the root of the charts repository. Options go before the two arguments." >&2
+  exit 1
+}
+CHART_DIR="keycloak-helm"
+REST=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --chart-dir)
+      [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
+      CHART_DIR="$2"
+      shift 2
+      ;;
+    --output-dir)
+      REST+=("$1")
+      if [[ $# -ge 2 ]]; then REST+=("$2"); shift; fi
+      shift
+      ;;
+    *)
+      REST+=("$1")
+      shift
+      ;;
+  esac
+done
+kit_parse_args "codemie-ui/assets" ${REST[@]+"${REST[@]}"}
 kit_init
 
 # Step 1 and 2: every check ends before anything is written
-kit_removed_tokens || exit 1
-kit_check_inputs || exit 1
-kit_check_theme_name || exit 1
+kit_removed_tokens "$PACKAGE_FILE" || exit 1
+kit_check_inputs "$PACKAGE_FILE" "$SCHEMA" "$ASSET_KEYS" "$PROP_PATHS" || exit 1
+kit_check_theme_name "$PACKAGE_FILE" || exit 1
 kit_guard_target "$OUTPUT_DIR" keycloak || exit 1
 [[ -d "$CHART_DIR" ]] || kit_die "chart folder not found: $CHART_DIR"
 kit_guard_target "$CHART_DIR" theme || exit 1
 
 # Step 3: generate the owned files once, then build both targets from them
-kit_read_brand
-THEME_NAME=$(kit_str '.keycloak.themeName')
+PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
+PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
+A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
+A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
+A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
+A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
+THEME_NAME=$(kit_str "$PACKAGE_FILE" '.keycloak.themeName')
 GEN="$TMP_ROOT/generated"
 mkdir -p "$GEN/login/resources/css" "$GEN/login/resources/img" "$GEN/email"
 
@@ -48,13 +86,13 @@ _prop() { printf '%s=%s\n' "$1" "$2"; }
   _prop brand.version 1
   _prop brand.product.name "$PRODUCT_NAME"
   for pk in primary primaryText text background surface; do
-    pv=$(kit_str ".email.palette.$pk")
+    pv=$(kit_str "$PACKAGE_FILE" ".email.palette.$pk")
     [[ -z "$pv" ]] && continue
     _prop "brand.email.color.$pk" "$pv"
   done
-  logo_url=$(kit_str '.email.images.logoUrl')
+  logo_url=$(kit_str "$PACKAGE_FILE" '.email.images.logoUrl')
   if [[ -n "$logo_url" ]]; then _prop brand.email.logo "$logo_url"; fi
-  sig=$(kit_str '.email.signature')
+  sig=$(kit_str "$PACKAGE_FILE" '.email.signature')
   if [[ -n "$sig" ]]; then
     sig="${sig//\{productName\}/$PRODUCT_NAME}"
     sig="${sig//$'\n'/\\n}"
@@ -62,7 +100,7 @@ _prop() { printf '%s=%s\n' "$1" "$2"; }
   fi
 } >"$GEN/email/theme.properties"
 
-kit_render_brand_css >"$GEN/login/resources/css/brand.css"
+kit_render_brand_css "$PACKAGE_FILE" >"$GEN/login/resources/css/brand.css"
 for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG"; do
   cp "$SOURCE_DIR/$name" "$GEN/login/resources/img/$name"
 done

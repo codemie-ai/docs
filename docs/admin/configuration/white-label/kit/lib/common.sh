@@ -1,7 +1,8 @@
 # Shared functions of apply-theme and apply-keycloak-theme. Source this file; do not run it.
 # Prerequisites: yq >=4 (mikefarah), ajv-cli >=5. Works with bash 3.2 and later.
 #
-# The caller sets KIT_SCRIPT (script name for messages), PACKAGE_FILE and SOURCE_DIR.
+# The caller sets KIT_SCRIPT (script name for messages) and SOURCE_DIR. Functions that read a
+# package take its path as an argument; none of them reads a package through a global.
 # Order of work of every script (the output changes only in the last step):
 #   1. kit_removed_tokens   2. kit_check_inputs   3. build every target in a staged folder
 #   4. kit_swap_file / kit_swap_dir
@@ -9,7 +10,6 @@
 shopt -u patsub_replacement 2>/dev/null || true
 
 KIT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-KIT_SCHEMA="$KIT_LIB_DIR/../theme-package.schema.json"
 
 # Asset and logo file names. The same rule as the chart (keycloak-helm/templates/child-theme-configmap.yaml)
 # and the UI (codemie-ui/src/utils/brand.ts). Held once here; the contract fixture holds the second copy.
@@ -38,42 +38,28 @@ kit_die() {
   exit 1
 }
 
-# kit_usage: print the synopsis of the running script and exit 1. KIT_ALLOW_CHART_DIR=yes adds --chart-dir.
+# kit_usage: print the synopsis of the running script and exit 1. A script with more options
+# defines its own kit_usage after sourcing this file.
 kit_usage() {
-  if [[ "${KIT_ALLOW_CHART_DIR:-no}" == "yes" ]]; then
-    echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>] [--chart-dir <keycloak-helm-folder>]" >&2
-  else
-    echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>]" >&2
-  fi
+  echo "Usage: $KIT_SCRIPT [--output-dir <assets-folder>]" >&2
   echo "         <theme-package.yaml> <source-dir>" >&2
   echo "" >&2
-  echo "  --output-dir  assets folder of the wrapper chart (default: codemie-ui/assets)" >&2
-  if [[ "${KIT_ALLOW_CHART_DIR:-no}" == "yes" ]]; then
-    echo "  --chart-dir   Keycloak chart folder; the theme is mirrored to <chart-dir>/theme (default: keycloak-helm)" >&2
-  fi
+  echo "  --output-dir  assets folder of the wrapper chart (default: ${KIT_DEFAULT_OUTPUT_DIR:-codemie-ui/assets})" >&2
   echo "  <source-dir>  folder with the logo, favicon, manifest and email logo files" >&2
   echo "Run the script from the root of the charts repository. Options go before the two arguments." >&2
   exit 1
 }
 
-# kit_parse_args "$@": sets OUTPUT_DIR, CHART_DIR, PACKAGE_FILE and SOURCE_DIR
+# kit_parse_args <default output dir> "$@": sets OUTPUT_DIR, PACKAGE_FILE and SOURCE_DIR
 kit_parse_args() {
-  OUTPUT_DIR="codemie-ui/assets"
-  CHART_DIR="keycloak-helm"
+  OUTPUT_DIR="$1"
+  KIT_DEFAULT_OUTPUT_DIR="$1"
+  shift
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --output-dir)
         [[ $# -ge 2 ]] || kit_die "--output-dir needs a value"
         OUTPUT_DIR="$2"
-        shift 2
-        ;;
-      --chart-dir)
-        if [[ "${KIT_ALLOW_CHART_DIR:-no}" != "yes" ]]; then
-          echo "Unknown option: $1" >&2
-          kit_usage
-        fi
-        [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
-        CHART_DIR="$2"
         shift 2
         ;;
       --help | -h) kit_usage ;;
@@ -94,30 +80,19 @@ kit_parse_args() {
   SOURCE_DIR="$2"
 }
 
-# kit_str <yq path>: the value when it is a string, else nothing
-kit_str() { yq eval "$1 | select(tag == \"!!str\")" "$PACKAGE_FILE" 2>/dev/null || true; }
-
-# kit_read_brand: product and asset fields, read by both scripts through this one function
-kit_read_brand() {
-  PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
-  PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
-  A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
-  A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
-  A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
-  A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
-  A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
-  EMAIL_LOGO=$(kit_str '.email.images.logo')
-}
+# kit_str <package> <yq path>: the value when it is a string, else nothing
+kit_str() { yq eval "$2 | select(tag == \"!!str\")" "$1" 2>/dev/null || true; }
 
 # Render brand.css to stdout. Each token carries a dark and a light value, and both are emitted together:
 # the dark values under html.codemieDark and the light values under html.codemieLight, the same
 # selectors the built-in stylesheet uses, so the brand follows the user's theme switch. Values are
 # space-separated "r g b" channels read through rgb(var(...)). Fonts are theme-independent and stay
-# in :root. Nothing needs !important.
-kit_render_brand_css() {
-  local FONT_FACE GRADIENTS DARK_VARS="" LIGHT_VARS="" FLAT_VARS="" token dark light pair
-  FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$PACKAGE_FILE")
-  GRADIENTS=$(yq eval '.effects.gradients // "default"' "$PACKAGE_FILE")
+# in :root. Nothing needs !important. Colours are always rendered; typography and effects only when
+# the package has them.
+kit_render_brand_css() { # <package>
+  local pkg="$1" FONT_FACE GRADIENTS DARK_VARS="" LIGHT_VARS="" FLAT_VARS="" token dark light pair
+  FONT_FACE=$(yq eval '.typography.fontFaceCSS // ""' "$pkg")
+  GRADIENTS=$(yq eval '.effects.gradients // "default"' "$pkg")
   # effects.gradients: none also makes the two-colour gradients of controls and tinted areas single-colour: the
   # end colour follows the start colour (a var() reference, so it works whether or not the package sets the
   # start colour). The swatch gradient has a middle colour too.
@@ -132,14 +107,16 @@ kit_render_brand_css() {
     [[ -n "$token" ]] || continue
     DARK_VARS+="  --colors-${token//./-}: $(_kit_hex_to_rgb "$dark");"$'\n'
     LIGHT_VARS+="  --colors-${token//./-}: $(_kit_hex_to_rgb "$light");"$'\n'
-  done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$PACKAGE_FILE")
+  done < <(yq eval '.colors // {} | to_entries | .[] | .key + " " + .value.dark + " " + .value.light' "$pkg")
 
   {
     if [[ -n "$FONT_FACE" ]]; then echo "$FONT_FACE"; fi
     echo ":root {"
-    echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$PACKAGE_FILE");"
-    echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$PACKAGE_FILE");"
-    echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$PACKAGE_FILE");"
+    if [[ "$(yq eval '.typography | tag' "$pkg")" != "!!null" ]]; then
+      echo "  --font-family-body: $(yq eval '.typography.bodyFamily' "$pkg");"
+      echo "  --font-family-body-prose: $(yq eval '.typography.bodyProseFamily' "$pkg");"
+      echo "  --font-family-code-block: $(yq eval '.typography.codeFamily' "$pkg");"
+    fi
     # effects.gradients: none removes every background gradient. The UI reads this variable; it is not a colour.
     if [[ "$GRADIENTS" == "none" ]]; then echo "  --brand-gradients: none;"; fi
     echo "}"
@@ -157,15 +134,15 @@ kit_render_brand_css() {
 }
 
 # Removed tokens (step 1). Each one found is named with the text to set it in the realm settings.
-kit_removed_tokens() {
-  local found=0
-  if [[ "$(yq eval '.email.senderName | tag' "$PACKAGE_FILE" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+kit_removed_tokens() { # <package>
+  local pkg="$1" found=0
+  if [[ "$(yq eval '.email.senderName | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
     echo "$KIT_SCRIPT: email.senderName is removed from the theme package." >&2
     echo "  The sender name of platform emails comes from EMAIL_FROM_NAME in the API values (default: Platform Notifications)." >&2
     echo "  Set the sender name of Keycloak emails in the Keycloak realm settings (Email, From display name)." >&2
     found=1
   fi
-  if [[ "$(yq eval '.keycloak.smtp | tag' "$PACKAGE_FILE" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+  if [[ "$(yq eval '.keycloak.smtp | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
     echo "$KIT_SCRIPT: keycloak.smtp is removed from the theme package." >&2
     echo "  Set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
     found=1
@@ -222,18 +199,23 @@ kit_report_errors() {
   for e in "${ERRORS[@]}"; do echo "  - $e" >&2; done
 }
 
-# The only input checks (step 2): schema (all errors), safe characters of values that reach a
-# .properties file (skipped when KIT_PROPERTIES_CHECK=no), asset files exist and are no symlinks, file names follow the chart rule.
+# The only input checks (step 2):
+#   kit_check_inputs <package> <schema> <asset_keys> <properties_paths>
+# schema (all errors), asset files named by <asset_keys> (space-separated keys under .assets) exist in
+# SOURCE_DIR and are no symlinks, file names follow the chart rule, and the safe characters of the values
+# at <properties_paths> (space-separated yq paths, for values that reach a .properties file; a path ending
+# in .* covers every key of that map, a path ending in :nl allows newlines; empty skips the policy).
 # Not checked: sizes (the charts own them), email-logo content, links, theme content (the test harness owns it).
 kit_check_inputs() {
   ERRORS=()
-  local ajv_input="$TMP_ROOT/package.json" ajv_err="$TMP_ROOT/ajv.err" key pk line
-  if ! yq eval -o=json "$PACKAGE_FILE" >"$ajv_input" 2>"$ajv_err"; then
-    ERRORS+=("cannot parse $PACKAGE_FILE: $(tr '\n' ' ' <"$ajv_err")")
+  local pkg="$1" schema="$2" asset_keys="$3" prop_paths="$4"
+  local ajv_input="$TMP_ROOT/package.json" ajv_err="$TMP_ROOT/ajv.err" key pk line pp nl base
+  if ! yq eval -o=json "$pkg" >"$ajv_input" 2>"$ajv_err"; then
+    ERRORS+=("cannot parse $pkg: $(tr '\n' ' ' <"$ajv_err")")
     kit_report_errors
     return 1
   fi
-  if ! ajv validate -s "$KIT_SCHEMA" --spec draft7 --all-errors --errors=text -d "$ajv_input" >"$ajv_err" 2>&1; then
+  if ! ajv validate -s "$schema" --spec draft7 --all-errors --errors=text -d "$ajv_input" >"$ajv_err" 2>&1; then
     # ajv prints all errors on one comma-joined line; put one per line and drop its "<file> invalid" summary
     while IFS= read -r line; do
       if [[ -n "$line" && "$line" != *" invalid" ]]; then ERRORS+=("$line"); fi
@@ -241,31 +223,33 @@ kit_check_inputs() {
 data\//g' "$ajv_err")
   fi
 
-  for key in "${KIT_ASSET_KEYS[@]}"; do
-    _kit_check_file "assets.$key" "$(kit_str ".assets.$key")"
+  for key in $asset_keys; do
+    _kit_check_file "assets.$key" "$(kit_str "$pkg" ".assets.$key")"
   done
-  _kit_check_file "email.images.logo" "$(kit_str '.email.images.logo')"
+  _kit_check_file "email.images.logo" "$(kit_str "$pkg" '.email.images.logo')"
 
-  # Only apply-keycloak-theme writes .properties files; apply-theme sets KIT_PROPERTIES_CHECK=no
-  if [[ "${KIT_PROPERTIES_CHECK:-yes}" == "yes" ]]; then
-    _kit_check_prop "product.name" "$(kit_str '.product.name')"
-    _kit_check_prop "product.shortName" "$(kit_str '.product.shortName')"
-    _kit_check_prop "email.signature" "$(kit_str '.email.signature')" allow_newline
-    _kit_check_prop "email.images.logoUrl" "$(kit_str '.email.images.logoUrl')"
-    while IFS= read -r pk; do
-      [[ -n "$pk" ]] || continue
-      _kit_check_prop "email.palette.$pk" "$(kit_str ".email.palette.\"$pk\"")"
-    done < <(yq eval '.email.palette // {} | keys | .[]' "$PACKAGE_FILE" 2>/dev/null || true)
-  fi
+  for pp in $prop_paths; do
+    nl=""
+    if [[ "$pp" == *:nl ]]; then nl="allow_newline"; pp="${pp%:nl}"; fi
+    if [[ "$pp" == *.\* ]]; then
+      base="${pp%.\*}"
+      while IFS= read -r pk; do
+        [[ -n "$pk" ]] || continue
+        _kit_check_prop "${base#.}.$pk" "$(kit_str "$pkg" "$base.\"$pk\"")" "$nl"
+      done < <(yq eval "$base // {} | keys | .[]" "$pkg" 2>/dev/null || true)
+    else
+      _kit_check_prop "${pp#.}" "$(kit_str "$pkg" "$pp")" "$nl"
+    fi
+  done
 
   [[ ${#ERRORS[@]} -eq 0 ]] || { kit_report_errors; return 1; }
 }
 
 # The keycloak.themeName rule (Keycloak script only): a-z0-9-, 3 to 40 characters, not reserved.
-kit_check_theme_name() {
+kit_check_theme_name() { # <package>
   ERRORS=()
   local name r
-  name=$(kit_str '.keycloak.themeName')
+  name=$(kit_str "$1" '.keycloak.themeName')
   if [[ -z "$name" ]]; then
     ERRORS+=("keycloak.themeName: required; add a keycloak block with a themeName to the package")
   elif [[ ! "$name" =~ ^[a-z0-9-]{3,40}$ ]]; then

@@ -167,7 +167,7 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   [ "$status" -eq 0 ]
   grep -qx -- '  --colors-surface-base-primary: 17 17 17;' "$OUT/brand.css"
   grep -qx -- '  --font-family-body: Inter, sans-serif;' "$OUT/brand.css"
-  run bash -c 'source "$1"; KIT_SCRIPT=t; PACKAGE_FILE=$2; kit_render_brand_css' _ "$BATS_TEST_DIRNAME/../lib/common.sh" "$FIXTURES/valid.yaml"
+  run bash -c 'source "$1"; KIT_SCRIPT=t; PACKAGE_FILE=$2; kit_render_brand_css "$PACKAGE_FILE"' _ "$BATS_TEST_DIRNAME/../lib/common.sh" "$FIXTURES/valid.yaml"
   [ "$output" = "$(cat "$OUT/brand.css")" ]
 }
 

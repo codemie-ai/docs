@@ -17,7 +17,7 @@ lib() {
   local code="$1"
   export T="$BATS_TEST_TMPDIR"
   shift
-  run bash -c 'source "$1"; KIT_SCRIPT=test; PACKAGE_FILE=$2; SOURCE_DIR=$3; kit_init; '"$code" _ "$LIB" "${1:-$FIXTURES/valid.yaml}" "${2:-$ASSETS_DIR}"
+  run bash -c 'source "$1"; KIT_SCRIPT=test; PACKAGE_FILE=$2; SOURCE_DIR=$3; SCHEMA_FILE=$4; ASSET_KEYS="logoLight logoDark favicon faviconSvg manifest"; PROP_PATHS=".product.name .product.shortName .email.signature:nl .email.images.logoUrl .email.palette.*"; kit_init; '"$code" _ "$LIB" "${1:-$FIXTURES/valid.yaml}" "${2:-$ASSETS_DIR}" "$SCHEMA"
 }
 
 # writable copy of the asset fixtures plus the email logo fixtures
@@ -37,19 +37,19 @@ work_assets() {
 }
 
 @test "check_inputs: a valid package passes" {
-  lib 'kit_check_inputs'
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"'
   [ "$status" -eq 0 ]
 }
 
 @test "check_inputs: a missing required field exits non-zero and names the field" {
-  lib 'kit_check_inputs' "$FIXTURES/missing-product.yaml"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$FIXTURES/missing-product.yaml"
   [ "$status" -ne 0 ]
   [[ "$output" == *"product"* ]]
 }
 
 @test "check_inputs: reports every schema error at once, not only the first" {
   pkg=$(mutate 'del(.typography.codeFamily) | .assets.manifest = "missing.webmanifest" | .product.shortName = "" | del(.assets.favicon)')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"codeFamily"* ]]
   [[ "$output" == *"shortName"* ]]
@@ -59,7 +59,7 @@ work_assets() {
 
 @test "check_inputs: css injection through font families, token names and !important is rejected" {
   pkg=$(mutate '.typography.bodyFamily = "x; } body { display: none" | .colors["a b{"] = {"dark": "#111111", "light": "#ffffff"} | .typography.fontFaceCSS = "@font-face { font-family: X !important; }"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"bodyFamily"* ]]
   [[ "$output" == *"colors"* ]]
@@ -68,7 +68,7 @@ work_assets() {
 
 @test "check_inputs: unsafe link urls, braces and markup are rejected" {
   pkg=$(mutate '.links.userGuide.url = "javascript:alert(1)" | .links.videoPortal.name = "{{ .Values }}" | .product.name = "<b>Acme</b>"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"links/userGuide/url"* ]]
   [[ "$output" == *"links/videoPortal/name"* ]]
@@ -77,7 +77,7 @@ work_assets() {
 
 @test "check_inputs: a colour token without its light value and an unknown effects key are rejected" {
   pkg=$(mutate 'del(.colors."surface.base.primary".light) | .effects.shadows = "none"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"light"* ]]
   [[ "$output" == *"effects"* ]]
@@ -85,14 +85,14 @@ work_assets() {
 
 @test "check_inputs: a dollar-brace value that reaches a properties file is rejected" {
   pkg=$(mutate '.product.name = "Acme ${env} Suite"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *'product.name: must not contain ${'* ]]
 }
 
 @test "check_inputs: dollar-brace in email.signature is rejected" {
   pkg=$(mutate '.email.signature = "Team ${x}"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.signature"* ]]
 }
@@ -100,34 +100,34 @@ work_assets() {
 @test "check_inputs: angle brackets, quote, backslash and control characters are rejected by field" {
   for expr in '.email.signature = "Best <b>"' '.email.signature = "Best \"x\""' '.email.signature = "A\\B"' '.email.signature = "A\tB"' '.email.palette.primary = "#11223\n"'; do
     pkg=$(mutate "$expr")
-    lib 'kit_check_inputs' "$pkg"
+    lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
     [ "$status" -ne 0 ]
   done
 }
 
 @test "check_inputs: a newline is allowed in email.signature, a tab next to it is not" {
   pkg=$(mutate '.email.signature = "Best,\n{productName} team"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -eq 0 ]
   pkg=$(mutate '.email.signature = "Best,\n\tteam"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.signature: must not contain control characters"* ]]
 }
 
 @test "check_inputs: leading or trailing whitespace is rejected" {
   pkg=$(mutate '.email.signature = " Team"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.signature: must not start or end with whitespace"* ]]
   pkg=$(mutate '.email.signature = "Team "')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
 }
 
 @test "check_inputs: a missing asset file is rejected and named" {
   pkg=$(mutate '.assets.logoDark = "absent.svg"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"assets.logoDark: file not found"* ]]
 }
@@ -136,7 +136,7 @@ work_assets() {
   d=$(work_assets)
   ln -s "$d/logo-dark.svg" "$d/linked.svg"
   pkg=$(mutate '.assets.logoDark = "linked.svg"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [ "$status" -ne 0 ]
   [[ "$output" == *"assets.logoDark: must not be a symbolic link"* ]]
 }
@@ -145,14 +145,14 @@ work_assets() {
   d=$(work_assets)
   cp "$d/logo-light.svg" "$d/Logo Light.svg"
   pkg=$(mutate '.assets.logoLight = "Logo Light.svg"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [ "$status" -ne 0 ]
   [[ "$output" == *"assets.logoLight"* ]]
 }
 
 @test "check_inputs: an asset name with a path is rejected as outside the source folder" {
   pkg=$(mutate '.assets.logoDark = "../../etc/passwd"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"assets.logoDark: must be a plain file name inside the source folder"* ]]
 }
@@ -161,14 +161,14 @@ work_assets() {
   d=$(work_assets)
   ln -s "$d/logo.png" "$d/linked.png"
   pkg=$(mutate '.email.images.logo = "linked.png"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.images.logo: must not be a symbolic link"* ]]
   pkg=$(mutate '.email.images.logo = "absent.png"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [[ "$output" == *"email.images.logo: file not found"* ]]
   pkg=$(mutate '.email.images.logo = "a b.png"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [[ "$output" == *"email.images.logo"* ]]
 }
 
@@ -178,13 +178,13 @@ work_assets() {
   cp "$FIXTURES/email-assets/bad-magic.png" "$d/bad.png"
   head -c 2000000 /dev/zero >"$d/big.svg"
   pkg=$(mutate '.email.images.logo = "bad.png" | .assets.logoDark = "big.svg"')
-  lib 'kit_check_inputs' "$pkg" "$d"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [ "$status" -eq 0 ]
 }
 
 @test "removed tokens: email.senderName is named and points to the realm settings" {
   pkg=$(mutate '.email.senderName = "Acme Notifications"')
-  lib 'kit_removed_tokens' "$pkg"
+  lib 'kit_removed_tokens "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.senderName"* ]]
   [[ "$output" == *"realm settings"* ]]
@@ -193,7 +193,7 @@ work_assets() {
 
 @test "removed tokens: keycloak.smtp is named and points to the realm settings" {
   pkg=$(mutate '.keycloak.themeName = "acme-brand" | .keycloak.smtp.host = "smtp.acme.example"')
-  lib 'kit_removed_tokens' "$pkg"
+  lib 'kit_removed_tokens "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"keycloak.smtp"* ]]
   [[ "$output" == *"realm settings"* ]]
@@ -201,18 +201,18 @@ work_assets() {
 
 @test "removed tokens: both are listed together, and a clean package passes" {
   pkg=$(mutate '.email.senderName = "A" | .keycloak.themeName = "acme-brand" | .keycloak.smtp = {}')
-  lib 'kit_removed_tokens' "$pkg"
+  lib 'kit_removed_tokens "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"email.senderName"* ]]
   [[ "$output" == *"keycloak.smtp"* ]]
-  lib 'kit_removed_tokens'
+  lib 'kit_removed_tokens "$PACKAGE_FILE"'
   [ "$status" -eq 0 ]
 }
 
 @test "theme name: reserved names are rejected" {
   for n in codemie codemie-default base keycloak; do
     pkg=$(mutate ".keycloak.themeName = \"$n\"")
-    lib 'kit_check_theme_name' "$pkg"
+    lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
     [ "$status" -ne 0 ]
     [[ "$output" == *"keycloak.themeName"* ]]
     [[ "$output" == *"reserved"* ]]
@@ -222,17 +222,17 @@ work_assets() {
 @test "theme name: length and characters are checked, a good name passes" {
   for n in ab Acme_Brand "$(printf 'a%.0s' $(seq 1 41))"; do
     pkg=$(mutate ".keycloak.themeName = \"$n\"")
-    lib 'kit_check_theme_name' "$pkg"
+    lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
     [ "$status" -ne 0 ]
   done
   pkg=$(mutate '.keycloak.themeName = "acme-brand"')
-  lib 'kit_check_theme_name' "$pkg"
+  lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
   [ "$status" -eq 0 ]
 }
 
 @test "theme name: a package without the keycloak block is rejected naming keycloak.themeName" {
   pkg=$(mutate 'del(.keycloak)')
-  lib 'kit_check_theme_name' "$pkg"
+  lib 'kit_check_theme_name "$PACKAGE_FILE"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"keycloak.themeName: required"* ]]
 }
@@ -287,7 +287,7 @@ work_assets() {
 }
 
 @test "brand.css: the variable names the UI reads, dark and light blocks, no colours in :root" {
-  lib 'kit_render_brand_css'
+  lib 'kit_render_brand_css "$PACKAGE_FILE"'
   [ "$status" -eq 0 ]
   css="$BATS_TEST_TMPDIR/brand.css"
   printf '%s\n' "$output" >"$css"
@@ -306,7 +306,7 @@ work_assets() {
 
 @test "brand.css: effects.gradients none writes the option and single-colour gradients in both themes" {
   pkg=$(mutate '.effects.gradients = "none" | .colors["border.specific.primary-button-to"] = {"dark": "#111111", "light": "#222222"}')
-  lib 'kit_render_brand_css' "$pkg"
+  lib 'kit_render_brand_css "$PACKAGE_FILE"' "$pkg"
   [ "$status" -eq 0 ]
   printf '%s\n' "$output" >"$BATS_TEST_TMPDIR/brand.css"
   css="$BATS_TEST_TMPDIR/brand.css"
@@ -324,7 +324,7 @@ work_assets() {
 
 @test "brand.css: multi-line fontFaceCSS comes first and appears once" {
   pkg=$(mutate '.typography.fontFaceCSS = "@font-face {\n  font-family: Inter;\n  src: url(https://fonts.acme.example/inter.woff2);\n}"')
-  lib 'kit_render_brand_css' "$pkg"
+  lib 'kit_render_brand_css "$PACKAGE_FILE"' "$pkg"
   [ "$status" -eq 0 ]
   printf '%s\n' "$output" >"$BATS_TEST_TMPDIR/brand.css"
   [ "$(head -1 "$BATS_TEST_TMPDIR/brand.css")" = "@font-face {" ]
@@ -333,7 +333,7 @@ work_assets() {
 
 @test "brand values: an ampersand and UTF-8 in the product name stay literal" {
   pkg=$(mutate '.product.name = "R&D Süite"')
-  lib 'kit_read_brand; printf "%s|%s" "$PRODUCT_NAME" "$PRODUCT_SHORT"' "$pkg"
+  lib 'printf "%s|%s" "$(kit_str "$PACKAGE_FILE" .product.name)" "$(kit_str "$PACKAGE_FILE" .product.shortName)"' "$pkg"
   [ "$status" -eq 0 ]
   [ "$output" = "R&D Süite|Acme" ]
 }
@@ -396,7 +396,7 @@ schema_paths() {
 
 @test "schema: senderName and smtp are rejected as unknown keys" {
   pkg=$(mutate '.email.senderName = "A" | .keycloak.smtp.host = "smtp.acme.example"')
-  lib 'kit_check_inputs' "$pkg"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"additional properties"* ]]
   [[ "$output" == *"data/email must NOT have additional properties"* ]]
@@ -405,12 +405,12 @@ schema_paths() {
 
 @test "example: the acme example passes the input checks and renders brand.css" {
   ex="$BATS_TEST_DIRNAME/../examples/acme"
-  lib 'kit_check_inputs && kit_render_brand_css >/dev/null' "$ex/theme-package.yaml" "$ex/assets"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS" && kit_render_brand_css "$PACKAGE_FILE" >/dev/null' "$ex/theme-package.yaml" "$ex/assets"
   [ "$status" -eq 0 ]
 }
 
 @test "example: the empty template still fails the input checks" {
-  lib 'kit_check_inputs' "$BATS_TEST_DIRNAME/../theme-package.yaml"
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$BATS_TEST_DIRNAME/../theme-package.yaml"
   [ "$status" -ne 0 ]
 }
 
@@ -522,4 +522,37 @@ need_charts() {
     [ -f "$BATS_TEST_TMPDIR/chart/theme/$t" ]
   done
   [ "$(ls "$BATS_TEST_TMPDIR/chart/theme/login/resources/img" | wc -l | tr -d ' ')" = "4" ]
+}
+
+@test "check_inputs: only the given asset keys are checked" {
+  pkg=$(mutate '.assets.manifest = "missing.webmanifest"')
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "logoLight logoDark" ""'
+  [ "$status" -eq 0 ]
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "logoLight logoDark manifest" ""' "$pkg"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"assets.manifest: file not found"* ]]
+}
+
+@test "check_inputs: the properties policy applies only to the given paths" {
+  pkg=$(mutate '.product.name = "Acme ${x}"')
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" ""' "$pkg"
+  [ "$status" -eq 0 ]
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" ".product.name"' "$pkg"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"product.name: must not contain"* ]]
+}
+
+@test "parse_args: the given default output folder is used, an option overrides it" {
+  lib 'kit_parse_args some/default p.yaml src; printf "%s|%s|%s" "$OUTPUT_DIR" "$PACKAGE_FILE" "$SOURCE_DIR"'
+  [ "$output" = "some/default|p.yaml|src" ]
+  lib 'kit_parse_args some/default --output-dir other p.yaml src; printf "%s" "$OUTPUT_DIR"'
+  [ "$output" = "other" ]
+}
+
+@test "render_brand_css: a package without typography and effects renders colours only" {
+  pkg=$(mutate 'del(.typography) | del(.effects)')
+  lib 'kit_render_brand_css "$PACKAGE_FILE"' "$pkg"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--colors-surface-base-primary: 17 17 17;"* ]]
+  if [[ "$output" == *"--font-family"* ]]; then false; fi
 }
