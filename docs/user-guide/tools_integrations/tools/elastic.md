@@ -76,7 +76,7 @@ curl -X POST "https://<elasticsearch_url>:9200/_security/api_key" \
 
 ## 2. Configure Integration in AI/Run CodeMie
 
-2.1. In AI/Run CodeMie, navigate to the **Integrations** tab and click **+ Create**.
+2.1. In AI/Run CodeMie, navigate to the **Integrations** tab and click **+ New Integration**.
 
 2.2. Fill in the required fields:
 

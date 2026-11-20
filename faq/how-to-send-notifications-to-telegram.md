@@ -11,7 +11,7 @@ To integrate Telegram with CodeMie, follow the steps below:
    1.6 Receive the Bot Token: After you have chosen a unique username, BotFather will provide you with an API Token. This token is essential and will be used to interact with the Telegram API to manage and control your bot.
 
 2. In the CodeMie main menu, click the integrations button.
-3. Select Integration Type: User or Project and click Create
+3. Click Create and select the Scope: User or Project
 4. Select the Project Name.
 5. Select the Credential Type: Telegram.
 6. Fill in the Alias is a representation of the user setting.
