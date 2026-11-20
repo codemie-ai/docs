@@ -43,7 +43,7 @@ kit_parse_option() {
     return 0
   fi
   if [[ "$1" == "--chart-dir" ]]; then
-    [[ $# -ge 2 ]] || kit_die "--chart-dir needs a value"
+    [[ $# -ge 2 && -n "$2" ]] || kit_die "--chart-dir needs a value"
     CHART_DIR="$2"
     KIT_OPT_SHIFT=2
     return 0
@@ -133,8 +133,11 @@ if [[ -n "$JAR_FILE" ]]; then
   types_json=""
   for t in $KIT_MANIFEST_TYPES; do types_json="$types_json${types_json:+,}\"$t\""; done
   printf '{"themes":[{"name":"%s","types":[%s]}]}\n' "$THEME_NAME" "$types_json" >"$JAR_TREE/META-INF/keycloak-themes.json"
-  find "$JAR_TREE" -exec touch -t 198001010000 {} +
-  (cd "$JAR_TREE" && find META-INF theme -type f | LC_ALL=C sort | zip -X -D -q "$TMP_ROOT/built.jar" -@) \
+  # TZ=UTC and fixed modes: the zip stores local DOS time and the file modes, so both must not vary
+  find "$JAR_TREE" -type d -exec chmod 0755 {} +
+  find "$JAR_TREE" -type f -exec chmod 0644 {} +
+  TZ=UTC find "$JAR_TREE" -exec touch -t 198001010000 {} +
+  (cd "$JAR_TREE" && find META-INF theme -type f | LC_ALL=C sort | TZ=UTC zip -X -D -q "$TMP_ROOT/built.jar" -@) \
     || kit_die "the jar could not be built"
 fi
 
@@ -153,11 +156,12 @@ TARGETS=("folder $OUTPUT_DIR")
 if [[ -n "$JAR_FILE" ]]; then
   # stage-and-move: the jar is copied next to its target, then renamed over it
   jar_dir="$(dirname "$JAR_FILE")"
-  mkdir -p "$jar_dir"
-  jar_stage=$(mktemp "$jar_dir/.kit-jar-XXXXXX")
+  jar_fail="the jar was not written; the theme folder is written. Run the script again to write both from one run"
+  mkdir -p "$jar_dir" || kit_die "$jar_fail"
+  jar_stage=$(mktemp "$jar_dir/.kit-jar-XXXXXX") || kit_die "$jar_fail"
   KIT_STAGES+=("$jar_stage")
-  if ! { cp "$TMP_ROOT/built.jar" "$jar_stage" && mv -f "$jar_stage" "$JAR_FILE"; }; then
-    kit_die "the jar was not written; the theme folder is written. Run the script again to write both from one run"
+  if ! { cp "$TMP_ROOT/built.jar" "$jar_stage" && chmod 0644 "$jar_stage" && mv -f "$jar_stage" "$JAR_FILE"; }; then
+    kit_die "$jar_fail"
   fi
   TARGETS+=("jar $JAR_FILE")
 fi

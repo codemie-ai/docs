@@ -149,11 +149,21 @@ kit_removed_tokens() { # <package>
     found=1
   fi
   if [[ "$(yq eval '.keycloak | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
-    echo "$KIT_SCRIPT: the keycloak block moved to keycloak-theme-package.yaml." >&2
-    echo "  Remove the block from this package and put the theme name in keycloak-theme-package.yaml (run apply-keycloak-theme with it)." >&2
+    if [[ "${KIT_SCRIPT:-}" == "apply-keycloak-theme" ]]; then
+      echo "$KIT_SCRIPT: keycloak is not a token of the Keycloak package." >&2
+      echo "  Remove the keycloak block. The theme name is the top-level themeName." >&2
+    else
+      echo "$KIT_SCRIPT: the keycloak block moved to keycloak-theme-package.yaml." >&2
+      echo "  Remove the block from this package and put the theme name in keycloak-theme-package.yaml (run apply-keycloak-theme with it)." >&2
+    fi
     if [[ "$(yq eval '.keycloak.smtp | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
       echo "  keycloak.smtp is removed: set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
     fi
+    found=1
+  fi
+  if [[ "${KIT_SCRIPT:-}" == "apply-keycloak-theme" && "$(yq eval '.smtp | tag' "$pkg" 2>/dev/null || echo '!!null')" != "!!null" ]]; then
+    echo "$KIT_SCRIPT: smtp is removed from the Keycloak package." >&2
+    echo "  Set the SMTP server of Keycloak in the Keycloak realm settings (Email)." >&2
     found=1
   fi
   [[ "$found" == "0" ]]

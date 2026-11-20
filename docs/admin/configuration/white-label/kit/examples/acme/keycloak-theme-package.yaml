@@ -32,5 +32,4 @@ email:
     background: '#F5F7FA'
     surface: '#FFFFFF'
   images:
-    logo: 'email-logo.png'
     logoUrl: 'https://static.acme.example/logo.png'

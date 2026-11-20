@@ -131,10 +131,10 @@ The script replaces the content of `platform/` and `email/` (old files go) and k
 
 Both scripts run the same input checks and list all problems at once. If any check fails, the script exits with a non-zero code and writes nothing.
 
-1. The removed tokens are reported by name. `email.senderName` and `smtp` have their own messages. A leftover `keycloak:` block in the UI package is reported with the text that it moved to `keycloak-theme-package.yaml`. See [Release Notes](#release-notes).
+1. The removed tokens are reported by name. `email.senderName` and `smtp` have their own messages, and a `keycloak:` block in the Keycloak package is named as not a token there. A leftover `keycloak:` block in the UI package is reported with the text that it moved to `keycloak-theme-package.yaml`. See [Release Notes](#release-notes).
 2. The package is validated against its own schema: `theme-package.schema.json` for `apply-theme`, `keycloak-theme-package.schema.json` for `apply-keycloak-theme`.
 3. For `apply-keycloak-theme`, every value that reaches a `.properties` file must not contain `${`, `<`, `>`, `"` or a backslash, control characters, or leading or trailing whitespace. Only `email.signature` may contain line breaks. `apply-theme` writes no `.properties` file and skips this check.
-4. Every file named in `assets` and `email.images.logo` must exist in the source folder, must not be a symbolic link, and must have a plain file name that follows the rule of the charts.
+4. Every file named in `assets` (and `email.images.logo` for `apply-theme`) must exist in the source folder, must not be a symbolic link, and must have a plain file name that follows the rule of the charts.
 
 Sizes, the type and content of the email logo, links, and the content of the theme files are not checked by the scripts. The charts check the size limits, and the test harness checks the content of the theme.
 
@@ -259,7 +259,7 @@ The folder holds these files:
 
 The script moves only these files into `--output-dir`. It never replaces the folder, and it keeps every other file in it. A file from an earlier run with a different image name stays in the folder. Delete such a file by hand. The theme folder inside the jar has the same layout.
 
-The jar has this layout. The manifest `META-INF/keycloak-themes.json` lists the theme name and the types `login` and `email`. The files are under `theme/<themeName>/login/` and `theme/<themeName>/email/`. Two runs on one machine give equal bytes.
+The jar has this layout. The manifest `META-INF/keycloak-themes.json` lists the theme name and the types `login` and `email`. The files are under `theme/<themeName>/login/` and `theme/<themeName>/email/`. Two runs give equal bytes on any machine: the script fixes the time zone to UTC, the file times and the file modes. The jar mode is 0644.
 
 :::warning The jar holds only the files that the script writes
 The script builds the jar from the files that it writes, not from the output folder. A custom file in the output folder, for example `email/messages/messages_en.properties`, is not in the jar. To ship such a file, add it to the jar by other means, or install the folder instead of the jar. The folder and the jar can come from different runs if one write fails. In that case the message tells to run the script again. Run it again before the install.

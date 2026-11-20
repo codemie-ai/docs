@@ -118,10 +118,6 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "logo": {
-              "type": "string",
-              "minLength": 1
-            },
             "logoUrl": {
               "type": "string",
               "pattern": "^https://[^\\s${}<>\"\\\\]{1,2000}$"

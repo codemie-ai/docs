@@ -543,7 +543,7 @@ need_charts() {
   d=$(work_assets)
   run "$BATS_TEST_DIRNAME/../apply-theme" --output-dir "$BATS_TEST_TMPDIR/out" "$pkg" "$d"
   [ "$status" -eq 0 ]
-  yq eval '.email.images.logo = "logo.png"' "$FIXTURES/keycloak.yaml" >"$BATS_TEST_TMPDIR/kc.yaml"
+  cp "$FIXTURES/keycloak.yaml" "$BATS_TEST_TMPDIR/kc.yaml"
   run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/kcout" --chart-dir "$BATS_TEST_TMPDIR/chart" "$BATS_TEST_TMPDIR/kc.yaml" "$d"
   [ "$status" -eq 0 ]
   layout=$(contract_lines layout)

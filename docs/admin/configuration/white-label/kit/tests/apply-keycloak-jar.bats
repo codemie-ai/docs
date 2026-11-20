@@ -65,6 +65,14 @@ theme/acme-brand/login/theme.properties"
   cmp "$BATS_TEST_TMPDIR/a.jar" "$BATS_TEST_TMPDIR/b.jar"
 }
 
+@test "jar: equal bytes in two time zones and umasks, and the jar is readable by all" {
+  TZ=Pacific/Auckland run --separate-stderr "$SCRIPT" --output-dir "$BATS_TEST_TMPDIR/o1" --jar "$BATS_TEST_TMPDIR/a.jar" "$PKG" "$ASSETS_DIR"
+  [ "$status" -eq 0 ]
+  (umask 077; TZ=America/Los_Angeles "$SCRIPT" --output-dir "$BATS_TEST_TMPDIR/o2" --jar "$BATS_TEST_TMPDIR/b.jar" "$PKG" "$ASSETS_DIR")
+  cmp "$BATS_TEST_TMPDIR/a.jar" "$BATS_TEST_TMPDIR/b.jar"
+  [ "$(stat -f %Lp "$BATS_TEST_TMPDIR/b.jar" 2>/dev/null || stat -c %a "$BATS_TEST_TMPDIR/b.jar")" = "644" ]
+}
+
 @test "jar: no jar without --jar" {
   run --separate-stderr "$SCRIPT" --output-dir "$OUT" "$PKG" "$ASSETS_DIR"
   [ "$status" -eq 0 ]

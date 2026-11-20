@@ -282,6 +282,24 @@ realm:
   [ ! -e "$OUT" ]
 }
 
+@test "removed tokens: a top-level smtp and a keycloak block are named in the Keycloak script" {
+  run "$SCRIPT" --output-dir "$OUT" "$(kc_pkg '.smtp.host = "smtp.acme.example"')" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"smtp is removed"* ]]
+  [[ "$output" == *"realm settings"* ]]
+  run "$SCRIPT" --output-dir "$OUT" "$(kc_pkg '.keycloak.themeName = "x"')" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not a token of the Keycloak package"* ]]
+  [[ "$output" != *"moved to keycloak-theme-package.yaml"* ]]
+}
+
+@test "arguments: an empty --chart-dir is refused" {
+  run "$SCRIPT" --output-dir "$OUT" --chart-dir "" "$(kc_pkg)" "$ASSETS_DIR"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"--chart-dir needs a value"* ]]
+  [ ! -e "$OUT" ]
+}
+
 @test "output guard: / . .. HOME, an empty value and a symlink are refused and nothing is written" {
   mkdir -p "$BATS_TEST_TMPDIR/home/sub" "$BATS_TEST_TMPDIR/elsewhere"
   echo keep >"$BATS_TEST_TMPDIR/home/file"

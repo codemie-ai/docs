@@ -66,13 +66,12 @@ All values are plain file names of files in the source folder that is passed to 
 
 The `email` block is optional. A package without it works: Keycloak emails keep the defaults of the theme. When the block is present, every key inside it is optional, and omitted keys keep the defaults. No key may be added that is not listed here.
 
-| Path                   | Type   | Required | Description                                                                                                         |
-| ---------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| `email.signature`      | string | No       | Closing line of every email. May use `{productName}`, which the script replaces with `product.name`.                |
-| `email.palette`        | object | No       | Email colors. Allowed roles: `primary`, `primaryText`, `text`, `background`, `surface`.                             |
-| `email.palette.<role>` | string | No       | Six-digit hex color `#RRGGBB`, upper case or lower case. Shorthand such as `#fff` is rejected.                      |
-| `email.images.logoUrl` | string | No       | Absolute `https://` URL of the logo for Keycloak emails. See [Email Logo URL](#email-logo-url).                     |
-| `email.images.logo`    | string | No       | Accepted by the schema, but `apply-keycloak-theme` does not read it. Use `email.images.logoUrl` for the email logo. |
+| Path                   | Type   | Required | Description                                                                                          |
+| ---------------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------- |
+| `email.signature`      | string | No       | Closing line of every email. May use `{productName}`, which the script replaces with `product.name`. |
+| `email.palette`        | object | No       | Email colors. Allowed roles: `primary`, `primaryText`, `text`, `background`, `surface`.              |
+| `email.palette.<role>` | string | No       | Six-digit hex color `#RRGGBB`, upper case or lower case. Shorthand such as `#fff` is rejected.       |
+| `email.images.logoUrl` | string | No       | Absolute `https://` URL of the logo for Keycloak emails. See [Email Logo URL](#email-logo-url).      |
 
 Omitted palette roles use the defaults of the theme. The roles have the same meaning as in the [Email Palette](./package-reference.md#email-palette) of the UI package.
 

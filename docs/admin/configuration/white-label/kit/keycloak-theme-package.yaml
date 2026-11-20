@@ -38,5 +38,4 @@ assets:
 #     background: '' # optional - page background
 #     surface: '' # optional - card background
 #   images:
-#     logo: '' # optional - file name in <source-dir>; png, jpg, jpeg or gif
 #     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak

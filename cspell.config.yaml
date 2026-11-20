@@ -389,6 +389,12 @@ words:
   # White-label theming kit words
   - Fira
   - rrggbb
+  - kc.sh
+  - keycloak-themes
+  - childTheme
+  - binaryData
+  - mktemp
+  - unzip
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:
