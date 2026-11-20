@@ -674,6 +674,7 @@ Customer-level toggle gating whether tool-call confirmation is enforced, plus a 
 - **When `enabled: false`** - all tool calls auto-approve, regardless of any assistant, request, or conversation-level policy.
 - **When `enabled: true`** - the effective policy resolves in this order: request override → conversation policy → assistant config. If the assistant sets `allow_override: false`, request and conversation overrides are ignored and only the assistant config applies.
 - `min_tool_call_policy` sets a customer-wide floor - the resolved policy is clamped to be at least as strict as this value (`manual` > `guarded` > `auto`).
+- The same rules apply to the tool calls of sub-assistants. The floor applies to every sub-assistant call, and the confirmation is shown inside the sub-assistant's step.
 
 **Fields used in this section:**
 
