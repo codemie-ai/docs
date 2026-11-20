@@ -140,7 +140,7 @@ Options go before the two positional arguments. A script rejects any argument af
 
 ## Customer Helm Repository
 
-The filled-in `theme-package.yaml`, the source files, and the generated brand files belong in the customer's own Helm repository, next to the copy of the charts that the customer deploys. The kit template stays in the kit. The customer repository holds the filled copy, so each brand change is a reviewed commit. The documentation repository never holds a customer brand.
+The filled-in `theme-package.yaml`, the source files, and the generated brand files belong in the customer's own Helm repository, next to the copy of the charts that the customer deploys. The kit template `theme-package.yaml` is the only template to fill in. The folder `codemie-ui/assets` of the charts repository holds `theme-config.template.yaml`, a copy of `kit/theme-config.template.yaml`. It is not read by any chart. Refresh the copy together with the kit template. The customer repository holds the filled copy, so each brand change is a reviewed commit. The documentation repository never holds a customer brand.
 
 ## Where the Product Name Appears
 
@@ -337,7 +337,6 @@ Move to `docs/admin/update/release-notes/release-notes.md` and remove here after
 - **API sender name.** No script path sets the API sender name of platform emails; see [Email Branding and Defaults](#email-branding-and-defaults).
 - **Keycloak scope.** Only the login and email themes are branded. The account console, locales, and per-mail texts are not part of the kit.
 - **Another theme folder.** `apply-keycloak-theme` writes only to `keycloak-helm/theme`. A deployment that sets another `keycloakx.childTheme.folder` copies the files by hand.
-- **Stale chart template.** The file `codemie-ui/assets/theme-config.template.yaml` in the charts repository is an old copy with five tokens, one of them `email.senderName`. Do not use it. The kit template `theme-package.yaml` is the only template to fill in, until the charts repository gets a copy of `theme-config.template.yaml` of the kit.
 - **Registry pull.** `helm-charts.sh` pulls the registry chart with `helm pull --version ${ai_run_version}`. This flow is proven only by a test with a stub, not by a deployment.
 - **First upgrade.** The first `helm upgrade` of an existing `codemie-ui` release with the wrapper chart is not checked for object ownership errors. Check it on a stand first.
 - **Chart under test.** The names tests ran against the unreleased chart of the first change, not against a released chart.
