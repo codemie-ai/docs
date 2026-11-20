@@ -36,7 +36,7 @@ For the endpoints a client calls, see [ServiceNow Budget Integration](./servicen
 
 Depending on what the client sends and how tokens are validated:
 
-- **Cost centers.** If a request names a `cost_center`, the `features:costCenters` component must be enabled in the [customer configuration](./customer-feature-configuration.md). Otherwise, the request gets `403` "Cost centers are not enabled for this customer." See [Chargeback and Cost Centers](../../../user-guide/budget-management/chargeback-cost-centers.md).
+- **Cost centers.** If a request names a `cost_center`, the `features:costCenters` component must be enabled in the [customer configuration](./customer-feature-configuration.md), and the `codemie-enterprise` package must be installed. Otherwise, the request gets `403` "Cost centers are not enabled for this customer." See [Chargeback and Cost Centers](../../../user-guide/budget-management/chargeback-cost-centers.md).
 - **Token validation (JWKS).** If `JWKS_VALIDATION_ENABLED=true`, `JWKS_TRUSTED_ISSUERS` must list the token's issuer, and the token's `aud` claim must match the `audience` of that entry. See [JWKS Signature Validation](./api-configuration.md#jwks-signature-validation) and [JWKS Validation and Audience](#jwks-validation-and-audience).
 
 ## File Location
@@ -300,7 +300,7 @@ Every message starts with `[ProvisioningClientsConfig]`.
 | `403` "This endpoint is reserved for registered provisioning clients."        | The token's user ID is not in the file, or the pods were not restarted. The log line `access_denied_provisioning_client: actor_user_id=<id>` shows the ID CodeMie received; register that value        |
 | `403` "This provisioning client does not hold the permission `<permission>`." | The grant is missing. A `PUT` or `PATCH` that would create the project, or that sends `cost_center` or `admin_emails`, also needs `manage-projects`. Log line: `access_denied_provisioning_permission` |
 | `403` "A provisioning client may only call the provisioning API."             | Expected for routes outside `/v1/provisioning`. Log line: `access_denied_provisioning_scope`                                                                                                           |
-| `403` "Cost centers are not enabled for this customer."                       | Enable the `features:costCenters` component in the customer configuration                                                                                                                              |
+| `403` "Cost centers are not enabled for this customer."                       | Enable the `features:costCenters` component in the customer configuration and install `codemie-enterprise`                                                                                             |
 | The same request sometimes passes and sometimes gets `403`                    | Pods are running with different versions of the file. Restart all three workloads (see [Apply Changes](#apply-changes))                                                                                |
 
 ## See Also
