@@ -41,7 +41,7 @@ AI/Run CodeMie can interact with various cloud providers, including Amazon Web S
 
 2.1. In the AI/Run CodeMie main menu, click the **Integrations** button.
 
-2.2. Select **User** or **Project** and click the **+ Create** button.
+2.2. Click **+ New Integration** and select the **Scope**: **User** or **Project**.
 
 2.3. Fill in the required fields and click **Create**:
 

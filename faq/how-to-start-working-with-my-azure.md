@@ -13,7 +13,7 @@ To integrate Azure with CodeMie, follow the steps below:
    1.8. Navigate Client secrets tab > Click + New client secret > Create Add.  
    1.9. Copy Secret ID and Value.
 2. In the CodeMie main menu, click the Integrations button.
-3. Select Integration Type: User or Project and click Create
+3. Click Create and select the Scope: User or Project
 4. Select the Project Name.
 5. Select the Credential Type: Azure.
 6. Fill in the Alias is a representation of the user setting.

@@ -38,7 +38,7 @@ curl -X POST "https://\<elasticsearch_url>:9200/\_security/api_key" \
 {"id":"example-id","name":"elastic_api_token","api_key":"example-key","encoded":"example-encoded-value"}  
  2.5. Copy id and api_key.  
 3. In the CodeMie main menu, click the Integrations button.  
-4. Select Integration Type: User or Project and click Create  
+4. Click Create and select the Scope: User or Project  
 5. Select the Project Name.  
 6. Select the Credential Type: Elastic.  
 7. Fill in the Alias is a representation of the user setting.  

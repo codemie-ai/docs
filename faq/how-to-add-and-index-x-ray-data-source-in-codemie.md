@@ -35,17 +35,16 @@ Follow the [Xray API Keys documentation](https://docs.getxray.app/display/XRAYCL
 ### Configure Integration in CodeMie
 
 1. Navigate to the **Integrations** section
-2. Select **User Integrations** or **Project Integrations** based on your needs:
-   - **User Integrations**: Available only to you across all projects
-   - **Project Integrations**: Shared with all members of the selected project
-3. Click **+ Create**
-4. Select **User** or **Project** integration scope
-5. Choose **X-ray** as the Credential Type
-6. Provide:
+2. Click **+ New Integration**
+3. Select the **Scope**:
+   - **User**: Available only to you. Turn on **Global Integration** to use it across all projects
+   - **Project**: Shared with all members of the selected project (project admins only)
+4. Choose **X-ray** as the Credential Type
+5. Provide:
    - X-ray instance URL
    - Client ID
    - Client Secret
-7. Click **+ Create** to save the integration
+6. Click **Save** to save the integration
 
 ---
 

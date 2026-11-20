@@ -39,10 +39,10 @@ Before configuring the integration in AI/Run CodeMie, you need to generate API c
 ### 2. Navigate to Integrations
 
 - Go to **Integrations**
-- Select **User Integrations** or **Project Integrations** based on your needs:
-  - **User Integrations**: Available only to you across all projects
-  - **Project Integrations**: Shared with all members of the selected project
-- Click **+ Create**
+- Click **+ New Integration**
+- Select the **Scope** based on your needs:
+  - **User**: Available only to you. Turn on **Global Integration** to use it across all projects
+  - **Project**: Shared with all members of the selected project (project admins only)
 
 ### 3. Configure Integration Settings
 
