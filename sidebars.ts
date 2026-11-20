@@ -818,7 +818,10 @@ const sidebars: SidebarsConfig = {
                 id: 'admin/configuration/white-label/white-label-overview',
               },
               collapsed: true,
-              items: ['admin/configuration/white-label/package-reference'],
+              items: [
+                'admin/configuration/white-label/package-reference',
+                'admin/configuration/white-label/keycloak-package-reference',
+              ],
             },
           ],
         },
