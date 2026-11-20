@@ -34,13 +34,17 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-69-0">
-<summary><span className="release__version">CodeMie 2.69.0</span><span className="release__date">Nov 19, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.69.0</span><span className="release__date">Nov 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 19, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.69.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Keycloak Operator 1.36.0</h4>
+
+Updated Keycloak Operator to 1.36.0. It no longer rewrites client scope protocol mappers on every reconcile. Existing deployments need a CRDs update.
+
+**Upgrade instructions:** [Keycloak Operator Upgrade 1.35.0 → 1.36.0](../3rd-party-components/keycloak/operator-upgrade.md#upgrade-keycloak-operator-from-1350-to-1360)
 
 <h3>Configuration Changes</h3>
 
