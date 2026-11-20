@@ -27,6 +27,10 @@ Projects Management is only available when **Platform-managed mode** is enabled.
 guide.
 :::
 
+:::note IdP-managed mode
+In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (Enterprise package), the identity provider (IdP) owns project membership. The controls for these changes are hidden in the interface, and the platform API refuses the requests. Changes are made in the IdP and reach the platform with the next run of the sync job.
+:::
+
 ## Projects List
 
 The projects list displays all projects you have access to. For each project, the table shows:

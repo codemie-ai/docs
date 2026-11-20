@@ -721,6 +721,7 @@ const sidebars: SidebarsConfig = {
               items: [
                 'admin/configuration/access-control/initial-realm-setup',
                 'admin/configuration/access-control/platform-managed-mode-configuration',
+                'admin/configuration/access-control/idp-managed-mode-configuration',
                 {
                   type: 'category',
                   label: 'User Provisioning',
