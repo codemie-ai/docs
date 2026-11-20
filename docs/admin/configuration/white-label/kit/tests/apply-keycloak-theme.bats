@@ -329,3 +329,13 @@ realm:
   [ "$status" -ne 0 ]
   [[ "$stderr" == *"product.name"* ]]
 }
+
+@test "example: acme writes the Keycloak theme folder from its own package and the shared images" {
+  ex="$BATS_TEST_DIRNAME/../examples/acme"
+  run "$SCRIPT" --output-dir "$OUT" "$ex/keycloak-theme-package.yaml" "$ex/assets"
+  [ "$status" -eq 0 ]
+  [ -f "$OUT/login/theme.properties" ]
+  [ -f "$OUT/email/theme.properties" ]
+  [ -f "$OUT/login/resources/img/logo-light.svg" ]
+  [ -f "$OUT/login/resources/css/brand.css" ]
+}

@@ -1,6 +1,6 @@
 {
-  "name": "Acme Corp AI Platform",
-  "short_name": "Acme",
+  "name": "Example Co AI Platform",
+  "short_name": "Example Co",
   "icons": [],
   "start_url": "/",
   "display": "standalone"

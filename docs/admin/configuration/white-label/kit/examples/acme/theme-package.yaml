@@ -8,11 +8,35 @@ colors:
   surface.base.primary:
     dark: '#121826'
     light: '#ffffff'
+  surface.base.sidebar:
+    dark: '#0d1320'
+    light: '#f3f5f9'
   text.primary:
     dark: '#f3f4f6'
     light: '#111827'
-  accent.primary:
+  text.accent:
+    dark: '#ff9a4d'
+    light: '#d95f00'
+  text.accent-status:
+    dark: '#ff9a4d'
+    light: '#c25400'
+  surface.specific.gradient:
     dark: '#ff7a1a'
+    light: '#ffb366'
+  border.specific.primary-button-from:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  surface.specific.tint-gradient-from:
+    dark: '#ff7a1a'
+    light: '#ff9a4d'
+  surface.specific.action-accent-btn:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  surface.specific.switch-on-from:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  onboarding.highlight:
+    dark: '#ff9a4d'
     light: '#d95f00'
 
 typography:
@@ -68,7 +92,6 @@ email:
     surface: '#FFFFFF'
   images:
     logo: 'email-logo.png'
-    logoUrl: 'https://static.acme.example/logo.png'
   messages:
     verification:
       subject: 'Confirm your {productName} account'
@@ -78,7 +101,3 @@ email:
       intro: 'The budget for project {projectName} ({costCenterName}) has been stopped.'
     budget_restored:
       intro: 'The budget for project {projectName} has been restored.'
-
-# Optional: Keycloak login theme. Used by apply-keycloak-theme only.
-keycloak:
-  themeName: 'acme-brand'
