@@ -81,7 +81,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "gradients": { "type": "string", "enum": ["default", "none"] }
+        "gradients": {
+          "type": "string",
+          "enum": ["default", "none"]
+        }
       }
     },
     "assets": {
@@ -162,30 +165,6 @@
     }
   },
   "definitions": {
-    "secretKeyRef": {
-      "type": "object",
-      "required": ["secretKeyRef"],
-      "additionalProperties": false,
-      "properties": {
-        "secretKeyRef": {
-          "type": "object",
-          "required": ["name", "key"],
-          "additionalProperties": false,
-          "properties": {
-            "name": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 253
-            },
-            "key": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 253
-            }
-          }
-        }
-      }
-    },
     "keycloak": {
       "type": "object",
       "required": ["themeName"],
@@ -194,47 +173,6 @@
         "themeName": {
           "type": "string",
           "pattern": "^[a-z0-9-]{3,40}$"
-        },
-        "smtp": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "host": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 253,
-              "pattern": "^[A-Za-z0-9.-]+$"
-            },
-            "port": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 65535
-            },
-            "from": {
-              "type": "string",
-              "minLength": 3,
-              "maxLength": 254,
-              "pattern": "^[^\\s<>\"\\\\]+@[^\\s<>\"\\\\]+$"
-            },
-            "ssl": {
-              "type": "boolean"
-            },
-            "starttls": {
-              "type": "boolean"
-            },
-            "auth": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "username": {
-                  "$ref": "#/definitions/secretKeyRef"
-                },
-                "password": {
-                  "$ref": "#/definitions/secretKeyRef"
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -301,11 +239,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "senderName": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
         "signature": {
           "type": "string"
         },

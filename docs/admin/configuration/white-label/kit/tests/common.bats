@@ -231,7 +231,8 @@ work_assets() {
 }
 
 @test "theme name: a package without the keycloak block is rejected naming keycloak.themeName" {
-  lib 'kit_check_theme_name'
+  pkg=$(mutate 'del(.keycloak)')
+  lib 'kit_check_theme_name' "$pkg"
   [ "$status" -ne 0 ]
   [[ "$output" == *"keycloak.themeName: required"* ]]
 }
@@ -335,6 +336,71 @@ work_assets() {
   lib 'kit_read_brand; printf "%s|%s" "$PRODUCT_NAME" "$PRODUCT_SHORT"' "$pkg"
   [ "$status" -eq 0 ]
   [ "$output" = "R&D Süite|Acme" ]
+}
+
+# token_paths <file>: dotted paths of every token line, commented out or not. A token line is a
+# lower-case key with no value, or a value of a plain form (string, number, boolean, null, {...}).
+# Explanatory comment lines never have that form; keys with dots (colour tokens) are not token lines.
+token_paths() {
+  awk '
+    { line = $0; sub(/^# ?/, "", line) }
+    match(line, /^ *[a-z][A-Za-z0-9_]*:/) {
+      head = substr(line, 1, RLENGTH - 1); rest = substr(line, RLENGTH + 1)
+      if (rest !~ /^$/ && rest !~ /^ *#/ && rest !~ /^ +(\x27[^\x27]*\x27|-?[0-9]+|true|false|null|\{[^}]*\})( +#.*)?$/) next
+      indent = match(head, /[^ ]/) - 1; key = substr(head, indent + 1)
+      while (depth > 0 && ind[depth] >= indent) depth--
+      depth++; ind[depth] = indent; name[depth] = key
+      path = name[1]; for (i = 2; i <= depth; i++) path = path "." name[i]
+      print path
+    }
+  ' "$1" | LC_ALL=C sort -u
+}
+
+# schema_paths: dotted path of every property of the schema; the free-form colors map is one path
+schema_paths() {
+  node -e '
+    const s = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+    const out = new Set();
+    const walk = (n, p) => {
+      if (n.$ref) n = n.$ref.split("/").slice(1).reduce((a, k) => a[k], s);
+      for (const [k, v] of Object.entries(n.properties || {})) {
+        const q = p ? p + "." + k : k;
+        out.add(q);
+        walk(v, q);
+      }
+    };
+    walk(s, "");
+    console.log([...out].join("\n"));
+  ' "$SCHEMA" | LC_ALL=C sort -u
+}
+
+@test "template: the token paths of theme-config.template.yaml equal the schema properties" {
+  [ -n "$(schema_paths)" ]
+  [ "$(token_paths "$BATS_TEST_DIRNAME/../theme-config.template.yaml")" = "$(schema_paths)" ]
+}
+
+@test "template: the token paths of theme-package.yaml equal those of theme-config.template.yaml" {
+  [ "$(token_paths "$BATS_TEST_DIRNAME/../theme-package.yaml")" = "$(token_paths "$BATS_TEST_DIRNAME/../theme-config.template.yaml")" ]
+}
+
+@test "template: theme-config.template.yaml has every token commented out and no senderName or smtp" {
+  f="$BATS_TEST_DIRNAME/../theme-config.template.yaml"
+  [ -z "$(grep -vE '^(#|$)' "$f")" ]
+  ! grep -qE 'senderName|smtp' "$f" "$BATS_TEST_DIRNAME/../theme-package.yaml"
+}
+
+@test "template: the awk reader sees a changed token (guard against a reader that finds nothing)" {
+  sed "s/^# product:/# prodct:/" "$BATS_TEST_DIRNAME/../theme-config.template.yaml" >"$BATS_TEST_TMPDIR/t.yaml"
+  [ "$(token_paths "$BATS_TEST_TMPDIR/t.yaml")" != "$(schema_paths)" ]
+}
+
+@test "schema: senderName and smtp are rejected as unknown keys" {
+  pkg=$(mutate '.email.senderName = "A" | .keycloak.smtp.host = "smtp.acme.example"')
+  lib 'kit_check_inputs' "$pkg"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"additional properties"* ]]
+  [[ "$output" == *"data/email must NOT have additional properties"* ]]
+  [[ "$output" == *"data/keycloak must NOT have additional properties"* ]]
 }
 
 @test "example: the acme example passes the input checks and renders brand.css" {

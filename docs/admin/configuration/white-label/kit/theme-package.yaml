@@ -1,8 +1,11 @@
 # White-label theme package template (kit version 1).
-# Copy this file, fill in the values, then run:
-#   apply-theme --render-only theme-package.yaml ./assets
+# Copy this file, fill in the values, then run from the root of the charts repository:
+#   apply-theme theme-package.yaml <source-dir>
+#   apply-keycloak-theme theme-package.yaml <source-dir>    (only with a keycloak block)
+# <source-dir> is the folder with the logo, favicon, manifest and email logo files.
 # Fields marked REQUIRED must be filled in; fields marked optional may be omitted.
 # This empty template intentionally does not pass validation until it is filled in.
+# The unfilled template with the same tokens, all commented out, is theme-config.template.yaml.
 
 version: '1' # REQUIRED - must be the string "1"
 
@@ -13,11 +16,8 @@ product:
 # REQUIRED - map of semantic token path to a dark and a light hex value (#rrggbb).
 # Add one entry per token you want to override; tokens you omit keep the default theme.
 colors: {}
-# Example:
-# colors:
-#   surface.base.primary:
-#     dark: '#111111'
-#     light: '#ffffff'
+# Example entry, one per token:
+#   surface.base.primary: {dark: '#111111', light: '#ffffff'}
 #
 # Side panel tokens (see "Side Panel and Gradient Tokens" in the Theme Package Reference):
 #   surface.base.navigation:                      main navigation background (only when effects.gradients is 'none')
@@ -62,8 +62,8 @@ typography:
 effects:
   gradients: 'default' # optional - 'default' keeps the background gradients, 'none' removes all of them
 
-# All assets are file names resolved against the assets directory passed to apply-theme.
-# The combined size of the five files must stay below 1 MiB.
+# All assets are file names of files in <source-dir>. A name starts with a letter or digit and has
+# only letters, digits, . _ and -, at most 100 characters (the rule of the charts).
 assets:
   logoLight: '' # REQUIRED - logo for the light theme (SVG)
   logoDark: '' # REQUIRED - logo for the dark theme (SVG)
@@ -71,8 +71,7 @@ assets:
   faviconSvg: '' # REQUIRED - SVG favicon
   manifest: '' # REQUIRED - web app manifest (.webmanifest)
 
-# The links block itself is REQUIRED. Each link is optional, but every link that is
-# enabled in customer-config.yaml must be present here with a name and a URL.
+# The links block itself is REQUIRED. Each link is optional; a link has a name and a URL.
 links:
   userGuide: # optional
     name: ''
@@ -104,7 +103,6 @@ links:
 # optional - branding of platform emails. Every key below is optional; omitted keys use the
 # platform defaults. Uncomment only what you want to change.
 # email:
-#   senderName: '' # optional - sender display name; must not be blank when set
 #   signature: '' # optional - closing line; may use {productName}
 #   palette: # optional - each role is #RRGGBB
 #     primary: '' # optional - button and accent color
@@ -113,7 +111,7 @@ links:
 #     background: '' # optional - page background
 #     surface: '' # optional - card background
 #   images:
-#     logo: '' # optional - file name in the assets directory; png, jpg, jpeg or gif, up to 256 KiB
+#     logo: '' # optional - file name in <source-dir>; png, jpg, jpeg or gif, up to 256 KiB (the API checks the type and size)
 #     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak
 #   messages: # optional - verification, password_reset, budget_soft_limit, budget_stopped, budget_restored
 #     verification:
@@ -122,21 +120,28 @@ links:
 #       intro: '' # optional
 #       buttonLabel: '' # optional
 #       footer: '' # optional
-#     budget_stopped: # budget_stopped and budget_restored take subject, heading and intro only
-#       subject: '' # optional - may use {productName}, {projectName}, {costCenterName}
-# Tokens: {productName} in every text field; {projectName} in subject and intro of budget_stopped and
+#     password_reset:
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+#       buttonLabel: '' # optional
+#       footer: '' # optional
+#     budget_soft_limit:
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+#       buttonLabel: '' # optional
+#       footer: '' # optional
+#     budget_stopped: # takes subject, heading and intro only
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+#     budget_restored: # takes subject, heading and intro only
+#       subject: '' # optional - must not be blank when set
+#       heading: '' # optional
+#       intro: '' # optional
+# Tokens in text fields - {productName} in every text field; {projectName} in subject and intro of budget_stopped and
 # budget_restored; {costCenterName} in subject and intro of budget_stopped.
-# optional - Keycloak login theme and mail settings. Omit the block to leave Keycloak unchanged.
+# optional - Keycloak login theme. Omit the block when only apply-theme is used.
 # keycloak:
-#   themeName: '' # required - theme name, 3-40 characters: a-z, 0-9, -
-#   smtp: # optional - SMTP server for Keycloak emails
-#     host: '' # optional - SMTP host name
-#     port: 587 # optional - SMTP port
-#     from: '' # optional - sender address
-#     ssl: false # optional - use SSL
-#     starttls: true # optional - use STARTTLS
-#     auth: # optional - credentials are read from existing Kubernetes secrets, never written here
-#       username:
-#         secretKeyRef: {name: '', key: ''}
-#       password:
-#         secretKeyRef: {name: '', key: ''}
+#   themeName: '' # required for apply-keycloak-theme - theme name, 3-40 characters: a-z, 0-9, -

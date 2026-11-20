@@ -209,7 +209,9 @@ realm:
 }
 
 @test "theme name: a package without a keycloak block is refused" {
-  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
+  pkg="$BATS_TEST_TMPDIR/nokc.yaml"
+  yq eval 'del(.keycloak)' "$FIXTURES/valid.yaml" >"$pkg"
+  run "$SCRIPT" --output-dir "$OUT" --chart-dir "$CHART" "$pkg" "$ASSETS_DIR"
   [ "$status" -ne 0 ]
   [[ "$output" == *"keycloak.themeName: required"* ]]
   [ ! -e "$OUT" ]

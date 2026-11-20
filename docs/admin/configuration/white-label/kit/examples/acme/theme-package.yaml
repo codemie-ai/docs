@@ -59,7 +59,6 @@ links:
 
 # Optional: branding of platform emails (verification, password reset, budget notifications).
 email:
-  senderName: 'Acme Notifications'
   signature: 'The {productName} Team'
   palette:
     primary: '#0B5FFF'
@@ -80,21 +79,6 @@ email:
     budget_restored:
       intro: 'The budget for project {projectName} has been restored.'
 
-# Optional: Keycloak login theme and mail settings.
+# Optional: Keycloak login theme. Used by apply-keycloak-theme only.
 keycloak:
   themeName: 'acme-brand'
-  smtp:
-    host: 'smtp.acme.example'
-    port: 587
-    from: 'no-reply@acme.example'
-    ssl: false
-    starttls: true
-    auth:
-      username:
-        secretKeyRef:
-          name: 'acme-smtp'
-          key: 'username'
-      password:
-        secretKeyRef:
-          name: 'acme-smtp'
-          key: 'password'

@@ -302,3 +302,19 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   [ "$(yq eval -p=json '.product.name' "$OUT/brand-config.json")" = "R&D Süite" ]
   iconv -f UTF-8 -t UTF-8 "$OUT/brand-config.json" >/dev/null
 }
+
+@test "example: acme writes the platform files and an email block that satisfies the backend rules" {
+  ex="$BATS_TEST_DIRNAME/../examples/acme"
+  run "$SCRIPT" --output-dir "$OUT" "$ex/theme-package.yaml" "$ex/assets"
+  [ "$status" -eq 0 ]
+  by="$OUT/email/brand.yaml"
+  for role in primary primaryText text background surface; do
+    yq eval ".email.palette.$role" "$by" | grep -Eq '^#[0-9A-Fa-f]{6}$'
+  done
+  [ -z "$(unknown_backend_keys "$by" '.' 'identity|email|links')" ]
+  [ -z "$(unknown_backend_keys "$by" '.email' 'senderName|signature|palette|images|messages')" ]
+  ! yq eval '.email | .. | select(tag == "!!str")' "$by" | grep -oE '\{[A-Za-z0-9_]+\}' | grep -vE '^\{(productName|projectName|costCenterName)\}$'
+  logo=$(yq eval '.email.images.logo' "$by")
+  [ -n "$logo" ] && [ "$logo" != "null" ]
+  [ "$(od -An -tx1 -N8 "$OUT/email/$logo" | tr -d ' \n')" = "89504e470d0a1a0a" ]
+}
