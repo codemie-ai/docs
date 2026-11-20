@@ -413,3 +413,108 @@ schema_paths() {
   lib 'kit_check_inputs' "$BATS_TEST_DIRNAME/../theme-package.yaml"
   [ "$status" -ne 0 ]
 }
+
+# ── contract with the charts ─────────────────────────────────────────────────
+
+CHARTS="$BATS_TEST_DIRNAME/../../../../../../../codemie-helm-charts"
+CONTRACT="$FIXTURES/contract/chart-values-keys.txt"
+
+# contract_lines <kind>: the values of the fixture lines of one kind
+contract_lines() { grep -E "^$1 " "$CONTRACT" | cut -d' ' -f2-; }
+
+# need_charts: skip with a visible message when the charts repository is not next to this one
+need_charts() {
+  if [ ! -d "$CHARTS/keycloak-helm" ]; then
+    skip "codemie-helm-charts not found at $CHARTS: contract lines are not checked against the charts"
+  fi
+}
+
+@test "contract: the fixture holds the new keys, the name regex and the assets layout" {
+  [ -n "$(contract_lines key | grep -x 'keycloakx.childTheme.images')" ]
+  [ -n "$(contract_lines key | grep -x 'keycloakx.childTheme.folder')" ]
+  [ "$(contract_lines text | grep -c '^login/\|^email/')" = "5" ]
+  [ -n "$(contract_lines text | grep -xF 'keycloak-child-theme')" ]
+  [ -n "$(contract_lines text | grep -xF '^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$')" ]
+  [ "$(contract_lines layout | tr '\n' ' ')" = "brand.css brand-config.json platform/* email/* email/brand.yaml keycloak " ]
+}
+
+@test "contract: the fixture lists no childTheme.data, binaryData, 400000, img. prefix or realm.smtp" {
+  ! grep -E 'childTheme\.data|childTheme\.binaryData|binaryData|400000|img\.|realm\.smtp' "$CONTRACT"
+}
+
+@test "contract: the asset-name regex of the fixture is the regex of the lib" {
+  source "$LIB"
+  [ "$(contract_lines text | grep -F '^[A-Za-z0-9]')" = "$KIT_ASSET_NAME_RE" ]
+}
+
+@test "contract: every key line is found in the values files of the charts" {
+  need_charts
+  for k in $(contract_lines key); do
+    parent="${k%.*}"
+    last="${k##*.}"
+    found=no
+    for f in "$CHARTS/keycloak-helm/values-aws.yaml" "$CHARTS/oauth2-proxy/values-aws.yaml"; do
+      if [ "$k" = "keycloakx.childTheme" ] || [ "$parent" = "$k" ]; then
+        [ "$(yq eval ".$k | tag" "$f")" = "!!map" ] && found=yes
+      else
+        [ "$(yq eval ".$parent | has(\"$last\")" "$f" 2>/dev/null)" = "true" ] && found=yes
+      fi
+    done
+    [ "$found" = "yes" ] || { echo "key not found in the charts: $k"; return 1; }
+  done
+}
+
+@test "contract: every text line is found in the Keycloak chart templates" {
+  need_charts
+  for t in $(contract_lines text | grep -v '^\^'); do
+    grep -rqF -- "$t" "$CHARTS/keycloak-helm/templates" || { echo "text not found in the charts: $t"; return 1; }
+  done
+  # the regex line is found after removing its anchors
+  re=$(contract_lines text | grep '^\^')
+  grep -rqF -- "$re" "$CHARTS/keycloak-helm/templates" || { echo "regex not found in the charts: $re"; return 1; }
+}
+
+@test "contract: every layout line is found in the wrapper chart" {
+  need_charts
+  for l in $(contract_lines layout); do
+    case "$l" in
+      keycloak) grep -qxF 'assets/keycloak' "$CHARTS/codemie-ui/.helmignore" ;;
+      email/brand.yaml) grep -qF 'brand.yaml' "$CHARTS/codemie-ui/templates/brand-configmaps.yaml" ;;
+      *) grep -qF "\"$l\"" "$CHARTS/codemie-ui/templates/_helpers.tpl" ;;
+    esac || { echo "layout not found in the charts: $l"; return 1; }
+  done
+}
+
+@test "contract: the brand-input lines equal codemie-ui/brand-inputs.txt, listed as a chart file" {
+  need_charts
+  [ "$(contract_lines brand-input)" = "$(cat "$CHARTS/codemie-ui/brand-inputs.txt")" ]
+  grep -qx '# chart file, not script output: codemie-ui/brand-inputs.txt' "$CONTRACT"
+}
+
+@test "contract: the paths both scripts write are paths of the fixture layout" {
+  mkdir -p "$BATS_TEST_TMPDIR/chart"
+  pkg=$(mutate '.keycloak.themeName = "acme-brand" | .email.images.logo = "logo.png"')
+  d=$(work_assets)
+  run "$BATS_TEST_DIRNAME/../apply-theme" --output-dir "$BATS_TEST_TMPDIR/out" "$pkg" "$d"
+  [ "$status" -eq 0 ]
+  run "$BATS_TEST_DIRNAME/../apply-keycloak-theme" --output-dir "$BATS_TEST_TMPDIR/out" --chart-dir "$BATS_TEST_TMPDIR/chart" "$pkg" "$d"
+  [ "$status" -eq 0 ]
+  layout=$(contract_lines layout)
+  text=$(contract_lines text)
+  # platform script paths: each is a layout path (a * covers one folder of files)
+  while IFS= read -r f; do
+    case "$f" in
+      brand.css | brand-config.json | email/brand.yaml) grep -qxF "$f" <<<"$layout" ;;
+      platform/*) grep -qxF 'platform/*' <<<"$layout" ;;
+      email/*) grep -qxF 'email/*' <<<"$layout" ;;
+      keycloak/*) grep -qxF 'keycloak' <<<"$layout" && p="${f#keycloak/}" && { grep -qxF "$p" <<<"$text" || grep -qxF "${p%/*}/" <<<"$text"; } ;;
+      *) false ;;
+    esac || { echo "path not in the fixture layout: $f"; return 1; }
+  done < <(cd "$BATS_TEST_TMPDIR/out" && find . -type f | sed 's#^\./##')
+  # every fixture layout path has output, and the mirror has the five paths
+  [ -f "$BATS_TEST_TMPDIR/out/brand.css" ] && [ -f "$BATS_TEST_TMPDIR/out/brand-config.json" ] && [ -d "$BATS_TEST_TMPDIR/out/platform" ]
+  for t in login/theme.properties login/resources/css/brand.css email/theme.properties; do
+    [ -f "$BATS_TEST_TMPDIR/chart/theme/$t" ]
+  done
+  [ "$(ls "$BATS_TEST_TMPDIR/chart/theme/login/resources/img" | wc -l | tr -d ' ')" = "4" ]
+}
