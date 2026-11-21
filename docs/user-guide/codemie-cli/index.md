@@ -24,6 +24,8 @@ CodeMie CLI is a unified command-line interface that provides access to multiple
 
 **Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
 
+**Claude Code and Claude Desktop**: Run Claude Code through `codemie-claude` and connect Claude Desktop to the CodeMie gateway. By default, only Claude models are available in both; other models of the project catalog can be added per profile. See [Claude with CodeMie](./claude/index.md).
+
 **Profile Management**: Maintain separate configurations for different contexts (work, personal, team projects). Each profile can be configured with its own provider (Azure OpenAI, AWS Bedrock, or LiteLLM), enabling seamless switching between environments.
 
 **Enterprise Features**: Built-in support for SSO authentication via CodeMie platform, comprehensive analytics and usage tracking, audit logging with session management, secrets scanning via Gitleaks, budget controls, and governance policies.
@@ -318,6 +320,8 @@ codemie-opencode --task "<prompt>"   # OpenCode agent
 - `--profile <name>`: Use specific profile
 - `--model <model>`: Override default model
 - `--help`: Show agent-specific help
+
+For `codemie-claude`, see also [Claude with CodeMie](./claude/index.md).
 
 **Example Workflows**
 

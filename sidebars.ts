@@ -316,9 +316,20 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
-            'user-guide/codemie-cli/codemie-claude-skills',
-            'user-guide/codemie-cli/sdk-cli-reference',
-            'user-guide/codemie-cli/claude-desktop',
+            {
+              type: 'category',
+              label: 'Claude',
+              link: {
+                type: 'doc',
+                id: 'user-guide/codemie-cli/claude/codemie-claude',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/codemie-cli/claude/codemie-claude-skills',
+                'user-guide/codemie-cli/claude/sdk-cli-reference',
+                'user-guide/codemie-cli/claude/claude-desktop',
+              ],
+            },
           ],
         },
         {

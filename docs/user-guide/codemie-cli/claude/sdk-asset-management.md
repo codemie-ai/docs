@@ -2,8 +2,8 @@
 id: sdk-cli-reference
 title: SDK CLI Reference
 sidebar_label: SDK CLI Reference
-sidebar_position: 5
-pagination_prev: user-guide/codemie-cli/codemie-claude-skills
+sidebar_position: 6
+pagination_prev: user-guide/codemie-cli/claude/codemie-claude
 pagination_next: null
 ---
 
