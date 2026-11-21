@@ -26,6 +26,8 @@ Five role levels are defined in CodeMie:
 
 The [**Auditor flag**](#auditor-flag) is a separate boolean attribute that can be set on any user account independently of their base role.
 
+The [**Invoker**](../configuration/access-control/invoker-role.md) role is a restricted platform role for users who only run shared assistants and workflows. It is mutually exclusive with Admin, Maintainer, Auditor, and Project Admin.
+
 ## How Keycloak Access Is Interpreted
 
 ### Realm Roles
