@@ -46,6 +46,16 @@ Updated Keycloak Operator to 1.36.0.
 
 **Upgrade instructions:** [Keycloak Operator Upgrade 1.35.0 → 1.36.0](../3rd-party-components/keycloak/operator-upgrade.md#upgrade-keycloak-operator-from-1350-to-1360)
 
+<h4>Keycloak 26.8.2</h4>
+
+Updated Keycloak to 26.8.2.
+
+**Upgrade instructions**, in this order:
+
+1. [Keycloak Upgrade 26.5.7 → 26.6.4](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-5-to-26-6.md)
+2. [Keycloak Upgrade 26.6.4 → 26.7.5](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-6-to-26-7.md)
+3. [Keycloak Upgrade 26.7.5 → 26.8.2](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-7-to-26-8.md)
+
 <h3>Configuration Changes</h3>
 
 No breaking configuration changes were introduced in this release.
