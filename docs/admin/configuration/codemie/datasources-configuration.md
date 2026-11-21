@@ -299,6 +299,7 @@ sharepoint_loader:
   max_retries: 3                               # Retry attempts for failed requests
   graph_api_version: "v1.0"                   # Microsoft Graph API version
   graph_base_url: "https://graph.microsoft.com" # Microsoft Graph API base URL
+  fetch_timeout_seconds: 1800                  # Max time a fetch may stay in Fetching (seconds)
 ```
 
 **Key Parameters:**
@@ -306,6 +307,7 @@ sharepoint_loader:
 - `max_file_size_mb` - Files exceeding this limit are skipped during indexing
 - `graph_api_version` - Update if a newer stable Graph API version is required
 - `max_retries` - Increase for unstable network connections to SharePoint
+- `fetch_timeout_seconds` - A SharePoint datasource still in Fetching after this time (default 30 minutes) is moved to Error with a message that says how to recover it. The check runs every minute as a trigger engine job, so it applies whenever the trigger engine is running (see [Trigger Engine](./api-configuration.md#trigger-engine)). It doesn't depend on `STALE_INDEXING_WATCHDOG_ENABLED`. Keep it at 60 seconds or more
 
 ### SVN Loader
 
@@ -514,6 +516,7 @@ extraObjects:
             max_retries: 3
             graph_api_version: "v1.0"
             graph_base_url: "https://graph.microsoft.com"
+            fetch_timeout_seconds: 1800
 
           svn_loader:
             loader_batch_size: 250
