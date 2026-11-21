@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Recording stub. `get deployment|rollouts.argoproj.io -l app.kubernetes.io/instance=<rel> -o name` answers
+# from KUBECTL_STUB_WORKLOADS, a space-separated list of "<release>=<kind>/<name>" (for example
+# "api=deployment.apps/api-codemie"). When it is unset, every release has a Deployment named like it.
+echo "kubectl $*" >> "$BATS_TMPDIR/kubectl-calls"
+if [[ "$1" == "get" && ( "$2" == "deployment" || "$2" == "rollouts.argoproj.io" ) ]]; then
+  rel=""
+  for a in "$@"; do [[ "$a" == app.kubernetes.io/instance=* ]] && rel="${a#*=}"; done
+  if [[ -z "${KUBECTL_STUB_WORKLOADS+x}" ]]; then
+    [[ "$2" == "deployment" ]] && echo "deployment.apps/$rel"
+  else
+    for entry in $KUBECTL_STUB_WORKLOADS; do
+      [[ "${entry%%=*}" == "$rel" ]] || continue
+      kind_name="${entry#*=}"
+      if [[ "$2" == "deployment" && "$kind_name" == deployment.apps/* ]]; then echo "$kind_name"; fi
+      if [[ "$2" == "rollouts.argoproj.io" && "$kind_name" == rollout.argoproj.io/* ]]; then echo "$kind_name"; fi
+    done
+  fi
+fi
+exit 0

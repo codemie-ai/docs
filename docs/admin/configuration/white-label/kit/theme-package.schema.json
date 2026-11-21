@@ -1,0 +1,376 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codemie-ai.github.io/docs/kit/theme-package.schema.json",
+  "title": "ThemePackage",
+  "type": "object",
+  "required": ["version", "product", "colors", "typography", "assets", "links"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "product": {
+      "type": "object",
+      "required": ["name", "shortName"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+        },
+        "shortName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["dark", "light"],
+        "additionalProperties": false,
+        "properties": {
+          "dark": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "light": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*$"
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["bodyFamily", "bodyProseFamily", "codeFamily"],
+      "additionalProperties": false,
+      "properties": {
+        "bodyFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "bodyProseFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "codeFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "fontFaceCSS": {
+          "type": ["string", "null"],
+          "maxLength": 20000,
+          "pattern": "^(?![\\s\\S]*!important)[\\s\\S]*$"
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gradients": { "type": "string", "enum": ["default", "none"] }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logoLight", "logoDark", "favicon", "faviconSvg", "manifest"],
+      "additionalProperties": false,
+      "properties": {
+        "logoLight": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "logoDark": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "favicon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "faviconSvg": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "manifest": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "userGuide": {
+          "$ref": "#/definitions/link"
+        },
+        "videoPortal": {
+          "$ref": "#/definitions/link"
+        },
+        "youtubeChannel": {
+          "$ref": "#/definitions/link"
+        },
+        "learningCourses": {
+          "$ref": "#/definitions/link"
+        },
+        "customerSupport": {
+          "$ref": "#/definitions/link"
+        },
+        "userSurvey": {
+          "$ref": "#/definitions/link"
+        },
+        "workflowDocumentation": {
+          "$ref": "#/definitions/link"
+        },
+        "workflowYamlDocumentation": {
+          "$ref": "#/definitions/link"
+        },
+        "googleDocsDocumentation": {
+          "$ref": "#/definitions/link"
+        }
+      }
+    },
+    "email": {
+      "$ref": "#/definitions/email"
+    },
+    "keycloak": {
+      "$ref": "#/definitions/keycloak"
+    }
+  },
+  "definitions": {
+    "secretKeyRef": {
+      "type": "object",
+      "required": ["secretKeyRef"],
+      "additionalProperties": false,
+      "properties": {
+        "secretKeyRef": {
+          "type": "object",
+          "required": ["name", "key"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253
+            }
+          }
+        }
+      }
+    },
+    "keycloak": {
+      "type": "object",
+      "required": ["themeName"],
+      "additionalProperties": false,
+      "properties": {
+        "themeName": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,40}$"
+        },
+        "smtp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "host": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 253,
+              "pattern": "^[A-Za-z0-9.-]+$"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "from": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 254,
+              "pattern": "^[^\\s<>\"\\\\]+@[^\\s<>\"\\\\]+$"
+            },
+            "ssl": {
+              "type": "boolean"
+            },
+            "starttls": {
+              "type": "boolean"
+            },
+            "auth": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "username": {
+                  "$ref": "#/definitions/secretKeyRef"
+                },
+                "password": {
+                  "$ref": "#/definitions/secretKeyRef"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^(?!.*\\{\\{)(?!.*\\}\\})[^\\u0000-\\u001f]+$"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "^https?://[^\\s\\u0000-\\u001f{}]+$"
+        }
+      }
+    },
+    "emailMessageFull": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        },
+        "buttonLabel": {
+          "type": "string"
+        },
+        "footer": {
+          "type": "string"
+        }
+      }
+    },
+    "emailMessageShort": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "senderName": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "palette": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "primaryText": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          }
+        },
+        "images": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "logo": {
+              "type": "string",
+              "minLength": 1
+            },
+            "logoUrl": {
+              "type": "string",
+              "pattern": "^https://[^\\s${}<>\"\\\\]{1,2000}$"
+            }
+          }
+        },
+        "messages": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "verification": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "password_reset": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_soft_limit": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_stopped": {
+              "$ref": "#/definitions/emailMessageShort"
+            },
+            "budget_restored": {
+              "$ref": "#/definitions/emailMessageShort"
+            }
+          }
+        }
+      }
+    }
+  }
+}
