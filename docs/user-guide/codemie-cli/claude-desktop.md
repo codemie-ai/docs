@@ -77,19 +77,24 @@ Check whether the proxy daemon is running:
 codemie proxy status
 ```
 
-Use `--deep` to also verify upstream CodeMie gateway reachability:
+To check the sign-in, CodeMie reachability, and Claude Desktop collection, and to get the
+command that fixes each problem, run:
 
 ```bash
-codemie proxy status --deep
+codemie proxy doctor --verbose
 ```
+
+See [Enable AI Analytics](./enable-analytics.md#troubleshooting) for the list of findings.
 
 ## Options
 
 | Option             | Description                                                             |
 | ------------------ | ----------------------------------------------------------------------- |
 | `--profile <name>` | Use a specific profile for this run without changing the active profile |
-| `--force`          | Stop any existing proxy and start a fresh one                           |
 | `--verbose`        | Show gateway URLs and config file paths for debugging                   |
+
+To restart the proxy, run `codemie proxy restart`. To remove the configuration, run
+`codemie proxy disconnect --claude-desktop`.
 
 ## Config file locations
 
