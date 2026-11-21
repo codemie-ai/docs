@@ -407,6 +407,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 | [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 | [`gpt-6.1-terra-2026-10-26`](#gpt-61-terra)                 | GPT-6.1 Terra          |
+| [`gpt-6.2-sol`](#gpt-62-sol)                                | GPT-6.2 Sol            |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
@@ -1485,6 +1486,29 @@ model_list:
     id: gpt-6.1-terra-2026-10-26-polandcentral-0
     base_model: azure/gpt-6.1-terra
     label: "GPT-6.1 Terra"
+    mode: responses
+```
+
+</details>
+
+### GPT-6.2 series
+
+#### GPT-6.2 Sol
+
+<details>
+<summary><strong>GPT-6.2 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6.2-sol
+  litellm_params:
+    model: azure/gpt-6.2-sol-2026-11-17
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.2-sol-polandcentral-0
+    base_model: azure/gpt-6.2-sol
+    label: "GPT-6.2 Sol"
     mode: responses
 ```
 
