@@ -434,9 +434,10 @@ execution. The editor then offers three actions:
 
 The example below keeps only the type mismatch from the previous section. Save succeeds in
 `warn` mode. The outlined status and actions confirm that the workflow is saved and that execution
-is a separate choice.
+is a separate choice. The **Issues** panel reads **Workflow created with warnings** after the first
+save of a new workflow and **Saved with warnings** after a later save.
 
-![Saved with warnings, with Done, Saved, and Run anyway outlined](./images/saved-with-warnings.png)
+![Workflow created with warnings, with Done, Saved, and Run anyway outlined](./images/saved-with-warnings.png)
 
 Warnings and informational `UNVERIFIED` results are different. A warning means the analysis
 found a likely problem, such as an optional field that a state needs. `UNVERIFIED` means the
