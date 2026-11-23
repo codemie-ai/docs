@@ -396,6 +396,10 @@ stored. For the outcome rules, see [Requirement outcomes](./configuration/workfl
 Select **Go to Issue** on a finding. The editor opens the relevant node configuration and focuses
 the field. Here, the missing-field error points to **Consumer → Input contract**.
 
+When the node form has no control for the field, **Go to Issue** opens the YAML editor instead.
+This happens, for example, for a task on a Tool or Transform node, or for a contract key while
+contract linking is disabled on the platform.
+
 ![Go to Issue focuses the input contract and displays its error message](./images/go-to-issue.png)
 
 To repair this example, remove `missing` from both `properties` and `required`, and change the
@@ -405,7 +409,8 @@ Then open **Issues** again.
 ![Issues marked Resolved after a local edit, with Check outlined](./images/resolved-before-check.png)
 
 **Resolved** means the local field changed. It does not prove that backend validation passed.
-Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
+An issue without a field location is not marked **Resolved** by a local edit. It clears only
+after a new Check or Save, or when you remove its state. Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
 store the workflow.
 
 ## Saving and Running Workflows

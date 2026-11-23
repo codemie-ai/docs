@@ -333,14 +333,16 @@ of the Issues panel, field navigation, and the local **Resolved** state. The
    output contract fields and the **Save validation** override on each state.
 2. Click **Check**.
 3. Read the **Issues** list. Each entry names the state and, where available, the field.
-4. Select **Go to Issue** to jump to the field.
+4. Select **Go to Issue** to jump to the field. If the node form has no control for that field,
+   the YAML editor opens instead.
 5. Change the field.
 6. Click **Check** again.
 7. Click **Save** when the remaining issues are acceptable for the effective mode.
 
 **Resolved.** After a local edit the editor can mark an issue **Resolved**. That only means the
 field changed on your screen. It does not prove that backend validation passed, so always
-**Check** again before saving.
+**Check** again before saving. An issue without a field location is not marked **Resolved** by
+a local edit; it clears only after a new Check or Save, or when you remove its state.
 
 A successful Check does not guarantee that a later save succeeds, because access, dependencies,
 and input can change.
@@ -358,7 +360,9 @@ and input can change.
 
 Save-time contract linking is controlled by the platform setting
 `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. When it is disabled, new contract
-warnings and coverage are not returned, but the `input_schema` structure checks still apply. No
+warnings and coverage are not returned, but the `input_schema` structure checks still apply.
+The editor hides the contract fields and **Check**, so a structure error found on Save opens in
+the YAML editor. No
 per-workflow `save_validation` value turns linking off when the platform enables it. A successful save
 does not prove that runtime values are correct.
 
