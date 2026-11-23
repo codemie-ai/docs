@@ -18,6 +18,11 @@ To open it, select **Analytics** in the left navigation, then the **AI Attributi
 global filters (time period, project, users) apply to every screen. Data visibility follows the
 [Analytics Dashboard access rules](./index.md#access-permissions-and-data-visibility).
 
+:::tip Start collecting
+AI Attribution shows the sessions that developers' tools send through the CodeMie CLI. To turn it
+on for Claude Code and GitHub Copilot, see [Enable AI Analytics](../codemie-cli/enable-analytics.md).
+:::
+
 :::info Estimated costs
 Costs are estimated from token counts and model prices, before any invoice. Models without a
 configured price count as $0 and are listed in a notice above the figures.

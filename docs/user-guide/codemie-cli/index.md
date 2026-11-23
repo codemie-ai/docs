@@ -375,6 +375,9 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
+To send usage from Claude Code and GitHub Copilot to CodeMie
+[AI Attribution](../analytics/ai-attribution.md), see [Enable AI Analytics](./enable-analytics.md).
+
 ### Connect Remote MCP Servers
 
 Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
@@ -389,9 +392,9 @@ codemie mcp list
 To connect VS Code to the CodeMie model catalog and MCP proxy:
 
 ```bash
-codemie proxy connect vscode
-codemie proxy connect vscode --profile <name>
-codemie proxy connect vscode --insiders
+codemie proxy connect --vscode
+codemie proxy connect --vscode --profile <name>
+codemie proxy connect --vscode --insiders
 ```
 
 The proxy starts locally and adds the managed CodeMie model catalog and MCP servers to your agent. Your SSO credentials remain in CodeMie and are not written to the agent configuration.
