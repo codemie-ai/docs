@@ -90,8 +90,8 @@ In the Keycloak Admin Console, create a new client in the target realm:
 
 1. Go to **Clients** and click **Create client**.
 2. Set **Client ID** to `codemie-migration-client`, **Client type** to `OpenID Connect`. Click **Next**.
-3. In **Capability config**, enable **Client authentication** and **Authorization**. Enable **Service accounts roles** under **Authentication flow**. Click **Next**.
-4. In **Access settings**, set **Valid redirect URIs** and **Web origins** to `/*`. Click **Save**.
+3. In **Capability config**, enable **Client authentication**. Enable **Service accounts roles** under **Authentication flow**. Click **Next**.
+4. Leave the URL fields of the last step empty and click **Save**. The migration uses only the service account, so the client needs no redirect URIs and no **Authorization**.
 5. Go to the **Service accounts roles** tab and assign the following `realm-management` roles:
    - `view-users`
    - `view-clients`
@@ -103,7 +103,8 @@ In the Keycloak Admin Console, create a new client in the target realm:
    - `query-clients`
    - `query-groups`
    - `query-realms`
-6. Go to the **Credentials** tab and copy the **Client secret**.
+6. Keycloak 26.8.2 or later: go to the **Client scopes** tab, click **Add client scope**, select `kc-admin-api`, click **Add** → **Default**. Without this scope the migration gets `401`.
+7. Go to the **Credentials** tab and copy the **Client secret**.
 
 #### Configure environment variables
 
@@ -177,6 +178,12 @@ extraEnv:
 ```
 
 Apply the changes to the deployment.
+
+The service account client is no longer needed either. In the Keycloak Admin Console, open **Clients** → `codemie-migration-client` → **Action** → **Delete**, then delete the Kubernetes secret:
+
+```bash
+kubectl delete secret codemie-migration-secret -n codemie
+```
 
 ---
 

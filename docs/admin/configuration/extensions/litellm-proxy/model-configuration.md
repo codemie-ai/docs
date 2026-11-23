@@ -267,6 +267,21 @@ Each model entry in the `model_list` array consists of three main sections:
 - **`label`**: Human-readable display name shown in CodeMie UI
 - **`forbidden_for_web`**: (Optional) Set to `true` to hide this model from CodeMie UI
 - **`supports_image_generation`**: (Optional) Set to `true` to include this model in the image generation model selector. Typically combined with `forbidden_for_web: true` since image generation models are not intended for general chat.
+- **Effort and temperature flags**: (Optional) CodeMie reads these LiteLLM capability flags to
+  decide which **Effort** levels a model offers and whether it accepts `temperature`. They are
+  usually filled from the LiteLLM models database; set them in `model_info` only to override it.
+
+  | Flag                              | Effect in CodeMie                                                                                     |
+  | --------------------------------- | ----------------------------------------------------------------------------------------------------- |
+  | `supports_reasoning`              | Enables `low`, `medium`, `high` for non-Claude models                                                 |
+  | `supports_output_config`          | Enables `low`, `medium`, `high` for Claude models (Claude models need this or one of the flags below) |
+  | `supports_xhigh_reasoning_effort` | Adds `xhigh`                                                                                          |
+  | `supports_max_reasoning_effort`   | Adds `max`                                                                                            |
+  | `supports_sampling_params: false` | `temperature` is not sent to the model                                                                |
+
+  Gemini models are limited to `low`, `medium`, `high`. The selected level is sent to the proxy as
+  `reasoning_effort`.
+
 - **`default_for_categories`**: Array of categories for default model selection.
 
   Available categories:
@@ -392,6 +407,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 | [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 | [`gpt-6.1-terra-2026-10-26`](#gpt-61-terra)                 | GPT-6.1 Terra          |
+| [`gpt-6.2-sol`](#gpt-62-sol)                                | GPT-6.2 Sol            |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
@@ -1470,6 +1486,29 @@ model_list:
     id: gpt-6.1-terra-2026-10-26-polandcentral-0
     base_model: azure/gpt-6.1-terra
     label: "GPT-6.1 Terra"
+    mode: responses
+```
+
+</details>
+
+### GPT-6.2 series
+
+#### GPT-6.2 Sol
+
+<details>
+<summary><strong>GPT-6.2 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6.2-sol
+  litellm_params:
+    model: azure/gpt-6.2-sol-2026-11-17
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.2-sol-polandcentral-0
+    base_model: azure/gpt-6.2-sol
+    label: "GPT-6.2 Sol"
     mode: responses
 ```
 

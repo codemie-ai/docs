@@ -37,6 +37,7 @@ words:
   - EPAM
   - epmd
   - cdme
+  - datadoghq
   - EPMDEDP
   - Tavily
   - SonarQube
@@ -99,6 +100,7 @@ words:
   - awscli
   - NACLs
   - xlarge
+  - xhigh
   - AWSIRSA
   - envsubst
   - superadmin
@@ -343,6 +345,7 @@ words:
   - Presales
   - agentic
   - keycloakx
+  - dbchecker
   - backchannel
   - xforwarded
   - CIBA
