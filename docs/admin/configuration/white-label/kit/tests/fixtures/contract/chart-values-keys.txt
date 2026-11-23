@@ -35,7 +35,6 @@ layout brand-config.json
 layout platform/*
 layout email/*
 layout email/brand.yaml
-layout keycloak
 
 # chart file, not script output: codemie-ui/brand-inputs.txt
 brand-input assets/brand.css

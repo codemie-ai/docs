@@ -481,7 +481,7 @@ need_charts() {
   [ "$(contract_lines text | grep -c '^login/\|^email/')" = "5" ]
   [ -n "$(contract_lines text | grep -xF 'keycloak-child-theme')" ]
   [ -n "$(contract_lines text | grep -xF '^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$')" ]
-  [ "$(contract_lines layout | tr '\n' ' ')" = "brand.css brand-config.json platform/* email/* email/brand.yaml keycloak " ]
+  [ "$(contract_lines layout | tr '\n' ' ')" = "brand.css brand-config.json platform/* email/* email/brand.yaml " ]
 }
 
 @test "contract: the fixture lists no childTheme.data, binaryData, 400000, img. prefix or realm.smtp" {
@@ -524,11 +524,19 @@ need_charts() {
   need_charts
   for l in $(contract_lines layout); do
     case "$l" in
-      keycloak) grep -qxF 'assets/keycloak' "$CHARTS/codemie-ui/.helmignore" ;;
       email/brand.yaml) grep -qF 'brand.yaml' "$CHARTS/codemie-ui/templates/brand-configmaps.yaml" ;;
       *) grep -qF "\"$l\"" "$CHARTS/codemie-ui/templates/_helpers.tpl" ;;
     esac || { echo "layout not found in the charts: $l"; return 1; }
   done
+}
+
+@test "contract: the template copies in the charts are byte-equal to the kit templates" {
+  need_charts
+  kit="$BATS_TEST_DIRNAME/.."
+  cmp "$kit/theme-config.template.yaml" "$CHARTS/codemie-ui/assets/theme-config.template.yaml"
+  cmp "$kit/keycloak-theme-config.template.yaml" "$CHARTS/keycloak-helm/keycloak-theme-config.template.yaml"
+  # the Keycloak files are not in the assets folder of the UI chart
+  [ ! -e "$CHARTS/codemie-ui/assets/keycloak" ]
 }
 
 @test "contract: the brand-input lines equal codemie-ui/brand-inputs.txt, listed as a chart file" {
@@ -558,7 +566,6 @@ need_charts() {
     esac || { echo "path not in the fixture layout: $f"; return 1; }
   done < <(cd "$BATS_TEST_TMPDIR/out" && find . -type f | sed 's#^\./##')
   # keycloak script paths: the output folder is the theme folder, so each path is a text line of the fixture
-  grep -qxF 'keycloak' <<<"$layout"
   while IFS= read -r f; do
     { grep -qxF "$f" <<<"$text" || grep -qxF "${f%/*}/" <<<"$text"; } || { echo "path not in the fixture layout: keycloak $f"; return 1; }
   done < <(cd "$BATS_TEST_TMPDIR/kcout" && find . -type f | sed 's#^\./##')
