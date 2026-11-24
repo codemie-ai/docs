@@ -663,6 +663,32 @@ Apply the change with `helm upgrade` and wait for the `codemie-api` pods to rest
 
 The platform limits each server's instructions to 4000 characters and the whole section to 12000 characters. MCP Connect additionally caps the text at `MCP_CONNECT_MAX_INSTRUCTIONS_CHARS` characters (default `8192`). See the [limits table](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md#limits).
 
+### Headroom {#headroom}
+
+Headroom compresses the messages sent to the model to reduce token usage. When the `features:headroom` component is enabled, users see the **Context compression (Headroom)** settings in the assistant form and in the workflow editor, the chat usage details show the tokens saved, and the **Analytics** dashboard shows the **Context Compression** section. For the user-facing behavior, see [Context Compression (Headroom)](../../../user-guide/assistants/context-compression.md).
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Boolean - show Headroom settings and analytics, allow compression
+```
+
+```yaml
+components:
+  # Context compression with Headroom
+  # NOTE: A missing component counts as disabled
+  - id: "features:headroom"
+    settings:
+      enabled: true
+      name: "Headroom"
+      description: "Compress large tool outputs and context with Headroom (sdk or sidecar mode) to reduce token usage"
+```
+
+:::warning The flag alone does not enable compression
+Compression also requires `HEADROOM_MODE` set to `sidecar` or `sdk` on the `codemie-api` service, and the matching deployment. With the flag on and the mode `off`, users can save settings but no tokens are saved. See [Headroom Context Compression Configuration](./headroom-configuration.md).
+:::
+
 ### Tool Call Permissions
 
 Customer-level toggle gating whether tool-call confirmation is enforced, plus a customer-wide floor on how strict that enforcement must be.
