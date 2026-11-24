@@ -146,7 +146,9 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 Expand **Contracts** to configure save-time validation. In this example, **Save validation** is
 set to **Default (warn)** and **Require input contracts** is on. **Save validation** applies at
 save time only: Save, Check, and dry-run. Declared or derived input contracts can provide
-coverage. The switch does not require an explicit declaration on every state.
+coverage. The switch does not require an explicit declaration on every state. Runtime checks use a
+separate `runtime_validation` setting. See
+[Runtime contract checks](./configuration/workflow-states.md#runtime-contract-checks).
 
 ![Advanced settings with the Contracts section outlined](./images/workflow-contract-settings.png)
 

@@ -37,6 +37,8 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 When save-time contract validation is enabled, workflows that do not opt into declared input contracts, strict validation, or required input-contract coverage can receive additional contract warnings and coverage information. These results describe save-time analysis. They do not add runtime input or output checks and do not change workflow execution. Existing configuration and access checks still apply.
 
 The feature is controlled by the platform setting `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. See [Workflow States](../../../user-guide/workflows/configuration/workflow-states.md#platform-prerequisite).
+
+Runtime checks are a separate platform setting. See [Runtime contract checks](../../../user-guide/workflows/configuration/workflow-states.md#runtime-contract-checks).
 :::
 
 <details className="release" id="v2-69-0">

@@ -119,8 +119,9 @@ Keep these points in mind:
   keys are names only.
 - Fields from any `list` form count as optional at their source. A state that requires such a
   field gets a `WARNING` that the field is optional or nullable at its source.
-- Save-time classification does not mean every node enforces its output contract at runtime.
-  Only the agent structured-output behavior described above constrains a model response.
+- Save-time classification itself does not run at runtime. Runtime enforcement of a `schema`
+  contract is a separate check, enabled by a platform setting. See
+  [Runtime contract checks](#runtime-contract-checks).
 
 #### Input contracts (`input_schema`)
 
@@ -195,7 +196,8 @@ the [Configuration Reference](./configuration-reference.md#32-workflow-level-set
 
 - **`save_validation`** — `warn` or `strict`, shown as **Save validation** in the editor. Set at
   workflow level (default `warn`) and optionally on a state. An explicit state value overrides the
-  workflow value for that state's checks. It applies at save time only: Save, Check, and dry-run.
+  workflow value for that state's checks. It applies at save time only: Save, Check, and dry-run. The runtime mode is the separate
+  `runtime_validation` key, described in [Runtime contract checks](#runtime-contract-checks).
 - **`require_input_contracts`** — boolean, workflow level only, default `false`.
 
 ```yaml

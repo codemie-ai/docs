@@ -215,6 +215,7 @@ max_concurrency: 10
 - **recursion_limit**: Maximum workflow execution steps (default: 50)
 - **max_concurrency**: Maximum concurrent parallel state executions
 - **save_validation**: Save-time contract validation mode, `warn` or `strict` (default: `warn`), shown as **Save validation** in the editor. It applies at save time only: Save, Check, and dry-run. Can also be set on a state, where it overrides the workflow value for that state — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+- **runtime_validation**: Runtime contract check mode, `warn` or `strict` (default: `warn`). It applies at runtime only and takes effect only when the platform enables runtime checks. Can also be set on a state, where it overrides the workflow value for that state — see [Runtime contract checks](./workflow-states.md#runtime-contract-checks)
 - **require_input_contracts**: Boolean, workflow level only (default: `false`). When `true`, a reachable state without declared or derived input-contract coverage blocks saving — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
 
 #### Workflow-Level Settings Examples:
@@ -555,6 +556,7 @@ State-level contract keys:
 
 - **input_schema**: Declared input contract as JSON text (a root object with `"type": "object"` and a `properties` object, optional `required` list; up to 64 KiB and 32 nesting levels) — see [Input contracts](./workflow-states.md#input-contracts-input_schema)
 - **save_validation**: `warn` or `strict`; overrides the workflow-level value for this state at save time — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+- **runtime_validation**: `warn` or `strict` (default: `warn`); overrides the workflow-level value for this state at runtime. Takes effect only when the platform enables runtime checks — see [Runtime contract checks](./workflow-states.md#runtime-contract-checks)
 
 ### 3.5 Custom Nodes Configuration
 
