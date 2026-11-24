@@ -176,6 +176,13 @@ Select tools to extend your assistant's capabilities:
 Each tool requires additional computing power, which may increase response time. Select only the tools your assistant needs.
 :::
 
+:::info Default Datasource Tools
+Attaching a code data source automatically selects **Get Repo Tree** and **Search Code**, and attaching a
+knowledge base data source selects **Search Knowledge Base**. These tools can be deselected like any
+other tool, for example to keep **Get Repo Tree** from loading the whole file tree of a very large
+repository. See [Default Datasource Tools](../tools_integrations/tools/codebase-tools.md#default-datasource-tools).
+:::
+
 :::info Integration Required
 Most tools require prior integration setup before they can be used. When you save the
 assistant, the platform automatically validates that all required integrations are
