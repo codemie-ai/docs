@@ -110,17 +110,17 @@ Enable or disable experimental features and beta functionality.
 
 ### Routing Spend Backfill
 
-Replace the cost figures on routing usage documents in Elasticsearch with values from the spend ledger. Settings are read from the environment at startup, so changing any of them requires a restart of the `codemie-api` service.
+Replace the cost figures on routing usage documents in Elasticsearch with values from the spend ledger. The job requires the spend uploader and an activated spend ledger. The Elasticsearch user of CodeMie needs `read` and `write` privileges on `codemie_metrics_logs*`, as this is the first CodeMie operation that writes to the metrics indices.
 
-| Parameter                        | Type    | Default | Description                                                                                                                                        |
-| -------------------------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SPEND_BACKFILL_ENABLED`         | boolean | `false` | Enable the backfill job. It runs after each successful spend uploader feed, so `LITELLM_SPEND_UPLOADER_ENABLED` must also be `true`                |
-| `SPEND_BACKFILL_DRY_RUN`         | boolean | `false` | Compute and log the changes without writing to Elasticsearch. Environment setting only: there is no runtime switch, so changing it needs a restart |
-| `SPEND_BACKFILL_MAX_AGE_HOURS`   | integer | `48`    | Start of the recent window, in hours before the run                                                                                                |
-| `SPEND_BACKFILL_BATCH`           | integer | `1000`  | Documents read per Elasticsearch page                                                                                                              |
-| `SPEND_BACKFILL_TIMEOUT_SECONDS` | integer | `60`    | Maximum wall time for one run                                                                                                                      |
-| `SPEND_BACKFILL_HISTORY_START`   | string  | `""`    | ISO-8601 UTC start of the one-off history pass; empty turns the pass off                                                                           |
-| `SPEND_BACKFILL_PROJECTS`        | string  | `""`    | Comma-separated project names to backfill; empty means all projects                                                                                |
+| Parameter                        | Type    | Default | Description                                                                                                                         |
+| -------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `SPEND_BACKFILL_ENABLED`         | boolean | `false` | Enable the backfill job. It runs after each successful spend uploader feed, so `LITELLM_SPEND_UPLOADER_ENABLED` must also be `true` |
+| `SPEND_BACKFILL_DRY_RUN`         | boolean | `false` | Compute and log the changes without writing to Elasticsearch                                                                        |
+| `SPEND_BACKFILL_MAX_AGE_HOURS`   | integer | `48`    | Size of the recent window in hours: documents newer than this are re-checked on every run. Minimum `0`                              |
+| `SPEND_BACKFILL_BATCH`           | integer | `1000`  | Documents read per Elasticsearch page. Range `1`-`10000`                                                                            |
+| `SPEND_BACKFILL_TIMEOUT_SECONDS` | integer | `60`    | Maximum wall time for one run; unfinished work resumes on the next run. Minimum `1`                                                 |
+| `SPEND_BACKFILL_HISTORY_START`   | string  | `""`    | ISO-8601 start of the one-off history pass, with a timezone (for example, `2026-11-01T00:00:00Z`); empty turns the pass off         |
+| `SPEND_BACKFILL_PROJECTS`        | string  | `""`    | Comma-separated project names to backfill; empty means all projects                                                                 |
 
 ### Marketplace Management
 
