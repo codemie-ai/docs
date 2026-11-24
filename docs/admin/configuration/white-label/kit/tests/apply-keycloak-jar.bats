@@ -70,7 +70,8 @@ theme/acme-brand/login/theme.properties"
   [ "$status" -eq 0 ]
   (umask 077; TZ=America/Los_Angeles "$SCRIPT" --output-dir "$BATS_TEST_TMPDIR/o2" --jar "$BATS_TEST_TMPDIR/b.jar" "$PKG" "$ASSETS_DIR")
   cmp "$BATS_TEST_TMPDIR/a.jar" "$BATS_TEST_TMPDIR/b.jar"
-  [ "$(stat -f %Lp "$BATS_TEST_TMPDIR/b.jar" 2>/dev/null || stat -c %a "$BATS_TEST_TMPDIR/b.jar")" = "644" ]
+  # GNU stat first: on Linux, `stat -f` reads the file system and does not fail, so it must not come first.
+  [ "$(stat -c %a "$BATS_TEST_TMPDIR/b.jar" 2>/dev/null || stat -f %Lp "$BATS_TEST_TMPDIR/b.jar")" = "644" ]
 }
 
 @test "jar: no jar without --jar" {
