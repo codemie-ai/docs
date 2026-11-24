@@ -34,7 +34,7 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 ## November 2026 {#2026-11}
 
 <details className="release" id="v2-71-0">
-<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--info">Component updates</span></summary>
+<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
 
@@ -49,9 +49,13 @@ For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/
 
 **Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
 
+<h4>CodeMie Code CLI 0.17.2</h4>
+
+The recommended CLI version is updated to [v0.17.2](https://github.com/codemie-ai/codemie-code/releases/tag/v0.17.2).
+
 <h3>Configuration Changes</h3>
 
-No breaking configuration changes were introduced in this release.
+1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` now enforces a minimum CLI version of `0.17.2` (previously `0.15.8`). Users on older CLI versions must upgrade to `0.17.2`.
 
 </details>
 
