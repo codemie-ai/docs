@@ -553,7 +553,7 @@ states:
 
 State-level contract keys:
 
-- **input_schema**: Declared input contract as JSON text (a root object with a `properties` object, optional `required` list; up to 64 KiB and 32 nesting levels) — see [Input contracts](./workflow-states.md#input-contracts-input_schema)
+- **input_schema**: Declared input contract as JSON text (a root object with `"type": "object"` and a `properties` object, optional `required` list; up to 64 KiB and 32 nesting levels) — see [Input contracts](./workflow-states.md#input-contracts-input_schema)
 - **save_validation**: `warn` or `strict`; overrides the workflow-level value for this state at save time — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
 
 ### 3.5 Custom Nodes Configuration

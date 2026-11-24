@@ -1430,8 +1430,8 @@ Agent task placeholders also contribute derived input requirements only when thi
 
 **Supplying `ticket_text`:** `ticket_text` is a workflow input. Enter it in the execution dialog
 when you run the workflow, for example `{"ticket_text": "The export button returns a 500 error."}`.
-No upstream state produces it, so the platform cannot confirm at save time that it will be
-provided.
+The `input_schema` of the first state also declares the workflow input. Here it lists
+`ticket_text` without marking it as required, so the platform treats the field as optional input.
 
 **Data path:**
 
@@ -1443,9 +1443,11 @@ provided.
 
 **Expected result with contract linking enabled:**
 
-- Under `save_validation: warn`, the workflow is accepted. Check returns one warning: `ticket_text` is
-  optional on `analyze-ticket` and no upstream state guarantees it. This is the expected
-  result, not a fault in the example.
+- Under `save_validation: warn`, the workflow is accepted. Check returns one warning:
+  `ticket_text`, needed by `analyze-ticket`, is optional or nullable at its source, the workflow
+  input. The example keeps this warning on purpose to show a warning that does not block saving.
+  To remove it, add `"required": ["ticket_text"]` to the `input_schema` of `analyze-ticket`.
+  The workflow then has no issues.
 - The `severity` and `summary` requirements of `write-reply` produce no issues.
 - Coverage: `validated_states: 2`, `total_states: 2`, `uncovered_state_ids: []`,
   `analysed: true`, `cap_reached: false`. Every reachable state has an input contract, which

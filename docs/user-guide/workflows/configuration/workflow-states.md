@@ -97,14 +97,14 @@ When you save a workflow, the platform classifies each state's `output_schema` t
 fields the state can provide to later states. This classification is separate from the agent's
 structured-output behavior described above. The table shows what each form supplies.
 
-| Form                  | What it is                                                                                                                                                             | What it supplies at save time                                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `schema`              | A valid JSON Schema object                                                                                                                                             | Top-level property names, plus types and required flags where the schema declares them                                     |
-| `example`             | A plain JSON object that is not a schema                                                                                                                               | Field names only. Example values do not establish field types                                                              |
-| `list` (plain)        | A JSON list of objects                                                                                                                                                 | Field names taken from the object items. No types or required flags                                                        |
-| `list` (array schema) | A schema whose root is an array                                                                                                                                        | Field names from `items.properties`, with types and required flags taken from `items`                                      |
-| `invalid`             | A value that is not usable as an output contract: malformed JSON text, or valid JSON that fails the checks, such as a scalar or an object that fails the schema checks | Quoted keys that can be recovered from some malformed text, as names only. If none can be recovered, the source is unknown |
-| `none`                | No `output_schema`, or a blank one                                                                                                                                     | Nothing. The state declares no output information                                                                          |
+| Form                  | What it is                                                                                                                                                                                          | What it supplies at save time                                                                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `schema`              | A valid JSON Schema object                                                                                                                                                                          | Top-level property names, plus types and required flags where the schema declares them                                          |
+| `example`             | A plain JSON object that is not a schema                                                                                                                                                            | Field names only. Example values do not establish field types                                                                   |
+| `list` (plain)        | A JSON list of objects                                                                                                                                                                              | Field names taken from the object items. No types or required flags                                                             |
+| `list` (array schema) | A schema whose root is an array                                                                                                                                                                     | Field names from `items.properties`, with types from `items`. Every field counts as optional, even if `items.required` lists it |
+| `invalid`             | A value that is not usable as an output contract: malformed JSON text that does not start with `[`, or valid JSON that fails the checks, such as a scalar or an object that fails the schema checks | Quoted keys that can be recovered from some malformed text, as names only. If none can be recovered, the source is unknown      |
+| `none`                | No `output_schema`, or a blank one                                                                                                                                                                  | Nothing. The state declares no output information                                                                               |
 
 Keep these points in mind:
 
@@ -115,6 +115,10 @@ Keep these points in mind:
   has no keys to recover, so its source is unknown.
 - Recovery from malformed text never establishes types or required status.
 - A root array schema is classified as a `list`, not as a `schema`.
+- Malformed text that starts with `[` is classified as a `list`, not as `invalid`. Any recovered
+  keys are names only.
+- Fields from any `list` form count as optional at their source. A state that requires such a
+  field gets a `WARNING` that the field is optional or nullable at its source.
 - Save-time classification does not mean every node enforces its output contract at runtime.
   Only the agent structured-output behavior described above constrains a model response.
 
@@ -171,6 +175,14 @@ state of an iteration, item fields can also supply tool input or agent placehold
 state reads them. A transform node does not read the iteration item directly. See
 [Iteration Properties](./state-transitions.md#iteration-properties).
 
+**Workflow input.** The `input_schema` of the first state also declares the workflow input. Its
+fields become a known source for later states. A field it marks as required counts as
+guaranteed, and a field it leaves optional counts as optional, so a state that needs that field
+gets a `WARNING`. If a state reads a field that this declaration does not list, the field has no
+known source and is reported as `ERROR`. Without an `input_schema` on the first state, the
+workflow input is an unknown source, and such fields are reported as `UNVERIFIED`. How each
+outcome affects saving depends on the mode; see [Requirement outcomes](#requirement-outcomes).
+
 **Iteration items.** A required field that can only be supplied by an unknown iteration item
 cannot be verified at save time and is reported as `UNVERIFIED`. This applies to required
 fields only: optional declared fields give `OK`. Static analysis can carry the uncertainty about
@@ -208,12 +220,22 @@ parameters). With `require_input_contracts: true`, an uncovered reachable state 
 both modes. A state-level `warn` does not disable this rule, and the setting does not require an
 explicit `input_schema` on every state. Transition checks alone give no coverage.
 
-**Strict output-form rule.** Under `strict`, a reachable producer that writes to context and
-declares a non-schema output contract (`example`, `list`, or `invalid`) can be rejected. A strict
-consumer can also be rejected because an upstream producer has a non-schema contract. Lists
-count as non-schema for this rule, even when written as a root array schema. Strict mode does
-not require an output contract on every state: a state with no `output_schema` does not trigger
-this rule.
+**Strict output-form rule.** This rule rejects producers whose output contract is not a JSON
+schema. Lists count as non-schema for this rule, even when written as a root array schema.
+
+- **Producer check.** This check applies only when the workflow-level `save_validation` is
+  `strict` and the producer's own effective mode is also `strict`. A state-level `warn` on the
+  producer exempts it, and a state-level `strict` on the producer alone does not trigger this
+  check. A reachable producer that writes to context is rejected when another state reads its
+  output and the producer has no JSON schema output contract. That includes a producer with no
+  `output_schema` at all. A producer that nobody reads is rejected only when it declares an
+  `example`, `list`, or `invalid` output contract.
+- **Consumer check.** A consumer whose effective mode is `strict` is rejected when it reads from
+  a producer without a JSON schema output contract. This applies even when the workflow-level
+  mode is `warn`.
+
+Strict mode therefore does not require an output contract on every state: a state with no
+`output_schema` passes this rule only if no other state reads its output.
 
 #### Requirement outcomes
 
@@ -269,11 +291,21 @@ under `strict`, and a raw derived `ERROR` appears as a public `WARNING` under `w
   contract linking ran, the [coverage](#contract-coverage) object.
 - **Rejected response.** With `error_format=json`, a rejection carries `error.details` with
   `error_type`, `message`, `errors`, `warnings`, and `coverage`. The default
-  `error_format=string` returns `error.details` as plain text instead: the errors, then the
-  warnings prefixed by their value, then the coverage line, joined with `<br>`. The UI requests
-  JSON. The create, update, and Check endpoints accept `error_format`.
+  `error_format=string` returns `error.details` as plain text instead, with lines joined by
+  `<br>`. The text starts with the header **Workflow contracts are not satisfied:**, then lists
+  the errors, then the warnings prefixed by their value (`WARNING:` or `UNVERIFIED:`). A
+  `warnings_truncated: N` line follows when warnings were omitted, and the coverage line comes
+  last. A line ends with a short label in parentheses when the finding has one, for example
+  `(renders empty)`. The UI requests JSON. The create, update, and Check endpoints accept `error_format`.
 - **Issue entries** identify the state and the relevant data field or configuration location.
   Location details can be absent.
+- **Analysis failure.** If the analysis fails, the response has one `UNVERIFIED` finding that
+  the contracts could not be analysed, and coverage shows `analysed: false` with 0 of 0 states.
+  The finding is informational under `warn` and blocks when the workflow or any state uses
+  `strict`.
+- **Work limit.** If the analysis reaches its work limit, coverage shows `cap_reached: true`.
+  Requirements that were not reached are reported as `UNVERIFIED`. The workflow-level notice
+  about the limit blocks only when the workflow-level mode is `strict`.
 - **Warning limit.** At most 100 contract warnings are returned. When more exist,
   `warnings_truncated` gives the number omitted. A response without `warnings_truncated` does not
   mean the response contains no warnings.
@@ -308,8 +340,9 @@ Remember:
 
 The workflow below has three reachable states.
 The first two have input contracts. The final **Log-result** state has a constant output and no
-declared or derived input contract. With `require_input_contracts: false`, Check returns
-**No issues found** and **Input contract coverage: 2 of 3 states**.
+declared or derived input contract. With `require_input_contracts: false`, Check shows a success
+message, **No issues found** and **Input contract coverage: 2 of 3 states**, and the Issues panel
+does not open.
 
 ![A successful Check reports input contract coverage of two out of three states](./images/incomplete-coverage.png)
 
@@ -342,7 +375,8 @@ of the Issues panel, field navigation, and the local **Resolved** state. The
 **Resolved.** After a local edit the editor can mark an issue **Resolved**. That only means the
 field changed on your screen. It does not prove that backend validation passed, so always
 **Check** again before saving. An issue without a field location is not marked **Resolved** by
-a local edit; it clears only after a new Check or Save, or when you remove its state.
+a local edit. It is marked **Resolved** only when you remove its state, and it stays in the list
+until the next Check or Save.
 
 A successful Check does not guarantee that a later save succeeds, because access, dependencies,
 and input can change.
@@ -361,10 +395,17 @@ and input can change.
 Save-time contract linking is controlled by the platform setting
 `WORKFLOW_CONTRACT_LINKING_ENABLED`, which defaults to `false`. When it is disabled, new contract
 warnings and coverage are not returned, but the `input_schema` structure checks still apply.
-The editor hides the contract fields and **Check**, so a structure error found on Save opens in
-the YAML editor. No
-per-workflow `save_validation` value turns linking off when the platform enables it. A successful save
+The editor hides **Check**, the workflow-level **Contracts** section, and the **Input contract** and
+**Save validation** node fields. Assistant, Tool, Custom, and Sub-Workflow nodes still show
+**Output contract**, and Transform nodes show no **Contracts** section. A structure error found on
+Save opens the Issues panel. **Go to Issue** on an `input_schema` or `save_validation` finding then
+opens the YAML editor, because the node form has no control for it. No per-workflow `save_validation` value turns linking off when the platform enables it. A successful save
 does not prove that runtime values are correct.
+
+When the setting is enabled, saving any workflow also returns an advisory warning when a
+script-step tool runs under the workflow author's integration for anyone who runs the workflow.
+This warning never blocks saving. Without the setting, it appears only for global workflows. Restoring a workflow version does not run contract linking.
+Other save checks, including the `input_schema` structure checks, still apply.
 
 For a complete workflow with both contracts, expected coverage, and a warn versus strict
 comparison, see
