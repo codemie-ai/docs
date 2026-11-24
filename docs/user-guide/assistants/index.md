@@ -45,6 +45,7 @@ Discover and share assistants with the community:
 Coordinate multiple assistants:
 
 - [Sub-Assistants and Orchestration](./sub-assistants-multi-assistant-orchestrator.md) - Coordinate multiple specialized assistants
+- [Context Compression (Headroom)](./context-compression.md) - Reduce token usage by compressing the context sent to the model
 
 ## Favorites and Pinned Assistants
 

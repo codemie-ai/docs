@@ -135,6 +135,7 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 - **Summarization Settings**: Token and message limits for automatic summarization
 - **Performance Settings**: Parallel task execution and recursion depth limits
 - **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
+- **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
 
 :::info Configuration Sync
 Changes made in the Visual Editor are automatically reflected in the YAML configuration, and vice versa. Both views stay synchronized in real-time.
