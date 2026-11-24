@@ -497,9 +497,11 @@ error. The parent's retry policy can therefore re-run the child workflow.
 
 ##### Contract failures are never retried
 
-Input and output contract failures are never retried, in either mode, whatever the node's
-`retry_policy` says. Execution errors, such as tool errors, timeouts, and model errors, keep the
-node's `retry_policy`. The output check is skipped on a failed attempt. See
+The node that raises an input or output contract failure never retries it, in either mode,
+whatever the node's `retry_policy` says. Execution errors, such as tool errors, timeouts, and
+model errors, keep the node's `retry_policy`. The output check is skipped on a failed attempt.
+The one exception is a strict failure inside a Sub-Workflow: the parent's `retry_policy` can
+re-run the child workflow, as described in the note above. See
 [Retry Policies](./advanced-features.md#73-retry-policies).
 
 ##### Existing workflows
