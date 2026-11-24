@@ -508,6 +508,62 @@ difference is warn findings on nodes whose schema-form `output_schema` the outpu
 conform to, and on nodes that already declare `input_schema`. With the platform setting off,
 nothing changes.
 
+##### Runtime findings
+
+Each failed check is stored as a finding. The fields are:
+
+| Field                | Meaning                                                                                                                                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execution_id`       | The execution the finding belongs to. It is stored with the finding. It is not repeated inside each finding in the execution response, because findings are nested in the execution that carries it |
+| `execution_state_id` | The state record of the latest attempt that produced the finding. A retry moves it to the latest attempt                                                                                            |
+| `state_id`           | The id of the workflow state (node)                                                                                                                                                                 |
+| `check`              | `input` or `output`                                                                                                                                                                                 |
+| `field`              | The field name. Empty for the "output is not an object" finding                                                                                                                                     |
+| `expected`           | The declared JSON types joined by `\|`, for example `integer\|null`. `any` when a required field states no type. `object` for output that is not an object                                          |
+| `actual`             | `missing`, or the JSON type name found. The raw value is never stored                                                                                                                               |
+| `mode`               | `warn` or `strict`, the effective mode at that node                                                                                                                                                 |
+| `message`            | A human-readable message, for example `Required field 'topic' is missing` or `Field 'topic' expected string, got integer`                                                                           |
+
+The response also carries `id`, `iteration_key` (stable across retries), `provenance`, and `date`.
+
+Example of a type-mismatch finding on an input check:
+
+```json
+{
+  "id": "f-1",
+  "execution_state_id": "es-1",
+  "state_id": "node-b",
+  "iteration_key": "|0|0",
+  "check": "input",
+  "field": "topic",
+  "expected": "string",
+  "actual": "integer",
+  "mode": "warn",
+  "message": "Field 'topic' expected string, got integer",
+  "provenance": null
+}
+```
+
+###### Missing-input provenance
+
+When an input finding reports a missing field, the platform runs the save-time analysis on the
+configuration the run is executing, at the moment the finding occurs. It stores the result with
+the finding, so later edits to the workflow do not change it. The result names the nodes
+expected to produce the field, or the node that removed it and how. If the result cannot be
+computed, or no node produces the field, the stored value is `{"available": false}`. Input
+findings other than missing-input, and all output findings, have `provenance: null`.
+
+###### Where findings appear
+
+With the platform setting on, the execution response returns `findings`, `findings_total`, and
+`dropped_count`.
+
+- At most 100 findings are saved per execution. `findings_total` counts all of them, and
+  `dropped_count` is the number that were not saved.
+- Identical findings, with the same state, iteration, check, and field, are stored once. A warn
+  finding repeated by a retry stays one finding.
+- Findings are deleted together with their execution.
+
 #### Agent State Advanced Examples:
 
 **Example 1: Using `output_schema` for Structured Output**
