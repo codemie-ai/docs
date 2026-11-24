@@ -83,7 +83,7 @@ This section provides essential tools for managing your workflow:
 
 - **Cancel**: Discard changes and exit without saving
 - **Save**: Save the current workflow configuration
-- **Save & Run**: Save the workflow, then open the run dialog unless contract warnings need review
+- **Save and Run**: Save the workflow, then open the run dialog unless contract warnings need review
 
 **Workflow Tools:**
 
@@ -170,7 +170,7 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 
 #### Node contract fields
 
-Select an action node and expand **Contracts**. The Assistant node below shows **Input contract**,
+Select an action node. Its **Contracts** section is expanded by default. The Assistant node below shows **Input contract**,
 **Output contract**, and **Save validation**. **Use workflow default** follows the workflow setting.
 Select `warn` or `strict` to override that setting for this node.
 
@@ -377,7 +377,7 @@ Use it after you change a contract, a node, or a connection.
 
 1. Click **Check**.
 2. Read the **Issues** panel. Errors appear before warnings. Informational findings appear under
-   **Unverified**.
+   **Unverified**, which starts collapsed when other groups are present.
 3. Read the coverage count separately from the findings. Full coverage does not prove that the
    requirements passed.
 
@@ -388,13 +388,22 @@ contracts, so coverage is still **2 of 2**.
 
 ![Issues panel with one error, one warning, full coverage, and the affected node outlined](./images/mixed-errors-and-warnings.png)
 
-**Changes not saved yet** means this is a Check result. It does not confirm that the workflow was
-stored. For the outcome rules, see [Requirement outcomes](./configuration/workflow-states.md#requirement-outcomes).
+**Changes not saved yet** appears when you check a new workflow or one with unsaved edits. It
+means the result describes the form on your screen, not a stored workflow. A Check on a saved,
+unedited workflow shows no such note.
+
+The **Issues** button shows the number of unresolved findings, and its color follows the most
+severe one. If no issues are found, the panel stays closed and a message reports
+**No issues found** with the coverage count. A Check that takes longer than 30 seconds stops with
+**Check timed out. Try again.** For the outcome rules, see [Requirement outcomes](./configuration/workflow-states.md#requirement-outcomes).
 
 ### Find and repair an issue
 
 Select **Go to Issue** on a finding. The editor opens the relevant node configuration and focuses
 the field. Here, the missing-field error points to **Consumer → Input contract**.
+
+For a workflow-level finding on **Save validation** or **Require input contracts**, **Go to Issue**
+opens **Workflow Config → Advanced** with the **Contracts** section expanded.
 
 When the node form has no control for the field, **Go to Issue** opens the YAML editor instead.
 This happens, for example, for a task on a Tool or Transform node, or for a contract key while
@@ -409,8 +418,9 @@ Then open **Issues** again.
 ![Issues marked Resolved after a local edit, with Check outlined](./images/resolved-before-check.png)
 
 **Resolved** means the local field changed. It does not prove that backend validation passed.
-An issue without a field location is not marked **Resolved** by a local edit. It clears only
-after a new Check or Save, or when you remove its state. Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
+An issue without a field location is not marked **Resolved** by a local edit. It is marked
+**Resolved** only when you remove its state, and it stays in the list until the next Check or
+Save. Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
 store the workflow.
 
 ## Saving and Running Workflows
@@ -418,19 +428,25 @@ store the workflow.
 ### Save Options
 
 - **Save**: Save the workflow configuration without executing
-- **Save & Run**: Save the workflow, then open the run dialog so you can start an execution
+- **Save and Run**: Save the workflow, then open the run dialog so you can start an execution
 - **Cancel**: Discard all changes and exit
 
 #### Saving with contract warnings
 
 When the workflow has [contract](./configuration/workflow-states.md#using-check-in-the-editor)
-warnings, the visual editor saves it and stays open instead of continuing straight to
-execution. The editor then offers three actions:
+warnings, the visual editor saves it and stays open. This applies to both **Save** and
+**Save and Run**: Save does not return to the workflow list, and Save and Run does not continue
+straight to execution. A new workflow switches from the create page to the edit page. The editor
+then offers three actions:
 
-- **Saved** confirms that the workflow was stored. Warnings do not prevent saving.
+- **Saved** is a disabled indicator that confirms the workflow was stored. Warnings do not
+  prevent saving.
 - **Done** closes the editor.
 - **Run anyway** continues to the run dialog despite the warnings. Execution still requires the
   run dialog: enter the input and start the run there.
+
+These actions stay until you edit the workflow. After an edit, **Cancel**, **Save**, and
+**Save and Run** return.
 
 The example below keeps only the type mismatch from the previous section. Save succeeds in
 `warn` mode. The outlined status and actions confirm that the workflow is saved and that execution
@@ -448,7 +464,7 @@ analysis could not establish the result, and in `warn` mode it is informational 
 
 After creating your workflow:
 
-1. Click **Save & Run** to save and open the run dialog
+1. Click **Save and Run** to save and open the run dialog
 2. Enter required input parameters in the execution dialog
 3. Monitor the execution progress
 4. Review the results and debug if needed
@@ -482,7 +498,7 @@ Use the **Beautify** button regularly to keep your workflow visually organized a
 
 ### Test Incrementally
 
-Test each node configuration individually before connecting the complete workflow. Use **Save & Run** frequently during development.
+Test each node configuration individually before connecting the complete workflow. Use **Save and Run** frequently during development.
 
 ### Use the Undo Feature
 
