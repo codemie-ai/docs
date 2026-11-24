@@ -100,9 +100,16 @@ Set the image tag override so the deployment uses the target Fluent Bit image ve
 </pre>
 
 :::warning Fluent Bit image registry
-The default registry `cr.fluentbit.io` can be unstable: image pulls sometimes fail with HTTP 503 or 504. The same image is published to the GitHub Container Registry (`ghcr.io/fluent/fluent-bit`) and Docker Hub (`docker.io/fluent/fluent-bit`). To use one of them, set `fluent-bit.image.repository`.
+`cr.fluentbit.io` (default) can fail with HTTP 503/504. Switch `fluent-bit.image.repository` to:
 
-With Docker Hub, watch its pull rate limit, which is lower for anonymous pulls. An upgrade pulls the new image on every node, and a new node pulls it when it joins. When the limit is reached, the image does not download, the Fluent Bit pod on that node does not start, and the logs written on that node until it starts do not reach Elasticsearch. Pull from Docker Hub with an authenticated account (`fluent-bit.imagePullSecrets`) or use `ghcr.io`.
+- `ghcr.io/fluent/fluent-bit` (recommended)
+- `docker.io/fluent/fluent-bit`
+
+Docker Hub has a pull rate limit:
+
+- Limit reached → image not pulled → Fluent Bit pod down → node logs missing in Elasticsearch.
+- Use an authenticated account (`fluent-bit.imagePullSecrets`).
+
 :::
 
 ### 5. Upgrade the Helm release
