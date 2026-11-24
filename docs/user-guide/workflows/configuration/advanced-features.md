@@ -486,6 +486,12 @@ retry_policy:
 - Rate limiting errors
 - Excludes: Authentication errors (401, 403, 404)
 
+:::note
+Contract failures are never retried. A runtime input or output contract failure is not retried in
+any mode, regardless of `retry_policy`. Execution errors follow the retry conditions above. See
+[Runtime contract checks](./workflow-states.md#runtime-contract-checks).
+:::
+
 #### Per-State Retry Override:
 
 ```yaml
