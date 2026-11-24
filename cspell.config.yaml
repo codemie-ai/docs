@@ -156,7 +156,6 @@ words:
   - StorageClass
   - millicores
   - fluentbit
-  - libbrotli
   - tfstate
   - nslookup
   - nofile
