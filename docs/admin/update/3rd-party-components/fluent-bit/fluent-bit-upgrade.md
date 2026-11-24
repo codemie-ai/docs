@@ -28,13 +28,14 @@ Before proceeding, make sure that:
 
 The exact files depend on your repository layout, but in `codemie-helm-charts` the upgrade usually requires updating the following values:
 
-| File                     | Parameter                              | Description                                                                                |
-| ------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `fluent-bit/Chart.yaml`  | `version`                              | Helm chart package version for this local chart; used to version the chart artifact.       |
-| `fluent-bit/Chart.yaml`  | `appVersion`                           | Informational application version shown in Helm metadata; does not control upgrade logic.  |
-| `fluent-bit/Chart.yaml`  | dependency `fluent-bit.version`        | Version or version range constraint for the dependent upstream `fluent-bit` chart.         |
-| `fluent-bit/values.yaml` | `fluent-bit.image.tag`                 | Value override passed to templates to select the Fluent Bit container image tag.           |
-| override values files    | environment-specific image or settings | Additional per-environment value overrides merged on top of base values during deployment. |
+| File                     | Parameter                              | Description                                                                                           |
+| ------------------------ | -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `fluent-bit/Chart.yaml`  | `version`                              | Helm chart package version for this local chart; used to version the chart artifact.                  |
+| `fluent-bit/Chart.yaml`  | `appVersion`                           | Informational application version shown in Helm metadata; does not control upgrade logic.             |
+| `fluent-bit/Chart.yaml`  | dependency `fluent-bit.version`        | Version or version range constraint for the dependent upstream `fluent-bit` chart.                    |
+| `fluent-bit/values.yaml` | `fluent-bit.image.tag`                 | Value override passed to templates to select the Fluent Bit container image tag.                      |
+| `fluent-bit/values.yaml` | `fluent-bit.image.repository`          | Registry of the Fluent Bit image: `cr.fluentbit.io` by default, `ghcr.io` or `docker.io`; see step 4. |
+| override values files    | environment-specific image or settings | Additional per-environment value overrides merged on top of base values during deployment.            |
 
 ## Upgrade procedure
 
@@ -91,9 +92,18 @@ Set the image tag override so the deployment uses the target Fluent Bit image ve
     enabled: false
 
   image:
+    repository: cr.fluentbit.io/fluent/fluent-bit
+    # repository: ghcr.io/fluent/fluent-bit   # GitHub Container Registry
+    # repository: docker.io/fluent/fluent-bit # Docker Hub
     tag: `}<span style={{ color: 'red' }}>{`<TARGET_IMAGE_TAG>`}</span>
   </code>
 </pre>
+
+:::warning Fluent Bit image registry
+The default registry `cr.fluentbit.io` can be unstable: image pulls sometimes fail with HTTP 503 or 504. The same image is published to the GitHub Container Registry (`ghcr.io/fluent/fluent-bit`) and Docker Hub (`docker.io/fluent/fluent-bit`). To use one of them, set `fluent-bit.image.repository`.
+
+With Docker Hub, watch its pull rate limit, which is lower for anonymous pulls. An upgrade pulls the new image on every node, and a new node pulls it when it joins. When the limit is reached, the image does not download, the Fluent Bit pod on that node does not start, and the logs written on that node until it starts do not reach Elasticsearch. Pull from Docker Hub with an authenticated account (`fluent-bit.imagePullSecrets`) or use `ghcr.io`.
+:::
 
 ### 4. Upgrade the Helm release
 
