@@ -411,6 +411,103 @@ For a complete workflow with both contracts, expected coverage, and a warn versu
 comparison, see
 [Example: Workflow with Input and Output Contracts](./examples.md#116-example-workflow-with-input-and-output-contracts).
 
+#### Runtime contract checks
+
+:::info Platform setting
+Runtime checks run only when the platform setting `WORKFLOW_CONTRACT_RUNTIME_CHECKS_ENABLED` is
+enabled. When it is off, no runtime check runs regardless of the contracts a workflow declares,
+and no findings are recorded. The setting is independent of `WORKFLOW_CONTRACT_LINKING_ENABLED`.
+See [Workflow Configuration](../../../admin/configuration/codemie/api-configuration.md#workflow-configuration)
+for the setting.
+:::
+
+Declared contracts can also be checked while a workflow runs. A failed check produces a
+[finding](#runtime-findings). Whether a finding only gets recorded or also stops the node depends
+on the [runtime validation mode](#runtime-validation-modes).
+
+##### When each check runs and what it reports
+
+| Check        | When it runs                                                                                                                                          | Subject                                                                                    | What produces a finding                                                                                         |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Input check  | Before the node executes, when the node declares a readable `input_schema` with at least one field                                                    | The data the node can read: the context, plus the iteration item on some nodes (see below) | A declared `required` field is absent, or a present field's top-level type is not in the declared `type`        |
+| Output check | After the node executes without an execution error, on the parsed object the node would write to context. Runs only for a schema-form `output_schema` | The parsed output object                                                                   | The output is not an object, a declared `required` field is missing, or a field's top-level type does not match |
+
+**Input check details**
+
+- The subject is the data the node can read, which is the context. On the first node of an
+  iteration, the item's fields are laid over the context where that node type reads them.
+  Tool and agent nodes read the item. A Transform node does not.
+- For an agent node in an iteration, the item is laid over the context regardless of whether
+  placeholder resolution is enabled, because the agent prompt always carries the item.
+- A tool's `input_key` narrows where its arguments come from. It does not change what the
+  declared contract describes or which data the check reads.
+- Extra keys never produce a finding. Nested constraints are not checked. Only the top-level
+  type is compared.
+- Type rules: `null` satisfies only a type list that contains `"null"`. A whole-number float
+  satisfies `integer`. An integer satisfies `number`. A boolean is `boolean`, not `integer`.
+- A state with no `input_schema`, or one that is not valid, is not checked.
+
+**Output check details**
+
+- The check applies only to a schema-form `output_schema`, as described in
+  [Save-time output contract forms](#save-time-output-contract-forms). Example, list, invalid,
+  and absent output contracts are not checked.
+- Extra keys never produce a finding, and nested constraints are not checked.
+- The check is skipped when the node fails with an execution error.
+- Agent structured output (Mode 1, enforced by the model provider) is a separate mechanism. The
+  runtime output check does not replace it.
+
+##### Runtime validation modes
+
+The runtime mode is the `runtime_validation` key, with the value `strict` or `warn`. Set it at
+workflow level or on a state. An explicit state value wins over the workflow value. The default
+is `warn`, and an unrecognized value is treated as `warn`.
+
+`save_validation` is never read at runtime. A `strict` save mode alone does not make runtime
+checks strict.
+
+```yaml
+runtime_validation: warn
+
+states:
+  - id: extract-order
+    assistant_id: extractor
+    task: Extract the order
+    runtime_validation: strict
+    next:
+      state_id: summarize
+```
+
+| Mode     | Input check failure                                    | Output check failure                                                                                    |
+| -------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `warn`   | The finding is recorded. The node runs normally        | The finding is recorded. The output is written unchanged                                                |
+| `strict` | The finding is recorded. The node fails and never runs | The finding is recorded. The node is marked `FAILED` and its output is not written. The run stops there |
+
+:::note
+If a strict finding cannot be stored because of a storage error, the node continues instead of
+failing.
+:::
+
+:::note
+A strict failure inside a Sub-Workflow reaches the parent workflow as an ordinary Sub-Workflow
+error. The parent's retry policy can therefore re-run the child workflow.
+:::
+
+##### Contract failures are never retried
+
+Input and output contract failures are never retried, in either mode, whatever the node's
+`retry_policy` says. Execution errors, such as tool errors, timeouts, and model errors, keep the
+node's `retry_policy`. The output check is skipped on a failed attempt. See
+[Retry Policies](./advanced-features.md#73-retry-policies).
+
+##### Existing workflows
+
+With the platform setting on and no `runtime_validation` anywhere, every node runs in `warn`
+mode. Nothing fails, nothing is retried differently, and outputs are unchanged. The only visible
+difference is warn findings on nodes whose schema-form `output_schema` the output does not
+conform to, and on nodes that already declare `input_schema`. With the platform setting off,
+nothing changes.
+
 #### Agent State Advanced Examples:
 
 **Example 1: Using `output_schema` for Structured Output**
