@@ -42,7 +42,22 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 <h4>Fluent Bit 5.2.0</h4>
 
-Updated Fluent Bit from 5.0.7 to 5.2.0 and the `fluent-bit` Helm chart from 0.57.7 to 0.58.3.
+**Option A**
+
+- **Fluent Bit:** 5.0.7 → 5.2.0
+- **`fluent-bit` Helm chart:** 0.57.7 → 0.58.3
+
+**Option B**
+
+- Updated Fluent Bit from 5.0.7 to 5.2.0.
+- Updated the `fluent-bit` Helm chart from 0.57.7 to 0.58.3.
+
+**Option C**
+
+| Component               | Previous | New    |
+| ----------------------- | -------- | ------ |
+| Fluent Bit              | 5.0.7    | 5.2.0  |
+| `fluent-bit` Helm chart | 0.57.7   | 0.58.3 |
 
 For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
 
