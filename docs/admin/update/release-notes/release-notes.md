@@ -33,6 +33,28 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+<details className="release" id="v2-71-0">
+<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Fluent Bit 5.2.0</h4>
+
+- **Fluent Bit:** 5.0.7 → 5.2.0
+- **`fluent-bit` Helm chart:** 0.57.7 → 0.58.3
+
+For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
+
+**Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-70-0">
 <summary><span className="release__version">CodeMie 2.70.0</span><span className="release__date">Nov 23, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
