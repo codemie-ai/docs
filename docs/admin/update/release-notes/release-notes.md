@@ -33,6 +33,31 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+<details className="release" id="v2-71-0">
+<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Fluent Bit 5.2.0</h4>
+
+Updated Fluent Bit from 5.0.7 to 5.2.0 and the `fluent-bit` Helm chart from 0.57.7 to 0.58.3.
+
+- The 0.58.3 chart ships Fluent Bit 5.1.3 by default, so `fluent-bit/values.yaml` now pins the image with `fluent-bit.image.tag: "5.2.0"`. Version 5.2.0 includes OS package security fixes, including the critical CVE-2026-111497 in `libbrotli1`.
+- Starting with Fluent Bit 5.1.4, a container log line larger than 2 MiB is split into several records, and Fluent Bit logs the warning `multiline message truncated due to buffer limit`. To keep such lines in a single record, raise `multiline_buffer_limit` in the `[SERVICE]` section by overriding `fluent-bit.config.service`.
+- The default inputs, filters, and outputs in `fluent-bit/values.yaml` work with 5.2.0 without changes.
+
+For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
+
+**Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-70-0">
 <summary><span className="release__version">CodeMie 2.70.0</span><span className="release__date">Nov 23, 2026</span><span className="release__no-action">No admin action required</span></summary>
 
