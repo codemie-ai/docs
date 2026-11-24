@@ -105,7 +105,7 @@ The default registry `cr.fluentbit.io` can be unstable: image pulls sometimes fa
 With Docker Hub, watch its pull rate limit, which is lower for anonymous pulls. An upgrade pulls the new image on every node, and a new node pulls it when it joins. When the limit is reached, the image does not download, the Fluent Bit pod on that node does not start, and the logs written on that node until it starts do not reach Elasticsearch. Pull from Docker Hub with an authenticated account (`fluent-bit.imagePullSecrets`) or use `ghcr.io`.
 :::
 
-### 4. Upgrade the Helm release
+### 5. Upgrade the Helm release
 
 Run the upgrade from the root of the `codemie-helm-charts` repository:
 
