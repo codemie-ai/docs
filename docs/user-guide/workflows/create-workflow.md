@@ -132,15 +132,14 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 
 **Advanced Tab:**
 
-![Advanced tab of the Workflow configuration panel with all sections expanded](./images/visual-editor-advanced-config.png)
+![Advanced tab of the Workflow configuration panel with the Performance, Retry Policy and Context Compression sections expanded](./images/visual-editor-advanced-config.png)
 
-- **Summarization Settings**: The **Enable Summarization** switch, **Tokens Limit Before Summarization** and **Messages Limit Before Summarization**
-- **Performance Settings**: **Max Concurrency** (parallel task execution) and **Recursion Limit**
-- **Retry Policy**: **Max Attempts**, **Initial Interval (sec)**, **Max Interval (sec)** and **Backoff Factor** for failed operations
+- **Summarization Settings**: The **Enable Summarization** switch (on by default), **Tokens Limit Before Summarization** (placeholder 100000) and **Messages Limit Before Summarization** (placeholder 20)
+- **Performance Settings**: **Max Concurrency** (parallel task execution, placeholder 10) and **Recursion Limit** (placeholder 25)
+- **Retry Policy**: **Max Attempts** (placeholder 10), **Initial Interval (sec)** (1), **Max Interval (sec)** (60) and **Backoff Factor** (2) for failed operations
+- **Context Compression (Headroom)**: Compress the context of every assistant node to reduce token usage. It contains the **Enable context compression** switch (off by default), the **Compress user input** and **Compress tool outputs** checkboxes (both selected once compression is enabled), a **Strategy** list (**Lossless**, **Balanced** or **Aggressive**; **Balanced** is shown by default) and a **Reset to defaults** button. Sub-assistants do not inherit this setting. System prompts, assistant replies, attached files and images are not compressed. The section is shown only when Headroom is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
 
 Each section can be expanded or collapsed. The fields show their default values as placeholders.
-
-- **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
 
 :::info Configuration Sync
 Changes made in the Visual Editor are automatically reflected in the YAML configuration, and vice versa. Both views stay synchronized in real-time.
