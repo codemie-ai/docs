@@ -487,6 +487,30 @@ npm run build  # Will fail with clear error if links are broken
 
 **See Also**: [Troubleshooting Broken Links](#broken-links) for debugging relative path issues.
 
+## Release Notes Format
+
+`docs/admin/update/release-notes/release-notes.md` uses raw HTML headings inside each release block. Styling and the copy-link control depend on this markup.
+
+- Wrap each release in `<details className="release" id="vX-Y-Z">`. The `id` is the shareable anchor, and the `#` copy-link control is added automatically for blocks with `className="release"` and an `id`.
+- Use `<h3>` for the two sections: `<h3>Third-Party Component Updates</h3>` and `<h3>Configuration Changes</h3>`.
+- Use `<h4>` for every component entry and every configuration change group. Do not use a bold-only line (`**AI Katas**`), because it is not styled as a heading.
+- Number configuration items per group, starting at 1. Put every numbered list under an `<h4>` group, including a single item.
+- Keep inline labels such as `**Upgrade instructions:**` and `**Actions required**` bold. They are not headings.
+
+```markdown
+<h3>Configuration Changes</h3>
+
+<h4>CodeMie Code CLI</h4>
+
+1. **Minimum CodeMie Code CLI version**: ...
+
+<h4>Azure Deployment Scripts</h4>
+
+1. **`AZURE_CLIENT_ID` renamed to `CODEMIE_AZURE_CLIENT_ID`**: ...
+```
+
+The release pipeline (`codemie-create-docs-pr` in `edp-delivery-custom-pipelines`) creates the default block and finalizes blocks written in advance. It does not add `<h4>` headings, so add them by hand.
+
 ## Sidebar Configuration
 
 ### CRITICAL: Managing Nested Navigation and Dropdowns
