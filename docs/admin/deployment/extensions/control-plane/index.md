@@ -210,6 +210,8 @@ env:
     value: 'false'
 ```
 
+The values files start the Control Plane with an empty configuration To use another configuration folder, set `CONTROL_PLANE_CONFIG` in the `env` list.
+
 #### Add Source Tokens
 
 To harvest Jira, GitLab or GitHub, keep the source tokens in a Kubernetes secret and reference them
