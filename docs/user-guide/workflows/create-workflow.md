@@ -22,16 +22,18 @@ Before creating a workflow, ensure you have:
 
 ## Creating a New Workflow
 
-1. Go to the **Workflows** section in the left sidebar
-2. Click **+ Create Workflow**:
+1. Go to the **Workflows** section in the left navigation.
+2. Click **Create Workflow** in the upper right corner of the workflow list (it is available on **My Workflows**, **All Workflows**, **Templates** and the other workflow pages):
 
-   ![Create Workflow button](../images/image48.png)
+   ![Create Workflow button highlighted on the My Workflows page](./images/create-workflow-button.png)
+
+The **Create Workflow** page opens with the Visual Workflow Editor, an empty canvas that contains only the **Start** and **End** nodes.
 
 ## Building Workflows with the Visual Editor
 
 The **Visual Workflow Editor** is a drag-and-drop interface that makes building workflows intuitive and visual. Instead of writing YAML code, you design workflows graphically.
 
-![Visual Workflow Editor](./images/visual-editor-controls.png)
+![Visual Workflow Editor with an example workflow loaded](./images/visual-editor-controls.png)
 
 :::tip Learn by Watching
 Watch this [video walkthrough of the Visual Workflow Editor](https://youtu.be/zacMZpM5MNU?si=dML07SgqFmL56TjQ) to see all features in action.
@@ -43,15 +45,15 @@ The Visual Workflow Editor consists of three main areas that help you design and
 
 ### Left Sidebar: Nodes Palette
 
-The left sidebar contains all available node types organized by category:
+The **Nodes** panel on the left of the canvas (**Drag to canvas**) contains all available node types organized by group. Use the arrow button at its left edge to collapse the panel.
 
-**Control Nodes:**
+**Control:**
 
 - **Conditional**: Branching logic with if/else conditions
 - **Switch**: Multi-path routing based on values
 - **Iterator**: Loop through collections of data
 
-**Action Nodes:**
+**Action:**
 
 - **Assistant**: AI-powered processing with assistants
 - **Tool**: External system integrations (Jira, Confluence, etc.)
@@ -62,7 +64,7 @@ The left sidebar contains all available node types organized by category:
 
 - **Note**: Add documentation and comments to your workflow
 
-To add a node, simply click on it in the sidebar or drag-and-drop it directly onto the canvas.
+To add a node, click it in the panel or drag-and-drop it onto the canvas. A node added with a click opens its **Node configuration** panel right away.
 
 ### Bottom Left: View Controls
 
@@ -71,7 +73,7 @@ Visual controls for managing your workflow view:
 - **Zoom In/Out**: Adjust the canvas zoom level
 - **Fit View**: Automatically fit the entire workflow in the viewport
 - **Lock/Unlock**: Lock the canvas to prevent accidental changes
-- **Download Schema**: Export the workflow schema as an image
+- **Download**: Export the workflow schema as an image
 
 ### Upper Right: Workflow Actions & Configuration
 
@@ -81,14 +83,14 @@ This section provides essential tools for managing your workflow:
 
 - **Cancel**: Discard changes and exit without saving
 - **Save**: Save the current workflow configuration
-- **Save & Run**: Save and immediately execute the workflow
+- **Save and Run**: Save and immediately execute the workflow
 
 **Workflow Tools:**
 
-- **Load Example**: Load a pre-built example workflow as a starting point
+- **Load Example**: Load a pre-built example workflow as a starting point (shown only when you create a new workflow)
 - **Beautify**: Automatically organize and align nodes for better visual layout
 - **Undo**: Revert to the previous state (appears after making changes)
-- **YAML**: Switch to YAML editor to view or edit the configuration code
+- **YAML**: Open the YAML configuration of the workflow to view or edit it
 - **Workflow Config**: Access Basic and Advanced configuration settings
 
 ### Workflow Configuration Menu
@@ -97,17 +99,17 @@ Click the **Workflow Config** button to access configuration options:
 
 **Basic Tab:**
 
-![Basic Configuration](./images/visual-editor-basic-config.png)
+![Basic tab of the Workflow configuration panel](./images/visual-editor-basic-config.png)
 
 Configure essential workflow settings:
 
 - **Project name**: Select the project where you want to add the workflow
-- **Shared with Project**: Enable to make your workflow visible to your project team
+- **Shared with Project Team**: Enable to make your workflow visible to your project team
 - **Name\*** (Required): Unique identifier for your workflow
 - **Description**: Brief explanation of the workflow's purpose and features
 - **Start Hint**: Custom text displayed below the prompt input field when users start a workflow execution.
 - **Icon URL**: Link to an image (.png or .svg) for the workflow avatar
-- **Categories**: Optional. Select up to 3 categories that describe the workflow's use case. The list is the same as for assistants. See [Workflow Categories](#workflow-categories).
+- **Categories**: Optional. Select up to 3 categories that describe the workflow's use case. The list is the same as for assistants. The field is at the bottom of the tab, below **Icon URL**: scroll down in the panel to reach it. See [Workflow Categories](#workflow-categories).
 
 :::info Required Fields
 Fields marked with an asterisk (\*) are required and must be filled in before saving the workflow.
@@ -115,9 +117,9 @@ Fields marked with an asterisk (\*) are required and must be filled in before sa
 
 #### Workflow Categories
 
-The **Categories** field is a multi-select dropdown located below **Icon URL** in the workflow configuration. The same field is available in the create/edit form and in the **Basic** tab of the Visual Editor **Workflow Config** menu.
+The **Categories** field is a multi-select dropdown located below **Icon URL** at the bottom of the **Basic** tab of the **Workflow Config** panel. Each option has a checkbox and a short description, and a search box helps you find a category.
 
-![Categories field in the workflow configuration](./images/workflow-config-categories-field.png)
+![Categories dropdown with two categories selected in the Workflow Config panel](./images/workflow-config-categories-field.png)
 
 - Selecting categories is optional. A workflow can be saved with no categories.
 - A maximum of 3 categories can be selected. Once 3 are chosen, additional options cannot be selected until one is removed.
@@ -130,11 +132,14 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 
 **Advanced Tab:**
 
-![Advanced Configuration](./images/visual-editor-advanced-config.png)
+![Advanced tab of the Workflow configuration panel with all sections expanded](./images/visual-editor-advanced-config.png)
 
-- **Summarization Settings**: Token and message limits for automatic summarization
-- **Performance Settings**: Parallel task execution and recursion depth limits
-- **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
+- **Summarization Settings**: The **Enable Summarization** switch, **Tokens Limit Before Summarization** and **Messages Limit Before Summarization**
+- **Performance Settings**: **Max Concurrency** (parallel task execution) and **Recursion Limit**
+- **Retry Policy**: **Max Attempts**, **Initial Interval (sec)**, **Max Interval (sec)** and **Backoff Factor** for failed operations
+
+Each section can be expanded or collapsed. The fields show their default values as placeholders.
+
 - **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
 
 :::info Configuration Sync
@@ -146,9 +151,9 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 ### Adding and Configuring Nodes
 
 1. **Add a Node**: Click a node type in the sidebar or drag it to the canvas
-2. **Configure the Node**: Click the node to open its configuration window
+2. **Configure the Node**: Click the node to open its **Node configuration** panel
 3. **Set Parameters**: Customize the node's behavior (assistant selection, task prompts, conditions, etc.)
-4. **Save Configuration**: Click **Save** to apply your changes
+4. **Save Configuration**: Click **Save** in the panel to apply your changes, or **Cancel** to discard them
 
 #### Smart Configuration Validation
 
@@ -169,7 +174,7 @@ Quickly duplicate existing nodes with their configuration:
 - **Windows/Linux**: Select a node and press `Ctrl+D`
 - **macOS**: Select a node and press `Cmd+D`
 
-This creates a copy of the selected node with all its settings, which you can then modify as needed.
+You can also click **Duplicate** in the **Node configuration** panel. This creates a copy of the selected node with all its settings, which you can then modify as needed.
 
 ### Connecting Nodes
 
@@ -195,7 +200,7 @@ The system automatically organizes the node layout, validates links, and generat
 Remove nodes or connections through their configuration windows:
 
 1. Click on the node or connection
-2. In the configuration window, click the **Delete** button
+2. In the **Node configuration** panel, click the **Delete** button
 3. Confirm the deletion
 
 ### Assistant State
@@ -220,15 +225,15 @@ Calls external APIs or integrations (Jira, Confluence, GitHub, etc.) for fast, r
 
 #### Selecting Tools
 
-![Tool Selection](./images/tool-node-configuration.png)
+![Tool node configuration panel with the Select tool and Select MCP tool buttons](./images/tool-node-configuration.png)
 
-When you add a Tool node to your workflow, the configuration panel displays two selection options:
+When you add a Tool node to your workflow, the **Node configuration** panel displays two selection buttons:
 
-1. **Select Tool** - Shows all previously connected integrations organized by category (Access Management, Azure DevOps, Cloud, Codebase Tools, Project Management, VCS, Data Management, IT Service Management). Your connected tools appear in the "Available Tools" list for quick selection.
+1. **Select tool** - Opens the **Select Tool** dialog with the **Available Tools** list, grouped by category (for example Access Management, Azure DevOps Work Item, Cloud, Codebase Tools, Project Management, VCS, Data Management, IT Service Management and Quality Assurance). Each category shows whether a tool is selected. Click **Configure Available Tools** in the dialog to manage your integrations.
 
-2. **Select MCP Tool** - Shows all configured MCP (Model Context Protocol) servers that you've added. MCP servers enable AI agents to access live data sources like file systems, databases, and APIs.
+2. **Select MCP tool** - Opens the **Select MCP Server** dialog with the MCP (Model Context Protocol) servers that you have installed. MCP servers enable AI agents to access live data sources like file systems, databases, and APIs. If no server is installed, the dialog offers **Browse Catalog** and **Manual Setup**.
 
-Both connected tools and MCP servers are immediately available in the selection list - no additional configuration needed for already set up integrations.
+Below the buttons the panel provides the **Input Key** and **Tool Result JSON Pointer** fields, the **Enable Tracing** and **Resolve Dynamic Values in Response** switches, the **State ID**, and the **Output contract**. Tools and MCP servers that are already set up are available in the dialogs without additional configuration.
 
 ### Custom State
 
@@ -297,14 +302,14 @@ The main canvas shows your workflow as a connected graph of nodes. Use the view 
 
 ### YAML configuration view
 
-Click the **YAML** button to see the generated YAML configuration. This view shows how your visual design translates to code.
+Click the **YAML** button to see the generated YAML configuration. The **Workflow configuration** panel opens on its **YAML** tab (next to **Basic** and **Advanced**), and shows how your visual design translates to code. While the YAML tab is open, the node panel and **Beautify** are disabled.
 
 If you need direct control over the workflow configuration, you can switch to YAML editing mode:
 
 1. Click the **YAML** button in the upper right corner
-2. Edit the YAML configuration directly
+2. Edit the YAML configuration directly in the panel (use **Expand** for a larger editor)
 
-When editing an existing workflow, use **Version History** in the YAML header to browse prior versions, compare changes, and restore a previous configuration. See [Workflow Version History](./workflow-version-history.md) for details.
+When editing an existing workflow, use **Version History** in the YAML header (or in the editor toolbar) to browse prior versions, compare changes, and restore a previous configuration. See [Workflow Version History](./workflow-version-history.md) for details.
 
 :::info Configuration Sync
 The Visual Editor and YAML editor are synchronized. Changes made in one view are automatically reflected in the other.
@@ -343,14 +348,14 @@ automatically the first time it opens, then saves the resulting positions.
 ### Save Options
 
 - **Save**: Save the workflow configuration without executing
-- **Save & Run**: Save and immediately execute the workflow to test it
+- **Save and Run**: Save and immediately execute the workflow to test it
 - **Cancel**: Discard all changes and exit
 
 ### Testing Your Workflow
 
 After creating your workflow:
 
-1. Click **Save & Run** to test immediately
+1. Click **Save and Run** to test immediately
 2. Enter required input parameters in the execution dialog
 3. Monitor the execution progress
 4. Review the results and debug if needed
@@ -384,7 +389,7 @@ Use the **Beautify** button regularly to keep your workflow visually organized a
 
 ### Test Incrementally
 
-Test each node configuration individually before connecting the complete workflow. Use **Save & Run** frequently during development.
+Test each node configuration individually before connecting the complete workflow. Use **Save and Run** frequently during development.
 
 ### Use the Undo Feature
 
