@@ -21,9 +21,9 @@ Navigate to **Skills** → **Project Skills** and click on the skill.
 
 **Step 2: Copy the Skill ID**
 
-Find the **Skill ID** field in the right panel and copy the value.
+Find the **Skill ID** field in the **Overview** panel on the right and copy the value with the copy button next to it.
 
-![Skill Details — Skill ID](./images/skill-details-skill-id.png)
+![Skill Details page with the Skill ID field and copy button in the right panel (value masked)](./images/skill-details-skill-id.png)
 
 ## Configuring Skills in Workflow YAML
 
@@ -38,14 +38,14 @@ Add a `skills` list under the assistant definition, using the skill IDs you copi
 ```yaml
 assistants:
   - id: html_generating_assistant
-    model: gpt-5.2
+    model: gpt-4.1
     system_prompt: |
       Act as a product manager's assistant responsible for creating HTML emails.
     skill_ids:
       - skill-id
 ```
 
-![Workflow YAML — Assistant Skills Configuration](./images/workflow-yaml-assistant-skills.png)
+![Workflow Config dialog, YAML tab, with skill_ids under the assistant (skill ID masked)](./images/workflow-yaml-assistant-skills.png)
 
 **Step 3: Save and run the workflow**
 
@@ -59,11 +59,11 @@ You can attach multiple skills to a single assistant by adding multiple IDs to t
 
 After the workflow runs, open the execution details to see which skills were invoked.
 
-Navigate to **Workflows** → select your workflow → click **view** button.
+Navigate to **Workflows**, click your workflow card to open its execution page, select the assistant step in the step list and click **Call history**.
 
-Each assistant step shows the skills it loaded, including the full skill content used during that run.
+The call history lists a **Skill** entry for every skill the assistant loaded. Expand it to see the full skill content used during that run.
 
-![Workflow Execution — Skill Output](./images/workflow-execution-skill-output.png)
+![Calls history popup for an assistant step with the expanded Skill entry showing the loaded skill content](./images/workflow-execution-skill-output.png)
 
 ## Related
 

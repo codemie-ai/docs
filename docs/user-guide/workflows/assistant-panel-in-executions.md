@@ -41,10 +41,12 @@ The panel opens under the **Assistant** heading and replicates the content of th
 
 - profile details — avatar, name, and author
 - **About Assistant** description
-- **Conversation Starters**
+- **Conversation Starters**, when the assistant has them
 - **System Instructions**, with a **Copy** action
-- tools and integrations
-- metadata
+- **Overview** — project and shared status
+- **Assistant ID** and **Access Links**, each with a copy button
+- **Configuration** — LLM model and additional datasource context
+- **Tools & Capabilities** and **Sub Assistants**
 
 If the assistant supports per-user integration selection, a note at the top of the panel points to the **Your Integration Settings** section below it.
 
@@ -61,7 +63,7 @@ The only editable part is the **Your Integration Settings** section, and it appe
 5. Decide on the scope of the change using the **Apply to the whole assistant, not just this workflow** checkbox at the top of the section — see [Where the selection applies](#where-the-selection-applies).
 6. Save the section.
 
-![The assistant panel opened from a workflow, showing the Your Integration Settings section with the scope checkbox and the integration dropdowns](./images/assistant-panel-your-integration-settings.png)
+![The assistant panel opened from a workflow node, showing the Your Integration Settings section with the scope checkbox and the integration dropdowns](./images/assistant-panel-your-integration-settings.png)
 
 :::info
 Which integrations appear in a dropdown, what the **No integration** option means, and why integrations pinned by the assistant author are not offered for selection are described in [Automatic Credentials Lookup](../tools_integrations/integrations/index.md#automatic-credentials-lookup) and [MCP Integration Credentials](../tools_integrations/tools/mcp/mcp-integration-credentials.md).

@@ -46,10 +46,14 @@ Use browser Developer Tools to identify the LLM model being used in your workflo
 
 ```json
 {
-  "model_id": "...",
   "base_name": "gpt-4.1",
-  "provider": "..."
+  "deployment_name": "codemie-gpt-4.1-2025-04-14",
+  "label": "GPT-4.1 2025-04-14",
+  "provider": "azure_openai",
+  "default": true
 }
 ```
+
+The response is a list with one object like this for every model available in your environment; other fields such as `multimodal`, `cost` and `features` are omitted here.
 
 The `base_name` field contains the model identifier (e.g., `gpt-4.1`, `claude-sonnet-5-5`, etc.).
