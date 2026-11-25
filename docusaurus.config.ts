@@ -77,6 +77,21 @@ const config: Config = {
     [
       '@docusaurus/plugin-client-redirects',
       {
+        // Pages moved into the Claude subsection of CodeMie CLI
+        redirects: [
+          {
+            from: '/user-guide/codemie-cli/codemie-claude-skills',
+            to: '/user-guide/codemie-cli/claude/codemie-claude-skills',
+          },
+          {
+            from: '/user-guide/codemie-cli/sdk-cli-reference',
+            to: '/user-guide/codemie-cli/claude/sdk-cli-reference',
+          },
+          {
+            from: '/user-guide/codemie-cli/claude-desktop',
+            to: '/user-guide/codemie-cli/claude/claude-desktop',
+          },
+        ],
         createRedirects(existingPath: string) {
           // Redirect any /docs/* path to /*
           if (!existingPath.startsWith('/docs')) {

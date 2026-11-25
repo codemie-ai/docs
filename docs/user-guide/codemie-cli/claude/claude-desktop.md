@@ -2,8 +2,8 @@
 id: claude-desktop
 title: Claude Desktop Integration
 sidebar_label: Claude Desktop
-sidebar_position: 6
-pagination_prev: user-guide/codemie-cli/codemie-cli
+sidebar_position: 7
+pagination_prev: user-guide/codemie-cli/claude/codemie-claude
 pagination_next: null
 ---
 
@@ -14,9 +14,12 @@ import EnterpriseFeature from '@site/src/components/EnterpriseFeature';
 <EnterpriseFeature />
 
 Claude Desktop can be connected to the CodeMie gateway via the CodeMie CLI local proxy daemon.
-Once connected, the full CodeMie model catalog becomes available in Claude Desktop's model
-selector — powered by the organization's configured LLM providers, SSO authentication, and
-governance policies. No Anthropic subscription is required.
+Once connected, the Claude models of the CodeMie project catalog become available in Claude
+Desktop's model selector — powered by the organization's configured LLM providers, SSO
+authentication, and governance policies. No Anthropic subscription is required.
+
+Non-Claude models (for example Grok, Gemini, or Kimi) are not listed by default. They can be
+added per profile, as described in [Available Models](./index.md#available-models).
 
 ## Prerequisites
 
@@ -36,8 +39,8 @@ This command:
 
 - Starts (or reuses) the local CodeMie proxy daemon on `http://127.0.0.1:4001`
 - Writes the inference gateway configuration to Claude Desktop's config library
-- Fetches available Claude-compatible models from the CodeMie gateway and writes them to the
-  Desktop model list
+- Fetches available Claude-compatible models from the CodeMie gateway, plus any non-Claude
+  models selected for the profile, and writes them to the Desktop model list
 - Registers managed MCP servers from the organization's CodeMie configuration
 
 After the command completes, restart Claude Desktop. The active profile is shown at the bottom
@@ -65,7 +68,9 @@ trigger model discovery after setup:
    _"Model discovery — found 13 models"_.
 6. Click **Apply Changes**, then restart Claude Desktop.
 
-All discovered models appear in Claude Desktop's model picker.
+All discovered models appear in Claude Desktop's model picker. Non-Claude models selected with
+`codemie-claude models` are listed too. See
+[Available Models](./index.md#non-claude-models-in-claude-desktop).
 
 ![Model discovery result in Claude Desktop inference settings](./images/claude-desktop-model-discovery.png)
 
@@ -84,7 +89,7 @@ command that fixes each problem, run:
 codemie proxy doctor --verbose
 ```
 
-See [Enable AI Analytics](./enable-analytics.md#troubleshooting) for the list of findings.
+See [Enable AI Analytics](../enable-analytics.md#troubleshooting) for the list of findings.
 
 ## Options
 
