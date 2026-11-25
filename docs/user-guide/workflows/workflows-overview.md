@@ -14,13 +14,13 @@ AI/Run CodeMie allows you to design complex logic for interactions between assis
 
 ## Accessing Workflows
 
-Navigate to the **Workflows** tab in the left sidebar:
+Select **Workflows** in the left navigation (click **Show Menu** to display item labels):
 
 ![Workflows tab in the navigation menu](./images/workflows-overview/workflows-tab-navigation.png)
 
 ## Workflow Categories
 
-Workflows are organized into three main categories:
+Workflows are organized into the following categories:
 
 | Category          | Description                                                                        |
 | ----------------- | ---------------------------------------------------------------------------------- |
@@ -28,6 +28,7 @@ Workflows are organized into three main categories:
 | **All Workflows** | A complete list of workflows available for you to use                              |
 | **Templates**     | Ready-made templates for quickly creating and customizing workflows                |
 | **Marketplace**   | Globally published workflows discoverable and executable by any authenticated user |
+| **Favorites**     | Workflows you marked with a star                                                   |
 
 ![Workflow categories view](./images/workflows-overview/workflow-categories-view.png)
 
@@ -35,17 +36,18 @@ Workflows are organized into three main categories:
 
 ### Workflow Actions
 
-Click the **Actions** button on any workflow card to:
+Each workflow card has the **Start Chat** and **Start Execution** buttons, a star for [favorites](#marking-workflows-as-favorites) and a **More options** (three dots) menu. Click **More options** to:
 
-- Copy workflow link
+- View workflow details
+- Copy the workflow link
+- Edit the workflow configuration
 - Clone the workflow
 - Delete the workflow
-- Edit workflow configuration
-- View workflow details
+- Publish the workflow to the Marketplace
 
 ![Workflow actions menu](./images/workflows-overview/workflow-actions-menu.png)
 
-To open the Workflow Details page, select **View Details** from the actions menu.
+To open the Workflow Details page, select **View Details** from the **More options** menu.
 
 ![View Details option in workflow actions](./images/workflows-overview/workflow-actions-view-details.png)
 
@@ -58,38 +60,37 @@ The **My Workflows** and **All Workflows** pages include a **Categories** filter
 1. Open **My Workflows** or **All Workflows**.
 2. In the left sidebar, open the **Categories** dropdown.
 3. Select one or more categories. The list updates to show only workflows that have a selected category assigned.
-4. To restore the full list, clear the selected categories.
+4. To restore the full list, clear the selected categories or click **Clear all** next to **Filters**.
 
 Workflows without categories are hidden while a category filter is applied and are shown again when the filter is cleared.
 
 ## Workflow Details Page
 
-The Workflow Details page is the central hub for viewing, running, and managing a specific workflow.
+The Workflow Details page is the central hub for viewing, running, and managing a specific workflow. It combines the execution history, the workflow graph, the execution output and the workflow configuration on one screen. If the workflow has executions, **View Details** opens the page with the latest execution selected.
 
 ![Workflow Details page overview](./images/workflows-overview/workflow-details-page.png)
 
 ### Header Actions
 
-The following buttons are available in the page header:
+The following buttons are available in the page header and above the graph:
 
-| Button           | Description                                                                                                                  |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| **Edit**         | Opens the workflow editor to modify the workflow configuration. Only visible if you have edit permissions for this workflow. |
-| **Start Chat**   | Creates a new chat session with this workflow as the active agent. You will be redirected to the Chat page.                  |
-| **Run workflow** | Opens the **New Execution** dialog to start a workflow execution with a prompt.                                              |
+| Button                     | Description                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Back** (arrow)           | Returns to the previous page.                                                                                                  |
+| **Clear all executions**   | The broom icon in the header removes all executions of this workflow from the history.                                         |
+| **Edit**                   | Opens the workflow editor to modify the workflow configuration. Only visible if you have edit permissions for this workflow.   |
+| **Configuration**          | Opens the **Configure Workflow** side panel with the workflow metadata and YAML.                                               |
+| **Info**                   | Shows the **Execution Info** dialog for the selected execution: status, who triggered it, times, runtime and spending metrics. |
+| **Export as .md or .html** | Downloads the selected execution. See [Exporting a Workflow Execution](./exporting-workflow-execution.md).                     |
+| **Run Chat**               | Creates a new chat session with this workflow as the active agent. You will be redirected to the Chat page.                    |
+| **Run workflow**           | Opens the **New Workflow Execution** dialog to start a workflow execution with a prompt.                                       |
+| **Abort**                  | Visible only while the selected execution is in progress. Stops the execution.                                                 |
 
-### Tabs
+### Browsing Executions
 
-The details page contains two tabs:
+The page has no separate tabs. The left panel, **Workflow Execution History**, lists the executions of the workflow. Select an execution to see its graph and its nodes in the node list below the graph. Select **Starting Prompt** or a node to see its **Input** and **Result**. Selecting an assistant node opens the [assistant panel](./assistant-panel-in-executions.md). When a workflow has no executions yet, the page shows the graph and the **You don't have any executions yet** message with the **Run Chat** and **Run workflow** buttons.
 
-| Tab               | Description                                                                                                                                                                                                                                   |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Executions**    | Lists all past and ongoing executions for this workflow. You can open any execution to view its progress, states, and output. Clicking an assistant node inside an execution opens the [assistant panel](./assistant-panel-in-executions.md). |
-| **Configuration** | Shows the workflow graph, YAML configuration, and sidebar with metadata such as Workflow ID and access links.                                                                                                                                 |
-
-### Configuration Tab
-
-#### Workflow Graph
+### Workflow Graph
 
 The visual graph displays all states (nodes) and their transitions (edges) in the workflow.
 
@@ -107,19 +108,24 @@ The graph toolbar at the bottom of the graph panel provides the following contro
 Use the **Expand** button to view complex workflows in fullscreen mode — especially useful during demos or knowledge-sharing sessions.
 :::
 
+### Configuration Panel
+
+Click **Configuration** in the page header to open the **Configure Workflow** panel on the right.
+
 #### YAML Configuration
 
-Below the graph, the full YAML configuration of the workflow is displayed in a read-only code block. Use the **Copy** button in the top-right corner of the code block to copy the YAML to your clipboard.
+The **Yaml configuration** section of the panel shows the full YAML configuration of the workflow in a read-only code block. Use the buttons in the top-right corner of the code block to expand it, copy the YAML to your clipboard, or download it. **Edit** next to the section title opens the workflow editor.
 
-#### Sidebar
+#### Workflow Information
 
-The right sidebar displays workflow metadata:
+The top of the panel displays workflow metadata:
 
-| Field                        | Description                                                                               |
-| ---------------------------- | ----------------------------------------------------------------------------------------- |
-| **Project**                  | The project this workflow belongs to.                                                     |
-| **Workflow ID**              | The unique identifier of this workflow. Click the copy icon to copy it to your clipboard. |
-| **Link to workflow details** | A direct URL to this Workflow Details page. Click the copy icon to copy the link.         |
+| Field           | Description                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| **Name**        | The workflow name and its avatar.                                                         |
+| **ID**          | The unique identifier of this workflow. Click the copy icon to copy it to your clipboard. |
+| **Description** | The workflow description.                                                                 |
+| **Configure**   | Opens the workflow configuration form.                                                    |
 
 ## Starting Workflow in Chat Mode
 
@@ -149,12 +155,12 @@ When running a workflow in chat mode, you can attach up to **10 files** to your 
 1. In the chat input area, attach files using any of these methods:
    - Click the **paperclip** icon in the input toolbar to open a file picker
    - Drag and drop files directly into the chat window
-2. Each uploaded file appears as a chip with options to preview, download, or remove it.
+2. Each uploaded file appears as a chip with the file name and type and the options to download or remove it.
 3. Send your message to start the workflow execution.
 
 ![Chat input with multiple files attached before sending](./images/workflows-overview/workflow-chat-file-attachment.png)
 
-After execution completes, you can view the results in the **Workflow Execution History**:
+After execution completes, open the execution in **Workflow Execution History**. The input of a state contains a `File attached:` line with the file name:
 
 ![Workflow execution results showing analysis of multiple attached files](./images/workflows-overview/workflow-execution-multi-file-result.png)
 
@@ -191,21 +197,21 @@ Workflow chat history works the same way as with regular assistants. You can alw
 
 The standard way to launch a workflow with a dedicated execution interface.
 
-1. Click the **Start Execution** button on the workflow card:
+1. Click the **Start Execution** button on the workflow card (or **Run workflow** on the Workflow Details page):
 
    ![Start Execution button](./images/workflows-overview/start-execution-button.png)
 
-2. Enter your prompt in the New Workflow Execution window:
+2. Enter your prompt in the **New Workflow Execution** window. The paperclip icon in the prompt field attaches files:
 
    ![New Workflow Execution window](./images/workflows-overview/new-execution-window.png)
 
    The prompt input field may display a hint set by the workflow creator to guide what input is expected.
 
-3. Click **Create** to initiate the execution.
+3. Click **Create** to initiate the execution. **Cancel** closes the window without starting a run.
 
 ### Monitoring Execution
 
-After starting an execution, you'll be redirected to the Workflow Execution page:
+After starting an execution, you'll be redirected to the Workflow Details page with the new execution selected:
 
 ![Workflow Execution page](./images/workflows-overview/workflow-execution-page.png)
 
@@ -213,29 +219,29 @@ After starting an execution, you'll be redirected to the Workflow Execution page
 
 During execution, you can:
 
-- **View Progress**: Monitor execution status in the **States** tab
-- **Rerun**: Restart the workflow execution
+- **View Progress**: Monitor the execution status in the **Workflow Execution History** panel and the status of each node in the node list under the graph
+- **Run workflow**: Start a new execution of the workflow
 - **Abort**: Stop a running execution
 
-![Abort and rerun buttons](./images/workflows-overview/execution-abort-rerun-buttons.png)
+![Abort button on a running execution](./images/workflows-overview/execution-abort-in-progress.png)
 
 :::info
-The abort button is only available while the workflow is actively executing.
+The **Abort** button is only available while the workflow is actively executing. An aborted execution gets the **Aborted** status.
 :::
-
-## Marking Workflows as Favorites
-
-You can mark any workflow as a favorite for quick access. Click the **Favorite** button (star icon) on a workflow card to save it. All favorite workflows are available on the **Favorites** page in the left navigation panel, alongside favorite assistants and skills.
-
-See [Favorites](../assistants/favorites.md) for full details.
-
-![Abort workflow button](./images/workflows-overview/execution-abort-button.png)
 
 ### Execution History
 
-All workflow executions are saved in the execution history. Switch between past executions by clicking on them in the history panel:
+All workflow executions are saved in the execution history. Switch between past executions by clicking on them in the **Workflow Execution History** panel. Each entry shows the execution number, status, start and finish time and runtime:
 
 ![Workflow execution history](./images/workflows-overview/execution-history-panel.png)
+
+## Marking Workflows as Favorites
+
+You can mark any workflow as a favorite for quick access. Click the star icon (**Add to favorites**) on a workflow card to save it. All favorite workflows are listed under **Favorites** in the workflow categories on the left. To remove a workflow from favorites, click the filled star and confirm with **Remove**.
+
+See [Favorites](../assistants/favorites.md) for full details.
+
+![Favorites view with a starred workflow](./images/workflows-overview/workflows-favorites-page.png)
 
 ## Node Call History
 
