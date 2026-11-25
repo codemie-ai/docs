@@ -84,7 +84,7 @@ The following buttons are available in the page header and above the graph:
 | **Export as .md or .html** | Downloads the selected execution. See [Exporting a Workflow Execution](./exporting-workflow-execution.md).                     |
 | **Run Chat**               | Creates a new chat session with this workflow as the active agent. You will be redirected to the Chat page.                    |
 | **Run workflow**           | Opens the **New Workflow Execution** dialog to start a workflow execution with a prompt.                                       |
-| **Abort**                  | Visible only while the selected execution is in progress. Stops the execution.                                                 |
+| **Abort**                  | Visible while the selected execution is in progress or interrupted. Stops the execution.                                       |
 
 ### Browsing Executions
 
@@ -230,7 +230,7 @@ During execution, you can:
 ![Abort button on a running execution](./images/workflows-overview/execution-abort-in-progress.png)
 
 :::info
-The **Abort** button is only available while the workflow is actively executing. An aborted execution gets the **Aborted** status.
+The **Abort** button is only available while the workflow is actively executing or waiting at an interruption. An aborted execution gets the **Aborted** status.
 :::
 
 ### Execution History
