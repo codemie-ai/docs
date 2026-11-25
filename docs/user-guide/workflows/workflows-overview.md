@@ -135,13 +135,13 @@ Launch workflows within a chat interface, preserving conversational context and 
 
    ![Workflow in chat mode](./images/workflows-overview/workflow-chat-interface.png)
 
-2. Enter your prompt in the chat interface
-
-   ![Workflow execution link](./images/workflows-overview/workflow-chat-execution-link.png)
+2. Enter your prompt in the chat interface and send it
 
 3. The workflow executes with your message as the initial input
 
-4. Monitor progress and view results in the chat
+4. Monitor progress and view results in the chat. The response shows the executed states and the workflow result. The highlighted **Open execution page** icon in the message action bar below the response opens the execution page (see the next section).
+
+   ![Chat with the prompt, the workflow response and the highlighted Open execution page icon](./images/workflows-overview/workflow-chat-execution-link.png)
 
 ### Opening the Execution Page from Chat
 
@@ -160,9 +160,13 @@ When running a workflow in chat mode, you can attach up to **10 files** to your 
 
 ![Chat input with multiple files attached before sending](./images/workflows-overview/workflow-chat-file-attachment.png)
 
-After execution completes, open the execution in **Workflow Execution History**. The input of a state contains a `File attached:` line with the file name:
+After execution completes, open the execution in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started from the **New Workflow Execution** window with two files:
 
-![Workflow execution results showing analysis of multiple attached files](./images/workflows-overview/workflow-execution-multi-file-result.png)
+![State input with two File attached lines](./images/workflows-overview/workflow-execution-multi-file-result.png)
+
+:::note
+In the current release, a message sent in chat mode passes only the first attached file to the workflow execution, even though every chip is uploaded. To append several files to the task description, attach them in the **New Workflow Execution** window instead.
+:::
 
 **Supported file types and limits:**
 
@@ -174,7 +178,7 @@ After execution completes, open the execution in **Workflow Execution History**.
 
 **How files are available in workflow steps:**
 
-Each attached file is appended to the task description of every state:
+Each file passed to the execution is appended to the task description of every state:
 
 ```
 File attached: filename.ext
