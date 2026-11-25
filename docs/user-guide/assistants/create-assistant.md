@@ -177,9 +177,9 @@ Each tool requires additional computing power, which may increase response time.
 :::
 
 :::info Default Datasource Tools
-Attaching a code data source automatically selects **Get Repo Tree** and **Search Code**, and attaching a
+Attaching a code data source automatically selects **Get Repository File Tree** and **Search Code Repo**, and attaching a
 knowledge base data source selects **Search Knowledge Base**. These tools can be deselected like any
-other tool, for example to keep **Get Repo Tree** from loading the whole file tree of a very large
+other tool, for example to keep **Get Repository File Tree** from loading the whole file tree of a very large
 repository. See [Default Datasource Tools](../tools_integrations/tools/codebase-tools.md#default-datasource-tools).
 :::
 
