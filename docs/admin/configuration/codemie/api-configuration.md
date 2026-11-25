@@ -110,7 +110,7 @@ Enable or disable experimental features and beta functionality.
 
 ### Routing Spend Backfill
 
-Replace the cost figures on routing usage documents in Elasticsearch with values from the spend ledger. The job requires the spend uploader and an activated spend ledger. The Elasticsearch user of CodeMie needs `read` and `write` privileges on `codemie_metrics_logs*`.
+Replace the cost figures on routing usage documents in Elasticsearch with values from the spend ledger. The job requires the spend uploader and an activated spend ledger. The Elasticsearch user of CodeMie needs `read`, `write` and `manage` privileges on `codemie_metrics_logs*`. A dry run needs only `read`.
 
 | Parameter                        | Type    | Default | Description                                                                                                                         |
 | -------------------------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
