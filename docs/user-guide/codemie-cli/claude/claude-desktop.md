@@ -89,7 +89,7 @@ command that fixes each problem, run:
 codemie proxy doctor --verbose
 ```
 
-See [Enable AI Analytics](./enable-analytics.md#troubleshooting) for the list of findings.
+See [Enable AI Analytics](../enable-analytics.md#troubleshooting) for the list of findings.
 
 ## Options
 
