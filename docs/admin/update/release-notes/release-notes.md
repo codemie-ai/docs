@@ -55,9 +55,11 @@ The recommended CLI version is updated to [v0.17.2](https://github.com/codemie-a
 
 <h3>Configuration Changes</h3>
 
+<h4>CodeMie Code CLI</h4>
+
 1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` now enforces a minimum CLI version of `0.17.2` (previously `0.15.8`). Users on older CLI versions must upgrade to `0.17.2`.
 
-**Azure Deployment Scripts**
+<h4>Azure Deployment Scripts</h4>
 
 1. **`AZURE_CLIENT_ID` renamed to `CODEMIE_AZURE_CLIENT_ID`** — the Azure deployment scripts no longer export `AZURE_CLIENT_ID`, which conflicts with Azure CLI and kubelogin authentication.
 
@@ -154,7 +156,7 @@ Updated from 7.15.3 (Helm chart 10.7.4, previously 10.6.1). The update addresses
 
 No breaking configuration changes were introduced in this release.
 
-**AI Katas**
+<h4>AI Katas</h4>
 
 1. **AI Katas are no longer enabled by default** — the UI hides the Katas navigation, pages, floating kata window, and kata leaderboard metrics unless the `features:katas` component is enabled. If users work with [AI Katas](../../../user-guide/ai-katas/katas-overview.md), administrators must enable the feature explicitly by adding the following component to the customer feature configuration. See [Customer Feature Configuration](../../configuration/codemie/customer-feature-configuration.md) for details.
 
@@ -171,7 +173,7 @@ No breaking configuration changes were introduced in this release.
    Deployments that relied on the previous default lose access to AI Katas after upgrading to this release. Add the component above before upgrading to keep the feature available.
    :::
 
-**oauth2-proxy Behavior Changes**
+<h4>oauth2-proxy Behavior Changes</h4>
 
 The oauth2-proxy security fixes tighten request handling. The default CodeMie configuration is not affected. Administrators who customized oauth2-proxy should review the [oauth2-proxy changelog ↗](https://github.com/oauth2-proxy/oauth2-proxy/blob/master/CHANGELOG.md) for the 7.15.4, 7.15.5, and 7.15.6 releases.
 
@@ -188,7 +190,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**PostgreSQL Database Names**
+<h4>PostgreSQL Database Names</h4>
 
 1. **LiteLLM and Langfuse default database names changed** — the Helm defaults changed from `postgres_litellm` to `litellm` and from `postgres_langfuse` to `langfuse`, matching the databases Terraform creates for dedicated instances (`TF_VAR_litellm_db_config`, `TF_VAR_langfuse_db_config`).
 
@@ -215,7 +217,7 @@ NATS upgraded from 2.11.0
 
 <h3>Configuration Changes</h3>
 
-**LiteLLM Spend Ledger**
+<h4>LiteLLM Spend Ledger</h4>
 
 1. **[BREAKING] LiteLLM spend collector and related variables removed** — spend, budget, limit, and analytics figures are now served from a single spend ledger (`litellm_spend_logs`) that is filled by the spend uploader. The following variables are no longer read and must be removed from `extraEnv` if present.
 
@@ -245,7 +247,7 @@ NATS upgraded from 2.11.0
 
 3. **New optional variables** — `SPEND_LEDGER_*` settings for coverage, projection, and read isolation, and `EVENT_LOOP_LAG_*` settings for event loop monitoring. All have defaults. See [API Configuration](../../configuration/codemie/api-configuration.md#litellm-spend-ledger).
 
-**Model Retirements**
+<h4>Model Retirements</h4>
 
 The following models are retired on **November 19, 2026** according to the [Azure OpenAI model retirement schedule ↗](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule) and the [Gemini 3.6 Flash model page ↗](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-6-flash). After this date, requests to these models fail. Their configuration examples have been removed from [LiteLLM Model Configuration](../../configuration/extensions/litellm-proxy/model-configuration.md).
 
@@ -261,7 +263,7 @@ The following models are retired on **November 19, 2026** according to the [Azur
 Remove the retired models from your LiteLLM configuration and replace them with the recommended models. Also update any assistants, workflows, and premium model lists that still reference them.
 :::
 
-**NATS Configuration**
+<h4>NATS Configuration</h4>
 
 **[BREAKING] NATS configuration values moved to `nats` root section** - NATS is now dependency of `codemie-nats` helm chart.
 
@@ -318,7 +320,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**CodeMie Keycloak Theme**
+<h4>CodeMie Keycloak Theme</h4>
 
 Updated from 2.50.0 to 2.62.0. This update upgrades the base build container image to Node.js 24 (`dhi.io/node:24-alpine3.23-dev`).
 
@@ -335,7 +337,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**LiteLLM graceful drain**
+<h4>LiteLLM graceful drain</h4>
 
 LiteLLM pods now drain in-flight requests through the `/health/drain` endpoint before they stop. This was added so that rollouts and scale-down no longer drop requests that are still being served. The drain call is authorized with a token stored in the new `litellm-drain-token` secret. The `general_settings.enable_drain_endpoint: true` setting and the `preStop` hook are already included in the updated `litellm/config/litellm-<cloud>-config.yaml` and `litellm/values-<cloud>.yaml` files.
 
@@ -391,7 +393,7 @@ No third-party component updates in this release.
 
 <h3>Configuration Changes</h3>
 
-**Code Executor**
+<h4>Code Executor</h4>
 
 These applicable only if the Code Executor tool is enabled:
 
@@ -426,6 +428,8 @@ Versions **2.57.0** and **2.57.1** contain known issues and are not recommended 
 The recommended CLI version is updated to [v0.15.8](https://github.com/codemie-ai/codemie-code/releases/tag/v0.15.8).
 
 <h3>Configuration Changes</h3>
+
+<h4>CodeMie Code CLI</h4>
 
 1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` enforces a minimum CLI version of `0.15.6`. Upgrading to `0.15.8` is recommended.
 
@@ -587,7 +591,7 @@ Updated from 1.93.0. For details, see the [LiteLLM 1.96.2 Release Notes ↗](htt
 
 <h3>Configuration Changes</h3>
 
-**CodeMie Keycloak Theme**
+<h4>CodeMie Keycloak Theme</h4>
 
 Updated from 2.15.2 to 2.50.0. This update addresses security vulnerabilities in the base Alpine Linux image.
 
