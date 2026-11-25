@@ -1,31 +1,44 @@
 ---
 id: elasticsearch-kibana-upgrade
 sidebar_position: 8
-title: Elasticsearch and Kibana Upgrade (8.14.2 → 8.18.4)
-description: Upgrade Elasticsearch and Kibana from 8.14.2 to 8.18.4
+title: Elasticsearch and Kibana Upgrade
+description: Upgrade Elasticsearch and Kibana to a newer version
 pagination_next: null
 pagination_prev: admin/update/3rd-party-components/elasticsearch/elasticsearch
 ---
 
-# Elasticsearch and Kibana Upgrade Guide (8.14.2 → 8.18.4)
+# Elasticsearch and Kibana Upgrade Guide
 
 :::warning IMPORTANT
 Create a backup before starting the upgrade process!
 :::
 
-This page will guide your journey from 8.14.2 Elasticsearch/Kibana to 8.18.4
+The steps are the same for every version. The target version is set by `imageTag` in the Helm values files of the [codemie-helm-charts](https://gitbud.epam.com/epm-cdme/codemie-helm-charts) repository. Check the [release notes](../../release-notes/release-notes.md) for the version your CodeMie release ships.
 
 ## Pre-Upgrade Requirements
 
-**Before proceeding with any upgrade, ensure you have:**
+- A complete backup of your Elasticsearch data.
+- A maintenance window. With two master-eligible nodes (the default on AWS), the cluster has no elected master while the nodes restart, so Elasticsearch, Kibana and log ingestion are unavailable until both nodes are back.
+- The upgrade tested in a non-production environment.
+- A green cluster before you start:
 
-- Created a complete backup of your Elasticsearch data
-- Planned for potential downtime
-- Tested the upgrade process in a non-production environment
+  ```bash
+  ES_USER=$(kubectl -n elastic get secret elasticsearch-master-credentials -o jsonpath='{.data.username}' | base64 -d)
+  ES_PASS=$(kubectl -n elastic get secret elasticsearch-master-credentials -o jsonpath='{.data.password}' | base64 -d)
+  kubectl -n elastic exec elasticsearch-master-0 -c elasticsearch -- \
+    curl -sk -u "$ES_USER:$ES_PASS" 'https://localhost:9200/_cluster/health?pretty'
+  ```
 
-## Elasticsearch Upgrade (8.14.2 → 8.18.4)
+  Expect `"status" : "green"` and `"unassigned_shards" : 0`.
 
-Steps to Upgrade Elasticsearch:
+## Upgrade Order
+
+1. **Elasticsearch first**
+2. **Kibana second**, only after Elasticsearch is back and green. Kibana cannot authenticate to a cluster that is down.
+
+If you deploy through ArgoCD, pause auto-sync on the `kibana` application until Elasticsearch is green.
+
+## Elasticsearch Upgrade
 
 1. **Backup Your Data** ⚠️
 
@@ -37,23 +50,26 @@ Steps to Upgrade Elasticsearch:
 
 3. **Update the Elasticsearch Helm Chart Release**
 
-   Use the following command to upgrade Elasticsearch:
-
    ```bash
    helm upgrade --install elastic elasticsearch/. -n elastic --values elasticsearch/values-<cloud_name>.yaml --wait --timeout 900s --dependency-update
    ```
 
-## Kibana Upgrade (8.14.2 → 8.18.4)
+4. **Wait for a green cluster**
 
-Steps to Upgrade Kibana:
+   Both `elasticsearch-master-*` pods must be `Running` and ready on the new image. Re-run the health check from the pre-upgrade requirements and confirm every node reports the new version:
+
+   ```bash
+   kubectl -n elastic exec elasticsearch-master-0 -c elasticsearch -- \
+     curl -sk -u "$ES_USER:$ES_PASS" 'https://localhost:9200/_cat/nodes?v&h=name,version,master'
+   ```
+
+## Kibana Upgrade
 
 1. **Update the Helm Chart**
 
    Pull the latest version of the values file for Kibana.
 
 2. **Create `kibana-encryption-keys` Kubernetes secret** (if not already created)
-
-   Use the following command to create the secret:
 
    ```bash
    kubectl create secret generic "kibana-encryption-keys" \
@@ -66,7 +82,7 @@ Steps to Upgrade Kibana:
 
 3. **Delete the existing Kibana token secret**
 
-   Use the following command to delete the existing secret:
+   This step is required. The pre-install hook creates a new token secret and fails if the old one still exists.
 
    ```bash
    kubectl -n elastic delete secret kibana-kibana-es-token
@@ -74,33 +90,27 @@ Steps to Upgrade Kibana:
 
 4. **Remove old Chart.lock and tgz files**
 
-5. **Upgrade the Kibana Helm Chart Release**
+   Delete `kibana/Chart.lock` and the packaged chart archive in `kibana/charts/` so `--dependency-update` fetches the current chart.
 
-   Use the following command to upgrade Kibana:
+5. **Upgrade the Kibana Helm Chart Release**
 
    ```bash
    helm upgrade --install kibana kibana/. -n elastic --values kibana/values-<cloud_name>.yaml --wait --timeout 900s --dependency-update
    ```
 
-## Recommended Upgrade Order
-
-1. **Elasticsearch first** - Always upgrade Elasticsearch before Kibana
-2. **Kibana second** - Upgrade Kibana after Elasticsearch is successfully upgraded and running
-
 ## Post-Upgrade Verification
 
-After completing both upgrades:
-
-- Verify Elasticsearch cluster health
-- Check Kibana accessibility and functionality
-- Validate data integrity
-- Test critical dashboards and searches
+- Elasticsearch cluster health is green and all nodes run the new version
+- Kibana is accessible and running the new version
+- Data is intact
+- Critical dashboards and searches work
 
 ## Troubleshooting
 
-If you encounter issues during the upgrade:
+| Symptom                                                                                  | Cause                                                               | Fix                                                                                                             |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `master_not_discovered_exception` (HTTP 503)                                             | The first node restarted while the second is still down.            | Wait for the second node to become ready. Do not restart the first node.                                        |
+| `elasticsearch-master-1` stays `Pending` with `FailedAttachVolume: Waiting for detach`   | On AWS, the EBS volume is still attached to the previous node.      | Wait. It recovers on its own. Do not delete the PVC or the volume.                                              |
+| `pre-install-kibana-kibana-*` pods in `Error`, or the ArgoCD app waiting on the hook Job | The old `kibana-kibana-es-token` secret was not deleted (HTTP 409). | Delete the secret, then delete the failed `pre-install-kibana-kibana` Job and its pods, and re-run the upgrade. |
 
-1. Check pod logs for error messages
-2. Verify resource availability (CPU, memory, storage)
-3. Ensure network connectivity between components
-4. Consult the official Elasticsearch/Kibana upgrade documentation
+For anything else, check pod logs, resource availability (CPU, memory, storage) and network connectivity between components, then consult the official Elasticsearch and Kibana upgrade documentation.
