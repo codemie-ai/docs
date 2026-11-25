@@ -183,6 +183,13 @@ if not, which command to run.
 Claude Desktop and the VS Code extension back their own Claude login if CodeMie routed them.
 Restart the applications afterwards.
 
+## Hide prompts in analytics
+
+Analytics carries prompt text, tool input and output, file paths and branch names by default. For
+projects whose rules forbid sharing project content, turn on **analytics privacy** in the last step
+of `codemie setup`, globally or for one project. Analytics then keeps only command, skill and agent
+names, ticket and MR numbers and metrics. See [Analytics Privacy](./analytics-privacy.md).
+
 ## Personal Claude subscriptions: work-folder consent
 
 If a developer uses Claude Code with a **personal Claude subscription** rather than through

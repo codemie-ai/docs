@@ -27,6 +27,7 @@ words:
   - dbuser
   - serviceaccount
   - codemie
+  - Cowork
   - passwordless
   - SAMEORIGIN
   - AI/Run
