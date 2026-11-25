@@ -116,6 +116,35 @@ helm upgrade codemie-api \
   --namespace codemie
 ```
 
+## Pod Annotations for Sandbox Jobs
+
+In `sandbox-jobs` mode, each Code Executor run creates a Kubernetes Job. `CODE_EXECUTOR_POD_ANNOTATIONS` adds annotations to the pod template of these Jobs, so the executor pods carry them. A typical use is enabling Datadog Python tracing through the Datadog admission controller:
+
+```yaml
+customEnv:
+  - name: CODE_EXECUTOR_POD_ANNOTATIONS
+    value: '{"admission.datadoghq.com/python-lib.version":"v4.15.2"}'
+```
+
+The variable takes a JSON object of string keys and string values. Keys follow the Kubernetes annotation format: an optional DNS subdomain prefix, a `/`, and a name of up to 63 characters.
+
+- When the variable is unset, blank, or `{}`, the Job manifest contains no annotations.
+- Invalid JSON, a non-object value, a non-string value (including numbers and `null`), or a malformed key is rejected before any Job is created. The error names the offending key.
+- `sandbox-shared` mode accepts the variable but ignores it.
+- The annotations apply to the pod template only, not to the Job object.
+- The annotations do not enable Datadog tracing for the executed Python script. The executor starts the script with a cleared environment and an explicit allow-list, so the variables that the Datadog init container injects (`PYTHONPATH`, `LD_PRELOAD`, `DD_*`) do not reach the user process.
+- The value is read once per API process. Restart the CodeMie API pods to apply a changed value. Jobs created after the restart carry the new annotations.
+
+The Helm `podAnnotations` value applies only to CodeMie API, ds-pool, and proxy-pool pods. It does not reach executor Job pods, so use `CODE_EXECUTOR_POD_ANNOTATIONS` for these pods.
+
+:::note Cluster prerequisites
+The Datadog admission controller may also require an opt-in pod label, such as `admission.datadoghq.com/enabled: "true"`, or namespace-wide injection configured on the cluster. This variable sets annotations only, never labels. These cluster settings are configured outside CodeMie.
+:::
+
+:::warning Pod start time
+If the executor namespace cannot pull the injected library image, the pod stays `Pending` for the whole pod-start budget of about 90 seconds and holds a pool slot while it waits.
+:::
+
 ## Environment Variables Reference
 
 For the full list of available environment variables, see [API Configuration — Code Executor & Python Sandbox](./api-configuration.md#code-executor--python-sandbox).

@@ -47,6 +47,21 @@ assistants:
 - **name**: Display name (optional)
 - **model**: LLM model to use
 - **temperature**: Response randomness (0.0-2.0)
+- **effort**: Reasoning effort for models that support it: `low`, `medium`, `high`, `xhigh` or
+  `max` (optional). Use it instead of `temperature` for reasoning models (for example Claude 4.6+,
+  GPT-5.x, o-series, Gemini 3). Overrides the effort of the referenced assistant. A level above
+  the model's maximum is lowered to the highest supported level; on models without effort support
+  the field is ignored.
+
+  ```yaml
+  assistants:
+    - id: planner
+      model: claude-opus-4-6
+      effort: high
+      system_prompt: |
+        Break the task into steps.
+  ```
+
 - **system_prompt**: Custom instructions and context
 - **tools**: List of tools the assistant can use
 - **datasource_ids**: Data sources for knowledge base integration
@@ -60,6 +75,20 @@ assistants:
 - **exclude_extra_context_tools**: Disable automatic context tools
 - **skill_ids**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
+- **headroom**: Context compression override for this node (optional). Accepts `enabled`,
+  `compress_user_messages`, `compress_tool_outputs` and `strategy` (`lossless`, `balanced` or
+  `aggressive`). Each key set here wins over the workflow-level `headroom` block and the
+  referenced assistant's setting; keys not set are inherited. Available only when context
+  compression is enabled for the instance. See
+  [Context Compression (Headroom)](../../assistants/context-compression.md#configure-compression-in-workflows).
+
+  ```yaml
+  assistants:
+    - id: analyst
+      assistant_id: 00000000-0000-0000-0000-000000000000
+      headroom:
+        strategy: aggressive
+  ```
 
 #### Tool Configuration:
 
@@ -199,6 +228,16 @@ max_concurrency: 10
 - **enable_summarization_node**: Enable automatic result summarization (default: true)
 - **recursion_limit**: Maximum workflow execution steps (default: 50)
 - **max_concurrency**: Maximum concurrent parallel state executions
+- **headroom**: Context compression for every assistant node of the workflow (optional). Accepts
+  `enabled`, `compress_user_messages`, `compress_tool_outputs` and `strategy`. Node-level
+  `headroom` blocks override it key by key. See
+  [Context Compression (Headroom)](../../assistants/context-compression.md#configure-compression-in-workflows).
+
+  ```yaml
+  headroom:
+    enabled: true
+    strategy: balanced
+  ```
 
 #### Workflow-Level Settings Examples:
 

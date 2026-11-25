@@ -33,7 +33,7 @@ Use this table to quickly find where each component appears in the UI.
 | `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS`                                                                                       |
 | `features:showAllProjects`                | Settings → Administration → project selector                        | All projects returned by admin project picker (no limit or search minimum)                      | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                                                                                                      |
 | `defaultConversationAssistant`            | New chat creation                                                   | Pre-selects specified assistant                                                                 | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                                                                                                                                            |
-| `features:personalLiteLLMIntegrations`    | Integrations → User tab                                             | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                                                                                                                  |
+| `features:personalLiteLLMIntegrations`    | New Integration form → Scope: User                                  | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                                                                                                                  |
 | `subWorkflowNode`                         | Workflow visual editor → Action nodes                               | Sub-workflow node UI                                                                            | Sub-workflow node UI                                                                | Disabled by default; enable with `features:subWorkflow`                                                                                                                              |
 | `features:subWorkflow`                    | Workflow editor and execution                                       | Sub-workflow configuration and execution                                                        | Sub-workflow controls; API and runtime access return `403`                          | Disabled by default; enable with `subWorkflowNode`                                                                                                                                   |
 | `features:hostedApplications`             | Applications page, `/apps` routes, content domain                   | Upload, share, and open custom static web applications                                          | Only Platform apps on the Applications page; hosted API and content domain closed   | Disabled by default; needs `HOSTED_APPS_*` settings and a validator pod; can also be toggled with `FEATURE_HOSTED_APPLICATIONS`. See [Custom Applications](./hosted-applications.md) |
@@ -291,7 +291,7 @@ components:
     settings:
       enabled: true
 
-  # WHERE: Integrations → User tab
+  # WHERE: New Integration form → Scope: User
   # ENABLED: Regular users see LiteLLM as a personal integration option and can
   #          create and manage their own LiteLLM credentials
   # DISABLED: LiteLLM is unavailable in personal integrations; only maintainers
@@ -663,6 +663,32 @@ Apply the change with `helm upgrade` and wait for the `codemie-api` pods to rest
 
 The platform limits each server's instructions to 4000 characters and the whole section to 12000 characters. MCP Connect additionally caps the text at `MCP_CONNECT_MAX_INSTRUCTIONS_CHARS` characters (default `8192`). See the [limits table](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md#limits).
 
+### Headroom {#headroom}
+
+Headroom compresses the messages sent to the model to reduce token usage. When the `features:headroom` component is enabled, users see the **Context compression (Headroom)** settings in the assistant form and in the workflow editor, the chat usage details show the tokens saved, and the **Analytics** dashboard shows the **Context Compression** section. For the user-facing behavior, see [Context Compression (Headroom)](../../../user-guide/assistants/context-compression.md).
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Boolean - show Headroom settings and analytics, allow compression
+```
+
+```yaml
+components:
+  # Context compression with Headroom
+  # NOTE: A missing component counts as disabled
+  - id: "features:headroom"
+    settings:
+      enabled: true
+      name: "Headroom"
+      description: "Compress large tool outputs and context with Headroom (sdk or sidecar mode) to reduce token usage"
+```
+
+:::warning The flag alone does not enable compression
+Compression also requires `HEADROOM_MODE` set to `sidecar` or `sdk` on the `codemie-api` service, and the matching deployment. With the flag on and the mode `off`, users can save settings but no tokens are saved. See [Headroom Context Compression Configuration](./headroom-configuration.md).
+:::
+
 ### Tool Call Permissions
 
 Customer-level toggle gating whether tool-call confirmation is enforced, plus a customer-wide floor on how strict that enforcement must be.
@@ -674,6 +700,7 @@ Customer-level toggle gating whether tool-call confirmation is enforced, plus a 
 - **When `enabled: false`** - all tool calls auto-approve, regardless of any assistant, request, or conversation-level policy.
 - **When `enabled: true`** - the effective policy resolves in this order: request override → conversation policy → assistant config. If the assistant sets `allow_override: false`, request and conversation overrides are ignored and only the assistant config applies.
 - `min_tool_call_policy` sets a customer-wide floor - the resolved policy is clamped to be at least as strict as this value (`manual` > `guarded` > `auto`).
+- The same rules apply to the tool calls of sub-assistants. The floor applies to every sub-assistant call, and the confirmation is shown inside the sub-assistant's step.
 
 **Fields used in this section:**
 

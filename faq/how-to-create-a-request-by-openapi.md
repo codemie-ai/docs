@@ -3,7 +3,7 @@
 To integrate OpenAPI with CodeMie.
 
 1. In the CodeMie main menu, click the Integrations button.
-2. Select Integration Type: User or Project and click Create.
+2. Click Create and select the Scope: User or Project.
 3. Select the Project Name.
 4. Select the Credential Type: OpenAPI.
 5. Alias: Enter the name of the integration.

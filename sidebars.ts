@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/assistant-categories-management',
             'user-guide/assistants/clone-assistant-from-marketplace',
             'user-guide/assistants/sub-assistants-multi-assistant-orchestrator',
+            'user-guide/assistants/context-compression',
             {
               type: 'category',
               label: 'Organizing and Managing Communication with Assistants',
@@ -314,6 +315,7 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'user-guide/codemie-cli/enable-analytics',
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
             'user-guide/codemie-cli/codemie-claude-skills',
@@ -675,6 +677,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/hosted-applications',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
+                'admin/configuration/codemie/headroom-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {
                   type: 'category',
@@ -880,6 +883,9 @@ const sidebars: SidebarsConfig = {
                       },
                       collapsed: true,
                       items: [
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-7-to-26-8',
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-6-to-26-7',
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-5-to-26-6',
                         'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5',
                         'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-24-to-26',
                       ],

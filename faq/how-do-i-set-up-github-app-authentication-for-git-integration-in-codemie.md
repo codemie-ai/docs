@@ -8,7 +8,7 @@ To use a GitHub App for Git integration in CodeMie:
 
 3. **Install the GitHub App** on the organization or repositories that CodeMie needs access to: go to **Settings → Developer settings → GitHub Apps → Edit → Install App**. After installation, note the **Installation ID** from the URL (e.g., `https://github.com/settings/installations/12345678`). The Installation ID is optional — CodeMie auto-detects it if left blank.
 
-4. **Create the integration in CodeMie**: go to **Integrations → + Create**, set **Credential Type** to **Git**, enter a URL (e.g., `https://github.com`), select **GitHub Application** as the **Authentication Type**, and fill in the App ID, private key, and Installation ID.
+4. **Create the integration in CodeMie**: go to **Integrations → + New Integration**, set **Credential Type** to **Git**, enter a URL (e.g., `https://github.com`), select **GitHub Application** as the **Authentication Type**, and fill in the App ID, private key, and Installation ID.
 
 ## Sources
 

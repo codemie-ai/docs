@@ -1269,6 +1269,20 @@ Automatically compress long conversation histories when token usage exceeds a th
 | `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`      | Number of most-recent conversation groups to preserve verbatim during compaction                    |
 | `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`  | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
 
+### Headroom Context Compression
+
+Compress the messages sent to the model with Headroom. Compression also requires the `features:headroom` customer feature. See [Headroom Context Compression Configuration](./headroom-configuration.md) for the deployment steps.
+
+| Parameter                           | Type    | Default                 | Description                                                                                      |
+| ----------------------------------- | ------- | ----------------------- | ------------------------------------------------------------------------------------------------ |
+| `HEADROOM_MODE`                     | string  | `off`                   | Compression mode: `off`, `sdk` (in the API process) or `sidecar` (separate container)            |
+| `HEADROOM_SIDECAR_URL`              | string  | `http://localhost:8787` | Base URL of the Headroom sidecar                                                                 |
+| `HEADROOM_PROXY_TOKEN`              | string  | empty                   | Bearer token for the sidecar; must match the sidecar value. Store it in a secret                 |
+| `HEADROOM_TIMEOUT_SECONDS`          | integer | `10`                    | Maximum wait for compression on each model call before the original messages are sent            |
+| `HEADROOM_MIN_TOKENS`               | integer | `1000`                  | Messages below this size are not compressed                                                      |
+| `HEADROOM_AGGRESSIVE_TARGET_RATIO`  | float   | `0.2`                   | Fraction of tokens kept by the `aggressive` strategy; applies only where the Kompress model runs |
+| `HEADROOM_SDK_ALLOW_MODEL_DOWNLOAD` | boolean | `false`                 | SDK mode only: allow the API process to download the Kompress model                              |
+
 ### Workflow Configuration
 
 | Parameter                      | Type    | Default | Description                                                                           |
@@ -1392,6 +1406,7 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | `CODE_EXECUTOR_VERBOSE`                   | boolean | `false`                                  | Enable verbose logging for executor debugging                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `CODE_EXECUTOR_KEEP_TEMPLATE`             | boolean | `true`                                   | Persist pod template after execution for performance optimization                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP`    | boolean | `false`                                  | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `CODE_EXECUTOR_POD_ANNOTATIONS`           | string  | `""`                                     | JSON object of annotations added to executor Job pods. Applies in `sandbox-jobs` mode only. See [Pod Annotations for Sandbox Jobs](./code-executor-configuration.md#pod-annotations-for-sandbox-jobs)                                                                                                                                                                                                                                                                                                                  |
 
 :::warning Security Considerations
 **Sandbox Isolation:** `CODE_EXECUTOR_EXECUTION_MODE=sandbox` runs user-supplied code in a dedicated Kubernetes pod, isolated from the CodeMie API. This is the execution model for running untrusted code safely in production.
@@ -1680,6 +1695,8 @@ Each model entry supports these configuration options:
 | `features.streaming`               | boolean | Supports streaming responses for real-time output                                                                                                                                                                                                                                                                                                                         |
 | `features.tools`                   | boolean | Supports function calling / tool use                                                                                                                                                                                                                                                                                                                                      |
 | `features.parallel_tool_calls`     | boolean | Whether the model can execute multiple tool calls in a single inference round. Defaults to `false`. Set to `false` explicitly for reasoning models (o-series) that do not support the `parallel_tool_calls` OpenAI parameter — sending it to these models causes an API error. When `false`, the platform strips the parameter from every outgoing request to that model. |
+| `features.temperature`             | boolean | Whether the model accepts `temperature`. Defaults to `true`. When `false`, the platform does not send `temperature` to the model.                                                                                                                                                                                                                                         |
+| `features.effort`                  | list    | Reasoning effort levels the model supports, from `low`, `medium`, `high`, `xhigh`, `max` (for example `["low", "medium", "high"]`). Omit for models without effort support. When set, the UI shows **Effort** instead of Temperature/Top P, and a requested level above the highest listed one is lowered to it.                                                          |
 
 :::info How parallel tool calls work
 When `parallel_tool_calls` is `true` for a model, the agent can issue and stream multiple
@@ -1689,6 +1706,27 @@ rendered in the UI as parallel entries under the same thought step.
 Standard GPT and Claude models support parallel tool calls. Reasoning models
 (o-series and similar) do **not** — always set
 `parallel_tool_calls: false` in their `features` block.
+:::
+
+:::info How effort is sent to providers
+The selected effort is translated to each provider's own parameter:
+
+| Provider                  | Parameter sent                                                |
+| ------------------------- | ------------------------------------------------------------- |
+| LiteLLM proxy             | `reasoning_effort`                                            |
+| AWS Bedrock (Claude)      | `additional_model_request_fields.output_config.effort`        |
+| Anthropic                 | `effort`                                                      |
+| Azure OpenAI / DIAL       | `reasoning_effort`                                            |
+| Google Vertex AI (Gemini) | `thinking_budget`: 1024 / 2048 / 4096 for low / medium / high |
+
+Example for a reasoning model that rejects `temperature`:
+
+```yaml
+features:
+  temperature: false
+  effort: ["low", "medium", "high"]
+```
+
 :::
 
 ### Model Categories

@@ -112,7 +112,7 @@ Generate an App Password in your Bitbucket account with the following permission
 
 ![Integrations menu](./images/git-integrations-menu.png)
 
-- Select **User Integration** or **Project Integration** (only for applications-admin, for that create request in support) and click **+ Create**
+- Click **+ New Integration** and select the **Scope**: **User** or **Project** (Project is only for applications-admin, for that create request in support)
 
 ![Create integration](./images/git-create-integration.png)
 

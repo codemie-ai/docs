@@ -33,14 +33,80 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 ## November 2026 {#2026-11}
 
+<details className="release" id="v2-71-0">
+<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Fluent Bit 5.2.0</h4>
+
+- **Fluent Bit:** 5.0.7 → 5.2.0
+- **`fluent-bit` Helm chart:** 0.57.7 → 0.58.3
+
+For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
+
+**Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
+
+<h4>CodeMie Code CLI 0.17.2</h4>
+
+The recommended CLI version is updated to [v0.17.2](https://github.com/codemie-ai/codemie-code/releases/tag/v0.17.2).
+
+<h3>Configuration Changes</h3>
+
+1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` now enforces a minimum CLI version of `0.17.2` (previously `0.15.8`). Users on older CLI versions must upgrade to `0.17.2`.
+
+</details>
+
+<details className="release" id="v2-70-0">
+<summary><span className="release__version">CodeMie 2.70.0</span><span className="release__date">Nov 23, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** November 23, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.70.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-69-0">
-<summary><span className="release__version">CodeMie 2.69.0</span><span className="release__date">Nov 19, 2026</span><span className="release__no-action">No admin action required</span></summary>
+<summary><span className="release__version">CodeMie 2.69.0</span><span className="release__date">Nov 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
 
 **Release Date:** November 19, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.69.0)
 
 <h3>Third-Party Component Updates</h3>
 
-No third-party component updates in this release.
+<h4>Keycloak Operator 1.36.0</h4>
+
+Updated Keycloak Operator to 1.36.0.
+
+**Upgrade instructions:** [Keycloak Operator Upgrade 1.35.0 → 1.36.0](../3rd-party-components/keycloak/operator-upgrade.md#upgrade-keycloak-operator-from-1350-to-1360)
+
+<h4>Keycloak</h4>
+
+This release contains two Keycloak updates. They are independent and can be applied separately.
+
+1. **Keycloak image 26.8.2**
+
+   Updated Keycloak to 26.8.2.
+
+   **Upgrade instructions**, in this order:
+   1. [Keycloak Upgrade 26.5.7 → 26.6.4](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-5-to-26-6.md)
+   2. [Keycloak Upgrade 26.6.4 → 26.7.5](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-6-to-26-7.md)
+   3. [Keycloak Upgrade 26.7.5 → 26.8.2](../3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-7-to-26-8.md)
+
+2. **Keycloak Helm chart 7.4.0**
+
+   Updated the `keycloakx` Helm chart from 7.1.9 to 7.4.0 to prepare for the Envoy Gateway migration.
+   - Keycloak keeps the version pinned in `keycloakx.image.tag` in the custom values.
+   - The `dbchecker` init container image changed from `docker.io/busybox:1.32` to `docker.io/busybox:1.37`.
+
+   **Upgrade instructions:** [Keycloak Upgrade](../3rd-party-components/keycloak/keycloak-upgrade/index.md)
 
 <h3>Configuration Changes</h3>
 
