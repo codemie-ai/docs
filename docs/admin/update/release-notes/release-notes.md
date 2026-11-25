@@ -19,13 +19,13 @@ Badges show what each release requires from administrators:
 - <span className="badge badge--info">Component updates</span> — Third-party components were updated and upgrading them is recommended as part of this release
 
 :::tip Upgrade regularly
-We highly recommend keeping CodeMie up to date. Regular upgrades deliver the latest security fixes and keep each upgrade small, with fewer configuration changes to review at once.
+Keeping CodeMie up to date is highly recommended. Regular upgrades deliver the latest security fixes and keep each upgrade small, with fewer configuration changes to review at once.
 
 Review every release between the current and target version that has a **Breaking**, **Config changes**, or **Component updates** badge. Releases marked **No admin action required** can be skipped.
 :::
 
 :::warning Use the verified LiteLLM version
-While we recommend keeping CodeMie up to date, keep LiteLLM at the version that has been tested and verified with the deployed CodeMie release.
+While regular CodeMie upgrades are recommended, keep LiteLLM at the version that has been tested and verified with the deployed CodeMie release.
 The currently tested and verified LiteLLM version is **1.99.4**.
 
 Do not upgrade LiteLLM beyond this version until it has been verified with CodeMie. Newer LiteLLM releases are not validated against CodeMie and may be incompatible with it or introduce unexpected bugs that affect platform stability.
@@ -746,7 +746,7 @@ No third-party component updates in this release.
    Affected charts: `codemie`, `codemie-ui`, `codemie-nats-auth-callout`, `codemie-mcp-connect-service`, `mermaid-server`.
 
    :::warning
-   All existing releases are available in both repositories, and future releases will continue to be published to both. Therefore, no immediate action is required. However, we recommend updating any custom `values.yaml` overrides that reference `prod` to use `codemie-clients-releases` instead.
+   All existing releases are available in both repositories, and future releases will continue to be published to both. Therefore, no immediate action is required. However, updating any custom `values.yaml` overrides that reference `prod` to use `codemie-clients-releases` is recommended.
    :::
 
 </details>
