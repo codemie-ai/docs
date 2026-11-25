@@ -75,6 +75,20 @@ assistants:
 - **exclude_extra_context_tools**: Disable automatic context tools
 - **skill_ids**: List of skill IDs to attach to the assistant. Skills load on demand during execution based on relevance. See [Skills in Workflow Assistants](../../skills/skills-in-workflow.md) for usage details.
 - **mcp_servers**: List of MCP server configurations (see Section 3.6)
+- **headroom**: Context compression override for this node (optional). Accepts `enabled`,
+  `compress_user_messages`, `compress_tool_outputs` and `strategy` (`lossless`, `balanced` or
+  `aggressive`). Each key set here wins over the workflow-level `headroom` block and the
+  referenced assistant's setting; keys not set are inherited. Available only when context
+  compression is enabled for the instance. See
+  [Context Compression (Headroom)](../../assistants/context-compression.md#configure-compression-in-workflows).
+
+  ```yaml
+  assistants:
+    - id: analyst
+      assistant_id: 00000000-0000-0000-0000-000000000000
+      headroom:
+        strategy: aggressive
+  ```
 
 #### Tool Configuration:
 
@@ -217,6 +231,16 @@ max_concurrency: 10
 - **save_validation**: Save-time contract validation mode, `warn` or `strict` (default: `warn`), shown as **Save validation** in the editor. It applies at save time only: Save, Check, and dry-run. Can also be set on a state, where it overrides the workflow value for that state — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
 - **runtime_validation**: Runtime contract check mode, `warn` or `strict` (default: `warn`). It applies at runtime only and takes effect only when the platform enables runtime checks. Can also be set on a state, where it overrides the workflow value for that state — see [Runtime contract checks](./workflow-states.md#runtime-contract-checks)
 - **require_input_contracts**: Boolean, workflow level only (default: `false`). When `true`, a reachable state without declared or derived input-contract coverage blocks saving — see [Validation modes and required coverage](./workflow-states.md#validation-modes-and-required-coverage)
+- **headroom**: Context compression for every assistant node of the workflow (optional). Accepts
+  `enabled`, `compress_user_messages`, `compress_tool_outputs` and `strategy`. Node-level
+  `headroom` blocks override it key by key. See
+  [Context Compression (Headroom)](../../assistants/context-compression.md#configure-compression-in-workflows).
+
+  ```yaml
+  headroom:
+    enabled: true
+    strategy: balanced
+  ```
 
 #### Workflow-Level Settings Examples:
 

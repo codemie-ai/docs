@@ -140,6 +140,7 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 - **Performance Settings**: Parallel task execution and recursion depth limits
 - **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
 - **Contracts**: Select the workflow **Save validation** mode and whether input-contract coverage is required
+- **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
 
 #### Workflow contract settings
 

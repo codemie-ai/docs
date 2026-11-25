@@ -1269,6 +1269,20 @@ Automatically compress long conversation histories when token usage exceeds a th
 | `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`      | Number of most-recent conversation groups to preserve verbatim during compaction                    |
 | `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`  | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
 
+### Headroom Context Compression
+
+Compress the messages sent to the model with Headroom. Compression also requires the `features:headroom` customer feature. See [Headroom Context Compression Configuration](./headroom-configuration.md) for the deployment steps.
+
+| Parameter                           | Type    | Default                 | Description                                                                                      |
+| ----------------------------------- | ------- | ----------------------- | ------------------------------------------------------------------------------------------------ |
+| `HEADROOM_MODE`                     | string  | `off`                   | Compression mode: `off`, `sdk` (in the API process) or `sidecar` (separate container)            |
+| `HEADROOM_SIDECAR_URL`              | string  | `http://localhost:8787` | Base URL of the Headroom sidecar                                                                 |
+| `HEADROOM_PROXY_TOKEN`              | string  | empty                   | Bearer token for the sidecar; must match the sidecar value. Store it in a secret                 |
+| `HEADROOM_TIMEOUT_SECONDS`          | integer | `10`                    | Maximum wait for compression on each model call before the original messages are sent            |
+| `HEADROOM_MIN_TOKENS`               | integer | `1000`                  | Messages below this size are not compressed                                                      |
+| `HEADROOM_AGGRESSIVE_TARGET_RATIO`  | float   | `0.2`                   | Fraction of tokens kept by the `aggressive` strategy; applies only where the Kompress model runs |
+| `HEADROOM_SDK_ALLOW_MODEL_DOWNLOAD` | boolean | `false`                 | SDK mode only: allow the API process to download the Kompress model                              |
+
 ### Workflow Configuration
 
 | Parameter                                  | Type    | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |

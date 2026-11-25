@@ -41,6 +41,47 @@ The feature is controlled by the platform setting `WORKFLOW_CONTRACT_LINKING_ENA
 Runtime checks are a separate platform setting. See [Runtime contract checks](../../../user-guide/workflows/configuration/workflow-states.md#runtime-contract-checks).
 :::
 
+<details className="release" id="v2-71-0">
+<summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">TBD</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
+
+**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
+
+<h3>Third-Party Component Updates</h3>
+
+<h4>Fluent Bit 5.2.0</h4>
+
+- **Fluent Bit:** 5.0.7 → 5.2.0
+- **`fluent-bit` Helm chart:** 0.57.7 → 0.58.3
+
+For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
+
+**Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
+
+<h4>CodeMie Code CLI 0.17.2</h4>
+
+The recommended CLI version is updated to [v0.17.2](https://github.com/codemie-ai/codemie-code/releases/tag/v0.17.2).
+
+<h3>Configuration Changes</h3>
+
+1. **Minimum CodeMie Code CLI version**: the backend environment variable `CODEMIE_MIN_CLI_VERSION` now enforces a minimum CLI version of `0.17.2` (previously `0.15.8`). Users on older CLI versions must upgrade to `0.17.2`.
+
+</details>
+
+<details className="release" id="v2-70-0">
+<summary><span className="release__version">CodeMie 2.70.0</span><span className="release__date">Nov 23, 2026</span><span className="release__no-action">No admin action required</span></summary>
+
+**Release Date:** November 23, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.70.0)
+
+<h3>Third-Party Component Updates</h3>
+
+No third-party component updates in this release.
+
+<h3>Configuration Changes</h3>
+
+No breaking configuration changes were introduced in this release.
+
+</details>
+
 <details className="release" id="v2-69-0">
 <summary><span className="release__version">CodeMie 2.69.0</span><span className="release__date">Nov 19, 2026</span><span className="badge badge--info">Component updates</span></summary>
 

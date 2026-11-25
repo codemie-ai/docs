@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/assistant-categories-management',
             'user-guide/assistants/clone-assistant-from-marketplace',
             'user-guide/assistants/sub-assistants-multi-assistant-orchestrator',
+            'user-guide/assistants/context-compression',
             {
               type: 'category',
               label: 'Organizing and Managing Communication with Assistants',
@@ -314,6 +315,7 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'user-guide/codemie-cli/enable-analytics',
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
             'user-guide/codemie-cli/codemie-claude-skills',
@@ -675,6 +677,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/hosted-applications',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
+                'admin/configuration/codemie/headroom-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {
                   type: 'category',
