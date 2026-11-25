@@ -14,9 +14,11 @@ The Workflow Marketplace is a centralized hub where authenticated users can disc
 
 ## Accessing the Marketplace
 
-Navigate to **Workflows** → **Marketplace**.
+Navigate to **Workflows** and select **Marketplace** in the **Categories** list on the left, below **My Workflows** and **All Workflows**.
 
-![Workflow Marketplace tab](./images/marketplace-tab.png)
+![Marketplace with workflows from two authors](./images/marketplace/marketplace-catalog.png)
+
+Each card shows the workflow name, its author (`by <author>`), a short description, the number of total uses, and the **Run Chat** and **Run workflow** buttons, plus an actions menu (⋮).
 
 ## Key Features
 
@@ -26,21 +28,22 @@ Browse a catalog of globally published workflows, each designed for specific use
 
 ### Usage Metrics
 
-Each workflow card displays the number of unique users who have executed it. Workflows with higher adoption appear more prominently, helping identify the most trusted and widely used solutions.
+Each workflow card displays its total number of uses (for example, `0 total uses`), which helps identify widely used solutions.
 
 ### Filtering and Search
 
-- Filter workflows by category to narrow results to a specific domain
-- Search by name to find a workflow directly
+- Use the **Categories** filter to narrow results to a specific domain
+- Use **Search** to find a workflow by name
+- Use **Created By** (or select the **Me** checkbox) to show workflows from a specific author
 
 ## Executing a Marketplace Workflow
 
 Any authenticated user can execute a marketplace workflow without additional permissions or configuration:
 
-1. Navigate to **Workflows** → **Marketplace**.
+1. Navigate to **Workflows** and select **Marketplace**.
 2. Browse the catalog or use search and filters to find a workflow.
-3. Click the workflow card to open its details page.
-4. Click **Run workflow** to start an execution.
+3. Click the workflow card (or open its actions menu and select **View Details**) to open the workflow page.
+4. Click **Run workflow** to start an execution, or **Run Chat** to run it from a chat. Both buttons are also available directly on the card.
 
 The workflow runs using the **publisher's project context** — their configured datasources and assistants are used automatically. No personal integrations are required unless the workflow explicitly relies on user-level credentials.
 
