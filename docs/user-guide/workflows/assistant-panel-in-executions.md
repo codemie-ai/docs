@@ -41,7 +41,7 @@ The panel opens under the **Assistant** heading and replicates the content of th
 
 - profile details — avatar, name, and author
 - **About Assistant** description
-- **Conversation Starters**, when the assistant has them
+- **Conversation Starters**, shown as a list of short prompts under the description, only when the assistant has them
 - **System Instructions**, with a **Copy** action
 - **Overview** — project and shared status
 - **Assistant ID** and **Access Links**, each with a copy button
@@ -61,7 +61,9 @@ The only editable part is the **Your Integration Settings** section, and it appe
 3. Find the tool, toolkit, or MCP server in the list. Entries are grouped by toolkit, and each one names the connected tool it applies to.
 4. Choose an integration from its dropdown. If no integration of the required type exists yet, use **Add Integration** next to the entry to create one.
 5. Decide on the scope of the change using the **Apply to the whole assistant, not just this workflow** checkbox at the top of the section — see [Where the selection applies](#where-the-selection-applies).
-6. Save the section.
+6. Click **Save**. The **Cancel** and **Save** buttons appear below the entries only after a dropdown has been changed; **Cancel** reverts the dropdowns to the stored selection without saving anything.
+
+Saving shows the message "Your integration settings have been successfully saved for this assistant", hides the two buttons, and the selection is still there after the page is reloaded. The scope checkbox has an info tooltip: when cleared, the integrations are used only when the assistant runs in this workflow; when selected, they are used everywhere the assistant runs, including chat.
 
 ![The assistant panel opened from a workflow node, showing the Your Integration Settings section with the scope checkbox and the integration dropdowns](./images/assistant-panel-your-integration-settings.png)
 
