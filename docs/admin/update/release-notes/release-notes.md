@@ -502,7 +502,7 @@ Releases from previous months, grouped by year and month. Expand a month to see 
 ### 2026 {#older-2026}
 
 <details className="release-archive" id="2026-09">
-<summary><span className="release-archive__month">September</span><span className="release-archive__count">9 releases</span></summary>
+<summary><span className="release-archive__month">September</span><span className="release-archive__count">9 releases</span><span className="release-archive__range">2.46.0 – 2.54.0</span></summary>
 
 <details className="release" id="v2-54-0">
 <summary><span className="release__version">CodeMie 2.54.0</span><span className="release__date">Sep 29, 2026</span><span className="badge badge--info">Component updates</span></summary>
@@ -660,7 +660,7 @@ No breaking configuration changes were introduced in this release.
 </details>
 
 <details className="release-archive" id="2026-08">
-<summary><span className="release-archive__month">August</span><span className="release-archive__count">4 releases</span></summary>
+<summary><span className="release-archive__month">August</span><span className="release-archive__count">4 releases</span><span className="release-archive__range">2.42.0 – 2.45.0</span></summary>
 
 <details className="release" id="v2-45-0">
 <summary><span className="release__version">CodeMie 2.45.0</span><span className="release__date">Aug 28, 2026</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
@@ -754,7 +754,7 @@ No third-party component updates in this release.
 </details>
 
 <details className="release-archive" id="2026-07">
-<summary><span className="release-archive__month">July</span><span className="release-archive__count">5 releases</span></summary>
+<summary><span className="release-archive__month">July</span><span className="release-archive__count">5 releases</span><span className="release-archive__range">2.37.0 – 2.41.0</span></summary>
 
 <details className="release" id="v2-41-0">
 <summary><span className="release__version">CodeMie 2.41.0</span><span className="release__date">Jul 27, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span></summary>
@@ -918,7 +918,7 @@ This release also delivers a set of security and hardening improvements across t
 </details>
 
 <details className="release-archive" id="2026-06">
-<summary><span className="release-archive__month">June</span><span className="release-archive__count">6 releases</span></summary>
+<summary><span className="release-archive__month">June</span><span className="release-archive__count">6 releases</span><span className="release-archive__range">2.31.0 – 2.36.0</span></summary>
 
 <details className="release" id="v2-36-0">
 <summary><span className="release__version">CodeMie 2.36.0</span><span className="release__date">Jun 26, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--secondary">1 hotfix</span></summary>
@@ -1087,7 +1087,7 @@ No breaking configuration changes were introduced in this release.
 </details>
 
 <details className="release-archive" id="2026-05">
-<summary><span className="release-archive__month">May</span><span className="release-archive__count">6 releases</span></summary>
+<summary><span className="release-archive__month">May</span><span className="release-archive__count">6 releases</span><span className="release-archive__range">2.25.0 – 2.30.0</span></summary>
 
 <details className="release" id="v2-30-0">
 <summary><span className="release__version">CodeMie 2.30.0</span><span className="release__date">May 27, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
@@ -1298,7 +1298,7 @@ Version 2.25.0 contains a known issue that causes instability in environments wi
 </details>
 
 <details className="release-archive" id="2026-04">
-<summary><span className="release-archive__month">April</span><span className="release-archive__count">5 releases</span></summary>
+<summary><span className="release-archive__month">April</span><span className="release-archive__count">5 releases</span><span className="release-archive__range">2.20.0 – 2.24.0</span></summary>
 
 <details className="release" id="v2-24-0">
 <summary><span className="release__version">CodeMie 2.24.0</span><span className="release__date">Apr 23, 2026</span><span className="badge badge--danger">Breaking</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span><span className="badge badge--secondary">1 hotfix</span></summary>
@@ -1503,7 +1503,7 @@ No breaking configuration changes were introduced in this release.
 </details>
 
 <details className="release-archive" id="2026-03">
-<summary><span className="release-archive__month">March</span><span className="release-archive__count">5 releases</span></summary>
+<summary><span className="release-archive__month">March</span><span className="release-archive__count">5 releases</span><span className="release-archive__range">2.15.0 – 2.19.0</span></summary>
 
 <details className="release" id="v2-19-0">
 <summary><span className="release__version">CodeMie 2.19.0</span><span className="release__date">Mar 27, 2026</span><span className="badge badge--info">Component updates</span></summary>

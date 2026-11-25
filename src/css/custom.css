@@ -420,3 +420,15 @@ details.release-archive > div > div {
   color: var(--ifm-color-emphasis-600);
   font-size: 0.875rem;
 }
+
+.release-archive__range {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.release-archive__range::before {
+  content: '·';
+  margin-right: 0.625rem;
+  color: var(--ifm-color-emphasis-500);
+}
