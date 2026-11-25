@@ -82,12 +82,15 @@ Users with the **Admin**, **Maintainer**, or **Auditor** role can view the budge
 
 Budget management is a unique role. Project Admin cannot manage budgets in any project — neither their own nor others'. Regular users and Project Admins are redirected away from the Budgets section; Auditors have direct read-only access.
 
-| Action                              | Maintainer | Admin | Project admin | Auditor   |
-| ----------------------------------- | ---------- | ----- | ------------- | --------- |
-| Create / update / delete any budget | Yes        | No    | No            | No        |
-| View budget list                    | Yes        | Yes   | No            | Yes       |
-| View own project budget             | Yes        | Yes   | Yes           | Yes (all) |
-| Override a member's allocation      | Yes        | No    | No            | No        |
+The one exception is the **Enforce member spend limits** toggle in **Edit Project**. It can be changed by a Project Admin for their own project, and by an Admin or Maintainer for any project. Every change requires confirmation. See [Confirming an Enforcement Change](./project-budgets.md#confirming-an-enforcement-change).
+
+| Action                                 | Maintainer | Admin | Project admin     | Auditor   |
+| -------------------------------------- | ---------- | ----- | ----------------- | --------- |
+| Create / update / delete any budget    | Yes        | No    | No                | No        |
+| View budget list                       | Yes        | Yes   | No                | Yes       |
+| View own project budget                | Yes        | Yes   | Yes               | Yes (all) |
+| Override a member's allocation         | Yes        | No    | No                | No        |
+| Change **Enforce member spend limits** | Yes        | Yes   | Yes (own project) | No        |
 
 :::info
 For details on roles, see [Roles & RBAC](../../admin/security/roles-rbac).
@@ -389,7 +392,7 @@ The following summarizes known constraints in the current version of the budgeti
 - One budget per category per project
 - The category of a budget cannot be changed if there are active user assignments — all assignments must be removed first
 - Budget ID is generated automatically from the name and cannot be edited after creation
-- Budget creation and modification require the Maintainer role; Project Admin cannot manage budgets
+- Budget creation and modification require the Maintainer role; Project Admin cannot manage budgets (the **Enforce member spend limits** toggle is the exception)
 - No global platform-wide spending cap across all projects
 - Direct budget configuration via the LiteLLM API is not recommended — it may cause unpredictable platform behavior
 - When a project budget is recreated, the LiteLLM spending counter resets; historical spend in analytics (Elasticsearch) is preserved
