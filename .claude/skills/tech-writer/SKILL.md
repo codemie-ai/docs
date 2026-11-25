@@ -251,6 +251,7 @@ You write the documentation directly in this phase. Follow all standards below.
 - Store images locally in `images/` folders next to documentation files, NOT `static/`
 - Use numbered filenames for ordering: `01-overview.md`, `02-prerequisites.md`
 - `docs/admin/` for admin content, `docs/user-guide/` for end-user content
+- For release notes, follow "Release Notes Format" in `CLAUDE.md`: `<h4>` for every component and configuration group, never a bold-only line
 
 #### Front Matter (Required on Every File)
 
