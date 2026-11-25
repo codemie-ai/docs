@@ -16,17 +16,17 @@ This differs from [Exporting Workflow Execution](./exporting-workflow-execution.
 
 ## Open the Call History
 
-1. Open a workflow and select an execution in **Workflow Execution History**.
+1. Open a workflow (**More options** (⋮) → **View Details** on the workflow card) and select an execution in **Workflow Execution History**.
 
 2. In the node list at the bottom of the execution page, below the workflow graph, select the node whose calls you want to review.
 
-3. Click **Call history**.
+3. Click **Call history** above the node list, next to **See transition**.
 
-   ![Node list with the Call history button highlighted](./images/exporting-node-call-history/states-list-call-history-button.png)
+   ![Node list with the Call history button boxed in red](./images/exporting-node-call-history/states-list-call-history-button.png)
 
-The popup opens with the title `Calls history for` followed by the node name. It lists every call with its status, input, and result. Expand a call to see its input, result, and any sub-calls (thoughts) it made.
+The popup opens with the title `Calls history for` followed by the node name. It lists every call with a **SUCCESS** or failure status badge, its input, and its result. Expand a call to see its input, its result (with **Copy** and **Download** buttons for the result block), and any sub-calls it made, such as **Codemie Thoughts**.
 
-![Call history popup with Download and Copy to clipboard buttons](./images/exporting-node-call-history/call-history-popup.png)
+![Call history popup for the classify_ticket node with Download and Copy to clipboard buttons](./images/exporting-node-call-history/call-history-popup.png)
 
 :::note
 The **Call history** button is not available for the **Starting Prompt** item. Clicking a node in the workflow graph does not open the popup.
@@ -36,16 +36,16 @@ The **Call history** button is not available for the **Starting Prompt** item. C
 
 The popup header provides two actions for saving or sharing a node's call history:
 
-| Action                | Description                                                                                            |
-| --------------------- | ------------------------------------------------------------------------------------------------------ |
-| **Download**          | Saves the call history as a `.json` file. The filename is derived from the node name and execution ID. |
-| **Copy to clipboard** | Copies the full call history JSON to the clipboard.                                                    |
+| Action                | Description                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Download**          | Saves the call history as a `.json` file. The filename has the form `call-history-<node-name>-<execution-id>.json`. |
+| **Copy to clipboard** | Copies the full call history JSON to the clipboard.                                                                 |
 
 To export a node's call history:
 
 1. Open the **Call history** popup for the node, as described above.
 
-2. Click **Download** to save a file, or **Copy to clipboard** to paste the JSON elsewhere. A confirmation message appears when the export succeeds.
+2. Click **Download** to save a file, or **Copy to clipboard** to paste the JSON elsewhere. A confirmation message ("downloaded" or "copied to clipboard") appears when the export succeeds.
 
 :::info
 The two buttons appear once the node's calls are loaded and are hidden for a node without calls.
