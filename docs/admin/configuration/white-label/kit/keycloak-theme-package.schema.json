@@ -19,7 +19,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 100,
-          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+          "pattern": "^(?=.*\\S)[^<>\"\\\\\\u0000-\\u001f]+$"
         },
         "shortName": {
           "type": "string",

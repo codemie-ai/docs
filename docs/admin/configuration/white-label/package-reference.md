@@ -27,10 +27,10 @@ This page lists every field of `theme-package.yaml`. It is derived from `theme-p
 
 ## Product
 
-| Path                | Type   | Required | Description                                                                                                                                                                                                                 |
-| ------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `product.name`      | string | Yes      | Product name shown across the UI, in chat and in platform emails. See [Where the Product Name Appears](./index.md#where-the-product-name-appears). 1 to 100 characters; no `<`, `>`, `"`, backslash, or control characters. |
-| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. 1 to 50 characters; same character rules.                                                                                                                                  |
+| Path                | Type   | Required | Description                                                                                                                                                                                                                                                             |
+| ------------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `product.name`      | string | Yes      | Product name shown across the UI, in chat and in platform emails. See [Where the Product Name Appears](./index.md#where-the-product-name-appears). 1 to 100 characters; at least one character that is not a space; no `<`, `>`, `"`, backslash, or control characters. |
+| `product.shortName` | string | Yes      | Abbreviated name for space-constrained surfaces. 1 to 50 characters; same character rules.                                                                                                                                                                              |
 
 The API reads the brand file once, at start. A change to the product name therefore needs an API restart.
 
@@ -108,15 +108,15 @@ With [`effects.gradients`](#effects) set to `none`, the `-to` value of every pai
 
 The default theme draws purple gradient borders on buttons and a purple product tour. Each of these colors has a token. Set the tokens to make the buttons and the tour match your palette. A two-color gradient takes a `from` and a `to` value; use the same value twice for a single color.
 
-| Token                                                                          | Where it applies                                                                                        |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `border.specific.primary-button-from`, `border.specific.primary-button-to`     | Gradient border of primary buttons, for example "Create", "Send" and "New chat".                        |
-| `surface.specific.button-secondary-hover-to`                                   | Fill of the progress bar.                                                                               |
-| `surface.specific.button-tertiary-from`, `surface.specific.button-tertiary-to` | Gradient border of the "Help & Product Tour" button, and its fill on hover.                             |
-| `onboarding.highlight`                                                         | Outline around the page element that a product tour step points to.                                     |
-| `onboarding.tooltip-from`, `onboarding.tooltip-to`                             | Vertical gradient of the product tour popup and its arrow. The popup text is white; choose dark colors. |
+| Token                                                                          | Where it applies                                                                                                       |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `border.specific.cta-button-from`, `border.specific.primary-button-to`         | Gradient border of primary buttons, for example "Create", "Send" and "New chat". The start color is `cta-button-from`. |
+| `surface.specific.button-secondary-hover-to`                                   | Fill of the progress bar.                                                                                              |
+| `surface.specific.button-tertiary-from`, `surface.specific.button-tertiary-to` | Gradient border of the "Help & Product Tour" button, and its fill on hover.                                            |
+| `onboarding.highlight`                                                         | Outline around the page element that a product tour step points to.                                                    |
+| `onboarding.tooltip-from`, `onboarding.tooltip-to`                             | Vertical gradient of the product tour popup and its arrow. The popup text is white; choose dark colors.                |
 
-With [`effects.gradients`](#effects) set to `none`, the `-to` value of the primary button border, the Help button and the product tour popup follows its `-from` value, and each gradient becomes a single color. The `-from` value stays under your control. If a package does not set a `-from` token, the single color is the default purple, so set the `-from` tokens when you use `none`.
+With [`effects.gradients`](#effects) set to `none`, the end color of the primary button border (`primary-button-to`) follows `border.specific.cta-button-from`, and the `-to` value of the Help button and the product tour popup follows its `-from` value, and each gradient becomes a single color. The `-from` value stays under your control. If a package does not set a `-from` token, the single color is the default purple, so set the `-from` tokens when you use `none`.
 
 ## Typography
 
@@ -179,7 +179,7 @@ The `links` object is required, but each link inside it is optional in the schem
 
 ## Email
 
-The `email` block is optional. A package without it works: the platform sends emails with its neutral defaults. When the block is present, every key inside it is optional, and omitted keys keep the platform defaults. No key may be added that is not listed here. The rules match the validation of the platform backend. The `email` block of the Keycloak package is separate. See the [Keycloak Theme Package Reference](./keycloak-package-reference.md#email).
+The `email` block is optional. A package without it works: the platform sends emails with its neutral defaults. When the block is present, every key inside it is optional, and omitted keys keep the platform defaults. No key may be added that is not listed here. The rules match the validation of the platform backend, and the API does not start when an email value breaks them. See [Invalid brand file](./index.md#where-the-product-name-appears). The `email` block of the Keycloak package is separate. See the [Keycloak Theme Package Reference](./keycloak-package-reference.md#email).
 
 | Path                              | Type   | Required | Description                                                                                                                    |
 | --------------------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -212,7 +212,7 @@ Omitted roles use the platform defaults: `primary` `#4F46E5`, `primaryText` `#FF
 
 ### Email Tokens
 
-A token is a name in braces, for example `{productName}`. A string such as `{a b}` or `{}` is not a token and is kept as written. Any other token name is rejected.
+A token is a name in braces, for example `{productName}`. A string such as `{a b}` or `{}` is not a token and is kept as written. Any other token name is rejected by `apply-theme`, and the API does not start with it.
 
 | Token              | Allowed in                                                            |
 | ------------------ | --------------------------------------------------------------------- |
@@ -226,7 +226,7 @@ A token is a name in braces, for example `{productName}`. A string such as `{a b
 
 - Use the file name only. A name with `/` or a backslash is rejected, and the name follows the file-name rule of [Assets](#assets).
 - The file must exist in the source folder and must not be a symbolic link. `apply-theme` copies it to `email/` in the assets folder.
-- Allowed types are PNG, JPEG and GIF, up to 262144 bytes (256 KiB). The scripts do not check the type, the size or the content. The API loader checks them when it reads the logo, and the test harness checks the result.
+- Allowed types are PNG, JPEG and GIF, up to 262144 bytes (256 KiB). The file name must have the extension `.png`, `.jpg`, `.jpeg` or `.gif` and must not contain `..`. `apply-theme` checks the name, the size and the first bytes of the file, as the API loader does. An SVG logo is rejected.
 
 :::note Sender name
 The package has no sender name. The sender name of platform emails comes from `EMAIL_FROM_NAME` in the API values, or it is `Platform Notifications`. The previous token `email.senderName` is removed. A package that still has it fails with a message that names the token.

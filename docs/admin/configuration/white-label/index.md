@@ -178,8 +178,8 @@ The value of `product.name` replaces "CodeMie" in the texts below. Names that co
 
 **Fallbacks and restart:**
 
-- With no brand file, or with a blank product name, the thought label stays "CodeMie Thoughts" and UI texts keep "CodeMie".
-- An invalid brand file makes the thought label fall back to "CodeMie Thoughts". Chats show no error.
+- With no brand file, the thought label stays "CodeMie Thoughts" and UI texts keep "CodeMie".
+- An invalid brand file stops the API at start. The log has the line "Invalid brand configuration, aborting startup" and names the key, for example `email.messages.verification.subject: token {projectName} is not allowed here`. `apply-theme` rejects the values that the API refuses (a product name with only spaces, an unknown token in an email text, a wrong email logo). Fix the value, run the script again, and restart the API.
 - A product name of exactly `Platform`, which is the packaged email default, also gives "CodeMie Thoughts".
 - The API reads the brand file once. A brand change on a running platform needs an API restart.
 

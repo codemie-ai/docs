@@ -102,11 +102,14 @@ kit_render_brand_css() { # <package>
   # effects.gradients: none also makes the two-colour gradients of controls and tinted areas single-colour: the
   # end colour follows the start colour (a var() reference, so it works whether or not the package sets the
   # start colour). The swatch gradient has a middle colour too.
-  for pair in border-specific-primary-button surface-specific-button-tertiary onboarding-tooltip \
+  for pair in surface-specific-button-tertiary onboarding-tooltip \
     surface-specific-tint-gradient surface-specific-banner-gradient surface-specific-switch-on \
     surface-specific-magic-gradient surface-specific-action-accent-hover surface-specific-swatch-gradient; do
     FLAT_VARS+="  --colors-${pair}-to: var(--colors-${pair}-from);"$'\n'
   done
+  # The primary button border runs from border.specific.cta-button-from to border.specific.primary-button-to
+  # (the UI reads these two), so its end colour follows cta-button-from.
+  FLAT_VARS+="  --colors-border-specific-primary-button-to: var(--colors-border-specific-cta-button-from);"$'\n'
   FLAT_VARS+="  --colors-surface-specific-swatch-gradient-via: var(--colors-surface-specific-swatch-gradient-from);"$'\n'
   _kit_hex_to_rgb() { printf '%d %d %d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
   while read -r token dark light; do
@@ -211,6 +214,28 @@ _kit_check_file() { # <dotted path> <file name>
   return 0
 }
 
+# The API loader refuses an email logo that is larger than 256 KiB or whose first bytes do not match the extension.
+# Only a logo that passed _kit_check_file is read.
+_kit_check_email_logo() { # <file name>
+  local name="$1" path size ext magic
+  [[ -n "$name" && "$name" =~ $KIT_ASSET_NAME_RE ]] || return 0
+  path="$SOURCE_DIR/$name"
+  [[ -f "$path" && ! -L "$path" ]] || return 0
+  size=$(wc -c <"$path" | tr -d ' ')
+  if ((size > 262144)); then
+    ERRORS+=("email.images.logo: larger than 256 KiB ($size bytes): $name")
+    return 0
+  fi
+  ext=$(printf '%s' "${name##*.}" | tr '[:upper:]' '[:lower:]')
+  magic=$(head -c 8 "$path" | od -An -tx1 | tr -d ' \n')
+  case "$ext" in
+    png) [[ "$magic" == 89504e470d0a1a0a ]] || ERRORS+=("email.images.logo: the content is not a PNG image: $name") ;;
+    jpg | jpeg) [[ "$magic" == ffd8ff* ]] || ERRORS+=("email.images.logo: the content is not a JPEG image: $name") ;;
+    gif) [[ "$magic" == 474946383761* || "$magic" == 474946383961* ]] || ERRORS+=("email.images.logo: the content is not a GIF image: $name") ;;
+  esac
+  return 0
+}
+
 # kit_report_errors: print ERRORS under one heading
 kit_report_errors() {
   local e
@@ -224,7 +249,9 @@ kit_report_errors() {
 # SOURCE_DIR and are no symlinks, file names follow the chart rule, and the safe characters of the values
 # at <properties_paths> (space-separated yq paths, for values that reach a .properties file; a path ending
 # in .* covers every key of that map, a path ending in :nl allows newlines; empty skips the policy).
-# Not checked: sizes (the charts own them), email-logo content, links, theme content (the test harness owns it).
+# The email logo is also checked as the API loader does (size up to 256 KiB, content matches the extension),
+# because the API stops at start when the logo is wrong.
+# Not checked: sizes of the other assets (the charts own them), links, theme content (the test harness owns it).
 kit_check_inputs() {
   ERRORS=()
   local pkg="$1" schema="$2" asset_keys="$3" prop_paths="$4"
@@ -246,6 +273,7 @@ data\//g' "$ajv_err")
     _kit_check_file "assets.$key" "$(kit_str "$pkg" ".assets.$key")"
   done
   _kit_check_file "email.images.logo" "$(kit_str "$pkg" '.email.images.logo')"
+  _kit_check_email_logo "$(kit_str "$pkg" '.email.images.logo')"
 
   for pp in $prop_paths; do
     nl=""

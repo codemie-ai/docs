@@ -23,7 +23,7 @@ colors:
   surface.specific.gradient:
     dark: '#ff7a1a'
     light: '#ffb366'
-  border.specific.primary-button-from:
+  border.specific.cta-button-from:
     dark: '#ff7a1a'
     light: '#d95f00'
   surface.specific.tint-gradient-from:

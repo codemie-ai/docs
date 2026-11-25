@@ -287,6 +287,71 @@ unknown_backend_keys() { yq eval "$2 | keys | .[]" "$1" | grep -vxE "$3" || true
   [[ "$output" == *"additional properties"* ]]
 }
 
+# Values the API loader refuses (codemie/src/codemie/service/email_brand/loader.py) must stop the kit before
+# anything is written: the API aborts at start on them.
+@test "email: a token that is not allowed in the field is refused and nothing is written" {
+  pkg=$(email_pkg '.email.messages.verification.subject = "Welcome to {projectName}"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT" ]
+}
+
+@test "email: a mistyped token is refused" {
+  pkg=$(email_pkg '.email.signature = "The {productname} Team"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT" ]
+}
+
+@test "email: tokens that the loader allows are accepted in the budget messages" {
+  pkg=$(email_pkg '.email.messages.budget_stopped.subject = "{projectName} {costCenterName} {productName}" | .email.messages.budget_restored.intro = "{projectName} is back"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -eq 0 ]
+}
+
+@test "email: costCenterName is refused in budget_restored" {
+  pkg=$(email_pkg '.email.messages.budget_restored.subject = "{costCenterName}"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT" ]
+}
+
+@test "email: a product name with only spaces is refused" {
+  pkg=$(mutate '.product.name = "   "')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [ ! -e "$OUT" ]
+}
+
+@test "email: an SVG logo and a logo name with two dots are refused" {
+  cp "$FIXTURES/email-assets/logo.png" "$(work_assets)/logo..png"
+  echo '<svg/>' >"$(work_assets)/logo.svg"
+  for name in logo.svg logo..png; do
+    pkg=$(email_pkg ".email.images.logo = \"$name\"")
+    run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+    [ "$status" -ne 0 ]
+    [ ! -e "$OUT" ]
+  done
+}
+
+@test "email: a logo over 256 KiB is refused" {
+  head -c 262145 /dev/zero >"$(work_assets)/big.png"
+  printf '\211PNG\r\n\032\n' | dd of="$(work_assets)/big.png" conv=notrunc 2>/dev/null
+  pkg=$(email_pkg '.email.images.logo = "big.png"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"larger than 256 KiB"* ]]
+  [ ! -e "$OUT" ]
+}
+
+@test "email: a logo whose content does not match the extension is refused" {
+  pkg=$(email_pkg '.email.images.logo = "bad-magic.png"')
+  run "$SCRIPT" --output-dir "$OUT" "$pkg" "$(work_assets)"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not a PNG"* ]]
+  [ ! -e "$OUT" ]
+}
+
 @test "email: a package without an email block writes brand.yaml with no email key and no logo" {
   run "$SCRIPT" --output-dir "$OUT" "$FIXTURES/valid.yaml" "$ASSETS_DIR"
   [ "$status" -eq 0 ]

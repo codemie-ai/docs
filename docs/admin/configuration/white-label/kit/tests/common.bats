@@ -172,14 +172,22 @@ work_assets() {
   [[ "$output" == *"email.images.logo"* ]]
 }
 
-@test "check_inputs: size, email-logo content and link cross-checks are not made" {
+@test "check_inputs: the size of the other assets and the links are not checked" {
   d=$(work_assets)
-  # a logo whose bytes are not a PNG and a very large asset both pass: the charts and the harness own those checks
-  cp "$FIXTURES/email-assets/bad-magic.png" "$d/bad.png"
+  # a very large asset passes: the charts own that check
   head -c 2000000 /dev/zero >"$d/big.svg"
-  pkg=$(mutate '.email.images.logo = "bad.png" | .assets.logoDark = "big.svg"')
+  pkg=$(mutate '.assets.logoDark = "big.svg"')
   lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
   [ "$status" -eq 0 ]
+}
+
+@test "check_inputs: the email logo content and size are checked as the API loader does" {
+  d=$(work_assets)
+  cp "$FIXTURES/email-assets/bad-magic.png" "$d/bad.png"
+  pkg=$(mutate '.email.images.logo = "bad.png"')
+  lib 'kit_check_inputs "$PACKAGE_FILE" "$SCHEMA_FILE" "$ASSET_KEYS" "$PROP_PATHS"' "$pkg" "$d"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not a PNG"* ]]
 }
 
 @test "removed tokens: email.senderName is named and points to the realm settings" {
@@ -299,7 +307,7 @@ work_assets() {
   [[ "$(sed -n '/^:root {/,/^}/p' "$css")" == *"  --brand-gradients: none;"* ]]
   for theme in codemieDark codemieLight; do
     block=$(sed -n "/^html.$theme {/,/^}/p" "$css")
-    [[ "$block" == *"--colors-border-specific-primary-button-to: var(--colors-border-specific-primary-button-from);"* ]]
+    [[ "$block" == *"--colors-border-specific-primary-button-to: var(--colors-border-specific-cta-button-from);"* ]]
     [[ "$block" == *"--colors-surface-specific-swatch-gradient-via: var(--colors-surface-specific-swatch-gradient-from);"* ]]
   done
   block=$(sed -n '/^html.codemieDark {/,/^}/p' "$css")
@@ -408,7 +416,6 @@ part() { yq eval -o=json -I0 "$2" "$1"; }
   [ "$(part "$UI" '.properties.colors')" = "$(part "$KC_SCHEMA" '.properties.colors')" ]
   [ "$(part "$UI" '.properties.product')" = "$(part "$KC_SCHEMA" '.properties.product')" ]
   [ "$(part "$UI" '.definitions.email.properties.palette')" = "$(part "$KC_SCHEMA" '.properties.email.properties.palette')" ]
-  [ "$(part "$UI" '.definitions.email.properties.signature')" = "$(part "$KC_SCHEMA" '.properties.email.properties.signature')" ]
   for k in logoLight logoDark favicon faviconSvg; do
     [ "$(part "$UI" ".properties.assets.properties.$k")" = "$(part "$KC_SCHEMA" ".properties.assets.properties.$k")" ]
   done

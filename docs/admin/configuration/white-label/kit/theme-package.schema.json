@@ -19,7 +19,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 100,
-          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+          "pattern": "^(?=.*\\S)[^<>\"\\\\\\u0000-\\u001f]+$"
         },
         "shortName": {
           "type": "string",
@@ -186,38 +186,26 @@
       "additionalProperties": false,
       "properties": {
         "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextProduct"
+            }
+          ],
           "type": "string",
           "minLength": 1,
           "pattern": "\\S"
         },
         "heading": {
-          "type": "string"
+          "$ref": "#/definitions/emailTextProduct"
         },
         "intro": {
-          "type": "string"
+          "$ref": "#/definitions/emailTextProduct"
         },
         "buttonLabel": {
-          "type": "string"
+          "$ref": "#/definitions/emailTextProduct"
         },
         "footer": {
-          "type": "string"
-        }
-      }
-    },
-    "emailMessageShort": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "subject": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
-        "heading": {
-          "type": "string"
-        },
-        "intro": {
-          "type": "string"
+          "$ref": "#/definitions/emailTextProduct"
         }
       }
     },
@@ -226,7 +214,7 @@
       "additionalProperties": false,
       "properties": {
         "signature": {
-          "type": "string"
+          "$ref": "#/definitions/emailTextProduct"
         },
         "palette": {
           "type": "object",
@@ -260,7 +248,8 @@
           "properties": {
             "logo": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9._-]{0,99}\\.(?:[Pp][Nn][Gg]|[Jj][Pp][Ee]?[Gg]|[Gg][Ii][Ff])$"
             }
           }
         },
@@ -278,12 +267,68 @@
               "$ref": "#/definitions/emailMessageFull"
             },
             "budget_stopped": {
-              "$ref": "#/definitions/emailMessageShort"
+              "$ref": "#/definitions/emailMessageBudgetStopped"
             },
             "budget_restored": {
-              "$ref": "#/definitions/emailMessageShort"
+              "$ref": "#/definitions/emailMessageBudgetRestored"
             }
           }
+        }
+      }
+    },
+    "emailTextProduct": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailTextBudgetStopped": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName|projectName|costCenterName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailTextBudgetRestored": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName|projectName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailMessageBudgetStopped": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextBudgetStopped"
+            }
+          ],
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "intro": {
+          "$ref": "#/definitions/emailTextBudgetStopped"
+        }
+      }
+    },
+    "emailMessageBudgetRestored": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextBudgetRestored"
+            }
+          ],
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "intro": {
+          "$ref": "#/definitions/emailTextBudgetRestored"
         }
       }
     }
