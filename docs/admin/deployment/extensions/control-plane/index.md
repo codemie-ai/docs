@@ -250,7 +250,7 @@ in the `env` list.
            optional: true
    ```
 
-3. Re-run the [Helm install command](#step-3-install-helm-chart). The pod restarts with the tokens.
+3. Run the [Helm install command](#step-3-install-helm-chart) to apply the tokens.
 
 For the variable naming rules, see the
 [Data Sources](../../../../user-guide/control-plane/configuration.md#data-sources) reference.
