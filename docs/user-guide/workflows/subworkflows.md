@@ -34,7 +34,7 @@ When the feature is disabled, the **Sub-Workflow** node and its advanced configu
 3. Select the node to open **Sub-Workflow Configuration**.
 4. In the required **Sub-Workflow** picker, select an accessible child workflow.
 5. Connect the node's incoming and outgoing connections to the parent workflow's execution path.
-6. Click **Save**, or click **Save & Run** to save and test the parent workflow.
+6. Click **Save**, or click **Save and Run** to save and test the parent workflow.
 7. Enter the parent workflow input and monitor the execution. The Sub-workflow node completes after the child workflow reaches a terminal state.
 
 The picker lists workflows available to the current user. Saving or running validates the selected workflow. A self-reference, a deleted workflow, or a workflow you cannot access is rejected.
