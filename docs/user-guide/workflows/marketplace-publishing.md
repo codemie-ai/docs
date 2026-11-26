@@ -45,7 +45,7 @@ If the workflow contains inline credentials — such as MCP environment variable
 ![Credential Review section in the Publish to Marketplace dialog](./images/marketplace/publish-credential-review.png)
 
 :::warning Inline Credentials
-Inline credentials embedded in the workflow configuration will be accessible to all users who execute the marketplace workflow. Review carefully before confirming.
+Inline credentials embedded in the workflow configuration will be accessible to all users who execute the marketplace workflow. Review carefully before clicking **Publish**.
 :::
 
 The section lists each detected credential: the MCP server or tool name, and the environment variable names or integration alias. MCP server environment variables are visible to other users, while integration credentials are not visible but are used for integration purposes. There is no separate confirmation step: the workflow is published when **Publish** is clicked, so review the list first and click **Cancel** to stop.

@@ -20,7 +20,7 @@ AI/Run CodeMie provides predefined workflow templates that serve as both example
 
 ## Available Templates
 
-The table lists a selection of the templates. The full catalog is on the **Templates** tab of the **Workflows** page.
+The table lists a selection of the templates. The full catalog is in the **Templates** category in the **Categories** list on the left of the **Workflows** page.
 
 | Name                                                   | Description/Integrated tools                                                                                                                                                                               | Required Assistants' tools                                                                                                                                                                                                    |
 | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
