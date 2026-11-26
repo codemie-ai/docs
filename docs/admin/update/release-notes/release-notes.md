@@ -40,6 +40,10 @@ Do not upgrade LiteLLM beyond this version until it has been verified with CodeM
 
 <h3>Third-Party Component Updates</h3>
 
+<h4>Elasticsearch and Kibana 8.19.26</h4>
+
+Elasticsearch and Kibana updated to 8.19.26. Follow the [Elasticsearch and Kibana Upgrade](../3rd-party-components/elasticsearch/elasticsearch-kibana-upgrade.md) guide to upgrade existing deployments.
+
 <h4>Fluent Bit 5.2.0</h4>
 
 - **Fluent Bit:** 5.0.7 → 5.2.0
