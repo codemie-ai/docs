@@ -18,7 +18,7 @@ Navigate to **Workflows** and select **Marketplace** in the **Categories** list 
 
 ![Marketplace with workflows from two authors](./images/marketplace/marketplace-catalog.png)
 
-Each card shows the workflow name, its author (`by <author>`), a short description, the number of total uses, and the **Start Chat** and **Start Execution** buttons, plus an actions menu (⋮).
+Each card shows the workflow name, its author (`by <author>`), a short description, the number of total uses (users who have run the workflow), and the **Start Chat** and **Start Execution** buttons, plus an actions menu (⋮).
 
 ## Key Features
 
@@ -28,7 +28,7 @@ Browse a catalog of globally published workflows, each designed for specific use
 
 ### Usage Metrics
 
-Each workflow card displays its total number of uses (for example, `0 total uses`), which helps identify widely used solutions.
+Each workflow card displays its total number of uses (for example, `0 total uses`): the number of users who have run the workflow. It helps identify widely used solutions.
 
 ### Filtering and Search
 

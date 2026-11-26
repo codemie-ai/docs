@@ -38,10 +38,6 @@ The **Clone Workflow** editor opens with the original workflow's graph and confi
 
 4. Optionally adjust **Shared with Project Team**, **Description**, **Start Hint** and **Icon URL**, then click **Save** in the panel.
 
-:::info Unique names
-The name must be unique within the selected project. If a conflict exists, a different name must be chosen before proceeding.
-:::
-
 ### 4. Complete Cloning
 
 1. Click **Save** in the top-right corner of the **Clone Workflow** page. **Save and Run** saves the copy and starts it; **Cancel** discards it.

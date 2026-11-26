@@ -8,6 +8,8 @@ sidebar_position: 1
 description: Overview of workflows in AI/Run CodeMie - create, manage, and execute multi-assistant workflows, including the Workflow Details page and graph controls
 ---
 
+<!-- cspell:words XLSB -->
+
 # Workflows Overview
 
 AI/Run CodeMie allows you to design complex logic for interactions between assistants, enabling the creation of fully functional workflows. By executing a series of actions, users can create their own low-code pipelines to handle a wide variety of tasks.
@@ -55,11 +57,11 @@ To open the Workflow Details page, select **View Details** from the **More optio
 
 ## Filtering Workflows by Category
 
-The **My Workflows** and **All Workflows** pages include a **Categories** filter in the left sidebar. It uses the same categories as assistants and works with categories assigned in the workflow's [configuration](./create-workflow.md#workflow-categories).
+The **My Workflows**, **All Workflows** and **Marketplace** pages include a **Categories** filter in the left sidebar. It uses the same categories as assistants and works with categories assigned in the workflow's [configuration](./create-workflow.md#workflow-categories).
 
 ![Categories filter on the My Workflows page](./images/workflows-overview/workflows-categories-filter.png)
 
-1. Open **My Workflows** or **All Workflows**.
+1. Open **My Workflows**, **All Workflows** or **Marketplace**.
 2. In the left sidebar, open the **Categories** dropdown.
 3. Select one or more categories. The list updates to show only workflows that have a selected category assigned.
 4. To restore the full list, clear the selected categories or click **Clear all** next to **Filters**.
@@ -86,7 +88,7 @@ The following buttons are available in the page header and above the graph:
 | **Export as .md or .html** | Downloads the selected execution. See [Exporting a Workflow Execution](./exporting-workflow-execution.md).                     |
 | **Run Chat**               | Creates a new chat session with this workflow as the active agent. You will be redirected to the Chat page.                    |
 | **Run workflow**           | Opens the **New Workflow Execution** dialog to start a workflow execution with a prompt.                                       |
-| **Abort**                  | Visible while the selected execution is in progress or interrupted. Stops the execution.                                       |
+| **Abort**                  | Visible while the selected execution is in progress. Stops the execution.                                                      |
 
 ### Browsing Executions
 
@@ -165,10 +167,7 @@ You can attach a file to a message in chat mode. When the message starts an exec
 
 ### Chat History
 
-Workflow chat history works the same way as with regular assistants. You can always review your workflow conversations in the Chats tab that started in a chat mode, where you'll find:
-
-- Recently used workflows
-- Recently used assistants
+Workflow chat history works the same way as with regular assistants. Open **Chats** to review your workflow conversations. The sidebar lists **Recent Assistants**, **Recent Chats** and **Folders**.
 
 ## Starting Workflow in Execution Mode
 
@@ -194,25 +193,21 @@ In the **New Workflow Execution** window you can attach several files to one exe
 
 **Supported file types and limits:**
 
-| Parameter     | Value                               |
-| ------------- | ----------------------------------- |
-| Max files     | 20 per execution                    |
-| Max file size | 100 MB per file                     |
-| File formats  | CSV, PDF, JPEG, JPG, PNG, GIF, PPTX |
+| Parameter     | Value                                                                        |
+| ------------- | ---------------------------------------------------------------------------- |
+| Max files     | 20 per execution                                                             |
+| Max file size | 100 MB per file                                                              |
+| File formats  | PPTX, DOCX, XLSX, XLSB, PDF, CSV, JPEG, PNG, JPG, GIF (others as plain text) |
 
 **How files are available in workflow steps:**
 
-Each file passed to the execution is appended to the task description of every state:
+Each file passed to the execution is appended to the task description of assistant states:
 
 ```text
 File attached: filename.ext
 ```
 
 The full list of file names is also accessible via the `{{file_names}}` context variable in YAML task templates or tool arguments.
-
-:::tip Referencing a specific file
-Mention a file by name (e.g., `@report.pdf`) to direct a step to focus on that specific file rather than processing all attached files.
-:::
 
 ### Monitoring Execution
 
@@ -231,7 +226,9 @@ During execution, you can:
 ![Abort button on a running execution](./images/workflows-overview/execution-abort-in-progress.png)
 
 :::info
-The **Abort** button is only available while the workflow is actively executing or waiting at an interruption. An aborted execution gets the **Aborted** status.
+The header **Abort** button is only available while the workflow is actively executing. An aborted execution gets the **Aborted** status.
+
+When an execution is **Interrupted**, select the interrupted node: its header shows **Abort**, **Edit** and **Continue**. Use them to stop the execution, edit the node output, or continue the run.
 :::
 
 ### Execution History

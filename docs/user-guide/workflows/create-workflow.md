@@ -45,7 +45,7 @@ The Visual Workflow Editor consists of three main areas that help you design and
 
 ### Left Sidebar: Nodes Palette
 
-The **Nodes** panel on the left of the canvas (**Drag to canvas**) contains all available node types organized by group. Use the arrow button at its left edge to collapse the panel.
+The **Nodes** panel on the left of the canvas (**Drag to canvas**) contains all available node types organized by group. Use the **Collapse sidebar** button in the panel header to collapse it.
 
 **Control:**
 
@@ -59,6 +59,7 @@ The **Nodes** panel on the left of the canvas (**Drag to canvas**) contains all 
 - **Tool**: External system integrations (Jira, Confluence, etc.)
 - **Custom**: Execute custom code or scripts
 - **Transform**: Transform data structures between states
+- **Sub-Workflow**: Run another workflow as a step (shown only when the feature is enabled on your instance)
 
 **Other:**
 
@@ -88,6 +89,7 @@ This section provides essential tools for managing your workflow:
 **Workflow Tools:**
 
 - **Load Example**: Load a pre-built example workflow as a starting point (shown only when you create a new workflow)
+- **Documentation**: Open this documentation
 - **Beautify**: Automatically organize and align nodes for better visual layout
 - **Undo**: Revert to the previous state (appears after making changes)
 - **YAML**: Open the YAML configuration of the workflow to view or edit it
@@ -105,10 +107,10 @@ Configure essential workflow settings:
 
 - **Project name**: Select the project where you want to add the workflow
 - **Shared with Project Team**: Enable to make your workflow visible to your project team
-- **Name\*** (Required): Unique identifier for your workflow
+- **Name\*** (Required): The workflow name
 - **Description**: Brief explanation of the workflow's purpose and features
 - **Start Hint**: Custom text displayed below the prompt input field when users start a workflow execution.
-- **Icon URL**: Link to an image (.png or .svg) for the workflow avatar
+- **Upload logo** or **Icon URL**: Upload an image or link to one for the workflow avatar (PNG, JPEG or SVG, up to 512 KB)
 - **Categories**: Optional. Select up to 3 categories that describe the workflow's use case. The list is the same as for assistants. The field is at the bottom of the tab, below **Icon URL**: scroll down in the panel to reach it. See [Workflow Categories](#workflow-categories).
 
 :::info Required Fields
@@ -124,7 +126,7 @@ The **Categories** field is a multi-select dropdown located below **Icon URL** a
 - Selecting categories is optional. A workflow can be saved with no categories.
 - A maximum of 3 categories can be selected. Once 3 are chosen, additional options cannot be selected until one is removed.
 - Selected categories are saved with the workflow and pre-filled when the workflow is edited again.
-- Categories assigned here are used to [filter workflows](./workflows-overview.md#filtering-workflows-by-category) on the **My Workflows** and **All Workflows** pages.
+- Categories assigned here are used to [filter workflows](./workflows-overview.md#filtering-workflows-by-category) on the **My Workflows**, **All Workflows** and **Marketplace** pages.
 
 :::note
 Categories are managed centrally and shared with assistants. See [Assistant Categories Management](../assistants/assistant-categories-management.md). This is the same field that is used when [publishing to the Marketplace](./marketplace-publishing.md#selecting-categories): the publish dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection.
@@ -199,8 +201,9 @@ The system automatically organizes the node layout, validates links, and generat
 Remove nodes or connections through their configuration windows:
 
 1. Click on the node or connection
-2. In the **Node configuration** panel, click the **Delete** button
-3. Confirm the deletion
+2. In the **Node configuration** panel, click the **Delete** button, or press `Delete` or `Backspace`
+
+The node is removed immediately, without a confirmation step.
 
 ### Assistant State
 

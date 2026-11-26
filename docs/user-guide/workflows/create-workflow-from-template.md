@@ -56,7 +56,7 @@ Some templates use placeholder variables to mark values that must be provided be
 
 A placeholder uses the syntax:
 
-```
+```text
 ${input:variable_name}
 ```
 
