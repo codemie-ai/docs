@@ -36,22 +36,24 @@ default, and with it off analytics is unchanged.
 
 A hidden field is replaced by `REDACTED:<FIELD>`, where `<FIELD>` is the field name, for example
 `REDACTED:TOOL-INPUT`. If a field cannot be reduced, it is sent as `REDACTED:FAILED`, the metrics
-are still sent, and the failure is written to the local log without the field content.
+are still sent, and the failure is written to the local log without the field content. A prompt that
+keeps some parts and loses other text ends with `REDACTED:REST_PROMPT`.
 
 ### How prompts and branches are reduced
 
-| Value                                                  | Sent as                                                                                                                                         |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| A prompt that starts with a command or skill           | The command name plus the ticket and MR numbers found in the whole prompt: `/review-pr !456 check auth` becomes `/review-pr !456`               |
-| A prompt without a command                             | The ticket and MR numbers only, separated by spaces (`EPMCDME-123 !456`)                                                                        |
-| A prompt with no command, ticket or MR                 | `REDACTED:PROMPT`                                                                                                                               |
-| An automatic prompt (hook, task or agent notification) | Its bare marker, for example `<task-notification>`                                                                                              |
-| A continuation prompt after a context reset            | `This session is being continued from a previous conversation`                                                                                  |
-| A git branch                                           | Its ticket keys (`feature/acme-EPMCDME-5` becomes `EPMCDME-5`), or `REDACTED:BRANCH` when it has none                                           |
-| A shared branch name                                   | Sent unchanged when the whole name is exactly `main`, `master`, `develop`, `dev`, `qa`, `test`, `testing`, `perf`, `stage`, `staging` or `prod` |
-| A Skill or Agent tool call                             | The skill or agent type name; the description and prompt passed to the subagent are dropped                                                     |
+| Value                                                  | Sent as                                                                                                                                                   |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A prompt that starts with a command or skill           | The command name plus the ticket and MR references found in the whole prompt: `/review-pr !456 check auth` becomes `/review-pr !456 REDACTED:REST_PROMPT` |
+| A prompt without a command                             | The ticket and MR references only: `fix EPMCDME-123 see !456` becomes `EPMCDME-123 !456 REDACTED:REST_PROMPT`                                             |
+| A prompt with no command, ticket or MR                 | `REDACTED:PROMPT`                                                                                                                                         |
+| An automatic prompt (hook, task or agent notification) | Its bare marker, for example `<task-notification>`                                                                                                        |
+| A continuation prompt after a context reset            | `This session is being continued from a previous conversation`                                                                                            |
+| A git branch                                           | Its ticket keys (`feature/acme-EPMCDME-5` becomes `EPMCDME-5`), or `REDACTED:BRANCH` when it has none                                                     |
+| A shared branch name                                   | Sent unchanged when the whole name is exactly `main`, `master`, `develop`, `dev`, `qa`, `test`, `testing`, `perf`, `stage`, `staging` or `prod`           |
+| A Skill or Agent tool call                             | The skill or agent type name; the description and prompt passed to the subagent are dropped                                                               |
 
-Every prompt in a session is reduced, not only the first one.
+`REDACTED:REST_PROMPT` is added only when text was removed: `/review-pr !456` typed alone is sent
+as it is. Every prompt in a session is reduced, not only the first one.
 
 The following ticket and MR references are recognized, in any letter case, and kept as written:
 
@@ -59,7 +61,10 @@ The following ticket and MR references are recognized, in any letter case, and k
 - GitHub: `#24` and `org/repo#24`
 - Azure DevOps: `AB#123`
 - GitLab: `!456`
-- Merge and pull request URLs: only the number of a `/pull/N` or `/merge_requests/N` URL is kept
+- Merge and pull request URLs: only the path word and number are kept, such as `pull/24` or
+  `merge_requests/77`, including the `merge-requests`, `pull-requests`, `pullrequests` and
+  `pullrequest` forms
+- Issue URLs: only the path word and number are kept, such as `issues/31` or `work_items/33`
 
 Text that only resembles a command or a reference is not kept: `/usr/bin/node` in the middle of a sentence,
 `#fff`, a `# Plan` heading or `v1.2.3`. A prompt that does not start with a command keeps no command
@@ -164,9 +169,8 @@ the rest of the session.
 ### Local report and sync
 
 With reduction on, the local `codemie analytics` report is reduced by default, in the terminal and
-in every export: the session title becomes the command name plus ticket and MR numbers, the branch
-is cut to its ticket keys, the project is shown as its folder name, and other text fields are
-replaced by placeholders. Metrics, models, tools and costs are unchanged.
+in every export: the session title is reduced like a prompt, the branch is cut to its ticket keys, the
+project is shown as its folder name, and other text fields are replaced by placeholders. Metrics, models, tools and costs are unchanged.
 
 To see the full data on the local machine, use `--unreduced`:
 
@@ -181,6 +185,11 @@ reduced. With reduction on, `--redact` has no extra effect, because reduction al
 `codemie analytics sync` always sends reduced data for a project that opted in, and has no
 unreduced option. A report that covers several projects reduces only the sessions of the projects
 that opted in.
+
+`codemie analytics sync status` and the summary of `codemie analytics sync install` print a
+**Prompt reduction** line: on globally, or off globally with the number of projects on the machine
+that turned it on in `codemie setup`. The line is for information only. A project whose committed
+configuration file turns reduction on is reduced even when it is not counted.
 
 ## Known limits
 
@@ -202,7 +211,8 @@ that opted in.
 
 1. Turn reduction on for a project with `codemie setup`.
 2. Start Claude Code in that project and send `/review-pr !456 secret notes`.
-3. Run `codemie analytics` in the project. The recorded prompt reads `/review-pr !456`.
+3. Run `codemie analytics` in the project. The recorded prompt reads
+   `/review-pr !456 REDACTED:REST_PROMPT`.
 4. Send a plain prompt with no command or ticket. It is recorded as `REDACTED:PROMPT`.
 
 To turn reduction off, run `codemie setup` and choose **Off**.

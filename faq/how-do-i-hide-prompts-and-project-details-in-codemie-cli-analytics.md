@@ -9,8 +9,8 @@ and can be committed to apply it to the whole team. The same setting is the
 With reduction on, analytics keeps only command, skill and agent names, ticket and MR numbers,
 the repository name and metrics. Prompt text, tool input and output, file paths, session titles
 and branch names are replaced by `REDACTED:<FIELD>` placeholders. A prompt such as
-`/review-pr !456 check auth` is sent as `/review-pr !456`, and a prompt with no command or
-reference is sent as `REDACTED:PROMPT`.
+`/review-pr !456 check auth` is sent as `/review-pr !456 REDACTED:REST_PROMPT`, and a prompt with
+no command or reference is sent as `REDACTED:PROMPT`.
 
 Reduction covers every analytics route, including `codemie analytics sync`. It does not change
 conversation history in CodeMie chat or analytics collected before it was turned on. The local
