@@ -68,9 +68,9 @@ These are the same categories as the [Categories field in the workflow configura
 
 ## After Publishing
 
-Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it. A published workflow is listed under **Marketplace** instead of **My Workflows** and **All Workflows**. If you remove it from the Marketplace, it returns to **My Workflows**.
+Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it. A published workflow is listed under **Marketplace** instead of **My Workflows** and **All Workflows**. If it is removed from the Marketplace, it returns to **My Workflows**.
 
-The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**. **Edit**, **Delete** and **Remove from Marketplace** appear only if you have the rights to manage the workflow:
+The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**. **Edit**, **Delete** and **Remove from Marketplace** appear only for users with the rights to manage the workflow:
 
 | Action                      | Description                                           |
 | --------------------------- | ----------------------------------------------------- |

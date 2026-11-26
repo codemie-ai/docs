@@ -26,11 +26,11 @@ Workflows are organized into the following categories:
 
 | Category          | Description                                                                                                        |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **My Workflows**  | Workflows you created                                                                                              |
-| **All Workflows** | Workflows available to you, except those published to the Marketplace                                              |
+| **My Workflows**  | Workflows created by the user                                                                                      |
+| **All Workflows** | Workflows available to the user, except those published to the Marketplace                                         |
 | **Templates**     | Ready-made templates for quickly creating and customizing workflows                                                |
 | **Marketplace**   | Published workflows, listed here instead of in My Workflows and All Workflows. Any authenticated user can run them |
-| **Favorites**     | Workflows you marked with a star                                                                                   |
+| **Favorites**     | Workflows marked with a star                                                                                       |
 
 ![Workflow categories view](./images/workflows-overview/workflow-categories-view.png)
 
@@ -47,7 +47,7 @@ Each workflow card has the **Start Chat** and **Start Execution** buttons, a sta
 - Delete the workflow
 - Publish the workflow to the Marketplace
 
-**Edit**, **Delete** and **Publish** appear only if you have the rights to manage the workflow.
+**Edit**, **Delete** and **Publish** appear only for users with the rights to manage the workflow.
 
 ![Workflow actions menu](./images/workflows-overview/workflow-actions-menu.png)
 
@@ -82,11 +82,11 @@ The following buttons are available in the page header and above the graph:
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **Back** (arrow)           | Returns to the previous page.                                                                                                  |
 | **Clear all executions**   | The broom icon in the header removes all executions of this workflow from the history.                                         |
-| **Edit**                   | Opens the workflow editor to modify the workflow configuration. Only visible if you have edit permissions for this workflow.   |
+| **Edit**                   | Opens the workflow editor to modify the workflow configuration. Only visible with edit permissions for this workflow.          |
 | **Configuration**          | Opens the **Configure Workflow** side panel with the workflow metadata and YAML.                                               |
 | **Info**                   | Shows the **Execution Info** dialog for the selected execution: status, who triggered it, times, runtime and spending metrics. |
 | **Export as .md or .html** | Downloads the selected execution. See [Exporting a Workflow Execution](./exporting-workflow-execution.md).                     |
-| **Run Chat**               | Creates a new chat session with this workflow as the active agent. You will be redirected to the Chat page.                    |
+| **Run Chat**               | Creates a new chat session with this workflow as the active agent. The Chat page opens.                                        |
 | **Run workflow**           | Opens the **New Workflow Execution** dialog to start a workflow execution with a prompt.                                       |
 | **Abort**                  | Visible while the selected execution is in progress. Stops the execution.                                                      |
 
@@ -118,18 +118,18 @@ Click **Configuration** in the page header to open the **Configure Workflow** pa
 
 #### YAML Configuration
 
-The **Yaml configuration** section of the panel shows the full YAML configuration of the workflow in a read-only code block. Use the buttons in the top-right corner of the code block to expand it, copy the YAML to your clipboard, or download it. **Edit** next to the section title opens the workflow editor.
+The **Yaml configuration** section of the panel shows the full YAML configuration of the workflow in a read-only code block. Use the buttons in the top-right corner of the code block to expand it, copy the YAML to the clipboard, or download it. **Edit** next to the section title opens the workflow editor.
 
 #### Workflow Information
 
 The top of the panel displays workflow metadata:
 
-| Field           | Description                                                                               |
-| --------------- | ----------------------------------------------------------------------------------------- |
-| **Name**        | The workflow name and its avatar.                                                         |
-| **ID**          | The unique identifier of this workflow. Click the copy icon to copy it to your clipboard. |
-| **Description** | The workflow description.                                                                 |
-| **Configure**   | Opens the workflow configuration form.                                                    |
+| Field           | Description                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| **Name**        | The workflow name and its avatar.                                                        |
+| **ID**          | The unique identifier of this workflow. Click the copy icon to copy it to the clipboard. |
+| **Description** | The workflow description.                                                                |
+| **Configure**   | Opens the workflow configuration form.                                                   |
 
 ## Starting Workflow in Chat Mode
 
@@ -139,7 +139,7 @@ Launch workflows within a chat interface, preserving conversational context and 
 
    ![Workflow in chat mode](./images/workflows-overview/workflow-chat-interface.png)
 
-2. Enter your prompt in the chat interface and send it
+2. Enter the prompt in the chat interface and send it
 
 3. The workflow executes with your message as the initial input
 
@@ -153,7 +153,7 @@ Each workflow response message in chat mode includes an **Open execution page** 
 
 ### Attaching a File in Chat Mode
 
-You can attach a file to a message in chat mode. When the message starts an execution, only the first attached file is passed to the workflow. To pass several files to one execution, attach them in the **New Workflow Execution** window (see [Starting Workflow in Execution Mode](#starting-workflow-in-execution-mode)).
+A file can be attached to a message in chat mode. When the message starts an execution, only the first attached file is passed to the workflow. To pass several files to one execution, attach them in the **New Workflow Execution** window (see [Starting Workflow in Execution Mode](#starting-workflow-in-execution-mode)).
 
 **To attach a file:**
 
@@ -167,7 +167,7 @@ You can attach a file to a message in chat mode. When the message starts an exec
 
 ### Chat History
 
-Workflow chat history works the same way as with regular assistants. Open **Chats** to review your workflow conversations. The sidebar lists **Recent Assistants**, **Recent Chats** and **Folders**.
+Workflow chat history works the same way as with regular assistants. Workflow conversations are reviewed in **Chats**. The sidebar lists **Recent Assistants**, **Recent Chats** and **Folders**.
 
 ## Starting Workflow in Execution Mode
 
@@ -177,7 +177,7 @@ The standard way to launch a workflow with a dedicated execution interface.
 
    ![Start Execution button](./images/workflows-overview/start-execution-button.png)
 
-2. Enter your prompt in the **New Workflow Execution** window. The paperclip icon in the prompt field attaches files:
+2. Enter the prompt in the **New Workflow Execution** window. The paperclip icon in the prompt field attaches files:
 
    ![New Workflow Execution window](./images/workflows-overview/new-execution-window.png)
 
@@ -187,7 +187,7 @@ The standard way to launch a workflow with a dedicated execution interface.
 
 ### Attaching Files
 
-In the **New Workflow Execution** window you can attach several files to one execution. After the execution completes, open it in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started with two files:
+In the **New Workflow Execution** window, several files can be attached to one execution. After the execution completes, open it in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started with two files:
 
 ![State input with two File attached lines](./images/workflows-overview/workflow-execution-multi-file-result.png)
 
@@ -211,7 +211,7 @@ The full list of file names is also accessible via the `{{file_names}}` context 
 
 ### Monitoring Execution
 
-After starting an execution, you'll be redirected to the Workflow Details page with the new execution selected:
+After an execution starts, the Workflow Details page opens with the new execution selected:
 
 ![Workflow Execution page](./images/workflows-overview/workflow-execution-page.png)
 
@@ -239,7 +239,7 @@ All workflow executions are saved in the execution history. Switch between past 
 
 ## Marking Workflows as Favorites
 
-You can mark any workflow as a favorite for quick access. Click the star icon (**Add to favorites**) on a workflow card to save it. All favorite workflows are listed under **Favorites** in the workflow categories on the left. To remove a workflow from favorites, click the filled star and confirm with **Remove**.
+Any workflow can be marked as a favorite for quick access. Click the star icon (**Add to favorites**) on a workflow card to save it. All favorite workflows are listed under **Favorites** in the workflow categories on the left. To remove a workflow from favorites, click the filled star and confirm with **Remove**.
 
 See [Favorites](../assistants/favorites.md) for full details.
 

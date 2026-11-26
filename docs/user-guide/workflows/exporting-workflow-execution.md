@@ -30,7 +30,7 @@ After a workflow has finished running:
    ![Export Workflow Execution dialog with the Markdown format and the Combine results into one file option](./images/exporting-workflow-execution/export-execution-dialog.png)
 
 :::tip
-When you combine results into a single file, the zip archive contains one consolidated file instead of one file per step.
+When results are combined into a single file, the zip archive contains one consolidated file instead of one file per step.
 :::
 
 ## Export Previous Executions
@@ -39,7 +39,7 @@ To export a previous workflow execution:
 
 1. Open the workflow (**More options** (⋮) → **View Details** on its card).
 
-2. Select the execution you want to export in **Workflow Execution History**. The ⋮ menu of a history entry only offers **Remove**; there is no per-entry download.
+2. Select the execution to export in **Workflow Execution History**. The ⋮ menu of a history entry only offers **Remove**; there is no per-entry download.
 
 3. Click the export icon in the toolbar and choose the format in the same dialog, then click **Export**.
 
@@ -71,7 +71,7 @@ Where:
 - `<step>` - the name of the step, for example `classify_ticket`. The last step is always `result_finalizer_node`
 - `<status>` - the step status in lowercase, for example `succeeded`
 
-The extension is `.html` when you choose the HTML format.
+The extension is `.html` when the HTML format is chosen.
 
 With **Combine results into one file**, the archive holds one file named `<workflow name>_<execution id>.md` (or `.html`) that contains all steps.
 

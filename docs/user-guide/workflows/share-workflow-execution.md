@@ -12,7 +12,7 @@ description: How to share workflow execution results with team members
 
 To let a colleague look at a workflow execution, send them the execution link. First make sure they are allowed to open it, as described below.
 
-## Before you send a link
+## Before sending a link
 
 A colleague can open the execution only when both conditions are met:
 
@@ -38,7 +38,7 @@ When the colleague opens the link they see that execution: the graph, **Starting
 
 ## Share the workflow instead
 
-The three dots menu (**More options**) on a workflow card also has **Copy Link**. It copies the address of the workflow itself (`https://<your-domain>/workflows/<workflow-id>`) and shows the message "Link to workflow copied to clipboard". The link opens the workflow page, not an execution. Use it when you want to point a colleague at the workflow and not at a particular run. The **View Details** page shows no separate copy button for this link.
+The three dots menu (**More options**) on a workflow card also has **Copy Link**. It copies the address of the workflow itself (`https://<your-domain>/workflows/<workflow-id>`) and shows the message "Link to workflow copied to clipboard". The link opens the workflow page, not an execution. It is meant for pointing a colleague at the workflow and not at a particular run. The **View Details** page shows no separate copy button for this link.
 
 ## Who can open a shared link
 

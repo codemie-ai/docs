@@ -59,7 +59,7 @@ You can attach multiple skills to a single assistant by adding multiple IDs to t
 
 After the workflow runs, open the execution details to see which skills were invoked.
 
-Navigate to **Workflows**, click your workflow card to open its execution page, select the assistant step in the step list and click **Call history**.
+Navigate to **Workflows**, click the workflow card to open its execution page, select the assistant step in the step list and click **Call history**.
 
 The call history lists a **Skill** entry for every skill the assistant loaded. Expand it to see the full skill content used during that run.
 

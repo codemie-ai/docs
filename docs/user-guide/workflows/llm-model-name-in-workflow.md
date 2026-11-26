@@ -10,7 +10,7 @@ description: How to identify which LLM model is being used in a workflow
 
 # LLM Model Name in Workflow
 
-Use browser Developer Tools to see which LLM models are available in your environment.
+Use browser Developer Tools to see which LLM models are available in the environment.
 
 ## Steps to Find Model Name
 
@@ -42,7 +42,7 @@ Use browser Developer Tools to see which LLM models are available in your enviro
 
 ## Example Response Structure
 
-The response is a JSON list with one object for every model available in your environment. This is a shortened example with two entries:
+The response is a JSON list with one object for every model available in the environment. This is a shortened example with two entries:
 
 ```json
 [

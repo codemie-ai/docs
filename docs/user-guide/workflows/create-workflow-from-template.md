@@ -40,15 +40,15 @@ Creating a workflow from scratch can be complex, especially for first-time users
 
 | Field                        | Description                                                                             |
 | ---------------------------- | --------------------------------------------------------------------------------------- |
-| **Project name**             | Your AI/Run CodeMie project (pre-populated by default)                                  |
+| **Project name**             | The AI/Run CodeMie project (pre-populated by default)                                   |
 | **Shared with Project Team** | Enable to allow teammates to view and use the workflow                                  |
-| **Name**                     | Unique name for the workflow (required, empty until you enter it)                       |
+| **Name**                     | Unique name for the workflow (required, empty until it is entered)                      |
 | **Description**              | Brief description of the workflow's features and purpose (pre-filled from the template) |
 | **Start Hint**               | Optional hint shown to users when they start a new execution                            |
 | **Icon URL**                 | URL to an icon image for the workflow avatar                                            |
 | **Categories**               | Optional. Up to 3 categories that describe the workflow's use case                      |
 
-7. Click **Save** to save your workflow, or **Save and Run** to save and run it immediately.
+7. Click **Save** to save the workflow, or **Save and Run** to save and run it immediately.
 
 ## Using Placeholder Variables in Templates
 
@@ -107,7 +107,7 @@ To customize the template workflow:
 
 ### Switching Between Editor Modes
 
-You can switch between Visual Editor and YAML editing by clicking the **YAML** button in the top right corner
+Switch between Visual Editor and YAML editing by clicking the **YAML** button in the top right corner
 
 :::tip Best Practice
 Start with the Visual Editor for initial design, then switch to YAML only if you need fine-grained control over advanced features like Jinja templating or complex conditional logic.

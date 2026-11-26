@@ -59,7 +59,7 @@ The **Nodes** panel on the left of the canvas (**Drag to canvas**) contains all 
 - **Tool**: External system integrations (Jira, Confluence, etc.)
 - **Custom**: Execute custom code or scripts
 - **Transform**: Transform data structures between states
-- **Sub-Workflow**: Run another workflow as a step (shown only when the feature is enabled on your instance)
+- **Sub-Workflow**: Run another workflow as a step (shown only when the feature is enabled on the instance)
 
 **Other:**
 
@@ -88,7 +88,7 @@ This section provides essential tools for managing your workflow:
 
 **Workflow Tools:**
 
-- **Load Example**: Load a pre-built example workflow as a starting point (shown only when you create a new workflow)
+- **Load Example**: Load a pre-built example workflow as a starting point (shown only when a new workflow is created)
 - **Documentation**: Open this documentation
 - **Beautify**: Automatically organize and align nodes for better visual layout
 - **Undo**: Revert to the previous state (appears after making changes)
@@ -106,7 +106,7 @@ Click the **Workflow Config** button to access configuration options:
 Configure essential workflow settings:
 
 - **Project name**: Select the project where you want to add the workflow
-- **Shared with Project Team**: Enable to make your workflow visible to your project team
+- **Shared with Project Team**: Enable to make the workflow visible to the project team
 - **Name\*** (Required): The workflow name
 - **Description**: Brief explanation of the workflow's purpose and features
 - **Start Hint**: Custom text displayed below the prompt input field when users start a workflow execution.
@@ -119,7 +119,7 @@ Fields marked with an asterisk (\*) are required and must be filled in before sa
 
 #### Workflow Categories
 
-The **Categories** field is a multi-select dropdown located below **Icon URL** at the bottom of the **Basic** tab of the **Workflow Config** panel. Each option has a checkbox and a short description, and a search box helps you find a category.
+The **Categories** field is a multi-select dropdown located below **Icon URL** at the bottom of the **Basic** tab of the **Workflow Config** panel. Each option has a checkbox and a short description, and a search box helps to find a category.
 
 ![Categories dropdown with two categories selected in the Workflow Config panel](./images/workflow-config-categories-field.png)
 
@@ -154,7 +154,7 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 1. **Add a Node**: Click a node type in the sidebar or drag it to the canvas
 2. **Configure the Node**: Click the node to open its **Node configuration** panel
 3. **Set Parameters**: Customize the node's behavior (assistant selection, task prompts, conditions, etc.)
-4. **Save Configuration**: Click **Save** in the panel to apply your changes, or **Cancel** to discard them
+4. **Save Configuration**: Click **Save** in the panel to apply the changes, or **Cancel** to discard them
 
 #### Smart Configuration Validation
 
@@ -175,7 +175,7 @@ Quickly duplicate existing nodes with their configuration:
 - **Windows/Linux**: Select a node and press `Ctrl+D`
 - **macOS**: Select a node and press `Cmd+D`
 
-You can also click **Duplicate** in the **Node configuration** panel. This creates a copy of the selected node with all its settings, which you can then modify as needed.
+The **Duplicate** button in the **Node configuration** panel does the same. It creates a copy of the selected node with all its settings, which can then be modified as needed.
 
 ### Connecting Nodes
 
@@ -229,11 +229,11 @@ Calls external APIs or integrations (Jira, Confluence, GitHub, etc.) for fast, r
 
 ![Tool node configuration panel with the Select tool and Select MCP tool buttons](./images/tool-node-configuration.png)
 
-When you add a Tool node to your workflow, the **Node configuration** panel displays two selection buttons:
+When a Tool node is added to a workflow, the **Node configuration** panel displays two selection buttons:
 
-1. **Select tool** - Opens the **Select Tool** dialog with the **Available Tools** list, grouped by category (for example Access Management, Azure DevOps Work Item, Cloud, Codebase Tools, Project Management, VCS, Data Management, IT Service Management and Quality Assurance). Each category shows whether a tool is selected. Click **Configure Available Tools** in the dialog to manage your integrations.
+1. **Select tool** - Opens the **Select Tool** dialog with the **Available Tools** list, grouped by category (for example Access Management, Azure DevOps Work Item, Cloud, Codebase Tools, Project Management, VCS, Data Management, IT Service Management and Quality Assurance). Each category shows whether a tool is selected. Click **Configure Available Tools** in the dialog to manage integrations.
 
-2. **Select MCP tool** - Opens the **Select MCP Server** dialog with the MCP (Model Context Protocol) servers that you have installed. MCP servers enable AI agents to access live data sources like file systems, databases, and APIs. If no server is installed, the dialog offers **Browse Catalog** and **Manual Setup**.
+2. **Select MCP tool** - Opens the **Select MCP Server** dialog with the MCP (Model Context Protocol) servers that are installed. MCP servers enable AI agents to access live data sources like file systems, databases, and APIs. If no server is installed, the dialog offers **Browse Catalog** and **Manual Setup**.
 
 Below the buttons the panel provides the **Input Key** and **Tool Result JSON Pointer** fields, the **Enable Tracing** and **Resolve Dynamic Values in Response** switches, the **State ID**, and the **Output contract**. Tools and MCP servers that are already set up are available in the dialogs without additional configuration.
 
@@ -304,7 +304,7 @@ The main canvas shows your workflow as a connected graph of nodes. Use the view 
 
 ### YAML configuration view
 
-Click the **YAML** button to see the generated YAML configuration. The **Workflow configuration** panel opens on its **YAML** tab (next to **Basic** and **Advanced**), and shows how your visual design translates to code. While the YAML tab is open, the node panel and **Beautify** are disabled.
+Click the **YAML** button to see the generated YAML configuration. The **Workflow configuration** panel opens on its **YAML** tab (next to **Basic** and **Advanced**), and shows how the visual design translates to code. While the YAML tab is open, the node panel and **Beautify** are disabled.
 
 If you need direct control over the workflow configuration, you can switch to YAML editing mode:
 

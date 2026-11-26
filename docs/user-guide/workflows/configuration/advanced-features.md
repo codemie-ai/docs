@@ -511,7 +511,7 @@ When `interrupt_before: true` is set on a state:
 2. **User notification**: The execution gets the **Interrupted** status
 3. **Review interface**: User can review the previous states and their input and result on the execution page
 4. **User decision**: The execution page offers three buttons:
-   - **Continue**: Resume workflow and execute the interrupted state. The arrow next to it opens **Continue with message**, which lets you add a message before resuming
+   - **Continue**: Resume workflow and execute the interrupted state. The arrow next to it opens **Continue with message**, which adds a message before resuming
    - **Abort**: Stop workflow execution
    - **Edit**: Change the output of the last completed state (**Edit Output**, with **Raw** and **Markdown** views) and save it with **Save**
 5. **Resume execution**: Workflow continues from the interrupted state

@@ -31,7 +31,7 @@ The **Clone Workflow** editor opens with the original workflow's graph and confi
 ### 3. Configure Clone Settings
 
 1. Click **Workflow Config** in the editor toolbar. The **Workflow configuration** panel opens on the **Basic** tab.
-2. In **Project name**, set the project to your own project by selecting it from the dropdown.
+2. In **Project name**, set the project to the user's own project by selecting it from the dropdown.
 3. Enter a **Name** for the cloned workflow. The field is empty, so a name is required:
 
    ![Clone Workflow with the Workflow configuration panel](./images/marketplace/clone-workflow-form.png)
