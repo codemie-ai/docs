@@ -486,6 +486,14 @@ retry_policy:
 - Rate limiting errors
 - Excludes: Authentication errors (401, 403, 404)
 
+:::note
+The node that raises a runtime input or output contract failure never retries it, in any mode,
+regardless of its `retry_policy`. Execution errors follow the retry conditions above. One case
+differs: a strict failure inside a Sub-Workflow reaches the parent as an ordinary Sub-Workflow
+error, so the parent's `retry_policy` can re-run the child workflow. See
+[Runtime contract checks](./workflow-states.md#runtime-contract-checks).
+:::
+
 #### Per-State Retry Override:
 
 ```yaml

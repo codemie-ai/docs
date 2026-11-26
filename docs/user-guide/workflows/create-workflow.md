@@ -31,7 +31,9 @@ Before creating a workflow, ensure you have:
 
 The **Visual Workflow Editor** is a drag-and-drop interface that makes building workflows intuitive and visual. Instead of writing YAML code, you design workflows graphically.
 
-![Visual Workflow Editor](./images/visual-editor-controls.png)
+![Workflow editor with Check, save actions, and Workflow Config outlined](./images/editor-controls.png)
+
+The orange rectangles identify **Check**, the save actions, and **Workflow Config**.
 
 :::tip Learn by Watching
 Watch this [video walkthrough of the Visual Workflow Editor](https://youtu.be/zacMZpM5MNU?si=dML07SgqFmL56TjQ) to see all features in action.
@@ -81,10 +83,12 @@ This section provides essential tools for managing your workflow:
 
 - **Cancel**: Discard changes and exit without saving
 - **Save**: Save the current workflow configuration
-- **Save & Run**: Save and immediately execute the workflow
+- **Save and Run**: Save the workflow, then open the run dialog unless contract warnings need review
 
 **Workflow Tools:**
 
+- **Check**: Validate the current configuration without saving or executing it
+- **Issues**: Open the findings from the latest check or save
 - **Load Example**: Load a pre-built example workflow as a starting point
 - **Beautify**: Automatically organize and align nodes for better visual layout
 - **Undo**: Revert to the previous state (appears after making changes)
@@ -135,7 +139,23 @@ Categories are managed centrally and shared with assistants. See [Assistant Cate
 - **Summarization Settings**: Token and message limits for automatic summarization
 - **Performance Settings**: Parallel task execution and recursion depth limits
 - **Retry Policy**: Configure retry attempts and backoff strategy for failed operations
+- **Contracts**: Select the workflow **Save validation** mode and whether input-contract coverage is required
 - **Context compression (Headroom)**: Compress the context of every assistant node to reduce token usage. Shown only when context compression is enabled for the instance. See [Context Compression (Headroom)](../assistants/context-compression.md#set-compression-for-the-whole-workflow)
+
+#### Workflow contract settings
+
+Expand **Contracts** to configure save-time validation. In this example, **Save validation** is
+set to **Default (warn)** and **Require input contracts** is on. **Save validation** applies at
+save time only: Save, Check, and dry-run. Declared or derived input contracts can provide
+coverage. The switch does not require an explicit declaration on every state. Runtime checks use a
+separate `runtime_validation` setting. See
+[Runtime contract checks](./configuration/workflow-states.md#runtime-contract-checks).
+
+![Advanced settings with the Contracts section outlined](./images/workflow-contract-settings.png)
+
+See [Validation modes and required coverage](./configuration/workflow-states.md#validation-modes-and-required-coverage)
+for the rules and [Platform prerequisite](./configuration/workflow-states.md#platform-prerequisite)
+for the platform setting that enables contract linking.
 
 :::info Configuration Sync
 Changes made in the Visual Editor are automatically reflected in the YAML configuration, and vice versa. Both views stay synchronized in real-time.
@@ -149,6 +169,18 @@ Changes made in the Visual Editor are automatically reflected in the YAML config
 2. **Configure the Node**: Click the node to open its configuration window
 3. **Set Parameters**: Customize the node's behavior (assistant selection, task prompts, conditions, etc.)
 4. **Save Configuration**: Click **Save** to apply your changes
+
+#### Node contract fields
+
+Select an action node. Its **Contracts** section is expanded by default. The Assistant node below shows **Input contract**,
+**Output contract**, and **Save validation**. **Use workflow default** follows the workflow setting.
+Select `warn` or `strict` to override that setting for this node.
+
+![Assistant node with input contract, output contract, and Save validation outlined](./images/node-contract-fields.png)
+
+In this example, the producer has an empty input contract and an example-form output contract.
+The output declares the name `value`, but it does not establish its type. A Transform node uses
+its own **Output Schema** field in **Transform Configuration**.
 
 #### Smart Configuration Validation
 
@@ -338,19 +370,103 @@ Writing a workflow from scratch without `meta_states` is safe — the editor lay
 automatically the first time it opens, then saves the resulting positions.
 :::
 
+## Checking Workflow Contracts
+
+**Check** validates the current configuration without saving it or starting an execution.
+Use it after you change a contract, a node, or a connection.
+
+### Read errors and warnings
+
+1. Click **Check**.
+2. Read the **Issues** panel. Errors appear before warnings. Informational findings appear under
+   **Unverified**, which starts collapsed when other groups are present.
+3. Read the coverage count separately from the findings. Full coverage does not prove that the
+   requirements passed.
+
+In the example below, **Producer** supplies a number named `value`. **Consumer** requires a
+string named `value` and another field named `missing`. Check reports one type warning and one
+missing-field error. The error blocks saving even in `warn` mode. Both states have input
+contracts, so coverage is still **2 of 2**.
+
+![Issues panel with one error, one warning, full coverage, and the affected node outlined](./images/mixed-errors-and-warnings.png)
+
+**Changes not saved yet** appears when you check a new workflow or one with unsaved edits. It
+means the result describes the form on your screen, not a stored workflow. A Check on a saved,
+unedited workflow shows no such note.
+
+The **Issues** button shows the number of unresolved findings, and its color follows the most
+severe one. If no issues are found, the panel stays closed and a message reports
+**No issues found** with the coverage count. A Check that takes longer than 30 seconds stops with
+**Check timed out. Try again.** For the outcome rules, see [Requirement outcomes](./configuration/workflow-states.md#requirement-outcomes).
+
+### Find and repair an issue
+
+Select **Go to Issue** on a finding. The editor opens the relevant node configuration and focuses
+the field. Here, the missing-field error points to **Consumer → Input contract**.
+
+For a workflow-level finding on **Save validation** or **Require input contracts**, **Go to Issue**
+opens **Workflow Config → Advanced** with the **Contracts** section expanded.
+
+When the node form has no control for the field, **Go to Issue** opens the YAML editor instead.
+This happens, for example, for a task on a Tool or Transform node, or for a contract key while
+contract linking is disabled on the platform.
+
+![Go to Issue focuses the input contract and displays its error message](./images/go-to-issue.png)
+
+To repair this example, remove `missing` from both `properties` and `required`, and change the
+type of `value` from `string` to `number`. Apply the node changes with the panel's **Save** button.
+Then open **Issues** again.
+
+![Issues marked Resolved after a local edit, with Check outlined](./images/resolved-before-check.png)
+
+**Resolved** means the local field changed. It does not prove that backend validation passed.
+An issue without a field location is not marked **Resolved** by a local edit. It is marked
+**Resolved** only when you remove its state, and it stays in the list until the next Check or
+Save. Click **Check** again. This repaired example returns no issues. Use the page-level **Save** to
+store the workflow.
+
 ## Saving and Running Workflows
 
 ### Save Options
 
 - **Save**: Save the workflow configuration without executing
-- **Save & Run**: Save and immediately execute the workflow to test it
+- **Save and Run**: Save the workflow, then open the run dialog so you can start an execution
 - **Cancel**: Discard all changes and exit
+
+#### Saving with contract warnings
+
+When the workflow has [contract](./configuration/workflow-states.md#using-check-in-the-editor)
+warnings, the visual editor saves it and stays open. This applies to both **Save** and
+**Save and Run**: Save does not return to the workflow list, and Save and Run does not continue
+straight to execution. A new workflow switches from the create page to the edit page. The editor
+then offers three actions:
+
+- **Saved** is a disabled indicator that confirms the workflow was stored. Warnings do not
+  prevent saving.
+- **Done** closes the editor.
+- **Run anyway** continues to the run dialog despite the warnings. Execution still requires the
+  run dialog: enter the input and start the run there.
+
+These actions stay until you edit the workflow. After an edit, **Cancel**, **Save**, and
+**Save and Run** return.
+
+The example below keeps only the type mismatch from the previous section. Save succeeds in
+`warn` mode. The outlined status and actions confirm that the workflow is saved and that execution
+is a separate choice. The **Issues** panel reads **Workflow created with warnings** after the first
+save of a new workflow and **Saved with warnings** after a later save.
+
+![Workflow created with warnings, with Done, Saved, and Run anyway outlined](./images/saved-with-warnings.png)
+
+Warnings and informational `UNVERIFIED` results are different. A warning means the analysis
+found a likely problem, such as an optional field that a state needs. `UNVERIFIED` means the
+analysis could not establish the result, and in `warn` mode it is informational only. Under
+`strict`, `UNVERIFIED` results block saving.
 
 ### Testing Your Workflow
 
 After creating your workflow:
 
-1. Click **Save & Run** to test immediately
+1. Click **Save and Run** to save and open the run dialog
 2. Enter required input parameters in the execution dialog
 3. Monitor the execution progress
 4. Review the results and debug if needed
@@ -384,7 +500,7 @@ Use the **Beautify** button regularly to keep your workflow visually organized a
 
 ### Test Incrementally
 
-Test each node configuration individually before connecting the complete workflow. Use **Save & Run** frequently during development.
+Test each node configuration individually before connecting the complete workflow. Use **Save and Run** frequently during development.
 
 ### Use the Undo Feature
 
