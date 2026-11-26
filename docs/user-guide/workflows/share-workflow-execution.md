@@ -10,7 +10,7 @@ description: How to share workflow execution results with team members
 
 # Share Workflow Execution
 
-There is no Share button or Share dialog for a workflow execution. To let a colleague look at an execution, you send them its address and make sure they are allowed to open it.
+To let a colleague look at a workflow execution, send them the execution link. First make sure they are allowed to open it, as described below.
 
 ## Before you send a link
 
@@ -48,6 +48,10 @@ The three dots menu (**More options**) on a workflow card also has **Copy Link**
 | Yes                                    | No                                  | The page opens empty and shows the message "Access denied". Turn on **Shared with Project Team** and send the link again.                        |
 | No                                     | Yes                                 | The page opens empty and shows the message "Access denied". Move the workflow to a project the colleague belongs to, or add them to the project. |
 | No                                     | No                                  | The page opens empty and shows the message "Access denied".                                                                                      |
+
+:::note No Share button
+A workflow execution has no **Share** button or share dialog. Sharing works through the execution link and the access conditions above.
+:::
 
 :::info Access Requirements
 Users must be signed in to AI/Run CodeMie. The link only works for users who belong to the workflow's project while the workflow is shared with that project.

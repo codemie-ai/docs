@@ -18,7 +18,7 @@ Navigate to **Workflows** and select **Marketplace** in the **Categories** list 
 
 ![Marketplace with workflows from two authors](./images/marketplace/marketplace-catalog.png)
 
-Each card shows the workflow name, its author (`by <author>`), a short description, the number of total uses, and the **Run Chat** and **Run workflow** buttons, plus an actions menu (⋮).
+Each card shows the workflow name, its author (`by <author>`), a short description, the number of total uses, and the **Start Chat** and **Start Execution** buttons, plus an actions menu (⋮).
 
 ## Key Features
 
@@ -43,7 +43,7 @@ Any authenticated user can execute a marketplace workflow without additional per
 1. Navigate to **Workflows** and select **Marketplace**.
 2. Browse the catalog or use search and filters to find a workflow.
 3. Click the workflow card (or open its actions menu and select **View Details**) to open the workflow page.
-4. Click **Run workflow** to start an execution, or **Run Chat** to run it from a chat. Both buttons are also available directly on the card.
+4. Click **Run workflow** to start an execution, or **Run Chat** to run it from a chat. The card offers the same two actions as the **Start Execution** and **Start Chat** buttons, so you can skip the details page.
 
 The workflow runs using the **publisher's project context** — their configured datasources and assistants are used automatically. No personal integrations are required unless the workflow explicitly relies on user-level credentials.
 

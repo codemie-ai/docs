@@ -150,6 +150,11 @@ Each workflow response message in chat mode includes an **Open execution page** 
 ### Attaching Files in Chat Mode
 
 When running a workflow in chat mode, you can attach up to **10 files** to your message.
+
+:::note Known limitation
+In the current release, a message sent in chat mode passes only the **first** attached file to the workflow execution, even though every file chip is uploaded. This is a known issue and is expected to be fixed. Until then, to pass several files to one execution, attach them in the **New Workflow Execution** window instead (see [Starting an execution](#starting-workflow-in-execution-mode)).
+:::
+
 **To attach files:**
 
 1. In the chat input area, attach files using any of these methods:
@@ -163,10 +168,6 @@ When running a workflow in chat mode, you can attach up to **10 files** to your 
 After execution completes, open the execution in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started from the **New Workflow Execution** window with two files:
 
 ![State input with two File attached lines](./images/workflows-overview/workflow-execution-multi-file-result.png)
-
-:::note
-In the current release, a message sent in chat mode passes only the first attached file to the workflow execution, even though every chip is uploaded. To append several files to the task description, attach them in the **New Workflow Execution** window instead.
-:::
 
 **Supported file types and limits:**
 

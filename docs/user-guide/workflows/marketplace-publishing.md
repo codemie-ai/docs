@@ -68,7 +68,11 @@ These are the same categories as the [Categories field in the workflow configura
 
 ## After Publishing
 
-Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it. In this version a published workflow is listed in the **Marketplace** only, not in **My Workflows**.
+Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it.
+
+:::note Known limitation
+In the current release, a published workflow appears in the **Marketplace** only and is not listed in **My Workflows**. This is a known issue and is expected to change. To find your published workflow, open **Marketplace**.
+:::
 
 The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**:
 
