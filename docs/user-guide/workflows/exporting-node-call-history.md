@@ -69,56 +69,63 @@ Both actions produce the same indented JSON, built from the call data already lo
 
 ### Calls
 
-The `calls` array lists every call shown in the popup, in order, including sub-calls:
+The `calls` array lists every call shown in the popup, in order, with sub-calls nested in `children`:
 
-| Field                      | Description                                                                       |
-| -------------------------- | --------------------------------------------------------------------------------- |
-| `index`                    | Position of the call, starting at 1                                               |
-| `id`                       | Identifier of the call                                                            |
-| `author_name`, `tool_name` | Name of the assistant or tool that made the call                                  |
-| `author_type`              | Type of the call's author, for example `WorkflowState`                            |
-| `input_text`               | Input passed to the call                                                          |
-| `message`                  | Raw output of the call                                                            |
-| `content`                  | Output parsed as JSON when it is valid JSON, otherwise the same text as `message` |
-| `error`                    | Error value, when the call failed                                                 |
-| `children`                 | Sub-calls (thoughts) made during the call                                         |
-| `date`                     | Date and time of the call                                                         |
+| Field         | Description                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| `index`       | Position of the call, starting at 1                                                         |
+| `id`          | Identifier of the call                                                                      |
+| `author_name` | Name of the assistant or tool that made the call (`tool_name` when the call is a tool call) |
+| `author_type` | Type of the call's author, for example `WorkflowState`                                      |
+| `input_text`  | Input passed to the call                                                                    |
+| `message`     | Raw output of the call                                                                      |
+| `content`     | Output parsed as JSON when it is valid JSON, otherwise the same text as `message`           |
+| `error`       | Error value, when the call failed                                                           |
+| `children`    | Sub-calls (thoughts) made during the call, for example `Codemie Thoughts`                   |
+| `date`        | Date and time of the call                                                                   |
 
 ### Example
 
-The downloaded file opened in a text editor:
-
-![Downloaded call history JSON file](./images/exporting-node-call-history/exported-call-history-json.png)
-
-The same content as text:
+The downloaded file for the `classify_ticket` node of a run of the demo workflow, with identifiers replaced by placeholders:
 
 ```json
 {
-  "execution_id": "9b6a892e-c097-4ff0-adb1-0bd7316f604c",
-  "state_id": "16a7d427-7ff4-4c6d-8f8b-bca195dd1704",
-  "node": "tool_1",
+  "execution_id": "<execution-id>",
+  "state_id": "<state-id>",
+  "node": "classify_ticket",
   "status": "Succeeded",
-  "started_at": "2026-11-05T08:25:48.806406",
-  "completed_at": "2026-11-05T08:25:48.984316",
-  "duration_seconds": 0.178,
+  "started_at": "2026-11-25T17:39:31.187911",
+  "completed_at": "2026-11-25T17:39:33.483088",
+  "duration_seconds": 2.296,
   "calls": [
     {
       "index": 1,
-      "id": "1e9be56b-a274-47d9-a42a-90fbf265df77",
-      "author_name": "Tool 1",
+      "id": "<call-id>",
+      "author_name": "Classify Ticket",
       "author_type": "WorkflowState",
-      "input_text": "Call get_conversation_analytics",
-      "message": "{\n    \"total_count\": 0,\n    \"conversation_analytics\": []\n} \n\n",
-      "children": [],
-      "content": {
-        "total_count": 0,
-        "conversation_analytics": []
-      },
-      "date": "2026-11-05T08:25:49.000030"
+      "input_text": "Classify this support ticket and summarize it: {{user_input}}\n",
+      "message": "~~~json\n{\n  \"priority\": \"high\",\n  \"summary\": \"Invoice export button unresponsive after update; customer unable to complete month-end close in Billing module.\"\n}\n~~~ \n\n",
+      "children": [
+        {
+          "id": "<thought-id>",
+          "execution_state_id": "<state-id>",
+          "parent_id": "<call-id>",
+          "author_name": "Codemie Thoughts",
+          "author_type": "Tool",
+          "input_text": "",
+          "content": "~~~json\n{\n  \"priority\": \"high\",\n  \"summary\": \"Invoice export button unresponsive after update; customer unable to complete month-end close in Billing module.\"\n}\n~~~",
+          "date": "2026-11-25T17:39:33.435631",
+          "children": []
+        }
+      ],
+      "content": "~~~json\n{\n  \"priority\": \"high\",\n  \"summary\": \"Invoice export button unresponsive after update; customer unable to complete month-end close in Billing module.\"\n}\n~~~ \n\n",
+      "date": "2026-11-25T17:39:33.490882"
     }
   ]
 }
 ```
+
+A sub-call in `children` has `id`, `execution_state_id`, `parent_id` (the `id` of the call it belongs to), `author_name`, `author_type`, `input_text`, `content`, `date` and its own `children`.
 
 :::tip
 Use **Copy to clipboard** to paste a node's call history straight into a ticket or chat, and **Download** when you need to keep the file or attach it.

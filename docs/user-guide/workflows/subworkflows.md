@@ -25,7 +25,7 @@ Before adding a Sub-workflow node, ensure that:
 - The child workflow is not the parent workflow itself.
 - You know what input the child expects and what its last state returns.
 
-When the feature is disabled, the **Sub-Workflow** node and its advanced configuration are not shown in the editor.
+The **Sub-Workflow** node appears in the editor only when this feature is enabled on your instance. When it is disabled, the node, the **Sub-workflow** section in **Workflow Config** > **Advanced** and its **Max Nesting Level** field are not shown.
 
 ## Add a Sub-workflow Node
 
@@ -70,7 +70,7 @@ If the child execution fails, the Sub-workflow node fails. If the child is abort
 
 ## Configure Nesting
 
-Sub-workflows can invoke other workflows. To configure a workflow's nesting limit in the visual editor:
+Sub-workflows can invoke other workflows. This section is shown only when the `features:subWorkflow` feature is enabled on your instance. To configure a workflow's nesting limit in the visual editor:
 
 1. Open the workflow.
 2. Select **Workflow Config**.

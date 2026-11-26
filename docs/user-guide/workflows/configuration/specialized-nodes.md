@@ -445,7 +445,7 @@ on_error: "partial"
 
 ### 8.5 Sub-workflow Node
 
-A Sub-workflow node invokes another workflow as a child execution. See [Sub-workflows](../subworkflows.md) for the visual-editor procedure and execution behavior.
+A Sub-workflow node invokes another workflow as a child execution. The visual editor shows the **Sub-Workflow** node only when the `features:subWorkflow` feature is enabled on the instance. See [Sub-workflows](../subworkflows.md) for the visual-editor procedure and execution behavior.
 
 ```yaml
 states:
