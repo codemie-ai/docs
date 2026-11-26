@@ -30,9 +30,7 @@ Use browser Developer Tools to identify the LLM model being used in your workflo
 
 5. **Locate the LLM Models Request**:
 
-   Search or filter for `llm_models` in the Name column:
-
-   ![Network tab showing llm_models request](../images/image110.png)
+   Type `llm_models` in the filter field of the Network tab. The list shows one request whose name ends in `llm_models`.
 
 6. **View Response Data**:
 
@@ -44,16 +42,35 @@ Use browser Developer Tools to identify the LLM model being used in your workflo
 
 ## Example Response Structure
 
+The response is a JSON list with one object for every model available in your environment. This is a shortened example with two entries:
+
 ```json
-{
-  "base_name": "gpt-4.1",
-  "deployment_name": "codemie-gpt-4.1-2025-04-14",
-  "label": "GPT-4.1 2025-04-14",
-  "provider": "azure_openai",
-  "default": true
-}
+[
+  {
+    "base_name": "gpt-4.1",
+    "deployment_name": "codemie-gpt-4.1-2025-04-14",
+    "label": "GPT-4.1 2025-04-14",
+    "multimodal": true,
+    "enabled": true,
+    "provider": "azure_openai",
+    "default": true,
+    "max_output_tokens": 32768,
+    "status": "enabled"
+  },
+  {
+    "base_name": "claude-4-5-haiku",
+    "deployment_name": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "label": "Bedrock Claude 4.5 Haiku",
+    "multimodal": true,
+    "enabled": true,
+    "provider": "aws_bedrock",
+    "default": false,
+    "max_output_tokens": 64000,
+    "status": "enabled"
+  }
+]
 ```
 
-The response is a list with one object like this for every model available in your environment; other fields such as `multimodal`, `cost` and `features` are omitted here.
+Other fields such as `cost`, `features`, `supports_image_generation` and `default_for_categories` are omitted here.
 
-The `base_name` field contains the model identifier (e.g., `gpt-4.1`, `claude-sonnet-5-5`, etc.).
+The `base_name` field contains the model identifier (for example, `gpt-4.1` or `claude-4-5-haiku`).
