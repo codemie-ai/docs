@@ -90,7 +90,7 @@ mkdir -p "$GEN/login/resources/css" "$GEN/login/resources/img" "$GEN/email"
 _prop() { printf '%s=%s\n' "$1" "$2"; }
 
 {
-  _prop parent codemie
+  _prop parent codemie-base
   _prop brand.version "$KIT_BRAND_VERSION"
   _prop brand.product.name "$PRODUCT_NAME"
   _prop brand.product.shortName "$PRODUCT_SHORT"
@@ -101,7 +101,7 @@ _prop() { printf '%s=%s\n' "$1" "$2"; }
 } >"$GEN/login/theme.properties"
 
 {
-  _prop parent codemie
+  _prop parent codemie-base
   _prop brand.version "$KIT_BRAND_VERSION"
   _prop brand.product.name "$PRODUCT_NAME"
   for pk in primary primaryText text background surface; do

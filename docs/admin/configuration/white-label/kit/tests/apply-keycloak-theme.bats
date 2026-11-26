@@ -92,7 +92,7 @@ KC_EMAIL=$'.email.palette.primary = "#112233" | .email.palette.text = "#223344" 
   [ -e "$OUT/login/resources/img/.gitkeep" ]
   [ "$(cat "$OUT/login/resources/img/stale.png")" = "stale" ]
   [ "$(ls -di "$OUT" | cut -d' ' -f1)" = "$inode_before" ]
-  [ "$(prop "$OUT/login/theme.properties" parent)" = "codemie" ]
+  [ "$(prop "$OUT/login/theme.properties" parent)" = "codemie-base" ]
 }
 
 @test "output: the images are byte copies and login brand.css is the colour rendering of the package" {
@@ -200,7 +200,7 @@ realm:
   kc_run
   [ "$status" -eq 0 ]
   f="$OUT/login/theme.properties"
-  [ "$(prop "$f" parent)" = "codemie" ]
+  [ "$(prop "$f" parent)" = "codemie-base" ]
   [ "$(prop "$f" brand.version)" = "1" ]
   [ "$(prop "$f" brand.product.name)" = "Acme Suite" ]
   [ "$(prop "$f" brand.product.shortName)" = "Acme" ]
@@ -214,7 +214,7 @@ realm:
   kc_run "$KC_EMAIL"
   [ "$status" -eq 0 ]
   f="$OUT/email/theme.properties"
-  [ "$(prop "$f" parent)" = "codemie" ]
+  [ "$(prop "$f" parent)" = "codemie-base" ]
   [ "$(prop "$f" brand.version)" = "1" ]
   [ "$(prop "$f" brand.product.name)" = "Acme Suite" ]
   [ "$(prop "$f" brand.email.color.primary)" = "#112233" ]
@@ -248,7 +248,7 @@ realm:
 }
 
 @test "theme name: reserved names, bad characters and bad length are refused and nothing is written" {
-  for n in codemie codemie-default base keycloak Acme_Brand ab "$(printf 'a%.0s' $(seq 1 41))"; do
+  for n in codemie codemie-base base keycloak Acme_Brand ab "$(printf 'a%.0s' $(seq 1 41))"; do
     run "$SCRIPT" --output-dir "$OUT" "$(kc_pkg ".themeName = \"$n\"")" "$ASSETS_DIR"
     [ "$status" -ne 0 ]
     [[ "$output" == *"themeName"* ]]

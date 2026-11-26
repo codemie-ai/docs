@@ -15,7 +15,7 @@ KIT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # and the UI (codemie-ui/src/utils/brand.ts). Held once here; the contract fixture holds the second copy.
 KIT_ASSET_NAME_RE='^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$'
 KIT_ASSET_KEYS=(logoLight logoDark favicon faviconSvg manifest)
-KIT_RESERVED_THEMES=(codemie codemie-default base keycloak)
+KIT_RESERVED_THEMES=(codemie codemie-base base keycloak)
 
 KIT_STAGES=()
 TMP_ROOT=""

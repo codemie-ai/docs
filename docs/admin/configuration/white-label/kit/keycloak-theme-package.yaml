@@ -7,7 +7,7 @@
 # The unfilled template with the same tokens, all commented out, is keycloak-theme-config.template.yaml.
 # This package is separate from the UI package (theme-package.yaml); the two share no file.
 
-themeName: '' # REQUIRED - theme name, 3-40 characters: a-z, 0-9, -; the names codemie, codemie-default, base and keycloak are reserved
+themeName: '' # REQUIRED - theme name, 3-40 characters: a-z, 0-9, -; the names codemie, codemie-base, base and keycloak are reserved
 
 product:
   name: '' # REQUIRED - product name shown on the login page and in emails
