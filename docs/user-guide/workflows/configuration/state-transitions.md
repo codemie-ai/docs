@@ -359,6 +359,10 @@ For nested structures or complex data, use JSON Pointer syntax (starts with `/`)
 - Supports array indexing: `/items/0/name`
 - Supports deeply nested paths: `/data/response/items/results`
 
+:::warning
+Pointers are split on `/` only. The RFC 6901 escapes `~0` (for `~`) and `~1` (for `/`) are not supported: `/data/a~1b` looks up a key literally named `a~1b`, not `a/b`, so keys that contain `/` or `~` cannot be addressed. The save-time check cannot detect a wrong key inside an open object, so such a workflow saves cleanly and fails at run time with a "path component … not found" error.
+:::
+
 #### State Result Formats:
 
 The previous state can output various formats, and `iter_key` adapts accordingly:
