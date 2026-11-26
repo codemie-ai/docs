@@ -45,7 +45,7 @@ Any authenticated user can execute a marketplace workflow without additional per
 3. Click the workflow card (or open its actions menu and select **View Details**) to open the workflow page.
 4. Click **Run workflow** to start an execution, or **Run Chat** to run it from a chat. The card offers the same two actions as the **Start Execution** and **Start Chat** buttons, so you can skip the details page.
 
-The workflow runs using the **publisher's project context** — their configured datasources and assistants are used automatically. No personal integrations are required unless the workflow explicitly relies on user-level credentials.
+The workflow runs using the **publisher's project context** — their configured datasources and the assistants defined inside the workflow are used automatically. A workflow that uses external (non-virtual) assistants or skills cannot be published. No personal integrations are required unless the workflow explicitly relies on user-level credentials.
 
 :::info Execution context
 Because marketplace workflows use the publisher's resources, the results and data access reflect the publisher's project configuration, not the executing user's project.

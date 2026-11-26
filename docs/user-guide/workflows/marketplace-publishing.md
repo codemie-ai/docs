@@ -18,7 +18,7 @@ Before publishing, ensure the following:
 
 - Edit rights on the workflow are available.
 - The workflow is fully configured and tested.
-- The workflow references only datasources — **no external assistants or skills**.
+- The workflow uses no external assistants or skills. Assistants defined inside the workflow YAML are allowed.
 
 ## Publishing Process
 
@@ -29,7 +29,7 @@ Before publishing, ensure the following:
    ![Publish to Marketplace item in the card actions menu](./images/marketplace/publish-to-marketplace-menu.png)
 
 3. The **Publish to Marketplace** dialog opens and the system validates the workflow ("Validating your workflow configuration..."):
-   - If the workflow references any external assistants or skills, publishing is **blocked** and the message "Marketplace workflows cannot use external (non-virtual) assistants or skills" is displayed. Remove those references before proceeding.
+   - If the workflow references any external assistants or skills, publishing is **blocked** and the message "Marketplace workflows cannot use external (non-virtual) assistants or skills" is displayed. Assistants defined inside the workflow YAML are allowed. Remove the external references before proceeding.
    - If the workflow contains inline credentials (MCP environment variables or integration aliases), a **Credential Review** section is added to the dialog.
 
 4. Review the credential warning if present (see [Credential Review](#credential-review) below).
@@ -63,14 +63,14 @@ At least one category is required. Clicking **Publish** without a category selec
 :::
 
 :::note
-These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results on **My Workflows**).
+These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results in the **Marketplace**).
 :::
 
 ## After Publishing
 
-Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it.
+Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it. A published workflow is listed under **Marketplace** instead of **My Workflows** and **All Workflows**. If you remove it from the Marketplace, it returns to **My Workflows**.
 
-The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**:
+The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**. **Edit**, **Delete** and **Remove from Marketplace** appear only if you have the rights to manage the workflow:
 
 | Action                      | Description                                           |
 | --------------------------- | ----------------------------------------------------- |
@@ -93,7 +93,7 @@ To remove a workflow from the Marketplace without deleting it:
 
 3. In the **Remove from Marketplace?** dialog, click **Unpublish** to confirm.
 
-The workflow is removed from the Marketplace immediately and returns to the project-scoped state. Existing executions are not affected.
+The workflow is removed from the Marketplace immediately and appears in **My Workflows** again. Existing executions are not affected.
 
 :::info Deletion and unpublishing
 Deleting a workflow automatically unpublishes it from the Marketplace.

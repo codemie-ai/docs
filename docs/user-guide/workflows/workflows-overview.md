@@ -22,13 +22,13 @@ Select **Workflows** in the left navigation (click **Show Menu** to display item
 
 Workflows are organized into the following categories:
 
-| Category          | Description                                                                        |
-| ----------------- | ---------------------------------------------------------------------------------- |
-| **My Workflows**  | Your personal workflows that you own or manage                                     |
-| **All Workflows** | A complete list of workflows available for you to use                              |
-| **Templates**     | Ready-made templates for quickly creating and customizing workflows                |
-| **Marketplace**   | Globally published workflows discoverable and executable by any authenticated user |
-| **Favorites**     | Workflows you marked with a star                                                   |
+| Category          | Description                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **My Workflows**  | Workflows you created                                                                                              |
+| **All Workflows** | Workflows available to you, except those published to the Marketplace                                              |
+| **Templates**     | Ready-made templates for quickly creating and customizing workflows                                                |
+| **Marketplace**   | Published workflows, listed here instead of in My Workflows and All Workflows. Any authenticated user can run them |
+| **Favorites**     | Workflows you marked with a star                                                                                   |
 
 ![Workflow categories view](./images/workflows-overview/workflow-categories-view.png)
 
@@ -44,6 +44,8 @@ Each workflow card has the **Start Chat** and **Start Execution** buttons, a sta
 - Clone the workflow
 - Delete the workflow
 - Publish the workflow to the Marketplace
+
+**Edit**, **Delete** and **Publish** appear only if you have the rights to manage the workflow.
 
 ![Workflow actions menu](./images/workflows-overview/workflow-actions-menu.png)
 
@@ -147,45 +149,19 @@ Launch workflows within a chat interface, preserving conversational context and 
 
 Each workflow response message in chat mode includes an **Open execution page** icon in the message action bar. Click it to open the full workflow execution page for that specific message in a new tab — where you can review execution steps, states, and detailed output.
 
-### Attaching Files in Chat Mode
+### Attaching a File in Chat Mode
 
-You can attach files to a message when you run a workflow in chat mode. To pass several files to a workflow, attach them in the **New Workflow Execution** window instead (see [Starting Workflow in Execution Mode](#starting-workflow-in-execution-mode)).
+You can attach a file to a message in chat mode. When the message starts an execution, only the first attached file is passed to the workflow. To pass several files to one execution, attach them in the **New Workflow Execution** window (see [Starting Workflow in Execution Mode](#starting-workflow-in-execution-mode)).
 
-**To attach files:**
+**To attach a file:**
 
-1. In the chat input area, attach files using any of these methods:
+1. In the chat input area, attach a file using either method:
    - Click the **paperclip** icon in the input toolbar to open a file picker
-   - Drag and drop files directly into the chat window
-2. Each uploaded file appears as a chip with the file name and type and the options to download or remove it.
+   - Drag and drop the file into the chat window
+2. The uploaded file appears as a chip with the file name and type and the options to download or remove it.
 3. Send your message to start the workflow execution.
 
-![Chat input with multiple files attached before sending](./images/workflows-overview/workflow-chat-file-attachment.png)
-
-After execution completes, open the execution in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started from the **New Workflow Execution** window with two files:
-
-![State input with two File attached lines](./images/workflows-overview/workflow-execution-multi-file-result.png)
-
-**Supported file types and limits:**
-
-| Parameter     | Value                               |
-| ------------- | ----------------------------------- |
-| Max files     | 10 per execution                    |
-| Max file size | 100 MB per file                     |
-| File formats  | CSV, PDF, JPEG, JPG, PNG, GIF, PPTX |
-
-**How files are available in workflow steps:**
-
-Each file passed to the execution is appended to the task description of every state:
-
-```
-File attached: filename.ext
-```
-
-The full list of file names is also accessible via the `{{file_names}}` context variable in YAML task templates or tool arguments.
-
-:::tip Referencing a specific file
-Mention a file by name (e.g., `@report.pdf`) to direct a step to focus on that specific file rather than processing all attached files.
-:::
+![Chat input with an attached file before sending](./images/workflows-overview/workflow-chat-file-attachment.png)
 
 ### Chat History
 
@@ -209,6 +185,34 @@ The standard way to launch a workflow with a dedicated execution interface.
    The prompt input field may display a hint set by the workflow creator to guide what input is expected.
 
 3. Click **Create** to initiate the execution. **Cancel** closes the window without starting a run.
+
+### Attaching Files
+
+In the **New Workflow Execution** window you can attach several files to one execution. After the execution completes, open it in **Workflow Execution History**. The input of a state contains one `File attached:` line per file that was passed to the execution. The screenshot shows a run started with two files:
+
+![State input with two File attached lines](./images/workflows-overview/workflow-execution-multi-file-result.png)
+
+**Supported file types and limits:**
+
+| Parameter     | Value                               |
+| ------------- | ----------------------------------- |
+| Max files     | 20 per execution                    |
+| Max file size | 100 MB per file                     |
+| File formats  | CSV, PDF, JPEG, JPG, PNG, GIF, PPTX |
+
+**How files are available in workflow steps:**
+
+Each file passed to the execution is appended to the task description of every state:
+
+```text
+File attached: filename.ext
+```
+
+The full list of file names is also accessible via the `{{file_names}}` context variable in YAML task templates or tool arguments.
+
+:::tip Referencing a specific file
+Mention a file by name (e.g., `@report.pdf`) to direct a step to focus on that specific file rather than processing all attached files.
+:::
 
 ### Monitoring Execution
 
