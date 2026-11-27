@@ -1,0 +1,43 @@
+# Copied from the charts repository. Update together with the charts.
+# One entry per line: "<kind> <value>". The contract test looks up every entry in ../codemie-helm-charts
+# when that folder exists, and skips with a message when it is absent.
+#   key          a key path of the values file of keycloak-helm or oauth2-proxy
+#   text         a text the Keycloak chart templates hold (layout of the theme folder, marker, name rule)
+#   layout       a path of the assets folder of the wrapper chart (script output)
+#   brand-input  a line of codemie-ui/brand-inputs.txt (chart file, not script output)
+
+# Child theme values (keycloak-helm)
+key keycloakx.childTheme
+key keycloakx.childTheme.enabled
+key keycloakx.childTheme.name
+key keycloakx.childTheme.folder
+key keycloakx.childTheme.images
+
+# Layout of the theme folder keycloak-helm/theme (the five paths the Keycloak script writes)
+text login/theme.properties
+text login/resources/css/brand.css
+text login/resources/img/
+text email/theme.properties
+text email/messages/messages_en.properties
+
+# Hook marker and the asset-name regex of the chart
+text keycloak-child-theme
+text ^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$
+
+# Realm values (oauth2-proxy)
+key realm.displayName
+key realm.themes.loginTheme
+key realm.themes.emailTheme
+
+# Assets layout of the wrapper chart (codemie-ui/assets)
+layout brand.css
+layout brand-config.json
+layout platform/*
+layout email/*
+layout email/brand.yaml
+
+# chart file, not script output: codemie-ui/brand-inputs.txt
+brand-input assets/brand.css
+brand-input assets/brand-config.json
+brand-input assets/platform/*
+brand-input assets/email/*

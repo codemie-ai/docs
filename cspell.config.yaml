@@ -19,6 +19,10 @@ ignorePaths:
   - CLAUDE.md
   - scripts/
   - codemie/
+  - '*.bats'
+  - docs/admin/configuration/white-label/kit/apply-theme
+  - docs/admin/configuration/white-label/kit/apply-keycloak-theme
+  - docs/admin/configuration/white-label/kit/lib/
 
 # Custom dictionary - project-specific words that are correct
 words:
@@ -382,6 +386,15 @@ words:
   - ONCPU
   - LOOKBACK
   - vbscript
+  # White-label theming kit words
+  - Fira
+  - rrggbb
+  - kc.sh
+  - keycloak-themes
+  - childTheme
+  - binaryData
+  - mktemp
+  - unzip
 
 # Ignore RegExp patterns (for things like URLs, version numbers, etc.)
 ignoreRegExpList:

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="40" viewBox="0 0 180 40" role="img" aria-label="Example Co">
+  <rect x="0" y="4" width="32" height="32" rx="8" fill="#14B8A6"/>
+  <path d="M10 12h12v4H14v3h7v4h-7v3h8v4H10z" fill="#ffffff"/>
+  <circle cx="30" cy="8" r="5" fill="#7C3AED"/>
+  <text x="42" y="27" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#0F172A">Example Co</text>
+</svg>

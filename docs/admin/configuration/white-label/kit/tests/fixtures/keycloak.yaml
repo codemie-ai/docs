@@ -1,0 +1,19 @@
+themeName: 'acme-brand'
+
+product:
+  name: 'Acme Suite'
+  shortName: 'Acme'
+
+colors:
+  surface.base.primary:
+    dark: '#111111'
+    light: '#ffffff'
+  text.specific.navigation-link:
+    dark: '#0a0b0c'
+    light: '#A0B0C0'
+
+assets:
+  logoLight: 'logo-light.svg'
+  logoDark: 'logo-dark.svg'
+  favicon: 'favicon.ico'
+  faviconSvg: 'favicon.svg'

@@ -1,0 +1,7 @@
+{
+  "name": "Example Co AI Platform",
+  "short_name": "Example Co",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone"
+}

@@ -1,0 +1,75 @@
+# Example workflow: validate a white-label theme package and prepare the brand files.
+# Copy this file to .github/workflows/ in the Helm repository that holds your theme package.
+# Assumes the kit (the apply-theme and apply-keycloak-theme scripts, lib/ and the schemas) is checked
+# in under ./kit and that the chart folder codemie-ui is in the repository root.
+#
+# The workflow only prepares files. It does not log in to a cluster, run helm or restart pods.
+# Download the artifact (or let the workflow commit the files in your own process), review the
+# files, commit them to the Helm repository, then deploy with helm-charts.sh.
+#
+# Setup in your repository:
+#   - replace the action SHAs below with the current release of each action when you adopt this file
+name: Prepare white-label theme files
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_path:
+        description: Path to the UI theme package file
+        required: true
+        default: theme/theme-package.yaml
+      keycloak_package_path:
+        description: Path to the Keycloak theme package file (used only when keycloak is set)
+        required: false
+        default: theme/keycloak-theme-package.yaml
+      source_path:
+        description: Path to the folder with the logo, favicon, manifest and email logo files
+        required: true
+        default: theme/assets
+      keycloak:
+        description: Also build the Keycloak theme folder and jar from the Keycloak package
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Validate the package and write the brand files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install ajv-cli and zip
+        run: |
+          npm install --global ajv-cli@5
+          sudo apt-get update
+          sudo apt-get install --yes zip
+
+      - name: Write the platform files
+        env:
+          PACKAGE_PATH: ${{ inputs.package_path }}
+          SOURCE_PATH: ${{ inputs.source_path }}
+        run: ./kit/apply-theme --output-dir codemie-ui/assets "$PACKAGE_PATH" "$SOURCE_PATH"
+
+      - name: Build the Keycloak theme folder and jar
+        if: ${{ inputs.keycloak }}
+        env:
+          KEYCLOAK_PACKAGE_PATH: ${{ inputs.keycloak_package_path }}
+          SOURCE_PATH: ${{ inputs.source_path }}
+        run: |
+          ./kit/apply-keycloak-theme --output-dir keycloak-theme --jar keycloak-theme.jar \
+            "$KEYCLOAK_PACKAGE_PATH" "$SOURCE_PATH"
+
+      - name: Keep the brand files for review
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: brand-files
+          path: |
+            codemie-ui/assets
+            keycloak-theme
+            keycloak-theme.jar
+          if-no-files-found: error

@@ -1,0 +1,336 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codemie-ai.github.io/docs/kit/theme-package.schema.json",
+  "title": "ThemePackage",
+  "type": "object",
+  "required": ["version", "product", "colors", "typography", "assets", "links"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "product": {
+      "type": "object",
+      "required": ["name", "shortName"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^(?=.*\\S)[^<>\"\\\\\\u0000-\\u001f]+$"
+        },
+        "shortName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[^<>\"\\\\\\u0000-\\u001f]+$"
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["dark", "light"],
+        "additionalProperties": false,
+        "properties": {
+          "dark": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "light": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*$"
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["bodyFamily", "bodyProseFamily", "codeFamily"],
+      "additionalProperties": false,
+      "properties": {
+        "bodyFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "bodyProseFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "codeFamily": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^;{}<>()!\\\\\\u0000-\\u001f]+$"
+        },
+        "fontFaceCSS": {
+          "type": ["string", "null"],
+          "maxLength": 20000,
+          "pattern": "^(?![\\s\\S]*!important)[\\s\\S]*$"
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gradients": {
+          "type": "string",
+          "enum": ["default", "none"]
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logoLight", "logoDark", "favicon", "faviconSvg", "manifest"],
+      "additionalProperties": false,
+      "properties": {
+        "logoLight": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "logoDark": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "favicon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "faviconSvg": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        },
+        "manifest": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+          "maxLength": 100
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "userGuide": {
+          "$ref": "#/definitions/link"
+        },
+        "videoPortal": {
+          "$ref": "#/definitions/link"
+        },
+        "youtubeChannel": {
+          "$ref": "#/definitions/link"
+        },
+        "learningCourses": {
+          "$ref": "#/definitions/link"
+        },
+        "customerSupport": {
+          "$ref": "#/definitions/link"
+        },
+        "userSurvey": {
+          "$ref": "#/definitions/link"
+        },
+        "workflowDocumentation": {
+          "$ref": "#/definitions/link"
+        },
+        "workflowYamlDocumentation": {
+          "$ref": "#/definitions/link"
+        },
+        "googleDocsDocumentation": {
+          "$ref": "#/definitions/link"
+        }
+      }
+    },
+    "email": {
+      "$ref": "#/definitions/email"
+    }
+  },
+  "definitions": {
+    "link": {
+      "type": "object",
+      "required": ["name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^(?!.*\\{\\{)(?!.*\\}\\})[^\\u0000-\\u001f]+$"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "^https?://[^\\s\\u0000-\\u001f{}]+$"
+        }
+      }
+    },
+    "emailMessageFull": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextProduct"
+            }
+          ],
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "intro": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "buttonLabel": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "footer": {
+          "$ref": "#/definitions/emailTextProduct"
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "signature": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "palette": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "primaryText": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
+          }
+        },
+        "images": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "logo": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9._-]{0,99}\\.(?:[Pp][Nn][Gg]|[Jj][Pp][Ee]?[Gg]|[Gg][Ii][Ff])$"
+            }
+          }
+        },
+        "messages": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "verification": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "password_reset": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_soft_limit": {
+              "$ref": "#/definitions/emailMessageFull"
+            },
+            "budget_stopped": {
+              "$ref": "#/definitions/emailMessageBudgetStopped"
+            },
+            "budget_restored": {
+              "$ref": "#/definitions/emailMessageBudgetRestored"
+            }
+          }
+        }
+      }
+    },
+    "emailTextProduct": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailTextBudgetStopped": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName|projectName|costCenterName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailTextBudgetRestored": {
+      "type": "string",
+      "pattern": "^(?![\\s\\S]*\\{(?!(?:productName|projectName)\\})[\\p{L}\\p{N}_]+\\})[\\s\\S]*$"
+    },
+    "emailMessageBudgetStopped": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextBudgetStopped"
+            }
+          ],
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "intro": {
+          "$ref": "#/definitions/emailTextBudgetStopped"
+        }
+      }
+    },
+    "emailMessageBudgetRestored": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/emailTextBudgetRestored"
+            }
+          ],
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "heading": {
+          "$ref": "#/definitions/emailTextProduct"
+        },
+        "intro": {
+          "$ref": "#/definitions/emailTextBudgetRestored"
+        }
+      }
+    }
+  }
+}

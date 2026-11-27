@@ -1,0 +1,103 @@
+version: '1'
+
+product:
+  name: 'Acme Corp AI Platform'
+  shortName: 'Acme'
+
+colors:
+  surface.base.primary:
+    dark: '#121826'
+    light: '#ffffff'
+  surface.base.sidebar:
+    dark: '#0d1320'
+    light: '#f3f5f9'
+  text.primary:
+    dark: '#f3f4f6'
+    light: '#111827'
+  text.accent:
+    dark: '#ff9a4d'
+    light: '#d95f00'
+  text.accent-status:
+    dark: '#ff9a4d'
+    light: '#c25400'
+  surface.specific.gradient:
+    dark: '#ff7a1a'
+    light: '#ffb366'
+  border.specific.cta-button-from:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  surface.specific.tint-gradient-from:
+    dark: '#ff7a1a'
+    light: '#ff9a4d'
+  surface.specific.action-accent-btn:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  surface.specific.switch-on-from:
+    dark: '#ff7a1a'
+    light: '#d95f00'
+  onboarding.highlight:
+    dark: '#ff9a4d'
+    light: '#d95f00'
+
+typography:
+  bodyFamily: 'Inter, sans-serif'
+  bodyProseFamily: 'Georgia, serif'
+  codeFamily: 'Fira Code, monospace'
+  fontFaceCSS: null
+
+assets:
+  logoLight: 'logo-light.svg'
+  logoDark: 'logo-dark.svg'
+  favicon: 'favicon.ico'
+  faviconSvg: 'favicon.svg'
+  manifest: 'site.webmanifest'
+
+links:
+  userGuide:
+    name: 'Acme Docs'
+    url: 'https://docs.acme.example/'
+  videoPortal:
+    name: 'Acme Videos'
+    url: 'https://videos.acme.example/'
+  youtubeChannel:
+    name: 'Acme YouTube'
+    url: 'https://youtube.com/@acme-example'
+  learningCourses:
+    name: 'Acme Learn'
+    url: 'https://learn.acme.example/'
+  customerSupport:
+    name: 'Acme Help Desk'
+    url: 'https://help.acme.example/'
+  userSurvey:
+    name: 'Acme Survey'
+    url: 'https://survey.acme.example/'
+  workflowDocumentation:
+    name: 'Acme Workflow Docs'
+    url: 'https://docs.acme.example/workflows'
+  workflowYamlDocumentation:
+    name: 'Acme Workflow YAML Docs'
+    url: 'https://docs.acme.example/workflows/yaml'
+  googleDocsDocumentation:
+    name: 'Acme Google Docs Guide'
+    url: 'https://docs.acme.example/google-docs'
+
+# Optional: branding of platform emails (verification, password reset, budget notifications).
+email:
+  signature: 'The {productName} Team'
+  palette:
+    primary: '#0B5FFF'
+    primaryText: '#FFFFFF'
+    text: '#1F2933'
+    background: '#F5F7FA'
+    surface: '#FFFFFF'
+  images:
+    logo: 'email-logo.png'
+  messages:
+    verification:
+      subject: 'Confirm your {productName} account'
+      heading: 'Welcome to {productName}'
+    budget_stopped:
+      subject: 'Budget stopped for {projectName}'
+      intro: 'The budget for project {projectName} ({costCenterName}) has been stopped.'
+    budget_restored:
+      intro: 'The budget for project {projectName} has been restored.'

@@ -1,0 +1,44 @@
+name: White-label kit tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/admin/configuration/white-label/kit/**'
+      - '.github/workflows/white-label-kit-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/admin/configuration/white-label/kit/**'
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    name: white-label kit bats suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install bats, ajv-cli and zip
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zip unzip
+          npm install --global bats@1 ajv-cli@5
+          yq --version
+
+      # The charts repository is on a private host, so this job cannot check it out: the contract
+      # tests against the charts skip here. Run them locally with the charts next to this repository,
+      # or set KIT_CHARTS_DIR and KIT_REQUIRE_CHARTS=yes on a runner that has the charts.
+      - name: Run the kit tests
+        run: |
+          bats docs/admin/configuration/white-label/kit/tests/common.bats
+          bats docs/admin/configuration/white-label/kit/tests/apply-theme.bats
+          bats docs/admin/configuration/white-label/kit/tests/apply-keycloak-theme.bats
+          bats docs/admin/configuration/white-label/kit/tests/apply-keycloak-jar.bats

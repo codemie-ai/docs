@@ -1,0 +1,38 @@
+# Template of the Keycloak brand settings of the white-label kit. Every token is commented out:
+# alone this file is not a theme. It lists every token the Keycloak schema knows.
+# To use it, copy it, remove the comment mark in front of each token you set and fill in the values.
+# The file to fill in is keycloak-theme-package.yaml; both files hold the same tokens.
+# This package is separate from the UI package (theme-package.yaml); the two share no file.
+
+# themeName: '' # REQUIRED - theme name, 3-40 characters: a-z, 0-9, -; the names codemie, codemie-base, base and keycloak are reserved
+
+# product:
+#   name: '' # REQUIRED - product name shown on the login page and in emails
+#   shortName: '' # REQUIRED - abbreviated name for space-constrained surfaces
+
+# REQUIRED - map of semantic token path to a dark and a light hex value (#rrggbb).
+# Add one entry per token you want to override; tokens you omit keep the default theme.
+# colors: {}
+# Example entry, one per token:
+#   surface.base.primary: {dark: '#111111', light: '#ffffff'}
+
+# All assets are file names of files in <source-dir>. A name starts with a letter or digit and has
+# only letters, digits, . _ and -, at most 100 characters (the rule of the charts).
+# assets:
+#   logoLight: '' # REQUIRED - logo for the light theme (SVG)
+#   logoDark: '' # REQUIRED - logo for the dark theme (SVG)
+#   favicon: '' # REQUIRED - legacy favicon (.ico)
+#   faviconSvg: '' # REQUIRED - SVG favicon
+
+# optional - branding of Keycloak emails. Every key below is optional; omitted keys use the
+# defaults of the theme. Uncomment only what you want to change.
+# email:
+#   signature: '' # optional - closing line; may use {productName}
+#   palette: # optional - each role is #RRGGBB
+#     primary: '' # optional - button and accent color
+#     primaryText: '' # optional - text on the primary color
+#     text: '' # optional - body text
+#     background: '' # optional - page background
+#     surface: '' # optional - card background
+#   images:
+#     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak

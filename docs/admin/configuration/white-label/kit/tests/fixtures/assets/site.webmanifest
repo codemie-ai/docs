@@ -1,0 +1,7 @@
+{
+  "name": "Acme Suite",
+  "short_name": "Acme",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone"
+}

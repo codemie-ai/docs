@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# apply-theme - write the platform brand files of a theme package into the assets folder of the
+# wrapper chart. The script writes files only: no base64, no values file, no cluster call.
+# Deploy with helm-charts.sh afterwards.
+# Prerequisites: yq >=4 (mikefarah), ajv-cli >=5
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+KIT_SCRIPT="apply-theme"
+SCHEMA="$SCRIPT_DIR/theme-package.schema.json"
+ASSET_KEYS="logoLight logoDark favicon faviconSvg manifest"
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
+kit_parse_args "codemie-ui/assets" "$@"
+kit_init
+
+# Step 1 and 2: every check ends before anything is written
+kit_removed_tokens "$PACKAGE_FILE" || exit 1
+# apply-theme writes no .properties file: the properties policy is not applied
+kit_check_inputs "$PACKAGE_FILE" "$SCHEMA" "$ASSET_KEYS" "" || exit 1
+kit_guard_target "$OUTPUT_DIR" brand.css brand-config.json platform email || exit 1
+if [[ -d "$OUTPUT_DIR/brand.css" || -d "$OUTPUT_DIR/brand-config.json" ]]; then
+  kit_die "brand.css and brand-config.json in $OUTPUT_DIR must be files"
+fi
+
+# Step 3: build every target in a temporary folder next to the output folder
+kit_stage "$(dirname "${OUTPUT_DIR%/}")"
+NEW="$STAGE"
+PRODUCT_NAME=$(yq eval '.product.name' "$PACKAGE_FILE")
+PRODUCT_SHORT=$(yq eval '.product.shortName' "$PACKAGE_FILE")
+A_LOGOLIGHT=$(yq eval '.assets.logoLight' "$PACKAGE_FILE")
+A_LOGODARK=$(yq eval '.assets.logoDark' "$PACKAGE_FILE")
+A_FAVICON=$(yq eval '.assets.favicon' "$PACKAGE_FILE")
+A_FAVICONSVG=$(yq eval '.assets.faviconSvg' "$PACKAGE_FILE")
+A_MANIFEST=$(yq eval '.assets.manifest' "$PACKAGE_FILE")
+EMAIL_LOGO=$(kit_str "$PACKAGE_FILE" '.email.images.logo')
+kit_render_brand_css "$PACKAGE_FILE" >"$NEW/brand.css"
+
+export PRODUCT_NAME PRODUCT_SHORT A_LOGOLIGHT A_LOGODARK A_FAVICON A_FAVICONSVG A_MANIFEST
+yq -n -o=json '
+  .product.name = strenv(PRODUCT_NAME) |
+  .product.shortName = strenv(PRODUCT_SHORT) |
+  .assets.logoLight = strenv(A_LOGOLIGHT) |
+  .assets.logoDark = strenv(A_LOGODARK) |
+  .assets.favicon = strenv(A_FAVICON) |
+  .assets.faviconSvg = strenv(A_FAVICONSVG) |
+  .assets.manifest = strenv(A_MANIFEST)
+' >"$NEW/brand-config.json"
+
+mkdir "$NEW/platform" "$NEW/email"
+for name in "$A_LOGOLIGHT" "$A_LOGODARK" "$A_FAVICON" "$A_FAVICONSVG" "$A_MANIFEST"; do
+  cp "$SOURCE_DIR/$name" "$NEW/platform/$name"
+done
+
+# brand.yaml is read by the API. images is dropped when it is empty.
+yq eval '{"identity": {"productName": .product.name}, "links": .links, "email": .email} | del(select(.email == null) | .email) | del(select(.email.images != null and (.email.images | length) == 0) | .email.images)' \
+  "$PACKAGE_FILE" >"$NEW/email/brand.yaml"
+if [[ -n "$EMAIL_LOGO" ]]; then
+  cp "$SOURCE_DIR/$EMAIL_LOGO" "$NEW/email/$EMAIL_LOGO"
+fi
+
+# .gitkeep keeps an empty folder in git: it stays
+for d in platform email; do
+  if [[ -f "$OUTPUT_DIR/$d/.gitkeep" ]]; then : >"$NEW/$d/.gitkeep"; fi
+done
+
+# Step 4: the only step that changes the output. Only these four names are replaced.
+mkdir -p "$OUTPUT_DIR"
+kit_swap_file "$NEW/brand.css" "$OUTPUT_DIR/brand.css"
+kit_swap_file "$NEW/brand-config.json" "$OUTPUT_DIR/brand-config.json"
+kit_swap_dir "$NEW/platform" "$OUTPUT_DIR/platform"
+kit_swap_dir "$NEW/email" "$OUTPUT_DIR/email"
+
+echo "apply-theme: files written to $OUTPUT_DIR"
+echo "  Set branding.enabled: true in the values file of the cloud and deploy with helm-charts.sh."

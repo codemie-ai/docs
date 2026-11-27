@@ -1,0 +1,41 @@
+# White-label Keycloak theme package template.
+# Copy this file, fill in the values, then run from the root of the charts repository:
+#   apply-keycloak-theme keycloak-theme-package.yaml <source-dir>
+# <source-dir> is the folder with the logo, favicon and email logo files.
+# Fields marked REQUIRED must be filled in; fields marked optional may be omitted.
+# This empty template intentionally does not pass validation until it is filled in.
+# The unfilled template with the same tokens, all commented out, is keycloak-theme-config.template.yaml.
+# This package is separate from the UI package (theme-package.yaml); the two share no file.
+
+themeName: '' # REQUIRED - theme name, 3-40 characters: a-z, 0-9, -; the names codemie, codemie-base, base and keycloak are reserved
+
+product:
+  name: '' # REQUIRED - product name shown on the login page and in emails
+  shortName: '' # REQUIRED - abbreviated name for space-constrained surfaces
+
+# REQUIRED - map of semantic token path to a dark and a light hex value (#rrggbb).
+# Add one entry per token you want to override; tokens you omit keep the default theme.
+colors: {}
+# Example entry, one per token:
+#   surface.base.primary: {dark: '#111111', light: '#ffffff'}
+
+# All assets are file names of files in <source-dir>. A name starts with a letter or digit and has
+# only letters, digits, . _ and -, at most 100 characters (the rule of the charts).
+assets:
+  logoLight: '' # REQUIRED - logo for the light theme (SVG)
+  logoDark: '' # REQUIRED - logo for the dark theme (SVG)
+  favicon: '' # REQUIRED - legacy favicon (.ico)
+  faviconSvg: '' # REQUIRED - SVG favicon
+
+# optional - branding of Keycloak emails. Every key below is optional; omitted keys use the
+# defaults of the theme. Uncomment only what you want to change.
+# email:
+#   signature: '' # optional - closing line; may use {productName}
+#   palette: # optional - each role is #RRGGBB
+#     primary: '' # optional - button and accent color
+#     primaryText: '' # optional - text on the primary color
+#     text: '' # optional - body text
+#     background: '' # optional - page background
+#     surface: '' # optional - card background
+#   images:
+#     logoUrl: '' # optional - https URL of the logo shown in emails sent by Keycloak
