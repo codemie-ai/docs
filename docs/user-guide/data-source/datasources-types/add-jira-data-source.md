@@ -66,6 +66,10 @@ Click the **+ Create Datasource** button and add all required data according to 
 - Choose Datasource Type: **Jira** source type in the add new data source window.
 - JQL Query: Add **JQL expressions** to filter the data you want to index. This field is required.
 - Select integration for Jira: Choose integration.
+- Include attachments: Index text extracted from issue attachments. Off by default.
+- Include comments: Index issue comments. Off by default.
+
+See [Including Comments and Attachments](#including-comments-and-attachments) for details.
 
 **Common JQL Example:**
 
@@ -104,6 +108,25 @@ In the **Reindex Type** section, configure automatic reindexing:
 #### 6. Create Data Source
 
 Click the **+ Create** button to create the Jira data source. Indexing will begin automatically based on your scheduler configuration.
+
+## Including Comments and Attachments
+
+The **Include attachments** and **Include comments** switches are independent and are available when creating and editing a Jira data source. Both are off by default, so issue comments and attachments are not indexed unless a switch is turned on.
+
+- **Include comments**: each comment becomes its own searchable document.
+- **Include attachments**: the extracted text of each attachment becomes its own document. Attachments larger than 20 MB, or with an unknown size, are skipped. Supported file types are PDF, DOCX, XLSX, XLS, XLSB, PPTX, Outlook MSG, HTML, and images (JPG, PNG, GIF, BMP, WebP). Text in images is extracted with the chat model. Other file types are skipped.
+
+Excluding comments and attachments keeps the index smaller and indexing faster. Including them makes their content searchable by assistants.
+
+:::info Changing a switch triggers a full reindex
+Changing either switch on an existing data source starts a full reindex automatically, even on a plain **Save**. Turning a switch off removes the already indexed comment or attachment documents. Turning it on adds them for all issues.
+
+If the full reindex fails, including when a temporary error occurs while fetching comments or attachments, it is forced again on the next run, scheduled runs included, until one succeeds.
+:::
+
+:::note Additional fields
+The switches control the separate comment and attachment documents only. If **Comment** or **Attachment** is listed in the data source's additional fields, that field's content is still added to the issue document, even when the matching switch is off.
+:::
 
 ## Error Handling for Jira Data Sources
 
