@@ -53,7 +53,7 @@ No breaking configuration changes were introduced in this release.
 <details className="release" id="v2-71-0">
 <summary><span className="release__version">CodeMie 2.71.0</span><span className="release__date">Nov 26, 2026</span><span className="badge badge--warning">Config changes</span><span className="badge badge--info">Component updates</span></summary>
 
-**Release Date:** TBD · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
+**Release Date:** November 26, 2026 · [GitHub Tag ↗](https://github.com/codemie-ai/codemie/releases/tag/2.71.0)
 
 <h3>Third-Party Component Updates</h3>
 
@@ -69,6 +69,12 @@ Elasticsearch and Kibana updated to 8.19.26. Follow the [Elasticsearch and Kiban
 For details, see the [Fluent Bit 5.2.0 Release Notes](https://github.com/fluent/fluent-bit/releases/tag/v5.2.0).
 
 **Upgrade instructions:** [Fluent Bit Upgrade](../3rd-party-components/fluent-bit/fluent-bit-upgrade.md)
+
+<h4>CodeMie Keycloak Theme 2.71.0</h4>
+
+- **CodeMie Keycloak Theme:** 2.62.0 → 2.71.0
+
+The 2.62.0 image was published in a manifest format that Docker and containerd cannot unpack. The 2.71.0 image is published in OCI format and pulls correctly.
 
 <h3>Configuration Changes</h3>
 

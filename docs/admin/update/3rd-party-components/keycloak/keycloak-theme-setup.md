@@ -28,7 +28,7 @@ In `keycloak-helm/values-<cloud_name>.yaml`, ensure the `extraInitContainers`, `
 ```yaml
 extraInitContainers: |
   - name: theme-provider
-    image: codemie/codemie-keycloak-theme:2.15.2
+    image: codemie/codemie-keycloak-theme:2.71.0
     imagePullPolicy: IfNotPresent
     command:
       - sh
