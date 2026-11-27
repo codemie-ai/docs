@@ -467,6 +467,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'user-guide/budget-management/project-budgets',
             'user-guide/budget-management/chargeback-cost-centers',
+            'user-guide/budget-management/budget-attribution',
           ],
         },
       ],
