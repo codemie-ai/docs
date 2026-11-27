@@ -232,6 +232,7 @@ const sidebars: SidebarsConfig = {
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
                     'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-server-instructions',
+                    'user-guide/tools_integrations/tools/mcp/mcp-generated-files',
                   ],
                 },
               ],
