@@ -204,6 +204,60 @@ Each row represents one user to be added to the project.
 In the **Project Members** table, use the **Role** dropdown next to a user's name to switch
 their role between **User** and **Project Admin**. The change takes effect immediately.
 
+### Override Models for a Member
+
+:::info Requires admin enablement
+The **Override models** action is shown only to Platform Admins and Project Admins, and only when
+the `features:userModelOverride` flag is enabled in `customer-config.yaml`.
+:::
+
+The models available to an individual project member can be overridden. The override applies only to
+that member within the project and takes precedence over the project's
+[model configuration](#model-configuration):
+
+- It can **expand** access by enabling models that the project does not offer.
+- It can **narrow** access by disabling models that the rest of the project can use.
+- Models disabled at the platform level cannot be enabled by an override.
+- When a member cannot use the model selected for an assistant or workflow, the platform falls back
+  to the member's default model, then to the project default model, and finally to the platform
+  default model.
+
+Path: **Profile → Settings → Administration → Projects management → select a project → Members**
+
+1. Click the **⋮ (Actions)** menu on the member's row and select **Override models**.
+
+![Member actions menu with the Override models option](./images/member-override-models-menu.png)
+
+2. In the **Model Override** dialog, use the checkboxes to enable or disable models for the member.
+   The dialog opens with the member's current models selected, and the header checkbox toggles all
+   models at once.
+3. Select the member's default model in the **Default** column. Only an enabled model can be the
+   default.
+
+![Model Override dialog with enabled models and the default model selected](./images/member-model-override-dialog.png)
+
+4. Click **Apply changes**. **Cancel** closes the dialog without saving.
+
+Members with custom model settings are marked with a sparkle icon in the **Members** table. To list
+only these members, set the **Model Settings** filter to **Custom**.
+
+### Reset Member Models to Project Defaults
+
+Resetting removes the member's override. The member then uses the project's model configuration and
+the project default model again.
+
+1. Click the **⋮ (Actions)** menu on the member's row and select **Override models**.
+2. In the **Model Override** dialog, click **Reset to project settings** and confirm the prompt.
+3. Click **Apply changes**.
+
+The sparkle icon is removed from the member's row, and the member is no longer listed when the
+**Model Settings** filter is set to **Custom**.
+
+:::note
+**Reset to project settings** is disabled for members without custom model settings. The reset is
+saved only after **Apply changes** is clicked; **Cancel** keeps the existing override.
+:::
+
 ### Remove a Member
 
 1. In the **Project Members** table, click the **Unassign** button (or the action icon) next
@@ -231,6 +285,9 @@ The **Models** tab on the project detail page lets Project Admins and Platform A
 which LLM models are available within a project and set a project-level default model. The
 configuration applies to all chats, assistants, and workflows that belong to the project —
 including shared assistants, marketplace assistants, and workflows shared across projects.
+
+Models can also be overridden for an individual member of the project. See
+[Override Models for a Member](#override-models-for-a-member).
 
 **How model availability works:**
 
