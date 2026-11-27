@@ -142,14 +142,14 @@ cost of one model for the selected period, and the legend lists the exact amount
 - **Filters**: the chart follows the [global filters](#global-filtering-system) — time period,
   users and projects.
 - **Client source**: costs are not filtered by client source. When a client source is selected,
-  the chart shows no cost values (usage charts keep the filter).
-- **Included costs**: platform LLM usage and CLI usage routed through the LiteLLM proxy.
+  no cost is shown and the chart displays "Cost is not available for the selected client source".
+  The usage charts keep the client source filter.
+- **Included costs**: platform LLM usage and CLI usage.
 - **Model names**: different names reported for the same model are combined into one slice.
-- **Consistency with other widgets**: for the same filters, the model costs add up to the totals
-  shown in **Projects Spending** and **Users Spending**. CLI costs are counted only from
-  7 February 2026, the date from which CLI usage data is reliable, in all three places.
-- **Dashboards**: the chart is also available as **LLMs Expenses** when you add a widget to a
-  custom dashboard.
+- **Consistency with other widgets**: costs come from the spend ledger. For the same filters, the
+  model costs match **Projects Spending** and **Users Spending**.
+- **Dashboards**: the chart is also available as **LLMs Expenses** in the widget list of the
+  custom dashboard builder.
 
 :::note
 When a period has more models than the selected **Top N**, the chart shows the models with the
