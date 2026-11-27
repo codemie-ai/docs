@@ -28,6 +28,10 @@ See [Platform-managed Mode Configuration](../../admin/configuration/access-contr
 for setup instructions.
 :::
 
+:::note IdP-managed mode
+In [IdP-managed mode](../../admin/configuration/access-control/idp-managed-mode-configuration.md) (Enterprise package), the identity provider (IdP) owns users, the administrator role, and project membership. Changes to these data are made in the IdP and reach the platform with the next run of the sync job. The controls for these changes are hidden in the interface, and the platform API refuses the requests. The user type and the maintainer and auditor flags are read-only.
+:::
+
 ## Sections
 
 <FeatureGrid>

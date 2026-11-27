@@ -20,6 +20,9 @@ The platform supports two user management modes. The active mode is controlled b
 | **Managing users**              | Keycloak admin interface                                   | In-app UI: Settings → Administration → Users management              |
 | **Local authentication**        | Not available                                              | Supported (`IDP_PROVIDER=local`)                                     |
 
+A third mode, [IdP-managed mode](./idp-managed-mode-configuration.md) (Enterprise package), lets the identity provider own users,
+the administrator role, and project membership through the management API, and refuses these changes in the platform.
+
 The workflow below applies to both modes. Steps that differ between modes are marked
 accordingly.
 
