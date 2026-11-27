@@ -129,7 +129,7 @@ Where the figures come from depends on how the model is called:
 
 | Call path                                       | Source of the cost                                                                                                                                                         |
 | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| LiteLLM proxy, non-streaming                    | Cost lines as returned by the proxy in its response cost headers                                                                                                           |
+| LiteLLM proxy, non-streaming                    | Cost lines from the proxy's response cost headers. `input` excludes the cache read and write cost, and `output` excludes reasoning, so the lines do not overlap          |
 | LiteLLM proxy, streaming                        | The proxy's total cost of the request. It is split into cost lines in proportion to each token type's price in the model's `cost` configuration                            |
 | Direct provider call, without the LiteLLM proxy | Calculated by CodeMie from the token counts and the model's `cost` configuration in the [LLM configuration](../codemie/ai-models-integration/codemie-native-llm-config.md) |
 
@@ -148,6 +148,10 @@ A response served from the CodeMie or LiteLLM response cache is recorded with a 
   `cost` configuration has no `cache_creation_input_token_cost`, so CodeMie prices cache writes at
   the `input` price, in Langfuse and in CodeMie spend. Set it to price cache writes at the
   provider's rate, as in the Bedrock Claude entries of the reference configuration.
+- **A failed request shows a cost of `0`.** When an LLM call fails, for example a stream that breaks
+  after the provider has already returned token counts, the Langfuse handler records the generation
+  with a total cost of `0`, so Langfuse does not show its cost. CodeMie spend still counts the tokens
+  the provider reported for that call.
 
 ---
 
