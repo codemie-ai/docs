@@ -92,7 +92,7 @@ Configure your PostgreSQL instance with the necessary database and user.
    GRANT ALL ON SCHEMA public TO aice;
    ```
 
-## Step 1: Deploy AICE
+## Deploy AICE
 
 Install or upgrade AICE using Helm:
 

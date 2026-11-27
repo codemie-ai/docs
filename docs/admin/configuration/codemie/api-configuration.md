@@ -216,6 +216,8 @@ Enables AI-generated images for visual content creation within assistants.
 
 Converts voice input to text for conversational interfaces and voice commands.
 
+These variables configure one STT model. To add more STT models through LiteLLM Proxy, see [Speech-to-Text Configuration](./speech-to-text-configuration.md).
+
 | Parameter                 | Type   | Default | Description                                                |
 | ------------------------- | ------ | ------- | ---------------------------------------------------------- |
 | `STT_API_URL`             | string | `""`    | Whisper or compatible STT service endpoint                 |
@@ -353,7 +355,7 @@ Configuration for Google Cloud Storage backend (requires `FILES_STORAGE_TYPE=gcp
 
 ### Hosted Applications
 
-Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs and `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
+Settings for custom (hosted) static web applications. The feature is switched on with the `features:hostedApplications` component in `customer-config.yaml` (override: `FEATURE_HOSTED_APPLICATIONS=true|false`) and also needs `ENABLE_USER_MANAGEMENT=true` and `FRONTEND_URL` (the only origin allowed to embed content). For the validator pod, ingress, rollout, and operations, see [Custom Applications](./hosted-applications.md).
 
 | Parameter                                  | Type    | Default                 | Description                                                                                                                                                                                            |
 | ------------------------------------------ | ------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -366,7 +368,7 @@ Settings for custom (hosted) static web applications. The feature is switched on
 | `HOSTED_APPS_STORAGE_S3_GRACE_SECONDS`     | integer | `30`                    | S3 only. Extra wait after the writer lease ends before cleanup. Startup refuses S3 when clock skew exceeds it                                                                                          |
 | `HOSTED_APPS_STORAGE_SWEEP_SECONDS`        | integer | `3600`                  | Interval of the sweep that deletes old orphaned objects from the hosted bucket (S3 and GCS)                                                                                                            |
 | `HOSTED_APPS_STORAGE_SWEEP_BUDGET_SECONDS` | integer | `20`                    | Time budget of one sweep run                                                                                                                                                                           |
-| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per user in bytes (2 GiB). Minimum `1048576`                                                                                                                                             |
+| `HOSTED_APPS_QUOTA_BYTES`                  | integer | `2147483648`            | Storage quota per creator in bytes (2 GiB): all versions, covers, and uploads in progress of the applications that a user created, whoever uploads them. Minimum `1048576`                             |
 
 :::note Storage backend
 Hosted applications use `FILES_STORAGE_TYPE` to select the backend: `aws` (S3) or `gcp` (GCS). `azure` keeps the feature unavailable, and `filesystem` is for development only.
@@ -1001,6 +1003,37 @@ Configure Model Context Protocol for enhanced AI context management and tool int
 | `MCP_CONNECT_BUCKETS_COUNT`  | integer | `10`                      | Number of context buckets for partitioning and isolation    |
 | `MCP_TOOL_TOKENS_SIZE_LIMIT` | integer | `30000`                   | Max tokens for tool definitions to prevent context overflow |
 
+### MCP Server Instructions
+
+| Parameter                       | Type   | Default | Description                                                                                                                                    |
+| ------------------------------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MCP_INSTRUCTIONS_NONCE_SECRET` | string | unset   | Shared key (at least 32 characters) for the delimiters around MCP server instructions in the system prompt. Set the same value on all replicas |
+
+When unset, each API process uses its own key, so the same conversation can get a different prompt on another replica and provider prompt caching misses. A value shorter than 32 characters fails at startup. The behavior is enabled by the `features:mcpServerInstructions` component; see [MCP Server Instructions](./customer-feature-configuration.md#mcp-server-instructions) for the full setup, including the Kubernetes secret and Helm values.
+
+### MCP Connect File Export
+
+These variables are set on the MCP Connect service (`codemie-mcp-connect-service`), not on the CodeMie API. They limit the files that opted-in stdio MCP servers deliver to the chat. See [Downloading Files Generated by MCP Servers](../../../user-guide/tools_integrations/tools/mcp/mcp-generated-files.md) for how servers opt in with `CODEMIE_EXPORT_FILES`.
+
+| Parameter                               | Type    | Default    | Description                                                                                           |
+| --------------------------------------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| `MCP_CONNECT_EXPORT_MAX_FILE_BYTES`     | integer | `52428800` | Maximum size of one exported file in bytes (50 MiB)                                                   |
+| `MCP_CONNECT_EXPORT_MAX_CALL_BYTES`     | integer | `52428800` | Maximum total size of files exported by one tool call in bytes (50 MiB)                               |
+| `MCP_CONNECT_EXPORT_MAX_FILES`          | integer | `20`       | Maximum number of files exported by one tool call                                                     |
+| `MCP_CONNECT_EXPORT_MAX_LINKS`          | integer | `50`       | Maximum number of `file:///` links read per tool call; the rest are replaced by one note              |
+| `MCP_CONNECT_EXPORT_MAX_INFLIGHT_BYTES` | integer | `52428800` | Budget of file bytes being sent at once across the pod (50 MiB). Memory use is about 5x the file size |
+
+:::warning Deployment order
+Deploy MCP Connect before the CodeMie API version that sends `conversation_id` to MCP Connect. An older MCP Connect rejects this field with HTTP 400, which fails every MCP tool call. For the same reason, do not roll MCP Connect back to an earlier version while the newer CodeMie API is running.
+:::
+
+Operational notes:
+
+- Exported files are read only from a per-user, per-conversation folder under `/home/codemie`. The folder is chosen by the `user_id` in the request, so restrict access to MCP Connect to the CodeMie API with a [network policy](../../security/network-policies/mcp-connect-service.mdx) or set `ACCESS_TOKEN`.
+- All stdio servers run as the same OS user, so a server that can read `/home/codemie` can read other users' folders.
+- Export folders are not cleaned up until the pod restarts. Size the ephemeral storage of the `/home/codemie` volume for the reports users generate.
+- `MCP_CONNECT_EXPORT_MAX_INFLIGHT_BYTES` is pod-wide only when MCP Connect runs one worker and one replica. Raise it only after measuring memory with the actual set of servers.
+
 ### MCP Client Configuration
 
 | Parameter            | Type  | Default | Description                                                     |
@@ -1259,6 +1292,20 @@ Automatically compress long conversation histories when token usage exceeds a th
 | `AI_AGENT_HISTORY_COMPACTION_PRESERVE_GROUPS`   | integer | `6`      | Number of most-recent conversation groups to preserve verbatim during compaction                    |
 | `AI_AGENT_HISTORY_COMPACTION_BATCH_TOKEN_LIMIT` | integer | `24000`  | Max tokens per compaction summary batch; larger batches produce fewer but longer summaries          |
 
+### Headroom Context Compression
+
+Compress the messages sent to the model with Headroom. Compression also requires the `features:headroom` customer feature. See [Headroom Context Compression Configuration](./headroom-configuration.md) for the deployment steps.
+
+| Parameter                           | Type    | Default                 | Description                                                                                      |
+| ----------------------------------- | ------- | ----------------------- | ------------------------------------------------------------------------------------------------ |
+| `HEADROOM_MODE`                     | string  | `off`                   | Compression mode: `off`, `sdk` (in the API process) or `sidecar` (separate container)            |
+| `HEADROOM_SIDECAR_URL`              | string  | `http://localhost:8787` | Base URL of the Headroom sidecar                                                                 |
+| `HEADROOM_PROXY_TOKEN`              | string  | empty                   | Bearer token for the sidecar; must match the sidecar value. Store it in a secret                 |
+| `HEADROOM_TIMEOUT_SECONDS`          | integer | `10`                    | Maximum wait for compression on each model call before the original messages are sent            |
+| `HEADROOM_MIN_TOKENS`               | integer | `1000`                  | Messages below this size are not compressed                                                      |
+| `HEADROOM_AGGRESSIVE_TARGET_RATIO`  | float   | `0.2`                   | Fraction of tokens kept by the `aggressive` strategy; applies only where the Kompress model runs |
+| `HEADROOM_SDK_ALLOW_MODEL_DOWNLOAD` | boolean | `false`                 | SDK mode only: allow the API process to download the Kompress model                              |
+
 ### Workflow Configuration
 
 | Parameter                      | Type    | Default | Description                                                                           |
@@ -1382,6 +1429,7 @@ Configure secure Python code execution in isolated Kubernetes pods for running u
 | `CODE_EXECUTOR_VERBOSE`                   | boolean | `false`                                  | Enable verbose logging for executor debugging                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `CODE_EXECUTOR_KEEP_TEMPLATE`             | boolean | `true`                                   | Persist pod template after execution for performance optimization                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `CODE_EXECUTOR_SKIP_ENVIRONMENT_SETUP`    | boolean | `false`                                  | Skip environment initialization in sandbox (faster startup but may break dependencies)                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `CODE_EXECUTOR_POD_ANNOTATIONS`           | string  | `""`                                     | JSON object of annotations added to executor Job pods. Applies in `sandbox-jobs` mode only. See [Pod Annotations for Sandbox Jobs](./code-executor-configuration.md#pod-annotations-for-sandbox-jobs)                                                                                                                                                                                                                                                                                                                  |
 
 :::warning Security Considerations
 **Sandbox Isolation:** `CODE_EXECUTOR_EXECUTION_MODE=sandbox` runs user-supplied code in a dedicated Kubernetes pod, isolated from the CodeMie API. This is the execution model for running untrusted code safely in production.
@@ -1550,16 +1598,33 @@ Automated background job that runs LLM-based analysis on completed conversations
 
 ## Stale Datasource Detection
 
-Nightly background job that identifies datasources with no recent usage or updates and marks them as stale to prompt review or cleanup.
+Nightly background job that identifies datasources with no recent usage or updates and marks them as stale. Optionally, the same run can then delete the Elasticsearch indexes of stale datasources to reclaim storage.
 
-| Parameter                         | Type    | Default       | Description                                                                                        |
-| --------------------------------- | ------- | ------------- | -------------------------------------------------------------------------------------------------- |
-| `STALE_DATASOURCE_ENABLED`        | boolean | `false`       | Enable the nightly stale datasource detection job                                                  |
-| `STALE_DATASOURCE_SCHEDULE`       | string  | `"0 3 * * *"` | Cron schedule (UTC) for the detection job; defaults to 3 AM daily                                  |
-| `STALE_DATASOURCE_NO_USAGE_DAYS`  | integer | `90`          | Days without usage metrics after which a datasource is considered stale                            |
-| `STALE_DATASOURCE_NO_UPDATE_DAYS` | integer | `120`         | Days without any update used as a fallback staleness criterion when no usage metrics are available |
-| `STALE_DATASOURCE_GRACE_DAYS`     | integer | `7`           | Newly created datasources are never marked stale within this grace period                          |
-| `STALE_DATASOURCE_BATCH_SIZE`     | integer | `100`         | Elasticsearch query batch size for metrics aggregation during detection                            |
+The job runs in two phases:
+
+1. **Detection** (`STALE_DATASOURCE_ENABLED`) -- datasources with no usage or updates within the configured thresholds are marked `STALE`.
+2. **Index deletion** (`STALE_DATASOURCE_DELETION_ENABLED`, disabled by default) -- the Elasticsearch index of each idle `STALE` datasource is deleted and the datasource moves to `ARCHIVED`.
+
+| Parameter                                | Type    | Default       | Description                                                                                                                                             |
+| ---------------------------------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `STALE_DATASOURCE_ENABLED`               | boolean | `false`       | Enable the nightly stale datasource detection job                                                                                                       |
+| `STALE_DATASOURCE_SCHEDULE`              | string  | `"0 3 * * *"` | Cron schedule (UTC) for the job; defaults to 3 AM daily                                                                                                 |
+| `STALE_DATASOURCE_NO_USAGE_DAYS`         | integer | `90`          | Days without usage metrics after which a datasource is considered stale                                                                                 |
+| `STALE_DATASOURCE_NO_UPDATE_DAYS`        | integer | `120`         | Days without any update used as a fallback staleness criterion when no usage metrics are available                                                      |
+| `STALE_DATASOURCE_GRACE_DAYS`            | integer | `7`           | Newly created datasources are never marked stale within this grace period                                                                               |
+| `STALE_DATASOURCE_BATCH_SIZE`            | integer | `100`         | Elasticsearch query batch size for metrics aggregation during detection                                                                                 |
+| `STALE_DATASOURCE_DELETION_ENABLED`      | boolean | `false`       | Enable the index deletion phase: delete the Elasticsearch index of stale datasources and mark them `ARCHIVED`. Requires `STALE_DATASOURCE_ENABLED=true` |
+| `STALE_DATASOURCE_MAX_DELETIONS_PER_RUN` | integer | `100`         | Maximum number of indexes deleted per run; when reached, the sweep stops and the remaining stale datasources are processed in subsequent runs           |
+
+:::warning
+Index deletion removes the datasource's Elasticsearch index permanently. Enable `STALE_DATASOURCE_DELETION_ENABLED` only after reviewing which datasources are currently marked stale. Enabling it also processes any existing stale backlog on the next run.
+:::
+
+Index deletion only removes the Elasticsearch index. The datasource record, scheduler, and webhook integrations are kept, so no configuration is lost.
+
+- **Reactivation** -- a datasource returns to `ACTIVE` after a successful reindex. For `ARCHIVED` datasources, a scheduled or webhook-triggered run performs a full reindex.
+- **Safeguards** -- datasources that are being indexed or queued are skipped. Before an index is deleted, activity is re-checked and recently active datasources return to `ACTIVE`. An index shared with an `ACTIVE` datasource is never deleted.
+- **Startup validation** -- enabling `STALE_DATASOURCE_DELETION_ENABLED` without `STALE_DATASOURCE_ENABLED` fails startup with a configuration error.
 
 ---
 
@@ -1653,6 +1718,8 @@ Each model entry supports these configuration options:
 | `features.streaming`               | boolean | Supports streaming responses for real-time output                                                                                                                                                                                                                                                                                                                         |
 | `features.tools`                   | boolean | Supports function calling / tool use                                                                                                                                                                                                                                                                                                                                      |
 | `features.parallel_tool_calls`     | boolean | Whether the model can execute multiple tool calls in a single inference round. Defaults to `false`. Set to `false` explicitly for reasoning models (o-series) that do not support the `parallel_tool_calls` OpenAI parameter — sending it to these models causes an API error. When `false`, the platform strips the parameter from every outgoing request to that model. |
+| `features.temperature`             | boolean | Whether the model accepts `temperature`. Defaults to `true`. When `false`, the platform does not send `temperature` to the model.                                                                                                                                                                                                                                         |
+| `features.effort`                  | list    | Reasoning effort levels the model supports, from `low`, `medium`, `high`, `xhigh`, `max` (for example `["low", "medium", "high"]`). Omit for models without effort support. When set, the UI shows **Effort** instead of Temperature/Top P, and a requested level above the highest listed one is lowered to it.                                                          |
 
 :::info How parallel tool calls work
 When `parallel_tool_calls` is `true` for a model, the agent can issue and stream multiple
@@ -1662,6 +1729,27 @@ rendered in the UI as parallel entries under the same thought step.
 Standard GPT and Claude models support parallel tool calls. Reasoning models
 (o-series and similar) do **not** — always set
 `parallel_tool_calls: false` in their `features` block.
+:::
+
+:::info How effort is sent to providers
+The selected effort is translated to each provider's own parameter:
+
+| Provider                  | Parameter sent                                                |
+| ------------------------- | ------------------------------------------------------------- |
+| LiteLLM proxy             | `reasoning_effort`                                            |
+| AWS Bedrock (Claude)      | `additional_model_request_fields.output_config.effort`        |
+| Anthropic                 | `effort`                                                      |
+| Azure OpenAI / DIAL       | `reasoning_effort`                                            |
+| Google Vertex AI (Gemini) | `thinking_budget`: 1024 / 2048 / 4096 for low / medium / high |
+
+Example for a reasoning model that rejects `temperature`:
+
+```yaml
+features:
+  temperature: false
+  effort: ["low", "medium", "high"]
+```
+
 :::
 
 ### Model Categories

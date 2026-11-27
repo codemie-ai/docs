@@ -8,6 +8,9 @@ pagination_prev: admin/deployment/extensions/litellm-proxy/litellm-proxy-overvie
 pagination_next: null
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Step 1: Configure CodeMie API and LiteLLM Values
 
 This step is required for both Automated and Manual setups.
@@ -62,9 +65,16 @@ litellm-helm:
     enabled: false # Redis is disabled by default
 ```
 
-### Enable Database Initialization Job
+### Database Configuration
 
-`dbInitJob` automatically creates the `postgres_litellm` database and user during Helm deployment. It is **disabled by default**.
+Configure the database initialization job based on your PostgreSQL deployment:
+
+<Tabs groupId="database-setup">
+  <TabItem value="shared" label="Shared Database" default>
+
+By default, LiteLLM shares the main CodeMie PostgreSQL instance. In this mode, a dedicated `litellm` database and user must be created inside that instance.
+
+Set `dbInitJob.enabled: true` in `litellm/values-<cloud>.yaml`:
 
 ```yaml
 dbInitJob:
@@ -72,14 +82,29 @@ dbInitJob:
   enabled: true
   initImage: alpine/psql:18.3
   pgAdminSecret:
-    name: codemie-postgresql  # Secret with PostgreSQL admin credentials
+    name: codemie-postgresql
     userKey: PG_USER
     passwordKey: PG_PASS
 ```
 
 :::info
-When enabled, the deployment script (`helm-charts.sh`) automatically creates the `codemie-postgresql` secret using admin credentials from `deployment_outputs.env` — either `CODEMIE_POSTGRES_DATABASE_USER`/`CODEMIE_POSTGRES_DATABASE_PASSWORD` (shared database) or `LITELLM_POSTGRES_DATABASE_USER`/`LITELLM_POSTGRES_DATABASE_PASSWORD` (dedicated LiteLLM database). For manual deployment, create this secret before running Helm — see [Manual Deployment](./deployment/manual-deployment.md#step-52-create-secrets-and-configmaps).
+When enabled, the deployment script automatically creates the `codemie-postgresql` secret using `CODEMIE_POSTGRES_DATABASE_USER` and `CODEMIE_POSTGRES_DATABASE_PASSWORD` from `deployment_outputs.env`. For manual deployment, create this secret before running Helm. See [Manual Deployment](./deployment/manual-deployment.md#step-52-create-secrets-and-configmaps).
 :::
+
+  </TabItem>
+  <TabItem value="dedicated" label="Dedicated Database">
+
+If you provisioned a dedicated PostgreSQL instance for LiteLLM via `TF_VAR_litellm_db_config`, Terraform already created the `litellm` database and `litellm_admin` master user.
+
+Keep `dbInitJob.enabled: false` in `litellm/values-<cloud>.yaml`. The initialization job is not needed.
+
+```yaml
+dbInitJob:
+  enabled: false
+```
+
+  </TabItem>
+</Tabs>
 
 ### Redis Configuration
 

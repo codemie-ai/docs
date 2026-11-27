@@ -84,25 +84,25 @@ The command above generates a URL-safe password using only alphanumeric characte
 ### Create Database
 
 ```sql
-CREATE DATABASE postgres_litellm;
+CREATE DATABASE litellm;
 ```
 
 ### Create User and Grant Privileges
 
 ```sql
 CREATE USER litellm WITH PASSWORD 'your_strong_password_here';
-GRANT ALL PRIVILEGES ON DATABASE postgres_litellm TO litellm;
+GRANT ALL PRIVILEGES ON DATABASE litellm TO litellm;
 ```
 
 ## Configure Schema Permissions
 
-1. Switch your connection to the newly created `postgres_litellm` database:
+1. Switch your connection to the newly created `litellm` database:
 
 ```sql
-\c postgres_litellm
+\c litellm
 ```
 
-or reconnect to the `postgres_litellm` database **using PG admin credentials**.
+or reconnect to the `litellm` database **using PG admin credentials**.
 
 2. Grant all privileges on the `public` schema to the `litellm` user:
 

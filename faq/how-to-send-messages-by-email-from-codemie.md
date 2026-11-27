@@ -3,7 +3,7 @@
 To integrate Email with CodeMie.
 
 1. In the CodeMie main menu, click the Integrations button.
-2. Select Integration Type: User or Project and click Create.
+2. Click Create and select the Scope: User or Project.
 3. Select the Project Name.
 4. Select the Credential Type: Email.
 5. Fill in the Alias is a representation of the user setting.

@@ -45,6 +45,7 @@ NATS is currently deprecated as part of the NATS retirement direction.
 
 | NAME        | CHART VERSION | APP VERSION | DESCRIPTION                                        |
 | ----------- | ------------- | ----------- | -------------------------------------------------- |
+| `nats/nats` | `2.15.2`      | `2.15.2`    | A Helm chart for the NATS.io High Speed Cloud N... |
 | `nats/nats` | `2.12.5`      | `2.12.5`    | A Helm chart for the NATS.io High Speed Cloud N... |
 | `nats/nats` | `1.3.16`      | `2.11.10`   | A Helm chart for the NATS.io High Speed Cloud N... |
 
@@ -59,8 +60,9 @@ NATS is currently deprecated as part of the NATS retirement direction.
 - If you want to use a custom NATS-Reloader image tag, add the following configuration to the `codemie-nats/values-<CLOUD_NAME>.yaml` file:
 
 ```yaml
+nats:
   reloader:
-    tag: 0.22.3
+    tag: 0.24.0
 ```
 
 ## Upgrade Procedure
@@ -68,16 +70,14 @@ NATS is currently deprecated as part of the NATS retirement direction.
 - Change the NATS version in `helm-charts.sh`
 
 ```shell
-  helm upgrade --install codemie-nats nats/nats \
-    --version <TARGET_CHART_VERSION> \
+  helm upgrade --install codemie-nats codemie-nats/. \
     --namespace $namespace \
     --values "./codemie-nats/values-<CLOUD_NAME>.yaml" \
+    --dependency-update \
     --wait --timeout 900s > /dev/null
 ```
 
 - Now you have to execute `helm-charts.sh` script or manually run the command above with namespace (`$namespace`) in which CodeMie is deployed
-
-> Replace `<TARGET_CHART_VERSION>` with the desired NATS chart version.
 
 ## Post-upgrade verification
 

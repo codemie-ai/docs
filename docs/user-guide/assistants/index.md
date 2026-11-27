@@ -19,7 +19,7 @@ This section covers how to create, manage, and collaborate with Assistants in AI
 Core assistant management tasks:
 
 - [Create Assistant](./create-assistant.md) - Build assistants from scratch
-- [Share Assistants](./sharing-assistants.md) - Share assistants with team members
+- [Share Assistants](./sharing-assistants.md) - Share assistants with a project or with specific users
 - [Edit Assistants](./edit-assistants.md) - Modify assistant configurations
 - [Assistant Version History](./assistant-version-history.md) - Browse, compare, and restore previous system instruction versions
 - [Delete Assistants and Chats](./delete-assistants-and-chats.md) - Remove unused assistants and conversations
@@ -45,6 +45,7 @@ Discover and share assistants with the community:
 Coordinate multiple assistants:
 
 - [Sub-Assistants and Orchestration](./sub-assistants-multi-assistant-orchestrator.md) - Coordinate multiple specialized assistants
+- [Context Compression (Headroom)](./context-compression.md) - Reduce token usage by compressing the context sent to the model
 
 ## Favorites and Pinned Assistants
 
@@ -87,3 +88,4 @@ Manage conversations and organize your workspace:
 - [Export Assistant Chat Messages](./export-assistant-chat-messages-to-word-and-pdf-formats.md) - Export chats to various formats
 - [HTML Preview](./html-preview.md) - Preview and interact with HTML content in chat
 - [Chat Input Settings](./chat-input-settings.md) - Control Web Search, Code Interpreter, and LLM model per conversation from the chat toolbar
+- [Response Ready Notifications](./chat-notifications.md) - Get a tab title indicator and browser notification when a response completes in an inactive tab

@@ -267,6 +267,21 @@ Each model entry in the `model_list` array consists of three main sections:
 - **`label`**: Human-readable display name shown in CodeMie UI
 - **`forbidden_for_web`**: (Optional) Set to `true` to hide this model from CodeMie UI
 - **`supports_image_generation`**: (Optional) Set to `true` to include this model in the image generation model selector. Typically combined with `forbidden_for_web: true` since image generation models are not intended for general chat.
+- **Effort and temperature flags**: (Optional) CodeMie reads these LiteLLM capability flags to
+  decide which **Effort** levels a model offers and whether it accepts `temperature`. They are
+  usually filled from the LiteLLM models database; set them in `model_info` only to override it.
+
+  | Flag                              | Effect in CodeMie                                                                                     |
+  | --------------------------------- | ----------------------------------------------------------------------------------------------------- |
+  | `supports_reasoning`              | Enables `low`, `medium`, `high` for non-Claude models                                                 |
+  | `supports_output_config`          | Enables `low`, `medium`, `high` for Claude models (Claude models need this or one of the flags below) |
+  | `supports_xhigh_reasoning_effort` | Adds `xhigh`                                                                                          |
+  | `supports_max_reasoning_effort`   | Adds `max`                                                                                            |
+  | `supports_sampling_params: false` | `temperature` is not sent to the model                                                                |
+
+  Gemini models are limited to `low`, `medium`, `high`. The selected level is sent to the proxy as
+  `reasoning_effort`.
+
 - **`default_for_categories`**: Array of categories for default model selection.
 
   Available categories:
@@ -329,6 +344,12 @@ Each model entry in the `model_list` array consists of three main sections:
   such and avoid treating it as a normal deployable model. See
   [LiteLLM Native Auto-Routing](../../codemie/ai-models-integration/litellm-native-auto-routing.md)
   for the field schema and a worked example.
+- **`mode`**: (Optional) Set to `audio_transcription` to make the model a speech-to-text (STT)
+  model. CodeMie lists it in the STT model list and not in the chat model list.
+- **`stt_config`**: (Optional) Per-model STT settings: `default_language`,
+  `forward_request_headers`, `response_headers`, `response_body_fields` and
+  `request_timeout_seconds`. See
+  [Speech-to-Text Configuration](../../codemie/speech-to-text-configuration.md).
 
 ## Model Configuration Examples
 
@@ -386,6 +407,7 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gpt-6-sol`](#gpt-6-sol)                                   | GPT-6 Sol              |
 | [`gpt-6.1-sol`](#gpt-61-sol)                                | GPT-6.1 Sol            |
 | [`gpt-6.1-terra-2026-10-26`](#gpt-61-terra)                 | GPT-6.1 Terra          |
+| [`gpt-6.2-sol`](#gpt-62-sol)                                | GPT-6.2 Sol            |
 | [`codemie-text-embedding-ada-002`](#text-embedding-ada-002) | Text Embedding Ada-002 |
 | [`codemie-text-embedding-3-small`](#text-embedding-3-small) | Text Embedding 3 Small |
 | [`codemie-text-embedding-3-large`](#text-embedding-3-large) | Text Embedding 3 Large |
@@ -409,6 +431,8 @@ Configuration examples for these models can be found in the provider-specific se
 | [`gemini-3.7-flash`](#gemini-37-flash)             | Gemini 3.7 Flash                       |
 | [`gemini-3.8-flash`](#gemini-38-flash)             | Gemini 3.8 Flash                       |
 | [`gemini-4-argon`](#gemini-4-argon)                | Gemini 4 Argon                         |
+| [`gemini-4-carbon`](#gemini-4-carbon)              | Gemini 4 Carbon                        |
+| [`gemini-4-hydrogen`](#gemini-4-hydrogen)          | Gemini 4 Hydrogen                      |
 | [`text-embedding-005`](#embeddings-for-text)       | Text Embedding                         |
 
 ### GitHub Copilot Models
@@ -1467,6 +1491,29 @@ model_list:
 
 </details>
 
+### GPT-6.2 series
+
+#### GPT-6.2 Sol
+
+<details>
+<summary><strong>GPT-6.2 Sol</strong></summary>
+
+```yaml
+- model_name: gpt-6.2-sol
+  litellm_params:
+    model: azure/gpt-6.2-sol-2026-11-17
+    api_base: https://api-base-polandcentral-0.openai.azure.com/
+    litellm_credential_name: default_azure_openai_credential
+    additional_drop_params: ["temperature", "top_p"]
+  model_info:
+    id: gpt-6.2-sol-polandcentral-0
+    base_model: azure/gpt-6.2-sol
+    label: "GPT-6.2 Sol"
+    mode: responses
+```
+
+</details>
+
 ### GPT-5-codex
 
 #### GPT-5.3-codex
@@ -1830,6 +1877,64 @@ The `litellm_settings` approach is recommended when all Gemini models share the 
     id: gemini-4-argon-eu
     base_model: vertex_ai/gemini-4-argon
     label: "Gemini 4 Argon"
+```
+
+</details>
+
+#### Gemini 4 Carbon
+
+<details>
+<summary><strong>Gemini 4 Carbon</strong></summary>
+
+```yaml
+- model_name: gemini-4-carbon
+  litellm_params:
+    model: vertex_ai/gemini-4-carbon
+    vertex_location: "global"
+  model_info:
+    id: gemini-4-carbon-global
+    base_model: vertex_ai/gemini-4-carbon
+    label: "Gemini 4 Carbon"
+
+- model_name: gemini-4-carbon
+  litellm_params:
+    model: vertex_ai/gemini-4-carbon
+    vertex_location: "eu"
+  model_info:
+    id: gemini-4-carbon-eu
+    base_model: vertex_ai/gemini-4-carbon
+    label: "Gemini 4 Carbon"
+```
+
+</details>
+
+#### Gemini 4 Hydrogen
+
+The EU deployment has `order: 1` and the global deployment has `order: 2`. LiteLLM sends requests to the EU endpoint first and falls back to the global endpoint only when the EU deployment is unavailable.
+
+<details>
+<summary><strong>Gemini 4 Hydrogen</strong></summary>
+
+```yaml
+- model_name: gemini-4-hydrogen
+  litellm_params:
+    model: vertex_ai/gemini-4-hydrogen
+    vertex_location: "eu"
+    order: 1
+  model_info:
+    id: gemini-4-hydrogen-eu
+    base_model: vertex_ai/gemini-4-hydrogen
+    label: "Gemini 4 Hydrogen"
+
+- model_name: gemini-4-hydrogen
+  litellm_params:
+    model: vertex_ai/gemini-4-hydrogen
+    vertex_location: "global"
+    order: 2
+  model_info:
+    id: gemini-4-hydrogen-global
+    base_model: vertex_ai/gemini-4-hydrogen
+    label: "Gemini 4 Hydrogen"
 ```
 
 </details>

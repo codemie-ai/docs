@@ -26,12 +26,14 @@ Use this table to quickly find where each component appears in the UI.
 | `feedbackAssistant`                       | Help Center, Quick actions (top-right)                              | Feedback assistant card/button                                                                  | Feedback collection interface                                                       |                                                                                                                                                                                      |
 | `mcpConnect`                              | Assistant/Workflow config → Tools                                   | "MCP Servers" option in dropdown                                                                | MCP integration option                                                              |                                                                                                                                                                                      |
 | `mcpCustomServersDisabled`                | Assistant/Workflow config → MCP Servers                             | Catalog-referenced and custom MCP servers                                                       | Possibility to configure custom MCP servers                                         |                                                                                                                                                                                      |
+| `features:mcpServerInstructions`          | Assistant and skill system prompt                                   | Usage instructions declared by MCP servers are added to the system prompt                       | Instructions are not added; MCP servers behave as before                            | Enabled by default; needs MCP Connect that returns `instructions`; see [MCP Server Instructions](#mcp-server-instructions)                                                           |
 | `skills`                                  | Navigation, Chat config, Assistant config                           | Skills menu, skill selector, management pages                                                   | Entire Skills subsystem                                                             | Major feature gate                                                                                                                                                                   |
+| `features:katas`                          | Main navigation, Katas pages, floating kata window, leaderboard     | Katas navigation, pages, floating window, onboarding tour step, leaderboard metrics             | All Katas UI surfaces                                                               | Disabled by default                                                                                                                                                                  |
 | `aiAdoption`                              | Analytics page, Settings → Administration                           | Analytics dashboard with 4 dimensions                                                           | Analytics dashboard and config                                                      | Enterprise package only                                                                                                                                                              |
 | `features:cliAnalytics`                   | Analytics page                                                      | CLI Analytics tab: per-session coding-agent cost, tooling, repository, and efficiency analytics | CLI Analytics tab                                                                   | Enterprise package only; disabled by default; can also be toggled with `FEATURE_CLI_ANALYTICS`                                                                                       |
 | `features:showAllProjects`                | Settings → Administration → project selector                        | All projects returned by admin project picker (no limit or search minimum)                      | Admin project picker limited to 5 results with 3-char search minimum                |                                                                                                                                                                                      |
 | `defaultConversationAssistant`            | New chat creation                                                   | Pre-selects specified assistant                                                                 | Default behavior (no pre-selection)                                                 | Requires `slug` parameter                                                                                                                                                            |
-| `features:personalLiteLLMIntegrations`    | Integrations → User tab                                             | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                                                                                                                  |
+| `features:personalLiteLLMIntegrations`    | New Integration form → Scope: User                                  | LiteLLM as a personal integration option for regular users                                      | LiteLLM from personal integrations (only maintainers and administrators can manage) | Disabled by default                                                                                                                                                                  |
 | `subWorkflowNode`                         | Workflow visual editor → Action nodes                               | Sub-workflow node UI                                                                            | Sub-workflow node UI                                                                | Disabled by default; enable with `features:subWorkflow`                                                                                                                              |
 | `features:subWorkflow`                    | Workflow editor and execution                                       | Sub-workflow configuration and execution                                                        | Sub-workflow controls; API and runtime access return `403`                          | Disabled by default; enable with `subWorkflowNode`                                                                                                                                   |
 | `features:hostedApplications`             | Applications page, `/apps` routes, content domain                   | Upload, share, and open custom static web applications                                          | Only Platform apps on the Applications page; hosted API and content domain closed   | Disabled by default; needs `HOSTED_APPS_*` settings and a validator pod; can also be toggled with `FEATURE_HOSTED_APPLICATIONS`. See [Custom Applications](./hosted-applications.md) |
@@ -289,7 +291,7 @@ components:
     settings:
       enabled: true
 
-  # WHERE: Integrations → User tab
+  # WHERE: New Integration form → Scope: User
   # ENABLED: Regular users see LiteLLM as a personal integration option and can
   #          create and manage their own LiteLLM credentials
   # DISABLED: LiteLLM is unavailable in personal integrations; only maintainers
@@ -391,6 +393,21 @@ components:
       enabled: true
       name: "Skills"
       description: "Modular knowledge units that provide domain-specific instructions to assistants"
+
+  # WHERE: 1) Main navigation → AI Katas menu item
+  #        2) All Katas pages (routes under /katas)
+  #        3) Floating kata window (and its local-storage restore on page load)
+  #        4) Onboarding tour step for Katas
+  #        5) Leaderboard → Kata Completion score part and Katas Completed metric
+  # ENABLED: Shows all Katas UI surfaces: navigation, pages, floating window, tour step, leaderboard metrics
+  # DISABLED: Hides all Katas UI - navigation item removed, pages blocked, floating window suppressed,
+  #           tour step hidden, leaderboard kata metrics not shown. A missing entry reads as disabled.
+  # NOTE: Disabled by default
+  - id: "features:katas"
+    settings:
+      enabled: false
+      name: "AI Katas"
+      description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
 
   # WHERE: 1) Analytics page → AI Adoption dashboard
   #        2) Settings → Administration → AI Adoption Config
@@ -509,6 +526,41 @@ components:
       description: "Upload, share and open custom static web applications on the Applications page"
 ```
 
+#### AI Katas
+
+Controls whether the AI Katas learning feature is visible in the application. When disabled, every
+Katas surface is hidden — the navigation item (desktop and mobile), all Katas pages, the floating
+kata window, the onboarding tour step, and the Kata Completion score part and Katas Completed metric
+in the leaderboard.
+
+**Where it appears:**
+
+- Main navigation sidebar → AI Katas item
+- All Katas pages (routes under `/katas`)
+- Floating kata window (including local-storage restore on page load)
+- Onboarding tour → Katas step
+- Leaderboard → Kata Completion score part and Katas Completed metric
+
+- **When `enabled: true`** — All Katas UI surfaces are visible and work as normal.
+- **When `enabled: false`** (default) — All Katas UI surfaces are hidden. Opening a Katas URL
+  directly shows the same result as other disabled features. A missing `features:katas` entry in
+  the configuration reads as disabled with no error.
+
+```yaml
+components:
+  # WHERE: Navigation, Katas pages, floating window, onboarding tour, leaderboard
+  # ENABLED: Shows all Katas UI surfaces
+  # DISABLED: Hides all Katas UI surfaces — navigation, pages, floating window, tour step, leaderboard metrics
+  # NOTE: Disabled by default
+  - id: "features:katas"
+    settings:
+      enabled: false
+      name: "AI Katas"
+      description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
+```
+
+For the user-facing description of AI Katas, see the [AI Katas user guide](../../../user-guide/ai-katas/katas-overview.md).
+
 ### Custom Applications
 
 The `features:hostedApplications` component (see the example above) turns custom (hosted) static web applications on or off for the UI and the API together. It is disabled by default and needs additional API settings, a validator pod, and a separate content domain. See [Custom Applications](./hosted-applications.md).
@@ -535,6 +587,108 @@ components:
       value: 60
 ```
 
+### MCP Server Instructions {#mcp-server-instructions}
+
+An MCP server can declare usage instructions during the connection handshake. MCP Connect returns them with the tool list, and when the `features:mcpServerInstructions` component is enabled, AI/Run CodeMie appends them to the system prompt of the assistant or skill that uses the server. For the user-facing behavior, see [MCP Server Instructions](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md).
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Boolean - add MCP server instructions to the system prompt
+```
+
+```yaml
+components:
+  # Adds the instructions that MCP servers declare at handshake to the system prompt
+  # NOTE: Enabled by default. A missing component counts as disabled
+  - id: "features:mcpServerInstructions"
+    settings:
+      enabled: true
+      name: "MCP Server Instructions"
+      description: "Inject usage instructions that MCP servers declare at handshake into the system prompt"
+```
+
+To turn the feature off, set `enabled: false`. The flag is evaluated each time the agent is built, so the next message in a conversation is affected after the API instances load the changed configuration. The component is not editable on the **Customer Configuration** page; change it in `customer-config.yaml`.
+
+:::warning Missing component disables the feature
+A `customer-config.yaml` that replaces the default file and does not contain `features:mcpServerInstructions` leaves the feature disabled. Add the component shown above to enable it.
+:::
+
+#### Requirements
+
+- `MCP_CONNECT_ENABLED` is `true` and the MCP Connect service is a version that returns the `instructions` field with `tools/list`. Older versions never return instructions, so the feature has no effect.
+- The MCP server declares instructions in its `initialize` response.
+
+#### Delimiter Secret
+
+Each instructions block is wrapped in `BEGIN`/`END` markers that carry a unique identifier. The identifier is the security boundary: text from the server that imitates a marker without the exact identifier is not treated as a delimiter. The identifier is derived from the conversation ID with an HMAC keyed by the `MCP_INSTRUCTIONS_NONCE_SECRET` environment variable of the `codemie-api` service, so it stays the same during one conversation and cannot be predicted by an MCP server.
+
+| Parameter                       | Type   | Default | Description                                                                      |
+| ------------------------------- | ------ | ------- | -------------------------------------------------------------------------------- |
+| `MCP_INSTRUCTIONS_NONCE_SECRET` | string | unset   | Shared key for the delimiter identifier. Must be at least 32 characters when set |
+
+Behavior:
+
+- **Set**: every API replica derives the same identifier for a conversation. The system prompt stays identical across pods and restarts, so LLM provider prompt caching keeps working.
+- **Unset**: each API process generates its own random key. The feature still works, but the same conversation can get a different identifier on another replica or after a restart, which causes prompt-cache misses. A warning is logged once per process.
+- **Shorter than 32 characters**: the API fails at startup with `MCP_INSTRUCTIONS_NONCE_SECRET must be at least 32 characters`.
+
+Use the same value on every `codemie-api` replica. Generate a value and store it in a Kubernetes secret:
+
+```bash
+kubectl create secret generic codemie-mcp-secrets \
+  --namespace codemie \
+  --from-literal=MCP_INSTRUCTIONS_NONCE_SECRET="$(openssl rand -hex 32)"
+```
+
+Reference the secret in the Helm values of the `codemie-api` chart:
+
+```yaml
+extraEnv:
+  - name: MCP_INSTRUCTIONS_NONCE_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: codemie-mcp-secrets
+        key: MCP_INSTRUCTIONS_NONCE_SECRET
+```
+
+:::warning Create the secret first
+A `secretKeyRef` that points to a missing secret prevents the pods from starting. Create the secret before applying the values.
+:::
+
+Apply the change with `helm upgrade` and wait for the `codemie-api` pods to restart. Changing the secret later changes the identifiers of existing conversations once, which causes a single prompt-cache miss per conversation.
+
+#### Size Limits
+
+The platform limits each server's instructions to 4000 characters and the whole section to 12000 characters. MCP Connect additionally caps the text at `MCP_CONNECT_MAX_INSTRUCTIONS_CHARS` characters (default `8192`). See the [limits table](../../../user-guide/tools_integrations/tools/mcp/mcp-server-instructions.md#limits).
+
+### Headroom {#headroom}
+
+Headroom compresses the messages sent to the model to reduce token usage. When the `features:headroom` component is enabled, users see the **Context compression (Headroom)** settings in the assistant form and in the workflow editor, the chat usage details show the tokens saved, and the **Analytics** dashboard shows the **Context Compression** section. For the user-facing behavior, see [Context Compression (Headroom)](../../../user-guide/assistants/context-compression.md).
+
+**Fields used in this section:**
+
+```yaml
+settings:
+  enabled: true     # Boolean - show Headroom settings and analytics, allow compression
+```
+
+```yaml
+components:
+  # Context compression with Headroom
+  # NOTE: A missing component counts as disabled
+  - id: "features:headroom"
+    settings:
+      enabled: true
+      name: "Headroom"
+      description: "Compress large tool outputs and context with Headroom (sdk or sidecar mode) to reduce token usage"
+```
+
+:::warning The flag alone does not enable compression
+Compression also requires `HEADROOM_MODE` set to `sidecar` or `sdk` on the `codemie-api` service, and the matching deployment. With the flag on and the mode `off`, users can save settings but no tokens are saved. See [Headroom Context Compression Configuration](./headroom-configuration.md).
+:::
+
 ### Tool Call Permissions
 
 Customer-level toggle gating whether tool-call confirmation is enforced, plus a customer-wide floor on how strict that enforcement must be.
@@ -546,6 +700,7 @@ Customer-level toggle gating whether tool-call confirmation is enforced, plus a 
 - **When `enabled: false`** - all tool calls auto-approve, regardless of any assistant, request, or conversation-level policy.
 - **When `enabled: true`** - the effective policy resolves in this order: request override → conversation policy → assistant config. If the assistant sets `allow_override: false`, request and conversation overrides are ignored and only the assistant config applies.
 - `min_tool_call_policy` sets a customer-wide floor - the resolved policy is clamped to be at least as strict as this value (`manual` > `guarded` > `auto`).
+- The same rules apply to the tool calls of sub-assistants. The floor applies to every sub-assistant call, and the confirmation is shown inside the sub-assistant's step.
 
 **Fields used in this section:**
 
@@ -1370,6 +1525,12 @@ extraObjects:
               enabled: true
               name: "Skills"
               description: "Modular knowledge units that provide domain-specific instructions to assistants"
+
+          - id: "features:katas"
+            settings:
+              enabled: false
+              name: "AI Katas"
+              description: "Show AI Katas navigation, pages, floating kata window and kata metrics in the leaderboard"
 
           - id: "aiAdoption"
             settings:

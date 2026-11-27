@@ -101,7 +101,7 @@ This guide provides a complete workflow for installing and integrating the LiteL
 
 :::info PostgreSQL Database Setup
 
-The `postgres_litellm` database and user are created automatically during deployment via the `db-init-job`. For manual setup instructions, see [Manual PostgreSQL Setup](./deployment/manual-deployment.md#manual-postgresql-setup).
+The `litellm` database and user are created automatically during deployment via the `db-init-job`. For manual setup instructions, see [Manual PostgreSQL Setup](./deployment/manual-deployment.md#manual-postgresql-setup).
 
 :::
 

@@ -55,17 +55,17 @@ Generate with AI analyzes your requirements and automatically sets up the assist
 
 **Configuration Fields**
 
-| Field                              | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| **Project**                        | The project where the assistant will be created                            |
-| **Shared with Project**            | Enable to allow team members to view and use the assistant                 |
-| **Name**                           | Descriptive name for the assistant                                         |
-| **Slug**                           | Unique human-readable identifier for sharing (e.g., `my-custom-assistant`) |
-| **Description**                    | Brief description of the assistant's purpose and capabilities              |
-| **System Instructions**            | Core prompt that defines the assistant's behavior and responses            |
-| **Icon URL** (Optional)            | URL to an image for the assistant's avatar                                 |
-| **Data Source Context** (Optional) | Project documentation or Git repository for context                        |
-| **Available Tools**                | Tools and integrations to extend the assistant's capabilities              |
+| Field                              | Description                                                                                                                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Project**                        | The project where the assistant will be created                                                                                                                                   |
+| **Shared with Project**            | Enable to allow team members to view and use the assistant. To share with specific users only, see [Share with Specific Users](./sharing-assistants.md#share-with-specific-users) |
+| **Name**                           | Descriptive name for the assistant                                                                                                                                                |
+| **Slug**                           | Unique human-readable identifier for sharing (e.g., `my-custom-assistant`)                                                                                                        |
+| **Description**                    | Brief description of the assistant's purpose and capabilities                                                                                                                     |
+| **System Instructions**            | Core prompt that defines the assistant's behavior and responses                                                                                                                   |
+| **Icon URL** (Optional)            | URL to an image for the assistant's avatar                                                                                                                                        |
+| **Data Source Context** (Optional) | Project documentation or Git repository for context                                                                                                                               |
+| **Available Tools**                | Tools and integrations to extend the assistant's capabilities                                                                                                                     |
 
 **Slug Configuration**
 
@@ -191,7 +191,8 @@ setting caps, per assistant, how many tokens a single tool's output may contribu
 conversation.
 
 The setting is located in the assistant configuration form, inside the **Extra configuration**
-section, alongside **LLM model**, **Temperature**, and **Top P**.
+section, alongside **LLM model**, **Temperature**, and **Top P** (or **Effort** for reasoning
+models, see [Effort](#effort)).
 
 ![Limit Tool Output Tokens field in the Extra configuration section](./images/limit-tool-output-tokens.png)
 
@@ -221,6 +222,58 @@ for accurate answers.
 :::note
 The `30000` placeholder is a visual hint only. Until a value is entered and saved, the assistant
 continues to use each tool's own default limit.
+:::
+
+## Effort
+
+Reasoning models (for example Claude 4.6 and later, GPT-5.x, o-series and Gemini 3) take a
+discrete **Effort** level instead of a sampling temperature. Effort controls how much the model
+thinks before it answers: a higher level usually gives more thorough answers but uses more tokens
+and takes longer.
+
+The setting is located in the **Extra configuration** section of the assistant configuration
+form. It is shown only when the selected **LLM model** supports effort; for such models it
+replaces **Temperature** and **Top P**.
+
+![Effort dropdown in the Extra configuration section for a reasoning model](./images/effort-assistant-dropdown.png)
+
+Models without effort support keep the **Temperature** and **Top P** fields:
+
+![Temperature and Top P fields for a model without effort support](./images/effort-assistant-temperature-model.png)
+
+**Behavior**
+
+- The levels in the dropdown are the ones the selected model supports. Possible levels are
+  `low`, `medium`, `high`, `xhigh` and `max`; most models offer only a subset.
+- When no effort is selected, the model uses its provider's default.
+- Selecting an effort clears any saved **Temperature** and **Top P** values.
+- Changing the **LLM model** resets **Effort**, **Temperature** and **Top P**.
+- Selecting `xhigh` or `max` shows a non-blocking warning: _"Higher effort increases model
+  thinking and may significantly increase token usage."_
+
+  ![Token usage warning shown when the max effort level is selected](./images/effort-assistant-max-effort-warning.png)
+
+- A saved effort is shown in the **Configuration** block of the assistant details page.
+
+**Field rules**
+
+| Property       | Behavior                                                                 |
+| -------------- | ------------------------------------------------------------------------ |
+| Default state  | Empty — the provider's default effort is used                            |
+| Accepted input | One of the levels listed for the selected model                          |
+| Visibility     | Shown only for models that support effort, in place of Temperature/Top P |
+| Persistence    | A saved value is retained and shown again when the assistant is edited   |
+
+:::tip
+Start with `medium` or leave the field empty. Use `high` or above for tasks that need deep
+analysis, such as complex code changes or multi-step planning, and lower levels for simple,
+latency-sensitive tasks.
+:::
+
+:::note
+If a model supports a lower maximum than the stored value (for example after the assistant is
+moved to another model through the API), the platform lowers the effort to the highest level the
+model supports instead of failing the request.
 :::
 
 ## Tool Output Visibility

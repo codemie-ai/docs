@@ -49,6 +49,19 @@ To open the Workflow Details page, select **View Details** from the actions menu
 
 ![View Details option in workflow actions](./images/workflows-overview/workflow-actions-view-details.png)
 
+## Filtering Workflows by Category
+
+The **My Workflows** and **All Workflows** pages include a **Categories** filter in the left sidebar. It uses the same categories as assistants and works with categories assigned in the workflow's [configuration](./create-workflow.md#workflow-categories).
+
+![Categories filter on the My Workflows page](./images/workflows-overview/workflows-categories-filter.png)
+
+1. Open **My Workflows** or **All Workflows**.
+2. In the left sidebar, open the **Categories** dropdown.
+3. Select one or more categories. The list updates to show only workflows that have a selected category assigned.
+4. To restore the full list, clear the selected categories.
+
+Workflows without categories are hidden while a category filter is applied and are shown again when the filter is cleared.
+
 ## Workflow Details Page
 
 The Workflow Details page is the central hub for viewing, running, and managing a specific workflow.

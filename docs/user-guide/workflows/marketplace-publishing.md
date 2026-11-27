@@ -62,6 +62,10 @@ Choose 1 to 3 categories that best describe the workflow's purpose. Categories h
 At least one category is required. Attempting to publish without a category selection results in a validation error.
 :::
 
+:::note
+These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results on **My Workflows**).
+:::
+
 ## After Publishing
 
 Once published, the workflow becomes globally visible in the **Marketplace** tab of the Workflows section. Any authenticated user can view and execute it.

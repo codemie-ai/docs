@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/assistants/assistant-categories-management',
             'user-guide/assistants/clone-assistant-from-marketplace',
             'user-guide/assistants/sub-assistants-multi-assistant-orchestrator',
+            'user-guide/assistants/context-compression',
             {
               type: 'category',
               label: 'Organizing and Managing Communication with Assistants',
@@ -72,6 +73,7 @@ const sidebars: SidebarsConfig = {
                 'user-guide/assistants/html-preview',
                 'user-guide/assistants/copy-table',
                 'user-guide/assistants/chat-input-settings',
+                'user-guide/assistants/chat-notifications',
               ],
             },
           ],
@@ -229,6 +231,8 @@ const sidebars: SidebarsConfig = {
                     'user-guide/tools_integrations/tools/mcp/adding-an-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
                     'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
+                    'user-guide/tools_integrations/tools/mcp/mcp-server-instructions',
+                    'user-guide/tools_integrations/tools/mcp/mcp-generated-files',
                   ],
                 },
               ],
@@ -312,11 +316,23 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'user-guide/codemie-cli/enable-analytics',
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
-            'user-guide/codemie-cli/codemie-claude-skills',
-            'user-guide/codemie-cli/sdk-cli-reference',
-            'user-guide/codemie-cli/claude-desktop',
+            {
+              type: 'category',
+              label: 'Claude',
+              link: {
+                type: 'doc',
+                id: 'user-guide/codemie-cli/claude/codemie-claude',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/codemie-cli/claude/codemie-claude-skills',
+                'user-guide/codemie-cli/claude/sdk-cli-reference',
+                'user-guide/codemie-cli/claude/claude-desktop',
+              ],
+            },
           ],
         },
         {
@@ -358,6 +374,19 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Control Plane',
+          link: {
+            type: 'doc',
+            id: 'user-guide/control-plane/control-plane',
+          },
+          collapsed: true,
+          items: [
+            'user-guide/control-plane/on-dedicated-vdi',
+            'user-guide/control-plane/configuration',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Analytics',
           link: {
             type: 'doc',
@@ -365,6 +394,8 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
+            'user-guide/analytics/spend-inventory',
+            'user-guide/analytics/ai-attribution',
             'user-guide/analytics/ai-champions-leaderboard',
             'user-guide/analytics/routing-analytics',
           ],
@@ -378,7 +409,23 @@ const sidebars: SidebarsConfig = {
           },
           collapsed: true,
           items: [
-            'user-guide/applications/hosted-applications',
+            {
+              type: 'category',
+              label: 'Hosted Applications',
+              link: {
+                type: 'doc',
+                id: 'user-guide/applications/hosted-applications/hosted-applications',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/applications/hosted-applications/create-and-upload',
+                'user-guide/applications/hosted-applications/versions-and-validation',
+                'user-guide/applications/hosted-applications/card-cover',
+                'user-guide/applications/hosted-applications/share',
+                'user-guide/applications/hosted-applications/open-and-view',
+                'user-guide/applications/hosted-applications/manage',
+              ],
+            },
             'user-guide/applications/integration-guide',
           ],
         },
@@ -567,6 +614,7 @@ const sidebars: SidebarsConfig = {
                   },
                   collapsed: true,
                   items: [
+                    'admin/deployment/extensions/litellm-proxy/postgres-setup',
                     'admin/deployment/extensions/litellm-proxy/configure-values',
                     'admin/deployment/extensions/litellm-proxy/auth-secrets',
                     'admin/deployment/extensions/litellm-proxy/model-config',
@@ -617,6 +665,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'admin/deployment/extensions/ai-code-explorer/ai-code-explorer',
                 'admin/deployment/extensions/mf-lens/mf-lens',
+                'admin/deployment/extensions/control-plane/control-plane',
               ],
             },
           ],
@@ -640,6 +689,7 @@ const sidebars: SidebarsConfig = {
                 'admin/configuration/codemie/hosted-applications',
                 'admin/configuration/codemie/dynamic-customer-configuration',
                 'admin/configuration/codemie/code-executor-configuration',
+                'admin/configuration/codemie/headroom-configuration',
                 'admin/configuration/codemie/scaling-configuration',
                 {
                   type: 'category',
@@ -666,7 +716,9 @@ const sidebars: SidebarsConfig = {
                   ],
                 },
                 'admin/configuration/codemie/api-configuration',
+                'admin/configuration/codemie/speech-to-text-configuration',
                 'admin/configuration/codemie/platform-administration',
+                'admin/configuration/codemie/global-model-management',
                 'admin/configuration/codemie/marketplace-management',
                 'admin/configuration/codemie/project-budget-management',
                 'admin/configuration/codemie/provisioning-clients',
@@ -843,6 +895,10 @@ const sidebars: SidebarsConfig = {
                       },
                       collapsed: true,
                       items: [
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-7-to-26-8',
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-6-to-26-7',
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-5-to-26-6',
+                        'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-26-4-to-26-5',
                         'admin/update/3rd-party-components/keycloak/keycloak-upgrade/keycloak-24-to-26',
                       ],
                     },

@@ -28,7 +28,7 @@ Since the 0.12.0 version of AI/Run CodeMie, assistants can operate with Telegram
 
 ## 2. Configure Telegram Integration
 
-2.1. In AI/Run CodeMie, navigate to the **Integrations tab → User** and click **+ Create**.
+2.1. In AI/Run CodeMie, navigate to the **Integrations** tab and click **+ New Integration**.
 
 2.2. Add a Telegram integration with the following parameters and click **Create**:
 

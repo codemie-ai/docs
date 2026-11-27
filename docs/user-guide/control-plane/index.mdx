@@ -1,0 +1,40 @@
+---
+id: control-plane
+title: Control Plane
+sidebar_label: Control Plane
+sidebar_position: 10
+pagination_prev: user-guide/index
+pagination_next: null
+description: Deploy the AI/Run Control Plane on Kubernetes or on a dedicated VDI.
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+import FeatureGrid from '@site/src/components/FeatureGrid';
+
+# Control Plane
+
+The AI/Run Control Plane shows project leads what AI-assisted delivery produced and what it cost.
+It combines CodeMie CLI sessions with tracker tickets and Git merge requests, and shows the results
+per project, stream and person.
+
+Engineers use the same CodeMie CLI in every deployment option, so a team can switch options without
+starting over.
+
+## Deployment Options
+
+<FeatureGrid>
+  <FeatureCard
+    icon="/img/icons/cloud-data.svg"
+    iconType="image"
+    title="Kubernetes"
+    description="Install the Control Plane with a Helm chart next to AI/Run CodeMie. AI usage metrics come from the CodeMie backend, and users sign in with SSO."
+    link="/admin/deployment/extensions/control-plane"
+  />
+  <FeatureCard
+    icon="/img/icons/paper.svg"
+    iconType="image"
+    title="On Dedicated VDI"
+    description="Run the Control Plane with Docker Compose on a dedicated VDI, with no new server. Users upload CodeMie CLI session export files and the Control Plane processes them."
+    link="/user-guide/control-plane/on-dedicated-vdi"
+  />
+</FeatureGrid>

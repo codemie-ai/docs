@@ -24,6 +24,8 @@ CodeMie CLI is a unified command-line interface that provides access to multiple
 
 **Multi-Agent Orchestration**: Manage multiple AI coding agents from one CLI — Claude Code, Gemini CLI, OpenAI Codex, GitHub Copilot CLI, OpenCode, and the built-in CodeMie agent. Each agent can be powered by different LLM models, allowing developers to choose the appropriate assistant for each task: Claude Code for complex refactoring, Gemini for rapid prototyping, or the built-in agent for file operations and planning.
 
+**Claude Code and Claude Desktop**: Run Claude Code through `codemie-claude` and connect Claude Desktop to the CodeMie gateway. By default, only Claude models are available in both; other models of the project catalog can be added per profile. See [Claude with CodeMie](./claude/index.md).
+
 **Profile Management**: Maintain separate configurations for different contexts (work, personal, team projects). Each profile can be configured with its own provider (Azure OpenAI, AWS Bedrock, or LiteLLM), enabling seamless switching between environments.
 
 **Enterprise Features**: Built-in support for SSO authentication via CodeMie platform, comprehensive analytics and usage tracking, audit logging with session management, secrets scanning via Gitleaks, budget controls, and governance policies.
@@ -319,6 +321,8 @@ codemie-opencode --task "<prompt>"   # OpenCode agent
 - `--model <model>`: Override default model
 - `--help`: Show agent-specific help
 
+For `codemie-claude`, see also [Claude with CodeMie](./claude/index.md).
+
 **Example Workflows**
 
 ```bash
@@ -375,6 +379,9 @@ Tracked metrics include:
 - Cache hit rates and efficiency metrics
 - Language statistics (lines added, files created/modified)
 
+To send usage from Claude Code and GitHub Copilot to CodeMie
+[AI Attribution](../analytics/ai-attribution.md), see [Enable AI Analytics](./enable-analytics.md).
+
 ### Connect Remote MCP Servers
 
 Use `codemie mcp add` to register remote MCP servers with Claude Code. The built-in `codemie-mcp-proxy` handles OAuth authentication automatically, so you don't need to manage tokens manually:
@@ -389,9 +396,9 @@ codemie mcp list
 To connect VS Code to the CodeMie model catalog and MCP proxy:
 
 ```bash
-codemie proxy connect vscode
-codemie proxy connect vscode --profile <name>
-codemie proxy connect vscode --insiders
+codemie proxy connect --vscode
+codemie proxy connect --vscode --profile <name>
+codemie proxy connect --vscode --insiders
 ```
 
 The proxy starts locally and adds the managed CodeMie model catalog and MCP servers to your agent. Your SSO credentials remain in CodeMie and are not written to the agent configuration.

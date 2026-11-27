@@ -13,7 +13,7 @@ AI/Run CodeMie is capable with SQL databases, such as MySQL and PostgreSQL. By e
 
 ## 1. Create SQL Integration
 
-1.1. In AI/Run CodeMie, navigate to the **Integrations** tab → **User/Project** and click **+ Create**:
+1.1. In AI/Run CodeMie, navigate to the **Integrations** tab, click **+ New Integration**, and select the **Scope**:
 
 ![Create integration](./images/image34.png)
 

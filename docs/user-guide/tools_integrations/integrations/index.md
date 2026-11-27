@@ -8,25 +8,27 @@ pagination_next: null
 
 # Integrations
 
-There are three types of integrations, distinguished by scope and who can create them. If you don't explicitly select an integration, CodeMie picks one automatically — see [How the Default Integration Is Selected](#how-the-default-integration-is-selected) below.
+Every integration has a **Scope** that defines who can use it. All integrations, regardless of scope, are managed from a single **Integrations** list and created with a single **New Integration** form. If an integration is not explicitly selected, CodeMie picks one automatically — see [How the Default Integration Is Selected](#how-the-default-integration-is-selected) below.
 
-- **User Integration**: Personal configuration scoped to the current project. Available only to you.
-- **User Global Integration**: Personal integration with the **Global** toggle enabled. Available to you across all projects where you are onboarded.
-- **Project Integration**: Shared configuration available to all project members. Requires the `isAdmin` or `applications_admin` role.
+There are two scopes, and the **Global** toggle extends a User integration to all projects, which gives three kinds of integrations:
+
+- **User Integration** (Scope: **User**): Personal configuration scoped to the current project. Available only to its owner.
+- **User Global Integration** (Scope: **User**, **Global** toggle enabled): Personal integration available to its owner across all projects where the owner is onboarded.
+- **Project Integration** (Scope: **Project**): Shared configuration available to all members of the selected project. Can be created by project admins only.
 
 :::note
-To create a **Project Integration**, you need the `isAdmin` or `applications_admin` role. To request `applications_admin` access, submit a Support ticket. See [Project & User Management](../../project-user-management/index.mdx) for details on managing roles.
+Only project admins (`applications_admin` role in the project), platform admins (`isAdmin`), and maintainers can create **Project Integrations** and see the Project scope in the list and in the form. Project integrations require admin rights on the project. Users who administer no project (members only, external users, service accounts) can create only User integrations, and only inside a project they belong to. To request `applications_admin` access, submit a Support ticket. See [Project & User Management](../../project-user-management/index.mdx) for details on managing roles.
 :::
 
 ## How the Default Integration Is Selected
 
 When a tool requires an integration and no specific one has been chosen, CodeMie picks it automatically. **User Integration always takes priority over Project Integration.**
 
-| Priority | Type                        | Created in                                               | Visible to                                        |
-| -------- | --------------------------- | -------------------------------------------------------- | ------------------------------------------------- |
-| 1        | **User Integration**        | **User** tab, current project                            | You only, in this project                         |
-| 2        | **User Global Integration** | **User** tab, **Global** toggle enabled                  | You only, in all projects where you are onboarded |
-| 3        | **Project Integration**     | **Project** tab (`isAdmin` or `applications_admin` only) | All project members                               |
+| Priority | Type                        | Created with                                                               | Visible to                                                   |
+| -------- | --------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1        | **User Integration**        | **Scope: User**, current project                                           | The owner only, in this project                              |
+| 2        | **User Global Integration** | **Scope: User**, **Global Integration** toggle enabled                     | The owner only, in all projects where the owner is onboarded |
+| 3        | **Project Integration**     | **Scope: Project** (project admins, platform admins, and maintainers only) | All project members                                          |
 
 If no matching integration is found at any level, the action requiring it will fail.
 
@@ -38,9 +40,9 @@ If no matching integration is found at any level, the action requiring it will f
 
 ### Tips
 
-- Use **User Global Integration** if you use the same credentials across multiple projects — configure once, use everywhere.
-- **Project Integration** acts as a shared fallback for team members who haven't set up their own.
-- If a tool is using unexpected credentials, go to **Integrations → User** and check whether a User Integration is overriding the project-level one.
+- Use **User Global Integration** for the same credentials across multiple projects — configure once, use everywhere.
+- **Project Integration** acts as a shared fallback for team members who have not set up their own.
+- If a tool is using unexpected credentials, open **Integrations**, set the **Scope** filter to **User** (or, for members, simply review the list), and check whether a User Integration is overriding the project-level one.
 
 ## Automatic Credentials Lookup
 
@@ -58,7 +60,7 @@ When the toggle is **On**, the integration dropdown is hidden — no manual sele
 
 ![Automatic Credentials Lookup toggle enabled](./images/automatic-credentials-lookup-on.png)
 
-When the toggle is **Off**, the dropdown becomes visible and a specific integration can be pinned:
+When the toggle is **Off**, the dropdown becomes visible and a specific integration can be pinned. If no integration of the tool's type is available yet, an **Add User Integration** button is shown in place of the dropdown:
 
 ![Automatic Credentials Lookup toggle disabled with integration dropdown](./images/automatic-credentials-lookup-off.png)
 
@@ -91,25 +93,86 @@ Pinning a specific integration applies the author's credentials to every user of
 
 ## Setting Up Integrations
 
-1. In the AI/Run CodeMie main menu, click the **Integrations** tab:
+### The Integrations List
 
-   ![Integrations tab in main menu](./images/integrations-menu-sidebar.png)
+In the AI/Run CodeMie main menu, click **Integrations**:
 
-2. In the Integrations menu, click **User** or **Project** and then click the **+ Create** button:
+![Integrations tab in main menu](./images/integrations-menu-sidebar.png)
 
-   ![Create integration button](./images/integrations-list-create-button.png)
+The page shows one combined list of all integrations the current user can see. There are no separate **User** and **Project** tabs or switches. The list contains the following columns:
 
-3. Select the desired tool from the **Credential Type** dropdown and specify the credentials, then click **Save**:
+| Column      | Description                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Project** | Project the integration belongs to                                                                                  |
+| **Alias**   | Name of the integration                                                                                             |
+| **Scope**   | **User** or **Project**. User integrations with the **Global** toggle enabled additionally carry a **Global** badge |
+| **Type**    | Credential type, for example Git or Jira                                                                            |
+| **URL**     | Integration URL, where the credential type has one                                                                  |
+| **State**   | Enabled or disabled state, shown for credential types that support it (for example, Scheduler)                      |
 
-   ![Integration creation form](./images/integration-create-form.png)
+![Unified Integrations list](./images/integrations-list-create-button.png)
+
+What the list shows depends on the role:
+
+- **Project admins, platform admins, and maintainers** see User and Project integrations together. A **Scope** filter with the options **All** (default), **User**, and **Project** narrows the list to one scope.
+- **Members without project-admin rights** see only their own User integrations. The **Scope** filter is not displayed, and the list behaves as if **Scope: User** is always selected.
+
+![Integrations list for a member](./images/integrations-list-member-view.png)
+
+Each project's Project integrations are listed to the admins of that project only. Platform admins see Project integrations of all projects.
+
+### Creating an Integration
+
+All integrations are created with the same **New Integration** form, regardless of scope.
+
+1. On the **Integrations** page, click **+ New Integration**. The **New Integration** form opens with the **Scope** already selected to match the list: **Scope: Project** is preselected when the list is filtered to **Project**, otherwise **User**.
+
+2. Select the **Scope**. This is the first field of the form and defines who can use the integration:
+   - **User**: only the creator can use the integration. Turn on **Global Integration** to use it in every project the creator is onboarded to.
+   - **Project**: every member of the selected project can use the integration. Only project admins, platform admins, and maintainers can select this scope. For other members, the form explains that Project integrations can be created by project admins only. Project admins see only the projects they administer in the **Project** field.
+
+3. Select the **Project** the integration belongs to. A project is required, except when **Scope: User** is selected with **Global Integration** turned on: the **Project** selector is then disabled, because the integration is not tied to a single project. The project cannot be changed after saving.
+
+4. Select the desired tool from the **Credential Type** dropdown, specify the **Alias** and the credentials, then click **Save**:
+
+   ![New Integration form](./images/integration-create-form.png)
+
+After saving, the list opens again, the saved row is highlighted, and a confirmation message is displayed. If the active filters hide the new row (for example, a User integration is saved while **Scope: Project** is selected), the message says so and offers **Show all scopes and types** to reset the filters.
 
 :::note
-Most of the tools require you to specify the URL, token, and alias. Alias is the name of the setting that will be displayed in the integrations list.
+Most of the tools require specifying the URL, token, and alias. Alias is the name of the setting that is displayed in the integrations list.
 :::
 
 :::tip
 The **Credential Type** dropdown is sorted alphabetically and includes a scrollbar, making it easy to locate the required credential type even when many options are available.
 :::
+
+:::info
+The **Global Integration** toggle is shown for **Scope: User** only, because Global applies to User integrations only. Moving an existing integration from one scope to the other is not supported; the **Scope** field is locked when an integration is edited.
+:::
+
+### Scope-Bound Credential Types
+
+Most credential types are available at both scopes. Some types exist at one scope only:
+
+| Credential type  | Available at |
+| ---------------- | ------------ |
+| **DIAL**         | Project only |
+| **Google OAuth** | User only    |
+
+:::note
+**Google OAuth** is displayed only when the Google OAuth feature is enabled in the customer configuration. Types limited to specific roles (Webhook, LiteLLM, MS Teams Bot) are shown to the same people as before.
+:::
+
+Scope-bound types are marked with a **User only** or **Project only** badge in the **Credential Type** dropdown of the form and in the **Type** filter of the list. They affect the form as follows:
+
+- **A type bound to the other scope shows the hint "Switches Scope to …"** in the **Credential Type** dropdown. For example, while **Scope: User** is selected, **DIAL** is listed with the hint "Switches Scope to Project".
+- **Selecting a type bound to the other scope switches the Scope automatically.** The form confirms the change, for example: "DIAL is available only at Project scope, so Scope switched to Project."
+- **After a scope-bound type is selected, the scope that does not match is disabled.** For **DIAL**, **User** is disabled; for **Google OAuth**, **Project** is disabled. The form explains why, for example: "DIAL is available only at Project scope, so User is unavailable. Pick another type to change it." To change the scope, select a different credential type first.
+- **Members without project-admin rights** see Project-only types such as DIAL as disabled, with the hint "Project only · needs project admin rights".
+- Entry points that fix the scope keep it. The quick-create form opened from an assistant or a data source creates **User** integrations only and has no **Scope** field.
+
+![Scope disabled by a scope-bound type](./images/integration-create-scope-locked.png)
 
 ## Integration Validation During Assistant Save
 
@@ -122,7 +185,7 @@ selected tools have the required integrations configured. If any are missing, a
 The modal lists every integration type that needs to be set up, grouped by type, and shows
 which tools depend on each one. For each missing integration you have two options:
 
-- Click **Add Integration** — opens the Create User Integration page for that type. After
+- Click **Add Integration** — opens the quick Create User Integration form for that type. This shortcut always creates a **User** integration. A Project integration is created from the **Integrations** page. After
   saving the integration, return to the assistant and save again.
 - Leave it as-is and click **Skip Validation & Save** — saves the assistant without the
   missing integrations. Tools without integrations will not work until you set them up.
@@ -146,7 +209,7 @@ As an alternative way of getting to the Integrations page, you can click the **A
 
 ![Add user integration from assistant page](./images/assistant-add-integration-button.png)
 
-This link will also lead to the Create User Integration page. Note that this link appears only if no such tools are configured by the users.
+This link opens the quick Create User Integration form, which creates **User** integrations only and has no **Scope** field. Note that this link appears only if no such tools are configured by the users.
 
 If you have two or more integrations related to one tool, you can specify the needed one when adding/editing assistants.
 
@@ -179,9 +242,27 @@ To change the state of a scheduler, open the record and toggle the **Is Enabled*
 
 ## Filter Integrations
 
-As you work with AI/Run CodeMie, the number of integrations will increase. To simplify navigation between integrations, use the filters. You can filter integrations by:
+As the number of integrations grows, the filter panel on the **Integrations** page narrows the list. Some filters are shown only for a specific scope.
 
-- **NAME**
-- **PROJECT**
-- **TYPE**
-- **GLOBAL**
+| Filter         | Shown for                                                 | Description                                                                                            |
+| -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Search**     | Everyone                                                  | Free-text search                                                                                       |
+| **Scope**      | Project admins, platform admins, and maintainers          | **All** (default), **User**, or **Project**                                                            |
+| **Project**    | Everyone                                                  | A single project                                                                                       |
+| **Type**       | Everyone                                                  | One or more credential types. Types bound to one scope carry a **User only** or **Project only** badge |
+| **Global**     | **Scope: User**, and members without project-admin rights | **All**, **Global**, or **Non Global** User integrations                                               |
+| **Created by** | **Scope: Project**                                        | Filters Project integrations by creator: **Me** checkbox or a user selected from the list              |
+
+**Clear all** at the top of the filter panel resets the search and all filters.
+
+![Filter panel with Scope: Project and the Created by filter](./images/integrations-scope-filters.png)
+
+The selected **Scope** is kept in the page URL (for example, `?scope=project`). After **Cancel**, **Save**, or the back arrow in the **New Integration** form, the list opens with the same scope selected. The **Project**, **Type**, and **Global** filters and the search are kept in the URL as well.
+
+At **Scope: All**, the **Global** and **Created by** filters are not offered, and the panel shows the hint "Pick a scope to filter by Global or Created by."
+
+When the **Scope** changes, **Global** and **Created by** are cleared. Selected **Type** values bound to the other scope are removed from the filter, and a note names what was removed, for example: "DIAL was removed from Type: it exists only at Project scope." In the **Type** filter, types bound to the other scope are disabled with the hint "Not available at … scope" while a single scope is selected.
+
+:::tip
+To see all scheduler integrations in one view, set **Type** to **Scheduler**. See [Scheduler State in the Integrations List](#scheduler-state-in-the-integrations-list).
+:::

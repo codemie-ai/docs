@@ -2,9 +2,9 @@
 id: codemie-claude-skills
 title: Claude Code Skills for CodeMie
 sidebar_label: Claude Code Skills
-sidebar_position: 4
-pagination_prev: user-guide/codemie-cli/skills-integration
-pagination_next: user-guide/codemie-cli/sdk-cli-reference
+sidebar_position: 5
+pagination_prev: user-guide/codemie-cli/claude/codemie-claude
+pagination_next: null
 ---
 
 import EnterpriseFeature from '@site/src/components/EnterpriseFeature';

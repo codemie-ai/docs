@@ -54,6 +54,17 @@ kubectl get secret elasticsearch-master-credentials -n elastic -o yaml | \
 
 ### Step 3: Install Fluent Bit Helm Chart
 
+:::warning Fluent Bit image registry
+If the image is not pulled, Fluent Bit does not start and logs do not reach Elasticsearch.
+
+| `fluent-bit.image.repository`                 | Use it?                                                      |
+| --------------------------------------------- | ------------------------------------------------------------ |
+| `ghcr.io/fluent/fluent-bit`                   | Yes, recommended                                             |
+| `cr.fluentbit.io/fluent/fluent-bit` (default) | No: sometimes unavailable (HTTP 503/504)                     |
+| `docker.io/fluent/fluent-bit`                 | Only with a Docker Hub login (`fluent-bit.imagePullSecrets`) |
+
+:::
+
 Deploy Fluent Bit:
 
 ```bash
