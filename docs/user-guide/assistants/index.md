@@ -89,3 +89,4 @@ Manage conversations and organize your workspace:
 - [HTML Preview](./html-preview.md) - Preview and interact with HTML content in chat
 - [Chat Input Settings](./chat-input-settings.md) - Control Web Search, Code Interpreter, and LLM model per conversation from the chat toolbar
 - [Response Ready Notifications](./chat-notifications.md) - Get a tab title indicator and browser notification when a response completes in an inactive tab
+- [Agent Workspace](./agent-workspace/) - Browse and preview the files an assistant wrote into the chat workspace: Markdown, JSON, logs, and source code
