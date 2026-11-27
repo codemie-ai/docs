@@ -65,6 +65,13 @@ Parent context and history are not merged into the child, and child context and 
 
 If the child execution fails, the Sub-workflow node fails. If the child is aborted, the node is aborted as well.
 
+## Run Attributes
+
+Run attributes supplied when the parent workflow execution starts are inherited by every child
+workflow execution it starts, so child usage is labelled the same way as the parent in analytics.
+See [Run Attributes](../api/index.md#run-attributes) for how attributes are supplied and
+[Run Attributes in Analytics](../analytics/run-attributes.md) for how they are used.
+
 ## Configure Nesting
 
 Sub-workflows can invoke other workflows. To configure a workflow's nesting limit in the visual editor:

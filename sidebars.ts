@@ -398,6 +398,7 @@ const sidebars: SidebarsConfig = {
             'user-guide/analytics/ai-attribution',
             'user-guide/analytics/ai-champions-leaderboard',
             'user-guide/analytics/routing-analytics',
+            'user-guide/analytics/run-attributes',
           ],
         },
         {
