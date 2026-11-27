@@ -317,6 +317,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             'user-guide/codemie-cli/enable-analytics',
+            'user-guide/codemie-cli/analytics-privacy',
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
             {

@@ -381,6 +381,8 @@ Tracked metrics include:
 
 To send usage from Claude Code and GitHub Copilot to CodeMie
 [AI Attribution](../analytics/ai-attribution.md), see [Enable AI Analytics](./enable-analytics.md).
+To keep prompt text and other project content out of analytics, see
+[Analytics Privacy](./analytics-privacy.md).
 
 ### Connect Remote MCP Servers
 

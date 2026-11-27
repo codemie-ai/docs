@@ -27,6 +27,9 @@ words:
   - dbuser
   - serviceaccount
   - codemie
+  - Cowork
+  - pullrequest
+  - pullrequests
   - passwordless
   - SAMEORIGIN
   - AI/Run
