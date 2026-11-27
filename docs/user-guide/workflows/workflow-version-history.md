@@ -23,40 +23,38 @@ Version history applies to **workflow YAML configuration** only. Workflow metada
 
 Version history is available when **editing** an existing workflow. It is not shown during workflow creation.
 
-1. Navigate to **Workflows** and open a workflow for editing (click **Actions** (⋮) → **Edit** on the workflow card, or **Edit** on the Workflow Details page).
+1. Navigate to **Workflows** and open a workflow for editing (click **More options** (⋮) → **Edit** on the workflow card, or **Edit** on the Workflow Details page). The **Edit Workflow** page opens.
 
-2. Open the YAML editor:
-   - **Visual Editor**: Click the **YAML** button in the upper-right corner of the workflow editor.
-   - **Legacy form editor**: Open the YAML configuration field in the workflow form.
+2. Click **YAML** in the editor toolbar. The **Workflow configuration** panel opens on the **YAML** tab.
 
-3. In the YAML header action bar, click **Version History** (beside **Documentation** when documentation is available):
+3. In the **YAML Configuration** section, click **Version History** (next to **Documentation** and **Expand**):
 
-   ![Version History button in the YAML editor header](./images/workflow-version-history-button.png)
+   ![Version History buttons in the editor toolbar and in the YAML tab, boxed in red](./images/workflow-version-history-button.png)
 
-:::info Editor Paths
-Both the visual editor YAML panel and the legacy YAML form editor expose the same **Version History** button. The button appears even when **Documentation** is hidden for the workflow.
+:::info Toolbar Button
+The **Edit Workflow** toolbar also has a **Version History** button (next to **Beautify** and **YAML**). It opens the same popup with a visual comparison of the workflow graph, where each node is marked **Added**, **Modified** or **Removed**. The YAML comparison described below is opened from the **YAML** tab.
 :::
 
 ## Browse and Compare Versions
 
-The **Version History** popup lists every saved prior version of the workflow YAML. Each entry is labeled in this format:
+The **Version History** popup lists every saved version of the workflow YAML in a dropdown. Each entry is labeled in this format:
 
 `[NN] - <date> - <author>`
 
-Where `NN` is a sequential version number (newer versions have higher numbers).
+Where `NN` is a sequential version number (newer versions have higher numbers), for example `[03] - Nov 25, 17:38 - docs-author`.
 
 1. Select a version from the dropdown to load it into the diff view.
 
-2. Compare the selected version against a baseline:
+2. Compare the selected version against a baseline using the tabs above the diff:
 
    | Baseline             | Description                                                                                    |
    | -------------------- | ---------------------------------------------------------------------------------------------- |
    | **Current Version**  | The YAML currently in the editor, including any unsaved changes captured when the popup opened |
    | **Previous Version** | The next older historical version relative to the selected entry (disabled when none exists)   |
 
-3. Review the side-by-side diff. Lines highlighted in **red** will be removed; lines in **green** will be added.
+3. Review the side-by-side diff. The text above it reads: "Review the changes below. Lines highlighted in red will be removed, lines in green will be added." The right pane is headed with the date and author of the selected version.
 
-   ![Version History popup with YAML diff view](./images/workflow-version-history-popup.png)
+   ![Version History popup with the YAML diff and the Current Version tab selected](./images/workflow-version-history-popup.png)
 
 If no historical versions exist, the popup displays **No version history available** and the **Restore** button is unavailable.
 
@@ -66,13 +64,13 @@ Restoring a version replaces the YAML in the editor with the content from the se
 
 1. Select the version to restore from the dropdown.
 
-2. Click **Restore**.
+2. Click **Restore** next to the dropdown.
 
-3. Confirm the restore action in the confirmation dialog:
+3. In the **Restore this version?** dialog, read the message ("This will replace the current editor content with the selected version. Unsaved changes will be lost. You will still need to save to persist the change.") and click **Restore**. **Cancel** closes the dialog without changes.
 
-   ![Restore confirmation dialog](./images/workflow-version-history-restore.png)
+   ![Restore this version confirmation dialog](./images/workflow-version-history-restore.png)
 
-4. Click **Save** on the Edit Workflow page to persist the restored configuration.
+4. Click **Save** on the **Edit Workflow** page to persist the restored configuration.
 
 :::warning Unsaved Changes
 Restoring a version replaces the current editor content. All unsaved workflow edits—including changes made in the visual editor or YAML panel—are discarded when restore is confirmed.

@@ -32,7 +32,7 @@ Favorites are personal — only you see your favorite items.
 
 ## View Favorites Within a Section
 
-Each section (**Assistants**, **Skills**, **Workflows**) has a **Favorites** tab in the left filter panel under **Browse**. Click it to show only your favorite items in that section:
+Each section (**Assistants**, **Skills**, **Workflows**) has a **Favorites** tab in the left panel (for workflows: **My Workflows**, **All Workflows**, **Marketplace**, **Templates**, **Favorites**). Selecting it shows only the favorite items of that section:
 
 ![Favorites tab in the Assistants section](./images/favorites-tab.png)
 

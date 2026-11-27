@@ -25,16 +25,19 @@ Before adding a Sub-workflow node, ensure that:
 - The child workflow is not the parent workflow itself.
 - You know what input the child expects and what its last state returns.
 
-When the feature is disabled, the **Sub-Workflow** node and its advanced configuration are not shown in the editor.
+The **Sub-Workflow** node appears in the editor only when this feature is enabled on the instance. When it is disabled, the node, the **Sub-workflow** section in **Workflow Config** > **Advanced** and its **Max Nesting Level** field are not shown.
 
 ## Add a Sub-workflow Node
 
 1. Open the parent workflow in the Visual Workflow Editor.
 2. In the node palette, find **Sub-Workflow** under **Action**, and add it to the canvas.
 3. Select the node to open **Sub-Workflow Configuration**.
-4. In the required **Sub-Workflow** picker, select an accessible child workflow.
+4. In the required **Sub-Workflow** picker, select an accessible child workflow. The picker has a **Search** field.
+
+   ![Sub-Workflow Configuration section of the node panel with the Sub-Workflow picker](./images/subworkflows/sub-workflow-node-configuration.png)
+
 5. Connect the node's incoming and outgoing connections to the parent workflow's execution path.
-6. Click **Save**, or click **Save & Run** to save and test the parent workflow.
+6. Click **Save**, or click **Save and Run** to save and test the parent workflow.
 7. Enter the parent workflow input and monitor the execution. The Sub-workflow node completes after the child workflow reaches a terminal state.
 
 The picker lists workflows available to the current user. Saving or running validates the selected workflow. A self-reference, a deleted workflow, or a workflow you cannot access is rejected.
@@ -67,13 +70,15 @@ If the child execution fails, the Sub-workflow node fails. If the child is abort
 
 ## Configure Nesting
 
-Sub-workflows can invoke other workflows. To configure a workflow's nesting limit in the visual editor:
+Sub-workflows can invoke other workflows. This section is shown only when the `features:subWorkflow` feature is enabled on the instance. To configure a workflow's nesting limit in the visual editor:
 
 1. Open the workflow.
 2. Select **Workflow Config**.
 3. Open **Advanced**.
 4. Expand **Sub-workflow**.
-5. Set **Max Nesting Level** to a value from 1 through 10. Leave it empty to use the server default.
+5. Set **Max Nesting Level** to a value from 1 through 10. Leave it empty to use the server default. The editor shows **Must be a positive number** for 0 and **Must be at most 10** for larger values.
+
+![Workflow Config Advanced tab with the Sub-workflow section and Max Nesting Level set to 3](./images/subworkflows/workflow-config-max-nesting-level.png)
 
 :::warning The Child Owns the Limit
 For each invocation, CodeMie uses the **selected child workflow's** Max Nesting Level. If the child does not define one, CodeMie uses the server setting `SUBWORKFLOW_MAX_NESTING_DEPTH`, whose default is `1`.
@@ -85,7 +90,7 @@ The visual editor accepts values from 1 through 10. YAML validation requires a v
 
 ## Interrupt and Resume
 
-A Sub-workflow node supports `interrupt_before`, like other workflow states. When configured, the parent can pause before the node runs.
+A Sub-workflow node supports `interrupt_before`, like other workflow states. In the visual editor, turn on **Interrupt Before** under **State Settings** in the node panel. The parent execution then gets the status **Interrupted** before the node runs. If an earlier node has already run, open the execution and click **Continue** to start the child workflow.
 
 If the child itself becomes interrupted, the parent also becomes interrupted and retains a link to that active child execution. Resuming the parent resumes the **same child execution** at the correct point; it does not start a replacement child execution.
 

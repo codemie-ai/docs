@@ -16,17 +16,17 @@ Creating a workflow from scratch can be complex, especially for first-time users
 
 1. Navigate to the **Workflows** section in the main navigation.
 
-2. Select the **Templates** tab:
+2. Select **Templates** in the **Categories** list on the left (next to **My Workflows**, **All Workflows**, **Marketplace** and **Favorites**). Each template card has a **+** button:
 
-   ![Templates tab in Workflows page](../images/image108.png)
+   ![Templates category in the Workflows section](./images/templates-category.png)
 
-3. Browse available templates and click on a template card to view its details and configuration.
+3. Browse available templates and click on a template card to view its details and configuration. The **Workflow Template Details** page shows the description, the YAML with **Copy** and **Download** buttons, and a link to the template.
 
-4. Click the **+** button to create a workflow from the selected template.
+4. Click the **+** button on the card (or **Create Workflow** on the template details page) to create a workflow from the selected template.
 
 5. If the template contains placeholder variables (see [Using Placeholder Variables in Templates](#using-placeholder-variables-in-templates) below), a **Configure Template Variables** dialog appears first, prompting for a value for each unique placeholder found in the template:
 
-   ![Configure Template Variables dialog](./images/configure-template-variables-dialog.png)
+   ![Configure Template Variables dialog with two placeholder fields filled in](./images/configure-template-variables-dialog.png)
 
    Provide a value for every field and click **Apply**. The template's YAML configuration, description, and start hint are filled in automatically with the provided values before the create form opens.
 
@@ -34,21 +34,21 @@ Creating a workflow from scratch can be complex, especially for first-time users
 
    Templates without placeholder variables skip this dialog entirely, and the create form opens pre-filled from the template as before.
 
-6. Configure the workflow settings:
+6. The **Create Workflow from Template** page opens in the Visual Workflow Editor, with the template's nodes on the canvas. Click **Workflow Config** in the upper right corner and configure the workflow settings on the **Basic** tab:
 
 ### Workflow Configuration
 
-| Field                   | Description                                                                              |
-| ----------------------- | ---------------------------------------------------------------------------------------- |
-| **Project name**        | Your AI/Run CodeMie project (pre-populated by default)                                   |
-| **Shared with Project** | Enable to allow teammates to view and use the workflow                                   |
-| **Name**                | Unique name for the workflow                                                             |
-| **Description**         | Brief description of the workflow's features and purpose                                 |
-| **Icon URL**            | URL to an icon image for the workflow avatar                                             |
-| **Categories**          | Optional. Up to 3 categories that describe the workflow's use case                       |
-| **Supervisor Prompt**   | Global context shared across all assistants; can include variables like date, time, etc. |
+| Field                        | Description                                                                             |
+| ---------------------------- | --------------------------------------------------------------------------------------- |
+| **Project name**             | The AI/Run CodeMie project (pre-populated by default)                                   |
+| **Shared with Project Team** | Enable to allow teammates to view and use the workflow                                  |
+| **Name**                     | Unique name for the workflow (required, empty until it is entered)                      |
+| **Description**              | Brief description of the workflow's features and purpose (pre-filled from the template) |
+| **Start Hint**               | Optional hint shown to users when they start a new execution                            |
+| **Icon URL**                 | URL to an icon image for the workflow avatar                                            |
+| **Categories**               | Optional. Up to 3 categories that describe the workflow's use case                      |
 
-7. Click **Create** to save your workflow.
+7. Click **Save** to save the workflow, or **Save and Run** to save and run it immediately.
 
 ## Using Placeholder Variables in Templates
 
@@ -56,7 +56,7 @@ Some templates use placeholder variables to mark values that must be provided be
 
 A placeholder uses the syntax:
 
-```
+```text
 ${input:variable_name}
 ```
 
@@ -80,7 +80,7 @@ After creating a workflow from a template, you can customize it using the **Visu
 
 ### Using the Visual Workflow Editor
 
-![Create Workflow from Template - Visual Editor](./images/create-from-template-visual-editor.png)
+![Create Workflow from Template page in the Visual Workflow Editor](./images/create-from-template-visual-editor.png)
 
 The Visual Workflow Editor provides an intuitive drag-and-drop interface for customizing your template. You can add, remove, and configure workflow states visually without writing YAML code.
 
@@ -107,7 +107,7 @@ To customize the template workflow:
 
 ### Switching Between Editor Modes
 
-You can switch between Visual Editor and YAML editing by clicking **Yaml** button in the top right corner
+Switch between Visual Editor and YAML editing by clicking the **YAML** button in the top right corner
 
 :::tip Best Practice
 Start with the Visual Editor for initial design, then switch to YAML only if you need fine-grained control over advanced features like Jinja templating or complex conditional logic.

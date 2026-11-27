@@ -158,7 +158,7 @@ states:
       Previous analysis: {{task}}
     # Workflow pauses here and waits for user to:
     # 1. Review the analysis from previous state
-    # 2. Click "Continue" to proceed or "Cancel" to stop
+    # 2. Click "Continue" to proceed or "Abort" to stop
     # User sees all previous conversation history
     next:
       state_id: apply-changes

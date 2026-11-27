@@ -18,59 +18,59 @@ Before publishing, ensure the following:
 
 - Edit rights on the workflow are available.
 - The workflow is fully configured and tested.
-- The workflow references only datasources — **no external assistants or skills**.
+- The workflow uses no external assistants or skills. Assistants defined inside the workflow YAML are allowed.
 
 ## Publishing Process
 
-1. Open the workflow for which publishing is intended.
+1. Go to **Workflows** → **My Workflows** and find the workflow to publish.
 
-2. Click the **Publish to Marketplace** button (available from the workflow card actions menu or the workflow details page):
+2. Open the actions menu (⋮) on the workflow card and select **Publish to Marketplace**:
 
-   ![Publish to Marketplace button](./images/publish-to-marketplace-button.png)
+   ![Publish to Marketplace item in the card actions menu](./images/marketplace/publish-to-marketplace-menu.png)
 
-3. The system runs a validation check:
-   - If the workflow references any external assistants or skills, publishing is **blocked**. Remove those references before proceeding.
-   - If the workflow contains inline credentials (MCP environment variables or integration aliases), a warning is displayed.
+3. The **Publish to Marketplace** dialog opens and the system validates the workflow ("Validating your workflow configuration..."):
+   - If the workflow references any external assistants or skills, publishing is **blocked** and the message "Marketplace workflows cannot use external (non-virtual) assistants or skills" is displayed. Assistants defined inside the workflow YAML are allowed. Remove the external references before proceeding.
+   - If the workflow contains inline credentials (MCP environment variables or integration aliases), a **Credential Review** section is added to the dialog.
 
 4. Review the credential warning if present (see [Credential Review](#credential-review) below).
 
 5. Select **1 to 3 categories** to help users discover the workflow.
 
-6. Confirm to publish.
+6. Click **Publish**. A confirmation message is displayed and the workflow appears in the **Marketplace**.
 
 ## Credential Review
 
-If the workflow contains inline credentials — such as MCP environment variable values or integration aliases — a warning modal appears before publishing.
+If the workflow contains inline credentials — such as MCP environment variable values or integration aliases — a **Credential Review** section appears in the **Publish to Marketplace** dialog, below the category selector.
 
-![Credential review modal](./images/publish-credential-review-modal.png)
+![Credential Review section in the Publish to Marketplace dialog](./images/marketplace/publish-credential-review.png)
 
 :::warning Inline Credentials
-Inline credentials embedded in the workflow configuration will be accessible to all users who execute the marketplace workflow. Review carefully before confirming.
+Inline credentials embedded in the workflow configuration will be accessible to all users who execute the marketplace workflow. Review carefully before clicking **Publish**.
 :::
 
-The warning lists the detected credentials and requires explicit confirmation to proceed. Publishing is only completed after confirmation.
+The section lists each detected credential: the MCP server or tool name, and the environment variable names or integration alias. MCP server environment variables are visible to other users, while integration credentials are not visible but are used for integration purposes. There is no separate confirmation step: the workflow is published when **Publish** is clicked, so review the list first and click **Cancel** to stop.
 
-If no inline credentials are detected, the warning step is skipped.
+If no inline credentials are detected, the **Credential Review** section is not shown.
 
 ## Selecting Categories
 
 Choose 1 to 3 categories that best describe the workflow's purpose. Categories help users filter and discover relevant workflows in the Marketplace.
 
-![Category selection](./images/publish-category-selection.png)
+![Categories dropdown in the Publish to Marketplace dialog](./images/marketplace/publish-categories-dropdown.png)
 
 :::info
-At least one category is required. Attempting to publish without a category selection results in a validation error.
+At least one category is required. Clicking **Publish** without a category selection shows the validation error "Please select at least one category".
 :::
 
 :::note
-These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results on **My Workflows**).
+These are the same categories as the [Categories field in the workflow configuration](./create-workflow.md#workflow-categories). The dialog starts with the workflow's current categories, and publishing saves the chosen categories to the workflow, replacing the previous selection (which also changes the **Categories** filter results in the **Marketplace**).
 :::
 
 ## After Publishing
 
-Once published, the workflow becomes globally visible in the **Marketplace** tab of the Workflows section. Any authenticated user can view and execute it.
+Once published, the workflow becomes globally visible in **Marketplace** in the Workflows section. Any authenticated user can view and execute it. A published workflow is listed under **Marketplace** instead of **My Workflows** and **All Workflows**. If it is removed from the Marketplace, it returns to **My Workflows**.
 
-The workflow remains editable by the owner and admins. The following management actions are available from the workflow card:
+The workflow remains editable by the owner and admins. The following management actions are available from the workflow card actions menu in the **Marketplace**, together with **View Details**, **Copy Link** and **Clone**. **Edit**, **Delete** and **Remove from Marketplace** appear only for users with the rights to manage the workflow:
 
 | Action                      | Description                                           |
 | --------------------------- | ----------------------------------------------------- |
@@ -86,14 +86,14 @@ After a workflow is published to the Marketplace, saving changes that introduce 
 
 To remove a workflow from the Marketplace without deleting it:
 
-1. Locate the workflow in the Marketplace or in the project workflows list.
-2. Open the actions menu and select **Remove from Marketplace**:
+1. Go to **Workflows** → **Marketplace** and locate the workflow.
+2. Open the card actions menu (⋮) and select **Remove from Marketplace**:
 
-   ![Remove from Marketplace button](./images/remove-from-marketplace-button.png)
+   ![Remove from Marketplace item in the card actions menu](./images/marketplace/remove-from-marketplace-menu.png)
 
-3. Confirm the action.
+3. In the **Remove from Marketplace?** dialog, click **Unpublish** to confirm.
 
-The workflow is removed from the Marketplace immediately and returns to the project-scoped state. Existing executions are not affected.
+The workflow is removed from the Marketplace immediately and appears in **My Workflows** again. Existing executions are not affected.
 
 :::info Deletion and unpublishing
 Deleting a workflow automatically unpublishes it from the Marketplace.

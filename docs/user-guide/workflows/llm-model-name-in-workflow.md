@@ -10,7 +10,7 @@ description: How to identify which LLM model is being used in a workflow
 
 # LLM Model Name in Workflow
 
-Use browser Developer Tools to identify the LLM model being used in your workflow execution.
+Use browser Developer Tools to see which LLM models are available in the environment.
 
 ## Steps to Find Model Name
 
@@ -30,26 +30,47 @@ Use browser Developer Tools to identify the LLM model being used in your workflo
 
 5. **Locate the LLM Models Request**:
 
-   Search or filter for `llm_models` in the Name column:
-
-   ![Network tab showing llm_models request](../images/image110.png)
+   Type `llm_models` in the filter field of the Network tab. Several requests match the filter. Pick the one whose name is exactly `llm_models`.
 
 6. **View Response Data**:
 
    Click on the request, then select the **Response** tab to see the JSON response.
 
-7. **Find the Model Name**:
+7. **Find the Model Names**:
 
-   Locate the `base_name` field in the JSON response - this indicates the LLM model name used in the workflow.
+   The `base_name` field of each entry in the response is the name of an available model. The model that a workflow uses is set in its YAML configuration or in the assistant that the step uses.
 
 ## Example Response Structure
 
+The response is a JSON list with one object for every model available in the environment. This is a shortened example with two entries:
+
 ```json
-{
-  "model_id": "...",
-  "base_name": "gpt-4.1",
-  "provider": "..."
-}
+[
+  {
+    "base_name": "gpt-4.1",
+    "deployment_name": "codemie-gpt-4.1-2025-04-14",
+    "label": "GPT-4.1 2025-04-14",
+    "multimodal": true,
+    "enabled": true,
+    "provider": "azure_openai",
+    "default": true,
+    "max_output_tokens": 32768,
+    "status": "enabled"
+  },
+  {
+    "base_name": "claude-4-5-haiku",
+    "deployment_name": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "label": "Bedrock Claude 4.5 Haiku",
+    "multimodal": true,
+    "enabled": true,
+    "provider": "aws_bedrock",
+    "default": false,
+    "max_output_tokens": 64000,
+    "status": "enabled"
+  }
+]
 ```
 
-The `base_name` field contains the model identifier (e.g., `gpt-4.1`, `claude-sonnet-5-5`, etc.).
+Other fields such as `cost`, `features`, `supports_image_generation` and `default_for_categories` are omitted here.
+
+The `base_name` field contains the model name (for example, `gpt-4.1` or `claude-4-5-haiku`).

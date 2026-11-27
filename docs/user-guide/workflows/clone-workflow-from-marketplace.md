@@ -16,41 +16,37 @@ Clone a marketplace workflow to a personal project to customize it or adapt it f
 
 ### 1. Navigate to Marketplace
 
-1. Go to **Workflows** → **Marketplace**.
+1. Go to **Workflows** and select **Marketplace**.
 2. Browse the catalog or use search and filters to find the workflow to clone.
 
 ### 2. Select a Workflow
 
-1. Click on the workflow card to open its details page.
-2. Review the workflow description, categories, and usage metrics.
-3. Click the **Clone** button:
+1. Optionally click the workflow card (or select **View Details** in its actions menu) to review the workflow. The **Clone** action is not on that page; it is in the card actions menu.
+2. On the workflow card in the **Marketplace**, open the actions menu (⋮) and select **Clone**:
 
-   ![Clone button in workflow actions menu](./images/clone-button.png)
+   ![Clone item in the Marketplace card actions menu](./images/marketplace/clone-menu-item.png)
+
+The **Clone Workflow** editor opens with the original workflow's graph and configuration.
 
 ### 3. Configure Clone Settings
 
-1. Select the target project from the dropdown.
-   - Only projects with access are listed.
+1. Click **Workflow Config** in the editor toolbar. The **Workflow configuration** panel opens on the **Basic** tab.
+2. In **Project name**, set the project to the user's own project by selecting it from the dropdown.
+3. Enter a **Name** for the cloned workflow. The field is empty, so a name is required:
 
-2. Enter a name for the cloned workflow:
+   ![Clone Workflow with the Workflow configuration panel](./images/marketplace/clone-workflow-form.png)
 
-   ![Clone workflow settings](./images/clone-workflow-settings.png)
-
-3. Confirm the slug is unique within the target project.
-
-:::info Slug requirements
-The slug must be unique within the selected project. If a conflict exists, a different name must be chosen before proceeding.
-:::
+4. Optionally adjust **Shared with Project Team**, **Description**, **Start Hint** and **Icon URL**, then click **Save** in the panel.
 
 ### 4. Complete Cloning
 
-1. Click **Clone Workflow** to start the process.
+1. Click **Save** in the top-right corner of the **Clone Workflow** page. **Save and Run** saves the copy and starts it; **Cancel** discards it.
 2. The system creates a copy with all configuration preserved.
-3. A confirmation is displayed when cloning is complete.
+3. The message "Workflow has been created successfully!" is displayed and the **Marketplace** page opens.
 
 ## After Cloning
 
-The cloned workflow appears in the target project's workflow list, where it can be:
+The cloned workflow appears under **My Workflows** for the target project, where it can be:
 
 - Edited and reconfigured freely
 - Connected to different datasources or assistants
