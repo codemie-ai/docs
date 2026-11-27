@@ -264,13 +264,13 @@ Common questions:
 The same proxy also routes desktop applications and IDEs to the CodeMie model catalog, so they
 use your organization's models and SSO instead of a personal subscription:
 
-| Command                                      | Application                                                |
-| -------------------------------------------- | ---------------------------------------------------------- |
-| `codemie proxy connect --claude-desktop`     | Claude Desktop (see [Claude Desktop](./claude-desktop.md)) |
-| `codemie proxy connect --vscode-claude-code` | Claude Code extension for VS Code                          |
-| `codemie proxy connect --vscode`             | GitHub Copilot Chat models in VS Code (bring your own key) |
-| `codemie proxy connect --codex-desktop`      | Codex desktop app                                          |
-| `codemie proxy connect --omp`                | oh-my-pi                                                   |
+| Command                                      | Application                                                       |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| `codemie proxy connect --claude-desktop`     | Claude Desktop (see [Claude Desktop](./claude/claude-desktop.md)) |
+| `codemie proxy connect --vscode-claude-code` | Claude Code extension for VS Code                                 |
+| `codemie proxy connect --vscode`             | GitHub Copilot Chat models in VS Code (bring your own key)        |
+| `codemie proxy connect --codex-desktop`      | Codex desktop app                                                 |
+| `codemie proxy connect --omp`                | oh-my-pi                                                          |
 
 Add `--insiders` for VS Code Insiders. Each has a matching `codemie proxy disconnect` flag.
 Run `codemie proxy connect` without a flag to list all targets.
@@ -308,5 +308,5 @@ Older forms keep working until December 31, 2026 and print the replacement:
 ## Related
 
 - [AI Attribution](../analytics/ai-attribution.md): where the collected analytics is shown.
-- [Claude Desktop](./claude-desktop.md): route Claude Desktop to CodeMie models.
+- [Claude Desktop](./claude/claude-desktop.md): route Claude Desktop to CodeMie models.
 - [CodeMie CLI](./index.md): installation and all CLI commands.

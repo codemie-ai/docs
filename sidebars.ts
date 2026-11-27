@@ -232,6 +232,7 @@ const sidebars: SidebarsConfig = {
                     'user-guide/tools_integrations/tools/mcp/mcp-integration-credentials',
                     'user-guide/tools_integrations/tools/mcp/clone-mcp-server',
                     'user-guide/tools_integrations/tools/mcp/mcp-server-instructions',
+                    'user-guide/tools_integrations/tools/mcp/mcp-generated-files',
                   ],
                 },
               ],
@@ -318,9 +319,20 @@ const sidebars: SidebarsConfig = {
             'user-guide/codemie-cli/enable-analytics',
             'user-guide/codemie-cli/assistants-integration',
             'user-guide/codemie-cli/skills-integration',
-            'user-guide/codemie-cli/codemie-claude-skills',
-            'user-guide/codemie-cli/sdk-cli-reference',
-            'user-guide/codemie-cli/claude-desktop',
+            {
+              type: 'category',
+              label: 'Claude',
+              link: {
+                type: 'doc',
+                id: 'user-guide/codemie-cli/claude/codemie-claude',
+              },
+              collapsed: true,
+              items: [
+                'user-guide/codemie-cli/claude/codemie-claude-skills',
+                'user-guide/codemie-cli/claude/sdk-cli-reference',
+                'user-guide/codemie-cli/claude/claude-desktop',
+              ],
+            },
           ],
         },
         {

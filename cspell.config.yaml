@@ -173,6 +173,7 @@ words:
   - elasticvue
   - valkey
   # Technical terms
+  - nums
   - backend
   - exfiltration
   - srcset

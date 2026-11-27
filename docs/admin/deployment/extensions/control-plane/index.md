@@ -210,6 +210,53 @@ env:
     value: 'false'
 ```
 
+The values files start the Control Plane with an empty configuration To use another configuration folder, set `CONTROL_PLANE_CONFIG` in the `env` list.
+
+#### Add Source Tokens
+
+To harvest Jira, GitLab or GitHub, keep the source tokens in a Kubernetes secret and reference them
+in the `env` list.
+
+1. Create the secret (only the sources in use are needed):
+
+   ```bash
+   kubectl create secret generic control-plane-source-tokens \
+     --namespace control-plane \
+     --from-literal=jira-token='<jira-token>' \
+     --from-literal=gitlab-token='<gitlab-token>' \
+     --from-literal=github-token='<github-token>'
+   ```
+
+2. Reference the keys in the `env` list:
+
+   ```yaml
+   env:
+     # ... existing variables
+     - name: JIRA_TOKEN
+       valueFrom:
+         secretKeyRef:
+           name: control-plane-source-tokens
+           key: jira-token
+           optional: true
+     - name: GITLAB_TOKEN_GITLAB_EXAMPLE_COM # GITLAB_TOKEN_<HOST>
+       valueFrom:
+         secretKeyRef:
+           name: control-plane-source-tokens
+           key: gitlab-token
+           optional: true
+     - name: GH_TOKEN
+       valueFrom:
+         secretKeyRef:
+           name: control-plane-source-tokens
+           key: github-token
+           optional: true
+   ```
+
+3. Run the [Helm install command](#step-3-install-helm-chart) to apply the tokens.
+
+For the variable naming rules, see the
+[Data Sources](../../../../user-guide/control-plane/configuration.md#data-sources) reference.
+
 For all available parameters, see
 [Control Plane Configuration Reference](../../../../user-guide/control-plane/configuration.md).
 
