@@ -27,8 +27,9 @@ see [Budget Priority](./index.md#budget-priority).
 Path: **Profile → Settings → Administration → Projects Management → select a project**
 
 Creating and editing project budgets requires the **Maintainer** role. Project Admins cannot manage
-budgets in any project — including their own. See [Access](./index.md#access) for the full
-permission matrix.
+budgets in any project — including their own. The exception is the **Enforce member spend limits**
+toggle, which Project Admins can change for the projects they administer. See
+[Access](./index.md#access) for the full permission matrix.
 
 ## Reviewing Projects and Their Budgets
 
@@ -160,7 +161,17 @@ the project itself, not on the budget.
 ![Edit Project dialog with the enforce member spend limits toggle](./images/edit-project-enforce-limits.png)
 
 To change it, open the project and click **Edit Project**, then toggle **Enforce member spend
-limits** and click **Save**.
+limits** and click **Save**. A confirmation dialog follows when the toggle value has changed. See
+[Confirming an Enforcement Change](#confirming-an-enforcement-change).
+
+The toggle is shown in **Edit Project** when budget management is enabled, to:
+
+- **Project Admins**, for the projects they administer
+- **Admins**, for any project
+- **Maintainers**, for any project
+
+For other users the toggle is not offered, and an attempt to change it directly through the API is
+rejected with a permission error.
 
 **Disabled (default) — shared pool**
 
@@ -176,6 +187,38 @@ Each member receives a hard individual limit, and requests beyond it are blocked
 
 - A $100 category budget across 10 members gives each member $10
 - If one member holds a $20 override, the remaining nine split the rest: ($100 − $20) ÷ 9 ≈ $8.89 each
+
+### Confirming an Enforcement Change
+
+Turning enforcement on or off changes who is blocked, right away. To prevent accidental changes,
+clicking **Save** in **Edit Project** opens a confirmation dialog whenever the **Enforce member spend
+limits** toggle differs from its stored value. The change is applied only after it is confirmed.
+
+| Change       | Dialog title                             | What the dialog explains                                                                                                                                                                             | Confirm button           |
+| ------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| **Turn on**  | Turn on member spend limit enforcement?  | Each member is capped at their own limit: their share of the project budget, or their fixed limit if they have one. Members who are already over their limit are blocked right away                  | **Turn on enforcement**  |
+| **Turn off** | Turn off member spend limit enforcement? | Members are no longer capped one by one and can draw on the full project budget. The project budget cap still applies, spend is still tracked per member, and members with a fixed limit stay capped | **Turn off enforcement** |
+
+:::warning
+Turning enforcement on blocks every member who has already spent more than their limit, right away.
+The dialog does not list which members are affected.
+:::
+
+**Confirm**
+
+The new setting is stored, member limits are re-applied (see [Rebalance](#rebalance)), and the change
+is recorded in the audit log together with the user who made it. A success message appears and the
+**Member spend limits** field on the project **Overview** shows the new state.
+
+**Cancel**
+
+Nothing is saved and member limits are not re-applied. Only the confirmation dialog closes: **Edit
+Project** stays open with the toggle back at its stored value, and any other edits (for example, a
+changed description) remain in the form. They can be saved without the enforcement change. Pressing
+`Esc` on the confirmation dialog behaves the same way.
+
+Saving **Edit Project** without changing the toggle applies the other edits immediately, without a
+confirmation dialog.
 
 ### Overriding a Member's Allocation
 
