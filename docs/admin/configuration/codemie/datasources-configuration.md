@@ -274,6 +274,8 @@ azure_devops_work_item_loader:
 - `index_comments` - Enable to include work item comment threads in the index
 - `index_attachments` - Enable to include attached files in the index
 
+These values are the deployment-wide defaults. The **Include comments** and **Include attachments** switches on an individual Azure DevOps Work Items data source override them: an explicit on or off on the data source takes precedence, and the setting here applies only when the switch is not set. Changing a switch on an existing data source triggers a full reindex of that data source.
+
 ### Xray Loader
 
 Processes Xray test management data from Jira.

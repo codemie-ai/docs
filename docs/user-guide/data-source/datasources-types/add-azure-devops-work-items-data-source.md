@@ -59,6 +59,8 @@ Configure the Azure DevOps Work Items-specific fields:
 | ----------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **WIQL Query**                | Optional | Filter work items using a WIQL query (e.g., `SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = @project`). Leave empty to index all work items in the project. |
 | **Integration**               | Required | Select your Azure DevOps integration.                                                                                                                                       |
+| **Include attachments**       | Optional | Index text extracted from work item attachments. Excluding attachments reduces datasource size; excluded content is not searchable. See [Attachments](#attachments).        |
+| **Include comments**          | Optional | Index work item discussion comments. Excluding comments reduces datasource size; excluded content is not searchable. See [Comments](#comments).                             |
 | **Model used for embeddings** | Required | Embedding model for indexing the content.                                                                                                                                   |
 
 #### 5. Configure Reindex Schedule (Optional)
@@ -86,27 +88,43 @@ Core work item fields are indexed as a single document per item, including title
 
 ### Comments
 
-All discussion comments on each work item are indexed. Each comment includes the author's name, timestamp, and text. Comments from a single work item are grouped into one document.
+When **Include comments** is on, discussion comments on each work item are indexed. Each comment includes the author's name, timestamp, and text. Comments from a single work item are grouped into one document.
+
+When the switch is off, comments are not retrieved, processed, or indexed.
 
 ### Attachments
 
-Files attached to work items are downloaded, text is extracted, and indexed. Supported file types:
+When **Include attachments** is on, files attached to work items are downloaded, text is extracted, and the result is indexed. Attachments larger than 20 MB, or with an unknown size, are skipped. Supported file types:
 
-| File Type                          | Extraction Method                                          |
-| ---------------------------------- | ---------------------------------------------------------- |
-| Images (JPEG, PNG, GIF, BMP, WebP) | OCR via multimodal AI model                                |
-| PDF                                | Text extraction; OCR via AI vision for image-only PDFs     |
-| Word (`.docx`)                     | Text extraction                                            |
-| Excel (`.xlsx`, `.xls`)            | Sheet content as text                                      |
-| PowerPoint (`.pptx`)               | Slide text extraction                                      |
-| Text files                         | UTF-8 text (`.txt`, `.md`, `.json`, `.csv`, `.yaml`, etc.) |
+| File Type                         | Extraction Method                                      |
+| --------------------------------- | ------------------------------------------------------ |
+| Images (JPG, PNG, GIF, BMP, WebP) | Text extracted with the chat model                     |
+| PDF                               | Text extraction; OCR via AI vision for image-only PDFs |
+| Word (`.docx`)                    | Text extraction                                        |
+| Excel (`.xlsx`, `.xls`, `.xlsb`)  | Sheet content as text                                  |
+| PowerPoint (`.pptx`)              | Slide text extraction                                  |
+| Outlook message (`.msg`)          | Message text extraction                                |
+| HTML                              | Text extraction                                        |
 
 :::note
 Image OCR and image-embedded document processing require a multimodal AI model to be configured in your CodeMie instance. If no multimodal model is available, image attachments are skipped.
 :::
 
 :::info Unsupported attachments
-Attachment types not listed above are handled gracefully — the indexing job records metadata only and continues without failing.
+Attachment types not listed above are skipped, and the indexing job continues without failing.
+:::
+
+## Including Comments and Attachments
+
+The **Include attachments** and **Include comments** switches are independent and are available when creating and editing the data source.
+
+- **Default**: when a switch is not set on the data source, the deployment setting `index_attachments` / `index_comments` applies (see [Datasources Configuration](../../../admin/configuration/codemie/datasources-configuration.md)). In the form, both switches are on by default. An explicit on or off on the data source overrides the deployment setting.
+- **Effect on the index**: excluding comments and attachments keeps the index smaller and indexing faster. Including them makes their content searchable by assistants.
+
+:::info Changing a switch triggers a full reindex
+Changing either switch on an existing data source starts a full reindex automatically, even on a plain **Save**. Turning a switch off removes the already indexed comment or attachment documents. Turning it on adds them for all work items.
+
+If the full reindex fails, including when a temporary error occurs while fetching comments or attachments, it is forced again on the next run, scheduled runs included, until one succeeds.
 :::
 
 ## Using the Azure DevOps Work Items Data Source in Assistants
